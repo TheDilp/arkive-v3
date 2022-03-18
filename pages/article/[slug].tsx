@@ -4,6 +4,6 @@ type Props = {
   text: string
 }
 
-export default function MDPreview({ text }: Props) {
+export default function Article({ text }: Props) {
   return <div>{text}</div>
 }

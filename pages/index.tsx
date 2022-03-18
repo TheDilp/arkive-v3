@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { useState } from 'react'
 import MDPreview from '../components/MDPreview'
 const Home: NextPage = () => {
-  const [text, setText] = useState<string>('# This is a test')
+  const [text, setText] = useState<string>('# This is a [[test]]')
   return (
     <div className="flex min-h-screen items-center justify-center py-2">
       <Head>
