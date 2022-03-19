@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { createEditor, Editor, Text, Transforms } from 'slate'
+import { createEditor, Editor, Range, Text, Transforms } from 'slate'
 import { Editable, Slate, withReact } from 'slate-react'
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
@@ -30,7 +30,9 @@ type Props = {
 
 export default function MDPreview({ text }: Props) {
   const [editor] = useState(() => withReact(createEditor() as any))
-
+  const [target, setTarget] = useState<Range | undefined>()
+  const [index, setIndex] = useState(0)
+  const [search, setSearch] = useState('')
   // Add the initial value when setting up our state.
   const [value, setValue] = useState<Descendant[]>([
     {
@@ -131,13 +133,44 @@ export default function MDPreview({ text }: Props) {
   }
   return (
     <div className="prose m-0" style={{ maxWidth: '100vw' }}>
-      <Slate editor={editor} value={value} onChange={setValue}>
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={(value) => {
+          setValue(value)
+          const { selection } = editor
+
+          if (selection && Range.isCollapsed(selection)) {
+            const [start] = Range.edges(selection)
+            const wordBefore = Editor.before(editor, start, { unit: 'word' })
+            const before = wordBefore && Editor.before(editor, wordBefore)
+            const beforeRange = before && Editor.range(editor, before, start)
+            const beforeText = beforeRange && Editor.string(editor, beforeRange)
+            const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/)
+            const after = Editor.after(editor, start)
+            const afterRange = Editor.range(editor, start, after)
+            const afterText = Editor.string(editor, afterRange)
+            const afterMatch = afterText.match(/^(\s|$)/)
+
+            if (beforeMatch && afterMatch) {
+              setTarget(beforeRange)
+              setSearch(beforeMatch[1])
+              setIndex(0)
+              return
+            }
+          }
+        }}
+      >
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={(event) => {
-            event.preventDefault()
+            if (event.key === '@') {
+              event.preventDefault()
+              alert('@@@@@')
+            }
             if (event.ctrlKey) {
+              event.preventDefault()
               // Select All
               if (event.key === 'a') {
                 Transforms.select(editor, {
