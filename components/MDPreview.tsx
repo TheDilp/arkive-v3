@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from 'react'
-import { createEditor, Editor, Transforms } from 'slate'
+import { createEditor, Editor, Text, Transforms } from 'slate'
 import { Editable, Slate, withReact } from 'slate-react'
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
 type CustomElement = {
   type: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
   children: CustomText[]
 }
 type CustomText = { text: string }
@@ -50,6 +53,24 @@ export default function MDPreview({ text }: Props) {
   const HeaderSixEl = (props: { attributes: any; children: any }) => {
     return <h6 {...props.attributes}>{props.children}</h6>
   }
+  const Leaf = (props: {
+    attributes: any
+    leaf: any
+    children: CustomText[]
+  }) => {
+    return (
+      <span
+        {...props.attributes}
+        style={{
+          fontWeight: props.leaf.bold ? 'bold' : 'normal',
+          fontStyle: props.leaf.italic ? 'italic' : '',
+          textDecoration: props.leaf.underline ? 'underline' : '',
+        }}
+      >
+        {props.children}
+      </span>
+    )
+  }
 
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
@@ -69,6 +90,9 @@ export default function MDPreview({ text }: Props) {
         return <ParagraphEl {...props} />
     }
   }, [])
+  const renderLeaf = useCallback((props) => {
+    return <Leaf {...props} />
+  }, [])
 
   function transformText(type: string) {
     Transforms.setNodes(
@@ -83,7 +107,9 @@ export default function MDPreview({ text }: Props) {
       <Slate editor={editor} value={value} onChange={setValue}>
         <Editable
           renderElement={renderElement}
+          renderLeaf={renderLeaf}
           onKeyDown={(event) => {
+            event.preventDefault()
             if (event.ctrlKey) {
               // Select All
               if (event.key === 'a') {
@@ -93,7 +119,6 @@ export default function MDPreview({ text }: Props) {
                 })
                 return
               }
-              event.preventDefault()
               //   Headers
               if (event.key === '1') {
                 transformText('header-one')
@@ -109,6 +134,24 @@ export default function MDPreview({ text }: Props) {
                 transformText('header-six')
               } else if (event.key === 'p') {
                 transformText('paragraph')
+              } else if (event.key === 'b') {
+                Transforms.setNodes(
+                  editor,
+                  { bold: true },
+                  { match: (n) => Text.isText(n), split: true }
+                )
+              } else if (event.key === 'i') {
+                Transforms.setNodes(
+                  editor,
+                  { italic: true },
+                  { match: (n) => Text.isText(n), split: true }
+                )
+              } else if (event.key === 'u') {
+                Transforms.setNodes(
+                  editor,
+                  { underline: true },
+                  { match: (n) => Text.isText(n), split: true }
+                )
               }
             }
           }}
