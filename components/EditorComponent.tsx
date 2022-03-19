@@ -22,9 +22,11 @@ declare module 'slate' {
     Text: CustomText
   }
 }
-type Props = {}
+type Props = {
+  content: string | null
+}
 
-export default function EditorComponent({}: Props) {
+export default function EditorComponent({ content }: Props) {
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
 
@@ -111,7 +113,6 @@ export default function EditorComponent({}: Props) {
   }
 
   const renderElement = useCallback((props) => {
-    console.log(props)
     switch (props.element.type) {
       case 'mention':
         return <Mention {...props} />
@@ -183,13 +184,17 @@ export default function EditorComponent({}: Props) {
   }, [chars.length, editor, index, search, target])
 
   useEffect(() => {
-    let content = localStorage.getItem('doc')
-    if (content) {
-      console.log(JSON.parse(content))
+    if (!content) {
+      let editcontent = localStorage.getItem('doc')
+      if (editcontent) {
+        setValue(JSON.parse(editcontent))
+        editor.children = JSON.parse(editcontent)
+      }
+    } else {
       setValue(JSON.parse(content))
       editor.children = JSON.parse(content)
     }
-  }, [])
+  }, [content])
 
   const mentionCallback = useCallback(
     (event) => {
@@ -266,6 +271,7 @@ export default function EditorComponent({}: Props) {
         }}
       >
         <Editable
+          readOnly={content ? true : false}
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={(event) => {

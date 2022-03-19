@@ -11,7 +11,6 @@ export default function ImageComponent({
   attributes,
   element: { url },
 }: Props) {
-  console.log(url)
   return (
     <span
       {...attributes}
