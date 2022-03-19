@@ -15,11 +15,9 @@ declare module 'slate' {
     Text: CustomText
   }
 }
-type Props = {
-  text: string
-}
+type Props = {}
 
-export default function MDPreview({ text }: Props) {
+export default function EditorComponent({}: Props) {
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
   const withMentions = (editor: Editor) => {

@@ -1,7 +1,12 @@
 import React from 'react'
+import EditorComponent from '../components/EditorComponent'
 
 type Props = {}
 
 export default function Editor({}: Props) {
-  return <div>editor</div>
+  return (
+    <div>
+      <EditorComponent />
+    </div>
+  )
 }
