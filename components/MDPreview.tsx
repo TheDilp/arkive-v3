@@ -22,7 +22,20 @@ type Props = {
 export default function MDPreview({ text }: Props) {
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
-  const [editor] = useState(() => withReact(createEditor() as any))
+  const withMentions = (editor: Editor) => {
+    const { isInline, isVoid } = editor
+
+    editor.isInline = (element) => {
+      return element.type === 'mention' ? true : isInline(element)
+    }
+
+    editor.isVoid = (element) => {
+      return element.type === 'mention' ? true : isVoid(element)
+    }
+
+    return editor
+  }
+
   const [target, setTarget] = useState<Range | null>()
   const [index, setIndex] = useState(0)
   const [search, setSearch] = useState('')
@@ -38,6 +51,9 @@ export default function MDPreview({ text }: Props) {
       children: [{ text: '' }],
     },
   ])
+  const [editor] = useState(() =>
+    withMentions(withReact(createEditor() as any))
+  )
   const ParagraphEl = (props: { attributes: any; children: any }) => {
     return <p {...props.attributes}>{props.children}</p>
   }

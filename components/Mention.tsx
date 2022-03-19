@@ -18,7 +18,6 @@ export default function Mention({ attributes, children, element }: Props) {
       style={{
         padding: '3px 3px 2px',
         margin: '0 1px',
-        verticalAlign: 'baseline',
         display: 'inline-block',
         borderRadius: '4px',
         backgroundColor: '#eee',
