@@ -70,7 +70,7 @@ export default function MDPreview({ text }: Props) {
     }
   }, [])
 
-  function transformHeader(type: string) {
+  function transformText(type: string) {
     Transforms.setNodes(
       editor,
       { type },
@@ -96,17 +96,19 @@ export default function MDPreview({ text }: Props) {
               event.preventDefault()
               //   Headers
               if (event.key === '1') {
-                transformHeader('header-one')
+                transformText('header-one')
               } else if (event.key === '2') {
-                transformHeader('header-two')
+                transformText('header-two')
               } else if (event.key === '3') {
-                transformHeader('header-three')
+                transformText('header-three')
               } else if (event.key === '4') {
-                transformHeader('header-four')
+                transformText('header-four')
               } else if (event.key === '5') {
-                transformHeader('header-five')
+                transformText('header-five')
               } else if (event.key === '6') {
-                transformHeader('header-six')
+                transformText('header-six')
+              } else if (event.key === 'p') {
+                transformText('paragraph')
               }
             }
           }}
