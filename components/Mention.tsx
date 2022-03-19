@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelected, useFocused } from 'slate-react'
-import { CustomText } from '../custom-types'
+import { CustomText, MentionElement } from '../custom-types'
 type Props = {
   attributes: any
   children: CustomText
-  element: any
+  element: MentionElement
 }
 
 export default function Mention({ attributes, children, element }: Props) {

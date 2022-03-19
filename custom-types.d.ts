@@ -17,3 +17,9 @@ export type MentionElement = {
   character: string
   children: CustomText[]
 }
+
+export type ImageElement = {
+  type: 'image'
+  url: string
+  children: CustomText[]
+}

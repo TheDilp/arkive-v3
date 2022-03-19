@@ -5,8 +5,15 @@ import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
 import Portal from './Portal'
 import { CHARACTERS } from '../chars'
-import { CustomElement, CustomText, MentionElement } from '../custom-types'
+import {
+  CustomElement,
+  CustomText,
+  ImageElement,
+  MentionElement,
+} from '../custom-types'
 import Mention from './Mention'
+import Image from 'next/image'
+import ImageComponent from './ImageComponent'
 
 declare module 'slate' {
   interface CustomTypes {
@@ -20,6 +27,22 @@ type Props = {}
 export default function EditorComponent({}: Props) {
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
+
+  const insertMention = (editor: Editor, character: string) => {
+    const mention: MentionElement = {
+      type: 'mention',
+      character,
+      children: [{ text: '' }],
+    }
+    Transforms.insertNodes(editor, mention)
+    Transforms.move(editor)
+  }
+  const insertImage = (editor: Editor, url: string) => {
+    const text = { text: '' }
+    const image: ImageElement = { type: 'image', url, children: [text] }
+    Transforms.insertNodes(editor, image)
+  }
+
   const withMentions = (editor: Editor) => {
     const { isInline, isVoid } = editor
 
@@ -88,9 +111,12 @@ export default function EditorComponent({}: Props) {
   }
 
   const renderElement = useCallback((props) => {
+    console.log(props)
     switch (props.element.type) {
       case 'mention':
         return <Mention {...props} />
+      case 'image':
+        return <ImageComponent {...props} />
       case 'header-one':
         return <HeaderOneEl {...props} />
       case 'header-two':
@@ -165,15 +191,6 @@ export default function EditorComponent({}: Props) {
     }
   }, [])
 
-  const insertMention = (editor: Editor, character: string) => {
-    const mention: MentionElement = {
-      type: 'mention',
-      character,
-      children: [{ text: '' }],
-    }
-    Transforms.insertNodes(editor, mention)
-    Transforms.move(editor)
-  }
   const mentionCallback = useCallback(
     (event) => {
       if (target) {
@@ -207,6 +224,18 @@ export default function EditorComponent({}: Props) {
 
   return (
     <div className="prose m-0" style={{ maxWidth: '100vw' }}>
+      <div className="mb-0 w-full text-center">
+        <h1>
+          Document Title{' '}
+          <button
+            onClick={() => {
+              insertImage(editor, 'https://picsum.photos/200/300')
+            }}
+          >
+            ImgBtn
+          </button>
+        </h1>
+      </div>
       <Slate
         editor={editor}
         value={value}
