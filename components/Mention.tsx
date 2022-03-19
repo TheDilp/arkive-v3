@@ -1,6 +1,8 @@
+import { nanoid } from 'nanoid'
 import React from 'react'
 import { useSelected, useFocused } from 'slate-react'
 import { CustomText, MentionElement } from '../custom-types'
+import { useRouter } from 'next/router'
 type Props = {
   attributes: any
   children: CustomText
@@ -8,6 +10,8 @@ type Props = {
 }
 
 export default function Mention({ attributes, children, element }: Props) {
+  const id = nanoid()
+  const router = useRouter()
   const selected = useSelected()
   const focused = useFocused()
   return (
@@ -19,6 +23,7 @@ export default function Mention({ attributes, children, element }: Props) {
       style={{
         boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
       }}
+      onClick={(e) => router.push(`./view/${id}`)}
     >
       @{element.character}
       {children}
