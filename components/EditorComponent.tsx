@@ -269,6 +269,17 @@ export default function EditorComponent({}: Props) {
                 toggleMark('italic')
               } else if (event.key === 'u') {
                 toggleMark('underline')
+              } else if (event.key === 'c') {
+                if (editor.selection)
+                  navigator.clipboard.writeText(
+                    Editor.string(editor, editor.selection)
+                  )
+              } else if (event.key === 'v') {
+                navigator.clipboard.readText().then((text) => {
+                  if (text) {
+                    Transforms.insertText(editor, text)
+                  }
+                })
               }
             }
           }}
