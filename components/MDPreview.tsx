@@ -5,7 +5,7 @@ import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
 import Portal from './Portal'
 import { CHARACTERS } from '../chars'
-import { CustomElement, CustomText } from '../custom-types'
+import { CustomElement, CustomText, MentionElement } from '../custom-types'
 import Mention from './Mention'
 
 declare module 'slate' {
@@ -146,6 +146,46 @@ export default function MDPreview({ text }: Props) {
       }
     }
   }, [chars.length, editor, index, search, target])
+  const insertMention = (editor: Editor, character: string) => {
+    const mention: MentionElement = {
+      type: 'mention',
+      character,
+      children: [{ text: '' }],
+    }
+    Transforms.insertNodes(editor, mention)
+    Transforms.move(editor)
+  }
+  const mentionCallback = useCallback(
+    (event) => {
+      if (target) {
+        switch (event.key) {
+          case 'ArrowDown':
+            event.preventDefault()
+            const prevIndex = index >= chars.length - 1 ? 0 : index + 1
+            setIndex(prevIndex)
+            break
+          case 'ArrowUp':
+            event.preventDefault()
+            const nextIndex = index <= 0 ? chars.length - 1 : index - 1
+            setIndex(nextIndex)
+            break
+          case 'Tab':
+          case 'Enter':
+            event.preventDefault()
+            Transforms.select(editor, target)
+            insertMention(editor, chars[index])
+            setTarget(null)
+            break
+          case 'Escape':
+            event.preventDefault()
+            setTarget(null)
+            break
+        }
+      }
+    },
+    [index, search, target]
+  )
+
   return (
     <div className="prose m-0" style={{ maxWidth: '100vw' }}>
       <Slate
@@ -181,6 +221,9 @@ export default function MDPreview({ text }: Props) {
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={(event) => {
+            if (search) {
+              mentionCallback(event)
+            }
             if (event.ctrlKey) {
               event.preventDefault()
               // Select All

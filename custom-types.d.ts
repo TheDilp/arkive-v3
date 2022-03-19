@@ -12,3 +12,8 @@ export type CustomText = {
   italic?: boolean
   underline?: boolean
 }
+export type MentionElement = {
+  type: 'mention'
+  character: string
+  children: CustomText[]
+}
