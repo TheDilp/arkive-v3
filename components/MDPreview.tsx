@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { createEditor, Editor, Range, Text, Transforms } from 'slate'
 import { Editable, Slate, withReact } from 'slate-react'
 import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
+import Portal from './Portal'
+import { CHARACTERS } from '../chars'
 type CustomElement = {
   type: string
   bold?: boolean
@@ -29,8 +31,10 @@ type Props = {
 }
 
 export default function MDPreview({ text }: Props) {
+  const ref =
+    useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
   const [editor] = useState(() => withReact(createEditor() as any))
-  const [target, setTarget] = useState<Range | undefined>()
+  const [target, setTarget] = useState<Range | null>()
   const [index, setIndex] = useState(0)
   const [search, setSearch] = useState('')
   // Add the initial value when setting up our state.
@@ -131,6 +135,21 @@ export default function MDPreview({ text }: Props) {
       )
     }
   }
+  const chars = CHARACTERS.filter((c) =>
+    c.toLowerCase().startsWith(search.toLowerCase())
+  ).slice(0, 10)
+
+  useEffect(() => {
+    if (target && chars.length > 0) {
+      const el = ref.current
+      const domRange = ReactEditor.toDOMRange(editor, target)
+      const rect = domRange.getBoundingClientRect()
+      if (el) {
+        el.style.top = `${rect.top + window.pageYOffset + 24}px`
+        el.style.left = `${rect.left + window.pageXOffset}px`
+      }
+    }
+  }, [chars.length, editor, index, search, target])
   return (
     <div className="prose m-0" style={{ maxWidth: '100vw' }}>
       <Slate
@@ -159,6 +178,7 @@ export default function MDPreview({ text }: Props) {
               return
             }
           }
+          setTarget(null)
         }}
       >
         <Editable
@@ -204,6 +224,37 @@ export default function MDPreview({ text }: Props) {
             }
           }}
         />
+        {target && chars.length > 0 && ref && (
+          <Portal>
+            <div
+              ref={ref}
+              style={{
+                top: '-9999px',
+                left: '-9999px',
+                position: 'absolute',
+                zIndex: 1,
+                padding: '3px',
+                background: 'white',
+                borderRadius: '4px',
+                boxShadow: '0 1px 5px rgba(0,0,0,.2)',
+              }}
+              data-cy="mentions-portal"
+            >
+              {chars.map((char, i) => (
+                <div
+                  key={char}
+                  style={{
+                    padding: '1px 3px',
+                    borderRadius: '3px',
+                    background: i === index ? '#B4D5FF' : 'transparent',
+                  }}
+                >
+                  {char}
+                </div>
+              ))}
+            </div>
+          </Portal>
+        )}
       </Slate>
     </div>
   )
