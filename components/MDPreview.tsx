@@ -10,7 +10,13 @@ type CustomElement = {
   underline?: boolean
   children: CustomText[]
 }
-type CustomText = { text: string }
+type CustomText = {
+  text: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+}
+
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor
@@ -101,7 +107,28 @@ export default function MDPreview({ text }: Props) {
       { match: (n) => Editor.isBlock(editor, n) }
     )
   }
-
+  function toggleMark(type: string) {
+    const marks = Editor.marks(editor)
+    if (type === 'bold') {
+      Transforms.setNodes(
+        editor,
+        { bold: marks?.bold ? false : true },
+        { match: (n) => Text.isText(n), split: true }
+      )
+    } else if (type === 'italic') {
+      Transforms.setNodes(
+        editor,
+        { italic: marks?.italic ? false : true },
+        { match: (n) => Text.isText(n), split: true }
+      )
+    } else if (type === 'underline') {
+      Transforms.setNodes(
+        editor,
+        { underline: marks?.underline ? false : true },
+        { match: (n) => Text.isText(n), split: true }
+      )
+    }
+  }
   return (
     <div className="prose m-0" style={{ maxWidth: '100vw' }}>
       <Slate editor={editor} value={value} onChange={setValue}>
@@ -135,23 +162,11 @@ export default function MDPreview({ text }: Props) {
               } else if (event.key === 'p') {
                 transformText('paragraph')
               } else if (event.key === 'b') {
-                Transforms.setNodes(
-                  editor,
-                  { bold: true },
-                  { match: (n) => Text.isText(n), split: true }
-                )
+                toggleMark('bold')
               } else if (event.key === 'i') {
-                Transforms.setNodes(
-                  editor,
-                  { italic: true },
-                  { match: (n) => Text.isText(n), split: true }
-                )
+                toggleMark('italic')
               } else if (event.key === 'u') {
-                Transforms.setNodes(
-                  editor,
-                  { underline: true },
-                  { match: (n) => Text.isText(n), split: true }
-                )
+                toggleMark('underline')
               }
             }
           }}
