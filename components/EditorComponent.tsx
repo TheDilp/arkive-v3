@@ -41,11 +41,6 @@ export default function EditorComponent({}: Props) {
   const [value, setValue] = useState<Descendant[]>([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
-    },
-    {
-      type: 'mention',
-      character: 'Mace Windu',
       children: [{ text: '' }],
     },
   ])
@@ -160,6 +155,16 @@ export default function EditorComponent({}: Props) {
       }
     }
   }, [chars.length, editor, index, search, target])
+
+  useEffect(() => {
+    let content = localStorage.getItem('doc')
+    if (content) {
+      console.log(JSON.parse(content))
+      setValue(JSON.parse(content))
+      editor.children = JSON.parse(content)
+    }
+  }, [])
+
   const insertMention = (editor: Editor, character: string) => {
     const mention: MentionElement = {
       type: 'mention',
@@ -280,6 +285,8 @@ export default function EditorComponent({}: Props) {
                     Transforms.insertText(editor, text)
                   }
                 })
+              } else if (event.key === 's') {
+                localStorage.setItem('doc', JSON.stringify(editor.children))
               }
             }
           }}
