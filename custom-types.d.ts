@@ -1,0 +1,14 @@
+export type CustomElement = {
+  type: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+  children: CustomText[]
+  character?: string
+}
+export type CustomText = {
+  text: string
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+}

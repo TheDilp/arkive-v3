@@ -5,19 +5,8 @@ import { BaseEditor, Descendant } from 'slate'
 import { ReactEditor } from 'slate-react'
 import Portal from './Portal'
 import { CHARACTERS } from '../chars'
-type CustomElement = {
-  type: string
-  bold?: boolean
-  italic?: boolean
-  underline?: boolean
-  children: CustomText[]
-}
-type CustomText = {
-  text: string
-  bold?: boolean
-  italic?: boolean
-  underline?: boolean
-}
+import { CustomElement, CustomText } from '../custom-types'
+import Mention from './Mention'
 
 declare module 'slate' {
   interface CustomTypes {
@@ -42,6 +31,11 @@ export default function MDPreview({ text }: Props) {
     {
       type: 'paragraph',
       children: [{ text: 'A line of text in a paragraph.' }],
+    },
+    {
+      type: 'mention',
+      character: 'Mace Windu',
+      children: [{ text: '' }],
     },
   ])
   const ParagraphEl = (props: { attributes: any; children: any }) => {
@@ -86,6 +80,8 @@ export default function MDPreview({ text }: Props) {
 
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
+      case 'mention':
+        return <Mention {...props} />
       case 'header-one':
         return <HeaderOneEl {...props} />
       case 'header-two':
@@ -185,10 +181,6 @@ export default function MDPreview({ text }: Props) {
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={(event) => {
-            if (event.key === '@') {
-              event.preventDefault()
-              alert('@@@@@')
-            }
             if (event.ctrlKey) {
               event.preventDefault()
               // Select All
