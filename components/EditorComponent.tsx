@@ -23,7 +23,7 @@ import {
   Leaf,
   ParagraphEl,
 } from '../elements'
-import SoftBreak from 'slate-soft-break'
+import { withHistory } from 'slate-history'
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor
@@ -38,7 +38,6 @@ type Props = {
 
 export default function EditorComponent({ content }: Props) {
   // Array of plugins to use in Editor
-  const plugins = [SoftBreak()]
 
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
@@ -83,7 +82,7 @@ export default function EditorComponent({ content }: Props) {
     },
   ])
   const [editor] = useState(() =>
-    withMentions(withReact(createEditor() as any))
+    withReact(withMentions(withHistory(createEditor() as any)))
   )
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
@@ -258,7 +257,7 @@ export default function EditorComponent({ content }: Props) {
                 return
               }
             }
-            if (event.ctrlKey) {
+            if (event.ctrlKey && event.key !== 'z' && event.key !== 'y') {
               event.preventDefault()
               // Select All
               if (event.key === 'a') {
