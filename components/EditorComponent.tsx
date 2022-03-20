@@ -14,6 +14,16 @@ import {
 import Mention from './Mention'
 import Image from 'next/image'
 import ImageComponent from './ImageComponent'
+import {
+  HeaderFiveEl,
+  HeaderFourEl,
+  HeaderOneEl,
+  HeaderSixEl,
+  HeaderThreeEl,
+  HeaderTwoEl,
+  Leaf,
+  ParagraphEl,
+} from '../elements'
 
 declare module 'slate' {
   interface CustomTypes {
@@ -72,45 +82,6 @@ export default function EditorComponent({ content }: Props) {
   const [editor] = useState(() =>
     withMentions(withReact(createEditor() as any))
   )
-  const ParagraphEl = (props: { attributes: any; children: any }) => {
-    return <p {...props.attributes}>{props.children}</p>
-  }
-  const HeaderOneEl = (props: { attributes: any; children: any }) => {
-    return <h1 {...props.attributes}>{props.children}</h1>
-  }
-  const HeaderTwoEl = (props: { attributes: any; children: any }) => {
-    return <h2 {...props.attributes}>{props.children}</h2>
-  }
-  const HeaderThreeEl = (props: { attributes: any; children: any }) => {
-    return <h3 {...props.attributes}>{props.children}</h3>
-  }
-  const HeaderFourEl = (props: { attributes: any; children: any }) => {
-    return <h4 {...props.attributes}>{props.children}</h4>
-  }
-  const HeaderFiveEl = (props: { attributes: any; children: any }) => {
-    return <h5 {...props.attributes}>{props.children}</h5>
-  }
-  const HeaderSixEl = (props: { attributes: any; children: any }) => {
-    return <h6 {...props.attributes}>{props.children}</h6>
-  }
-  const Leaf = (props: {
-    attributes: any
-    leaf: any
-    children: CustomText[]
-  }) => {
-    return (
-      <span
-        {...props.attributes}
-        style={{
-          fontWeight: props.leaf.bold ? 'bold' : 'normal',
-          fontStyle: props.leaf.italic ? 'italic' : '',
-          textDecoration: props.leaf.underline ? 'underline' : '',
-        }}
-      >
-        {props.children}
-      </span>
-    )
-  }
 
   const renderElement = useCallback((props) => {
     switch (props.element.type) {

@@ -16,12 +16,9 @@ export default function ViewPage({}: Props) {
     }
   }, [])
   return (
-    <article
-      className="flex justify-center bg-blue-300"
-      style={{ minHeight: '100vh' }}
-    >
+    <article className="flex justify-center" style={{ minHeight: '100vh' }}>
       {content && (
-        <div className="flex w-2/3 rounded bg-green-400 shadow-lg">
+        <div className="flex w-2/3 rounded shadow-lg">
           <EditorComponent content={content} />
         </div>
       )}
