@@ -12,7 +12,6 @@ import {
   MentionElement,
 } from '../custom-types'
 import Mention from './Mention'
-import Image from 'next/image'
 import ImageComponent from './ImageComponent'
 import {
   HeaderFiveEl,
@@ -24,7 +23,7 @@ import {
   Leaf,
   ParagraphEl,
 } from '../elements'
-
+import SoftBreak from 'slate-soft-break'
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor
@@ -32,11 +31,15 @@ declare module 'slate' {
     Text: CustomText
   }
 }
+
 type Props = {
   content: string | null
 }
 
 export default function EditorComponent({ content }: Props) {
+  // Array of plugins to use in Editor
+  const plugins = [SoftBreak()]
+
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
 
@@ -82,7 +85,6 @@ export default function EditorComponent({ content }: Props) {
   const [editor] = useState(() =>
     withMentions(withReact(createEditor() as any))
   )
-
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
       case 'mention':
@@ -248,6 +250,13 @@ export default function EditorComponent({ content }: Props) {
           onKeyDown={(event) => {
             if (search) {
               mentionCallback(event)
+            }
+            if (event.shiftKey) {
+              if (event.key === 'Enter') {
+                event.preventDefault()
+                Transforms.insertText(editor, '\n')
+                return
+              }
             }
             if (event.ctrlKey) {
               event.preventDefault()
