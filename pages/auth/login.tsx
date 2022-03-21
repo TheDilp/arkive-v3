@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import { supabase } from '../../utils/supabaseClient'
 
 type Props = {}
 
 export default function login({}: Props) {
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -13,13 +15,19 @@ export default function login({}: Props) {
       setLoading(true)
       const { error } = await supabase.auth.signIn({ email, password })
       if (error) throw error
-      alert('Check your email for the login link!')
+      router.push('../editor')
     } catch (error: any) {
       alert(error.error_description || error.message)
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (supabase.auth.user()?.id) {
+      router.push('../editor')
+    }
+  }, [])
 
   return (
     <div className="flex h-screen items-center justify-center">
