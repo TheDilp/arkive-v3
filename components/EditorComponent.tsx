@@ -266,6 +266,8 @@ export default function EditorComponent({ content }: Props) {
                   focus: Editor.end(editor, []),
                 })
                 return
+              } else if (event.shiftKey) {
+                //
               }
               //   Headers
               if (event.key === '1') {
