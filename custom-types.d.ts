@@ -28,4 +28,5 @@ export type Document = {
   id: string
   title: string
   image: string
+  content: JSON
 }

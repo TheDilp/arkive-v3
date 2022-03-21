@@ -1,9 +1,16 @@
+import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { createEditor, Editor, Range, Text, Transforms } from 'slate'
-import { Editable, Slate, withReact } from 'slate-react'
-import { BaseEditor, Descendant } from 'slate'
-import { ReactEditor } from 'slate-react'
-import Portal from './Portal'
+import {
+  BaseEditor,
+  createEditor,
+  Descendant,
+  Editor,
+  Range,
+  Text,
+  Transforms,
+} from 'slate'
+import { withHistory } from 'slate-history'
+import { Editable, ReactEditor, Slate, withReact } from 'slate-react'
 import { CHARACTERS } from '../chars'
 import {
   CustomElement,
@@ -11,8 +18,6 @@ import {
   ImageElement,
   MentionElement,
 } from '../custom-types'
-import Mention from './Mention'
-import ImageComponent from './ImageComponent'
 import {
   HeaderFiveEl,
   HeaderFourEl,
@@ -23,7 +28,10 @@ import {
   Leaf,
   ParagraphEl,
 } from '../elements'
-import { withHistory } from 'slate-history'
+import { fetchSingleDocument } from '../utils/supabaseClient'
+import ImageComponent from './ImageComponent'
+import Mention from './Mention'
+import Portal from './Portal'
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor
@@ -38,6 +46,8 @@ type Props = {
 
 export default function EditorComponent({ content }: Props) {
   // Array of plugins to use in Editor
+  const router = useRouter()
+  const { id } = router.query
 
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
@@ -75,12 +85,7 @@ export default function EditorComponent({ content }: Props) {
   const [index, setIndex] = useState(0)
   const [search, setSearch] = useState('')
   // Add the initial value when setting up our state.
-  const [value, setValue] = useState<Descendant[]>([
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ])
+  const [value, setValue] = useState<Descendant[]>()
   const [editor] = useState(() =>
     withReact(withMentions(withHistory(createEditor() as any)))
   )
@@ -157,16 +162,22 @@ export default function EditorComponent({ content }: Props) {
 
   useEffect(() => {
     if (!content) {
-      let editcontent = localStorage.getItem('doc')
-      if (editcontent) {
-        setValue(JSON.parse(editcontent))
-        editor.children = JSON.parse(editcontent)
+      if (id) {
+        fetchSingleDocument(id as string)
+          .then((doc) => {
+            if (doc) {
+              setValue(doc[0].content)
+              editor.children = doc[0].content
+              console.log(doc)
+            }
+          })
+          .catch((err) => console.log(err))
       }
     } else {
       setValue(JSON.parse(content))
       editor.children = JSON.parse(content)
     }
-  }, [content])
+  }, [content, id])
 
   const mentionCallback = useCallback(
     (event) => {
@@ -203,7 +214,7 @@ export default function EditorComponent({ content }: Props) {
     <div className="prose m-0" style={{ maxWidth: '100vw' }}>
       <div className="mb-0 w-full text-center">
         <h1>
-          Document Title{' '}
+          Document Title
           <button
             onClick={() => {
               insertImage(editor, 'https://picsum.photos/200/300')
@@ -213,132 +224,140 @@ export default function EditorComponent({ content }: Props) {
           </button>
         </h1>
       </div>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(value) => {
-          setValue(value)
-          const { selection } = editor
+      {value && (
+        <div className="rounded py-0 px-4 shadow-lg">
+          <Slate
+            editor={editor}
+            value={value}
+            onChange={(value) => {
+              setValue(value)
+              const { selection } = editor
 
-          if (selection && Range.isCollapsed(selection)) {
-            const [start] = Range.edges(selection)
-            const wordBefore = Editor.before(editor, start, { unit: 'word' })
-            const before = wordBefore && Editor.before(editor, wordBefore)
-            const beforeRange = before && Editor.range(editor, before, start)
-            const beforeText = beforeRange && Editor.string(editor, beforeRange)
-            const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/)
-            const after = Editor.after(editor, start)
-            const afterRange = Editor.range(editor, start, after)
-            const afterText = Editor.string(editor, afterRange)
-            const afterMatch = afterText.match(/^(\s|$)/)
-
-            if (beforeMatch && afterMatch) {
-              setTarget(beforeRange)
-              setSearch(beforeMatch[1])
-              setIndex(0)
-              return
-            }
-          }
-          setTarget(null)
-        }}
-      >
-        <Editable
-          readOnly={content ? true : false}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          onKeyDown={(event) => {
-            if (search) {
-              mentionCallback(event)
-            }
-            if (event.shiftKey) {
-              if (event.key === 'Enter') {
-                event.preventDefault()
-                Transforms.insertText(editor, '\n')
-                return
-              }
-            }
-            if (event.ctrlKey && event.key !== 'z' && event.key !== 'y') {
-              event.preventDefault()
-              // Select All
-              if (event.key === 'a') {
-                Transforms.select(editor, {
-                  anchor: Editor.start(editor, []),
-                  focus: Editor.end(editor, []),
+              if (selection && Range.isCollapsed(selection)) {
+                const [start] = Range.edges(selection)
+                const wordBefore = Editor.before(editor, start, {
+                  unit: 'word',
                 })
-                return
-              } else if (event.shiftKey) {
-                //
+                const before = wordBefore && Editor.before(editor, wordBefore)
+                const beforeRange =
+                  before && Editor.range(editor, before, start)
+                const beforeText =
+                  beforeRange && Editor.string(editor, beforeRange)
+                const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/)
+                const after = Editor.after(editor, start)
+                const afterRange = Editor.range(editor, start, after)
+                const afterText = Editor.string(editor, afterRange)
+                const afterMatch = afterText.match(/^(\s|$)/)
+
+                if (beforeMatch && afterMatch) {
+                  setTarget(beforeRange)
+                  setSearch(beforeMatch[1])
+                  setIndex(0)
+                  return
+                }
               }
-              //   Headers
-              if (event.key === '1') {
-                transformText('header-one')
-              } else if (event.key === '2') {
-                transformText('header-two')
-              } else if (event.key === '3') {
-                transformText('header-three')
-              } else if (event.key === '4') {
-                transformText('header-four')
-              } else if (event.key === '5') {
-                transformText('header-five')
-              } else if (event.key === '6') {
-                transformText('header-six')
-              } else if (event.key === 'p') {
-                transformText('paragraph')
-              } else if (event.key === 'b') {
-                toggleMark('bold')
-              } else if (event.key === 'i') {
-                toggleMark('italic')
-              } else if (event.key === 'u') {
-                toggleMark('underline')
-              } else if (event.key === 'c') {
-                if (editor.selection)
-                  navigator.clipboard.writeText(
-                    Editor.string(editor, editor.selection)
-                  )
-              } else if (event.key === 'v') {
-                navigator.clipboard.readText().then((text) => {
-                  if (text) {
-                    Transforms.insertText(editor, text)
+              setTarget(null)
+            }}
+          >
+            <Editable
+              readOnly={content ? true : false}
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              onKeyDown={(event) => {
+                if (search) {
+                  mentionCallback(event)
+                }
+                if (event.shiftKey) {
+                  if (event.key === 'Enter') {
+                    event.preventDefault()
+                    Transforms.insertText(editor, '\n')
+                    return
                   }
-                })
-              } else if (event.key === 's') {
-                localStorage.setItem('doc', JSON.stringify(editor.children))
-              }
-            }
-          }}
-        />
-        {target && chars.length > 0 && ref && (
-          <Portal>
-            <div
-              ref={ref}
-              style={{
-                top: '-9999px',
-                left: '-9999px',
-                position: 'absolute',
-                zIndex: 1,
-                padding: '3px',
-                background: 'white',
-                borderRadius: '4px',
-                boxShadow: '0 1px 5px rgba(0,0,0,.2)',
+                }
+                if (event.ctrlKey && event.key !== 'z' && event.key !== 'y') {
+                  event.preventDefault()
+                  // Select All
+                  if (event.key === 'a') {
+                    Transforms.select(editor, {
+                      anchor: Editor.start(editor, []),
+                      focus: Editor.end(editor, []),
+                    })
+                    return
+                  } else if (event.shiftKey) {
+                    //
+                  }
+                  //   Headers
+                  if (event.key === '1') {
+                    transformText('header-one')
+                  } else if (event.key === '2') {
+                    transformText('header-two')
+                  } else if (event.key === '3') {
+                    transformText('header-three')
+                  } else if (event.key === '4') {
+                    transformText('header-four')
+                  } else if (event.key === '5') {
+                    transformText('header-five')
+                  } else if (event.key === '6') {
+                    transformText('header-six')
+                  } else if (event.key === 'p') {
+                    transformText('paragraph')
+                  } else if (event.key === 'b') {
+                    toggleMark('bold')
+                  } else if (event.key === 'i') {
+                    toggleMark('italic')
+                  } else if (event.key === 'u') {
+                    toggleMark('underline')
+                  } else if (event.key === 'c') {
+                    if (editor.selection)
+                      navigator.clipboard.writeText(
+                        Editor.string(editor, editor.selection)
+                      )
+                  } else if (event.key === 'v') {
+                    navigator.clipboard.readText().then((text) => {
+                      if (text) {
+                        Transforms.insertText(editor, text)
+                      }
+                    })
+                  } else if (event.key === 's') {
+                    localStorage.setItem('doc', JSON.stringify(editor.children))
+                  }
+                }
               }}
-              data-cy="mentions-portal"
-            >
-              {chars.map((char, i) => (
+            />
+            {target && chars.length > 0 && ref && (
+              <Portal>
                 <div
-                  key={char}
+                  ref={ref}
                   style={{
-                    padding: '1px 3px',
-                    borderRadius: '3px',
-                    background: i === index ? '#B4D5FF' : 'transparent',
+                    top: '-9999px',
+                    left: '-9999px',
+                    position: 'absolute',
+                    zIndex: 1,
+                    padding: '3px',
+                    background: 'white',
+                    borderRadius: '4px',
+                    boxShadow: '0 1px 5px rgba(0,0,0,.2)',
                   }}
+                  data-cy="mentions-portal"
                 >
-                  {char}
+                  {chars.map((char, i) => (
+                    <div
+                      key={char}
+                      style={{
+                        padding: '1px 3px',
+                        borderRadius: '3px',
+                        background: i === index ? '#B4D5FF' : 'transparent',
+                      }}
+                    >
+                      {char}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </Portal>
-        )}
-      </Slate>
+              </Portal>
+            )}
+          </Slate>
+        </div>
+      )}
     </div>
   )
 }

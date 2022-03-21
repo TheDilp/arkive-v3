@@ -21,8 +21,8 @@ export default function ArticleCard({ id, title, image }: Props) {
         <div className="relative  h-3/4 w-full">
           <Image src={image} layout="fill" objectFit="cover" />
         </div>
-        <div className="h-full w-full">
-          <h2 className="truncate text-center text-2xl">{title}</h2>
+        <div className="flex h-1/4 w-full items-center justify-center">
+          <h2 className="truncate text-2xl">{title}</h2>
         </div>
       </div>
     </div>
