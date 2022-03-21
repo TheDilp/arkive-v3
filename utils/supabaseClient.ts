@@ -8,7 +8,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export const fetchDocuments = async () => {
   let { data: documents, error } = await supabase
     .from('documents')
-    .select('id, title')
+    .select('id, title, image')
   if (documents) return documents
   if (error) {
     console.log(error)

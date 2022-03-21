@@ -27,4 +27,5 @@ export type ImageElement = {
 export type Document = {
   id: string
   title: string
+  image: string
 }
