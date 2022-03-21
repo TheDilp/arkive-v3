@@ -23,3 +23,8 @@ export type ImageElement = {
   url: string
   children: CustomText[]
 }
+
+export type Document = {
+  id: string
+  title: string
+}
