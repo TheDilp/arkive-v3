@@ -28,7 +28,11 @@ import {
   Leaf,
   ParagraphEl,
 } from '../elements'
-import { fetchSingleDocument } from '../utils/supabaseClient'
+import {
+  fetchSingleDocument,
+  saveDocument,
+  user,
+} from '../utils/supabaseClient'
 import ImageComponent from './ImageComponent'
 import Mention from './Mention'
 import Portal from './Portal'
@@ -225,7 +229,10 @@ export default function EditorComponent({ content }: Props) {
         </h1>
       </div>
       {value && (
-        <div className="rounded py-0 px-4 shadow-lg">
+        <div
+          className="rounded py-0 px-4 shadow-md"
+          style={{ minHeight: '80vh' }}
+        >
           <Slate
             editor={editor}
             value={value}
@@ -264,6 +271,7 @@ export default function EditorComponent({ content }: Props) {
               renderElement={renderElement}
               renderLeaf={renderLeaf}
               onKeyDown={(event) => {
+                if (content) return
                 if (search) {
                   mentionCallback(event)
                 }
@@ -319,7 +327,9 @@ export default function EditorComponent({ content }: Props) {
                       }
                     })
                   } else if (event.key === 's') {
-                    localStorage.setItem('doc', JSON.stringify(editor.children))
+                    saveDocument({ id: id as string, content: value }).catch(
+                      (err) => console.log(err)
+                    )
                   }
                 }
               }}

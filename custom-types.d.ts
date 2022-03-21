@@ -1,3 +1,5 @@
+import { Descendant } from 'slate'
+
 export type CustomElement = {
   type: string
   bold?: boolean
@@ -28,5 +30,5 @@ export type Document = {
   id: string
   title: string
   image: string
-  content: JSON
+  content: Descendant[]
 }
