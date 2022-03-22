@@ -343,9 +343,15 @@ export default function EditorComponent({ content, docId }: Props) {
                       }
                     })
                   } else if (event.key === 's') {
-                    saveDocument({ id: docId as string, content: value }).catch(
-                      (err) => console.log(err)
-                    )
+                    saveDocument({ id: docId as string, content: value })
+                      .then(
+                        async () =>
+                          await queryClient.invalidateQueries({
+                            queryKey: docId as string,
+                            refetchInactive: true,
+                          })
+                      )
+                      .catch((err) => console.log(err))
                   }
                 }
               }}
