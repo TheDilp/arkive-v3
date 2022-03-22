@@ -172,7 +172,6 @@ export default function EditorComponent({ content }: Props) {
             if (doc) {
               setValue(doc[0].content)
               editor.children = doc[0].content
-              console.log(doc)
             }
           })
           .catch((err) => console.log(err))

@@ -8,8 +8,9 @@ const Home: NextPage = () => {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
-      <main className="w-full text-center">MAIN PAGE</main>
+      <main className="w-full text-center">
+        <Navbar />
+      </main>
     </div>
   )
 }
