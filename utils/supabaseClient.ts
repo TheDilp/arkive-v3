@@ -19,11 +19,12 @@ export const fetchDocuments = async () => {
 }
 
 export const fetchSingleDocument = async (id: string) => {
-  let { data: document, error } = await supabase
-    .from('documents')
-    .select('id, title, image, content')
-    .eq('id', id)
-  if (document) return document
+  let { data: document, error }: { data: Document[] | null; error: any } =
+    await supabase
+      .from('documents')
+      .select('id, title, image, content')
+      .eq('id', id)
+  if (document) return document[0]
   if (error) {
     console.log(error)
     return
@@ -39,6 +40,15 @@ export const saveDocument = async (document: {
     .from('documents')
     .update({ content: document.content })
     .eq('id', document.id)
+  if (data) return data
+  if (error) {
+    console.log(error)
+    return
+  }
+}
+
+export const getDocumentPaths = async () => {
+  let { data, error } = await supabase.from('documents').select('id')
   if (data) return data
   if (error) {
     console.log(error)

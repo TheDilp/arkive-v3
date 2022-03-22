@@ -1,28 +1,31 @@
-import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { Descendant } from 'slate'
 import EditorComponent from '../../components/EditorComponent'
 import { Document } from '../../custom-types'
-import { fetchSingleDocument } from '../../utils/supabaseClient'
+import {
+  fetchSingleDocument,
+  getDocumentPaths,
+} from '../../utils/supabaseClient'
 
-type Props = {}
+type Props = {
+  document: Document
+}
 
-export default function ViewPage({}: Props) {
+function ViewPage({ document }: Props) {
   const router = useRouter()
   const { id } = router.query
-  const [document, setDocument] = useState<Document | null>(null)
+  // const [document, setDocument] = useState<Document | null>(null)
 
-  const { data, error } = useQuery(
-    `${id}-view`,
-    async () => await fetchSingleDocument(id as string),
-    {
-      onSuccess(data: [Document]) {
-        setDocument(data[0])
-      },
-    }
-  )
+  // const { data, error } = useQuery(
+  //   `${id}-view`,
+  //   async () => await fetchSingleDocument(id as string),
+  //   {
+  //     onSuccess(data: [Document]) {
+  //       setDocument(data[0])
+  //     },
+  //   }
+  // )
 
   return (
     <article className="flex justify-center" style={{ minHeight: '100vh' }}>
@@ -42,3 +45,26 @@ export default function ViewPage({}: Props) {
     </article>
   )
 }
+
+export async function getStaticPaths() {
+  const documents = await getDocumentPaths()
+  const paths = documents
+    ? documents.map((doc) => ({
+        params: { id: doc.id },
+      }))
+    : []
+  return {
+    paths,
+    fallback: false, // false or 'blocking'
+  }
+}
+
+export async function getStaticProps({ params }: { params: any }) {
+  const document = await fetchSingleDocument(params.id)
+
+  return {
+    props: { document }, // will be passed to the page component as props
+  }
+}
+
+export default ViewPage

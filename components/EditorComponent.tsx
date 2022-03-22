@@ -52,7 +52,6 @@ export default function EditorComponent({
   allDocuments,
 }: Props) {
   // Array of plugins to use in Editor
-
   const queryClient = useQueryClient()
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
