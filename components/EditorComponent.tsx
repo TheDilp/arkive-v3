@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   BaseEditor,
@@ -28,11 +27,7 @@ import {
   Leaf,
   ParagraphEl,
 } from '../elements'
-import {
-  fetchSingleDocument,
-  saveDocument,
-  user,
-} from '../utils/supabaseClient'
+import { fetchSingleDocument, saveDocument } from '../utils/supabaseClient'
 import ImageComponent from './ImageComponent'
 import Mention from './Mention'
 import Portal from './Portal'
@@ -46,12 +41,11 @@ declare module 'slate' {
 
 type Props = {
   content: string | null
+  docId: string | null
 }
 
-export default function EditorComponent({ content }: Props) {
+export default function EditorComponent({ content, docId }: Props) {
   // Array of plugins to use in Editor
-  const router = useRouter()
-  const { id } = router.query
 
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
@@ -166,8 +160,8 @@ export default function EditorComponent({ content }: Props) {
 
   useEffect(() => {
     if (!content) {
-      if (id) {
-        fetchSingleDocument(id as string)
+      if (docId) {
+        fetchSingleDocument(docId)
           .then((doc) => {
             if (doc) {
               setValue(doc[0].content)
@@ -180,7 +174,7 @@ export default function EditorComponent({ content }: Props) {
       setValue(JSON.parse(content))
       editor.children = JSON.parse(content)
     }
-  }, [content, id])
+  }, [content, docId])
 
   const mentionCallback = useCallback(
     (event) => {
@@ -326,7 +320,7 @@ export default function EditorComponent({ content }: Props) {
                       }
                     })
                   } else if (event.key === 's') {
-                    saveDocument({ id: id as string, content: value }).catch(
+                    saveDocument({ id: docId as string, content: value }).catch(
                       (err) => console.log(err)
                     )
                   }
