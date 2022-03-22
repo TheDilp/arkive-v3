@@ -47,6 +47,9 @@ export default function Editor({}: Props) {
                 currentDoc={currentDoc}
               />
               <div className="mx-auto w-4/5">
+                <div className="mb-0 w-full text-center">
+                  <h1 className="text-4xl">Document Title</h1>
+                </div>
                 <EditorComponent content={null} docId={currentDoc} />
               </div>
             </div>

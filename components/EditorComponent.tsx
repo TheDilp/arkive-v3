@@ -42,7 +42,7 @@ declare module 'slate' {
 }
 
 type Props = {
-  content: string | null
+  content: Descendant[] | null
   docId: string | null
 }
 
@@ -194,8 +194,8 @@ export default function EditorComponent({ content, docId }: Props) {
         // console.log(data)
       }
     } else {
-      setValue(JSON.parse(content))
-      editor.children = JSON.parse(content)
+      setValue(content)
+      editor.children = content
     }
   }, [content, docId])
 
@@ -231,19 +231,7 @@ export default function EditorComponent({ content, docId }: Props) {
   )
 
   return (
-    <div className="prose m-0" style={{ maxWidth: '100vw' }}>
-      <div className="mb-0 w-full text-center">
-        <h1>
-          Document Title
-          <button
-            onClick={() => {
-              insertImage(editor, 'https://picsum.photos/200/300')
-            }}
-          >
-            ImgBtn
-          </button>
-        </h1>
-      </div>
+    <div className="prose m-0 w-full" style={{ maxWidth: '100vw' }}>
       {value && (
         <div
           className="rounded border-2 py-0 px-4 shadow-xl"
