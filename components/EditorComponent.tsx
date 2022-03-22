@@ -167,9 +167,9 @@ export default function EditorComponent({
     {
       enabled: false,
       staleTime: Infinity,
-      onSuccess: (data: [Document]) => {
-        setValue(data[0].content)
-        editor.children = data[0].content
+      onSuccess: (data: Document) => {
+        setValue(data.content)
+        editor.children = data.content
       },
     }
   )
