@@ -44,6 +44,7 @@ export default function Editor({}: Props) {
               <DocumentsList
                 documents={documents}
                 selectDocument={setCurrentDoc}
+                currentDoc={currentDoc}
               />
               <div className="mx-auto w-4/5">
                 <EditorComponent content={null} docId={currentDoc} />
