@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 import ArticleCard from '../components/ArticleCard'
 import DocumentsList from '../components/DocumentsList'
 import EditorComponent from '../components/EditorComponent'
@@ -11,10 +12,18 @@ type Props = {}
 export default function Editor({}: Props) {
   const [documents, setDocuments] = useState<Document[] | null>()
   const [currentDoc, setCurrentDoc] = useState<string | null>()
+  const { data, error } = useQuery(
+    'allDocuments',
+    async () => await fetchDocuments(),
+    {
+      onSuccess: (data) => {
+        setDocuments(data)
+        console.log(data)
+      },
+      onError: (err) => alert(err),
+    }
+  )
 
-  useEffect(() => {
-    fetchDocuments().then((docs) => setDocuments(docs))
-  }, [])
   return (
     <div>
       <Navbar />
@@ -32,7 +41,10 @@ export default function Editor({}: Props) {
             ))}
           {currentDoc && (
             <div className="mt-2 flex w-full justify-center ">
-              <DocumentsList />
+              <DocumentsList
+                documents={documents}
+                selectDocument={setCurrentDoc}
+              />
               <div className="mx-auto w-2/3 ">
                 <EditorComponent content={null} docId={currentDoc} />
               </div>

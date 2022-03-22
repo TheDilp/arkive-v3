@@ -1,13 +1,24 @@
 import React from 'react'
+import { Document } from '../custom-types'
 
-type Props = {}
+type Props = {
+  documents: Document[] | null | undefined
+  selectDocument: (id: string) => void
+}
 
-export default function DocumentsList({}: Props) {
+export default function DocumentsList({ documents, selectDocument }: Props) {
   return (
     <ul className="">
-      <li>Ayyy</li>
-      <li>Ayyy</li>
-      <li>Ayyy</li>
+      {documents &&
+        documents.map((doc) => (
+          <li
+            onClick={() => selectDocument(doc.id)}
+            className="cursor-pointer text-center hover:bg-blue-400"
+            key={doc.id}
+          >
+            {doc.title}
+          </li>
+        ))}
     </ul>
   )
 }

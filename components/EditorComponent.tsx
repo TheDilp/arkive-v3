@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useQuery, useQueryClient } from 'react-query'
 import {
   BaseEditor,
   createEditor,
@@ -14,6 +15,7 @@ import { CHARACTERS } from '../chars'
 import {
   CustomElement,
   CustomText,
+  Document,
   ImageElement,
   MentionElement,
 } from '../custom-types'
@@ -47,6 +49,7 @@ type Props = {
 export default function EditorComponent({ content, docId }: Props) {
   // Array of plugins to use in Editor
 
+  const queryClient = useQueryClient()
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
 
@@ -146,6 +149,31 @@ export default function EditorComponent({ content, docId }: Props) {
     c.toLowerCase().startsWith(search.toLowerCase())
   ).slice(0, 10)
 
+  const qSD = useCallback(() => {
+    const cachedData: [Document] | undefined = queryClient.getQueryData(
+      docId as string
+    )
+    if (cachedData) {
+      setValue(cachedData[0].content)
+      editor.children = cachedData[0].content
+    } else {
+      querySingleDocument.refetch()
+    }
+  }, [docId])
+
+  const querySingleDocument = useQuery(
+    docId as string,
+    async () => await fetchSingleDocument(docId as string),
+    {
+      enabled: false,
+      staleTime: Infinity,
+      onSuccess: (data: [Document]) => {
+        setValue(data[0].content)
+        editor.children = data[0].content
+      },
+    }
+  )
+
   useEffect(() => {
     if (target && chars.length > 0) {
       const el = ref.current
@@ -161,14 +189,9 @@ export default function EditorComponent({ content, docId }: Props) {
   useEffect(() => {
     if (!content) {
       if (docId) {
-        fetchSingleDocument(docId)
-          .then((doc) => {
-            if (doc) {
-              setValue(doc[0].content)
-              editor.children = doc[0].content
-            }
-          })
-          .catch((err) => console.log(err))
+        qSD()
+        // const data = querySingleDocument.refetch()
+        // console.log(data)
       }
     } else {
       setValue(JSON.parse(content))
