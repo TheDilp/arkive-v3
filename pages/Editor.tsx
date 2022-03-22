@@ -18,7 +18,6 @@ export default function Editor({}: Props) {
     {
       onSuccess: (data) => {
         setDocuments(data)
-        console.log(data)
       },
       onError: (err) => alert(err),
     }
@@ -40,16 +39,13 @@ export default function Editor({}: Props) {
               />
             ))}
           {currentDoc && (
-            <div className="mt-2 flex w-full justify-center space-x-2">
+            <div className="mt-2 flex w-full justify-center space-x-2 ">
               <DocumentsList
                 documents={documents}
                 selectDocument={setCurrentDoc}
                 currentDoc={currentDoc}
               />
               <div className="mx-auto w-4/5">
-                <div className="mb-0 w-full text-center">
-                  <h1 className="text-4xl">Document Title</h1>
-                </div>
                 <EditorComponent content={null} docId={currentDoc} />
               </div>
             </div>

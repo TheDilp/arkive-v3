@@ -29,10 +29,12 @@ export default function ViewPage({}: Props) {
       {document && (
         <div className="flex w-2/3 flex-col rounded">
           <div className="relative h-1/6 w-full">
-            <div className="z-5 absolute mb-0 w-full text-center">
-              <h1 className="text-4xl">Document Title</h1>
+            <div className="relative z-50 mb-0 flex h-full w-full items-center justify-center">
+              <h1 className="text-6xl">
+                <b>{document.title}</b>
+              </h1>
             </div>
-            <Image src={document.image} layout="fill" objectFit="cover" />
+            {/* <Image src={document.image} layout="fill" objectFit="cover" /> */}
           </div>
           <EditorComponent content={document.content} docId={id as string} />
         </div>
