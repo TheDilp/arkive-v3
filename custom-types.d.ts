@@ -15,8 +15,9 @@ export type CustomText = {
   underline?: boolean
 }
 export type MentionElement = {
+  pageId: string
   type: 'mention'
-  character: string
+  title: string
   children: CustomText[]
 }
 

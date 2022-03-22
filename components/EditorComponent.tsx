@@ -11,7 +11,6 @@ import {
 } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react'
-import { CHARACTERS } from '../chars'
 import {
   CustomElement,
   CustomText,
@@ -31,7 +30,7 @@ import {
 } from '../elements'
 import { fetchSingleDocument, saveDocument } from '../utils/supabaseClient'
 import ImageComponent from './ImageComponent'
-import Mention from './Mention'
+import Mention from './MentionComponent'
 import Portal from './Portal'
 declare module 'slate' {
   interface CustomTypes {
@@ -44,19 +43,25 @@ declare module 'slate' {
 type Props = {
   content: Descendant[] | null
   docId: string | null
+  allDocuments?: Document[] | null
 }
 
-export default function EditorComponent({ content, docId }: Props) {
+export default function EditorComponent({
+  content,
+  docId,
+  allDocuments,
+}: Props) {
   // Array of plugins to use in Editor
 
   const queryClient = useQueryClient()
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
 
-  const insertMention = (editor: Editor, character: string) => {
+  const insertMention = (editor: Editor, docId: string, title: string) => {
     const mention: MentionElement = {
+      pageId: docId,
       type: 'mention',
-      character,
+      title,
       children: [{ text: '' }],
     }
     Transforms.insertNodes(editor, mention)
@@ -81,7 +86,6 @@ export default function EditorComponent({ content, docId }: Props) {
 
     return editor
   }
-
   const [target, setTarget] = useState<Range | null>()
   const [index, setIndex] = useState(0)
   const [search, setSearch] = useState('')
@@ -145,9 +149,6 @@ export default function EditorComponent({ content, docId }: Props) {
       )
     }
   }
-  const chars = CHARACTERS.filter((c) =>
-    c.toLowerCase().startsWith(search.toLowerCase())
-  ).slice(0, 10)
 
   const qSD = useCallback(() => {
     const cachedData: [Document] | undefined = queryClient.getQueryData(
@@ -175,7 +176,7 @@ export default function EditorComponent({ content, docId }: Props) {
   )
 
   useEffect(() => {
-    if (target && chars.length > 0) {
+    if (target && allDocuments && allDocuments.length > 0) {
       const el = ref.current
       const domRange = ReactEditor.toDOMRange(editor, target)
       const rect = domRange.getBoundingClientRect()
@@ -184,7 +185,7 @@ export default function EditorComponent({ content, docId }: Props) {
         el.style.left = `${rect.left + window.pageXOffset}px`
       }
     }
-  }, [chars.length, editor, index, search, target])
+  }, [allDocuments?.length, editor, index, search, target])
 
   useEffect(() => {
     if (!content) {
@@ -201,23 +202,27 @@ export default function EditorComponent({ content, docId }: Props) {
 
   const mentionCallback = useCallback(
     (event) => {
-      if (target) {
+      if (target && allDocuments) {
         switch (event.key) {
           case 'ArrowDown':
             event.preventDefault()
-            const prevIndex = index >= chars.length - 1 ? 0 : index + 1
+            const prevIndex = index >= allDocuments.length - 1 ? 0 : index + 1
             setIndex(prevIndex)
             break
           case 'ArrowUp':
             event.preventDefault()
-            const nextIndex = index <= 0 ? chars.length - 1 : index - 1
+            const nextIndex = index <= 0 ? allDocuments.length - 1 : index - 1
             setIndex(nextIndex)
             break
           case 'Tab':
           case 'Enter':
             event.preventDefault()
             Transforms.select(editor, target)
-            insertMention(editor, chars[index])
+            insertMention(
+              editor,
+              allDocuments[index].id,
+              allDocuments[index].title
+            )
             setTarget(null)
             break
           case 'Escape':
@@ -344,7 +349,7 @@ export default function EditorComponent({ content, docId }: Props) {
                 }
               }}
             />
-            {target && chars.length > 0 && ref && (
+            {target && allDocuments && allDocuments.length > 0 && ref && (
               <Portal>
                 <div
                   ref={ref}
@@ -360,16 +365,16 @@ export default function EditorComponent({ content, docId }: Props) {
                   }}
                   data-cy="mentions-portal"
                 >
-                  {chars.map((char, i) => (
+                  {allDocuments.map((doc, i) => (
                     <div
-                      key={char}
+                      key={doc.id}
                       style={{
                         padding: '1px 3px',
                         borderRadius: '3px',
                         background: i === index ? '#B4D5FF' : 'transparent',
                       }}
                     >
-                      {char}
+                      {doc.title}
                     </div>
                   ))}
                 </div>

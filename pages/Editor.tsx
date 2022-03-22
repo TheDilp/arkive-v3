@@ -46,7 +46,11 @@ export default function Editor({}: Props) {
                 currentDoc={currentDoc}
               />
               <div className="mx-auto w-4/5">
-                <EditorComponent content={null} docId={currentDoc} />
+                <EditorComponent
+                  content={null}
+                  docId={currentDoc}
+                  allDocuments={documents}
+                />
               </div>
             </div>
           )}
