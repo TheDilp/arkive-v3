@@ -29,7 +29,7 @@ export default function Editor({}: Props) {
       <Navbar />
 
       <div className="mt-2 flex justify-center ">
-        <div className="flex w-2/3 flex-wrap justify-center ">
+        <div className="flex w-5/6 flex-wrap justify-center">
           {documents &&
             !currentDoc &&
             documents.map((doc) => (
@@ -40,12 +40,12 @@ export default function Editor({}: Props) {
               />
             ))}
           {currentDoc && (
-            <div className="mt-2 flex w-full justify-center ">
+            <div className="mt-2 flex w-full justify-center space-x-2">
               <DocumentsList
                 documents={documents}
                 selectDocument={setCurrentDoc}
               />
-              <div className="mx-auto w-2/3 ">
+              <div className="mx-auto w-4/5">
                 <EditorComponent content={null} docId={currentDoc} />
               </div>
             </div>

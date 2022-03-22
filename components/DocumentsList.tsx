@@ -8,12 +8,12 @@ type Props = {
 
 export default function DocumentsList({ documents, selectDocument }: Props) {
   return (
-    <ul className="">
+    <ul className="flex w-1/5 flex-col items-center justify-start border-x-2 border-b-2">
       {documents &&
         documents.map((doc) => (
           <li
             onClick={() => selectDocument(doc.id)}
-            className="cursor-pointer text-center hover:bg-blue-400"
+            className="w-full cursor-pointer text-center last:border-b-2 odd:border-y-2 hover:bg-blue-400"
             key={doc.id}
           >
             {doc.title}

@@ -246,7 +246,7 @@ export default function EditorComponent({ content, docId }: Props) {
       </div>
       {value && (
         <div
-          className="rounded py-0 px-4 shadow-md"
+          className="rounded border-2 py-0 px-4 shadow-xl"
           style={{ minHeight: '80vh' }}
         >
           <Slate
