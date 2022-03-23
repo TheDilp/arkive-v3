@@ -158,12 +158,12 @@ export default function EditorComponent({
     }
   }
 
+  // Fetch the data based on the documents Id
   const qSD = useCallback(() => {
     const cachedData: Document | undefined = queryClient.getQueryData(
       docId as string
     )
     if (cachedData) {
-      console.log(cachedData)
       setValue(cachedData.content)
       editor.children = cachedData.content
     } else {
@@ -171,12 +171,13 @@ export default function EditorComponent({
     }
   }, [docId])
 
+  // Define the query
   const querySingleDocument = useQuery(
     docId as string,
     async () => await fetchSingleDocument(docId as string),
     {
-      enabled: false,
-      staleTime: Infinity,
+      enabled: false, // Don't auto-fetch, only when requested
+      staleTime: 3600000, // 1 hour
       onSuccess: (data: Document) => {
         setValue(data.content)
         editor.children = data.content
@@ -199,9 +200,8 @@ export default function EditorComponent({
   useEffect(() => {
     if (!content) {
       if (docId) {
+        setValue(undefined)
         qSD()
-        // const data = querySingleDocument.refetch()
-        // console.log(data)
       }
     } else {
       setValue(content)
@@ -248,6 +248,7 @@ export default function EditorComponent({
 
   return (
     <div className="prose m-0 w-full" style={{ maxWidth: '100vw' }}>
+      {!value && 'LOADING'}
       {value && (
         <div
           className="rounded border-2 py-0 px-4 shadow-xl"
