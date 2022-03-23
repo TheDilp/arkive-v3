@@ -33,3 +33,10 @@ export type Document = {
   image: string
   content: Descendant[]
 }
+
+export type Project = {
+  id: string
+  title: string
+  cardImage: string
+  user_id: string
+}

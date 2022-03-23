@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, User } from '@supabase/supabase-js'
 import { Descendant } from 'slate'
 import { Document } from '../custom-types'
 
@@ -52,6 +52,23 @@ export const getDocumentPaths = async () => {
   if (data) return data
   if (error) {
     console.log(error)
+    return
+  }
+}
+
+export const fetchAllProjects = async () => {
+  if (user) {
+    let { data, error } = await supabase
+      .from('projects')
+      .select('id, title, cardImage')
+      .eq('user_id', user.id)
+    if (data) return data
+    if (error) {
+      console.log(error)
+      return
+    }
+  } else {
+    console.log('NO USER')
     return
   }
 }

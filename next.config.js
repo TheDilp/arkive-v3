@@ -3,6 +3,6 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ['picsum.photos'],
+    domains: ['picsum.photos', 'upload.wikimedia.org', 'i.pinimg.com'],
   },
 }
