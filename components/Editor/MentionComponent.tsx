@@ -12,7 +12,6 @@ export default function Mention({ attributes, children, element }: Props) {
   const router = useRouter()
   const selected = useSelected()
   const focused = useFocused()
-  const { id } = router.query
   return (
     <span
       className=" cursor-pointer rounded bg-blue-400 p-0.5 text-base text-white transition-colors hover:bg-blue-300 hover:text-gray-800"
@@ -23,12 +22,7 @@ export default function Mention({ attributes, children, element }: Props) {
         boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
       }}
       onClick={(e) => {
-        if (id) {
-          // The id is only present when on a view page
-          router.push(`./${element.pageId}`)
-        } else {
-          router.push(`./view/${element.pageId}`)
-        }
+        router.push(`../${element.projectId}/view/${element.pageId}`)
       }}
     >
       @{element.title}

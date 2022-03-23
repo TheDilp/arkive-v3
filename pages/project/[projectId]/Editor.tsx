@@ -16,12 +16,12 @@ export default function Editor({}: Props) {
   const [currentDoc, setCurrentDoc] = useState<string | null>()
   const [view, setView] = useState(true)
   const router = useRouter()
-  const { id: project_id } = router.query
+  const { projectId } = router.query
   const query = useQuery(
     'allDocuments',
-    async () => await fetchDocuments(project_id as string),
+    async () => await fetchDocuments(projectId as string),
     {
-      enabled: !!project_id,
+      enabled: !!projectId,
       onSuccess: (data) => {
         setDocuments(data)
       },
@@ -30,9 +30,9 @@ export default function Editor({}: Props) {
   )
 
   useEffect(() => {
-    console.log(project_id)
-    if (project_id) query.refetch()
-  }, [project_id])
+    console.log(projectId)
+    if (projectId) query.refetch()
+  }, [projectId])
 
   return (
     <div>
@@ -77,6 +77,7 @@ export default function Editor({}: Props) {
                 <EditorComponent
                   content={null}
                   docId={currentDoc}
+                  projectId={projectId as string}
                   allDocuments={documents}
                 />
               </div>

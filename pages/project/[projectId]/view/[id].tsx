@@ -1,12 +1,10 @@
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { useQuery } from 'react-query'
-import EditorComponent from '../../components/Editor/EditorComponent'
-import { Document } from '../../custom-types'
+import EditorComponent from '../../../../components/Editor/EditorComponent'
+import { Document } from '../../../../custom-types'
 import {
   fetchSingleDocument,
   getDocumentPaths,
-} from '../../utils/supabaseClient'
+} from '../../../../utils/supabaseClient'
 
 type Props = {
   document: Document
@@ -14,18 +12,7 @@ type Props = {
 
 function ViewPage({ document }: Props) {
   const router = useRouter()
-  const { id } = router.query
-  // const [document, setDocument] = useState<Document | null>(null)
-
-  // const { data, error } = useQuery(
-  //   `${id}-view`,
-  //   async () => await fetchSingleDocument(id as string),
-  //   {
-  //     onSuccess(data: [Document]) {
-  //       setDocument(data[0])
-  //     },
-  //   }
-  // )
+  const { id, projectId } = router.query
 
   return (
     <article className="flex justify-center" style={{ minHeight: '100vh' }}>
@@ -39,7 +26,11 @@ function ViewPage({ document }: Props) {
             </div>
             {/* <Image src={document.image} layout="fill" objectFit="cover" /> */}
           </div>
-          <EditorComponent content={document.content} docId={id as string} />
+          <EditorComponent
+            content={document.content}
+            docId={id as string}
+            projectId={projectId as string}
+          />
         </div>
       )}
     </article>
@@ -50,7 +41,7 @@ export async function getStaticPaths() {
   const documents = await getDocumentPaths()
   const paths = documents
     ? documents.map((doc) => ({
-        params: { id: doc.id },
+        params: { id: doc.id, projectId: doc.project_id },
       }))
     : []
   return {
@@ -63,7 +54,9 @@ export async function getStaticProps({ params }: { params: any }) {
   const document = await fetchSingleDocument(params.id)
 
   return {
-    props: { document }, // will be passed to the page component as props
+    props: { document },
+    revalidate: 3600,
+    // will be passed to the page component as props
   }
 }
 

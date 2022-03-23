@@ -15,6 +15,7 @@ export type CustomText = {
   underline?: boolean
 }
 export type MentionElement = {
+  projectId: string
   pageId: string
   type: 'mention'
   title: string

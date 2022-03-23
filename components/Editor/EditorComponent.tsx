@@ -43,21 +43,30 @@ declare module 'slate' {
 type Props = {
   content: Descendant[] | null
   docId: string | null
+  projectId: string | null
   allDocuments?: Document[] | null
 }
 
 export default function EditorComponent({
   content,
+  projectId,
   docId,
   allDocuments,
 }: Props) {
+  console.log(projectId)
   // Array of plugins to use in Editor
   const queryClient = useQueryClient()
   const ref =
     useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLDivElement>
 
-  const insertMention = (editor: Editor, docId: string, title: string) => {
+  const insertMention = (
+    editor: Editor,
+    projectId: string,
+    docId: string,
+    title: string
+  ) => {
     const mention: MentionElement = {
+      projectId,
       pageId: docId,
       type: 'mention',
       title,
@@ -216,10 +225,12 @@ export default function EditorComponent({
             break
           case 'Tab':
           case 'Enter':
+            console.log(projectId)
             event.preventDefault()
             Transforms.select(editor, target)
             insertMention(
               editor,
+              projectId as string,
               allDocuments[index].id,
               allDocuments[index].title
             )
