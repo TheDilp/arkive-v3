@@ -150,12 +150,13 @@ export default function EditorComponent({
   }
 
   const qSD = useCallback(() => {
-    const cachedData: [Document] | undefined = queryClient.getQueryData(
+    const cachedData: Document | undefined = queryClient.getQueryData(
       docId as string
     )
     if (cachedData) {
-      setValue(cachedData[0].content)
-      editor.children = cachedData[0].content
+      console.log(cachedData)
+      setValue(cachedData.content)
+      editor.children = cachedData.content
     } else {
       querySingleDocument.refetch()
     }
