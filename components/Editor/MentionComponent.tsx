@@ -22,7 +22,9 @@ export default function Mention({ attributes, children, element }: Props) {
         boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
       }}
       onClick={(e) => {
-        router.push(`../${element.projectId}/view/${element.pageId}`)
+        router.push(
+          `../../../project/${element.projectId}/view/${element.pageId}`
+        )
       }}
     >
       @{element.title}
