@@ -17,7 +17,7 @@ import {
   Document,
   ImageElement,
   MentionElement,
-} from '../custom-types'
+} from '../../custom-types'
 import {
   HeaderFiveEl,
   HeaderFourEl,
@@ -27,8 +27,8 @@ import {
   HeaderTwoEl,
   Leaf,
   ParagraphEl,
-} from '../elements'
-import { fetchSingleDocument, saveDocument } from '../utils/supabaseClient'
+} from '../../elements'
+import { fetchSingleDocument, saveDocument } from '../../utils/supabaseClient'
 import ImageComponent from './ImageComponent'
 import Mention from './MentionComponent'
 import Portal from './Portal'

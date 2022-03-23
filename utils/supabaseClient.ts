@@ -7,10 +7,11 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 export const user = supabase.auth.user()
-export const fetchDocuments = async () => {
+export const fetchDocuments = async (project_id: string) => {
   let { data: documents, error } = await supabase
     .from('documents')
     .select('id, title, image')
+    .eq('project_id', project_id)
   if (documents) return documents
   if (error) {
     console.log(error)

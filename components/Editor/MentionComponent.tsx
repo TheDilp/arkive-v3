@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelected, useFocused } from 'slate-react'
-import { CustomText, MentionElement } from '../custom-types'
+import { CustomText, MentionElement } from '../../custom-types'
 import { useRouter } from 'next/router'
 type Props = {
   attributes: any

@@ -20,7 +20,7 @@ const Home: NextPage = () => {
       </Head>
       <main className="w-full text-center">
         <Navbar />
-        <div className="mt-2 flex h-screen justify-center space-x-1">
+        <div className="mt-2 flex justify-center">
           {data &&
             data.map((project: Project) => (
               <ProjectCard key={project.id} {...project} />

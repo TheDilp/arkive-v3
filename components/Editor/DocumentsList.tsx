@@ -1,5 +1,5 @@
 import React from 'react'
-import { Document } from '../custom-types'
+import { Document } from '../../custom-types'
 
 type Props = {
   documents: Document[] | null | undefined

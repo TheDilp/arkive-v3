@@ -1,25 +1,38 @@
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import ArticleCard from '../components/ArticleCard'
-import ArticleRow from '../components/ArticleRow'
-import DocumentsList from '../components/DocumentsList'
-import EditorComponent from '../components/EditorComponent'
-import Navbar from '../components/Navbar'
-import { Document } from '../custom-types'
-import { fetchDocuments } from '../utils/supabaseClient'
+import ArticleCard from '../../../components/Articles/ArticleCard'
+import ArticleRow from '../../../components/Articles/ArticleRow'
+import DocumentsList from '../../../components/Editor/DocumentsList'
+import EditorComponent from '../../../components/Editor/EditorComponent'
+import Navbar from '../../../components/Navbar'
+import { Document } from '../../../custom-types'
+import { fetchDocuments } from '../../../utils/supabaseClient'
 
 type Props = {}
 
 export default function Editor({}: Props) {
   const [documents, setDocuments] = useState<Document[] | null>()
   const [currentDoc, setCurrentDoc] = useState<string | null>()
-  const [view, setView] = useState(false)
-  const query = useQuery('allDocuments', async () => await fetchDocuments(), {
-    onSuccess: (data) => {
-      setDocuments(data)
-    },
-    onError: (err) => alert(err),
-  })
+  const [view, setView] = useState(true)
+  const router = useRouter()
+  const { id: project_id } = router.query
+  const query = useQuery(
+    'allDocuments',
+    async () => await fetchDocuments(project_id as string),
+    {
+      enabled: !!project_id,
+      onSuccess: (data) => {
+        setDocuments(data)
+      },
+      onError: (err) => alert(err),
+    }
+  )
+
+  useEffect(() => {
+    console.log(project_id)
+    if (project_id) query.refetch()
+  }, [project_id])
 
   return (
     <div>

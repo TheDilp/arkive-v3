@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import { CustomText, ImageElement } from '../custom-types'
+import { CustomText, ImageElement } from '../../custom-types'
 
 type Props = {
   attributes: any

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import EditorComponent from '../../components/EditorComponent'
+import EditorComponent from '../../components/Editor/EditorComponent'
 import { Document } from '../../custom-types'
 import {
   fetchSingleDocument,
