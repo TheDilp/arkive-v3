@@ -1,25 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useEffect, useRef, useState } from "react";
+import "./App.css";
+import EditorJS from "@editorjs/editorjs";
+import Header from "@editorjs/header";
+import LinkAutoComplete from "@editorjs/link-autocomplete";
+import ContentAlignmentTool from "editorjs-text-alignment-blocktune";
 function App() {
+  const editorRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const [editor, setEditor] = useState<EditorJS | null>(null);
+
+  useEffect(() => {
+    if (editorRef && editorRef.current) {
+      if (!editor)
+        setEditor(
+          new EditorJS({
+            holder: editorRef.current,
+            tools: {
+              header: { class: Header, tunes: ["anyTuneName"] },
+              linkTool: {
+                class: LinkAutoComplete,
+                tunes: ["anyTuneName"],
+                config: {
+                  // endpoint: "youtube.com", // Your backend endpoint for url data fetching,
+                },
+              },
+              anyTuneName: {
+                class: ContentAlignmentTool,
+                config: {
+                  default: "left",
+                  blocks: {
+                    header: "left",
+                    list: "left",
+                  },
+                },
+              },
+            },
+          })
+        );
+    }
+    return () => {
+      if (editor) editor.destroy();
+    };
+  }, [editorRef.current]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className="App">
+      <div id="editor" ref={editorRef}></div>
+    </main>
   );
 }
 
