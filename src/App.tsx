@@ -1,53 +1,81 @@
 import { useRef, useState } from "react";
 import "./App.css";
+import { Editor, rootCtx, themeToolCtx, commandsCtx } from "@milkdown/core";
+import { nord } from "@milkdown/theme-nord";
+import { ReactEditor, useEditor } from "@milkdown/react";
+import { commonmark } from "@milkdown/preset-commonmark";
+import {
+  slashPlugin,
+  slash,
+  createDropdownItem,
+  defaultActions,
+} from "@milkdown/plugin-slash";
 function App() {
-  const [state, setState] = useState({ text: "", lastWord: "" });
-  const [menuState, setMenuState] = useState({ show: false, x: 0, y: 0 });
-  const menu = ["ITEM1", "ITEM2", "ITEM3"];
-  const inputRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const [value, setValue] = useState("# hello markdown");
+  const editor = useEditor(
+    (root) =>
+      Editor.make()
+        .config((ctx) => {
+          ctx.set(rootCtx, root);
+        })
+        .use(nord)
+        .use(commonmark)
+        .use(slash)
+    // .use(
+    //   slash.configure(slashPlugin, {
+    //     config: (ctx) => {
+    //       // Get default slash plugin items
+    //       const actions = defaultActions(ctx);
+
+    //       // Define a status builder
+    //       return ({ isTopLevel, content, parentNode }) => {
+    //         // You can only show something at root level
+    //         if (!isTopLevel) return null;
+
+    //         // Empty content ? Set your custom empty placeholder !
+    //         if (!content) {
+    //           return { placeholder: "Type / to use the slash commands..." };
+    //         }
+
+    //         // Define the placeholder & actions (dropdown items) you want to display depending on content
+    //         if (content.startsWith("/")) {
+    //           // Add some actions depending on your content's parent node
+    //           if (parentNode.type.name === "customNode") {
+    //             actions.push({
+    //               id: "custom",
+    //               dom: createDropdownItem(
+    //                 ctx.get(themeToolCtx),
+    //                 "Custom",
+    //                 "h1"
+    //               ),
+    //               command: () => ctx.get(commandsCtx).call("@"),
+    //               keyword: ["mentionLink"],
+    //               enable: () => true,
+    //             });
+    //           }
+
+    //           return content === "/"
+    //             ? {
+    //                 placeholder: "Type to filter...",
+    //                 actions,
+    //               }
+    //             : {
+    //                 actions: actions.filter(({ keyword }) =>
+    //                   keyword.some((key) =>
+    //                     key.includes(content.slice(1).toLocaleLowerCase())
+    //                   )
+    //                 ),
+    //               };
+    //         }
+    //       };
+    //     },
+    //   })
+    // )
+  );
   return (
     <main className="App">
       <div id="editor">
-        <div
-          contentEditable={true}
-          ref={inputRef}
-          onChange={(e) =>
-            setState({
-              text: e.currentTarget.innerText,
-              lastWord: e.currentTarget.innerText,
-            })
-          }
-          onKeyDown={(e) => {
-            //  Create dropdown menu on slash command in textarea
-            if (e.key === "/") {
-              const range = window.getSelection()?.getRangeAt(0).cloneRange();
-              range?.collapse(true);
-              const rect = range?.getClientRects()[0];
-              console.log(rect);
-              if (rect) setMenuState({ show: true, x: rect?.x, y: rect?.y });
-            }
-
-            // if (state.text.)
-            // if (e.key === "/") {
-            //   setMenuState({ ...menuState, show: true });
-            // } else if (e.key === "Space" || e.key === "Enter") {
-            //   setState({ ...state, lastWord: "" });
-            // }
-          }}
-        ></div>
-        {menuState.show && (
-          <ul
-            style={{
-              position: "absolute",
-              top: menuState.y,
-              left: menuState.x,
-            }}
-          >
-            {menu.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
-        )}
+        <ReactEditor editor={editor} />
       </div>
     </main>
   );

@@ -5,3 +5,4 @@ declare module "linkify-it";
 declare module "markdown-it";
 declare module "react-linkify";
 declare module "@webscopeio/react-textarea-autocomplete";
+declare module "showdown";
