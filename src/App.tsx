@@ -1,81 +1,101 @@
-import { useRef, useState } from "react";
+import autocomplete, { Options } from "prosemirror-autocomplete";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { shift, flip, autoUpdate, inline } from "@floating-ui/react-dom";
 import "./App.css";
-import { Editor, rootCtx, themeToolCtx, commandsCtx } from "@milkdown/core";
-import { nord } from "@milkdown/theme-nord";
-import { ReactEditor, useEditor } from "@milkdown/react";
-import { commonmark } from "@milkdown/preset-commonmark";
+import { HtmlEditor, Toolbar, Editor } from "@aeaton/react-prosemirror";
 import {
-  slashPlugin,
-  slash,
-  createDropdownItem,
-  defaultActions,
-} from "@milkdown/plugin-slash";
+  plugins,
+  schema,
+  toolbar,
+} from "@aeaton/react-prosemirror-config-default";
+import {
+  useFloating,
+  useInteractions,
+  useListNavigation,
+} from "@floating-ui/react-dom-interactions";
+type noReducerOptions = Omit<Options, "reducer">;
 function App() {
-  const [value, setValue] = useState("# hello markdown");
-  const editor = useEditor(
-    (root) =>
-      Editor.make()
-        .config((ctx) => {
-          ctx.set(rootCtx, root);
-        })
-        .use(nord)
-        .use(commonmark)
-        .use(slash)
-    // .use(
-    //   slash.configure(slashPlugin, {
-    //     config: (ctx) => {
-    //       // Get default slash plugin items
-    //       const actions = defaultActions(ctx);
+  const items = ["ITEM1", "ITEM2", "ITEM3"];
+  const [filter, setFilter] = useState<string | undefined>("");
+  const options: noReducerOptions = {
+    triggers: [
+      { name: "hashtag", trigger: "#" },
+      { name: "mention", trigger: "@" },
+    ],
+    onOpen: ({ view, range, trigger, type }) => true,
+    onArrow: ({ view, kind }) => true,
+    onFilter: ({ view, filter }) => {
+      setFilter(filter);
+      console.log(filter);
+      return true;
+    },
+    // onEnter: ({ view }) => handleSelect(),
+    onClose: ({ view }) => {
+      setFilter(undefined);
+      return true;
+    },
+  };
+  const initialValue = "<p></p>";
+  const [value, setValue] = useState(initialValue);
+  const { x, y, reference, floating, strategy, update, refs } = useFloating({
+    placement: "bottom",
+    middleware: [inline(), shift(), flip()],
+  });
 
-    //       // Define a status builder
-    //       return ({ isTopLevel, content, parentNode }) => {
-    //         // You can only show something at root level
-    //         if (!isTopLevel) return null;
+  const { context } = useFloating();
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    useListNavigation(context),
+  ]);
 
-    //         // Empty content ? Set your custom empty placeholder !
-    //         if (!content) {
-    //           return { placeholder: "Type / to use the slash commands..." };
-    //         }
+  useEffect(() => {
+    if (!refs.reference.current || !refs.floating.current) {
+      return;
+    }
 
-    //         // Define the placeholder & actions (dropdown items) you want to display depending on content
-    //         if (content.startsWith("/")) {
-    //           // Add some actions depending on your content's parent node
-    //           if (parentNode.type.name === "customNode") {
-    //             actions.push({
-    //               id: "custom",
-    //               dom: createDropdownItem(
-    //                 ctx.get(themeToolCtx),
-    //                 "Custom",
-    //                 "h1"
-    //               ),
-    //               command: () => ctx.get(commandsCtx).call("@"),
-    //               keyword: ["mentionLink"],
-    //               enable: () => true,
-    //             });
-    //           }
+    // Only call this when the floating element is rendered
+    return autoUpdate(refs.reference.current, refs.floating.current, update);
+  }, [refs.reference, refs.floating, update]);
 
-    //           return content === "/"
-    //             ? {
-    //                 placeholder: "Type to filter...",
-    //                 actions,
-    //               }
-    //             : {
-    //                 actions: actions.filter(({ keyword }) =>
-    //                   keyword.some((key) =>
-    //                     key.includes(content.slice(1).toLocaleLowerCase())
-    //                   )
-    //                 ),
-    //               };
-    //         }
-    //       };
-    //     },
-    //   })
-    // )
-  );
   return (
     <main className="App">
-      <div id="editor">
-        <ReactEditor editor={editor} />
+      <button
+        id="button"
+        aria-describedby="tooltip"
+        // onMouseEnter={() => {
+        //   if (refs.floating.current)
+        //     refs.floating.current.style.display = "block";
+        // }}
+        // onMouseLeave={() => {
+        //   if (refs.floating.current)
+        //     refs.floating.current.style.display = "none";
+        // }}
+      >
+        My button
+      </button>
+      <div
+        id="tooltip"
+        role="tooltip"
+        ref={floating}
+        style={{
+          position: strategy,
+          top: y ?? "",
+          left: x ?? "",
+        }}
+      >
+        {filter &&
+          items.filter((i) => i.toLowerCase().includes(filter.toLowerCase()))}
+      </div>
+      <div id="editor" ref={reference}>
+        <HtmlEditor
+          schema={schema}
+          plugins={[...plugins, ...autocomplete(options)]}
+          value={initialValue}
+          handleChange={setValue}
+          debounce={250}
+        >
+          <Toolbar toolbar={toolbar} />
+          <Editor autoFocus />
+        </HtmlEditor>
       </div>
     </main>
   );
