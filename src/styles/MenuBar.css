@@ -1,0 +1,30 @@
+.menuBar {
+    position: sticky;
+    display: flex;
+    flex-wrap: nowrap;
+    border: lightgray solid 1px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.menuBarGroup {
+    border-right: lightgray solid 1px;
+}
+
+.menuBarButton {
+    height: 100%;
+    padding: 0.5rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+}
+
+.menuBarButton:hover {
+    background-color: lightgreen;
+}
+
+.menuBarButtonActive {
+    background-color: green;
+    color: lightgreen
+}

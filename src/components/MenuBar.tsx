@@ -1,5 +1,5 @@
-import { useCommands } from "@remirror/react";
-import React from "react";
+import { useActive, useCommands } from "@remirror/react";
+import "../styles/MenuBar.css";
 
 export default function MenuBar() {
   const {
@@ -15,49 +15,62 @@ export default function MenuBar() {
     insertImage,
     focus,
   } = useCommands();
+  const active = useActive();
   return (
-    <div>
+    <div className="menuBar">
+      <div className="menuBarGroup">
+        <button
+          className="menuBarButton"
+          onClick={() => {
+            toggleBold();
+            focus();
+          }}
+        >
+          <b>B</b>
+        </button>
+        <button
+          className={`menuBarButton ${
+            active.italic() ? "menuBarButtonActive" : ""
+          }`}
+          onClick={() => {
+            toggleItalic();
+            focus();
+          }}
+        >
+          <i>I</i>
+        </button>
+        <button
+          className="menuBarButton"
+          onClick={() => {
+            toggleUnderline();
+            focus();
+          }}
+        >
+          <s>U</s>
+        </button>
+      </div>
+      <div className="menuBarGroup">
+        <button
+          className="menuBarButton"
+          onClick={() => {
+            toggleBulletList();
+            focus();
+          }}
+        >
+          <span>BL</span>
+        </button>
+        <button
+          className="menuBarButton"
+          onClick={() => {
+            toggleOrderedList();
+            focus();
+          }}
+        >
+          <span>OL</span>
+        </button>
+      </div>
       <button
-        onClick={() => {
-          toggleBold();
-          focus();
-        }}
-      >
-        <b>B</b>
-      </button>
-      <button
-        onClick={() => {
-          toggleItalic();
-          focus();
-        }}
-      >
-        <i>I</i>
-      </button>
-      <button
-        onClick={() => {
-          toggleUnderline();
-          focus();
-        }}
-      >
-        <s>U</s>
-      </button>
-      <button
-        onClick={() => {
-          toggleBulletList();
-          focus();
-        }}
-      >
-        <span>BL</span>
-      </button>
-      <button
-        onClick={() => {
-          toggleOrderedList();
-          focus();
-        }}
-      >
-        <span>OL</span>
-      </button>
-      <button
+        className="menuBarButton"
         onClick={() => {
           insertImage({ src: "https://picsum.photos/200/300" });
           focus();
@@ -66,6 +79,7 @@ export default function MenuBar() {
         IMG
       </button>
       <button
+        className="menuBarButton"
         onClick={() => {
           insertHorizontalRule();
           focus();
@@ -74,6 +88,7 @@ export default function MenuBar() {
         ---
       </button>
       <button
+        className="menuBarButton"
         onClick={() => {
           updateLink({ href: "https://remirror.io" });
           focus();
@@ -82,6 +97,7 @@ export default function MenuBar() {
         LINK
       </button>
       <button
+        className="menuBarButton"
         onClick={() => {
           toggleCallout({ type: "warning" });
         }}
@@ -89,6 +105,7 @@ export default function MenuBar() {
         !
       </button>
       <select
+        className="menuBarButton"
         onChange={(e) => {
           let level = parseInt(e.target.value);
           toggleHeading({ level });
