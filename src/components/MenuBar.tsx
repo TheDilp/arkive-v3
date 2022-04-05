@@ -1,15 +1,17 @@
 import { useCommands } from "@remirror/react";
 import React from "react";
 
-type Props = {};
-
-export default function MenuBar({}: Props) {
+export default function MenuBar() {
   const {
     toggleBold,
     toggleItalic,
+    toggleUnderline,
     toggleBulletList,
     toggleOrderedList,
     toggleHeading,
+    toggleCallout,
+    insertHorizontalRule,
+    updateLink,
     insertImage,
     focus,
   } = useCommands();
@@ -30,6 +32,14 @@ export default function MenuBar({}: Props) {
         }}
       >
         <i>I</i>
+      </button>
+      <button
+        onClick={() => {
+          toggleUnderline();
+          focus();
+        }}
+      >
+        <s>U</s>
       </button>
       <button
         onClick={() => {
@@ -54,6 +64,29 @@ export default function MenuBar({}: Props) {
         }}
       >
         IMG
+      </button>
+      <button
+        onClick={() => {
+          insertHorizontalRule();
+          focus();
+        }}
+      >
+        ---
+      </button>
+      <button
+        onClick={() => {
+          updateLink({ href: "https://remirror.io" });
+          focus();
+        }}
+      >
+        LINK
+      </button>
+      <button
+        onClick={() => {
+          toggleCallout({ type: "warning" });
+        }}
+      >
+        !
       </button>
       <select
         onChange={(e) => {

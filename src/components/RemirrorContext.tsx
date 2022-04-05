@@ -1,11 +1,15 @@
 import {
   BoldExtension,
   ItalicExtension,
+  UnderlineExtension,
   MentionAtomExtension,
   ImageExtension,
   BulletListExtension,
   OrderedListExtension,
   HeadingExtension,
+  LinkExtension,
+  HorizontalRuleExtension,
+  CalloutExtension,
 } from "remirror/extensions";
 import {
   useRemirror,
@@ -23,6 +27,7 @@ export default function RemirrorContext() {
       new BoldExtension(),
       new ItalicExtension(),
       new HeadingExtension(),
+      new UnderlineExtension(),
       new ImageExtension({
         enableResizing: true,
       }),
@@ -40,6 +45,9 @@ export default function RemirrorContext() {
           },
         ],
       }),
+      new LinkExtension(),
+      new HorizontalRuleExtension(),
+      new CalloutExtension(),
     ],
 
     // Set the initial content.
