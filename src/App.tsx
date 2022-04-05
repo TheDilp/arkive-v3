@@ -9,19 +9,50 @@ import { useState } from "react";
 import "./App.css";
 type noReducerOptions = Omit<Options, "reducer">;
 function App() {
-  const items = ["ITEM1", "ITEM2", "ITEM3"];
+  const [items, setItems] = useState(["ITEM1", "ITEM2", "ITEM3"]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [filter, setFilter] = useState<string | undefined>("");
+
+  function handleArrow(kind: string) {
+    if (kind === "ArrowDown") {
+      setActiveIndex((activeIndex) => {
+        if (activeIndex === null) {
+          return 0;
+        } else if (activeIndex !== null && activeIndex < items.length - 1) {
+          return activeIndex + 1;
+        } else {
+          return 0;
+        }
+      });
+    } else if (kind === "ArrowUp") {
+      setActiveIndex((activeIndex) => {
+        if (activeIndex === null || activeIndex === 0) {
+          return items.length - 1;
+        } else if (activeIndex <= items.length - 1) {
+          return activeIndex - 1;
+        } else {
+          return 0;
+        }
+      });
+    }
+    return true;
+  }
+
   const options: noReducerOptions = {
     triggers: [
       { name: "hashtag", trigger: "#" },
       { name: "mention", trigger: "@" },
     ],
     onOpen: ({ view, range, trigger, type }) => true,
-    onArrow: ({ view, kind }) => true,
+    onArrow: ({ view, kind }) => handleArrow(kind),
     onFilter: ({ view, filter }) => {
       setFilter(filter);
-      console.log(filter);
+      if (filter)
+        setItems(
+          items.filter((item) =>
+            item.toLowerCase().includes(filter.toLowerCase())
+          )
+        );
       return true;
     },
     // onEnter: ({ view }) => handleSelect(),
@@ -34,26 +65,7 @@ function App() {
   const [value, setValue] = useState(initialValue);
   return (
     <main className="App">
-      <div
-        id="editor"
-        onKeyDown={(e) => {
-          if (filter) {
-            if (e.key === "ArrowDown") {
-              e.preventDefault();
-              if (activeIndex === null) {
-                setActiveIndex(0);
-              } else if (
-                activeIndex !== null &&
-                activeIndex < items.length - 1
-              ) {
-                setActiveIndex(activeIndex + 1);
-              } else if (activeIndex === items.length - 1) {
-                setActiveIndex(0);
-              }
-            }
-          }
-        }}
-      >
+      <div id="editor">
         <HtmlEditor
           schema={schema}
           plugins={[...plugins, ...autocomplete(options)]}
