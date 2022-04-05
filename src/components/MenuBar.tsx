@@ -20,7 +20,9 @@ export default function MenuBar() {
     <div className="menuBar">
       <div className="menuBarGroup">
         <button
-          className="menuBarButton"
+          className={`menuBarButton ${
+            active.bold() ? "menuBarButtonActive" : ""
+          }`}
           onClick={() => {
             toggleBold();
             focus();
@@ -40,7 +42,9 @@ export default function MenuBar() {
           <i>I</i>
         </button>
         <button
-          className="menuBarButton"
+          className={`menuBarButton ${
+            active.underline() ? "menuBarButtonActive" : ""
+          }`}
           onClick={() => {
             toggleUnderline();
             focus();
@@ -51,7 +55,9 @@ export default function MenuBar() {
       </div>
       <div className="menuBarGroup">
         <button
-          className="menuBarButton"
+          className={`menuBarButton ${
+            active.bulletList() ? "menuBarButtonActive" : ""
+          }`}
           onClick={() => {
             toggleBulletList();
             focus();
@@ -60,7 +66,9 @@ export default function MenuBar() {
           <span>BL</span>
         </button>
         <button
-          className="menuBarButton"
+          className={`menuBarButton ${
+            active.orderedList() ? "menuBarButtonActive" : ""
+          }`}
           onClick={() => {
             toggleOrderedList();
             focus();
@@ -69,56 +77,72 @@ export default function MenuBar() {
           <span>OL</span>
         </button>
       </div>
-      <button
-        className="menuBarButton"
-        onClick={() => {
-          insertImage({ src: "https://picsum.photos/200/300" });
-          focus();
-        }}
-      >
-        IMG
-      </button>
-      <button
-        className="menuBarButton"
-        onClick={() => {
-          insertHorizontalRule();
-          focus();
-        }}
-      >
-        ---
-      </button>
-      <button
-        className="menuBarButton"
-        onClick={() => {
-          updateLink({ href: "https://remirror.io" });
-          focus();
-        }}
-      >
-        LINK
-      </button>
-      <button
-        className="menuBarButton"
-        onClick={() => {
-          toggleCallout({ type: "warning" });
-        }}
-      >
-        !
-      </button>
-      <select
-        className="menuBarButton"
-        onChange={(e) => {
-          let level = parseInt(e.target.value);
-          toggleHeading({ level });
-          focus();
-        }}
-      >
-        <option value={1}>H1</option>
-        <option value={2}>H2</option>
-        <option value={3}>H3</option>
-        <option value={4}>H4</option>
-        <option value={5}>H5</option>
-        <option value={6}>H6</option>
-      </select>
+      <div className="menuBarGroup">
+        <button
+          className={`menuBarButton ${
+            active.image() ? "menuBarButtonActive" : ""
+          }`}
+          onClick={() => {
+            insertImage({ src: "https://picsum.photos/200/300" });
+            focus();
+          }}
+        >
+          IMG
+        </button>
+        <button
+          className={`menuBarButton ${
+            active.horizontalRule() ? "menuBarButtonActive" : ""
+          }`}
+          onClick={() => {
+            insertHorizontalRule();
+            focus();
+          }}
+        >
+          ---
+        </button>
+        <button
+          className={`menuBarButton ${
+            active.link() ? "menuBarButtonActive" : ""
+          }`}
+          onClick={() => {
+            updateLink({ href: "https://remirror.io" });
+            focus();
+          }}
+        >
+          LINK
+        </button>
+      </div>
+      <div className="menuBarGroup">
+        <button
+          className={`menuBarButton ${
+            active.callout() ? "menuBarButtonActive" : ""
+          }`}
+          onClick={() => {
+            toggleCallout({ type: "warning" });
+          }}
+        >
+          !
+        </button>
+        <select
+          className={`menuBarButton headingSelect ${
+            active.heading() ? "menuBarButtonActive" : ""
+          }`}
+          defaultValue={0}
+          onChange={(e) => {
+            let level = parseInt(e.target.value);
+            toggleHeading({ level });
+            focus();
+          }}
+        >
+          <option value={0}>Heading</option>
+          <option value={1}>H1</option>
+          <option value={2}>H2</option>
+          <option value={3}>H3</option>
+          <option value={4}>H4</option>
+          <option value={5}>H5</option>
+          <option value={6}>H6</option>
+        </select>
+      </div>
     </div>
   );
 }

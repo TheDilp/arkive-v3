@@ -5,6 +5,7 @@
     border: lightgray solid 1px;
     border-radius: 0.5rem;
     overflow: hidden;
+    box-shadow: 0 0.05rem 0.15rem lightgray;
 }
 
 .menuBarGroup {
@@ -20,7 +21,7 @@
 
 }
 
-.menuBarButton:hover {
+.menuBarButton:hover:not(.headingSelect) {
     background-color: lightgreen;
 }
 
