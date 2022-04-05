@@ -1,54 +1,37 @@
-import { Editor, HtmlEditor, Toolbar } from "@aeaton/react-prosemirror";
-import {
-  plugins,
-  schema,
-  toolbar,
-} from "@aeaton/react-prosemirror-config-default";
-import autocomplete, {
-  AutocompleteAction,
-  Options,
-} from "prosemirror-autocomplete";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { HtmlEditor } from "@aeaton/react-prosemirror";
+import { plugins, schema } from "@aeaton/react-prosemirror-config-default";
+import autocomplete, { Options } from "prosemirror-autocomplete";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
-type noReducerOptions = Omit<Options, "reducer">;
+import CustomEditor from "./components/Editor/CustomEditor";
+import { mockItem } from "./customTypes";
 function App() {
-  const [items, setItems] = useState(["ITEM1", "ITEM2", "ITEM3"]);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [mockData, setMockData] = useState<mockItem[]>([]);
   const [filter, setFilter] = useState<string | undefined>("");
+  const [filteredData, setFilteredData] = useState<mockItem[]>([]);
+  const selectedRef = useRef(0);
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => response.json())
+      .then((json) => {
+        setMockData(json);
+        setFilteredData(json);
+      });
+  }, []);
 
   function handleArrow(kind: string) {
     if (kind === "ArrowDown") {
-      setActiveIndex((activeIndex) => {
-        if (activeIndex === null) {
-          itemRef.current = 0;
-          return 0;
-        } else if (activeIndex !== null && activeIndex < items.length - 1) {
-          itemRef.current = activeIndex + 1;
-          return activeIndex + 1;
-        } else {
-          itemRef.current = 0;
-          return 0;
-        }
-      });
-    } else if (kind === "ArrowUp") {
-      setActiveIndex((activeIndex) => {
-        if (activeIndex === null || activeIndex === 0) {
-          itemRef.current = items.length - 1;
-
-          return items.length - 1;
-        } else if (activeIndex <= items.length - 1) {
-          itemRef.current = activeIndex - 1;
-          return activeIndex - 1;
-        } else {
-          itemRef.current = 0;
-          return 0;
-        }
-      });
+      if (activeIndex <= filteredData.length - 1) {
+        setActiveIndex((activeIndex) => activeIndex + 1);
+      } else {
+        setActiveIndex(0);
+      }
     }
     return true;
   }
-
-  const itemRef = useRef(0);
+  type noReducerOptions = Omit<Options, "reducer">;
+  const suggestionsRef = useRef() as React.MutableRefObject<HTMLUListElement>;
   const options: noReducerOptions = {
     triggers: [
       { name: "hashtag", trigger: "#" },
@@ -56,23 +39,16 @@ function App() {
     ],
     onOpen: ({ view, range, trigger, type }) => true,
     onArrow: ({ view, kind }) => handleArrow(kind),
-    onFilter: ({ view, filter }) => {
-      setFilter(filter);
-      if (filter)
-        setItems(
-          items.filter((item) =>
-            item.toLowerCase().includes(filter.toLowerCase())
-          )
-        );
+    onEnter: ({ view, range, trigger, type }) => {
+      const { from, to } = range;
+      const tr = view.state.tr
+        .deleteRange(from, to) // This is the full selection
+        .insertText(filteredData[selectedRef.current].title); // This can be a node view, or something else!
+      view.dispatch(tr);
       return true;
     },
-    onEnter: (action) => {
-      const { from, to } = action.range;
-      const tr = action.view.state.tr
-        .deleteRange(from, to) // This is the full selection
-        .insertText(items[itemRef.current]); // This can be a node view, or something else!
-      action.view.dispatch(tr);
-      console.log();
+    onFilter: ({ view, filter }) => {
+      setFilter(filter);
       return true;
     },
     onClose: ({ view }) => {
@@ -80,37 +56,34 @@ function App() {
       return true;
     },
   };
+
+  useEffect(() => {
+    if (activeIndex) selectedRef.current = activeIndex;
+  }, [activeIndex]);
+
   const initialValue = "<p></p>";
   const [value, setValue] = useState(initialValue);
   return (
     <main className="App">
       <div id="editor">
-        <HtmlEditor
-          schema={schema}
-          plugins={[...autocomplete(options), ...plugins]}
-          value={initialValue}
-          handleChange={setValue}
-          debounce={250}
-        >
-          <Toolbar toolbar={toolbar} />
-          <Editor autoFocus />
-        </HtmlEditor>
-        {filter && (
-          <div id="suggestion">
-            {items
-              .filter((item) =>
-                item.toLowerCase().includes(filter.toLowerCase())
-              )
-              .map((item, index) => (
-                <div
-                  style={{
-                    backgroundColor: activeIndex === index ? "green" : "blue",
-                  }}
-                >
-                  {item}
-                </div>
-              ))}
-          </div>
+        {mockData.length > 0 && filteredData.length > 0 && (
+          <HtmlEditor
+            schema={schema}
+            plugins={[...autocomplete(options), ...plugins]}
+            value={initialValue}
+            handleChange={setValue}
+            debounce={250}
+          >
+            <CustomEditor
+              activeIndex={activeIndex}
+              filter={filter}
+              filteredData={filteredData}
+              setFilteredData={setFilteredData}
+              setFilter={setFilter}
+              setMockData={setMockData}
+              suggestionsRef={suggestionsRef}
+            />
+          </HtmlEditor>
         )}
       </div>
     </main>
