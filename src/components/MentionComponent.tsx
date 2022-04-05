@@ -1,11 +1,7 @@
 import { MentionAtomPopupComponent, MentionAtomState } from "@remirror/react";
 import React, { useMemo, useState } from "react";
-import { MentionAtomNodeAttributes } from "remirror/extensions";
 
-type Props = {};
-interface MentionComponentProps<
-  UserData extends MentionAtomNodeAttributes = MentionAtomNodeAttributes
-> {
+interface MentionComponentProps {
   documents?: {
     id: string;
     label: string;
@@ -17,7 +13,7 @@ export default function MentionComponent({ documents }: MentionComponentProps) {
     () =>
       (documents ?? []).map((doc) => ({
         id: doc.id,
-        label: `#${doc.label}`,
+        label: `${doc.label}`,
         href: doc.id,
       })),
     [documents]
