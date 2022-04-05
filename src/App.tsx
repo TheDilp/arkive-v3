@@ -55,7 +55,15 @@ function App() {
         );
       return true;
     },
-    // onEnter: ({ view }) => handleSelect(),
+    onEnter: ({ range, view }) => {
+      console.log("ASKLDJASLKDJ");
+      const { from, to } = range;
+      const tr = view.state.tr
+        .deleteRange(from, to) // This is the full selection
+        .insertText("You can define this!"); // This can be a node view, or something else!
+      view.dispatch(tr);
+      return true;
+    },
     onClose: ({ view }) => {
       setFilter(undefined);
       return true;
@@ -68,7 +76,7 @@ function App() {
       <div id="editor">
         <HtmlEditor
           schema={schema}
-          plugins={[...plugins, ...autocomplete(options)]}
+          plugins={[...autocomplete(options), ...plugins]}
           value={initialValue}
           handleChange={setValue}
           debounce={250}
