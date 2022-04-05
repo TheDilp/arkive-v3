@@ -4,8 +4,11 @@ import {
   schema,
   toolbar,
 } from "@aeaton/react-prosemirror-config-default";
-import autocomplete, { Options } from "prosemirror-autocomplete";
-import { useState } from "react";
+import autocomplete, {
+  AutocompleteAction,
+  Options,
+} from "prosemirror-autocomplete";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 type noReducerOptions = Omit<Options, "reducer">;
 function App() {
@@ -17,20 +20,27 @@ function App() {
     if (kind === "ArrowDown") {
       setActiveIndex((activeIndex) => {
         if (activeIndex === null) {
+          itemRef.current = 0;
           return 0;
         } else if (activeIndex !== null && activeIndex < items.length - 1) {
+          itemRef.current = activeIndex + 1;
           return activeIndex + 1;
         } else {
+          itemRef.current = 0;
           return 0;
         }
       });
     } else if (kind === "ArrowUp") {
       setActiveIndex((activeIndex) => {
         if (activeIndex === null || activeIndex === 0) {
+          itemRef.current = items.length - 1;
+
           return items.length - 1;
         } else if (activeIndex <= items.length - 1) {
+          itemRef.current = activeIndex - 1;
           return activeIndex - 1;
         } else {
+          itemRef.current = 0;
           return 0;
         }
       });
@@ -38,6 +48,7 @@ function App() {
     return true;
   }
 
+  const itemRef = useRef(0);
   const options: noReducerOptions = {
     triggers: [
       { name: "hashtag", trigger: "#" },
@@ -55,13 +66,13 @@ function App() {
         );
       return true;
     },
-    onEnter: ({ range, view }) => {
-      console.log("ASKLDJASLKDJ");
-      const { from, to } = range;
-      const tr = view.state.tr
+    onEnter: (action) => {
+      const { from, to } = action.range;
+      const tr = action.view.state.tr
         .deleteRange(from, to) // This is the full selection
-        .insertText("You can define this!"); // This can be a node view, or something else!
-      view.dispatch(tr);
+        .insertText(items[itemRef.current]); // This can be a node view, or something else!
+      action.view.dispatch(tr);
+      console.log();
       return true;
     },
     onClose: ({ view }) => {
