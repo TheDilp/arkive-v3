@@ -3,13 +3,12 @@
     width: 50%;
 }
 
-#tooltip {
+#suggestion {
     position: absolute;
-    background: #222;
-    color: white;
-    font-weight: bold;
-    padding: 5px;
-    border-radius: 4px;
-    font-size: 90%;
-    pointer-events: none;
+    border-radius: 2px;
+    border: 1px solid #333;
+    min-width: 300px;
+    background-color: white;
+    padding: 10px;
+    transform: translateY(-1px);
 }

@@ -1,21 +1,16 @@
-import autocomplete, { Options } from "prosemirror-autocomplete";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { shift, flip, autoUpdate, inline } from "@floating-ui/react-dom";
-import "./App.css";
-import { HtmlEditor, Toolbar, Editor } from "@aeaton/react-prosemirror";
+import { Editor, HtmlEditor, Toolbar } from "@aeaton/react-prosemirror";
 import {
   plugins,
   schema,
   toolbar,
 } from "@aeaton/react-prosemirror-config-default";
-import {
-  useFloating,
-  useInteractions,
-  useListNavigation,
-} from "@floating-ui/react-dom-interactions";
+import autocomplete, { Options } from "prosemirror-autocomplete";
+import { useState } from "react";
+import "./App.css";
 type noReducerOptions = Omit<Options, "reducer">;
 function App() {
   const items = ["ITEM1", "ITEM2", "ITEM3"];
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [filter, setFilter] = useState<string | undefined>("");
   const options: noReducerOptions = {
     triggers: [
@@ -37,55 +32,28 @@ function App() {
   };
   const initialValue = "<p></p>";
   const [value, setValue] = useState(initialValue);
-  const { x, y, reference, floating, strategy, update, refs } = useFloating({
-    placement: "bottom",
-    middleware: [inline(), shift(), flip()],
-  });
-
-  const { context } = useFloating();
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    useListNavigation(context),
-  ]);
-
-  useEffect(() => {
-    if (!refs.reference.current || !refs.floating.current) {
-      return;
-    }
-
-    // Only call this when the floating element is rendered
-    return autoUpdate(refs.reference.current, refs.floating.current, update);
-  }, [refs.reference, refs.floating, update]);
-
   return (
     <main className="App">
-      <button
-        id="button"
-        aria-describedby="tooltip"
-        // onMouseEnter={() => {
-        //   if (refs.floating.current)
-        //     refs.floating.current.style.display = "block";
-        // }}
-        // onMouseLeave={() => {
-        //   if (refs.floating.current)
-        //     refs.floating.current.style.display = "none";
-        // }}
-      >
-        My button
-      </button>
       <div
-        id="tooltip"
-        role="tooltip"
-        ref={floating}
-        style={{
-          position: strategy,
-          top: y ?? "",
-          left: x ?? "",
+        id="editor"
+        onKeyDown={(e) => {
+          if (filter) {
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              if (activeIndex === null) {
+                setActiveIndex(0);
+              } else if (
+                activeIndex !== null &&
+                activeIndex < items.length - 1
+              ) {
+                setActiveIndex(activeIndex + 1);
+              } else if (activeIndex === items.length - 1) {
+                setActiveIndex(0);
+              }
+            }
+          }
         }}
       >
-        {filter &&
-          items.filter((i) => i.toLowerCase().includes(filter.toLowerCase()))}
-      </div>
-      <div id="editor" ref={reference}>
         <HtmlEditor
           schema={schema}
           plugins={[...plugins, ...autocomplete(options)]}
@@ -96,6 +64,23 @@ function App() {
           <Toolbar toolbar={toolbar} />
           <Editor autoFocus />
         </HtmlEditor>
+        {filter && (
+          <div id="suggestion">
+            {items
+              .filter((item) =>
+                item.toLowerCase().includes(filter.toLowerCase())
+              )
+              .map((item, index) => (
+                <div
+                  style={{
+                    backgroundColor: activeIndex === index ? "green" : "blue",
+                  }}
+                >
+                  {item}
+                </div>
+              ))}
+          </div>
+        )}
       </div>
     </main>
   );

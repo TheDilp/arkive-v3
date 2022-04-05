@@ -47,6 +47,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-linkify-it": "^1.0.4",
     "react-markdown": "^8.0.2",
+    "react-merge-refs": "^1.1.0",
     "react-popper": "^2.2.5",
     "react-remark": "^2.1.0",
     "react-scripts": "5.0.0",
