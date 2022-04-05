@@ -20,6 +20,7 @@ import {
 import "remirror/styles/all.css";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
+import CustomLinkExtenstion from "./CustomLinkExtension";
 
 export default function RemirrorContext() {
   const { manager, state } = useRemirror({
@@ -45,7 +46,7 @@ export default function RemirrorContext() {
           },
         ],
       }),
-      new LinkExtension(),
+      CustomLinkExtenstion,
       new HorizontalRuleExtension(),
       new CalloutExtension(),
     ],
