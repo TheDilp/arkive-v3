@@ -22,7 +22,7 @@ import {
   UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
-import { toastSuccess } from "../utils/utils";
+import { toastSuccess } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
@@ -98,23 +98,25 @@ export default function RemirrorContext() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <ToastContainer />
-      <Remirror
-        manager={manager}
-        initialContent={state}
-        hooks={hooks}
-        classNames={["editorContext"]}
-      >
-        <MenuBar />
-        <EditorComponent />
-        <MentionComponent
-          documents={[
-            { id: "1", label: "DOC1" },
-            { id: "2", label: "DOC2" },
-          ]}
-        />
-      </Remirror>
-    </ThemeProvider>
+    <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
+      <ThemeProvider>
+        <ToastContainer />
+        <Remirror
+          manager={manager}
+          initialContent={state}
+          hooks={hooks}
+          classNames={["editorContext"]}
+        >
+          <MenuBar />
+          <EditorComponent />
+          <MentionComponent
+            documents={[
+              { id: "1", label: "DOC1" },
+              { id: "2", label: "DOC2" },
+            ]}
+          />
+        </Remirror>
+      </ThemeProvider>
+    </div>
   );
 }

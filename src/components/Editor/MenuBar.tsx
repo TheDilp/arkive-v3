@@ -1,5 +1,5 @@
 import { useActive, useCommands } from "@remirror/react";
-import "../styles/MenuBar.css";
+import "../../styles/MenuBar.css";
 
 export default function MenuBar() {
   const {
