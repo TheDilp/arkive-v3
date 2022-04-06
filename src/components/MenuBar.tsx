@@ -17,6 +17,19 @@ export default function MenuBar() {
     focus,
   } = useCommands();
   const active = useActive();
+
+  function calloutToggle(type: string) {
+    if (active.callout()) {
+      if (!active.callout({ type })) {
+        updateCallout({ type });
+      } else if (active.callout({ type })) {
+        toggleCallout({ type });
+      }
+    } else {
+      toggleCallout({ type });
+    }
+  }
+
   return (
     <div className="menuBar">
       <div className="menuBarGroup">
@@ -101,11 +114,7 @@ export default function MenuBar() {
             <div
               className="calloutOption calloutInfo"
               onClick={() => {
-                if (active.callout()) {
-                  updateCallout({ type: "info" });
-                } else {
-                  toggleCallout({ type: "info" });
-                }
+                calloutToggle("info");
                 focus();
               }}
             >
@@ -114,11 +123,7 @@ export default function MenuBar() {
             <div
               className="calloutOption calloutWarning"
               onClick={() => {
-                if (active.callout()) {
-                  updateCallout({ type: "warning" });
-                } else {
-                  toggleCallout({ type: "warning" });
-                }
+                calloutToggle("warning");
                 focus();
               }}
             >
@@ -127,24 +132,18 @@ export default function MenuBar() {
             <div
               className="calloutOption calloutSuccess"
               onClick={() => {
-                if (active.callout()) {
-                  updateCallout({ type: "success" });
-                } else {
-                  toggleCallout({ type: "success" });
-                }
+                calloutToggle("success");
                 focus();
               }}
             >
               Success
             </div>
             <div
-              className="calloutOption calloutError"
+              className={`calloutOption calloutError ${active.callout({
+                type: "error",
+              })}`}
               onClick={() => {
-                if (active.callout()) {
-                  updateCallout({ type: "error" });
-                } else {
-                  toggleCallout({ type: "error" });
-                }
+                calloutToggle("error");
                 focus();
               }}
             >
