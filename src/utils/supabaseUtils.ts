@@ -20,3 +20,20 @@ export const login = async (email: string, password: string) => {
     throw new Error(error.message);
   }
 };
+
+// SELECT
+
+export const getProjects = async () => {
+  if (user) {
+    const { data: projects, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("user_id", user.id);
+
+    if (projects) return projects;
+    if (error) {
+      toastError("There was an error getting your projects.");
+      throw new Error(error.message);
+    }
+  }
+};

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import images from "./authImages";
-import { user, login } from "../../utils/supabaseUtils";
-import "../../styles/Login.css";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-type Props = {};
+import "../../styles/Login.css";
+import { login, user } from "../../utils/supabaseUtils";
+import images from "./authImages";
 
-export default function Login({}: Props) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
