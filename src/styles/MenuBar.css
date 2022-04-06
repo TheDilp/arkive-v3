@@ -21,8 +21,9 @@
 
 }
 
-.menuBarButton:hover:not(.headingSelect) {
+.menuBarButton:hover {
     background-color: lightgreen;
+    color: green;
 }
 
 .menuBarButtonActive {

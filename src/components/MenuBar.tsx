@@ -6,6 +6,7 @@ export default function MenuBar() {
     toggleBold,
     toggleItalic,
     toggleUnderline,
+
     toggleBulletList,
     toggleOrderedList,
     toggleHeading,
@@ -54,6 +55,21 @@ export default function MenuBar() {
         </button>
       </div>
       <div className="menuBarGroup">
+        {[1, 2, 3, 4, 5, 6].map((level) => (
+          <button
+            className={`menuBarButton ${
+              active.heading({ level }) ? "menuBarButtonActive" : ""
+            }`}
+            onClick={() => {
+              toggleHeading({ level });
+              focus();
+            }}
+          >
+            {level}
+          </button>
+        ))}
+      </div>
+      <div className="menuBarGroup">
         <button
           className={`menuBarButton ${
             active.bulletList() ? "menuBarButtonActive" : ""
@@ -78,6 +94,16 @@ export default function MenuBar() {
         </button>
       </div>
       <div className="menuBarGroup">
+        <button
+          className={`menuBarButton ${
+            active.callout() ? "menuBarButtonActive" : ""
+          }`}
+          onClick={() => {
+            toggleCallout({ type: "warning" });
+          }}
+        >
+          !
+        </button>
         <button
           className={`menuBarButton ${
             active.image() ? "menuBarButtonActive" : ""
@@ -111,37 +137,6 @@ export default function MenuBar() {
         >
           LINK
         </button>
-      </div>
-      <div className="menuBarGroup">
-        <button
-          className={`menuBarButton ${
-            active.callout() ? "menuBarButtonActive" : ""
-          }`}
-          onClick={() => {
-            toggleCallout({ type: "warning" });
-          }}
-        >
-          !
-        </button>
-        <select
-          className={`menuBarButton headingSelect ${
-            active.heading() ? "menuBarButtonActive" : ""
-          }`}
-          defaultValue={0}
-          onChange={(e) => {
-            let level = parseInt(e.target.value);
-            toggleHeading({ level });
-            focus();
-          }}
-        >
-          <option value={0}>Heading</option>
-          <option value={1}>H1</option>
-          <option value={2}>H2</option>
-          <option value={3}>H3</option>
-          <option value={4}>H4</option>
-          <option value={5}>H5</option>
-          <option value={6}>H6</option>
-        </select>
       </div>
     </div>
   );
