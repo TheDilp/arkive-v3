@@ -1,3 +1,4 @@
+import { RemirrorJSON } from "@remirror/core";
 export type Project = {
   id: string;
   backgroundImage: string;
@@ -11,7 +12,7 @@ export type Project = {
 
 export type Document = {
   id: string;
-  content: JSON;
+  content: RemirrorJSON;
   image: string;
   user_id: string;
   project_id: string;

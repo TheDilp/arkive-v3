@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { RemirrorJSON } from "remirror";
 import { Document, Project } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -49,6 +50,25 @@ export const getDocuments = async (project_id: string) => {
     if (documents) return documents;
     if (error) {
       toastError("There was an error getting your documents.");
+      throw new Error(error.message);
+    }
+  }
+};
+
+// UPDATE
+
+export const updateDocument = async (doc_id: string, content: RemirrorJSON) => {
+  if (user) {
+    const { data: document, error } = await supabase
+      .from<Document>("documents")
+      .update({
+        content,
+      })
+      .eq("id", doc_id);
+
+    if (document) return document;
+    if (error) {
+      toastError("There was an error updating your document.");
       throw new Error(error.message);
     }
   }

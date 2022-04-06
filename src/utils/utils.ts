@@ -7,5 +7,3 @@ export const toastSuccess = (message: string) =>
   toast.success(message, defaultToastConfig);
 export const toastError = (message: string) =>
   toast.error(message, defaultToastConfig);
-
-// React Arborist utils

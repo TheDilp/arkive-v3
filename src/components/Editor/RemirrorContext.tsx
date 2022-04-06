@@ -7,7 +7,9 @@ import {
   useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   BoldExtension,
@@ -22,7 +24,9 @@ import {
   UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
-import { toastSuccess } from "../../utils/utils";
+import { Document } from "../../custom-types";
+import { updateDocument } from "../../utils/supabaseUtils";
+import { toastError, toastSuccess } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
@@ -30,12 +34,14 @@ import MenuBar from "./MenuBar";
 const hooks = [
   () => {
     const { getJSON } = useHelpers();
-
+    const { doc_id } = useParams();
     const handleSaveShortcut = useCallback(
       ({ state }) => {
-        localStorage.setItem("content", JSON.stringify(getJSON(state)));
-        toastSuccess("Document saved!");
-
+        updateDocument(doc_id as string, getJSON(state))
+          .then(() => {
+            toastSuccess("Document saved!");
+          })
+          .catch((err) => toastError(err?.message));
         return true; // Prevents any further key handlers from being run.
       },
       [getJSON]
@@ -47,6 +53,7 @@ const hooks = [
 ];
 
 export default function RemirrorContext() {
+  const queryClient = useQueryClient();
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
@@ -88,14 +95,22 @@ export default function RemirrorContext() {
     // is added to the editor.
     stringHandler: "html",
   });
-
+  const { project_id, doc_id } = useParams();
   useEffect(() => {
-    const content = localStorage.getItem("content");
-    if (content)
+    const documents: Document[] = queryClient.getQueryData(
+      `${project_id}-documents`
+    ) as Document[];
+    const currentDocument = documents.find(
+      (document) => document.id === doc_id
+    );
+    if (currentDocument) {
       manager.view.updateState(
-        manager.createState({ content: JSON.parse(content) })
+        manager.createState({
+          content: JSON.parse(JSON.stringify(currentDocument.content)),
+        })
       );
-  }, []);
+    }
+  }, [doc_id]);
 
   return (
     <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>

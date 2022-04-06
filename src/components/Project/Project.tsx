@@ -1,29 +1,14 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
-import { getDocuments } from "../../utils/supabaseUtils";
+import { getDocuments, updateDocument } from "../../utils/supabaseUtils";
 import { Tree, NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect, useState } from "react";
 import "../../styles/Project.css";
 import RemirrorContext from "../Editor/RemirrorContext";
 export default function Project() {
   const { project_id } = useParams();
-  const SampleData = [
-    {
-      id: 1,
-      parent: 0,
-      text: "Folder",
-      droppable: true,
-    },
-    { id: 2, parent: 1, text: "File" },
-    { id: 3, parent: 1, text: "File" },
-    {
-      id: 4,
-      parent: 0,
-      text: "Folder 2",
-      droppable: true,
-    },
-  ];
-  const [treeData, setTreeData] = useState<NodeModel[]>(SampleData);
+
+  const [treeData, setTreeData] = useState<NodeModel[]>([]);
   const handleDrop = (newTree: NodeModel[]) => setTreeData(newTree);
   const {
     data: documents,
@@ -45,6 +30,7 @@ export default function Project() {
       setTreeData(newTreeData);
     }
   }, [documents]);
+
   if (isLoading || error) return <div>TEST</div>;
   return (
     <div style={{ width: "100%" }} className="projectContainer">
