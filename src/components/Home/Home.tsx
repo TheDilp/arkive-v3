@@ -12,9 +12,18 @@ export default function Home() {
   if (error || isLoading) return <div>"TEST"</div>;
   return (
     <div className="Home">
-      {projects?.map((project) => (
-        <ProjectCard key={project.id} {...project} />
-      ))}
+      <div className="projectsContainer">
+        {projects?.map((project) => (
+          <ProjectCard key={project.id} {...project} />
+        ))}
+        <div className="projectCardContainer">
+          <div className="projectCard">
+            <div className="projectCardTitleContainer">
+              <h2>New Project</h2>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
