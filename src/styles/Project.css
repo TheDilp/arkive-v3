@@ -1,3 +1,5 @@
+body {}
+
 ul {
     list-style: none;
 }
@@ -6,4 +8,13 @@ ul {
     box-sizing: border-box;
     height: 100%;
     padding: 30px 15px;
+}
+
+.projectContainer {
+    display: flex;
+    padding: 0 5rem;
+}
+
+.projectTreeContainer {
+    width: 10%;
 }

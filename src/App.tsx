@@ -14,8 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/project/:project_id" element={<Project />} />
-            <Route path="/editor/:doc_id" element={<RemirrorContext />} />
+            <Route path="/project/:project_id/*" element={<Project />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

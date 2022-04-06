@@ -45,7 +45,7 @@ export const getDocuments = async (project_id: string) => {
       .from<Document>("documents")
       .select("*")
       .eq("project_id", project_id);
-
+    console.log(documents);
     if (documents) return documents;
     if (error) {
       toastError("There was an error getting your documents.");
