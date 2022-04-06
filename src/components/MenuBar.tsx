@@ -6,11 +6,11 @@ export default function MenuBar() {
     toggleBold,
     toggleItalic,
     toggleUnderline,
-
     toggleBulletList,
     toggleOrderedList,
     toggleHeading,
     toggleCallout,
+    updateCallout,
     insertHorizontalRule,
     updateLink,
     insertImage,
@@ -93,17 +93,66 @@ export default function MenuBar() {
           <span>OL</span>
         </button>
       </div>
+
       <div className="menuBarGroup">
-        <button
-          className={`menuBarButton ${
-            active.callout() ? "menuBarButtonActive" : ""
-          }`}
-          onClick={() => {
-            toggleCallout({ type: "warning" });
-          }}
-        >
-          !
-        </button>
+        <span className="calloutContainer">
+          <span>CL</span>
+          <div className="calloutMenu">
+            <div
+              className="calloutOption calloutInfo"
+              onClick={() => {
+                if (active.callout()) {
+                  updateCallout({ type: "info" });
+                } else {
+                  toggleCallout({ type: "info" });
+                }
+                focus();
+              }}
+            >
+              Info
+            </div>
+            <div
+              className="calloutOption calloutWarning"
+              onClick={() => {
+                if (active.callout()) {
+                  updateCallout({ type: "warning" });
+                } else {
+                  toggleCallout({ type: "warning" });
+                }
+                focus();
+              }}
+            >
+              Warning
+            </div>
+            <div
+              className="calloutOption calloutSuccess"
+              onClick={() => {
+                if (active.callout()) {
+                  updateCallout({ type: "success" });
+                } else {
+                  toggleCallout({ type: "success" });
+                }
+                focus();
+              }}
+            >
+              Success
+            </div>
+            <div
+              className="calloutOption calloutError"
+              onClick={() => {
+                if (active.callout()) {
+                  updateCallout({ type: "error" });
+                } else {
+                  toggleCallout({ type: "error" });
+                }
+                focus();
+              }}
+            >
+              Error
+            </div>
+          </div>
+        </span>
+
         <button
           className={`menuBarButton ${
             active.image() ? "menuBarButtonActive" : ""
