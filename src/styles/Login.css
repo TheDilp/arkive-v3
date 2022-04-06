@@ -35,5 +35,71 @@
 }
 
 .loginCardForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 40%;
+}
+
+.loginCardFormTitle,
+.loginCardFormSubtitle {
+    text-align: center;
+    color: white;
+}
+
+.loginCardFormSubtitle a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.loginCardFormInputContainer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.loginCardFormInputContainer label {
+    color: white;
+    margin: 0 1rem;
+}
+
+.loginCardFormInputContainer input {
+
+    background-color: #121212;
+    border: #424242 solid 1px;
+    border-radius: 0.25rem;
+    color: white;
+    margin: 0 1rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+}
+
+.loginCardFormButtonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.loginCardFormButton {
+    width: 90%;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #64b5f6;
+    color: white;
+    margin-top: 2rem;
+    padding: 0.5rem 0;
+    font-size: 1.25rem;
+    box-shadow: 0 0.15rem 0.1rem black;
+    cursor: pointer;
+
+}
+
+.loginCardFormButton:active {
+    background-color: #21bff3;
+    box-shadow: none;
+    transition: all 0.25s;
+
+
 }
