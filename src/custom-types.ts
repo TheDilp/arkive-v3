@@ -8,3 +8,13 @@ export type Project = {
   categories: JSON[];
   createdAt: Date;
 };
+
+export type Document = {
+  id: string;
+  content: JSON;
+  image: string;
+  user_id: string;
+  project_id: string;
+  categories: string[];
+  title: string;
+};

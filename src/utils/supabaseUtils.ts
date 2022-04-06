@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { Project } from "../custom-types";
+import { Document, Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
@@ -34,6 +34,21 @@ export const getProjects = async () => {
     if (projects) return projects;
     if (error) {
       toastError("There was an error getting your projects.");
+      throw new Error(error.message);
+    }
+  }
+};
+
+export const getDocuments = async (project_id: string) => {
+  if (user) {
+    const { data: documents, error } = await supabase
+      .from<Document>("documents")
+      .select("*")
+      .eq("project_id", project_id);
+
+    if (documents) return documents;
+    if (error) {
+      toastError("There was an error getting your documents.");
       throw new Error(error.message);
     }
   }

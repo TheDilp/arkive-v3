@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Home from "./components/Home/Home";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Project from "./components/Project/Project";
 function App() {
   const queryClient = new QueryClient();
   return (
@@ -13,7 +14,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/editor" element={<RemirrorContext />} />
+            <Route path="/project/:project_id" element={<Project />} />
+            <Route path="/editor/:doc_id" element={<RemirrorContext />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

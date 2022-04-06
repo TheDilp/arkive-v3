@@ -1,9 +1,9 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { Project } from "../../custom-types";
 
 export default function ProjectCard({ ...Project }: Project) {
   return (
-    <div className="projectCardContainer">
+    <Link to={`/project/${Project.id}`} className="projectCardContainer">
       <div className="projectCard">
         <div className="projectCardTitleContainer">
           <h2>{Project.title}</h2>
@@ -16,6 +16,6 @@ export default function ProjectCard({ ...Project }: Project) {
           />
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
