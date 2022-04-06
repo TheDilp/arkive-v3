@@ -1,28 +1,31 @@
 import {
-  BoldExtension,
-  ItalicExtension,
-  UnderlineExtension,
-  MentionAtomExtension,
-  ImageExtension,
-  BulletListExtension,
-  OrderedListExtension,
-  HeadingExtension,
-  HorizontalRuleExtension,
-  CalloutExtension,
-} from "remirror/extensions";
-import {
-  useRemirror,
-  Remirror,
   EditorComponent,
+  Remirror,
   ThemeProvider,
   useHelpers,
   useKeymap,
+  useRemirror,
 } from "@remirror/react";
+import { useCallback, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  BoldExtension,
+  BulletListExtension,
+  CalloutExtension,
+  HeadingExtension,
+  HorizontalRuleExtension,
+  ImageExtension,
+  ItalicExtension,
+  MentionAtomExtension,
+  OrderedListExtension,
+  UnderlineExtension,
+} from "remirror/extensions";
 import "remirror/styles/all.css";
+import { toastSuccess } from "../utils/utils";
+import CustomLinkExtenstion from "./CustomLinkExtension";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
-import CustomLinkExtenstion from "./CustomLinkExtension";
-import { useCallback, useEffect, useState } from "react";
 
 const hooks = [
   () => {
@@ -31,6 +34,7 @@ const hooks = [
     const handleSaveShortcut = useCallback(
       ({ state }) => {
         localStorage.setItem("content", JSON.stringify(getJSON(state)));
+        toastSuccess("Document saved!");
 
         return true; // Prevents any further key handlers from being run.
       },
@@ -95,6 +99,7 @@ export default function RemirrorContext() {
 
   return (
     <ThemeProvider>
+      <ToastContainer />
       <Remirror
         manager={manager}
         initialContent={state}
