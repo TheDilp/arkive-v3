@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
@@ -26,7 +27,7 @@ export const login = async (email: string, password: string) => {
 export const getProjects = async () => {
   if (user) {
     const { data: projects, error } = await supabase
-      .from("projects")
+      .from<Project>("projects")
       .select("*")
       .eq("user_id", user.id);
 
