@@ -1,0 +1,39 @@
+.loginPageContainer {
+    width: 100vw;
+    height: 100vh;
+    background-color: #121212;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginCard {
+    position: relative;
+    width: 50%;
+    height: 50%;
+    display: flex;
+    background-color: #212121;
+    border-radius: 0.5rem;
+    overflow: hidden;
+
+}
+
+/* w-full h-full absolute transition-all transition-duration-200 */
+.loginCardImage {
+    position: relative;
+    width: 60%;
+    height: 100%;
+}
+
+.loginCardImage img {
+    transition: opacity 200ms;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.loginCardForm {
+    width: 40%;
+}

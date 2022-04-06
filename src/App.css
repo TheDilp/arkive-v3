@@ -1,3 +1,7 @@
+body {
+    margin: 0;
+}
+
 .editorContext {
     height: 80vh;
     margin: 0 auto;
