@@ -6,7 +6,7 @@ import {
   useKeymap,
   useRemirror,
 } from "@remirror/react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -19,7 +19,6 @@ import {
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
-  MentionAtomExtension,
   OrderedListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
@@ -28,9 +27,10 @@ import { Document } from "../../custom-types";
 import { updateDocument } from "../../utils/supabaseUtils";
 import { toastError, toastSuccess } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
+import CustomMentionExtension from "./CustomMentionExtension";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
-
+import "../../styles/Editor.css";
 const hooks = [
   () => {
     const { getJSON } = useHelpers();
@@ -65,18 +65,21 @@ export default function RemirrorContext() {
       }),
       new BulletListExtension(),
       new OrderedListExtension(),
-      new MentionAtomExtension({
-        extraTags: ["link"],
-        extraAttributes: { href: "" },
-        mentionTag: "a",
-        matchers: [
-          {
-            name: "at",
-            char: "@",
-            appendText: "",
-          },
-        ],
-      }),
+      // new MentionAtomExtension({
+      //   extraTags: ["link"],
+      //   mentionTag: "span",
+      //   extraAttributes: {
+      //     onclick: "",
+      //   },
+      //   matchers: [
+      //     {
+      //       name: "at",
+      //       char: "@",
+      //       appendText: "",
+      //     },
+      //   ],
+      // }),
+      CustomMentionExtension,
       CustomLinkExtenstion,
       new HorizontalRuleExtension(),
       new CalloutExtension(),
@@ -95,14 +98,14 @@ export default function RemirrorContext() {
     // is added to the editor.
     stringHandler: "html",
   });
+  const [documents, setDocuments] = useState<Document[]>([]);
   const { project_id, doc_id } = useParams();
   useEffect(() => {
-    const documents: Document[] = queryClient.getQueryData(
+    const allDocs: Document[] = queryClient.getQueryData(
       `${project_id}-documents`
     ) as Document[];
-    const currentDocument = documents.find(
-      (document) => document.id === doc_id
-    );
+    setDocuments(allDocs);
+    const currentDocument = allDocs.find((document) => document.id === doc_id);
     if (currentDocument) {
       manager.view.updateState(
         manager.createState({
@@ -124,12 +127,7 @@ export default function RemirrorContext() {
         >
           <MenuBar />
           <EditorComponent />
-          <MentionComponent
-            documents={[
-              { id: "1", label: "DOC1" },
-              { id: "2", label: "DOC2" },
-            ]}
-          />
+          <MentionComponent documents={documents} />
         </Remirror>
       </ThemeProvider>
     </div>

@@ -1,10 +1,10 @@
 import { MentionAtomPopupComponent, MentionAtomState } from "@remirror/react";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface MentionComponentProps {
   documents?: {
     id: string;
-    label: string;
+    title: string;
   }[];
 }
 export default function MentionComponent({ documents }: MentionComponentProps) {
@@ -13,8 +13,7 @@ export default function MentionComponent({ documents }: MentionComponentProps) {
     () =>
       (documents ?? []).map((doc) => ({
         id: doc.id,
-        label: `${doc.label}`,
-        href: doc.id,
+        label: `${doc.title}`,
       })),
     [documents]
   );

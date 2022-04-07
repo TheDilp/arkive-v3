@@ -2,16 +2,3 @@ body {
     margin: 0;
 }
 
-.editorContext {
-    height: 80vh;
-    margin: 0 auto;
-    min-width: 50vw;
-}
-
-.remirror-mention-atom-popup-highlight {
-    background-color: lightblue !important;
-}
-
-.remirror-mention-atom-popup-name {
-    color: black !important;
-}

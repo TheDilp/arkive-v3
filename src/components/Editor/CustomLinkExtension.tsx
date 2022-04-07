@@ -6,4 +6,5 @@ CustomLinkExtenstion.addHandler("onClick", (_, data) => {
   window.location.replace(data.href);
   return true;
 });
+
 export default CustomLinkExtenstion;

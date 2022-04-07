@@ -1,0 +1,23 @@
+.editorContext {
+    height: 80vh;
+    margin: 0 auto;
+    min-width: 50vw;
+}
+
+.remirror-mention-atom-popup-highlight {
+    background-color: lightblue !important;
+}
+
+.remirror-mention-atom-popup-name {
+    color: black !important;
+}
+
+.mentionLink {
+    text-decoration: none;
+    color: lightskyblue;
+}
+
+.remirror-mention-atom {
+    outline: none !important;
+    background: none !important;
+}

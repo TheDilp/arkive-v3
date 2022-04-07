@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "react-query";
-import { Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { getDocuments, updateDocument } from "../../utils/supabaseUtils";
 import { Tree, NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect, useState } from "react";
@@ -30,7 +30,7 @@ export default function Project() {
       setTreeData(newTreeData);
     }
   }, [documents]);
-
+  const [docId, setDocId] = useState("");
   if (isLoading || error) return <div>TEST</div>;
   return (
     <div style={{ width: "100%" }} className="projectContainer">
@@ -41,11 +41,24 @@ export default function Project() {
           render={(node, { depth, isOpen, onToggle }) => (
             <div
               style={{ marginInlineStart: depth * 10 }}
-              className="treeNode"
-              onClick={() => navigate(`./${node.id}`)}
+              className={`projectTreeNode ${
+                docId === node.id ? "projectTreeNodeActive" : ""
+              }`}
+              onClick={() => {
+                setDocId(node.id as string);
+                navigate(`./${node.id}`);
+              }}
             >
               {node.droppable && (
-                <span onClick={onToggle}>{isOpen ? "[-]" : "[+]"}</span>
+                <span
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onToggle();
+                  }}
+                >
+                  {isOpen ? "[-]" : "[+]"}
+                </span>
               )}
               {node.text}
             </div>
