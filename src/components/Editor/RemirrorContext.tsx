@@ -73,7 +73,11 @@ const hooks = [
   },
 ];
 
-export default function RemirrorContext() {
+export default function RemirrorContext({
+  setDocId,
+}: {
+  setDocId: (docId: string) => void;
+}) {
   const queryClient = useQueryClient();
   const { manager, state } = useRemirror({
     extensions: () => [
@@ -107,20 +111,32 @@ export default function RemirrorContext() {
   });
   const [documents, setDocuments] = useState<Document[]>([]);
   const { project_id, doc_id } = useParams();
+
   useEffect(() => {
     const allDocs: Document[] = queryClient.getQueryData(
       `${project_id}-documents`
     ) as Document[];
     setDocuments(allDocs);
-    const currentDocument = allDocs.find((document) => document.id === doc_id);
-    if (currentDocument) {
-      manager.view.updateState(
-        manager.createState({
-          content: JSON.parse(JSON.stringify(currentDocument.content)),
-        })
-      );
+    console.log(allDocs);
+  }, []);
+
+  useEffect(() => {
+    if (doc_id) {
+      setDocId(doc_id);
+      if (documents) {
+        const currentDocument = documents.find(
+          (document) => document.id === doc_id
+        );
+        if (currentDocument) {
+          manager.view.updateState(
+            manager.createState({
+              content: JSON.parse(JSON.stringify(currentDocument.content)),
+            })
+          );
+        }
+      }
     }
-  }, [doc_id]);
+  }, [doc_id, documents]);
 
   return (
     <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>

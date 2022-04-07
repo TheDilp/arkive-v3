@@ -31,36 +31,20 @@ export default function Project() {
     }
   }, [documents]);
 
-  
-
   if (isLoading || error) return <div>TEST</div>;
   return (
     <div style={{ width: "100%" }} className="projectContainer">
-      {!docId && (
-        <ProjectTree
-          treeData={treeData}
-          setTreeData={setTreeData}
-          docId={docId}
-          setDocId={setDocId}
-        />
-      )}
+      <ProjectTree
+        treeData={treeData}
+        setTreeData={setTreeData}
+        docId={docId}
+        setDocId={setDocId}
+      />
 
       <Routes>
         <Route
           path="/:doc_id"
-          element={
-            <>
-              {docId && (
-                <ProjectTree
-                  treeData={treeData}
-                  setTreeData={setTreeData}
-                  docId={docId}
-                  setDocId={setDocId}
-                />
-              )}
-              <RemirrorContext />
-            </>
-          }
+          element={<RemirrorContext setDocId={setDocId} />}
         />
       </Routes>
     </div>

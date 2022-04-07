@@ -17,6 +17,9 @@ export default function ProjectTree({
 }: Props) {
   const handleDrop = (newTree: NodeModel[]) => setTreeData(newTree);
   const navigate = useNavigate();
+
+  // doc_id => param from URL
+  // docId => state that's used for highlighting the current document in the tree
   const { doc_id } = useParams();
 
   useEffect(() => {
@@ -38,7 +41,7 @@ export default function ProjectTree({
             }`}
             onClick={() => {
               setDocId(node.id as string);
-              navigate(`./${node.id}`);
+              navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
             }}
           >
             {node.droppable && (
