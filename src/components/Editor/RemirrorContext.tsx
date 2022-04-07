@@ -34,17 +34,38 @@ import "../../styles/Editor.css";
 const hooks = [
   () => {
     const { getJSON } = useHelpers();
-    const { doc_id } = useParams();
+    const { project_id, doc_id } = useParams();
+    const queryClient = useQueryClient();
     const handleSaveShortcut = useCallback(
       ({ state }) => {
         updateDocument(doc_id as string, getJSON(state))
-          .then(() => {
-            toastSuccess("Document saved!");
+          .then((data) => {
+            if (data) {
+              let updatedDoc = data[0];
+              queryClient.setQueryData(
+                `${project_id}-documents`,
+                (oldData: Document[] | undefined) => {
+                  if (oldData) {
+                    let newData: Document[] = oldData.map((doc) => {
+                      if (doc.id === updatedDoc.id) {
+                        return updatedDoc;
+                      } else {
+                        return doc;
+                      }
+                    });
+                    return newData;
+                  } else {
+                    return [];
+                  }
+                }
+              );
+              toastSuccess(`Document ${updatedDoc.title} saved`);
+            }
           })
           .catch((err) => toastError(err?.message));
         return true; // Prevents any further key handlers from being run.
       },
-      [getJSON]
+      [getJSON, doc_id]
     );
 
     // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
@@ -65,20 +86,6 @@ export default function RemirrorContext() {
       }),
       new BulletListExtension(),
       new OrderedListExtension(),
-      // new MentionAtomExtension({
-      //   extraTags: ["link"],
-      //   mentionTag: "span",
-      //   extraAttributes: {
-      //     onclick: "",
-      //   },
-      //   matchers: [
-      //     {
-      //       name: "at",
-      //       char: "@",
-      //       appendText: "",
-      //     },
-      //   ],
-      // }),
       CustomMentionExtension,
       CustomLinkExtenstion,
       new HorizontalRuleExtension(),
