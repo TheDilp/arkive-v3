@@ -1,4 +1,7 @@
-import RemirrorContext from "./components/Editor/RemirrorContext";
+import "primereact/resources/themes/lara-dark-blue/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
+import "/node_modules/primeflex/primeflex.css";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";

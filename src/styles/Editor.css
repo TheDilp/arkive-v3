@@ -4,6 +4,16 @@
     min-width: 50vw;
 }
 
+.editorContainer {
+    width: 80%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.editorContainer>* {
+    width: 100%;
+}
+
 .remirror-mention-atom-popup-highlight {
     background-color: lightblue !important;
 }

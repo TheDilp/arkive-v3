@@ -139,7 +139,7 @@ export default function RemirrorContext({
   }, [doc_id, documents]);
 
   return (
-    <div style={{ width: "80%", display: "flex", justifyContent: "center" }}>
+    <div className="editorContainer">
       <ThemeProvider>
         <ToastContainer />
         <Remirror
