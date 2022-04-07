@@ -3,7 +3,7 @@ import { Project } from "../../custom-types";
 
 export default function ProjectCard({ ...Project }: Project) {
   return (
-    <Link to={`/project/${Project.id}`} className="projectCardContainer">
+    <Link to={`/project/${Project.id}/wiki`} className="projectCardContainer">
       <div className="projectCard">
         <div className="projectCardTitleContainer">
           <h2>{Project.title}</h2>

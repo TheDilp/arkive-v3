@@ -14,7 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/project/:project_id/*" element={<Project />} />
+            <Route path="/project/:project_id/wiki/*" element={<Project />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

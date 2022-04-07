@@ -20,4 +20,5 @@
 .remirror-mention-atom {
     outline: none !important;
     background: none !important;
+    padding: 0 !important;
 }
