@@ -41,14 +41,14 @@ const hooks = [
         updateDocument(doc_id as string, getJSON(state))
           .then((data) => {
             if (data) {
-              let updatedDoc = data[0];
+              let updatedDocument = data;
               queryClient.setQueryData(
                 `${project_id}-documents`,
                 (oldData: Document[] | undefined) => {
                   if (oldData) {
                     let newData: Document[] = oldData.map((doc) => {
-                      if (doc.id === updatedDoc.id) {
-                        return updatedDoc;
+                      if (doc.id === updatedDocument.id) {
+                        return updatedDocument;
                       } else {
                         return doc;
                       }
@@ -59,7 +59,7 @@ const hooks = [
                   }
                 }
               );
-              toastSuccess(`Document ${updatedDoc.title} saved`);
+              toastSuccess(`Document ${updatedDocument.title} saved`);
             }
           })
           .catch((err) => toastError(err?.message));
@@ -140,12 +140,11 @@ export default function RemirrorContext({
   }, [doc_id, documents]);
 
   return (
-    <div className="editorContainer w-9 flex flex-wrap align-content-start text-white">
+    <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2">
         {currentDocument && currentDocument.title}
       </h1>
       <ThemeProvider>
-        <ToastContainer />
         <Remirror
           manager={manager}
           initialContent={state}

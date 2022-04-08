@@ -6,7 +6,7 @@ export type Project = {
   logoImage: string;
   title: string;
   user_id: string;
-  categories: JSON[];
+  categories: string[];
   createdAt: Date;
 };
 

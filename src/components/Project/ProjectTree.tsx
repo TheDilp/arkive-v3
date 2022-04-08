@@ -29,7 +29,7 @@ export default function ProjectTree({
   }, [doc_id]);
 
   return (
-    <div className="text-white w-2 flex ">
+    <div className="text-white w-2 flex surface-50">
       <Tree
         classes={{ root: "list-none", container: "list-none" }}
         tree={treeData}
