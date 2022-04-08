@@ -9,7 +9,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
 import {
   BoldExtension,
   BulletListExtension,
@@ -119,11 +118,12 @@ export default function RemirrorContext({
         );
         if (currentDocument) {
           setCurrentDocument(currentDocument);
-          manager.view.updateState(
-            manager.createState({
-              content: JSON.parse(JSON.stringify(currentDocument.content)),
-            })
-          );
+          if (currentDocument.content)
+            manager.view.updateState(
+              manager.createState({
+                content: JSON.parse(JSON.stringify(currentDocument.content)),
+              })
+            );
         }
       }
     }

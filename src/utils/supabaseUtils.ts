@@ -80,6 +80,30 @@ export const getDocuments = async (project_id: string) => {
   }
 };
 
+// INSERT
+
+export const createDocument = async (
+  project_id: string,
+  parent: string | undefined
+) => {
+  let user = auth.user();
+  if (user) {
+    const { data: document, error } = await supabase
+      .from<Document>("documents")
+      .insert({
+        project_id,
+        user_id: user.id,
+        parent: parent || "0",
+        title: "New Document",
+      });
+    if (document) return document[0];
+    if (error) {
+      toastError("There was an error creating your document.");
+      throw new Error(error.message);
+    }
+  }
+};
+
 // UPDATE
 
 export const updateDocument = async (

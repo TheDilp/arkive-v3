@@ -2,6 +2,11 @@ import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import { createDocument } from "../../utils/supabaseUtils";
+import { useQueryClient } from "react-query";
+import { Document } from "../../custom-types";
+import { toastSuccess } from "../../utils/utils";
 type Props = {
   treeData: NodeModel[];
   setTreeData: (treeData: NodeModel[]) => void;
@@ -15,12 +20,13 @@ export default function ProjectTree({
   docId,
   setDocId,
 }: Props) {
+  const queryClient = useQueryClient();
   const handleDrop = (newTree: NodeModel[]) => setTreeData(newTree);
   const navigate = useNavigate();
   const [filter, setFilter] = useState("");
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
-  const { doc_id } = useParams();
+  const { project_id, doc_id } = useParams();
 
   useEffect(() => {
     if (doc_id) {
@@ -31,6 +37,33 @@ export default function ProjectTree({
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
       <div className="pt-2 px-2 w-full">
+        <div className="w-full py-1">
+          <Button
+            label="New Document"
+            icon={"pi pi-fw pi-plus"}
+            iconPos="right"
+            className="p-button-outlined"
+            onClick={async () => {
+              const newDocument = (await createDocument(
+                project_id as string,
+                "0"
+              )) as Document;
+              toastSuccess("New Document created!");
+              queryClient.setQueryData(
+                `${project_id}-documents`,
+                (oldData: Document[] | undefined) => {
+                  if (oldData) {
+                    console.log(oldData);
+                    const newData = [...oldData, newDocument];
+                    return newData;
+                  } else {
+                    return [newDocument];
+                  }
+                }
+              );
+            }}
+          />
+        </div>
         <InputText
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
@@ -41,7 +74,7 @@ export default function ProjectTree({
       {!filter && (
         <Tree
           classes={{
-            root: "list-none h-screen w-full",
+            root: "list-none w-full overflow-y-scroll projectTreeRoot",
             container: "list-none cursor-pointer",
           }}
           tree={treeData}
