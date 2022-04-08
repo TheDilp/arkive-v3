@@ -9,16 +9,18 @@ import { Document } from "../../custom-types";
 import { toastSuccess } from "../../utils/utils";
 type Props = {
   treeData: NodeModel[];
-  setTreeData: (treeData: NodeModel[]) => void;
   docId: string;
+  setTreeData: (treeData: NodeModel[]) => void;
   setDocId: (docId: string) => void;
+  setDocuments: (documents: Document[]) => void;
 };
 
 export default function ProjectTree({
   treeData,
-  setTreeData,
   docId,
+  setTreeData,
   setDocId,
+  setDocuments,
 }: Props) {
   const queryClient = useQueryClient();
   const handleDrop = (newTree: NodeModel[]) => setTreeData(newTree);
@@ -53,10 +55,11 @@ export default function ProjectTree({
                 `${project_id}-documents`,
                 (oldData: Document[] | undefined) => {
                   if (oldData) {
-                    console.log(oldData);
                     const newData = [...oldData, newDocument];
+                    setDocuments(newData);
                     return newData;
                   } else {
+                    setDocuments([newDocument]);
                     return [newDocument];
                   }
                 }

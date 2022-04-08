@@ -18,7 +18,6 @@ import {
   ImageExtension,
   ItalicExtension,
   OrderedListExtension,
-  MentionAtomExtension,
   UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
@@ -73,9 +72,13 @@ const hooks = [
 ];
 
 export default function RemirrorContext({
+  documents,
+  setDocuments,
   setDocId,
 }: {
+  documents: Document[];
   setDocId: (docId: string) => void;
+  setDocuments: (documents: Document[]) => void;
 }) {
   const queryClient = useQueryClient();
   const { manager, state } = useRemirror({
@@ -98,7 +101,6 @@ export default function RemirrorContext({
     selection: "start",
     stringHandler: "html",
   });
-  const [documents, setDocuments] = useState<Document[]>([]);
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const { project_id, doc_id } = useParams();
 
@@ -118,12 +120,13 @@ export default function RemirrorContext({
         );
         if (currentDocument) {
           setCurrentDocument(currentDocument);
-          if (currentDocument.content)
+          if (currentDocument.content) {
             manager.view.updateState(
               manager.createState({
                 content: JSON.parse(JSON.stringify(currentDocument.content)),
               })
             );
+          }
         }
       }
     }

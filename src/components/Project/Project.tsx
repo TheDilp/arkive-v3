@@ -2,6 +2,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Route, Routes, useParams } from "react-router-dom";
+import { Document } from "../../custom-types";
 import { getCurrentProject, getDocuments } from "../../utils/supabaseUtils";
 import RemirrorContext from "../Editor/RemirrorContext";
 import ProjectTree from "./ProjectTree";
@@ -9,10 +10,11 @@ import PropertiesPanel from "./PropertiesPanel";
 export default function Project() {
   const { project_id } = useParams();
   const [docId, setDocId] = useState("");
-
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
+
   const {
-    data: documents,
+    data: documentsData,
     error: documentsError,
     isLoading,
   } = useQuery(
@@ -28,8 +30,8 @@ export default function Project() {
     async () => await getCurrentProject(project_id as string)
   );
   useEffect(() => {
-    if (documents && documents.length > 0) {
-      const newTreeData = documents.map((document) => ({
+    if (documentsData && documentsData.length > 0) {
+      const newTreeData = documentsData.map((document) => ({
         id: document.id,
         parent: document.parent,
         text: document.title,
@@ -37,7 +39,7 @@ export default function Project() {
       }));
       setTreeData(newTreeData);
     }
-  }, [documents]);
+  }, [documentsData]);
 
   if (isLoading || documentsError || projectError || projectLoading)
     return <div>TEST</div>;
@@ -48,6 +50,7 @@ export default function Project() {
         setTreeData={setTreeData}
         docId={docId}
         setDocId={setDocId}
+        setDocuments={setDocuments}
       />
 
       <Routes>
@@ -55,7 +58,11 @@ export default function Project() {
           path="/:doc_id"
           element={
             <>
-              <RemirrorContext setDocId={setDocId} />
+              <RemirrorContext
+                setDocId={setDocId}
+                documents={documents}
+                setDocuments={setDocuments}
+              />
               <PropertiesPanel />
             </>
           }
