@@ -30,12 +30,14 @@ export default function ProjectTree({
 
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
-      <InputText
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        className="w-full p-1"
-        placeholder="Filter Documents"
-      />
+      <div className="pt-2 px-2 w-full">
+        <InputText
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full p-1"
+          placeholder="Filter Documents"
+        />
+      </div>
       {!filter && (
         <Tree
           classes={{
@@ -47,8 +49,8 @@ export default function ProjectTree({
           render={(node, { depth, isOpen, onToggle }) => (
             <div
               style={{ marginInlineStart: depth * 10 }}
-              className={`text-lg ${
-                docId === node.id ? "bg-primary py-1" : ""
+              className={`text-lg hover:bg-blue-300 py-1 ${
+                docId === node.id ? "bg-primary" : ""
               }`}
               onClick={() => {
                 setDocId(node.id as string);

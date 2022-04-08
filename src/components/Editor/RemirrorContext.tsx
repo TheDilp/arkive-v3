@@ -9,7 +9,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   BoldExtension,
@@ -20,6 +19,7 @@ import {
   ImageExtension,
   ItalicExtension,
   OrderedListExtension,
+  MentionAtomExtension,
   UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
@@ -95,18 +95,8 @@ export default function RemirrorContext({
       new HorizontalRuleExtension(),
       new CalloutExtension(),
     ],
-
-    // Set the initial content.
     content: "<p>This is awesome</p>",
-
-    // Place the cursor at the start of the document. This can also be set to
-    // `end`, `all` or a numbered position.
     selection: "start",
-
-    // Set the string handler which means the content provided will be
-    // automatically handled as html.
-    // `markdown` is also available when the `MarkdownExtension`
-    // is added to the editor.
     stringHandler: "html",
   });
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -149,7 +139,7 @@ export default function RemirrorContext({
           manager={manager}
           initialContent={state}
           hooks={hooks}
-          classNames={["surface-50"]}
+          classNames={["surface-50 text-white"]}
         >
           <MenuBar />
           <EditorComponent />
