@@ -29,16 +29,15 @@ export default function ProjectTree({
   }, [doc_id]);
 
   return (
-    <div className="text-white w-2 flex">
+    <div className="text-white w-2 flex ">
       <Tree
+        classes={{ root: "list-none", container: "list-none" }}
         tree={treeData}
         rootId={"0"}
         render={(node, { depth, isOpen, onToggle }) => (
           <div
             style={{ marginInlineStart: depth * 10 }}
-            className={`projectTreeNode ${
-              docId === node.id ? "bg-primary" : ""
-            }`}
+            className={`text-lg ${docId === node.id ? "bg-primary" : ""}`}
             onClick={() => {
               setDocId(node.id as string);
               navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
@@ -52,7 +51,11 @@ export default function ProjectTree({
                   onToggle();
                 }}
               >
-                {isOpen ? "[-]" : "[+]"}
+                {isOpen ? (
+                  <i className="pi pi-fw pi-chevron-down"></i>
+                ) : (
+                  <i className="pi pi-fw pi-chevron-right"></i>
+                )}
               </span>
             )}
             {node.text}
