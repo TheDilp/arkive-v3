@@ -49,6 +49,8 @@ export const getProjects = async () => {
   }
 };
 export const getCurrentProject = async (project_id: string) => {
+  let user = auth.user();
+
   if (user) {
     const { data: project, error } = await supabase
       .from<Project>("projects")
@@ -63,6 +65,7 @@ export const getCurrentProject = async (project_id: string) => {
   }
 };
 export const getDocuments = async (project_id: string) => {
+  let user = auth.user();
   if (user) {
     const { data: documents, error } = await supabase
       .from<Document>("documents")
@@ -84,6 +87,8 @@ export const updateDocument = async (
   content?: RemirrorJSON,
   categories?: string[]
 ) => {
+  let user = auth.user();
+
   if (user) {
     const { data: document, error } = await supabase
       .from<Document>("documents")
