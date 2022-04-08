@@ -11,7 +11,7 @@ import Project from "./components/Project/Project";
 function App() {
   const queryClient = new QueryClient();
   return (
-    <main className="App" style={{ display: "flex", justifyContent: "center" }}>
+    <main className="App flex justify-content-center h-screen surface-0">
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>

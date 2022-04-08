@@ -1,7 +1,7 @@
-import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import { getDocuments } from "../../utils/supabaseUtils";
 import RemirrorContext from "../Editor/RemirrorContext";
 import ProjectTree from "./ProjectTree";
@@ -32,7 +32,7 @@ export default function Project() {
 
   if (isLoading || error) return <div>TEST</div>;
   return (
-    <div className="w-full flex ">
+    <div className="w-full flex justify-content-start">
       <ProjectTree
         treeData={treeData}
         setTreeData={setTreeData}

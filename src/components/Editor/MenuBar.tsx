@@ -31,10 +31,10 @@ export default function MenuBar() {
   }
 
   return (
-    <div className="menuBar">
-      <div className="menuBarGroup">
+    <div className="menuBar ">
+      <div className="menuBarGroup ">
         <button
-          className={`menuBarButton ${
+          className={`menuBarButton  ${
             active.bold() ? "menuBarButtonActive" : ""
           }`}
           onClick={() => {

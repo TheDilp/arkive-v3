@@ -117,7 +117,6 @@ export default function RemirrorContext({
       `${project_id}-documents`
     ) as Document[];
     setDocuments(allDocs);
-    console.log(allDocs);
   }, []);
 
   useEffect(() => {
@@ -139,14 +138,14 @@ export default function RemirrorContext({
   }, [doc_id, documents]);
 
   return (
-    <div className="editorContainer">
+    <div className="editorContainer w-9">
       <ThemeProvider>
         <ToastContainer />
         <Remirror
           manager={manager}
           initialContent={state}
           hooks={hooks}
-          classNames={["editorContext"]}
+          classNames={["surface-50 text-white"]}
         >
           <MenuBar />
           <EditorComponent />

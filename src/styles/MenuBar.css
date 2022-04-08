@@ -3,9 +3,10 @@
     z-index: 99;
     display: flex;
     flex-wrap: nowrap;
-    border: lightgray solid 1px;
+    background-color: var(--surface-50);
+    border: var(--surface-100) solid 1px;
     border-radius: 0.5rem;
-    box-shadow: 0 0.05rem 0.15rem lightgray;
+
 }
 
 .menuBarGroup {
@@ -18,7 +19,7 @@
     border: none;
     background-color: transparent;
     cursor: pointer;
-
+    color: white
 }
 
 .menuBarButton:hover {

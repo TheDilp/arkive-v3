@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 type Props = {
@@ -29,7 +29,7 @@ export default function ProjectTree({
   }, [doc_id]);
 
   return (
-    <div className="projectTreeContainer">
+    <div className="text-white w-2 flex">
       <Tree
         tree={treeData}
         rootId={"0"}
