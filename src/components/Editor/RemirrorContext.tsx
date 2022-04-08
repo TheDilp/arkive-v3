@@ -110,6 +110,7 @@ export default function RemirrorContext({
     stringHandler: "html",
   });
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const { project_id, doc_id } = useParams();
 
   useEffect(() => {
@@ -127,6 +128,7 @@ export default function RemirrorContext({
           (document) => document.id === doc_id
         );
         if (currentDocument) {
+          setCurrentDocument(currentDocument);
           manager.view.updateState(
             manager.createState({
               content: JSON.parse(JSON.stringify(currentDocument.content)),
@@ -138,14 +140,17 @@ export default function RemirrorContext({
   }, [doc_id, documents]);
 
   return (
-    <div className="editorContainer w-9">
+    <div className="editorContainer w-9 flex flex-wrap align-content-start text-white">
+      <h1 className="w-full text-center my-2">
+        {currentDocument && currentDocument.title}
+      </h1>
       <ThemeProvider>
         <ToastContainer />
         <Remirror
           manager={manager}
           initialContent={state}
           hooks={hooks}
-          classNames={["surface-50 text-white"]}
+          classNames={["surface-50"]}
         >
           <MenuBar />
           <EditorComponent />

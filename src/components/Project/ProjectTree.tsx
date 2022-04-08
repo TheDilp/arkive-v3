@@ -37,7 +37,7 @@ export default function ProjectTree({
           <div
             style={{ marginInlineStart: depth * 10 }}
             className={`projectTreeNode ${
-              docId === node.id ? "projectTreeNodeActive" : ""
+              docId === node.id ? "bg-primary" : ""
             }`}
             onClick={() => {
               setDocId(node.id as string);

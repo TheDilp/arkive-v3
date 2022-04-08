@@ -32,7 +32,7 @@ export default function Project() {
 
   if (isLoading || error) return <div>TEST</div>;
   return (
-    <div className="w-full flex justify-content-start">
+    <div className="w-full flex flex-wrap justify-content-start">
       <ProjectTree
         treeData={treeData}
         setTreeData={setTreeData}
