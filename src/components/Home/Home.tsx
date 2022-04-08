@@ -11,18 +11,18 @@ export default function Home() {
   } = useQuery("getAllProjects", async () => await getProjects());
   if (error || isLoading) return <div>"TEST"</div>;
   return (
-    <div className="Home">
-      <div className="projectsContainer">
+    <div className="Home w-8">
+      <div className="w-full flex justify-content-center mt-5">
         {projects?.map((project) => (
           <ProjectCard key={project.id} {...project} />
         ))}
-        <div className="projectCardContainer">
+        {/* <div className="projectCardContainer">
           <div className="projectCard">
             <div className="projectCardTitleContainer">
               <h2>New Project</h2>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
