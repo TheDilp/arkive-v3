@@ -10,7 +10,7 @@ export const supabase = createClient(
   supabaseKey as string
 );
 
-export const user = supabase.auth.user();
+export const auth = supabase.auth;
 
 // Auth functions
 
@@ -23,9 +23,18 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const logout = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    toastError("There was an error logging you out. Please try again.");
+    throw new Error(error.message);
+  }
+};
+
 // SELECT
 
 export const getProjects = async () => {
+  let user = auth.user();
   if (user) {
     const { data: projects, error } = await supabase
       .from<Project>("projects")

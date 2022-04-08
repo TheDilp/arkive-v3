@@ -1,21 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "react-query";
-import { getProjects } from "../../utils/supabaseUtils";
+import { auth, getProjects } from "../../utils/supabaseUtils";
 import ProjectCard from "./ProjectCard";
 import "../../styles/Home.css";
+import { Navigate } from "react-router-dom";
 export default function Home() {
   const {
     data: projects,
     error,
     isLoading,
   } = useQuery("getAllProjects", async () => await getProjects());
-  if (error || isLoading) return <div>"TEST"</div>;
-  return (
+  if (error || isLoading)
+    return (
+      <div className="text-white">
+        <h1>"TEST"</h1>
+      </div>
+    );
+
+  return auth.user() ? (
     <div className="Home w-8">
       <div className="w-full flex justify-content-center mt-5">
-        {projects?.map((project) => (
-          <ProjectCard key={project.id} {...project} />
-        ))}
+        {projects &&
+          projects.map((project) => (
+            <ProjectCard key={project.id} {...project} />
+          ))}
         {/* <div className="projectCardContainer">
           <div className="projectCard">
             <div className="projectCardTitleContainer">
@@ -25,5 +33,7 @@ export default function Home() {
         </div> */}
       </div>
     </div>
+  ) : (
+    <Navigate to="/login" />
   );
 }

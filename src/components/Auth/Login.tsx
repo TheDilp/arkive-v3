@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import "../../styles/Login.css";
-import { login, user } from "../../utils/supabaseUtils";
+import { auth, login } from "../../utils/supabaseUtils";
 import images from "./authImages";
 
 export default function Login() {
@@ -19,7 +19,7 @@ export default function Login() {
     }, 5000);
     return () => clearTimeout(timeout);
   }, [index]);
-  return user && user.id ? (
+  return auth.user() ? (
     <Navigate to="/" />
   ) : (
     <div className="loginPageContainer">
@@ -66,8 +66,8 @@ export default function Login() {
             <button
               className="loginCardFormButton"
               onClick={async () => {
-                await login(email, password);
-                navigate("/");
+                let user = await login(email, password);
+                if (user) navigate("/");
               }}
             >
               Sign In
