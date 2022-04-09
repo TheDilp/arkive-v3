@@ -36,8 +36,8 @@ const hooks = [
     const queryClient = useQueryClient();
     const handleSaveShortcut = useCallback(
       ({ state }) => {
-        updateDocument(doc_id as string, getJSON(state))
-          .then((data) => {
+        updateDocument(doc_id as string, undefined, getJSON(state))
+          .then((data: Document | undefined) => {
             if (data) {
               let updatedDocument = data;
               queryClient.setQueryData(

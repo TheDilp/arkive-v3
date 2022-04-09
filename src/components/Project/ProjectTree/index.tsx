@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { createDocument } from "../../../utils/supabaseUtils";
+import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
 import { useQueryClient } from "react-query";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
-import { toastSuccess } from "../../../utils/utils";
+import { toastError, toastSuccess } from "../../../utils/utils";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 import ProjectTreeDialog from "./ProjectTreeDialog";
@@ -52,20 +52,73 @@ export default function ProjectTree({
         setDisplayDialog={setDisplayDialog}
       />
       <Dialog
-        header="Header"
+        header={`Edit ${displayDialog.title}`}
         visible={displayDialog.show}
-        style={{ width: "50vw" }}
+        className="w-3"
         onHide={() =>
           setDisplayDialog((displayDialog) => ({
-            ...displayDialog,
+            id: "",
+            title: "",
             show: false,
           }))
         }
         modal={false}
       >
         {displayDialog && (
-          <div>
-            <InputText />
+          <div className="w-full">
+            <div className="my-2">
+              <InputText
+                className="w-full"
+                value={displayDialog.title}
+                onChange={(e) =>
+                  setDisplayDialog((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="flex w-full">
+              <Button
+                className="ml-auto p-button-raised p-button-text p-button-success"
+                label="Save"
+                icon="pi pi-fw pi-save"
+                iconPos="right"
+                onClick={async () => {
+                  const newDocument = await updateDocument(
+                    displayDialog.id,
+                    displayDialog.title
+                  )
+                    .then((data: Document | undefined) => {
+                      if (data) {
+                        setDisplayDialog({ id: "", title: "", show: false });
+                        let updatedDocument = data;
+                        queryClient.setQueryData(
+                          `${project_id}-documents`,
+                          (oldData: Document[] | undefined) => {
+                            if (oldData) {
+                              let newData: Document[] = oldData.map((doc) => {
+                                if (doc.id === updatedDocument.id) {
+                                  return updatedDocument;
+                                } else {
+                                  return doc;
+                                }
+                              });
+                              return newData;
+                            } else {
+                              return [];
+                            }
+                          }
+                        );
+                        toastSuccess(`Document ${updatedDocument.title} saved`);
+                      }
+                    })
+                    .catch((err) =>
+                      toastError("There was an error updating the document")
+                    );
+                }}
+              />
+            </div>
           </div>
         )}
       </Dialog>

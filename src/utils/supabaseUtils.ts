@@ -121,6 +121,7 @@ export const createDocument = async (
 
 export const updateDocument = async (
   doc_id: string,
+  title?: string,
   content?: RemirrorJSON,
   categories?: string[]
 ) => {
@@ -130,6 +131,7 @@ export const updateDocument = async (
     const { data: document, error } = await supabase
       .from<Document>("documents")
       .update({
+        title,
         content,
         categories,
       })
