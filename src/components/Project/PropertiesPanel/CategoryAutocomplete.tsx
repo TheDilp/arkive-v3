@@ -30,6 +30,7 @@ export default function CategoryAutocomplete({
     const updatedDocument = await updateDocument(
       doc_id as string,
       undefined,
+      undefined,
       categories
     ).catch((err) => {
       setCurrentDoc(oldDocument);

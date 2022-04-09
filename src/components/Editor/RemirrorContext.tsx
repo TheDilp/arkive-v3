@@ -196,7 +196,6 @@ export default function RemirrorContext({
             const { tr, firstRender } = props;
             if (!firstRender && tr?.docChanged) {
               setSaving(tr?.time);
-              console.log(tr);
             }
           }}
         >
