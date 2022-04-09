@@ -1,7 +1,7 @@
 import { useActive, useCommands } from "@remirror/react";
 import { Menubar } from "primereact/menubar";
+import { Icon } from "@iconify/react";
 import "../../styles/MenuBar.css";
-
 export default function MenuBar() {
   const {
     toggleBold,
@@ -65,6 +65,102 @@ export default function MenuBar() {
         },
       ],
     },
+    {
+      template: (item: any, options: any) => (
+        <span className={`${options.className} text-center text-xl`}>
+          <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+            <Icon
+              className={`${options.iconClassName} m-0`}
+              icon="bi:list-ul"
+            />
+          </div>
+        </span>
+      ),
+    },
+
+    {
+      template: (item: any, options: any) => (
+        <span className={`${options.className} text-center text-xl`}>
+          <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+            <Icon
+              className={`${options.iconClassName} m-0`}
+              icon="bi:list-ol"
+            />
+          </div>
+        </span>
+      ),
+    },
+    {
+      icon: "pi pi-fw pi-info-circle",
+      items: [
+        {
+          label: "Info",
+          icon: "pi pi-fw pi-info-circle",
+          className: "calloutInfoButton",
+        },
+        {
+          label: "Error",
+          template: (item: any, options: any) => (
+            <span className={`${options.className}`}>
+              <span className="">
+                <Icon
+                  className={`${options.iconClassName}`}
+                  icon="codicon:error"
+                  color="#f00"
+                />
+              </span>
+              <span className={`${options.labelClassName} `}>{item.label}</span>
+            </span>
+          ),
+        },
+        {
+          label: "Warning",
+          template: (item: any, options: any) => (
+            <span className={`${options.className}`}>
+              <span className="">
+                <Icon
+                  className={`${options.iconClassName}`}
+                  icon="jam:triangle-danger-f"
+                  color="#ff0"
+                />
+              </span>
+              <span className={`${options.labelClassName} `}>{item.label}</span>
+            </span>
+          ),
+        },
+        {
+          label: "Success",
+          template: (item: any, options: any) => (
+            <span className={`${options.className}`}>
+              <span className="">
+                <Icon
+                  className={`${options.iconClassName}`}
+                  icon="clarity:success-standard-line"
+                  color="#0f0"
+                />
+              </span>
+              <span className={`${options.labelClassName} `}>{item.label}</span>
+            </span>
+          ),
+        },
+      ],
+    },
+    {
+      icon: "pi pi-fw pi-image",
+    },
+    {
+      template: (item: any, options: any) => (
+        <span className={`${options.className} text-center text-xl`}>
+          <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+            <Icon
+              className={`${options.iconClassName} m-0`}
+              icon="radix-icons:divider-horizontal"
+            />
+          </div>
+        </span>
+      ),
+    },
+    { icon: "pi pi-fw pi-link" },
   ];
 
   return <Menubar model={items} className="p-0" />;

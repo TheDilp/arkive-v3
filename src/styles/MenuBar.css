@@ -1,72 +1,7 @@
-.menuBar {
-    position: sticky;
-    z-index: 99;
-    display: flex;
-    flex-wrap: nowrap;
-    background-color: var(--surface-50);
-    border: var(--surface-100) solid 1px;
-    border-radius: 0.5rem;
-
+.customMenuBarIconContainer>* {
+    margin: 0 !important;
 }
 
-.menuBarGroup {
-    border-right: lightgray solid 1px;
-}
-
-.menuBarButton {
-    height: 100%;
-    padding: 0.5rem;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    color: white
-}
-
-
-.calloutContainer {
-    display: inline-block;
-    cursor: pointer;
-}
-
-.calloutContainer .calloutMenu {
-    display: none;
-    margin: 0;
-    position: absolute;
-    background-color: #f9f9f9;
-    z-index: 1;
-    width: 10%;
-    border-radius: 0.5rem;
-    border: solid lightgray 1px;
-    overflow: hidden;
-    box-shadow: 0 0.2rem 0.5rem lightgray;
-}
-
-.calloutContainer:hover .calloutMenu {
-    display: block;
-}
-
-.calloutContainer .calloutMenu:hover {
-    display: block;
-}
-
-.calloutOption {
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-}
-
-.calloutInfo:hover {
-    background-color: lightblue;
-}
-
-.calloutWarning:hover {
-    background-color: lightyellow;
-}
-
-.calloutError:hover {
-    background-color: lightcoral;
-}
-
-.calloutSuccess:hover {
-    background-color: lightgreen;
+.calloutInfoButton .pi-info-circle {
+    color: lightskyblue !important;
 }
