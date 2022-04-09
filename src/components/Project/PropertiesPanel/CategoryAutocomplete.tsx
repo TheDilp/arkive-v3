@@ -24,6 +24,38 @@ export default function CategoryAutocomplete({
   const { project_id, doc_id } = useParams();
   const queryClient = useQueryClient();
 
+  async function updateCategories(currentDoc: Document, categories: string[]) {
+    let oldDocument = currentDoc;
+    setCurrentDoc({ ...currentDoc, categories });
+    const updatedDocument = await updateDocument(
+      doc_id as string,
+      undefined,
+      categories
+    ).catch((err) => {
+      setCurrentDoc(oldDocument);
+      toastError("There was an error updating your document's categories");
+    });
+    if (updatedDocument) {
+      queryClient.setQueryData(
+        `${project_id}-documents`,
+        (oldData: Document[] | undefined) => {
+          if (oldData) {
+            let newData: Document[] = oldData.map((doc) => {
+              if (doc.id === updatedDocument.id) {
+                return updatedDocument;
+              } else {
+                return doc;
+              }
+            });
+            return newData;
+          } else {
+            return [];
+          }
+        }
+      );
+    }
+  }
+
   return (
     <AutoComplete
       value={currentDoc.categories}
@@ -32,35 +64,21 @@ export default function CategoryAutocomplete({
         searchCategory(e, currentProject.categories, setFilteredCategories)
       }
       multiple
-      onChange={async (e) => {
-        let oldDocument = currentDoc;
-        setCurrentDoc({ ...currentDoc, categories: e.value });
-        const updatedDocument = await updateDocument(
-          doc_id as string,
-          undefined,
-          e.value
-        ).catch((err) => {
-          setCurrentDoc(oldDocument);
-          toastError("There was an error updating your document's categories");
-        });
-        if (updatedDocument) {
-          queryClient.setQueryData(
-            `${project_id}-documents`,
-            (oldData: Document[] | undefined) => {
-              if (oldData) {
-                let newData: Document[] = oldData.map((doc) => {
-                  if (doc.id === updatedDocument.id) {
-                    return updatedDocument;
-                  } else {
-                    return doc;
-                  }
-                });
-                return newData;
-              } else {
-                return [];
-              }
-            }
-          );
+      onChange={async (e) => updateCategories(currentDoc, e.value)}
+      onKeyUp={async (e) => {
+        if (e.key === "Enter") {
+          if (
+            currentDoc.categories &&
+            !currentDoc.categories.includes(e.currentTarget.value)
+          ) {
+            updateCategories(currentDoc, [
+              ...currentDoc.categories,
+              e.currentTarget.value,
+            ]);
+          } else if (!currentDoc.categories && e.currentTarget.value !== "") {
+            updateCategories(currentDoc, [e.currentTarget.value]);
+          }
+          e.currentTarget.value = "";
         }
       }}
     />
