@@ -43,7 +43,6 @@ export default function Project() {
       }));
       setTreeData(newTreeData);
     }
-    console.log(documentsData);
   }, [documentsData]);
 
   if (isLoading || documentsError || projectError || projectLoading)

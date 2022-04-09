@@ -1,7 +1,5 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 type Props = {
   docId: string;
   node: NodeModel;
@@ -9,6 +7,7 @@ type Props = {
   isOpen: boolean;
   onToggle: () => void;
   setDocId: (docId: string) => void;
+  cm: any;
 };
 
 export default function ProjectTreeItem({
@@ -18,6 +17,7 @@ export default function ProjectTreeItem({
   isOpen,
   onToggle,
   setDocId,
+  cm,
 }: Props) {
   const { doc_id } = useParams();
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ export default function ProjectTreeItem({
         setDocId(node.id as string);
         navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
       }}
+      onContextMenu={(e) => cm.current.show(e)}
     >
       <i className="pi pi-fw pi-bars"></i>
       {node.droppable && (

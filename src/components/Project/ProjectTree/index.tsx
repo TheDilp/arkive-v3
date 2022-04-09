@@ -1,5 +1,5 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -8,6 +8,7 @@ import { useQueryClient } from "react-query";
 import { Document } from "../../../custom-types";
 import { toastSuccess } from "../../../utils/utils";
 import ProjectTreeItem from "./ProjectTreeItem";
+import ProjectTreeItemContext from "./ProjectTreeItemContext";
 type Props = {
   treeData: NodeModel[];
   docId: string;
@@ -30,7 +31,7 @@ export default function ProjectTree({
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
   const { project_id, doc_id } = useParams();
-
+  const cm = useRef(null);
   useEffect(() => {
     if (doc_id) {
       setDocId(doc_id);
@@ -38,6 +39,7 @@ export default function ProjectTree({
   }, [doc_id]);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50 ">
+      <ProjectTreeItemContext cm={cm} />
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">
           <Button
@@ -90,6 +92,7 @@ export default function ProjectTree({
               onToggle={onToggle}
               docId={docId}
               setDocId={setDocId}
+              cm={cm}
             />
           )}
           dragPreviewRender={(monitorProps) => (

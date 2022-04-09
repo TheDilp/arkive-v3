@@ -60,6 +60,7 @@ export default function CategoryAutocomplete({
     <AutoComplete
       value={currentDoc.categories}
       suggestions={filteredCategories}
+      placeholder="Enter tags for this document..."
       completeMethod={(e) =>
         searchCategory(e, currentProject.categories, setFilteredCategories)
       }
