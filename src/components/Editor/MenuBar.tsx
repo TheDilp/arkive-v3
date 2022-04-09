@@ -48,6 +48,7 @@ export default function MenuBar() {
         },
         {
           label: "I",
+          className: active.italic() ? "menuBarButtonActive" : "",
           command: () => {
             toggleItalic();
             focus();
@@ -55,6 +56,7 @@ export default function MenuBar() {
         },
         {
           label: "U",
+          className: active.underline() ? "menuBarButtonActive" : "",
           command: () => {
             toggleUnderline();
             focus();
@@ -65,6 +67,9 @@ export default function MenuBar() {
           items: [
             {
               label: "H1",
+              className: active.heading({ level: 1 })
+                ? "menuBarButtonActive"
+                : "",
               command: () => {
                 toggleHeading({ level: 1 });
                 focus();
@@ -72,6 +77,9 @@ export default function MenuBar() {
             },
             {
               label: "H2",
+              className: active.heading({ level: 2 })
+                ? "menuBarButtonActive"
+                : "",
               command: () => {
                 toggleHeading({ level: 2 });
                 focus();
@@ -79,6 +87,9 @@ export default function MenuBar() {
             },
             {
               label: "H3",
+              className: active.heading({ level: 3 })
+                ? "menuBarButtonActive"
+                : "",
               command: () => {
                 toggleHeading({ level: 3 });
                 focus();
@@ -86,6 +97,9 @@ export default function MenuBar() {
             },
             {
               label: "H4",
+              className: active.heading({ level: 4 })
+                ? "menuBarButtonActive"
+                : "",
               command: () => {
                 toggleHeading({ level: 4 });
                 focus();
@@ -93,6 +107,9 @@ export default function MenuBar() {
             },
             {
               label: "H5",
+              className: active.heading({ level: 5 })
+                ? "menuBarButtonActive"
+                : "",
               command: () => {
                 toggleHeading({ level: 5 });
                 focus();
@@ -100,6 +117,9 @@ export default function MenuBar() {
             },
             {
               label: "H6",
+              className: active.heading({ level: 6 })
+                ? "menuBarButtonActive"
+                : "",
               command: () => {
                 toggleHeading({ level: 6 });
                 focus();
@@ -108,14 +128,15 @@ export default function MenuBar() {
           ],
         },
         {
+          className: active.bulletList() ? "menuBarButtonActive" : "",
           template: (item: any, options: any) => (
             <span
-              className={`${options.className} text-center text-xl`}
+              className={`${options.className} text-center `}
               onClick={options.onClick}
             >
               <div className="flex justify-content-center m-0 customMenuBarIconContainer">
                 <Icon
-                  className={`${options.iconClassName} m-0`}
+                  className={`${options.iconClassName} m-0 `}
                   icon="bi:list-ul"
                 />
               </div>
@@ -128,14 +149,16 @@ export default function MenuBar() {
         },
 
         {
+          className: active.orderedList() ? "menuBarButtonActive" : "",
+
           template: (item: any, options: any) => (
             <span
-              className={`${options.className} text-center text-xl`}
+              className={`${options.className} text-center `}
               onClick={options.onClick}
             >
               <div className="flex justify-content-center m-0 customMenuBarIconContainer">
                 <Icon
-                  className={`${options.iconClassName} m-0`}
+                  className={`${options.iconClassName} m-0 `}
                   icon="bi:list-ol"
                 />
               </div>
@@ -152,7 +175,9 @@ export default function MenuBar() {
             {
               label: "Info",
               icon: "pi pi-fw pi-info-circle",
-              className: "calloutInfoButton",
+              className: `calloutInfoButton ${
+                active.callout({ type: "info" }) ? "menuBarButtonActive" : ""
+              }`,
               command: () => {
                 calloutToggle("info");
                 focus();
@@ -164,6 +189,9 @@ export default function MenuBar() {
                 calloutToggle("error");
                 focus();
               },
+              className: active.callout({ type: "error" })
+                ? "menuBarButtonActive"
+                : "",
               template: (item: any, options: any) => (
                 <span
                   className={`${options.className}`}
@@ -171,7 +199,7 @@ export default function MenuBar() {
                 >
                   <span className="">
                     <Icon
-                      className={`${options.iconClassName}`}
+                      className={`${options.iconClassName} `}
                       icon="codicon:error"
                       color="#f00"
                     />
@@ -184,6 +212,9 @@ export default function MenuBar() {
             },
             {
               label: "Warning",
+              className: active.callout({ type: "warning" })
+                ? "menuBarButtonActive"
+                : "",
               template: (item: any, options: any) => (
                 <span
                   className={`${options.className}`}
@@ -196,7 +227,13 @@ export default function MenuBar() {
                       color="#ff0"
                     />
                   </span>
-                  <span className={`${options.labelClassName} `}>
+                  <span
+                    className={`${options.labelClassName} ${
+                      active.callout({ type: "warning" })
+                        ? "menuBarButtonActive"
+                        : ""
+                    }`}
+                  >
                     {item.label}
                   </span>
                 </span>
@@ -208,6 +245,9 @@ export default function MenuBar() {
             },
             {
               label: "Success",
+              className: active.callout({ type: "success" })
+                ? "menuBarButtonActive"
+                : "",
               template: (item: any, options: any) => (
                 <span
                   className={`${options.className}`}
@@ -215,7 +255,11 @@ export default function MenuBar() {
                 >
                   <span className="">
                     <Icon
-                      className={`${options.iconClassName}`}
+                      className={`${options.iconClassName} ${
+                        active.callout({ type: "success" })
+                          ? "menuBarButtonActive"
+                          : ""
+                      }`}
                       icon="clarity:success-standard-line"
                       color="#0f0"
                     />
@@ -234,6 +278,7 @@ export default function MenuBar() {
         },
         {
           icon: "pi pi-fw pi-image",
+          className: active.image() ? "menuBarButtonActive" : "",
           command: () => {
             insertImage({ src: "https://picsum.photos/200/300" });
             focus();
@@ -242,7 +287,9 @@ export default function MenuBar() {
         {
           template: (item: any, options: any) => (
             <span
-              className={`${options.className} text-center text-xl`}
+              className={`${options.className} text-center  ${
+                active.horizontalRule() ? "menuBarButtonActive" : ""
+              }`}
               onClick={options.onClick}
             >
               <div className="flex justify-content-center m-0 customMenuBarIconContainer">
@@ -260,13 +307,14 @@ export default function MenuBar() {
         },
         {
           icon: "pi pi-fw pi-link",
+          className: active.link() ? "menuBarButtonActive" : "",
           command: () => {
             updateLink({ href: "https://remirror.io" });
             focus();
           },
         },
       ]}
-      className="p-0"
+      className="p-0 text-xl"
     />
   );
 }
