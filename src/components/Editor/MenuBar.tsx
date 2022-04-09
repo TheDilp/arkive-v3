@@ -312,8 +312,11 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           icon: "pi pi-fw pi-link",
           className: active.link() ? "menuBarButtonActive" : "",
           command: () => {
-            updateLink({ href: "https://remirror.io" });
-            focus();
+            let href = window.prompt("Enter the URL:", undefined);
+            if (href) {
+              updateLink({ href });
+              focus();
+            }
           },
         },
       ]}
