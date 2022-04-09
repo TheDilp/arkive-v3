@@ -280,8 +280,11 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           icon: "pi pi-fw pi-image",
           className: active.image() ? "menuBarButtonActive" : "",
           command: () => {
-            insertImage({ src: "https://picsum.photos/200/300" });
-            focus();
+            let src = window.prompt("Enter the URL of the image:", undefined);
+            if (src) {
+              insertImage({ src });
+              focus();
+            }
           },
         },
         {
