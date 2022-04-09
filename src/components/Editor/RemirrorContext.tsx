@@ -109,7 +109,7 @@ export default function RemirrorContext({
       `${project_id}-documents`
     ) as Document[];
     setDocuments(allDocs);
-  }, []);
+  }, [queryClient.getQueryData(`${project_id}-documents`)]);
 
   useEffect(() => {
     if (doc_id) {

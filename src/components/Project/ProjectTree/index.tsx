@@ -1,16 +1,15 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
+import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
+import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
 import { toastError, toastSuccess } from "../../../utils/utils";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
-import ProjectTreeDialog from "./ProjectTreeDialog";
-import { Dialog } from "primereact/dialog";
 type Props = {
   treeData: NodeModel[];
   docId: string;
@@ -39,6 +38,36 @@ export default function ProjectTree({
   // docId => state that's used for highlighting the current document in the tree
   const { project_id, doc_id } = useParams();
   const cm = useRef(null);
+
+  async function updateDocumentTitle(docId: string, title: string) {
+    await updateDocument(docId, title)
+      .then((data: Document | undefined) => {
+        if (data) {
+          setDisplayDialog({ id: "", title: "", show: false });
+          let updatedDocument = data;
+          queryClient.setQueryData(
+            `${project_id}-documents`,
+            (oldData: Document[] | undefined) => {
+              if (oldData) {
+                let newData: Document[] = oldData.map((doc) => {
+                  if (doc.id === updatedDocument.id) {
+                    return updatedDocument;
+                  } else {
+                    return doc;
+                  }
+                });
+                return newData;
+              } else {
+                return [];
+              }
+            }
+          );
+          toastSuccess(`Document ${updatedDocument.title} saved`);
+        }
+      })
+      .catch((err) => toastError("There was an error updating the document"));
+  }
+
   useEffect(() => {
     if (doc_id) {
       setDocId(doc_id);
@@ -76,6 +105,14 @@ export default function ProjectTree({
                     title: e.target.value,
                   }))
                 }
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter") {
+                    await updateDocumentTitle(
+                      displayDialog.id,
+                      displayDialog.title
+                    );
+                  }
+                }}
               />
             </div>
             <div className="flex w-full">
@@ -84,39 +121,12 @@ export default function ProjectTree({
                 label="Save"
                 icon="pi pi-fw pi-save"
                 iconPos="right"
-                onClick={async () => {
-                  const newDocument = await updateDocument(
+                onClick={async () =>
+                  await updateDocumentTitle(
                     displayDialog.id,
                     displayDialog.title
                   )
-                    .then((data: Document | undefined) => {
-                      if (data) {
-                        setDisplayDialog({ id: "", title: "", show: false });
-                        let updatedDocument = data;
-                        queryClient.setQueryData(
-                          `${project_id}-documents`,
-                          (oldData: Document[] | undefined) => {
-                            if (oldData) {
-                              let newData: Document[] = oldData.map((doc) => {
-                                if (doc.id === updatedDocument.id) {
-                                  return updatedDocument;
-                                } else {
-                                  return doc;
-                                }
-                              });
-                              return newData;
-                            } else {
-                              return [];
-                            }
-                          }
-                        );
-                        toastSuccess(`Document ${updatedDocument.title} saved`);
-                      }
-                    })
-                    .catch((err) =>
-                      toastError("There was an error updating the document")
-                    );
-                }}
+                }
               />
             </div>
           </div>
