@@ -21,3 +21,9 @@ export type Document = {
   parent: string;
   folder: boolean;
 };
+
+export type treeItemDisplayDialog = {
+  id: string;
+  title: string;
+  show: boolean;
+};

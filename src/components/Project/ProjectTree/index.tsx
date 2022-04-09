@@ -5,10 +5,12 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { createDocument } from "../../../utils/supabaseUtils";
 import { useQueryClient } from "react-query";
-import { Document } from "../../../custom-types";
+import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { toastSuccess } from "../../../utils/utils";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
+import ProjectTreeDialog from "./ProjectTreeDialog";
+import { Dialog } from "primereact/dialog";
 type Props = {
   treeData: NodeModel[];
   docId: string;
@@ -28,6 +30,11 @@ export default function ProjectTree({
   const handleDrop = (newTree: NodeModel[]) => setTreeData(newTree);
   const navigate = useNavigate();
   const [filter, setFilter] = useState("");
+  const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
+    id: "",
+    title: "",
+    show: false,
+  });
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
   const { project_id, doc_id } = useParams();
@@ -39,7 +46,29 @@ export default function ProjectTree({
   }, [doc_id]);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50 ">
-      <ProjectTreeItemContext cm={cm} />
+      <ProjectTreeItemContext
+        cm={cm}
+        displayDialog={displayDialog as treeItemDisplayDialog}
+        setDisplayDialog={setDisplayDialog}
+      />
+      <Dialog
+        header="Header"
+        visible={displayDialog.show}
+        style={{ width: "50vw" }}
+        onHide={() =>
+          setDisplayDialog((displayDialog) => ({
+            ...displayDialog,
+            show: false,
+          }))
+        }
+        modal={false}
+      >
+        {displayDialog && (
+          <div>
+            <InputText />
+          </div>
+        )}
+      </Dialog>
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">
           <Button
@@ -92,6 +121,7 @@ export default function ProjectTree({
               onToggle={onToggle}
               docId={docId}
               setDocId={setDocId}
+              setDisplayDialog={setDisplayDialog}
               cm={cm}
             />
           )}
