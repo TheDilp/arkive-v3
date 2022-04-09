@@ -6,7 +6,7 @@ import {
   useKeymap,
   useRemirror,
 } from "@remirror/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import {
@@ -80,6 +80,7 @@ export default function RemirrorContext({
   setDocId: (docId: string) => void;
   setDocuments: (documents: Document[]) => void;
 }) {
+  const firstRender = useRef(true);
   const queryClient = useQueryClient();
   const { manager, state } = useRemirror({
     extensions: () => [
@@ -103,7 +104,7 @@ export default function RemirrorContext({
   });
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const { project_id, doc_id } = useParams();
-
+  const [saving, setSaving] = useState<number | boolean>(false);
   useEffect(() => {
     const allDocs: Document[] = queryClient.getQueryData(
       `${project_id}-documents`
@@ -132,6 +133,54 @@ export default function RemirrorContext({
     }
   }, [doc_id, documents]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!firstRender.current) {
+        if (currentDocument) {
+          updateDocument(
+            currentDocument.id,
+            undefined,
+            // @ts-ignore
+            manager.view.state.doc.toJSON()
+          )
+            .then((data: Document | undefined) => {
+              if (data) {
+                let updatedDocument = data;
+                queryClient.setQueryData(
+                  `${project_id}-documents`,
+                  (oldData: Document[] | undefined) => {
+                    if (oldData) {
+                      let newData: Document[] = oldData.map((doc) => {
+                        if (doc.id === updatedDocument.id) {
+                          return updatedDocument;
+                        } else {
+                          return doc;
+                        }
+                      });
+                      return newData;
+                    } else {
+                      return [];
+                    }
+                  }
+                );
+                setSaving(false);
+              }
+            })
+            .catch((err) => toastError(err?.message));
+        }
+      }
+    }, 1500);
+
+    return () => clearTimeout(timeout);
+  }, [saving]);
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      setSaving(false);
+    }
+  }, []);
+
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
@@ -142,9 +191,16 @@ export default function RemirrorContext({
           manager={manager}
           initialContent={state}
           hooks={hooks}
-          classNames={["surface-50 text-white Lato Editor"]}
+          classNames={["text-white Lato Editor overflow-y-scroll"]}
+          onChange={(props) => {
+            const { tr, firstRender } = props;
+            if (!firstRender && tr?.docChanged) {
+              setSaving(tr?.time);
+              console.log(tr);
+            }
+          }}
         >
-          <MenuBar />
+          <MenuBar saving={saving} />
           <EditorComponent />
           <MentionComponent documents={documents} />
         </Remirror>

@@ -9,6 +9,7 @@ import {
   getDocuments,
 } from "../../utils/supabaseUtils";
 import RemirrorContext from "../Editor/RemirrorContext";
+import LoadingScreen from "../Util/LoadingScreen";
 import ProjectTree from "./ProjectTree";
 import PropertiesPanel from "./PropertiesPanel";
 export default function Project() {
@@ -46,7 +47,7 @@ export default function Project() {
   }, [documentsData]);
 
   if (isLoading || documentsError || projectError || projectLoading)
-    return <div>TEST</div>;
+    return <LoadingScreen />;
 
   return !auth.user() ? (
     <Navigate to="/login" />

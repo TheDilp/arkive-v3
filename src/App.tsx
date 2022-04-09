@@ -12,9 +12,15 @@ import { ToastContainer } from "react-toastify";
 import Project from "./components/Project/Project";
 import Navbar from "./components/Nav/Navbar";
 function App() {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
   return (
-    <main className="App flex flex-wrap align-content-start justify-content-center h-screen surface-0 ">
+    <main className="App flex flex-wrap align-content-start justify-content-center h-screen surface-0 overflow-y-hidden">
       <ToastContainer />
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>

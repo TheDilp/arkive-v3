@@ -1,13 +1,13 @@
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import "../../styles/Login.css";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { auth, login } from "../../utils/supabaseUtils";
 import images from "./authImages";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const [index, set] = useState(0);
   useEffect(() => {
     let timeout = setTimeout(() => {
@@ -22,56 +22,85 @@ export default function Login() {
   return auth.user() ? (
     <Navigate to="/" />
   ) : (
-    <div className="loginPageContainer">
-      <div className="loginCard">
-        <div className="loginCardImage">
+    <div className="w-full h-full flex align-items-center justify-content-center">
+      <div className="surface-card shadow-4 w-full border-round w-6 flex">
+        <div className="w-7 relative">
+          <h1
+            className="text-center text-6xl text-white absolute w-full z-5 Merriweather"
+            style={{
+              textShadow: "0 0 20px black",
+            }}
+          >
+            Discover your world
+          </h1>
           {images.map((image, imgIDX) => (
             <img
               key={imgIDX}
               src={image.url}
-              className=""
+              className="w-full h-full absolute transition-all transition-duration-200"
               alt="planet placeholder"
-              style={{ opacity: index === imgIDX ? 1 : 0 }}
+              style={{ objectFit: "cover", opacity: index === imgIDX ? 1 : 0 }}
             />
           ))}
         </div>
-        <div className="loginCardForm">
+        <div className="w-5 p-4">
+          <div className="text-center mb-5">
+            <div className="text-900 text-3xl font-medium mb-3 Merriweather">
+              Welcome Back
+            </div>
+            <span className="text-600 font-medium line-height-3 Lato">
+              Don't have an account?
+            </span>
+            <Link
+              to="/register"
+              className="font-medium no-underline ml-2 text-blue-500 cursor-pointer Lato"
+            >
+              Register today!
+            </Link>
+          </div>
+
           <div>
-            <h1 className="loginCardFormTitle">Welcome Back</h1>
-            <h3 className="loginCardFormSubtitle">
-              Don't have an account? <a href="/register">Register Today!</a>
-            </h3>
-          </div>
-          <div className="loginCardFormInputContainer">
-            <label htmlFor="email">Email</label>
-            <input
+            <label
+              htmlFor="email"
+              className="block text-900 font-medium mb-2 Lato"
+            >
+              Email
+            </label>
+            <InputText
               id="email"
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              className="w-full mb-3"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
             />
-          </div>
-          <div className="loginCardFormInputContainer">
-            <label htmlFor="password">Password</label>
-            <input
+
+            <label
+              htmlFor="password"
+              className="block text-900 font-medium mb-2 Lato"
+            >
+              Password
+            </label>
+            <InputText
               id="password"
               type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="loginCardFormButtonContainer">
-            <button
-              className="loginCardFormButton"
-              onClick={async () => {
-                let user = await login(email, password);
-                if (user) navigate("/");
+              className="w-full mb-3"
+              onChange={(e) => {
+                setPassword(e.target.value);
               }}
-            >
-              Sign In
-            </button>
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  login(email, password);
+                }
+              }}
+            />
+
+            <Button
+              label="Sign In"
+              icon="pi pi-user"
+              className="w-full text-white Lato"
+              onClick={() => login(email, password)}
+            />
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { auth, getProjects } from "../../utils/supabaseUtils";
 import ProjectCard from "./ProjectCard";
 import "../../styles/Home.css";
 import { Navigate } from "react-router-dom";
+import LoadingScreen from "../Util/LoadingScreen";
 export default function Home() {
   const {
     data: projects,
@@ -13,7 +14,7 @@ export default function Home() {
   if (error || isLoading)
     return (
       <div className="text-white">
-        <h1>"TEST"</h1>
+        <LoadingScreen />
       </div>
     );
 

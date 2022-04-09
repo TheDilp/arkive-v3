@@ -51,7 +51,7 @@ export default function ProjectTree({
               if (oldData) {
                 let newData: Document[] = oldData.map((doc) => {
                   if (doc.id === updatedDocument.id) {
-                    return updatedDocument;
+                    return { ...doc, title: updatedDocument.title };
                   } else {
                     return doc;
                   }
