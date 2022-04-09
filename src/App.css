@@ -8,6 +8,15 @@ body {
     height: 83.8vh;
 }
 
+.Lato {
+    font-family: 'Lato', 'Times New Roman', Times, serif;
+}
+
+.Merriweather {
+    font-family: "Merriweather", Georgia, 'Times New Roman', Times, serif;
+}
+
+
 /* CUSTOM SCROLLBAR */
 /* width */
 ::-webkit-scrollbar {

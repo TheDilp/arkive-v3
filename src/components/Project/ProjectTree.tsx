@@ -37,14 +37,14 @@ export default function ProjectTree({
   }, [doc_id]);
 
   return (
-    <div className="text-white w-2 flex flex-wrap surface-50">
+    <div className="text-white w-2 flex flex-wrap surface-50 ">
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">
           <Button
             label="New Document"
             icon={"pi pi-fw pi-plus"}
             iconPos="right"
-            className="p-button-outlined"
+            className="p-button-outlined Lato"
             onClick={async () => {
               const newDocument = (await createDocument(
                 project_id as string,
@@ -77,15 +77,15 @@ export default function ProjectTree({
       {!filter && (
         <Tree
           classes={{
-            root: "list-none w-full overflow-y-scroll projectTreeRoot",
-            container: "list-none cursor-pointer",
+            root: "list-none w-full overflow-y-scroll projectTreeRoot ",
+            container: "list-none cursor-pointer ",
           }}
           tree={treeData}
           rootId={"0"}
           render={(node, { depth, isOpen, onToggle }) => (
             <div
               style={{ marginInlineStart: depth * 10 }}
-              className={`text-lg hover:bg-blue-300 py-1 ${
+              className={`text-lg hover:bg-blue-300 py-1 Lato ${
                 docId === node.id ? "bg-primary" : ""
               }`}
               onClick={() => {
@@ -126,14 +126,14 @@ export default function ProjectTree({
         />
       )}
       {filter && (
-        <ul className="h-screen list-none text-lg">
+        <ul className="h-screen list-none text-lg ">
           {treeData
             .filter((node) =>
               node.text.toLowerCase().includes(filter.toLowerCase())
             )
             .map((node) => (
               <li
-                className="hover:bg-primary cursor-pointer"
+                className="hover:bg-primary cursor-pointer Lato"
                 onClick={() => {
                   setDocId(node.id as string);
                   navigate(

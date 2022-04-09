@@ -14,6 +14,10 @@
     width: 100%;
 }
 
+.remirror-editor {
+    box-shadow: none !important;
+}
+
 .remirror-editor>h1,
 h2,
 h3,

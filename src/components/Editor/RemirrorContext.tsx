@@ -134,7 +134,7 @@ export default function RemirrorContext({
 
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
-      <h1 className="w-full text-center my-2">
+      <h1 className="w-full text-center my-2 Merriweather">
         {currentDocument && currentDocument.title}
       </h1>
       <ThemeProvider>
@@ -142,7 +142,7 @@ export default function RemirrorContext({
           manager={manager}
           initialContent={state}
           hooks={hooks}
-          classNames={["surface-50 text-white"]}
+          classNames={["surface-50 text-white Lato Editor"]}
         >
           <MenuBar />
           <EditorComponent />

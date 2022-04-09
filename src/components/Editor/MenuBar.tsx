@@ -147,7 +147,6 @@ export default function MenuBar() {
             focus();
           },
         },
-
         {
           className: active.orderedList() ? "menuBarButtonActive" : "",
 
@@ -314,7 +313,7 @@ export default function MenuBar() {
           },
         },
       ]}
-      className="p-0 text-xl"
+      className="p-0 text-xl Lato"
     />
   );
 }
