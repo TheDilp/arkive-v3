@@ -5,3 +5,7 @@
 .calloutInfoButton .pi-info-circle {
     color: lightskyblue !important;
 }
+
+.menuBarButtonActive .p-menuitem-text {
+    color: red !important;
+}

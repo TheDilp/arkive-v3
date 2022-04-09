@@ -2,6 +2,7 @@ import { useActive, useCommands } from "@remirror/react";
 import { Menubar } from "primereact/menubar";
 import { Icon } from "@iconify/react";
 import "../../styles/MenuBar.css";
+import { useEffect, useMemo, useState } from "react";
 export default function MenuBar() {
   const {
     toggleBold,
@@ -32,138 +33,242 @@ export default function MenuBar() {
     }
   }
 
-  const items = [
-    {
-      label: "B",
-    },
-    {
-      label: "I",
-    },
-    {
-      label: "U",
-    },
-    {
-      label: "Heading",
-      items: [
+  return (
+    // Model is passed in directly here to ensure rerenders on change of the active booleans
+    // active.bold(), active.italic(), etc
+    <Menubar
+      model={[
         {
-          label: "H1",
+          label: "B",
+          className: active.bold() ? "menuBarButtonActive" : "",
+          command: () => {
+            toggleBold();
+            focus();
+          },
         },
         {
-          label: "H2",
+          label: "I",
+          command: () => {
+            toggleItalic();
+            focus();
+          },
         },
         {
-          label: "H3",
+          label: "U",
+          command: () => {
+            toggleUnderline();
+            focus();
+          },
         },
         {
-          label: "H4",
+          label: "Heading",
+          items: [
+            {
+              label: "H1",
+              command: () => {
+                toggleHeading({ level: 1 });
+                focus();
+              },
+            },
+            {
+              label: "H2",
+              command: () => {
+                toggleHeading({ level: 2 });
+                focus();
+              },
+            },
+            {
+              label: "H3",
+              command: () => {
+                toggleHeading({ level: 3 });
+                focus();
+              },
+            },
+            {
+              label: "H4",
+              command: () => {
+                toggleHeading({ level: 4 });
+                focus();
+              },
+            },
+            {
+              label: "H5",
+              command: () => {
+                toggleHeading({ level: 5 });
+                focus();
+              },
+            },
+            {
+              label: "H6",
+              command: () => {
+                toggleHeading({ level: 6 });
+                focus();
+              },
+            },
+          ],
         },
         {
-          label: "H5",
+          template: (item: any, options: any) => (
+            <span
+              className={`${options.className} text-center text-xl`}
+              onClick={options.onClick}
+            >
+              <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+                <Icon
+                  className={`${options.iconClassName} m-0`}
+                  icon="bi:list-ul"
+                />
+              </div>
+            </span>
+          ),
+          command: () => {
+            toggleBulletList();
+            focus();
+          },
         },
-        {
-          label: "H6",
-        },
-      ],
-    },
-    {
-      template: (item: any, options: any) => (
-        <span className={`${options.className} text-center text-xl`}>
-          <div className="flex justify-content-center m-0 customMenuBarIconContainer">
-            <Icon
-              className={`${options.iconClassName} m-0`}
-              icon="bi:list-ul"
-            />
-          </div>
-        </span>
-      ),
-    },
 
-    {
-      template: (item: any, options: any) => (
-        <span className={`${options.className} text-center text-xl`}>
-          <div className="flex justify-content-center m-0 customMenuBarIconContainer">
-            <Icon
-              className={`${options.iconClassName} m-0`}
-              icon="bi:list-ol"
-            />
-          </div>
-        </span>
-      ),
-    },
-    {
-      icon: "pi pi-fw pi-info-circle",
-      items: [
         {
-          label: "Info",
+          template: (item: any, options: any) => (
+            <span
+              className={`${options.className} text-center text-xl`}
+              onClick={options.onClick}
+            >
+              <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+                <Icon
+                  className={`${options.iconClassName} m-0`}
+                  icon="bi:list-ol"
+                />
+              </div>
+            </span>
+          ),
+          command: () => {
+            toggleOrderedList();
+            focus();
+          },
+        },
+        {
           icon: "pi pi-fw pi-info-circle",
-          className: "calloutInfoButton",
+          items: [
+            {
+              label: "Info",
+              icon: "pi pi-fw pi-info-circle",
+              className: "calloutInfoButton",
+              command: () => {
+                calloutToggle("info");
+                focus();
+              },
+            },
+            {
+              label: "Error",
+              command: () => {
+                calloutToggle("error");
+                focus();
+              },
+              template: (item: any, options: any) => (
+                <span
+                  className={`${options.className}`}
+                  onClick={options.onClick}
+                >
+                  <span className="">
+                    <Icon
+                      className={`${options.iconClassName}`}
+                      icon="codicon:error"
+                      color="#f00"
+                    />
+                  </span>
+                  <span className={`${options.labelClassName} `}>
+                    {item.label}
+                  </span>
+                </span>
+              ),
+            },
+            {
+              label: "Warning",
+              template: (item: any, options: any) => (
+                <span
+                  className={`${options.className}`}
+                  onClick={options.onClick}
+                >
+                  <span className="">
+                    <Icon
+                      className={`${options.iconClassName}`}
+                      icon="jam:triangle-danger-f"
+                      color="#ff0"
+                    />
+                  </span>
+                  <span className={`${options.labelClassName} `}>
+                    {item.label}
+                  </span>
+                </span>
+              ),
+              command: () => {
+                calloutToggle("warning");
+                focus();
+              },
+            },
+            {
+              label: "Success",
+              template: (item: any, options: any) => (
+                <span
+                  className={`${options.className}`}
+                  onClick={options.onClick}
+                >
+                  <span className="">
+                    <Icon
+                      className={`${options.iconClassName}`}
+                      icon="clarity:success-standard-line"
+                      color="#0f0"
+                    />
+                  </span>
+                  <span className={`${options.labelClassName} `}>
+                    {item.label}
+                  </span>
+                </span>
+              ),
+              command: () => {
+                calloutToggle("success");
+                focus();
+              },
+            },
+          ],
         },
         {
-          label: "Error",
-          template: (item: any, options: any) => (
-            <span className={`${options.className}`}>
-              <span className="">
-                <Icon
-                  className={`${options.iconClassName}`}
-                  icon="codicon:error"
-                  color="#f00"
-                />
-              </span>
-              <span className={`${options.labelClassName} `}>{item.label}</span>
-            </span>
-          ),
+          icon: "pi pi-fw pi-image",
+          command: () => {
+            insertImage({ src: "https://picsum.photos/200/300" });
+            focus();
+          },
         },
         {
-          label: "Warning",
           template: (item: any, options: any) => (
-            <span className={`${options.className}`}>
-              <span className="">
+            <span
+              className={`${options.className} text-center text-xl`}
+              onClick={options.onClick}
+            >
+              <div className="flex justify-content-center m-0 customMenuBarIconContainer">
                 <Icon
-                  className={`${options.iconClassName}`}
-                  icon="jam:triangle-danger-f"
-                  color="#ff0"
+                  className={`${options.iconClassName} m-0`}
+                  icon="radix-icons:divider-horizontal"
                 />
-              </span>
-              <span className={`${options.labelClassName} `}>{item.label}</span>
+              </div>
             </span>
           ),
+          command: () => {
+            insertHorizontalRule();
+            focus();
+          },
         },
         {
-          label: "Success",
-          template: (item: any, options: any) => (
-            <span className={`${options.className}`}>
-              <span className="">
-                <Icon
-                  className={`${options.iconClassName}`}
-                  icon="clarity:success-standard-line"
-                  color="#0f0"
-                />
-              </span>
-              <span className={`${options.labelClassName} `}>{item.label}</span>
-            </span>
-          ),
+          icon: "pi pi-fw pi-link",
+          command: () => {
+            updateLink({ href: "https://remirror.io" });
+            focus();
+          },
         },
-      ],
-    },
-    {
-      icon: "pi pi-fw pi-image",
-    },
-    {
-      template: (item: any, options: any) => (
-        <span className={`${options.className} text-center text-xl`}>
-          <div className="flex justify-content-center m-0 customMenuBarIconContainer">
-            <Icon
-              className={`${options.iconClassName} m-0`}
-              icon="radix-icons:divider-horizontal"
-            />
-          </div>
-        </span>
-      ),
-    },
-    { icon: "pi pi-fw pi-link" },
-  ];
-
-  return <Menubar model={items} className="p-0" />;
+      ]}
+      className="p-0"
+    />
+  );
 }
 
 // <div className="menuBar ">
