@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { createDocument } from "../../utils/supabaseUtils";
+import { createDocument } from "../../../utils/supabaseUtils";
 import { useQueryClient } from "react-query";
-import { Document } from "../../custom-types";
-import { toastSuccess } from "../../utils/utils";
+import { Document } from "../../../custom-types";
+import { toastSuccess } from "../../../utils/utils";
+import ProjectTreeItem from "./ProjectTreeItem";
 type Props = {
   treeData: NodeModel[];
   docId: string;
@@ -35,7 +36,6 @@ export default function ProjectTree({
       setDocId(doc_id);
     }
   }, [doc_id]);
-
   return (
     <div className="text-white w-2 flex flex-wrap surface-50 ">
       <div className="pt-2 px-2 w-full">
@@ -83,33 +83,14 @@ export default function ProjectTree({
           tree={treeData}
           rootId={"0"}
           render={(node, { depth, isOpen, onToggle }) => (
-            <div
-              style={{ marginInlineStart: depth * 10 }}
-              className={`text-lg hover:bg-blue-300 py-1 Lato ${
-                docId === node.id ? "bg-primary" : ""
-              }`}
-              onClick={() => {
-                setDocId(node.id as string);
-                navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
-              }}
-            >
-              {node.droppable && (
-                <span
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onToggle();
-                  }}
-                >
-                  {isOpen ? (
-                    <i className="pi pi-fw pi-chevron-down"></i>
-                  ) : (
-                    <i className="pi pi-fw pi-chevron-right"></i>
-                  )}
-                </span>
-              )}
-              {node.text}
-            </div>
+            <ProjectTreeItem
+              node={node}
+              depth={depth}
+              isOpen={isOpen}
+              onToggle={onToggle}
+              docId={docId}
+              setDocId={setDocId}
+            />
           )}
           dragPreviewRender={(monitorProps) => (
             <div
