@@ -22,15 +22,6 @@
     color: white
 }
 
-.menuBarButton:hover {
-    background-color: lightgreen;
-    color: green;
-}
-
-.menuBarButtonActive {
-    background-color: green;
-    color: lightgreen
-}
 
 .calloutContainer {
     display: inline-block;
