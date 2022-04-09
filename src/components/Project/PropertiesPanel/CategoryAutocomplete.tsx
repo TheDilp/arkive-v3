@@ -4,7 +4,7 @@ import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
 import { updateDocument } from "../../../utils/supabaseUtils";
-import { searchCategory, toastError } from "../../../utils/utils";
+import { searchCategory, toastError, toastWarn } from "../../../utils/utils";
 
 type Props = {
   currentDoc: Document;
@@ -75,6 +75,11 @@ export default function CategoryAutocomplete({
               ...currentDoc.categories,
               e.currentTarget.value,
             ]);
+          } else if (
+            currentDoc.categories &&
+            currentDoc.categories.includes(e.currentTarget.value)
+          ) {
+            toastWarn("Tag already exists on this document!");
           } else if (!currentDoc.categories && e.currentTarget.value !== "") {
             updateCategories(currentDoc, [e.currentTarget.value]);
           }

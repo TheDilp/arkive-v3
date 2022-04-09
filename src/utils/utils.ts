@@ -7,7 +7,8 @@ export const toastSuccess = (message: string) =>
   toast.success(message, defaultToastConfig);
 export const toastError = (message: string) =>
   toast.error(message, defaultToastConfig);
-
+export const toastWarn = (message: string) =>
+  toast.warn(message, defaultToastConfig);
 // Filter autocomplete for categories
 export const searchCategory = (
   event: any,
