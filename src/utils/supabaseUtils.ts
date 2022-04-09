@@ -144,3 +144,21 @@ export const updateDocument = async (
     }
   }
 };
+
+// DELETE
+
+export const deleteDocument = async (doc_id: string) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase
+      .from<Document>("documents")
+      .delete()
+      .eq("id", doc_id);
+
+    if (error) {
+      toastError("There was an error deleting your document.");
+      throw new Error(error.message);
+    }
+  }
+};

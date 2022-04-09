@@ -314,7 +314,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           },
         },
       ]}
-      end={() => (saving ? <ProgressSpinner className="w-1rem h-1rem" /> : "")}
+      end={() => (saving ? <ProgressSpinner className="w-2rem h-2rem" /> : "")}
       className="p-0 text-xl Lato"
     />
   );
