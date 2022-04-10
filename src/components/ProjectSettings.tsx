@@ -16,6 +16,7 @@ import {
 } from "../utils/supabaseUtils";
 import LoadingScreen from "./Util/LoadingScreen";
 import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
+import { Toolbar } from "primereact/toolbar";
 type Props = {};
 
 export default function ProjectSettings({}: Props) {
@@ -31,7 +32,7 @@ export default function ProjectSettings({}: Props) {
     categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
-
+  const [selectedDocuments, setSelectedDocuments] = useState([]);
   const onGlobalFilterChange = (e: any) => {
     const value = e.target.value;
     let _filter = { ...filter };
@@ -167,18 +168,43 @@ export default function ProjectSettings({}: Props) {
       />
     );
   };
-
+  const leftToolbarTemplate = () => {
+    return (
+      <React.Fragment>
+        <Button
+          label="New"
+          icon="pi pi-plus"
+          className="p-button-success mr-2"
+        />
+        <Button
+          label="Delete Selected"
+          icon="pi pi-trash"
+          className="p-button-danger"
+          disabled={selectedDocuments.length === 0}
+        />
+      </React.Fragment>
+    );
+  };
+  console.log(selectedDocuments);
   return (
     <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
+      <Toolbar className="mb-2" left={leftToolbarTemplate}></Toolbar>
       <DataTable
         value={documents}
-        responsiveLayout="scroll"
+        header={header1}
+        selection={selectedDocuments}
+        selectionMode="checkbox"
+        onSelectionChange={(e) => setSelectedDocuments(e.value)}
         filterDisplay="menu"
         filters={filter}
         globalFilterFields={["name"]}
-        header={header1}
+        responsiveLayout="scroll"
       >
+        <Column
+          selectionMode="multiple"
+          headerStyle={{ width: "3em" }}
+        ></Column>
         <Column field="title" header="Title" filter></Column>
         <Column field="image" header="Image" body={imageBodyTemplate}></Column>
 
