@@ -121,14 +121,19 @@ export default function ProjectSettings({}: Props) {
 
   const imageBodyTemplate = (rowData: Document) => {
     return (
-      <div className="w-2rem h-2rem">
-        <img src={rowData.image} alt="document" className="w-full h-full" />
+      <div className="w-4rem h-4rem relative">
+        <img
+          src={rowData.image}
+          alt="document"
+          className="w-full h-full border-round"
+          loading="lazy"
+        />
       </div>
     );
   };
 
   return (
-    <div className="w-full px-5 mt-4">
+    <div className="w-full px-8 mx-8 mt-4">
       <DataTable
         value={documents}
         responsiveLayout="scroll"
