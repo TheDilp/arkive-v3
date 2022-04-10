@@ -16,6 +16,10 @@ body {
     font-family: "Merriweather", Georgia, 'Times New Roman', Times, serif;
 }
 
+.deleteAllDocuments div .p-confirm-dialog-message,
+.deleteAllDocuments div .p-confirm-dialog-icon {
+    color: red !important;
+}
 
 /* CUSTOM SCROLLBAR */
 /* width */

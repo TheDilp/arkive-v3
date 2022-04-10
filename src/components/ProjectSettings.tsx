@@ -1,14 +1,16 @@
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Button } from "primereact/button";
+import { Chip } from "primereact/chip";
 import { Column } from "primereact/column";
+import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
-import React, { useState } from "react";
+import { Toolbar } from "primereact/toolbar";
+import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document, Project } from "../custom-types";
-import { Chip } from "primereact/chip";
+import { Document } from "../custom-types";
 import {
   deleteDocument,
   deleteManyDocuments,
@@ -16,14 +18,11 @@ import {
   getDocumentsForSettings,
 } from "../utils/supabaseUtils";
 import LoadingScreen from "./Util/LoadingScreen";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
-import { Toolbar } from "primereact/toolbar";
 type Props = {};
 
 export default function ProjectSettings({}: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-
   const [filter, setFilter] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     title: {
@@ -32,8 +31,10 @@ export default function ProjectSettings({}: Props) {
     },
     categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
-  const [selectedDocuments, setSelectedDocuments] = useState([]);
+  const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
   const onGlobalFilterChange = (e: any) => {
     const value = e.target.value;
     let _filter = { ...filter };
@@ -118,6 +119,7 @@ export default function ProjectSettings({}: Props) {
             message: `Are you sure you want to delete ${rowData.title}?`,
             header: `Deleting ${rowData.title}`,
             icon: "pi pi-exclamation-triangle",
+            acceptClassName: "p-button-danger",
             accept: () => {
               deleteDocument(rowData.id).then(() => {
                 queryClient.setQueryData(
@@ -152,9 +154,13 @@ export default function ProjectSettings({}: Props) {
           disabled={selectedDocuments.length === 0}
           onClick={() =>
             confirmDialog({
-              message: `Are you sure you want to delete ${selectedDocuments.length} documents?`,
+              message: selectAll
+                ? "Are you sure you want to delete all of your documents?"
+                : `Are you sure you want to delete ${selectedDocuments.length} documents?`,
               header: `Deleting ${selectedDocuments.length} documents`,
               icon: "pi pi-exclamation-triangle",
+              acceptClassName: "p-button-danger",
+              className: selectAll ? "deleteAllDocuments" : "",
               accept: () => {
                 let documentIdsForDeletion = selectedDocuments.map(
                   (doc: Document) => doc.id
@@ -206,12 +212,24 @@ export default function ProjectSettings({}: Props) {
           <InputText
             value={globalFilterValue1}
             onChange={onGlobalFilterChange}
-            placeholder="Keyword Search"
+            placeholder="Quick Search"
           />
         </span>
       </div>
     );
   };
+  const onSelectAllChange = (event: any) => {
+    const selectAll = event.checked;
+
+    if (selectAll && documents) {
+      setSelectAll(true);
+      setSelectedDocuments(documents);
+    } else {
+      setSelectAll(false);
+      setSelectedDocuments([]);
+    }
+  };
+
   return (
     <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
@@ -224,30 +242,52 @@ export default function ProjectSettings({}: Props) {
         value={documents}
         selection={selectedDocuments}
         selectionMode="checkbox"
-        onSelectionChange={(e) => setSelectedDocuments(e.value)}
+        paginator
+        rows={8}
+        selectAll={selectAll}
+        onSelectAllChange={onSelectAllChange}
+        onSelectionChange={(e) => {
+          const value = e.value;
+          setSelectedDocuments(value);
+          setSelectAll(value.length === documents?.length);
+        }}
         filterDisplay="menu"
         filters={filter}
         globalFilterFields={["title"]}
-        responsiveLayout="scroll"
+        size="small"
       >
         <Column
           selectionMode="multiple"
-          headerStyle={{ width: "3em" }}
+          headerStyle={{ width: "2rem" }}
         ></Column>
-        <Column field="title" header="Title" filter></Column>
-        <Column field="image" header="Image" body={imageBodyTemplate}></Column>
+        <Column
+          field="title"
+          header="Title"
+          filter
+          style={{ minWidth: "200px" }}
+        ></Column>
+        <Column
+          field="image"
+          header="Image"
+          body={imageBodyTemplate}
+          style={{ minWidth: "200px" }}
+        ></Column>
 
         <Column
           header="Tags"
           filterField="categories"
           showFilterMatchModes={false}
           filterMenuStyle={{ width: "28rem" }}
-          style={{ maxWidth: "14rem" }}
           body={categoriesBodyTemplate}
           filterElement={categoriesFilterTemplate}
           filter
+          style={{ minWidth: "200px" }}
         />
-        <Column header="Delete" body={deleteBodyTemplate} />
+        <Column
+          header="Delete"
+          body={deleteBodyTemplate}
+          style={{ minWidth: "200px" }}
+        />
       </DataTable>
     </div>
   );
