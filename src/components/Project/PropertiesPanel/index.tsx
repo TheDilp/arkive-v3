@@ -18,7 +18,7 @@ export default function PropertiesPanel() {
       setCurrentProject(currentProject);
       setFilteredCategories(currentProject.categories);
     }
-  }, []);
+  }, [queryClient.getQueryData(`${project_id}-project`)]);
 
   useEffect(() => {
     const allDocs: Document[] = queryClient.getQueryData(

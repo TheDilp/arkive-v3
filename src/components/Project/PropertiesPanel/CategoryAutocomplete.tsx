@@ -46,13 +46,32 @@ export default function CategoryAutocomplete({
           (cat) => !projectData.categories.includes(cat)
         );
         if (difference.length > 0) {
-          await updateProject(
+          const updatedProject = await updateProject(
             project_id as string,
             undefined,
             projectData.categories.concat(difference)
           );
+          console.log(updatedProject);
+
+          if (updatedProject) {
+            console.log(updatedProject);
+            queryClient.setQueryData(
+              `${project_id}-project`,
+              (oldData: Project | undefined) => {
+                console.log(oldData);
+                let newData: any = {
+                  ...oldData,
+                  categories: updatedProject.categories,
+                };
+                console.log(newData);
+                return newData;
+              }
+            );
+          }
         }
       }
+
+      // Update the document's categories in storage
       queryClient.setQueryData(
         `${project_id}-documents`,
         (oldData: Document[] | undefined) => {
