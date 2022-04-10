@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../custom-types";
+import { Chip } from "primereact/chip";
 import {
   getCurrentProject,
   getDocumentsForSettings,
@@ -24,7 +25,7 @@ export default function ProjectSettings({}: Props) {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
     },
-    categories: { value: null, matchMode: FilterMatchMode.IN },
+    categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
 
@@ -88,10 +89,15 @@ export default function ProjectSettings({}: Props) {
 
   if (documentsError || documentsLoading || projectError || projectLoading)
     return <LoadingScreen />;
-  const categoriesBodyTemplate = (rowData: any) => {
-    return <span className="">CATEGORIES</span>;
+  const categoriesBodyTemplate = (rowData: Document) => {
+    return (
+      <div className="">
+        {rowData.categories.map((cat, index) => (
+          <Chip label={cat} className="m-1 bg-primary text-primary"></Chip>
+        ))}
+      </div>
+    );
   };
-
   const categoriesFilterTemplate = (options: any) => {
     return (
       <MultiSelect
@@ -105,11 +111,18 @@ export default function ProjectSettings({}: Props) {
       />
     );
   };
-
   const categoriesItemTemplate = (option: any) => {
     return (
       <div className="p-multiselect-representative-option">
         <span className="image-text">{option}</span>
+      </div>
+    );
+  };
+
+  const imageBodyTemplate = (rowData: Document) => {
+    return (
+      <div className="w-2rem h-2rem">
+        <img src={rowData.image} alt="document" className="w-full h-full" />
       </div>
     );
   };
@@ -125,12 +138,14 @@ export default function ProjectSettings({}: Props) {
         header={header1}
       >
         <Column field="title" header="Title" filter></Column>
+        <Column field="image" header="Image" body={imageBodyTemplate}></Column>
+
         <Column
           header="Tags"
           filterField="categories"
           showFilterMatchModes={false}
           filterMenuStyle={{ width: "28rem" }}
-          style={{ minWidth: "14rem" }}
+          style={{ maxWidth: "14rem" }}
           body={categoriesBodyTemplate}
           filterElement={categoriesFilterTemplate}
           filter
