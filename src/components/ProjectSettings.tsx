@@ -42,39 +42,6 @@ export default function ProjectSettings({}: Props) {
     setFilter(_filter);
     setGlobalFilterValue1(value);
   };
-  const renderHeader1 = () => {
-    return (
-      <div className="flex justify-content-between">
-        <Button
-          type="button"
-          icon="pi pi-filter-slash"
-          label="Clear"
-          className="p-button-outlined"
-          onClick={() =>
-            setFilter({
-              global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-              title: {
-                operator: FilterOperator.AND,
-                constraints: [
-                  { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-                ],
-              },
-              categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
-            })
-          }
-        />
-        <span className="p-input-icon-left">
-          <i className="pi pi-search" />
-          <InputText
-            value={globalFilterValue1}
-            onChange={onGlobalFilterChange}
-            placeholder="Keyword Search"
-          />
-        </span>
-      </div>
-    );
-  };
-  const header1 = renderHeader1();
 
   const {
     data: documents,
@@ -213,19 +180,54 @@ export default function ProjectSettings({}: Props) {
       </div>
     );
   };
+  const rightToolbarTemplate = () => {
+    return (
+      <div className="flex justify-content-between">
+        <Button
+          type="button"
+          icon="pi pi-filter-slash"
+          label="Clear"
+          className="p-button-outlined mr-2"
+          onClick={() =>
+            setFilter({
+              global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+              title: {
+                operator: FilterOperator.AND,
+                constraints: [
+                  { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                ],
+              },
+              categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            })
+          }
+        />
+        <span className="p-input-icon-left">
+          <i className="pi pi-search" />
+          <InputText
+            value={globalFilterValue1}
+            onChange={onGlobalFilterChange}
+            placeholder="Keyword Search"
+          />
+        </span>
+      </div>
+    );
+  };
   return (
     <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
-      <Toolbar className="mb-2" left={leftToolbarTemplate}></Toolbar>
+      <Toolbar
+        className="mb-2"
+        left={leftToolbarTemplate}
+        right={rightToolbarTemplate}
+      ></Toolbar>
       <DataTable
         value={documents}
-        header={header1}
         selection={selectedDocuments}
         selectionMode="checkbox"
         onSelectionChange={(e) => setSelectedDocuments(e.value)}
         filterDisplay="menu"
         filters={filter}
-        globalFilterFields={["name"]}
+        globalFilterFields={["title"]}
         responsiveLayout="scroll"
       >
         <Column
