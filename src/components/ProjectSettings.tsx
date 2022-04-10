@@ -5,19 +5,22 @@ import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../custom-types";
 import { Chip } from "primereact/chip";
 import {
+  deleteDocument,
   getCurrentProject,
   getDocumentsForSettings,
 } from "../utils/supabaseUtils";
 import LoadingScreen from "./Util/LoadingScreen";
+import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
 type Props = {};
 
 export default function ProjectSettings({}: Props) {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
 
   const [filter, setFilter] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -92,7 +95,7 @@ export default function ProjectSettings({}: Props) {
   const categoriesBodyTemplate = (rowData: Document) => {
     return (
       <div className="">
-        {rowData.categories.map((cat, index) => (
+        {rowData.categories?.map((cat, index) => (
           <Chip label={cat} className="m-1 bg-primary text-primary"></Chip>
         ))}
       </div>
@@ -122,18 +125,52 @@ export default function ProjectSettings({}: Props) {
   const imageBodyTemplate = (rowData: Document) => {
     return (
       <div className="w-4rem h-4rem relative">
-        <img
-          src={rowData.image}
-          alt="document"
-          className="w-full h-full border-round"
-          loading="lazy"
-        />
+        {rowData.image && (
+          <img
+            src={rowData.image}
+            alt="document"
+            className="w-full h-full border-round"
+            loading="lazy"
+          />
+        )}
       </div>
+    );
+  };
+  const deleteBodyTemplate = (rowData: Document) => {
+    return (
+      <Button
+        label="Delete"
+        className="p-button-danger p-button-outlined"
+        icon="pi pi-fw pi-trash"
+        iconPos="right"
+        onClick={() => {
+          confirmDialog({
+            message: `Are you sure you want to delete ${rowData.title}?`,
+            header: `Deleting ${rowData.title}`,
+            icon: "pi pi-exclamation-triangle",
+            accept: () => {
+              deleteDocument(rowData.id).then(() => {
+                queryClient.setQueryData(
+                  `${project_id}-documents`,
+                  (oldData: Document[] | undefined) => {
+                    if (oldData) {
+                      return oldData.filter((doc) => doc.id !== rowData.id);
+                    } else {
+                      return [];
+                    }
+                  }
+                );
+              });
+            },
+          });
+        }}
+      />
     );
   };
 
   return (
     <div className="w-full px-8 mx-8 mt-4">
+      <ConfirmDialog />
       <DataTable
         value={documents}
         responsiveLayout="scroll"
@@ -155,6 +192,7 @@ export default function ProjectSettings({}: Props) {
           filterElement={categoriesFilterTemplate}
           filter
         />
+        <Column header="Delete" body={deleteBodyTemplate} />
       </DataTable>
     </div>
   );
