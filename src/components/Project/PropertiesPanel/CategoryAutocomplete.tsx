@@ -86,7 +86,7 @@ export default function CategoryAutocomplete({
       multiple
       onChange={async (e) => updateCategories(currentDoc, e.value)}
       onKeyUp={async (e) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && e.currentTarget.value !== "") {
           if (
             currentDoc.categories &&
             !currentDoc.categories.includes(e.currentTarget.value)
