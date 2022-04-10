@@ -99,7 +99,7 @@ export default function RemirrorContext({
       new CalloutExtension(),
     ],
     content: "<p>This is awesome</p>",
-    selection: "start",
+    selection: "all",
     stringHandler: "html",
   });
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
@@ -131,7 +131,7 @@ export default function RemirrorContext({
         }
       }
     }
-  }, [doc_id, documents]);
+  }, [doc_id]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
