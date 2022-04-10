@@ -10,12 +10,12 @@ const CustomMentionExtension = new MentionAtomExtension({
       name: "at",
       char: "@",
       appendText: "",
+      supportedCharacters: /[^\s][\w\d_ ]+/,
     },
   ],
 });
 
 CustomMentionExtension.ReactComponent = ({ node }) => {
-  
   return (
     <Link className="mentionLink" to={`../${node.attrs.id}`}>
       {node.attrs.label}
