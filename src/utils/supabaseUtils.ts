@@ -130,28 +130,14 @@ export const createDocument = async (
     }
   }
 };
-export const createManyDocuments = async () => {
-  let user = auth.user();
-  if (user) {
-    const docs = [];
-    for (let i = 0; i < 1000; i++) {
-      docs.push({
-        project_id: "8c1b9d69-ab46-4892-a626-aad48856fc1d",
-        title: `New Document ${i}`,
-        user_id: user.id,
-        parent: "0",
-      });
-    }
-    const data = await supabase.from<Document>("documents").insert(docs);
-  }
-};
 
 // UPDATE
 export const updateDocument = async (
   doc_id: string,
   title?: string,
   content?: RemirrorJSON,
-  categories?: string[]
+  categories?: string[],
+  folder?: boolean
 ) => {
   let user = auth.user();
 
@@ -162,6 +148,7 @@ export const updateDocument = async (
         title,
         content,
         categories,
+        folder,
       })
       .eq("id", doc_id);
 

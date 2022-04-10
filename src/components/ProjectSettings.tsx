@@ -7,6 +7,7 @@ import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
+import { Checkbox } from "primereact/checkbox";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -16,6 +17,7 @@ import {
   deleteManyDocuments,
   getCurrentProject,
   getDocumentsForSettings,
+  updateDocument,
 } from "../utils/supabaseUtils";
 import LoadingScreen from "./Util/LoadingScreen";
 type Props = {};
@@ -30,6 +32,7 @@ export default function ProjectSettings({}: Props) {
       constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
     },
     categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    folder: { value: null, matchMode: FilterMatchMode.EQUALS },
   });
 
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
@@ -104,6 +107,24 @@ export default function ProjectSettings({}: Props) {
             loading="lazy"
           />
         )}
+      </div>
+    );
+  };
+  const folderBodyTemplate = (rowData: Document) => {
+    return (
+      <div className="relative flex justify-content-center">
+        <Checkbox
+          checked={rowData.folder}
+          onChange={(e) =>
+            updateDocument(
+              rowData.id,
+              undefined,
+              undefined,
+              undefined,
+              e.checked
+            )
+          }
+        />
       </div>
     );
   };
@@ -231,7 +252,7 @@ export default function ProjectSettings({}: Props) {
   };
 
   return (
-    <div className="w-full px-8 mx-8 mt-4">
+  <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
       <Toolbar
         className="mb-2"
@@ -256,38 +277,26 @@ export default function ProjectSettings({}: Props) {
         globalFilterFields={["title"]}
         size="small"
       >
+        <Column selectionMode="multiple"></Column>
+        <Column field="title" header="Title" filter></Column>
+        <Column field="image" header="Image" body={imageBodyTemplate}></Column>
         <Column
-          selectionMode="multiple"
-          headerStyle={{ width: "2rem" }}
-        ></Column>
-        <Column
-          field="title"
-          header="Title"
+          header="Folder"
+          alignHeader={"center"}
+          field="folder"
           filter
-          style={{ minWidth: "200px" }}
+          body={folderBodyTemplate}
         ></Column>
         <Column
-          field="image"
-          header="Image"
-          body={imageBodyTemplate}
-          style={{ minWidth: "200px" }}
-        ></Column>
-
-        <Column
-          header="Tags"
+          header={() => <div className="text-center">Categories</div>}
           filterField="categories"
           showFilterMatchModes={false}
           filterMenuStyle={{ width: "28rem" }}
           body={categoriesBodyTemplate}
           filterElement={categoriesFilterTemplate}
           filter
-          style={{ minWidth: "200px" }}
         />
-        <Column
-          header="Delete"
-          body={deleteBodyTemplate}
-          style={{ minWidth: "200px" }}
-        />
+        <Column header="Delete" body={deleteBodyTemplate} />
       </DataTable>
     </div>
   );
