@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import { auth, getProjects } from "../../utils/supabaseUtils";
 import ProjectCard from "./ProjectCard";

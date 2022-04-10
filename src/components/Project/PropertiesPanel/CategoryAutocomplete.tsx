@@ -3,7 +3,7 @@ import React from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
-import { updateDocument } from "../../../utils/supabaseUtils";
+import { updateDocument, updateProject } from "../../../utils/supabaseUtils";
 import { searchCategory, toastError, toastWarn } from "../../../utils/utils";
 
 type Props = {
@@ -37,6 +37,22 @@ export default function CategoryAutocomplete({
       toastError("There was an error updating your document's categories");
     });
     if (updatedDocument) {
+      let projectData: Project = queryClient.getQueryData(
+        `${project_id}-project`
+      ) as Project;
+      if (projectData) {
+        // Filter out any categories that are not already present in the global project categories
+        let difference = categories.filter(
+          (cat) => !projectData.categories.includes(cat)
+        );
+        if (difference.length > 0) {
+          await updateProject(
+            project_id as string,
+            undefined,
+            projectData.categories.concat(difference)
+          );
+        }
+      }
       queryClient.setQueryData(
         `${project_id}-documents`,
         (oldData: Document[] | undefined) => {

@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import Project from "./components/Project/Project";
 import Navbar from "./components/Nav/Navbar";
+import ProjectSettings from "./components/ProjectSettings";
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -29,6 +30,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/project/:project_id/wiki/*" element={<Project />} />
+            <Route
+              path="/project/:project_id/settings"
+              element={<ProjectSettings />}
+            />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

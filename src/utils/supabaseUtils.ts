@@ -118,7 +118,6 @@ export const createDocument = async (
 };
 
 // UPDATE
-
 export const updateDocument = async (
   doc_id: string,
   title?: string,
@@ -140,6 +139,29 @@ export const updateDocument = async (
     if (document) return document[0];
     if (error) {
       toastError("There was an error updating your document.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const updateProject = async (
+  project_id: string,
+  title?: string,
+  categories?: string[]
+) => {
+  let user = auth.user();
+
+  if (user) {
+    const { data: project, error } = await supabase
+      .from<Project>("projects")
+      .update({
+        title,
+        categories,
+      })
+      .eq("id", project_id);
+
+    if (project) return project[0];
+    if (error) {
+      toastError("There was an error updating your project.");
       throw new Error(error.message);
     }
   }
