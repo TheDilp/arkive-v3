@@ -198,3 +198,18 @@ export const deleteDocument = async (doc_id: string) => {
     }
   }
 };
+export const deleteManyDocuments = async (doc_ids: string[]) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase
+      .from<Document>("documents")
+      .delete()
+      .in("id", doc_ids);
+
+    if (error) {
+      toastError("There was an error deleting your documents.");
+      throw new Error(error.message);
+    }
+  }
+};

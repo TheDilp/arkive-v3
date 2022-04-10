@@ -11,6 +11,7 @@ import { Document, Project } from "../custom-types";
 import { Chip } from "primereact/chip";
 import {
   deleteDocument,
+  deleteManyDocuments,
   getCurrentProject,
   getDocumentsForSettings,
 } from "../utils/supabaseUtils";
@@ -52,12 +53,13 @@ export default function ProjectSettings({}: Props) {
           onClick={() =>
             setFilter({
               global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-              name: {
+              title: {
                 operator: FilterOperator.AND,
                 constraints: [
                   { value: null, matchMode: FilterMatchMode.STARTS_WITH },
                 ],
               },
+              categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
             })
           }
         />
@@ -170,22 +172,47 @@ export default function ProjectSettings({}: Props) {
   };
   const leftToolbarTemplate = () => {
     return (
-      <React.Fragment>
+      <div>
         <Button
           label="New"
           icon="pi pi-plus"
-          className="p-button-success mr-2"
+          className="p-button-success mr-2 p-button-outlined"
         />
         <Button
           label="Delete Selected"
           icon="pi pi-trash"
-          className="p-button-danger"
+          className="p-button-danger p-button-outlined"
           disabled={selectedDocuments.length === 0}
+          onClick={() =>
+            confirmDialog({
+              message: `Are you sure you want to delete ${selectedDocuments.length} documents?`,
+              header: `Deleting ${selectedDocuments.length} documents`,
+              icon: "pi pi-exclamation-triangle",
+              accept: () => {
+                let documentIdsForDeletion = selectedDocuments.map(
+                  (doc: Document) => doc.id
+                );
+                deleteManyDocuments(documentIdsForDeletion).then(() => {
+                  queryClient.setQueryData(
+                    `${project_id}-documents`,
+                    (oldData: Document[] | undefined) => {
+                      if (oldData) {
+                        return oldData.filter(
+                          (doc) => !documentIdsForDeletion.includes(doc.id)
+                        );
+                      } else {
+                        return [];
+                      }
+                    }
+                  );
+                });
+              },
+            })
+          }
         />
-      </React.Fragment>
+      </div>
     );
   };
-  console.log(selectedDocuments);
   return (
     <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
