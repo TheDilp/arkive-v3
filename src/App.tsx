@@ -10,8 +10,9 @@ import Home from "./components/Home/Home";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import Project from "./components/Project/Project";
-import Navbar from "./components/Nav/Navbar";
-import ProjectSettings from "./components/ProjectSettings";
+import ProjectSettings from "./components/Project/ProjectSettings/ProjectSettings";
+import Wiki from "./components/Project/Wiki/Wiki";
+import { ReactQueryDevtools } from "react-query/devtools";
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -24,16 +25,15 @@ function App() {
     <main className="App flex flex-wrap align-content-start justify-content-center h-screen surface-0 overflow-y-hidden">
       <ToastContainer />
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
-          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/project/:project_id/wiki/*" element={<Project />} />
-            <Route
-              path="/project/:project_id/settings"
-              element={<ProjectSettings />}
-            />
+            <Route path="login" element={<Login />} />
+            <Route path="project/:project_id" element={<Project />}>
+              <Route path="wiki/*" element={<Wiki />} />
+              <Route path="settings" element={<ProjectSettings />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

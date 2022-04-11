@@ -11,7 +11,7 @@ import { Checkbox } from "primereact/checkbox";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document } from "../custom-types";
+import { Document } from "../../../custom-types";
 import {
   createManyDocuments,
   deleteDocument,
@@ -19,8 +19,8 @@ import {
   getCurrentProject,
   getDocumentsForSettings,
   updateDocument,
-} from "../utils/supabaseUtils";
-import LoadingScreen from "./Util/LoadingScreen";
+} from "../../../utils/supabaseUtils";
+import LoadingScreen from "../../Util/LoadingScreen";
 type Props = {};
 
 export default function ProjectSettings({}: Props) {
@@ -54,7 +54,8 @@ export default function ProjectSettings({}: Props) {
     isLoading: documentsLoading,
   } = useQuery(
     `${project_id}-documents`,
-    async () => await getDocumentsForSettings(project_id as string)
+    async () => await getDocumentsForSettings(project_id as string),
+    { enabled: !queryClient.getQueryData(`${project_id}-documents`) }
   );
   const {
     data: project,
