@@ -7,10 +7,7 @@ export default function Project() {
   const { project_id } = useParams();
   const { error: documentsError, isLoading } = useQuery(
     `${project_id}-documents`,
-    async () => await getDocuments(project_id as string),
-    {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    }
+    async () => await getDocuments(project_id as string)
   );
   const { error: projectError, isLoading: projectLoading } = useQuery(
     `${project_id}-project`,

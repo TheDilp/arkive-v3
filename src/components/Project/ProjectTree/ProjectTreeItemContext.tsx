@@ -2,7 +2,7 @@ import React from "react";
 import { ContextMenu } from "primereact/contextmenu";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { deleteDocument, updateDocument } from "../../../utils/supabaseUtils";
-import { toastSuccess } from "../../../utils/utils";
+import { toastError, toastSuccess } from "../../../utils/utils";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
@@ -51,7 +51,7 @@ export default function ProjectTreeItemContext({
     queryClient.getQueryData(`${project_id}-documents`) || [];
   folders = folders.filter((folder) => folder.folder);
 
-  const updateParent = async (doc_id: string, parent: string) => {
+  async function updateParent(doc_id: string, parent: string | null) {
     const updatedDocument = await updateDocument(
       displayDialog.id,
       undefined,
@@ -59,26 +59,47 @@ export default function ProjectTreeItemContext({
       undefined,
       undefined,
       parent
-    );
-    if (updatedDocument)
-      queryClient.setQueryData(
-        `${project_id}-documents`,
-        (oldData: Document[] | undefined) => {
-          if (oldData) {
-            let newData: Document[] = oldData.map((doc) => {
-              if (doc.id === updatedDocument.id) {
-                return { ...doc, parent: updatedDocument.parent };
+    )
+      .then((data: Document | undefined) => {
+        if (data) {
+          setDisplayDialog({ id: "", title: "", show: false });
+          let updatedDocument = data;
+          queryClient.setQueryData(
+            `${project_id}-documents`,
+            (oldData: Document[] | undefined) => {
+              if (oldData) {
+                let newData: Document[] = oldData.map((doc) => {
+                  if (doc.id === updatedDocument.id) {
+                    return { ...doc, parent: updatedDocument.parent };
+                  } else {
+                    return doc;
+                  }
+                });
+                return newData;
               } else {
-                return doc;
+                return [];
               }
-            });
-            return newData;
-          } else {
-            return [];
-          }
+            }
+          );
         }
-      );
-  };
+      })
+      .catch((err) => toastError("There was an error updating the document"));
+  }
+
+  const moveToOptions = [
+    {
+      label: "Root",
+      command: async (item: any) => {
+        await updateParent(displayDialog.id, null);
+      },
+    },
+    ...folders.map((folder) => ({
+      label: folder.title,
+      command: async (item: any) => {
+        await updateParent(displayDialog.id, folder.id);
+      },
+    })),
+  ];
 
   const items = [
     {
@@ -89,13 +110,7 @@ export default function ProjectTreeItemContext({
     {
       label: "Move To",
       icon: "pi pi-fw pi-directions",
-      items: folders.map((folder) => ({
-        label: folder.title,
-        command: async () => {
-          await updateParent(displayDialog.id, folder.id);
-          setDisplayDialog({ ...displayDialog, show: false });
-        },
-      })),
+      items: moveToOptions,
     },
     {
       label: "Change Type",
