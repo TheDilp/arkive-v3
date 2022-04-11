@@ -81,11 +81,10 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       })
       .catch((err) => toastError("There was an error updating the document"));
   }
-
+  const docs: Document[] | undefined = queryClient.getQueryData(
+    `${project_id}-documents`
+  );
   useEffect(() => {
-    const docs: Document[] | undefined = queryClient.getQueryData(
-      `${project_id}-documents`
-    );
     if (docs) {
       const treeData = docs.map((doc) => ({
         id: doc.id,
@@ -94,10 +93,9 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         parent: doc.parent ? doc.parent : "0",
       }));
       setTreeData(treeData);
-      console.log(treeData);
     }
+    console.log(docs);
   }, [queryClient.getQueryData(`${project_id}-documents`)]);
-
   useEffect(() => {
     if (doc_id) {
       setDocId(doc_id);

@@ -51,6 +51,35 @@ export default function ProjectTreeItemContext({
     queryClient.getQueryData(`${project_id}-documents`) || [];
   folders = folders.filter((folder) => folder.folder);
 
+  const updateParent = async (doc_id: string, parent: string) => {
+    const updatedDocument = await updateDocument(
+      displayDialog.id,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      parent
+    );
+    if (updatedDocument)
+      queryClient.setQueryData(
+        `${project_id}-documents`,
+        (oldData: Document[] | undefined) => {
+          if (oldData) {
+            let newData: Document[] = oldData.map((doc) => {
+              if (doc.id === updatedDocument.id) {
+                return { ...doc, parent: updatedDocument.parent };
+              } else {
+                return doc;
+              }
+            });
+            return newData;
+          } else {
+            return [];
+          }
+        }
+      );
+  };
+
   const items = [
     {
       label: "Rename Document",
@@ -63,36 +92,8 @@ export default function ProjectTreeItemContext({
       items: folders.map((folder) => ({
         label: folder.title,
         command: async () => {
-          await updateDocument(
-            displayDialog.id,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            folder.id
-          ).then((data) => {
-            console.log(data);
-            if (data) {
-              const updatedDocument = data;
-              queryClient.setQueryData(
-                `${project_id}-documents`,
-                (oldData: Document[] | undefined) => {
-                  if (oldData) {
-                    let newData: Document[] = oldData.map((doc) => {
-                      if (doc.id === updatedDocument.id) {
-                        return { ...doc, parent: updatedDocument.parent };
-                      } else {
-                        return doc;
-                      }
-                    });
-                    return newData;
-                  } else {
-                    return [];
-                  }
-                }
-              );
-            }
-          });
+          await updateParent(displayDialog.id, folder.id);
+          setDisplayDialog({ ...displayDialog, show: false });
         },
       })),
     },
