@@ -195,9 +195,12 @@ export default function ProjectTree({
           classes={{
             root: "list-none w-full overflow-y-scroll projectTreeRoot ",
             container: "list-none cursor-pointer ",
+            placeholder: "relative",
           }}
           tree={treeData}
           rootId={"0"}
+          sort={false}
+          insertDroppableFirst={false}
           render={(node, { depth, isOpen, onToggle }) => (
             <ProjectTreeItem
               node={node}
@@ -216,6 +219,25 @@ export default function ProjectTree({
               droppable={monitorProps.item.droppable}
             />
           )}
+          placeholderRender={(node, { depth }) => (
+            <div
+              style={{
+                top: 0,
+                right: 0,
+                left: depth * 24,
+                backgroundColor: "#1967d2",
+                height: "2px",
+                position: "absolute",
+                transform: "translateY(-50%)",
+              }}
+            ></div>
+          )}
+          dropTargetOffset={10}
+          canDrop={(tree, { dragSource, dropTargetId, dropTarget }) => {
+            if (dragSource?.parent === dropTargetId) {
+              return true;
+            }
+          }}
           // @ts-ignore
           onDrop={handleDrop}
         />
