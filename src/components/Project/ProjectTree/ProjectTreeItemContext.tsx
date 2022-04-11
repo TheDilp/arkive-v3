@@ -1,7 +1,7 @@
 import React from "react";
 import { ContextMenu } from "primereact/contextmenu";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
-import { deleteDocument } from "../../../utils/supabaseUtils";
+import { deleteDocument, updateDocument } from "../../../utils/supabaseUtils";
 import { toastSuccess } from "../../../utils/utils";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -47,6 +47,9 @@ export default function ProjectTreeItemContext({
       reject: () => {},
     });
   };
+  let folders: Document[] | undefined =
+    queryClient.getQueryData(`${project_id}-documents`) || [];
+  folders = folders.filter((folder) => folder.folder);
 
   const items = [
     {
@@ -54,6 +57,57 @@ export default function ProjectTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
+    {
+      label: "Move To",
+      icon: "pi pi-fw pi-directions",
+      items: folders.map((folder) => ({
+        label: folder.title,
+        command: async () => {
+          await updateDocument(
+            displayDialog.id,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            folder.id
+          ).then((data) => {
+            console.log(data);
+            if (data) {
+              const updatedDocument = data;
+              queryClient.setQueryData(
+                `${project_id}-documents`,
+                (oldData: Document[] | undefined) => {
+                  if (oldData) {
+                    let newData: Document[] = oldData.map((doc) => {
+                      if (doc.id === updatedDocument.id) {
+                        return { ...doc, parent: updatedDocument.parent };
+                      } else {
+                        return doc;
+                      }
+                    });
+                    return newData;
+                  } else {
+                    return [];
+                  }
+                }
+              );
+            }
+          });
+        },
+      })),
+    },
+    {
+      label: "Change Type",
+      icon: "pi pi-fw, pi-sync",
+      items: [
+        {
+          label: "Document",
+          icon: "pi pi-fw pi-file",
+        },
+        { label: "Folder", icon: "pi pi-fw pi-folder" },
+      ],
+    },
+    { separator: true },
     {
       label: "Delete Document",
       icon: "pi pi-fw pi-trash",

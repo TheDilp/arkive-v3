@@ -10,7 +10,7 @@ import Home from "./components/Home/Home";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import Project from "./components/Project/Project";
-import ProjectSettings from "./components/Project/ProjectSettings/ProjectSettings";
+import ProjectSettings from "./components/Project/ProjectSettings";
 import Wiki from "./components/Project/Wiki/Wiki";
 import { ReactQueryDevtools } from "react-query/devtools";
 function App() {

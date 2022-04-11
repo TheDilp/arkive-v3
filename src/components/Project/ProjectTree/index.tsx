@@ -12,22 +12,21 @@ import DragPreview from "./DragPreview";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 type Props = {
-  treeData: NodeModel[];
   docId: string;
-  setTreeData: (treeData: NodeModel[]) => void;
   setDocId: (docId: string) => void;
-  setDocuments: (documents: Document[]) => void;
 };
 
-export default function ProjectTree({
-  treeData,
-  docId,
-  setTreeData,
-  setDocId,
-  setDocuments,
-}: Props) {
+export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
+  const [treeData, setTreeData] = useState<NodeModel[]>([]);
 
+  const navigate = useNavigate();
+  const [filter, setFilter] = useState("");
+  const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
+    id: "",
+    title: "",
+    show: false,
+  });
   // Function to handle the drop functionality of the tree
   const handleDrop = (
     newTree: NodeModel[],
@@ -49,13 +48,6 @@ export default function ProjectTree({
       dropTargetId === "0" ? null : dropTargetId
     );
   };
-  const navigate = useNavigate();
-  const [filter, setFilter] = useState("");
-  const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
-    id: "",
-    title: "",
-    show: false,
-  });
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
   const { project_id, doc_id } = useParams();
@@ -91,6 +83,22 @@ export default function ProjectTree({
   }
 
   useEffect(() => {
+    const docs: Document[] | undefined = queryClient.getQueryData(
+      `${project_id}-documents`
+    );
+    if (docs) {
+      const treeData = docs.map((doc) => ({
+        id: doc.id,
+        text: doc.title,
+        droppable: doc.folder,
+        parent: doc.parent ? doc.parent : "0",
+      }));
+      setTreeData(treeData);
+      console.log(treeData);
+    }
+  }, [queryClient.getQueryData(`${project_id}-documents`)]);
+
+  useEffect(() => {
     if (doc_id) {
       setDocId(doc_id);
     }
@@ -107,11 +115,11 @@ export default function ProjectTree({
         visible={displayDialog.show}
         className="w-3"
         onHide={() =>
-          setDisplayDialog((displayDialog) => ({
+          setDisplayDialog({
             id: "",
             title: "",
             show: false,
-          }))
+          })
         }
         modal={false}
       >
@@ -172,10 +180,8 @@ export default function ProjectTree({
                 (oldData: Document[] | undefined) => {
                   if (oldData) {
                     const newData = [...oldData, newDocument];
-                    setDocuments(newData);
                     return newData;
                   } else {
-                    setDocuments([newDocument]);
                     return [newDocument];
                   }
                 }
@@ -232,7 +238,7 @@ export default function ProjectTree({
             ></div>
           )}
           dropTargetOffset={10}
-          canDrop={(tree, { dragSource, dropTargetId, dropTarget }) => {
+          canDrop={(tree, { dragSource, dropTargetId }) => {
             const depth = getDepth(treeData, dropTargetId);
             // Don't allow nesting documents beyond this depth
             if (depth > 3) return false;

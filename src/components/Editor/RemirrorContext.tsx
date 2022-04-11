@@ -72,13 +72,9 @@ const hooks = [
 ];
 
 export default function RemirrorContext({
-  documents,
-  setDocuments,
   setDocId,
 }: {
-  documents: Document[];
   setDocId: (docId: string) => void;
-  setDocuments: (documents: Document[]) => void;
 }) {
   const firstRender = useRef(true);
   const queryClient = useQueryClient();
@@ -102,6 +98,7 @@ export default function RemirrorContext({
     selection: "all",
     stringHandler: "html",
   });
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const { project_id, doc_id } = useParams();
   const [saving, setSaving] = useState<number | boolean>(false);
