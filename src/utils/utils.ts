@@ -1,3 +1,4 @@
+import { NodeModel } from "@minoru/react-dnd-treeview";
 import { toast, ToastOptions } from "react-toastify";
 const defaultToastConfig: ToastOptions = {
   autoClose: 2000,
@@ -27,4 +28,18 @@ export const searchCategory = (
 
     setFilteredCategories(_filteredCategories);
   }, 250);
+};
+
+export const getDepth = (
+  tree: NodeModel[],
+  id: number | string,
+  depth = 0
+): number => {
+  const target: NodeModel | undefined = tree.find((node) => node.id === id);
+
+  if (target) {
+    return getDepth(tree, target.parent, depth + 1);
+  }
+
+  return depth;
 };

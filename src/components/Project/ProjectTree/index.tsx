@@ -7,7 +7,7 @@ import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
-import { toastError, toastSuccess } from "../../../utils/utils";
+import { getDepth, toastError, toastSuccess } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
@@ -200,7 +200,6 @@ export default function ProjectTree({
           tree={treeData}
           rootId={"0"}
           sort={false}
-          insertDroppableFirst={false}
           render={(node, { depth, isOpen, onToggle }) => (
             <ProjectTreeItem
               node={node}
@@ -234,6 +233,9 @@ export default function ProjectTree({
           )}
           dropTargetOffset={10}
           canDrop={(tree, { dragSource, dropTargetId, dropTarget }) => {
+            const depth = getDepth(treeData, dropTargetId);
+            // Don't allow nesting documents beyond this depth
+            if (depth > 3) return false;
             if (dragSource?.parent === dropTargetId) {
               return true;
             }

@@ -24,7 +24,6 @@ export default function ProjectTreeItem({
 }: Props) {
   const { doc_id } = useParams();
   const navigate = useNavigate();
-
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
