@@ -13,6 +13,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document } from "../custom-types";
 import {
+  createManyDocuments,
   deleteDocument,
   deleteManyDocuments,
   getCurrentProject,
@@ -252,7 +253,7 @@ export default function ProjectSettings({}: Props) {
   };
 
   return (
-  <div className="w-full px-8 mx-8 mt-4">
+    <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
       <Toolbar
         className="mb-2"

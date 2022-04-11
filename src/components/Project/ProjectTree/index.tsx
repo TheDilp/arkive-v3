@@ -26,7 +26,23 @@ export default function ProjectTree({
   setDocuments,
 }: Props) {
   const queryClient = useQueryClient();
-  const handleDrop = (newTree: NodeModel[]) => setTreeData(newTree);
+  const handleDrop = (
+    newTree: NodeModel[],
+    {
+      dragSourceId,
+      dropTargetId,
+    }: { dragSourceId: string; dropTargetId: string }
+  ) => {
+    setTreeData(newTree);
+    updateDocument(
+      dragSourceId,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      dropTargetId
+    );
+  };
   const navigate = useNavigate();
   const [filter, setFilter] = useState("");
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
@@ -142,7 +158,7 @@ export default function ProjectTree({
             onClick={async () => {
               const newDocument = (await createDocument(
                 project_id as string,
-                "0"
+                undefined
               )) as Document;
               toastSuccess("New Document created!");
               queryClient.setQueryData(

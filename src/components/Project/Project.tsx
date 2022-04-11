@@ -38,7 +38,7 @@ export default function Project() {
     if (documentsData && documentsData.length > 0) {
       const newTreeData = documentsData.map((document) => ({
         id: document.id,
-        parent: document.parent,
+        parent: document.parent ?? "0",
         text: document.title,
         droppable: document.folder,
       }));

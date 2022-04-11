@@ -120,7 +120,7 @@ export const createDocument = async (
           ],
         },
         user_id: user.id,
-        parent: parent || "0",
+        parent,
         title: "New Document",
       });
     if (document) return document[0];
@@ -137,7 +137,8 @@ export const updateDocument = async (
   title?: string,
   content?: RemirrorJSON,
   categories?: string[],
-  folder?: boolean
+  folder?: boolean,
+  parent?: string
 ) => {
   let user = auth.user();
 
@@ -149,6 +150,7 @@ export const updateDocument = async (
         content,
         categories,
         folder,
+        parent,
       })
       .eq("id", doc_id);
 
