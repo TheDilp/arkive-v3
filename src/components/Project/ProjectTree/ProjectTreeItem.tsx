@@ -28,9 +28,7 @@ export default function ProjectTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className={`text-lg hover:bg-blue-300 py-1 pl-2 Lato ${
-        docId === node.id ? "bg-primary" : ""
-      }`}
+      className="text-lg hover:bg-blue-300 py-1 pl-2"
       onClick={() => {
         setDocId(node.id as string);
         navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
@@ -44,7 +42,6 @@ export default function ProjectTreeItem({
         });
       }}
     >
-      <i className="pi pi-fw pi-bars"></i>
       {node.droppable && (
         <span
           onClick={(e) => {
@@ -60,7 +57,14 @@ export default function ProjectTreeItem({
           )}
         </span>
       )}
-      {node.text}
+      <i className={`pi pi-fw ${node.droppable ? "pi-folder" : "pi-file"}`}></i>
+      <span
+        className={`text-lg hover:bg-blue-300 Lato ${
+          docId === node.id ? "text-primary" : ""
+        }`}
+      >
+        {node.text}
+      </span>
     </div>
   );
 }

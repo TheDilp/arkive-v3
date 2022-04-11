@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
 import { toastError, toastSuccess } from "../../../utils/utils";
+import DragPreview from "./DragPreview";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 type Props = {
@@ -26,6 +27,8 @@ export default function ProjectTree({
   setDocuments,
 }: Props) {
   const queryClient = useQueryClient();
+
+  // Function to handle the drop functionality of the tree
   const handleDrop = (
     newTree: NodeModel[],
     {
@@ -33,14 +36,17 @@ export default function ProjectTree({
       dropTargetId,
     }: { dragSourceId: string; dropTargetId: string }
   ) => {
+    // Set the user's current view to the new tree
     setTreeData(newTree);
+
+    // Update the document's parent
     updateDocument(
       dragSourceId,
       undefined,
       undefined,
       undefined,
       undefined,
-      dropTargetId
+      dropTargetId === "0" ? null : dropTargetId
     );
   };
   const navigate = useNavigate();
@@ -205,16 +211,12 @@ export default function ProjectTree({
             />
           )}
           dragPreviewRender={(monitorProps) => (
-            <div
-              style={{
-                backgroundColor: "blue",
-                width: "10%",
-                position: "absolute",
-              }}
-            >
-              {monitorProps.item.text}
-            </div>
+            <DragPreview
+              text={monitorProps.item.text}
+              droppable={monitorProps.item.droppable}
+            />
           )}
+          // @ts-ignore
           onDrop={handleDrop}
         />
       )}

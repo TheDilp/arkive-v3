@@ -138,7 +138,7 @@ export const updateDocument = async (
   content?: RemirrorJSON,
   categories?: string[],
   folder?: boolean,
-  parent?: string
+  parent?: string | null
 ) => {
   let user = auth.user();
 
