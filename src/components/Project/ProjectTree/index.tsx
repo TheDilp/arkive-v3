@@ -3,11 +3,16 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
-import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
+import {
+  createDocument,
+  getDocuments,
+  updateDocument,
+} from "../../../utils/supabaseUtils";
 import { getDepth, toastError, toastSuccess } from "../../../utils/utils";
+import LoadingScreen from "../../Util/LoadingScreen";
 import DragPreview from "./DragPreview";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
@@ -18,6 +23,7 @@ type Props = {
 
 export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
+  const { project_id, doc_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
 
   const navigate = useNavigate();
@@ -50,7 +56,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   };
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
-  const { project_id, doc_id } = useParams();
   const cm = useRef(null);
 
   async function updateDocumentTitle(docId: string, title: string) {
@@ -81,9 +86,17 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       })
       .catch((err) => toastError("There was an error updating the document"));
   }
-  const docs: Document[] | undefined = queryClient.getQueryData(
-    `${project_id}-documents`
+
+  const {
+    data: docs,
+    error: documentsError,
+    isLoading,
+  } = useQuery(
+    `${project_id}-documents`,
+    async () => await getDocuments(project_id as string),
+    { staleTime: 5 * 60 * 1000 }
   );
+
   useEffect(() => {
     if (docs) {
       const treeData = docs.map((doc) => ({
@@ -101,6 +114,9 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       setDocId(doc_id);
     }
   }, [doc_id]);
+
+  if (documentsError || isLoading) return <LoadingScreen />;
+
   return (
     <div className="text-white w-2 flex flex-wrap surface-50 ">
       <ProjectTreeItemContext

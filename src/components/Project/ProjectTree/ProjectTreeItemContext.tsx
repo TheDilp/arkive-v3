@@ -3,7 +3,7 @@ import { ContextMenu } from "primereact/contextmenu";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { deleteDocument, updateDocument } from "../../../utils/supabaseUtils";
 import { toastError, toastSuccess } from "../../../utils/utils";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 type Props = {
@@ -51,52 +51,88 @@ export default function ProjectTreeItemContext({
     queryClient.getQueryData(`${project_id}-documents`) || [];
   folders = folders.filter((folder) => folder.folder);
 
-  async function updateParent(doc_id: string, parent: string | null) {
-    const updatedDocument = await updateDocument(
-      displayDialog.id,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      parent
-    )
-      .then((data: Document | undefined) => {
-        if (data) {
-          setDisplayDialog({ id: "", title: "", show: false });
-          let updatedDocument = data;
-          queryClient.setQueryData(
-            `${project_id}-documents`,
-            (oldData: Document[] | undefined) => {
-              if (oldData) {
-                let newData: Document[] = oldData.map((doc) => {
-                  if (doc.id === updatedDocument.id) {
-                    return { ...doc, parent: updatedDocument.parent };
-                  } else {
-                    return doc;
-                  }
-                });
-                return newData;
-              } else {
-                return [];
-              }
+  // async function updateParent(doc_id: string, parent: string | null) {
+
+  //     .then((data: Document | undefined) => {
+  //       if (data) {
+  //         // ! THIS RERENDERS THE TREE
+  //         // setDisplayDialog({ id: "", title: "", show: false });
+  //         let updatedDocument = data;
+  //         queryClient.setQueryData(
+  //           `${project_id}-documents`,
+  //           (oldData: Document[] | undefined) => {
+  //             if (oldData) {
+  //               let newData: Document[] = oldData.map((doc) => {
+  //                 if (doc.id === updatedDocument.id) {
+  //                   return { ...doc, parent: updatedDocument.parent };
+  //                 } else {
+  //                   return doc;
+  //                 }
+  //               });
+  //               return newData;
+  //             } else {
+  //               return [];
+  //             }
+  //           }
+  //         );
+  //       }
+  //     })
+  //     .catch((err) => toastError("There was an error updating the document"));
+  // }
+  const updateParent = useMutation(
+    async (vars: { doc_id: string; parent: string | null }) =>
+      await updateDocument(
+        vars.doc_id,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        vars.parent
+      ),
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return { ...doc, parent: updatedDocument.parent };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
             }
-          );
-        }
-      })
-      .catch((err) => toastError("There was an error updating the document"));
-  }
+          }
+        );
+
+        return { previousDocuments };
+      },
+    }
+  );
 
   const moveToOptions = [
     {
       label: "Root",
-      command: async (item: any) => {
-        await updateParent(displayDialog.id, null);
+      command: (item: any) => {
+        updateParent.mutate({ doc_id: displayDialog.id, parent: null });
       },
     },
     ...folders.map((folder) => ({
       label: folder.title,
-      command: async (item: any) => {
-        await updateParent(displayDialog.id, folder.id);
+      command: (item: any) => {
+        updateParent.mutate({
+          doc_id: displayDialog.id,
+          parent: folder.id,
+        });
       },
     })),
   ];
