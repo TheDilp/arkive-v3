@@ -406,13 +406,14 @@ export default function ProjectSettings() {
           filter
           filterElement={folderFilterTemplate}
           body={folderBodyTemplate}
+          dataType="boolean"
         ></Column>
         <Column
           header="Parent"
           field="parent"
           filter
           body={parentBodyTemplate}
-          className="w-10rem"
+          className="w-10rem text-center"
         ></Column>
         <Column
           header={() => <div className="text-center">Categories</div>}
