@@ -1,7 +1,11 @@
 import React from "react";
 import { ContextMenu } from "primereact/contextmenu";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
-import { deleteDocument, updateDocument } from "../../../utils/supabaseUtils";
+import {
+  deleteDocument,
+  updateDocument,
+  updateMultipleDocumentsParents,
+} from "../../../utils/supabaseUtils";
 import { toastError, toastSuccess } from "../../../utils/utils";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -132,6 +136,42 @@ export default function ProjectTreeItemContext({
           }
         );
 
+        if (!updatedDocument.folder) {
+          let children: Document[] | undefined = queryClient.getQueryData(
+            `${project_id}-documents`
+          );
+
+          // If the folder is changing back to a document
+          // Updated the children's (if there are any) parent to the root folder
+          // Otherwise the user won't be able to access the children if this doesn't occur
+          // Since the children will be still under the parent which cannot be expanded if it is a file type
+
+          if (children) {
+            children = children
+              .filter((child) => child.parent === updatedDocument.doc_id)
+              .map((child) => ({ ...child, parent: null }));
+            updateMultipleDocumentsParents(children);
+
+            queryClient.setQueryData(
+              `${project_id}-documents`,
+              (oldData: Document[] | undefined) => {
+                if (oldData) {
+                  let newData: Document[] = oldData.map((doc) => {
+                    if (doc.parent === updatedDocument.doc_id) {
+                      return { ...doc, parent: null };
+                    } else {
+                      return doc;
+                    }
+                  });
+                  return newData;
+                } else {
+                  return [];
+                }
+              }
+            );
+          }
+        }
+
         return { previousDocuments };
       },
       onError: (err, newTodo, context) => {
@@ -140,6 +180,7 @@ export default function ProjectTreeItemContext({
           context?.previousDocuments
         );
       },
+      onSuccess: (data, vars) => {},
     }
   );
 

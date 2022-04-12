@@ -184,6 +184,23 @@ export const updateProject = async (
     }
   }
 };
+export const updateMultipleDocumentsParents = async (
+  documents: Pick<Document, "id" | "parent">[]
+) => {
+  let user = auth.user();
+
+  if (user) {
+    const { data: updatedDocuments, error } = await supabase
+      .from<Document>("documents")
+      .upsert(documents);
+
+    if (updatedDocuments) return updatedDocuments;
+    if (error) {
+      toastError("There was an error updating your documents.");
+      throw new Error(error.message);
+    }
+  }
+};
 
 // DELETE
 
