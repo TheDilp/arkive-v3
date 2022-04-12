@@ -32,8 +32,14 @@ export default function ProjectSettings() {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
     },
-    categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    folder: { value: null, matchMode: FilterMatchMode.EQUALS },
+    categories: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
+    },
+    folder: {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+    },
   });
 
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
@@ -167,7 +173,7 @@ export default function ProjectSettings() {
         itemTemplate={categoriesItemTemplate}
         onChange={(e) => options.filterCallback(e.value)}
         placeholder="Any"
-        className="p-column-filter w-12"
+        className="p-column-filter w-full"
       />
     );
   };
@@ -179,9 +185,24 @@ export default function ProjectSettings() {
     );
   };
 
+  const folderFilterTemplate = (options: any) => {
+    return (
+      <Checkbox
+        checked={options.value}
+        onChange={(e) => {
+          options.filterCallback(e.checked);
+
+          console.log(options, e);
+        }}
+        placeholder="False"
+        className="p-column-filter w-full"
+      />
+    );
+  };
+
   const imageBodyTemplate = (rowData: Document) => {
     return (
-      <div className="w-4rem h-4rem relative">
+      <div className="w-2rem h-2rem relative">
         {rowData.image && (
           <img
             src={rowData.image}
@@ -317,7 +338,7 @@ export default function ProjectSettings() {
         <Button
           type="button"
           icon="pi pi-filter-slash"
-          label="Clear"
+          label="Clear All"
           className="p-button-outlined mr-2"
           onClick={() =>
             // @ts-ignore
@@ -344,17 +365,6 @@ export default function ProjectSettings() {
       </div>
     );
   };
-  const onSelectAllChange = (event: any) => {
-    const selectAll = event.checked;
-
-    if (selectAll && documents) {
-      setSelectAll(true);
-      setSelectedDocuments(documents);
-    } else {
-      setSelectAll(false);
-      setSelectedDocuments([]);
-    }
-  };
 
   return (
     <div className="w-full px-8 mx-8 mt-4">
@@ -369,9 +379,8 @@ export default function ProjectSettings() {
         selection={selectedDocuments}
         selectionMode="checkbox"
         paginator
-        rows={8}
-        selectAll={selectAll}
-        onSelectAllChange={onSelectAllChange}
+        rows={12}
+        showGridlines
         onSelectionChange={(e) => {
           const value = e.value;
           setSelectedDocuments(value);
@@ -381,14 +390,21 @@ export default function ProjectSettings() {
         filters={filter}
         globalFilterFields={["title"]}
         size="small"
+        responsiveLayout="scroll"
       >
         <Column selectionMode="multiple"></Column>
-        <Column field="title" header="Title" filter></Column>
+        <Column
+          field="title"
+          header="Title"
+          filter
+          style={{ width: "20rem" }}
+        ></Column>
         <Column field="image" header="Image" body={imageBodyTemplate}></Column>
         <Column
           header="Folder"
           field="folder"
           filter
+          filterElement={folderFilterTemplate}
           body={folderBodyTemplate}
         ></Column>
         <Column
@@ -402,7 +418,7 @@ export default function ProjectSettings() {
           header={() => <div className="text-center">Categories</div>}
           filterField="categories"
           showFilterMatchModes={false}
-          filterMenuStyle={{ width: "28rem" }}
+          filterMenuStyle={{ width: "25rem" }}
           body={categoriesBodyTemplate}
           filterElement={categoriesFilterTemplate}
           filter
