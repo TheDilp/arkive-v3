@@ -40,6 +40,10 @@ export default function ProjectSettings() {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
     },
+    "parent.title": {
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
+    },
   });
 
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
@@ -59,8 +63,7 @@ export default function ProjectSettings() {
     isLoading: documentsLoading,
   } = useQuery(
     `${project_id}-documents`,
-    async () => await getDocumentsForSettings(project_id as string),
-    { enabled: !queryClient.getQueryData(`${project_id}-documents`) }
+    async () => await getDocumentsForSettings(project_id as string)
   );
   const {
     data: project,
@@ -187,16 +190,17 @@ export default function ProjectSettings() {
 
   const folderFilterTemplate = (options: any) => {
     return (
-      <Checkbox
-        checked={options.value}
-        onChange={(e) => {
-          options.filterCallback(e.checked);
-
-          console.log(options, e);
-        }}
-        placeholder="False"
-        className="p-column-filter w-full"
-      />
+      <div className="flex justify-content-evenly w-full">
+        Folder:
+        <Checkbox
+          checked={options.value}
+          onChange={(e) => {
+            options.filterCallback(e.checked);
+          }}
+          placeholder="False"
+          className="p-column-filter"
+        />
+      </div>
     );
   };
 
@@ -257,14 +261,6 @@ export default function ProjectSettings() {
         }}
       />
     );
-  };
-  const parentBodyTemplate = (rowData: Document) => {
-    let docs: Document[] | undefined = queryClient.getQueryData(
-      `${project_id}-documents`
-    );
-    if (docs) {
-      return docs.find((doc) => doc.id === rowData.parent)?.title || "";
-    }
   };
   const leftToolbarTemplate = () => {
     return (
@@ -350,7 +346,12 @@ export default function ProjectSettings() {
                   { value: null, matchMode: FilterMatchMode.STARTS_WITH },
                 ],
               },
-              categories: { value: null, matchMode: FilterMatchMode.CONTAINS },
+              categories: {
+                operator: FilterOperator.AND,
+                constraints: [
+                  { value: null, matchMode: FilterMatchMode.CONTAINS },
+                ],
+              },
             })
           }
         />
@@ -365,7 +366,6 @@ export default function ProjectSettings() {
       </div>
     );
   };
-
   return (
     <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
@@ -401,18 +401,20 @@ export default function ProjectSettings() {
         ></Column>
         <Column field="image" header="Image" body={imageBodyTemplate}></Column>
         <Column
-          header="Folder"
+          header="Is Folder"
           field="folder"
           filter
           filterElement={folderFilterTemplate}
           body={folderBodyTemplate}
           dataType="boolean"
+          style={{ width: "7rem" }}
         ></Column>
         <Column
           header="Parent"
-          field="parent"
+          field="parent.title"
           filter
-          body={parentBodyTemplate}
+          // filterElement={parentFilterTemplate}
+          // dataType="string"
           className="w-10rem text-center"
         ></Column>
         <Column
