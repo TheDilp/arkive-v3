@@ -3,16 +3,11 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
-import {
-  createDocument,
-  getDocuments,
-  updateDocument,
-} from "../../../utils/supabaseUtils";
+import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
 import { getDepth, toastError, toastSuccess } from "../../../utils/utils";
-import LoadingScreen from "../../Util/LoadingScreen";
 import DragPreview from "./DragPreview";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
@@ -87,17 +82,10 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       .catch((err) => toastError("There was an error updating the document"));
   }
 
-  const {
-    data: docs,
-    error: documentsError,
-    isLoading,
-  } = useQuery(
-    `${project_id}-documents`,
-    async () => await getDocuments(project_id as string),
-    { staleTime: 5 * 60 * 1000 }
-  );
-
   useEffect(() => {
+    let docs: Document[] | undefined = queryClient.getQueryData(
+      `${project_id}-documents`
+    );
     if (docs) {
       const treeData = docs.map((doc) => ({
         id: doc.id,
@@ -107,15 +95,13 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       }));
       setTreeData(treeData);
     }
-  }, [docs]);
+  }, []);
 
   useEffect(() => {
     if (doc_id) {
       setDocId(doc_id);
     }
   }, [doc_id]);
-
-  if (documentsError || isLoading) return <LoadingScreen />;
 
   return (
     <div className="text-white w-2 flex flex-wrap surface-50 ">

@@ -1,9 +1,8 @@
+import { Icon } from "@iconify/react";
 import { useActive, useCommands } from "@remirror/react";
 import { Menubar } from "primereact/menubar";
-import { Icon } from "@iconify/react";
-import "../../styles/MenuBar.css";
-import { useEffect, useMemo, useState } from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
+import "../../styles/MenuBar.css";
 export default function MenuBar({ saving }: { saving: number | boolean }) {
   const {
     toggleBold,

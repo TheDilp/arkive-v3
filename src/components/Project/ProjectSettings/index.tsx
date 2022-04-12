@@ -13,7 +13,6 @@ import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document } from "../../../custom-types";
 import {
-  createManyDocuments,
   deleteDocument,
   deleteManyDocuments,
   getCurrentProject,
@@ -21,9 +20,8 @@ import {
   updateDocument,
 } from "../../../utils/supabaseUtils";
 import LoadingScreen from "../../Util/LoadingScreen";
-type Props = {};
 
-export default function ProjectSettings({}: Props) {
+export default function ProjectSettings() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState({

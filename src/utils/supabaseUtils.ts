@@ -83,7 +83,7 @@ export const getDocumentsForSettings = async (project_id: string) => {
   if (user) {
     const { data: documents, error } = await supabase
       .from<Document>("documents")
-      .select("id, title, image, categories, folder")
+      .select("id, title, image, categories, folder, parent")
       .eq("project_id", project_id);
     if (documents) return documents;
     if (error) {

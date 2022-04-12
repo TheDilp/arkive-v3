@@ -102,26 +102,23 @@ export default function RemirrorContext({
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const { project_id, doc_id } = useParams();
   const [saving, setSaving] = useState<number | boolean>(false);
-  useEffect(() => {
-    const allDocs: Document[] = queryClient.getQueryData(
-      `${project_id}-documents`
-    ) as Document[];
-    setDocuments(allDocs);
-  }, [queryClient.getQueryData(`${project_id}-documents`)]);
 
   useEffect(() => {
     if (doc_id) {
       setDocId(doc_id);
+      const documents: Document[] | undefined = queryClient.getQueryData(
+        `${project_id}-documents`
+      );
       if (documents) {
-        const currentDocument = documents.find(
+        const currentDocData = documents.find(
           (document) => document.id === doc_id
         );
-        if (currentDocument) {
-          setCurrentDocument(currentDocument);
-          if (currentDocument.content) {
+        if (currentDocData) {
+          setCurrentDocument(currentDocData);
+          if (currentDocData.content) {
             manager.view.updateState(
               manager.createState({
-                content: JSON.parse(JSON.stringify(currentDocument.content)),
+                content: JSON.parse(JSON.stringify(currentDocData.content)),
               })
             );
           }
@@ -163,7 +160,10 @@ export default function RemirrorContext({
                 setSaving(false);
               }
             })
-            .catch((err) => toastError(err?.message));
+            .catch((err) => {
+              toastError(err?.message);
+              setSaving(false);
+            });
         }
       }
     }, 1500);
@@ -173,8 +173,8 @@ export default function RemirrorContext({
 
   useEffect(() => {
     if (firstRender.current) {
-      firstRender.current = false;
       setSaving(false);
+      firstRender.current = false;
     }
   }, []);
 
