@@ -9,15 +9,17 @@ import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
 import { Checkbox } from "primereact/checkbox";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document } from "../../../custom-types";
 import {
+  createDocument,
   deleteDocument,
   deleteManyDocuments,
   getCurrentProject,
   getDocumentsForSettings,
   updateDocument,
+  updateMultipleDocumentsParents,
 } from "../../../utils/supabaseUtils";
 import LoadingScreen from "../../Util/LoadingScreen";
 
@@ -45,7 +47,6 @@ export default function ProjectSettings() {
     setFilter(_filter);
     setGlobalFilterValue1(value);
   };
-
   const {
     data: documents,
     error: documentsError,
@@ -62,6 +63,88 @@ export default function ProjectSettings() {
   } = useQuery(
     `${project_id}-project`,
     async () => await getCurrentProject(project_id as string)
+  );
+
+  const updateType = useMutation(
+    async (vars: { doc_id: string; folder: boolean }) =>
+      await updateDocument(
+        vars.doc_id,
+        undefined,
+        undefined,
+        undefined,
+        vars.folder
+      ),
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return { ...doc, folder: updatedDocument.folder };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
+        if (!updatedDocument.folder) {
+          let children: Document[] | undefined = queryClient.getQueryData(
+            `${project_id}-documents`
+          );
+
+          // If the folder is changing back to a document
+          // Updated the children's (if there are any) parent to the root folder
+          // Otherwise the user won't be able to access the children if this doesn't occur
+          // Since the children will be still under the parent which cannot be expanded if it is a file type
+
+          if (children) {
+            children = children
+              .filter((child) => child.parent === updatedDocument.doc_id)
+              .map((child) => ({ ...child, parent: null }));
+            updateMultipleDocumentsParents(children);
+
+            queryClient.setQueryData(
+              `${project_id}-documents`,
+              (oldData: Document[] | undefined) => {
+                if (oldData) {
+                  let newData: Document[] = oldData.map((doc) => {
+                    if (doc.parent === updatedDocument.doc_id) {
+                      return { ...doc, parent: null };
+                    } else {
+                      return doc;
+                    }
+                  });
+                  return newData;
+                } else {
+                  return [];
+                }
+              }
+            );
+          }
+        }
+
+        return { previousDocuments };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+      },
+      onSuccess: (data, vars) => {},
+    }
   );
 
   if (documentsError || documentsLoading || projectError || projectLoading)
@@ -116,13 +199,7 @@ export default function ProjectSettings() {
         <Checkbox
           checked={rowData.folder}
           onChange={(e) =>
-            updateDocument(
-              rowData.id,
-              undefined,
-              undefined,
-              undefined,
-              e.checked
-            )
+            updateType.mutate({ doc_id: rowData.id, folder: e.checked })
           }
         />
       </div>
@@ -160,6 +237,14 @@ export default function ProjectSettings() {
       />
     );
   };
+  const parentBodyTemplate = (rowData: Document) => {
+    let docs: Document[] | undefined = queryClient.getQueryData(
+      `${project_id}-documents`
+    );
+    if (docs) {
+      return docs.find((doc) => doc.id === rowData.parent)?.title || "";
+    }
+  };
   const leftToolbarTemplate = () => {
     return (
       <div>
@@ -167,6 +252,25 @@ export default function ProjectSettings() {
           label="New"
           icon="pi pi-plus"
           className="p-button-success mr-2 p-button-outlined"
+          onClick={async () => {
+            const newDocument = (await createDocument(
+              project_id as string,
+              undefined
+            )) as Document;
+            if (newDocument) {
+              queryClient.setQueryData(
+                `${project_id}-documents`,
+                (oldData: Document[] | undefined) => {
+                  if (oldData) {
+                    const newData = [...oldData, newDocument];
+                    return newData;
+                  } else {
+                    return [newDocument];
+                  }
+                }
+              );
+            }
+          }}
         />
         <Button
           label="Delete Selected"
@@ -216,6 +320,7 @@ export default function ProjectSettings() {
           label="Clear"
           className="p-button-outlined mr-2"
           onClick={() =>
+            // @ts-ignore
             setFilter({
               global: { value: null, matchMode: FilterMatchMode.CONTAINS },
               title: {
@@ -282,10 +387,16 @@ export default function ProjectSettings() {
         <Column field="image" header="Image" body={imageBodyTemplate}></Column>
         <Column
           header="Folder"
-          alignHeader={"center"}
           field="folder"
           filter
           body={folderBodyTemplate}
+        ></Column>
+        <Column
+          header="Parent"
+          field="parent"
+          filter
+          body={parentBodyTemplate}
+          className="w-10rem"
         ></Column>
         <Column
           header={() => <div className="text-center">Categories</div>}

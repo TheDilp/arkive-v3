@@ -56,7 +56,7 @@ export default function ProjectTreeItemContext({
   folders = folders.filter((folder) => folder.folder);
 
   // Mutation to update the parent of a file
-  const updateParent = useMutation(
+  const updateParentMutation = useMutation(
     async (vars: { doc_id: string; parent: string | null }) =>
       await updateDocument(
         vars.doc_id,
@@ -102,7 +102,7 @@ export default function ProjectTreeItemContext({
     }
   );
 
-  const updateType = useMutation(
+  const updateTypeMutation = useMutation(
     async (vars: { doc_id: string; folder: boolean }) =>
       await updateDocument(
         vars.doc_id,
@@ -189,13 +189,13 @@ export default function ProjectTreeItemContext({
     {
       label: "Root",
       command: (item: any) => {
-        updateParent.mutate({ doc_id: displayDialog.id, parent: null });
+        updateParentMutation.mutate({ doc_id: displayDialog.id, parent: null });
       },
     },
     ...folders.map((folder) => ({
       label: folder.title,
       command: (item: any) => {
-        updateParent.mutate({
+        updateParentMutation.mutate({
           doc_id: displayDialog.id,
           parent: folder.id,
         });
@@ -222,13 +222,13 @@ export default function ProjectTreeItemContext({
           label: "Document",
           icon: "pi pi-fw pi-file",
           command: () =>
-            updateType.mutate({ doc_id: displayDialog.id, folder: false }),
+            updateTypeMutation.mutate({ doc_id: displayDialog.id, folder: false }),
         },
         {
           label: "Folder",
           icon: "pi pi-fw pi-folder",
           command: () =>
-            updateType.mutate({ doc_id: displayDialog.id, folder: true }),
+            updateTypeMutation.mutate({ doc_id: displayDialog.id, folder: true }),
         },
       ],
     },

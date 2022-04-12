@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
@@ -20,7 +20,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
   const { project_id, doc_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
-
   const navigate = useNavigate();
   const [filter, setFilter] = useState("");
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
@@ -52,7 +51,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
-
   async function updateDocumentTitle(docId: string, title: string) {
     await updateDocument(docId, title)
       .then((data: Document | undefined) => {
@@ -174,18 +172,20 @@ export default function ProjectTree({ docId, setDocId }: Props) {
                 project_id as string,
                 undefined
               )) as Document;
-              toastSuccess("New Document created!");
-              queryClient.setQueryData(
-                `${project_id}-documents`,
-                (oldData: Document[] | undefined) => {
-                  if (oldData) {
-                    const newData = [...oldData, newDocument];
-                    return newData;
-                  } else {
-                    return [newDocument];
+              if (newDocument) {
+                toastSuccess("New Document created!");
+                queryClient.setQueryData(
+                  `${project_id}-documents`,
+                  (oldData: Document[] | undefined) => {
+                    if (oldData) {
+                      const newData = [...oldData, newDocument];
+                      return newData;
+                    } else {
+                      return [newDocument];
+                    }
                   }
-                }
-              );
+                );
+              }
             }}
           />
         </div>
