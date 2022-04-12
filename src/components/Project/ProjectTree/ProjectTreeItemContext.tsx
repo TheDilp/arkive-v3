@@ -51,34 +51,7 @@ export default function ProjectTreeItemContext({
     queryClient.getQueryData(`${project_id}-documents`) || [];
   folders = folders.filter((folder) => folder.folder);
 
-  // async function updateParent(doc_id: string, parent: string | null) {
-
-  //     .then((data: Document | undefined) => {
-  //       if (data) {
-  //         // ! THIS RERENDERS THE TREE
-  //         // setDisplayDialog({ id: "", title: "", show: false });
-  //         let updatedDocument = data;
-  //         queryClient.setQueryData(
-  //           `${project_id}-documents`,
-  //           (oldData: Document[] | undefined) => {
-  //             if (oldData) {
-  //               let newData: Document[] = oldData.map((doc) => {
-  //                 if (doc.id === updatedDocument.id) {
-  //                   return { ...doc, parent: updatedDocument.parent };
-  //                 } else {
-  //                   return doc;
-  //                 }
-  //               });
-  //               return newData;
-  //             } else {
-  //               return [];
-  //             }
-  //           }
-  //         );
-  //       }
-  //     })
-  //     .catch((err) => toastError("There was an error updating the document"));
-  // }
+  // Mutation to update the parent of a file
   const updateParent = useMutation(
     async (vars: { doc_id: string; parent: string | null }) =>
       await updateDocument(
@@ -116,9 +89,61 @@ export default function ProjectTreeItemContext({
 
         return { previousDocuments };
       },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+      },
     }
   );
 
+  const updateType = useMutation(
+    async (vars: { doc_id: string; folder: boolean }) =>
+      await updateDocument(
+        vars.doc_id,
+        undefined,
+        undefined,
+        undefined,
+        vars.folder
+      ),
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return { ...doc, folder: updatedDocument.folder };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+      },
+    }
+  );
+
+  // Get all the folders a document can be moved to
   const moveToOptions = [
     {
       label: "Root",
@@ -155,8 +180,15 @@ export default function ProjectTreeItemContext({
         {
           label: "Document",
           icon: "pi pi-fw pi-file",
+          command: () =>
+            updateType.mutate({ doc_id: displayDialog.id, folder: false }),
         },
-        { label: "Folder", icon: "pi pi-fw pi-folder" },
+        {
+          label: "Folder",
+          icon: "pi pi-fw pi-folder",
+          command: () =>
+            updateType.mutate({ doc_id: displayDialog.id, folder: true }),
+        },
       ],
     },
     { separator: true },
@@ -169,7 +201,7 @@ export default function ProjectTreeItemContext({
   return (
     <>
       <ConfirmDialog />
-      <ContextMenu model={items} ref={cm} />
+      <ContextMenu model={items} ref={cm} className="Lato" />
     </>
   );
 }

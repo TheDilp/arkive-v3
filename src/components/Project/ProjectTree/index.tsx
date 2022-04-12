@@ -95,7 +95,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       }));
       setTreeData(treeData);
     }
-  }, []);
+  }, [queryClient.getQueryData(`${project_id}-documents`)]);
 
   useEffect(() => {
     if (doc_id) {

@@ -17,7 +17,13 @@ const CustomMentionExtension = new MentionAtomExtension({
 
 CustomMentionExtension.ReactComponent = ({ node }) => {
   return (
-    <Link className="mentionLink" to={`../${node.attrs.id}`}>
+    <Link
+      className="Lato text-white"
+      style={{
+        fontWeight: "700",
+      }}
+      to={`../${node.attrs.id}`}
+    >
       {node.attrs.label}
     </Link>
   );

@@ -44,11 +44,6 @@ div[data-callout-type="info"] {
     color: black !important;
 }
 
-.mentionLink {
-    text-decoration: none;
-    color: lightskyblue;
-}
-
 .remirror-mention-atom {
     outline: none !important;
     background: none !important;
