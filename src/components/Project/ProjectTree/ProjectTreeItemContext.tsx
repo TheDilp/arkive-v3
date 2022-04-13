@@ -10,6 +10,7 @@ import { toastError, toastSuccess } from "../../../utils/utils";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { isVariableStatement } from "typescript";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   displayDialog: treeItemDisplayDialog;
@@ -55,15 +56,18 @@ export default function ProjectTreeItemContext({
     queryClient.getQueryData(`${project_id}-documents`) || [];
   folders = folders.filter((folder) => folder.folder);
 
-  // Mutation to update the parent of a file
-  const updateParentMutation = useMutation(
-    async (vars: { doc_id: string; parent: string | null }) =>
+  const updateDocumentMutation = useMutation(
+    async (vars: {
+      doc_id: string;
+      folder?: boolean;
+      parent?: string | null;
+    }) =>
       await updateDocument(
         vars.doc_id,
         undefined,
         undefined,
         undefined,
-        undefined,
+        vars.folder,
         vars.parent
       ),
     {
@@ -79,53 +83,13 @@ export default function ProjectTreeItemContext({
             if (oldData) {
               let newData: Document[] = oldData.map((doc) => {
                 if (doc.id === updatedDocument.doc_id) {
-                  return { ...doc, parent: updatedDocument.parent };
-                } else {
-                  return doc;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-
-        return { previousDocuments };
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          context?.previousDocuments
-        );
-        toastError("There was an error updating your document.");
-      },
-    }
-  );
-
-  const updateTypeMutation = useMutation(
-    async (vars: { doc_id: string; folder: boolean }) =>
-      await updateDocument(
-        vars.doc_id,
-        undefined,
-        undefined,
-        undefined,
-        vars.folder
-      ),
-    {
-      onMutate: async (updatedDocument) => {
-        await queryClient.cancelQueries(`${project_id}-documents`);
-
-        const previousDocuments = queryClient.getQueryData(
-          `${project_id}-documents`
-        );
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
-            if (oldData) {
-              let newData: Document[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.doc_id) {
-                  return { ...doc, folder: updatedDocument.folder };
+                  return {
+                    ...doc,
+                    ...updatedDocument,
+                    parent: updatedDocument.parent
+                      ? updatedDocument.parent
+                      : doc.parent,
+                  };
                 } else {
                   return doc;
                 }
@@ -190,13 +154,16 @@ export default function ProjectTreeItemContext({
     {
       label: "Root",
       command: (item: any) => {
-        updateParentMutation.mutate({ doc_id: displayDialog.id, parent: null });
+        updateDocumentMutation.mutate({
+          doc_id: displayDialog.id,
+          parent: null,
+        });
       },
     },
     ...folders.map((folder) => ({
       label: folder.title,
       command: (item: any) => {
-        updateParentMutation.mutate({
+        updateDocumentMutation.mutate({
           doc_id: displayDialog.id,
           parent: folder.id,
         });
@@ -223,7 +190,7 @@ export default function ProjectTreeItemContext({
           label: "Document",
           icon: "pi pi-fw pi-file",
           command: () =>
-            updateTypeMutation.mutate({
+            updateDocumentMutation.mutate({
               doc_id: displayDialog.id,
               folder: false,
             }),
@@ -232,7 +199,7 @@ export default function ProjectTreeItemContext({
           label: "Folder",
           icon: "pi pi-fw pi-folder",
           command: () =>
-            updateTypeMutation.mutate({
+            updateDocumentMutation.mutate({
               doc_id: displayDialog.id,
               folder: true,
             }),
