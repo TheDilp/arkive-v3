@@ -529,6 +529,9 @@ export default function ProjectSettings() {
         filterDisplay="menu"
         filters={filter}
         globalFilterFields={["title"]}
+        sortField="title"
+        sortMode="multiple"
+        removableSort
         size="small"
         responsiveLayout="scroll"
         editMode="cell"
@@ -540,6 +543,7 @@ export default function ProjectSettings() {
           filter
           style={{ width: "20rem" }}
           editor={titleEditor}
+          sortable
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
               documentTitleMutation.mutate({
@@ -556,12 +560,14 @@ export default function ProjectSettings() {
           filterElement={folderFilterTemplate}
           body={folderBodyTemplate}
           dataType="boolean"
+          sortable
           style={{ width: "7rem" }}
         ></Column>
         <Column
           header="Parent"
           field="parent.title"
           filter
+          sortable
           className="w-10rem text-center"
           editor={(options) => parentEditor(options)}
         ></Column>
