@@ -1,5 +1,4 @@
 import { AutoComplete } from "primereact/autocomplete";
-import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
@@ -67,14 +66,22 @@ export default function CategoryAutocomplete({
 
         if (projectData) {
           // Filter out any categories that are not already present in the global project categories
-          let difference = vars.categories.filter(
-            (cat) => !projectData.categories.includes(cat)
-          );
-          if (difference.length > 0) {
+
+          let difference: string[] = [];
+
+          if (projectData.categories) {
+            difference = vars.categories.filter(
+              (cat) => !projectData.categories.includes(cat)
+            );
+          }
+          // Only update if there is a new category not present in the project categories
+          if (difference.length > 0 || !projectData.categories) {
             const updatedProject = await updateProject(
               project_id as string,
               undefined,
-              projectData.categories.concat(difference)
+              projectData.categories
+                ? projectData.categories.concat(difference)
+                : difference
             );
 
             if (updatedProject) {
@@ -112,7 +119,11 @@ export default function CategoryAutocomplete({
         currentDoc.categories ? "" : "Enter tags for this document..."
       }
       completeMethod={(e) =>
-        searchCategory(e, currentProject.categories, setFilteredCategories)
+        searchCategory(
+          e,
+          currentProject.categories || [],
+          setFilteredCategories
+        )
       }
       multiple
       onChange={async (e) =>
@@ -136,7 +147,8 @@ export default function CategoryAutocomplete({
             currentDoc.categories.includes(e.currentTarget.value)
           ) {
             toastWarn("Tag already exists on this document!");
-          } else if (!currentDoc.categories && e.currentTarget.value !== "") {
+          } else if (!currentDoc.categories) {
+            console.log("TEST", e.currentTarget.value);
             categoriesMutation.mutate({
               doc_id: currentDoc.id,
               categories: [e.currentTarget.value],

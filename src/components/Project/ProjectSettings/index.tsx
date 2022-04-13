@@ -16,7 +16,7 @@ import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document } from "../../../custom-types";
+import { Document, Project } from "../../../custom-types";
 import {
   createDocument,
   deleteDocument,
@@ -25,9 +25,11 @@ import {
   getDocumentsForSettings,
   updateDocument,
   updateMultipleDocumentsParents,
+  updateProject,
 } from "../../../utils/supabaseUtils";
 import LoadingScreen from "../../Util/LoadingScreen";
-import { toastError } from "../../../utils/utils";
+import { searchCategory, toastError, toastWarn } from "../../../utils/utils";
+import { AutoComplete } from "primereact/autocomplete";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
@@ -55,6 +57,7 @@ export default function ProjectSettings() {
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const onGlobalFilterChange = (e: any) => {
     const value = e.target.value;
     let _filter = { ...filter };
@@ -145,6 +148,84 @@ export default function ProjectSettings() {
           context?.previousDocuments
         );
         toastError("There was an error updating this document.");
+      },
+    }
+  );
+
+  const categoriesMutation = useMutation(
+    async (vars: { doc_id: string; categories: string[] }) =>
+      await updateDocument(vars.doc_id, undefined, undefined, vars.categories),
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              return oldData.map((document: Document) => {
+                if (document.id === updatedDocument.doc_id) {
+                  return {
+                    ...document,
+                    categories: updatedDocument.categories,
+                  };
+                } else {
+                  return document;
+                }
+              });
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onSuccess: async (data, vars) => {
+        let projectData: Project = queryClient.getQueryData(
+          `${project_id}-project`
+        ) as Project;
+
+        if (projectData) {
+          // Filter out any categories that are not already present in the global project categories
+          let difference = vars.categories.filter(
+            (cat) => !projectData.categories.includes(cat)
+          );
+          // Only update if there is a new category not present in the project categories
+          if (difference.length > 0) {
+            const updatedProject = await updateProject(
+              project_id as string,
+              undefined,
+              projectData.categories.concat(difference)
+            );
+
+            if (updatedProject) {
+              queryClient.setQueryData(
+                `${project_id}-project`,
+                (oldData: Project | undefined) => {
+                  let newData: any = {
+                    ...oldData,
+                    categories: updatedProject.categories,
+                  };
+                  return newData;
+                }
+              );
+            }
+          }
+        }
+      },
+      onError: (error, updatedDocument, context) => {
+        if (context)
+          queryClient.setQueryData(
+            `${project_id}-documents`,
+            context.previousDocuments
+          );
+
+        toastError("There was an error updating your document.");
       },
     }
   );
@@ -363,6 +444,7 @@ export default function ProjectSettings() {
     );
   };
 
+  // Cell Editors
   const parentEditor = (options: ColumnEditorOptions) => {
     return (
       <Dropdown
@@ -408,6 +490,9 @@ export default function ProjectSettings() {
         }}
       />
     );
+  };
+  const categoryEditor = (options: ColumnEditorOptions) => {
+    return <span>test</span>;
   };
 
   return (
@@ -488,6 +573,7 @@ export default function ProjectSettings() {
           editor={(options) => parentEditor(options)}
         ></Column>
         <Column
+          className="w-full"
           header={() => <div className="text-center">Categories</div>}
           filterField="categories"
           showFilterMatchModes={false}
@@ -495,6 +581,10 @@ export default function ProjectSettings() {
           body={categoriesBodyTemplate}
           filterElement={categoriesFilterTemplate}
           filter
+          editor={categoryEditor}
+          onCellEditComplete={(e: any) => {
+            console.log(e.rowData.id, e);
+          }}
         />
         <Column header="Delete" body={deleteBodyTemplate} />
       </DataTable>
