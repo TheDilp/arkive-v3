@@ -81,6 +81,7 @@ export default function ProjectSettings() {
     async () => await getCurrentProject(project_id as string)
   );
 
+  // MUTATIONS
   const updateType = useMutation(
     async (vars: { doc_id: string; folder: boolean }) =>
       await updateDocument(
@@ -216,6 +217,46 @@ export default function ProjectSettings() {
           context?.previousDocuments
         );
         toastError("There was an error updating the parent of this document.");
+      },
+    }
+  );
+  const documentTitleMutation = useMutation(
+    async (vars: { doc_id: string; title: string }) => {
+      await updateDocument(vars.doc_id, vars.title);
+    },
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return { ...doc, title: updatedDocument.title };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+        toastError("There was an error updating your document.");
       },
     }
   );
@@ -452,6 +493,18 @@ export default function ProjectSettings() {
       />
     );
   };
+  const titleEditor = (options: ColumnEditorOptions) => {
+    return (
+      <InputText
+        value={options.value}
+        onChange={(e) => {
+          if (options.rowData.id && e.target.value)
+            //@ts-ignore
+            options.editorCallback(e.target.value);
+        }}
+      />
+    );
+  };
 
   return (
     <div className="w-full px-8 mx-8 mt-4">
@@ -486,6 +539,14 @@ export default function ProjectSettings() {
           header="Title"
           filter
           style={{ width: "20rem" }}
+          editor={titleEditor}
+          onCellEditComplete={(e: any) => {
+            if (e.rowData.id && e.newValue)
+              documentTitleMutation.mutate({
+                doc_id: e.rowData.id,
+                title: e.newValue,
+              });
+          }}
         ></Column>
         <Column field="image" header="Image" body={imageBodyTemplate}></Column>
         <Column

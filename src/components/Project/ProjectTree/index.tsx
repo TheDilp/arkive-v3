@@ -51,34 +51,48 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
-  async function updateDocumentTitle(docId: string, title: string) {
-    await updateDocument(docId, title)
-      .then((data: Document | undefined) => {
-        if (data) {
-          setDisplayDialog({ id: "", title: "", show: false });
-          let updatedDocument = data;
-          queryClient.setQueryData(
-            `${project_id}-documents`,
-            (oldData: Document[] | undefined) => {
-              if (oldData) {
-                let newData: Document[] = oldData.map((doc) => {
-                  if (doc.id === updatedDocument.id) {
-                    return { ...doc, title: updatedDocument.title };
-                  } else {
-                    return doc;
-                  }
-                });
-                return newData;
-              } else {
-                return [];
-              }
+
+  const documentTitleMutation = useMutation(
+    async (vars: { docId: string; title: string }) => {
+      await updateDocument(vars.docId, vars.title);
+    },
+    {
+      onMutate: async (updatedDocument) => {
+        setDisplayDialog({ id: "", title: "", show: false });
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.docId) {
+                  return { ...doc, title: updatedDocument.title };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
             }
-          );
-          toastSuccess(`Document ${updatedDocument.title} saved`);
-        }
-      })
-      .catch((err) => toastError("There was an error updating the document"));
-  }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+        toastError("There was an error updating your document.");
+      },
+    }
+  );
 
   useEffect(() => {
     let docs: Document[] | undefined = queryClient.getQueryData(
@@ -89,7 +103,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         id: doc.id,
         text: doc.title,
         droppable: doc.folder,
-        parent: doc.parent ? doc.parent : "0",
+        parent: doc.parent ? (doc.parent as string) : "0",
       }));
       setTreeData(treeData);
     }
@@ -133,12 +147,12 @@ export default function ProjectTree({ docId, setDocId }: Props) {
                     title: e.target.value,
                   }))
                 }
-                onKeyDown={async (e) => {
+                onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    await updateDocumentTitle(
-                      displayDialog.id,
-                      displayDialog.title
-                    );
+                    documentTitleMutation.mutate({
+                      docId: displayDialog.id,
+                      title: displayDialog.title,
+                    });
                   }
                 }}
               />
@@ -149,11 +163,11 @@ export default function ProjectTree({ docId, setDocId }: Props) {
                 label="Save"
                 icon="pi pi-fw pi-save"
                 iconPos="right"
-                onClick={async () =>
-                  await updateDocumentTitle(
-                    displayDialog.id,
-                    displayDialog.title
-                  )
+                onClick={() =>
+                  documentTitleMutation.mutate({
+                    docId: displayDialog.id,
+                    title: displayDialog.title,
+                  })
                 }
               />
             </div>

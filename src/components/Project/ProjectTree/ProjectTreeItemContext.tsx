@@ -98,6 +98,7 @@ export default function ProjectTreeItemContext({
           `${project_id}-documents`,
           context?.previousDocuments
         );
+        toastError("There was an error updating your document.");
       },
     }
   );
@@ -222,13 +223,19 @@ export default function ProjectTreeItemContext({
           label: "Document",
           icon: "pi pi-fw pi-file",
           command: () =>
-            updateTypeMutation.mutate({ doc_id: displayDialog.id, folder: false }),
+            updateTypeMutation.mutate({
+              doc_id: displayDialog.id,
+              folder: false,
+            }),
         },
         {
           label: "Folder",
           icon: "pi pi-fw pi-folder",
           command: () =>
-            updateTypeMutation.mutate({ doc_id: displayDialog.id, folder: true }),
+            updateTypeMutation.mutate({
+              doc_id: displayDialog.id,
+              folder: true,
+            }),
         },
       ],
     },
