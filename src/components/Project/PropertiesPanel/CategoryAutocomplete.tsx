@@ -1,6 +1,6 @@
 import { AutoComplete } from "primereact/autocomplete";
 import React from "react";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
 import { updateDocument, updateProject } from "../../../utils/supabaseUtils";
@@ -21,76 +21,88 @@ export default function CategoryAutocomplete({
   setCurrentDoc,
   setFilteredCategories,
 }: Props) {
-  const { project_id, doc_id } = useParams();
+  const { project_id } = useParams();
   const queryClient = useQueryClient();
 
-  async function updateCategories(currentDoc: Document, categories: string[]) {
-    let oldDocument = currentDoc;
-    setCurrentDoc({ ...currentDoc, categories });
-    const updatedDocument = await updateDocument(
-      doc_id as string,
-      undefined,
-      undefined,
-      categories
-    ).catch((err) => {
-      setCurrentDoc(oldDocument);
-      toastError("There was an error updating your document's categories");
-    });
-    if (updatedDocument) {
-      let projectData: Project = queryClient.getQueryData(
-        `${project_id}-project`
-      ) as Project;
-      if (projectData) {
-        // Filter out any categories that are not already present in the global project categories
-        let difference = categories.filter(
-          (cat) => !projectData.categories.includes(cat)
+  const categoriesMutation = useMutation(
+    async (vars: { doc_id: string; categories: string[] }) =>
+      await updateDocument(vars.doc_id, undefined, undefined, vars.categories),
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
         );
-        if (difference.length > 0) {
-          const updatedProject = await updateProject(
-            project_id as string,
-            undefined,
-            projectData.categories.concat(difference)
+        setCurrentDoc({
+          ...currentDoc,
+          categories: updatedDocument.categories,
+        });
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              return oldData.map((document: Document) => {
+                if (document.id === updatedDocument.doc_id) {
+                  return {
+                    ...document,
+                    categories: updatedDocument.categories,
+                  };
+                } else {
+                  return document;
+                }
+              });
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onSuccess: async (data, vars) => {
+        let projectData: Project = queryClient.getQueryData(
+          `${project_id}-project`
+        ) as Project;
+
+        if (projectData) {
+          // Filter out any categories that are not already present in the global project categories
+          let difference = vars.categories.filter(
+            (cat) => !projectData.categories.includes(cat)
           );
-          console.log(updatedProject);
-
-          if (updatedProject) {
-            console.log(updatedProject);
-            queryClient.setQueryData(
-              `${project_id}-project`,
-              (oldData: Project | undefined) => {
-                console.log(oldData);
-                let newData: any = {
-                  ...oldData,
-                  categories: updatedProject.categories,
-                };
-                console.log(newData);
-                return newData;
-              }
+          if (difference.length > 0) {
+            const updatedProject = await updateProject(
+              project_id as string,
+              undefined,
+              projectData.categories.concat(difference)
             );
-          }
-        }
-      }
 
-      // Update the document's categories in storage
-      queryClient.setQueryData(
-        `${project_id}-documents`,
-        (oldData: Document[] | undefined) => {
-          if (oldData) {
-            let newData: Document[] = oldData.map((doc) => {
-              if (doc.id === updatedDocument.id) {
-                return updatedDocument;
-              } else {
-                return doc;
-              }
-            });
-            return newData;
-          } else {
-            return [];
+            if (updatedProject) {
+              queryClient.setQueryData(
+                `${project_id}-project`,
+                (oldData: Project | undefined) => {
+                  let newData: any = {
+                    ...oldData,
+                    categories: updatedProject.categories,
+                  };
+                  return newData;
+                }
+              );
+            }
           }
         }
-      );
+      },
+      onError: (error, updatedDocument, context) => {
+        if (context)
+          queryClient.setQueryData(
+            `${project_id}-documents`,
+            context.previousDocuments
+          );
+
+        toastError("There was an error updating your document.");
+      },
     }
-  }
+  );
 
   return (
     <AutoComplete
@@ -103,24 +115,32 @@ export default function CategoryAutocomplete({
         searchCategory(e, currentProject.categories, setFilteredCategories)
       }
       multiple
-      onChange={async (e) => updateCategories(currentDoc, e.value)}
+      onChange={async (e) =>
+        categoriesMutation.mutate({
+          doc_id: currentDoc.id,
+          categories: e.value,
+        })
+      }
       onKeyUp={async (e) => {
         if (e.key === "Enter" && e.currentTarget.value !== "") {
           if (
             currentDoc.categories &&
             !currentDoc.categories.includes(e.currentTarget.value)
           ) {
-            updateCategories(currentDoc, [
-              ...currentDoc.categories,
-              e.currentTarget.value,
-            ]);
+            categoriesMutation.mutate({
+              doc_id: currentDoc.id,
+              categories: [...currentDoc.categories, e.currentTarget.value],
+            });
           } else if (
             currentDoc.categories &&
             currentDoc.categories.includes(e.currentTarget.value)
           ) {
             toastWarn("Tag already exists on this document!");
           } else if (!currentDoc.categories && e.currentTarget.value !== "") {
-            updateCategories(currentDoc, [e.currentTarget.value]);
+            categoriesMutation.mutate({
+              doc_id: currentDoc.id,
+              categories: [e.currentTarget.value],
+            });
           }
           e.currentTarget.value = "";
         }

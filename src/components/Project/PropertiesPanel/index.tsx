@@ -28,6 +28,10 @@ export default function PropertiesPanel() {
       setCurrentDoc(allDocs.filter((doc) => doc.id === doc_id)[0]);
     }
   }, [doc_id]);
+
+  
+
+
   return (
     <div className="h-full w-2 surface-50 text-white">
       {currentProject && currentDoc && (
