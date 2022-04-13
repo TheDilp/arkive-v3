@@ -84,7 +84,8 @@ export const getDocumentsForSettings = async (project_id: string) => {
     const { data: documents, error } = await supabase
       .from<Document>("documents")
       .select("id, title, image, categories, folder, parent(title)")
-      .eq("project_id", project_id);
+      .eq("project_id", project_id)
+      .order("title", { ascending: true });
     if (documents) return documents;
     if (error) {
       toastError("There was an error getting your documents.");
@@ -138,7 +139,8 @@ export const updateDocument = async (
   content?: RemirrorJSON,
   categories?: string[],
   folder?: boolean,
-  parent?: string | null
+  parent?: string | null,
+  image?: string
 ) => {
   let user = auth.user();
 
@@ -151,6 +153,7 @@ export const updateDocument = async (
         categories,
         folder,
         parent,
+        image,
       })
       .eq("id", doc_id);
 

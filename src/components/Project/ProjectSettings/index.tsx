@@ -82,19 +82,27 @@ export default function ProjectSettings() {
   );
 
   // MUTATIONS
-  const updateType = useMutation(
-    async (vars: { doc_id: string; folder: boolean }) =>
+
+  const updateDocumentMutation = useMutation(
+    async (vars: {
+      doc_id: string;
+      title?: string;
+      folder?: boolean;
+      parent?: string | null;
+      image?: string;
+    }) =>
       await updateDocument(
         vars.doc_id,
+        vars.title,
         undefined,
         undefined,
-        undefined,
-        vars.folder
+        vars.folder,
+        vars.parent,
+        vars.image
       ),
     {
       onMutate: async (updatedDocument) => {
         await queryClient.cancelQueries(`${project_id}-documents`);
-
         const previousDocuments = queryClient.getQueryData(
           `${project_id}-documents`
         );
@@ -102,98 +110,18 @@ export default function ProjectSettings() {
           `${project_id}-documents`,
           (oldData: Document[] | undefined) => {
             if (oldData) {
-              let newData: Document[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.doc_id) {
-                  return { ...doc, folder: updatedDocument.folder };
-                } else {
-                  return doc;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-
-        if (!updatedDocument.folder) {
-          let children: Document[] | undefined = queryClient.getQueryData(
-            `${project_id}-documents`
-          );
-
-          // If the folder is changing back to a document
-          // Updated the children's (if there are any) parent to the root folder
-          // Otherwise the user won't be able to access the children if this doesn't occur
-          // Since the children will be still under the parent which cannot be expanded if it is a file type
-
-          if (children) {
-            children = children
-              .filter((child) => child.parent === updatedDocument.doc_id)
-              .map((child) => ({ ...child, parent: null }));
-            updateMultipleDocumentsParents(children);
-
-            queryClient.setQueryData(
-              `${project_id}-documents`,
-              (oldData: Document[] | undefined) => {
-                if (oldData) {
-                  let newData: Document[] = oldData.map((doc) => {
-                    if (doc.parent === updatedDocument.doc_id) {
-                      return { ...doc, parent: null };
-                    } else {
-                      return doc;
-                    }
-                  });
-                  return newData;
-                } else {
-                  return [];
-                }
-              }
-            );
-          }
-        }
-
-        return { previousDocuments };
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          context?.previousDocuments
-        );
-      },
-      onSuccess: (data, vars) => {},
-    }
-  );
-  const updateParentMutation = useMutation(
-    async (vars: { doc_id: string; parent: string | null }) =>
-      await updateDocument(
-        vars.doc_id,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        vars.parent
-      ),
-    {
-      onMutate: async (updatedDocument) => {
-        await queryClient.cancelQueries(`${project_id}-documents`);
-        const previousDocuments = queryClient.getQueryData(
-          `${project_id}-documents`
-        );
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
-            let newParentTitle = oldData.find(
-              (doc) => doc.id === updatedDocument.parent
-            );
-            if (oldData && newParentTitle) {
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedDocument.parent
+              );
               let newData: Document[] = oldData.map((doc) => {
                 if (doc.id === updatedDocument.doc_id) {
                   return {
                     ...doc,
-                    parent: {
-                      id: updatedDocument.parent as string,
-                      title: newParentTitle?.title as string,
-                    },
+                    ...updatedDocument,
+                    parent:
+                      updatedDocument.parent && newParent
+                        ? { id: newParent.id, title: newParent.title }
+                        : doc.parent,
                   };
                 } else {
                   return doc;
@@ -216,47 +144,7 @@ export default function ProjectSettings() {
           `${project_id}-documents`,
           context?.previousDocuments
         );
-        toastError("There was an error updating the parent of this document.");
-      },
-    }
-  );
-  const documentTitleMutation = useMutation(
-    async (vars: { doc_id: string; title: string }) => {
-      await updateDocument(vars.doc_id, vars.title);
-    },
-    {
-      onMutate: async (updatedDocument) => {
-        await queryClient.cancelQueries(`${project_id}-documents`);
-
-        const previousDocuments = queryClient.getQueryData(
-          `${project_id}-documents`
-        );
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
-            if (oldData) {
-              let newData: Document[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.doc_id) {
-                  return { ...doc, title: updatedDocument.title };
-                } else {
-                  return doc;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-
-        return { previousDocuments };
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          context?.previousDocuments
-        );
-        toastError("There was an error updating your document.");
+        toastError("There was an error updating this document.");
       },
     }
   );
@@ -311,12 +199,12 @@ export default function ProjectSettings() {
 
   const imageBodyTemplate = (rowData: Document) => {
     return (
-      <div className="w-2rem h-2rem relative">
+      <div className="w-2rem h-2rem">
         {rowData.image && (
           <img
             src={rowData.image}
             alt="document"
-            className="w-full h-full border-round"
+            className="w-full h-full border-circle"
             loading="lazy"
           />
         )}
@@ -329,7 +217,10 @@ export default function ProjectSettings() {
         <Checkbox
           checked={rowData.folder}
           onChange={(e) =>
-            updateType.mutate({ doc_id: rowData.id, folder: e.checked })
+            updateDocumentMutation.mutate({
+              doc_id: rowData.id,
+              folder: e.checked,
+            })
           }
         />
       </div>
@@ -481,7 +372,7 @@ export default function ProjectSettings() {
         optionValue="id"
         onChange={(e) => {
           if (options.rowData.id && e.value)
-            updateParentMutation.mutate({
+            updateDocumentMutation.mutate({
               doc_id: options.rowData.id,
               parent: e.value,
             });
@@ -496,6 +387,19 @@ export default function ProjectSettings() {
   const titleEditor = (options: ColumnEditorOptions) => {
     return (
       <InputText
+        value={options.value}
+        onChange={(e) => {
+          if (options.rowData.id && e.target.value)
+            //@ts-ignore
+            options.editorCallback(e.target.value);
+        }}
+      />
+    );
+  };
+  const imageEditor = (options: ColumnEditorOptions) => {
+    return (
+      <InputText
+        className="w-full"
         value={options.value}
         onChange={(e) => {
           if (options.rowData.id && e.target.value)
@@ -529,7 +433,6 @@ export default function ProjectSettings() {
         filterDisplay="menu"
         filters={filter}
         globalFilterFields={["title"]}
-        sortField="title"
         sortMode="multiple"
         removableSort
         size="small"
@@ -546,13 +449,26 @@ export default function ProjectSettings() {
           sortable
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
-              documentTitleMutation.mutate({
+              updateDocumentMutation.mutate({
                 doc_id: e.rowData.id,
                 title: e.newValue,
               });
           }}
         ></Column>
-        <Column field="image" header="Image" body={imageBodyTemplate}></Column>
+        <Column
+          field="image"
+          header="Image"
+          body={imageBodyTemplate}
+          editor={imageEditor}
+          align="center"
+          onCellEditComplete={(e: any) => {
+            if (e.rowData.id && e.newValue)
+              updateDocumentMutation.mutate({
+                doc_id: e.rowData.id,
+                image: e.newValue,
+              });
+          }}
+        ></Column>
         <Column
           header="Is Folder"
           field="folder"
