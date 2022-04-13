@@ -18,7 +18,7 @@ export type Document = {
   project_id: string;
   categories: string[];
   title: string;
-  parent: string | null;
+  parent: string | null | { id: string; title: string };
   folder: boolean;
 };
 

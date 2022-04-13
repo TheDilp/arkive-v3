@@ -1,13 +1,18 @@
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Button } from "primereact/button";
 import { Chip } from "primereact/chip";
-import { Column } from "primereact/column";
+import {
+  Column,
+  ColumnEditorOptions,
+  ColumnEventParams,
+} from "primereact/column";
 import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
 import { Checkbox } from "primereact/checkbox";
+import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -22,6 +27,7 @@ import {
   updateMultipleDocumentsParents,
 } from "../../../utils/supabaseUtils";
 import LoadingScreen from "../../Util/LoadingScreen";
+import { toastError } from "../../../utils/utils";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
@@ -61,6 +67,7 @@ export default function ProjectSettings() {
     data: documents,
     error: documentsError,
     isLoading: documentsLoading,
+    refetch: documentsRefetch,
   } = useQuery(
     `${project_id}-documents`,
     async () => await getDocumentsForSettings(project_id as string)
@@ -153,6 +160,63 @@ export default function ProjectSettings() {
         );
       },
       onSuccess: (data, vars) => {},
+    }
+  );
+  const updateParentMutation = useMutation(
+    async (vars: { doc_id: string; parent: string | null }) =>
+      await updateDocument(
+        vars.doc_id,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        vars.parent
+      ),
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            let newParentTitle = oldData.find(
+              (doc) => doc.id === updatedDocument.parent
+            );
+            if (oldData && newParentTitle) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return {
+                    ...doc,
+                    parent: {
+                      id: updatedDocument.parent as string,
+                      title: newParentTitle?.title as string,
+                    },
+                  };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onSuccess: () => {
+        documentsRefetch();
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+        toastError("There was an error updating the parent of this document.");
+      },
     }
   );
 
@@ -366,6 +430,29 @@ export default function ProjectSettings() {
       </div>
     );
   };
+
+  const parentEditor = (options: ColumnEditorOptions) => {
+    return (
+      <Dropdown
+        value={options.value}
+        options={documents?.filter((doc) => doc.folder) || []}
+        optionLabel="title"
+        optionValue="id"
+        onChange={(e) => {
+          if (options.rowData.id && e.value)
+            updateParentMutation.mutate({
+              doc_id: options.rowData.id,
+              parent: e.value,
+            });
+        }}
+        placeholder="Select a Folder"
+        itemTemplate={(option) => {
+          return <span>{option.title}</span>;
+        }}
+      />
+    );
+  };
+
   return (
     <div className="w-full px-8 mx-8 mt-4">
       <ConfirmDialog />
@@ -391,6 +478,7 @@ export default function ProjectSettings() {
         globalFilterFields={["title"]}
         size="small"
         responsiveLayout="scroll"
+        editMode="cell"
       >
         <Column selectionMode="multiple"></Column>
         <Column
@@ -413,9 +501,8 @@ export default function ProjectSettings() {
           header="Parent"
           field="parent.title"
           filter
-          // filterElement={parentFilterTemplate}
-          // dataType="string"
           className="w-10rem text-center"
+          editor={(options) => parentEditor(options)}
         ></Column>
         <Column
           header={() => <div className="text-center">Categories</div>}
