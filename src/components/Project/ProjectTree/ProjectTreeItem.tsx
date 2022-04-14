@@ -1,9 +1,10 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
+import { Icon } from "@iconify/react";
 type Props = {
   docId: string;
-  node: NodeModel;
+  node: NodeModel<Document>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
@@ -56,7 +57,7 @@ export default function ProjectTreeItem({
           )}
         </span>
       )}
-      <i className={`pi pi-fw ${node.droppable ? "pi-folder" : "pi-file"}`}></i>
+      <Icon icon={node.data?.icon as string} />
       <span
         className={`text-lg hover:bg-blue-300 Lato ${
           docId === node.id ? "text-primary" : ""

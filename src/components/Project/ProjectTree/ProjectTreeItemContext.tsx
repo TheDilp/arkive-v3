@@ -112,7 +112,11 @@ export default function ProjectTreeItemContext({
 
           if (children) {
             children = children
-              .filter((child) => child.parent === updatedDocument.doc_id)
+              .filter((child) =>
+                !child.parent
+                  ? false
+                  : child.parent.id === updatedDocument.doc_id
+              )
               .map((child) => ({ ...child, parent: null }));
             updateMultipleDocumentsParents(children);
 
@@ -121,7 +125,7 @@ export default function ProjectTreeItemContext({
               (oldData: Document[] | undefined) => {
                 if (oldData) {
                   let newData: Document[] = oldData.map((doc) => {
-                    if (doc.parent === updatedDocument.doc_id) {
+                    if (doc.parent?.id === updatedDocument.doc_id) {
                       return { ...doc, parent: null };
                     } else {
                       return doc;

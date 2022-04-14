@@ -104,6 +104,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         text: doc.title,
         droppable: doc.folder,
         parent: doc.parent ? (doc.parent.id as string) : "0",
+        data: doc,
       }));
       setTreeData(treeData);
     }
@@ -220,7 +221,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           tree={treeData}
           rootId={"0"}
           sort={false}
-          render={(node, { depth, isOpen, onToggle }) => (
+          render={(node: NodeModel, { depth, isOpen, onToggle }) => (
             <ProjectTreeItem
               node={node}
               depth={depth}

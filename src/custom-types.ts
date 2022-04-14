@@ -20,6 +20,7 @@ export type Document = {
   title: string;
   parent: { id: string; title: string } | null;
   folder: boolean;
+  icon: string;
 };
 
 export type treeItemDisplayDialog = {
