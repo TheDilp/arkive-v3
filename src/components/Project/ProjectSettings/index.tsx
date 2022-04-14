@@ -35,7 +35,7 @@ export default function ProjectSettings() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
 
-  const [globalFilterValue1, setGlobalFilterValue1] = useState("");
+  const [globalFilter, setGlobalFilter] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
@@ -407,22 +407,16 @@ export default function ProjectSettings() {
             ref.current?.reset();
           }}
         />
-        {/* <span className="p-input-icon-left">
+        <span className="p-input-icon-left">
           <i className="pi pi-search" />
           <InputText
-            value={globalFilterValue1}
+            value={globalFilter}
             placeholder="Quick Search"
             onChange={(e) => {
-              setGlobalFilterValue1(e.target.value);
-              if (ref.current) {
-                ref.current?.filter((value, field) => {
-                  console.log(value, field);
-                  return true;
-                });
-              }
+              setGlobalFilter(e.target.value);
             }}
           />
-        </span> */}
+        </span>
       </div>
     );
   };
@@ -532,9 +526,13 @@ export default function ProjectSettings() {
       ></Toolbar>
       <DataTable
         ref={ref}
-        value={documents?.map((doc) => {
-          return { ...doc, categories: doc.categories.sort() };
-        })}
+        value={documents
+          ?.filter((doc) =>
+            globalFilter ? doc.title.includes(globalFilter) : true
+          )
+          ?.map((doc) => {
+            return { ...doc, categories: doc.categories.sort() };
+          })}
         selection={selectedDocuments}
         selectionMode="checkbox"
         paginator
