@@ -12,7 +12,15 @@ export default function IconSelectMenu({
 }: iconSelect) {
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const rowVirtualizer = useVirtual({
-    size: iconList.length,
+    size: Math.ceil(iconList.length / 6),
+    parentRef,
+    estimateSize: useCallback(() => 35, []),
+    overscan: 5,
+  });
+
+  const columnVirtualizer = useVirtual({
+    horizontal: true,
+    size: 6,
     parentRef,
     estimateSize: useCallback(() => 35, []),
     overscan: 5,
@@ -34,19 +42,36 @@ export default function IconSelectMenu({
           }}
         >
           {rowVirtualizer.virtualItems.map((virtualRow) => (
-            <div
-              key={virtualRow.index}
-              className={virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: `${virtualRow.size}px`,
-                transform: `translateY(${virtualRow.start}px)`,
-              }}
-            >
-              <Icon icon={`mdi:${iconList[virtualRow.index]}`} />
+            <div key={virtualRow.index}>
+              {columnVirtualizer.virtualItems.map((virtualColumn) => (
+                <span
+                  key={virtualColumn.index}
+                  className={
+                    virtualColumn.index % 2
+                      ? virtualRow.index % 2 === 0
+                        ? "ListItemOdd"
+                        : "ListItemEven"
+                      : virtualRow.index % 2
+                      ? "ListItemOdd"
+                      : "ListItemEven"
+                  }
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: `10px`,
+                    height: `10px`,
+                    transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  <Icon
+                    fontSize={30}
+                    icon={`mdi:${
+                      iconList[virtualRow.index * 6 + virtualColumn.index]
+                    }`}
+                  />
+                </span>
+              ))}
             </div>
           ))}
         </div>
