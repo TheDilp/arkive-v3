@@ -27,7 +27,7 @@ export default function IconSelectMenu({
   });
   return (
     <div
-      className="absolute surface-100 z-5 w-16rem h-20rem"
+      className="absolute surface-100 z-5  h-20rem"
       style={{
         left,
         top,
@@ -36,8 +36,8 @@ export default function IconSelectMenu({
       <div ref={parentRef} className="List w-full h-full overflow-auto">
         <div
           style={{
-            height: `${rowVirtualizer.totalSize}px`,
             width: "100%",
+            height: `${rowVirtualizer.totalSize}px`,
             position: "relative",
           }}
         >
@@ -46,21 +46,13 @@ export default function IconSelectMenu({
               {columnVirtualizer.virtualItems.map((virtualColumn) => (
                 <span
                   key={virtualColumn.index}
-                  className={
-                    virtualColumn.index % 2
-                      ? virtualRow.index % 2 === 0
-                        ? "ListItemOdd"
-                        : "ListItemEven"
-                      : virtualRow.index % 2
-                      ? "ListItemOdd"
-                      : "ListItemEven"
-                  }
+                  className="px-2"
                   style={{
-                    position: "absolute",
+                    position: "relative",
                     top: 0,
                     left: 0,
-                    width: `10px`,
-                    height: `10px`,
+                    width: `${virtualColumn.size}px`,
+                    height: `${virtualRow.size}px`,
                     transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
                   }}
                 >
