@@ -34,34 +34,12 @@ import { AutoComplete } from "primereact/autocomplete";
 export default function ProjectSettings() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const [filter, setFilter] = useState({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    title: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
-    },
-    folder: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
-    },
-    "parent.title": {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
-    },
-  });
 
   const [globalFilterValue1, setGlobalFilterValue1] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
-  const onGlobalFilterChange = (e: any) => {
-    const value = e.target.value;
-    let _filter = { ...filter };
-    _filter.global.value = value;
 
-    setFilter(_filter);
-    setGlobalFilterValue1(value);
-  };
   const {
     data: documents,
     error: documentsError,
@@ -257,7 +235,6 @@ export default function ProjectSettings() {
       </div>
     );
   };
-
   const folderFilterTemplate = (options: any) => {
     return (
       <div className="flex justify-content-evenly w-full">
@@ -271,6 +248,22 @@ export default function ProjectSettings() {
           className="p-column-filter"
         />
       </div>
+    );
+  };
+  const parentFilterTemplate = (options: any) => {
+    return (
+      <Dropdown
+        value={options.value}
+        options={documents?.filter((doc) => doc.folder) || []}
+        optionLabel="title"
+        optionValue="title"
+        onChange={(e) => {
+          options.filterCallback(e.value);
+        }}
+        itemTemplate={(option) => {
+          return <span>{option.title}</span>;
+        }}
+      />
     );
   };
 
@@ -409,39 +402,11 @@ export default function ProjectSettings() {
           icon="pi pi-filter-slash"
           label="Clear All"
           className="p-button-outlined mr-2"
-          onClick={() =>
-            // @ts-ignore
-            setFilter({
-              global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-              title: {
-                operator: FilterOperator.AND,
-                constraints: [
-                  { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-                ],
-              },
-              categories: { value: null, matchMode: FilterMatchMode.IN },
-              folder: {
-                operator: FilterOperator.AND,
-                constraints: [
-                  { value: null, matchMode: FilterMatchMode.EQUALS },
-                ],
-              },
-              "parent.title": {
-                operator: FilterOperator.AND,
-                constraints: [
-                  { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-                ],
-              },
-            })
-          }
+          onClick={() => {}}
         />
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
-          <InputText
-            value={globalFilterValue1}
-            onChange={onGlobalFilterChange}
-            placeholder="Quick Search"
-          />
+          <InputText value={globalFilterValue1} placeholder="Quick Search" />
         </span>
       </div>
     );
@@ -607,15 +572,19 @@ export default function ProjectSettings() {
           field="folder"
           filter
           filterElement={folderFilterTemplate}
+          filterMatchMode="equals"
           body={folderBodyTemplate}
           dataType="boolean"
           sortable
-          style={{ width: "7rem" }}
+          style={{ width: "10rem" }}
         ></Column>
         <Column
           header="Parent"
           field="parent.title"
           filter
+          filterMatchMode="equals"
+          showFilterMatchModes={false}
+          filterElement={parentFilterTemplate}
           sortable
           className="w-10rem text-center"
           editor={(options) => parentEditor(options)}
@@ -625,9 +594,9 @@ export default function ProjectSettings() {
           filterField="categories"
           body={categoriesBodyTemplate}
           filterMenuStyle={{ width: "25rem" }}
-          filterPlaceholder="Search"
           filter
           filterMatchMode="custom"
+          showFilterMatchModes={false}
           filterFunction={(value: string[], filter: string[] | null) => {
             if (!filter) return true;
             if (filter.every((f: string) => value.includes(f))) {
