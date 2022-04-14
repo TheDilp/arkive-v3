@@ -7,7 +7,7 @@ import {
   useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import {
   BoldExtension,
@@ -29,6 +29,7 @@ import CustomMentionExtension from "./CustomMentionExtension";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
 import "../../styles/Editor.css";
+import { RemirrorJSON } from "remirror";
 const hooks = [
   () => {
     const { getJSON } = useHelpers();
@@ -46,7 +47,9 @@ const hooks = [
                   if (oldData) {
                     let newData: Document[] = oldData.map((doc) => {
                       if (doc.id === updatedDocument.id) {
-                        return updatedDocument;
+                        // Return the parent from the old document because it is a foreign table query
+                        // The updated Doc has id only, but {id, title} is required
+                        return { ...updatedDocument, parent: doc.parent };
                       } else {
                         return doc;
                       }
@@ -103,6 +106,57 @@ export default function RemirrorContext({
   const { project_id, doc_id } = useParams();
   const [saving, setSaving] = useState<number | boolean>(false);
 
+  const saveContentMutation = useMutation(
+    async (vars: { doc_id: string; content: RemirrorJSON }) => {
+      updateDocument(
+        vars.doc_id,
+        undefined,
+        // @ts-ignore
+        vars.content
+      );
+    },
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return {
+                    ...doc,
+                    content: updatedDocument.content,
+                  };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+      },
+      onSuccess: () => {
+        setSaving(false);
+      },
+    }
+  );
+
   useEffect(() => {
     if (doc_id) {
       setDocId(doc_id);
@@ -131,39 +185,11 @@ export default function RemirrorContext({
     const timeout = setTimeout(() => {
       if (!firstRender.current) {
         if (currentDocument) {
-          updateDocument(
-            currentDocument.id,
-            undefined,
+          saveContentMutation.mutate({
+            doc_id: currentDocument.id,
             // @ts-ignore
-            manager.view.state.doc.toJSON()
-          )
-            .then((data: Document | undefined) => {
-              if (data) {
-                let updatedDocument = data;
-                queryClient.setQueryData(
-                  `${project_id}-documents`,
-                  (oldData: Document[] | undefined) => {
-                    if (oldData) {
-                      let newData: Document[] = oldData.map((doc) => {
-                        if (doc.id === updatedDocument.id) {
-                          return updatedDocument;
-                        } else {
-                          return doc;
-                        }
-                      });
-                      return newData;
-                    } else {
-                      return [];
-                    }
-                  }
-                );
-                setSaving(false);
-              }
-            })
-            .catch((err) => {
-              toastError(err?.message);
-              setSaving(false);
-            });
+            content: manager.view.state.doc.toJSON(),
+          });
         }
       }
     }, 1500);
