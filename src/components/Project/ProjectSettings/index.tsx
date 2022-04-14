@@ -1,4 +1,4 @@
-import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
 import { Button } from "primereact/button";
 import { Chip } from "primereact/chip";
 import {
@@ -39,10 +39,6 @@ export default function ProjectSettings() {
     title: {
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
-    },
-    categories: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
     },
     folder: {
       operator: FilterOperator.AND,
@@ -246,7 +242,7 @@ export default function ProjectSettings() {
       <MultiSelect
         value={options.value}
         display="chip"
-        options={project?.categories || []}
+        options={project?.categories.sort() || []}
         itemTemplate={categoriesItemTemplate}
         onChange={(e) => options.filterCallback(e.value)}
         placeholder="Any"
@@ -423,10 +419,17 @@ export default function ProjectSettings() {
                   { value: null, matchMode: FilterMatchMode.STARTS_WITH },
                 ],
               },
-              categories: {
+              categories: { value: null, matchMode: FilterMatchMode.IN },
+              folder: {
                 operator: FilterOperator.AND,
                 constraints: [
-                  { value: null, matchMode: FilterMatchMode.CONTAINS },
+                  { value: null, matchMode: FilterMatchMode.EQUALS },
+                ],
+              },
+              "parent.title": {
+                operator: FilterOperator.AND,
+                constraints: [
+                  { value: null, matchMode: FilterMatchMode.STARTS_WITH },
                 ],
               },
             })
@@ -492,7 +495,51 @@ export default function ProjectSettings() {
     );
   };
   const categoryEditor = (options: ColumnEditorOptions) => {
-    return <span>test</span>;
+    return (
+      <AutoComplete
+        value={
+          documents?.find((doc) => doc.id === options.rowData.id)?.categories ||
+          []
+        }
+        suggestions={filteredCategories}
+        placeholder={
+          options.rowData.categories ? "" : "Enter tags for this document..."
+        }
+        completeMethod={(e) =>
+          searchCategory(e, project?.categories || [], setFilteredCategories)
+        }
+        multiple
+        onChange={async (e) => {
+          categoriesMutation.mutate({
+            doc_id: options.rowData.id,
+            categories: e.value,
+          });
+        }}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") e.preventDefault();
+          if (e.currentTarget.value !== "") {
+            if (
+              options.rowData.categories &&
+              !options.rowData.categories.includes(e.currentTarget.value)
+            ) {
+              options.editorCallback([
+                ...options.rowData.categories,
+                e.currentTarget.value,
+              ]);
+
+              // categoriesMutation.mutate({
+              //   doc_id: options.rowData.id,
+              //   categories: ,
+              // });
+            } else if (!options.rowData.categories) {
+              if (e.key === "Enter")
+                options.editorCallback([e.currentTarget.value]);
+            }
+            // e.currentTarget.value = "";
+          }
+        }}
+      />
+    );
   };
 
   return (
@@ -504,7 +551,9 @@ export default function ProjectSettings() {
         right={rightToolbarTemplate}
       ></Toolbar>
       <DataTable
-        value={documents}
+        value={documents?.map((doc) => {
+          return { ...doc, categories: doc.categories.sort() };
+        })}
         selection={selectedDocuments}
         selectionMode="checkbox"
         paginator
@@ -516,7 +565,6 @@ export default function ProjectSettings() {
           setSelectAll(value.length === documents?.length);
         }}
         filterDisplay="menu"
-        filters={filter}
         globalFilterFields={["title"]}
         sortMode="multiple"
         removableSort
@@ -573,18 +621,24 @@ export default function ProjectSettings() {
           editor={(options) => parentEditor(options)}
         ></Column>
         <Column
-          className="w-full"
           header={() => <div className="text-center">Categories</div>}
           filterField="categories"
-          showFilterMatchModes={false}
-          filterMenuStyle={{ width: "25rem" }}
           body={categoriesBodyTemplate}
-          filterElement={categoriesFilterTemplate}
+          filterMenuStyle={{ width: "25rem" }}
+          filterPlaceholder="Search"
           filter
-          editor={categoryEditor}
-          onCellEditComplete={(e: any) => {
-            console.log(e.rowData.id, e);
+          filterMatchMode="custom"
+          filterFunction={(value: string[], filter: string[] | null) => {
+            if (!filter) return true;
+            if (filter.every((f: string) => value.includes(f))) {
+              return true;
+            } else {
+              return false;
+            }
           }}
+          filterElement={categoriesFilterTemplate}
+          onFilterApplyClick={(e) => console.log(e)}
+          editor={categoryEditor}
         />
         <Column header="Delete" body={deleteBodyTemplate} />
       </DataTable>

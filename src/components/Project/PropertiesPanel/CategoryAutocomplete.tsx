@@ -148,7 +148,6 @@ export default function CategoryAutocomplete({
           ) {
             toastWarn("Tag already exists on this document!");
           } else if (!currentDoc.categories) {
-            console.log("TEST", e.currentTarget.value);
             categoriesMutation.mutate({
               doc_id: currentDoc.id,
               categories: [e.currentTarget.value],
