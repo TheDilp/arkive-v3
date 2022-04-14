@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -326,6 +327,9 @@ export default function ProjectSettings() {
       />
     );
   };
+  const iconBodyTemplate = (rowData: Document) => {
+    return <Icon icon={rowData.icon} fontSize={30} />;
+  };
   const leftToolbarTemplate = () => {
     return (
       <div>
@@ -619,6 +623,14 @@ export default function ProjectSettings() {
           filterElement={categoriesFilterTemplate}
           onFilterApplyClick={(e) => console.log(e)}
           editor={categoryEditor}
+        />
+        <Column
+          header="Icon"
+          field="icon"
+          editor={categoryEditor}
+          alignHeader="center"
+          bodyClassName="text-center"
+          body={iconBodyTemplate}
         />
         <Column header="Delete" body={deleteBodyTemplate} />
       </DataTable>
