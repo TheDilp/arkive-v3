@@ -187,9 +187,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           </div>
         )}
       </Dialog>
-      {iconSelect.show && (
-        <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
-      )}
+      <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">
           <Button
@@ -238,6 +236,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           sort={false}
           render={(node: NodeModel, { depth, isOpen, onToggle }) => (
             <ProjectTreeItem
+              // @ts-ignore
               node={node}
               depth={depth}
               isOpen={isOpen}

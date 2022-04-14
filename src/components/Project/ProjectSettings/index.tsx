@@ -13,7 +13,7 @@ import { Toolbar } from "primereact/toolbar";
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document, Project } from "../../../custom-types";
+import { Document, iconSelect, Project } from "../../../custom-types";
 import {
   createDocument,
   deleteDocument,
@@ -25,6 +25,7 @@ import {
 } from "../../../utils/supabaseUtils";
 import { searchCategory, toastError } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
+import IconSelectMenu from "../ProjectTree/IconSelectMenu";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
@@ -34,6 +35,13 @@ export default function ProjectSettings() {
   const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
+  const [iconSelect, setIconSelect] = useState<iconSelect>({
+    doc_id: "",
+    icon: "",
+    top: 0,
+    left: 0,
+    show: false,
+  });
   const ref = useRef(null);
   const {
     data: documents,
@@ -66,6 +74,7 @@ export default function ProjectSettings() {
       folder?: boolean;
       parent?: string | null;
       image?: string;
+      icon?: string;
     }) =>
       await updateDocument(
         vars.doc_id,
@@ -74,7 +83,8 @@ export default function ProjectSettings() {
         undefined,
         vars.folder,
         vars.parent,
-        vars.image
+        vars.image,
+        vars.icon
       ),
     {
       onMutate: async (updatedDocument) => {
@@ -207,7 +217,7 @@ export default function ProjectSettings() {
     return <LoadingScreen />;
   const categoriesBodyTemplate = (rowData: Document) => {
     return (
-      <div className="">
+      <div className="cursor-pointer">
         {rowData.categories?.map((cat, index) => (
           <Chip label={cat} className="m-1 bg-primary text-primary"></Chip>
         ))}
@@ -268,12 +278,15 @@ export default function ProjectSettings() {
 
   const imageBodyTemplate = (rowData: Document) => {
     return (
-      <div className="w-2rem h-2rem">
+      <div className="w-full h-auto cursor-pointer flex justify-content-center">
         {rowData.image && (
           <img
             src={rowData.image}
             alt="document"
-            className="w-full h-full border-circle"
+            className="w-2rem h-full relative border-circle"
+            style={{
+              objectFit: "cover",
+            }}
             loading="lazy"
           />
         )}
@@ -328,7 +341,9 @@ export default function ProjectSettings() {
     );
   };
   const iconBodyTemplate = (rowData: Document) => {
-    return <Icon icon={rowData.icon} fontSize={30} />;
+    return (
+      <Icon icon={rowData.icon} fontSize={30} className="cursor-pointer" />
+    );
   };
   const leftToolbarTemplate = () => {
     return (
@@ -406,6 +421,7 @@ export default function ProjectSettings() {
           tooltip="Resets Filters, Sorting and Pagination"
           className="p-button-outlined mr-2"
           onClick={() => {
+            // @ts-ignore
             ref.current?.reset();
           }}
         />
@@ -498,6 +514,7 @@ export default function ProjectSettings() {
               options.rowData.categories &&
               !options.rowData.categories.includes(e.currentTarget.value)
             ) {
+              // @ts-ignore
               options.editorCallback([
                 ...options.rowData.categories,
                 e.currentTarget.value,
@@ -509,12 +526,30 @@ export default function ProjectSettings() {
               // });
             } else if (!options.rowData.categories) {
               if (e.key === "Enter")
+                // @ts-ignore
                 options.editorCallback([e.currentTarget.value]);
             }
             // e.currentTarget.value = "";
           }
         }}
       />
+    );
+  };
+  const iconEditor = (options: ColumnEditorOptions) => {
+    return (
+      <>
+        <Icon
+          icon={options.rowData.icon}
+          fontSize={30}
+          className="cursor-pointer"
+        />
+        <IconSelectMenu
+          {...iconSelect}
+          setIconSelect={setIconSelect}
+          // @ts-ignore
+          closeEdit={ref.current?.closeEditingCell}
+        />
+      </>
     );
   };
 
@@ -601,7 +636,7 @@ export default function ProjectSettings() {
           showFilterMatchModes={false}
           filterElement={parentFilterTemplate}
           sortable
-          className="w-10rem text-center"
+          className="w-10rem text-center cursor-pointer"
           editor={(options) => parentEditor(options)}
         ></Column>
         <Column
@@ -627,7 +662,16 @@ export default function ProjectSettings() {
         <Column
           header="Icon"
           field="icon"
-          editor={categoryEditor}
+          editor={iconEditor}
+          onCellEditInit={(e: any) => {
+            setIconSelect({
+              doc_id: e.rowData.id,
+              icon: e.rowData.icon,
+              top: e.originalEvent.clientY,
+              left: e.originalEvent.clientX,
+              show: true,
+            });
+          }}
           alignHeader="center"
           bodyClassName="text-center"
           body={iconBodyTemplate}

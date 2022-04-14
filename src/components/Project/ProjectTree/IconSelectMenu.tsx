@@ -9,11 +9,14 @@ import { updateDocument } from "../../../utils/supabaseUtils";
 import { toastSuccess } from "../../../utils/utils";
 interface iconSelectMenu extends iconSelect {
   setIconSelect: (iconSelect: iconSelect) => void;
+  closeEdit?: () => void;
 }
 export default function IconSelectMenu({
   doc_id,
   top,
   left,
+  show,
+  closeEdit,
   setIconSelect,
 }: iconSelectMenu) {
   const { project_id } = useParams();
@@ -32,7 +35,6 @@ export default function IconSelectMenu({
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
-
   const iconMutation = useMutation(
     async (vars: { doc_id: string; icon: string }) => {
       updateDocument(
@@ -82,7 +84,7 @@ export default function IconSelectMenu({
           context?.previousDocuments
         );
       },
-      onSuccess: () => {
+      onSuccess: (data, vars) => {
         toastSuccess("Icon updated.");
       },
     }
@@ -94,6 +96,7 @@ export default function IconSelectMenu({
       style={{
         left,
         top,
+        display: show ? "block" : "none",
       }}
     >
       <div ref={parentRef} className="List w-full h-full overflow-auto">
@@ -122,18 +125,19 @@ export default function IconSelectMenu({
                   <Icon
                     className="mx-auto hover:text-blue-300 cursor-pointer"
                     onClick={() => {
+                      if (closeEdit) closeEdit();
+                      iconMutation.mutate({
+                        doc_id: doc_id,
+                        icon: `mdi:${
+                          iconList[virtualRow.index * 6 + virtualColumn.index]
+                        }`,
+                      });
                       setIconSelect({
                         doc_id,
                         icon: "",
                         top: 0,
                         left: 0,
                         show: false,
-                      });
-                      iconMutation.mutate({
-                        doc_id: doc_id,
-                        icon: `mdi:${
-                          iconList[virtualRow.index * 6 + virtualColumn.index]
-                        }`,
                       });
                     }}
                     fontSize={30}
