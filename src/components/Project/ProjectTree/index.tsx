@@ -187,7 +187,9 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           </div>
         )}
       </Dialog>
-      <IconSelectMenu {...iconSelect} />
+      {iconSelect.show && (
+        <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
+      )}
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">
           <Button

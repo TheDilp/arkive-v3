@@ -97,7 +97,6 @@ export const iconList = [
   "skull-outline",
   "spear",
   "star-face",
-  "steam",
   "sword",
   "sword-cross",
   "tangram",

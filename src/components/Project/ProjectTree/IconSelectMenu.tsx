@@ -1,20 +1,24 @@
 import { Icon } from "@iconify/react";
-import { useCallback, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { useVirtual } from "react-virtual";
 import { iconSelect } from "../../../custom-types";
 import { iconList } from "../../../utils/iconsList";
+interface iconSelectMenu extends iconSelect {
+  setIconSelect: (iconSelect: iconSelect) => void;
+}
 export default function IconSelectMenu({
   doc_id,
   icon,
   top,
   left,
   show,
-}: iconSelect) {
+  setIconSelect,
+}: iconSelectMenu) {
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const rowVirtualizer = useVirtual({
     size: Math.ceil(iconList.length / 6),
     parentRef,
-    estimateSize: useCallback(() => 35, []),
+    estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
 
@@ -22,12 +26,12 @@ export default function IconSelectMenu({
     horizontal: true,
     size: 6,
     parentRef,
-    estimateSize: useCallback(() => 35, []),
+    estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
   return (
     <div
-      className="absolute surface-100 z-5  h-20rem"
+      className="absolute surface-100 z-5 w-13rem  h-20rem"
       style={{
         left,
         top,
@@ -42,13 +46,13 @@ export default function IconSelectMenu({
           }}
         >
           {rowVirtualizer.virtualItems.map((virtualRow) => (
-            <div key={virtualRow.index}>
+            <React.Fragment key={virtualRow.index}>
               {columnVirtualizer.virtualItems.map((virtualColumn) => (
-                <span
+                <div
                   key={virtualColumn.index}
-                  className="px-2"
+                  className="mx-2 justify-content-center"
                   style={{
-                    position: "relative",
+                    position: "absolute",
                     top: 0,
                     left: 0,
                     width: `${virtualColumn.size}px`,
@@ -57,14 +61,24 @@ export default function IconSelectMenu({
                   }}
                 >
                   <Icon
+                    className="mx-auto hover:text-blue-300 cursor-pointer"
+                    onClick={() => {
+                      setIconSelect({
+                        doc_id,
+                        icon: "",
+                        top: 0,
+                        left: 0,
+                        show: false,
+                      });
+                    }}
                     fontSize={30}
                     icon={`mdi:${
                       iconList[virtualRow.index * 6 + virtualColumn.index]
                     }`}
                   />
-                </span>
+                </div>
               ))}
-            </div>
+            </React.Fragment>
           ))}
         </div>
       </div>
