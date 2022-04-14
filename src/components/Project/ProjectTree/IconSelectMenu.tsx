@@ -1,19 +1,23 @@
 import { Icon } from "@iconify/react";
 import React, { useCallback, useRef } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { iconSelect } from "../../../custom-types";
+import { Document, iconSelect } from "../../../custom-types";
 import { iconList } from "../../../utils/iconsList";
+import { updateDocument } from "../../../utils/supabaseUtils";
+import { toastSuccess } from "../../../utils/utils";
 interface iconSelectMenu extends iconSelect {
   setIconSelect: (iconSelect: iconSelect) => void;
 }
 export default function IconSelectMenu({
   doc_id,
-  icon,
   top,
   left,
-  show,
   setIconSelect,
 }: iconSelectMenu) {
+  const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const rowVirtualizer = useVirtual({
     size: Math.ceil(iconList.length / 6),
@@ -21,7 +25,6 @@ export default function IconSelectMenu({
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
-
   const columnVirtualizer = useVirtual({
     horizontal: true,
     size: 6,
@@ -29,6 +32,62 @@ export default function IconSelectMenu({
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
+
+  const iconMutation = useMutation(
+    async (vars: { doc_id: string; icon: string }) => {
+      updateDocument(
+        doc_id,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        vars.icon
+      );
+    },
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return {
+                    ...doc,
+                    icon: updatedDocument.icon,
+                  };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+      },
+      onSuccess: () => {
+        toastSuccess("Icon updated.");
+      },
+    }
+  );
+
   return (
     <div
       className="absolute surface-100 z-5 w-13rem  h-20rem"
@@ -69,6 +128,12 @@ export default function IconSelectMenu({
                         top: 0,
                         left: 0,
                         show: false,
+                      });
+                      iconMutation.mutate({
+                        doc_id: doc_id,
+                        icon: `mdi:${
+                          iconList[virtualRow.index * 6 + virtualColumn.index]
+                        }`,
                       });
                     }}
                     fontSize={30}

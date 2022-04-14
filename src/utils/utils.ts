@@ -1,7 +1,7 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { toast, ToastOptions } from "react-toastify";
 const defaultToastConfig: ToastOptions = {
-  autoClose: 2000,
+  autoClose: 1250,
   theme: "dark",
 };
 export const toastSuccess = (message: string) =>

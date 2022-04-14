@@ -148,7 +148,6 @@ export default function ProjectTreeItemContext({
           context?.previousDocuments
         );
       },
-      onSuccess: (data, vars) => {},
     }
   );
 

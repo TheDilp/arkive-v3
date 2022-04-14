@@ -82,7 +82,23 @@ export default function ProjectTreeItem({
           }}
         />
       ) : (
-        <Icon icon={node.data?.icon as string} inline={true} className="mr-1" />
+        <Icon
+          icon={node.data?.icon as string}
+          inline={true}
+          className="mr-1"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            setIconSelect({
+              doc_id: node.id as string,
+              icon: "bxs:folder",
+              show: true,
+              top: e.clientY,
+              left: e.clientX,
+            });
+          }}
+        />
       )}
       <span
         className={`text-lg hover:bg-blue-300 Lato ${
