@@ -22,7 +22,7 @@ export default function ProjectTreeItemContext({
   setDisplayDialog,
 }: Props) {
   const queryClient = useQueryClient();
-  const { project_id } = useParams();
+  const { project_id, doc_id } = useParams();
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -46,7 +46,7 @@ export default function ProjectTreeItemContext({
           );
         });
         setDisplayDialog({ ...displayDialog, show: false });
-        navigate("./");
+        if (doc_id === displayDialog.id) navigate("./");
       },
       reject: () => {},
     });
