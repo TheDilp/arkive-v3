@@ -164,6 +164,7 @@ export default function RemirrorContext({
         `${project_id}-documents`
       );
       if (documents) {
+        setDocuments(documents);
         const currentDocData = documents.find(
           (document) => document.id === doc_id
         );
@@ -181,52 +182,54 @@ export default function RemirrorContext({
     }
   }, [doc_id]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!firstRender.current) {
-        if (currentDocument) {
-          saveContentMutation.mutate({
-            doc_id: currentDocument.id,
-            // @ts-ignore
-            content: manager.view.state.doc.toJSON(),
-          });
-        }
-      }
-    }, 1500);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     if (!firstRender.current) {
+  //       if (currentDocument) {
+  //         saveContentMutation.mutate({
+  //           doc_id: currentDocument.id,
+  //           // @ts-ignore
+  //           content: manager.view.state.doc.toJSON(),
+  //         });
+  //       }
+  //     }
+  //   }, 1500);
 
-    return () => clearTimeout(timeout);
-  }, [saving]);
+  //   return () => clearTimeout(timeout);
+  // }, [saving]);
 
   useEffect(() => {
     if (firstRender.current) {
-      setSaving(false);
+      // setSaving(false);
       firstRender.current = false;
     }
   }, []);
-
+  console.log(documents);
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
         {currentDocument && currentDocument.title}
       </h1>
-      <ThemeProvider>
-        <Remirror
-          manager={manager}
-          initialContent={state}
-          hooks={hooks}
-          classNames={["text-white Lato Editor overflow-y-scroll"]}
-          onChange={(props) => {
-            const { tr, firstRender } = props;
-            if (!firstRender && tr?.docChanged) {
-              setSaving(tr?.time);
-            }
-          }}
-        >
-          <MenuBar saving={saving} />
-          <EditorComponent />
-          <MentionComponent documents={documents} />
-        </Remirror>
-      </ThemeProvider>
+      {documents && (
+        <ThemeProvider>
+          <Remirror
+            manager={manager}
+            initialContent={state}
+            hooks={hooks}
+            classNames={["text-white Lato Editor overflow-y-scroll"]}
+            // onChange={(props) => {
+            //   const { tr, firstRender } = props;
+            //   if (!firstRender && tr?.docChanged) {
+            //     setSaving(tr?.time);
+            //   }
+            // }}
+          >
+            <MenuBar saving={saving} />
+            <EditorComponent />
+            <MentionComponent documents={documents} />
+          </Remirror>
+        </ThemeProvider>
+      )}
     </div>
   );
 }
