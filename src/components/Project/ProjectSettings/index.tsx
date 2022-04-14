@@ -13,7 +13,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
-import { useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
@@ -39,7 +39,7 @@ export default function ProjectSettings() {
   const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
-
+  const ref = useRef(null);
   const {
     data: documents,
     error: documentsError,
@@ -400,14 +400,29 @@ export default function ProjectSettings() {
         <Button
           type="button"
           icon="pi pi-filter-slash"
-          label="Clear All"
+          label="Reset"
+          tooltip="Resets Filters, Sorting and Pagination"
           className="p-button-outlined mr-2"
-          onClick={() => {}}
+          onClick={() => {
+            ref.current?.reset();
+          }}
         />
-        <span className="p-input-icon-left">
+        {/* <span className="p-input-icon-left">
           <i className="pi pi-search" />
-          <InputText value={globalFilterValue1} placeholder="Quick Search" />
-        </span>
+          <InputText
+            value={globalFilterValue1}
+            placeholder="Quick Search"
+            onChange={(e) => {
+              setGlobalFilterValue1(e.target.value);
+              if (ref.current) {
+                ref.current?.filter((value, field) => {
+                  console.log(value, field);
+                  return true;
+                });
+              }
+            }}
+          />
+        </span> */}
       </div>
     );
   };
@@ -516,6 +531,7 @@ export default function ProjectSettings() {
         right={rightToolbarTemplate}
       ></Toolbar>
       <DataTable
+        ref={ref}
         value={documents?.map((doc) => {
           return { ...doc, categories: doc.categories.sort() };
         })}
@@ -530,7 +546,6 @@ export default function ProjectSettings() {
           setSelectAll(value.length === documents?.length);
         }}
         filterDisplay="menu"
-        globalFilterFields={["title"]}
         sortMode="multiple"
         removableSort
         size="small"
