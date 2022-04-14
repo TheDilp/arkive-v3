@@ -28,3 +28,10 @@ export type treeItemDisplayDialog = {
   title: string;
   show: boolean;
 };
+export type iconSelect = {
+  doc_id: string;
+  icon: string;
+  top: number;
+  left: number;
+  show: boolean;
+};

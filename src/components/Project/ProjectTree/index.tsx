@@ -5,10 +5,15 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Document, treeItemDisplayDialog } from "../../../custom-types";
+import {
+  Document,
+  iconSelect,
+  treeItemDisplayDialog,
+} from "../../../custom-types";
 import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
 import { getDepth, toastError, toastSuccess } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
+import IconSelectMenu from "./IconSelectMenu";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 type Props = {
@@ -25,6 +30,13 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
     id: "",
     title: "",
+    show: false,
+  });
+  const [iconSelect, setIconSelect] = useState<iconSelect>({
+    doc_id: "",
+    icon: "",
+    top: 0,
+    left: 0,
     show: false,
   });
   // Function to handle the drop functionality of the tree
@@ -175,6 +187,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           </div>
         )}
       </Dialog>
+      <IconSelectMenu {...iconSelect} />
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">
           <Button
@@ -230,6 +243,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
               docId={docId}
               setDocId={setDocId}
               setDisplayDialog={setDisplayDialog}
+              setIconSelect={setIconSelect}
               cm={cm}
             />
           )}

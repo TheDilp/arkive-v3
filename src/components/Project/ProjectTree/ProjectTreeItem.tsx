@@ -1,6 +1,10 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useNavigate, useParams } from "react-router-dom";
-import { Document, treeItemDisplayDialog } from "../../../custom-types";
+import {
+  Document,
+  iconSelect,
+  treeItemDisplayDialog,
+} from "../../../custom-types";
 import { Icon } from "@iconify/react";
 type Props = {
   docId: string;
@@ -10,6 +14,7 @@ type Props = {
   onToggle: () => void;
   setDocId: (docId: string) => void;
   setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
+  setIconSelect: (iconSelect: iconSelect) => void;
   cm: any;
 };
 
@@ -21,6 +26,7 @@ export default function ProjectTreeItem({
   onToggle,
   setDocId,
   setDisplayDialog,
+  setIconSelect,
   cm,
 }: Props) {
   const { doc_id } = useParams();
@@ -51,13 +57,33 @@ export default function ProjectTreeItem({
           }}
         >
           {isOpen ? (
-            <i className="pi pi-fw pi-chevron-down"></i>
+            <Icon icon="akar-icons:chevron-down" />
           ) : (
-            <i className="pi pi-fw pi-chevron-right"></i>
+            <Icon icon="akar-icons:chevron-right" />
           )}
         </span>
       )}
-      <Icon icon={node.data?.icon as string} />
+      {node.droppable ? (
+        <Icon
+          icon="bxs:folder"
+          inline={true}
+          className="mr-1"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            setIconSelect({
+              doc_id: node.id as string,
+              icon: "bxs:folder",
+              show: true,
+              top: e.clientY,
+              left: e.clientX,
+            });
+          }}
+        />
+      ) : (
+        <Icon icon={node.data?.icon as string} inline={true} className="mr-1" />
+      )}
       <span
         className={`text-lg hover:bg-blue-300 Lato ${
           docId === node.id ? "text-primary" : ""

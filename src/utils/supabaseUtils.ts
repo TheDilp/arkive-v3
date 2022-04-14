@@ -125,7 +125,8 @@ export const updateDocument = async (
   categories?: string[],
   folder?: boolean,
   parent?: string | null,
-  image?: string
+  image?: string,
+  icon?: string
 ) => {
   let user = auth.user();
 
@@ -137,8 +138,10 @@ export const updateDocument = async (
         content,
         categories,
         folder,
+        // @ts-ignore
         parent,
         image,
+        icon,
       })
       .eq("id", doc_id);
 
