@@ -19,7 +19,6 @@ export default function Wiki() {
     { staleTime: 5 * 60 * 1000 }
   );
   if (documentsError || isLoading) return <LoadingScreen />;
-  console.log(docs);
 
   return !auth.user() ? (
     <Navigate to="/login" />

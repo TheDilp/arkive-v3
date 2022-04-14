@@ -7,7 +7,7 @@ import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import {
   deleteDocument,
   updateDocument,
-  updateMultipleDocumentsParents
+  updateMultipleDocumentsParents,
 } from "../../../utils/supabaseUtils";
 import { toastSuccess } from "../../../utils/utils";
 type Props = {
@@ -59,7 +59,7 @@ export default function ProjectTreeItemContext({
     async (vars: {
       doc_id: string;
       folder?: boolean;
-      parent?: string | null;
+      parent?: { id: string; title: string } | null;
     }) =>
       await updateDocument(
         vars.doc_id,
@@ -67,7 +67,7 @@ export default function ProjectTreeItemContext({
         undefined,
         undefined,
         vars.folder,
-        vars.parent
+        vars.parent ? vars.parent.id : null
       ),
     {
       onMutate: async (updatedDocument) => {
@@ -164,7 +164,7 @@ export default function ProjectTreeItemContext({
       command: (item: any) => {
         updateDocumentMutation.mutate({
           doc_id: displayDialog.id,
-          parent: folder.id,
+          parent: { id: folder.id, title: folder.title },
         });
       },
     })),

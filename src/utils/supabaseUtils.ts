@@ -69,21 +69,7 @@ export const getDocuments = async (project_id: string) => {
   if (user) {
     const { data: documents, error } = await supabase
       .from<Document>("documents")
-      .select("*")
-      .eq("project_id", project_id);
-    if (documents) return documents;
-    if (error) {
-      toastError("There was an error getting your documents.");
-      throw new Error(error.message);
-    }
-  }
-};
-export const getDocumentsForSettings = async (project_id: string) => {
-  let user = auth.user();
-  if (user) {
-    const { data: documents, error } = await supabase
-      .from<Document>("documents")
-      .select("id, title, image, categories, folder, parent(title)")
+      .select("*, parent(id, title)")
       .eq("project_id", project_id)
       .order("title", { ascending: true });
     if (documents) return documents;
@@ -93,6 +79,21 @@ export const getDocumentsForSettings = async (project_id: string) => {
     }
   }
 };
+// export const getDocumentsForSettings = async (project_id: string) => {
+//   let user = auth.user();
+//   if (user) {
+//     const { data: documents, error } = await supabase
+//       .from<Document>("documents")
+//       .select("id, title, image, categories, folder, parent(title)")
+//       .eq("project_id", project_id)
+//       .order("title", { ascending: true });
+//     if (documents) return documents;
+//     if (error) {
+//       toastError("There was an error getting your documents.");
+//       throw new Error(error.message);
+//     }
+//   }
+// };
 
 // INSERT
 

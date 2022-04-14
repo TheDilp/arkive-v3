@@ -1,19 +1,15 @@
-import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
+import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
 import { Chip } from "primereact/chip";
-import {
-  Column,
-  ColumnEditorOptions,
-  ColumnEventParams,
-} from "primereact/column";
+import { Column, ColumnEditorOptions } from "primereact/column";
 import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog"; // To use confirmDialog method
 import { DataTable } from "primereact/datatable";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
-import { Checkbox } from "primereact/checkbox";
-import { Dropdown } from "primereact/dropdown";
-import { RefObject, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
@@ -22,14 +18,12 @@ import {
   deleteDocument,
   deleteManyDocuments,
   getCurrentProject,
-  getDocumentsForSettings,
+  getDocuments,
   updateDocument,
-  updateMultipleDocumentsParents,
   updateProject,
 } from "../../../utils/supabaseUtils";
+import { searchCategory, toastError } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
-import { searchCategory, toastError, toastWarn } from "../../../utils/utils";
-import { AutoComplete } from "primereact/autocomplete";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
@@ -47,7 +41,8 @@ export default function ProjectSettings() {
     refetch: documentsRefetch,
   } = useQuery(
     `${project_id}-documents`,
-    async () => await getDocumentsForSettings(project_id as string)
+    async () => await getDocuments(project_id as string),
+    { staleTime: 5 * 60 * 1000 }
   );
   const {
     data: project,
@@ -55,7 +50,10 @@ export default function ProjectSettings() {
     isLoading: projectLoading,
   } = useQuery(
     `${project_id}-project`,
-    async () => await getCurrentProject(project_id as string)
+    async () => await getCurrentProject(project_id as string),
+    {
+      staleTime: 5 * 60 * 1000,
+    }
   );
 
   // MUTATIONS

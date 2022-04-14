@@ -103,7 +103,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         id: doc.id,
         text: doc.title,
         droppable: doc.folder,
-        parent: doc.parent ? (doc.parent as string) : "0",
+        parent: doc.parent ? (doc.parent.id as string) : "0",
       }));
       setTreeData(treeData);
     }
