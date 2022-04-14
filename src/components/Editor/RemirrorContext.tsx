@@ -108,7 +108,7 @@ export default function RemirrorContext({
 
   const saveContentMutation = useMutation(
     async (vars: { doc_id: string; content: RemirrorJSON }) => {
-      updateDocument(
+      await updateDocument(
         vars.doc_id,
         undefined,
         // @ts-ignore
@@ -182,29 +182,28 @@ export default function RemirrorContext({
     }
   }, [doc_id]);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     if (!firstRender.current) {
-  //       if (currentDocument) {
-  //         saveContentMutation.mutate({
-  //           doc_id: currentDocument.id,
-  //           // @ts-ignore
-  //           content: manager.view.state.doc.toJSON(),
-  //         });
-  //       }
-  //     }
-  //   }, 1500);
+  useEffect(() => {
+    const timeout = setTimeout(async () => {
+      if (!firstRender.current) {
+        if (currentDocument) {
+          await saveContentMutation.mutateAsync({
+            doc_id: currentDocument.id,
+            // @ts-ignore
+            content: manager.view.state.doc.toJSON(),
+          });
+        }
+      }
+    }, 500);
 
-  //   return () => clearTimeout(timeout);
-  // }, [saving]);
+    return () => clearTimeout(timeout);
+  }, [saving]);
 
   useEffect(() => {
     if (firstRender.current) {
-      // setSaving(false);
+      setSaving(false);
       firstRender.current = false;
     }
   }, []);
-  console.log(documents);
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
@@ -217,12 +216,12 @@ export default function RemirrorContext({
             initialContent={state}
             hooks={hooks}
             classNames={["text-white Lato Editor overflow-y-scroll"]}
-            // onChange={(props) => {
-            //   const { tr, firstRender } = props;
-            //   if (!firstRender && tr?.docChanged) {
-            //     setSaving(tr?.time);
-            //   }
-            // }}
+            onChange={(props) => {
+              const { tr, firstRender } = props;
+              if (!firstRender && tr?.docChanged) {
+                setSaving(tr?.time);
+              }
+            }}
           >
             <MenuBar saving={saving} />
             <EditorComponent />
