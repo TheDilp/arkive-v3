@@ -283,7 +283,7 @@ export default function ProjectSettings() {
           <img
             src={rowData.image}
             alt="document"
-            className="w-2rem h-full relative border-round"
+          className="w-2rem h-full relative border-round"
             style={{
               objectFit: "cover",
             }}

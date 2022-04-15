@@ -6,7 +6,7 @@ import { useVirtual } from "react-virtual";
 import { Document, iconSelect } from "../../../custom-types";
 import { iconList } from "../../../utils/iconsList";
 import { updateDocument } from "../../../utils/supabaseUtils";
-import { toastSuccess } from "../../../utils/utils";
+import { toastSuccess, useOnClickOutside } from "../../../utils/utils";
 interface iconSelectMenu extends iconSelect {
   setIconSelect: (iconSelect: iconSelect) => void;
   closeEdit?: () => void;
@@ -89,9 +89,13 @@ export default function IconSelectMenu({
       },
     }
   );
-
+  const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
+  useOnClickOutside(ref, () =>
+    setIconSelect({ doc_id: "", icon: "", top: 0, left: 0, show: false })
+  );
   return (
     <div
+      ref={ref}
       className="absolute surface-100 z-5 w-13rem  h-20rem"
       style={{
         left,
