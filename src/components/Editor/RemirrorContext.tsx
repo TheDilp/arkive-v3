@@ -158,6 +158,13 @@ export default function RemirrorContext({
   );
 
   useEffect(() => {
+    if (firstRender.current) {
+      setSaving(false);
+      firstRender.current = false;
+    }
+    // else {
+    //   firstRender.current = true;
+    // }
     if (doc_id) {
       setDocId(doc_id);
       const documents: Document[] | undefined = queryClient.getQueryData(
@@ -184,26 +191,18 @@ export default function RemirrorContext({
 
   useEffect(() => {
     const timeout = setTimeout(async () => {
-      if (!firstRender.current) {
-        if (currentDocument) {
-          await saveContentMutation.mutateAsync({
-            doc_id: currentDocument.id,
-            // @ts-ignore
-            content: manager.view.state.doc.toJSON(),
-          });
-        }
+      if (!firstRender.current && saving && currentDocument) {
+        await saveContentMutation.mutateAsync({
+          doc_id: currentDocument.id,
+          // @ts-ignore
+          content: manager.view.state.doc.toJSON(),
+        });
       }
     }, 500);
 
     return () => clearTimeout(timeout);
   }, [saving]);
 
-  useEffect(() => {
-    if (firstRender.current) {
-      setSaving(false);
-      firstRender.current = false;
-    }
-  }, []);
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
