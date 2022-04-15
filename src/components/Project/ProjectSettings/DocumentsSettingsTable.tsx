@@ -27,7 +27,10 @@ import { searchCategory, toastError } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../ProjectTree/IconSelectMenu";
 
-export default function ProjectSettingsTable() {
+type Props = {
+  project: Project;
+};
+export default function DocumentsSettingsTable({ project }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
 
@@ -52,17 +55,6 @@ export default function ProjectSettingsTable() {
     `${project_id}-documents`,
     async () => await getDocuments(project_id as string),
     { staleTime: 5 * 60 * 1000 }
-  );
-  const {
-    data: project,
-    error: projectError,
-    isLoading: projectLoading,
-  } = useQuery(
-    `${project_id}-project`,
-    async () => await getCurrentProject(project_id as string),
-    {
-      staleTime: 5 * 60 * 1000,
-    }
   );
 
   // MUTATIONS
@@ -213,8 +205,7 @@ export default function ProjectSettingsTable() {
     }
   );
 
-  if (documentsError || documentsLoading || projectError || projectLoading)
-    return <LoadingScreen />;
+  if (documentsError || documentsLoading) return <LoadingScreen />;
   const categoriesBodyTemplate = (rowData: Document) => {
     return (
       <div className="cursor-pointer">
@@ -554,7 +545,7 @@ export default function ProjectSettingsTable() {
   };
 
   return (
-    <div className="w-full px-8 mx-8 mt-4">
+    <div className="w-full px-2  mt-4">
       <ConfirmDialog />
       <Toolbar
         className="mb-2"
