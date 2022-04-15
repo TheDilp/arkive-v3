@@ -12,7 +12,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Document, iconSelect, Project } from "../../../custom-types";
 import {
   createDocument,
@@ -33,7 +33,7 @@ type Props = {
 export default function DocumentsSettingsTable({ project }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const [globalFilter, setGlobalFilter] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -299,36 +299,45 @@ export default function DocumentsSettingsTable({ project }: Props) {
       </div>
     );
   };
-  const deleteBodyTemplate = (rowData: Document) => {
+  const actionsBodyTemplate = (rowData: Document) => {
     return (
-      <Button
-        label="Delete"
-        className="p-button-danger p-button-outlined"
-        icon="pi pi-fw pi-trash"
-        iconPos="right"
-        onClick={() => {
-          confirmDialog({
-            message: `Are you sure you want to delete ${rowData.title}?`,
-            header: `Deleting ${rowData.title}`,
-            icon: "pi pi-exclamation-triangle",
-            acceptClassName: "p-button-danger",
-            accept: () => {
-              deleteDocument(rowData.id).then(() => {
-                queryClient.setQueryData(
-                  `${project_id}-documents`,
-                  (oldData: Document[] | undefined) => {
-                    if (oldData) {
-                      return oldData.filter((doc) => doc.id !== rowData.id);
-                    } else {
-                      return [];
+      <div className="">
+        <Button
+          label="Delete"
+          className="p-button-danger p-button-outlined"
+          icon="pi pi-fw pi-trash"
+          iconPos="right"
+          onClick={() => {
+            confirmDialog({
+              message: `Are you sure you want to delete ${rowData.title}?`,
+              header: `Deleting ${rowData.title}`,
+              icon: "pi pi-exclamation-triangle",
+              acceptClassName: "p-button-danger",
+              accept: () => {
+                deleteDocument(rowData.id).then(() => {
+                  queryClient.setQueryData(
+                    `${project_id}-documents`,
+                    (oldData: Document[] | undefined) => {
+                      if (oldData) {
+                        return oldData.filter((doc) => doc.id !== rowData.id);
+                      } else {
+                        return [];
+                      }
                     }
-                  }
-                );
-              });
-            },
-          });
-        }}
-      />
+                  );
+                });
+              },
+            });
+          }}
+        />
+        <Button
+          className="p-button-success p-button-outlined ml-2"
+          icon="pi pi-fw pi-link"
+          onClick={() => {
+            navigate(`../wiki/${rowData.id}`);
+          }}
+        />
+      </div>
     );
   };
   const iconBodyTemplate = (rowData: Document) => {
@@ -667,7 +676,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
           bodyClassName="text-center"
           body={iconBodyTemplate}
         />
-        <Column header="Delete" body={deleteBodyTemplate} />
+        <Column header="Actions" body={actionsBodyTemplate} />
       </DataTable>
     </section>
   );
