@@ -20,11 +20,11 @@
 }
 
 .remirror-editor>h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.remirror-editor>h2,
+.remirror-editor>h3,
+.remirror-editor>h4,
+.remirror-editor>h5,
+.remirror-editor>h6 {
     color: white !important;
 
 }

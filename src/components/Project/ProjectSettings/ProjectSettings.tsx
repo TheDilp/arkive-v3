@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
 import { deleteProject, updateProject } from "../../../utils/supabaseUtils";
-import { toastSuccess } from "../../../utils/utils";
+import { toastSuccess, useUpdateProject } from "../../../utils/utils";
 
 type Props = {
   project: Project;
@@ -15,33 +15,8 @@ type Props = {
 export default function ProjectSettings({ project }: Props) {
   const [localProject, setLocalProject] = useState<Project>(project);
   const queryClient = useQueryClient();
-  const updateProjectMutation = useMutation(
-    async (vars: {
-      project_id: string;
-      title?: string;
-      categories?: string[];
-    }) => await updateProject(vars.project_id, vars.title, vars.categories),
-    {
-      onMutate: async (updatedProject) => {
-        await queryClient.cancelQueries(`${localProject.id}-project`);
+  const projectMutation = useUpdateProject();
 
-        const previousProject = queryClient.getQueryData(
-          `${localProject.id}-project`
-        );
-        queryClient.setQueryData(
-          `${localProject.id}-project`,
-          //   @ts-ignore
-          (oldData: Project | undefined) => {
-            if (oldData) return { ...oldData, ...updatedProject };
-          }
-        );
-        return { previousProject };
-      },
-      onSuccess: () => {
-        toastSuccess("Project successfully updated.");
-      },
-    }
-  );
   const navigate = useNavigate();
   const confirmDeleteDialog = () =>
     confirmDialog({
@@ -56,7 +31,7 @@ export default function ProjectSettings({ project }: Props) {
       },
     });
   return (
-    <article className="w-full px-3 justify-content-center">
+    <article className="w-full px-3 justify-content-center text-white">
       <ConfirmDialog />
       <h2 className="Merriweather">{project.title} Settings</h2>
       <section className="Lato">
@@ -71,9 +46,10 @@ export default function ProjectSettings({ project }: Props) {
         <Button
           label="Save"
           icon="pi pi-fw pi-save"
+          iconPos="right"
           className="p-button-outlined p-button-success ml-2"
           onClick={() => {
-            updateProjectMutation.mutate({
+            projectMutation.mutate({
               project_id: localProject.id,
               title: localProject.title,
             });
@@ -82,14 +58,35 @@ export default function ProjectSettings({ project }: Props) {
       </section>
       <section className="Lato">
         <h3>Update Project Card Image</h3>
-        <div className="w-10rem h-10rem">
+        <div className="w-10rem">
           <img
             src={project.cardImage}
             alt="Card"
-            className="w-full h-full"
+            className="w-full h-full border-round cursor-pointer relative"
             style={{
-            objectFit: "cover",
+              objectFit: "contain",
             }}
+          />
+        </div>
+        <div className="w-full flex flex-nowrap mt-2">
+          <InputText
+            value={localProject.cardImage}
+            onChange={(e) =>
+              setLocalProject({ ...localProject, cardImage: e.target.value })
+            }
+            className="w-20rem"
+          />
+          <Button
+            label="Save"
+            icon="pi pi-fw pi-save"
+            iconPos="right"
+            className="p-button-outlined p-button-success ml-2"
+            onClick={() =>
+              projectMutation.mutate({
+                project_id: localProject.id,
+                cardImage: localProject.cardImage,
+              })
+            }
           />
         </div>
       </section>
@@ -97,7 +94,7 @@ export default function ProjectSettings({ project }: Props) {
         <hr />
         <div className="w-fit">
           <h3>Delete Project</h3>
-          <h4>
+          <h4 style={{ color: "var(--red-500)" }}>
             Warning: A deleted project cannot be recovered. This also deletes
             all the documents, boards and maps associated with this project.
           </h4>
@@ -110,6 +107,7 @@ export default function ProjectSettings({ project }: Props) {
               icon="pi pi-fw pi-trash"
               className="p-button-outlined p-button-danger"
               onClick={confirmDeleteDialog}
+              iconPos="right"
             />
           </div>
         </div>

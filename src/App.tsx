@@ -1,5 +1,5 @@
-import "primereact/resources/themes/arya-blue/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
+import "primereact/resources/themes/arya-blue/theme.css"; //theme
 import "primeicons/primeicons.css"; //icons
 import "/node_modules/primeflex/primeflex.css";
 import "react-toastify/dist/ReactToastify.css";

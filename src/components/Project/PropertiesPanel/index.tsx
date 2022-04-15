@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document, Project } from "../../../custom-types";
-import { getProjects } from "../../../utils/supabaseUtils";
+import { Document } from "../../../custom-types";
 import { useGetProjectData } from "../../../utils/utils";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 export default function PropertiesPanel() {

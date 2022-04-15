@@ -1,34 +1,14 @@
-import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Project } from "../../../custom-types";
-import { getProjects } from "../../../utils/supabaseUtils";
+import { useGetProjectData } from "../../../utils/utils";
 import DocumentsSettingsTable from "./DocumentsSettingsTable";
 import ProjectSettings from "./ProjectSettings";
 
 export default function ProjectSettingsIndex() {
-  const [project, setProject] = useState<Project>();
   const [activeTab, setActiveTab] = useState(0);
-  const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const { data: projects, refetch: refetchProjects } = useQuery(
-    "getAllProjects",
-    async () => await getProjects(),
-    {
-      enabled: false,
-    }
-  );
-  useEffect(() => {
-    if (project_id) {
-      if (projects) {
-        setProject(
-          projects.find((project: Project) => project.id === project_id)
-        );
-      } else {
-        refetchProjects();
-      }
-    }
-  }, [project_id, projects]);
+  const project = useGetProjectData(project_id as string);
 
   return (
     <div className="flex w-full h-screen">

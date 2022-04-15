@@ -155,7 +155,8 @@ export const updateDocument = async (
 export const updateProject = async (
   project_id: string,
   title?: string,
-  categories?: string[]
+  categories?: string[],
+  cardImage?: string
 ) => {
   let user = auth.user();
 
@@ -165,6 +166,7 @@ export const updateProject = async (
       .update({
         title,
         categories,
+        cardImage,
       })
       .eq("id", project_id);
 

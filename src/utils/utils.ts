@@ -1,8 +1,9 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import React, { useEffect } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
-import { getProjects } from "./supabaseUtils";
+import { Project } from "../custom-types";
+import { getProjects, updateProject } from "./supabaseUtils";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
@@ -46,6 +47,8 @@ export const getDepth = (
 
   return depth;
 };
+// CUSTOM HOOKS
+
 // Custom hook for detecting if user clicked outside of element (ref)
 export function useOnClickOutside(ref: any, handler: (event: any) => void) {
   useEffect(() => {
@@ -64,7 +67,51 @@ export function useOnClickOutside(ref: any, handler: (event: any) => void) {
     };
   }, [ref, handler]);
 }
+// Custom hook for getting a project's data
 export function useGetProjectData(project_id: string) {
   const { data } = useQuery("getAllProjects", async () => await getProjects());
   return data?.find((project) => project.id === project_id);
+}
+// Custom hook for updating a project's data
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      project_id: string;
+      title?: string;
+      categories?: string[];
+      cardImage?: string;
+    }) =>
+      await updateProject(
+        vars.project_id,
+        vars.title,
+        vars.categories,
+        vars.cardImage
+      ),
+    {
+      onMutate: async (updatedProject) => {
+        const previousProjects = queryClient.getQueryData(`getAllProjects`);
+        queryClient.setQueryData(
+          "getAllProjects",
+          //   @ts-ignore
+          (oldData: Project[] | undefined) => {
+            if (oldData) {
+              let newData: Project[] = oldData.map((project) => {
+                if (project.id === updatedProject.project_id) {
+                  return { ...project, ...updatedProject };
+                } else {
+                  return project;
+                }
+              });
+              return newData;
+            }
+          }
+        );
+        return { previousProjects };
+      },
+      onSuccess: () => {
+        toastSuccess("Project successfully updated.");
+      },
+    }
+  );
 }
