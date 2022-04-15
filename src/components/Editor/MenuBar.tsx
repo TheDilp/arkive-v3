@@ -17,6 +17,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     insertHorizontalRule,
     updateLink,
     insertImage,
+    leftAlign,
+    centerAlign,
+    rightAlign,
     focus,
   } = useCommands();
   const active = useActive();
@@ -318,9 +321,38 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             }
           },
         },
+        {
+          icon: "pi pi-fw pi-align-left",
+          items: [
+            {
+              label: "Align Left",
+              icon: "pi pi-fw pi-align-left",
+              command: () => {
+                leftAlign();
+                focus();
+              },
+            },
+            {
+              label: "Align Center",
+              icon: "pi pi-fw pi-align-center",
+              command: () => {
+                centerAlign();
+                focus();
+              },
+            },
+            {
+              label: "Align Right",
+              icon: "pi pi-fw pi-align-right",
+              command: () => {
+                rightAlign();
+                focus();
+              },
+            },
+          ],
+        },
       ]}
       end={() => (saving ? <ProgressSpinner className="w-2rem h-2rem" /> : "")}
-      className="p-0 text-xl Lato"
+      className="p-0 text-lg Lato"
     />
   );
 }

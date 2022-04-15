@@ -19,6 +19,7 @@ import {
   ItalicExtension,
   OrderedListExtension,
   UnderlineExtension,
+  NodeFormattingExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
@@ -96,6 +97,7 @@ export default function RemirrorContext({
       CustomLinkExtenstion,
       new HorizontalRuleExtension(),
       new CalloutExtension(),
+      new NodeFormattingExtension(),
     ],
     content: "<p>This is awesome</p>",
     selection: "all",
