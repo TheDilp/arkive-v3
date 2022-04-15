@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
+import { getProjects } from "../../../utils/supabaseUtils";
+import { useGetProjectData } from "../../../utils/utils";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
   const queryClient = useQueryClient();
   const [currentDoc, setCurrentDoc] = useState<Document | null>();
-  const [currentProject, setCurrentProject] = useState<Project | null>();
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
-
+  const project = useGetProjectData(project_id as string);
   useEffect(() => {
-    const currentProject: Project = queryClient.getQueryData(
-      `${project_id}-project`
-    ) as Project;
-    if (currentProject) {
-      setCurrentProject(currentProject);
-      setFilteredCategories(currentProject.categories);
+    if (project) {
+      setFilteredCategories(project.categories);
     }
-  }, [queryClient.getQueryData(`${project_id}-project`)]);
+  }, [project]);
 
   useEffect(() => {
     const allDocs: Document[] = queryClient.getQueryData(
@@ -29,16 +26,13 @@ export default function PropertiesPanel() {
     }
   }, [doc_id]);
 
-  
-
-
   return (
     <div className="h-full w-2 surface-50 text-white">
-      {currentProject && currentDoc && (
+      {project && currentDoc && (
         <span className="p-fluid">
           <CategoryAutocomplete
             currentDoc={currentDoc}
-            currentProject={currentProject}
+            currentProject={project}
             filteredCategories={filteredCategories}
             setCurrentDoc={setCurrentDoc}
             setFilteredCategories={setFilteredCategories}

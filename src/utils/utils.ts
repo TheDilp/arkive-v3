@@ -1,6 +1,8 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import React, { useEffect } from "react";
+import { useQuery } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
+import { getProjects } from "./supabaseUtils";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
@@ -61,4 +63,8 @@ export function useOnClickOutside(ref: any, handler: (event: any) => void) {
       document.removeEventListener("touchstart", listener);
     };
   }, [ref, handler]);
+}
+export function useGetProjectData(project_id: string) {
+  const { data } = useQuery("getAllProjects", async () => await getProjects());
+  return data?.find((project) => project.id === project_id);
 }

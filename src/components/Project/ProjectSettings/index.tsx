@@ -1,29 +1,35 @@
-import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Project } from "../../../custom-types";
-import { getCurrentProject } from "../../../utils/supabaseUtils";
-import LoadingScreen from "../../Util/LoadingScreen";
+import { getProjects } from "../../../utils/supabaseUtils";
 import DocumentsSettingsTable from "./DocumentsSettingsTable";
 import ProjectSettings from "./ProjectSettings";
 
-type Props = {};
-
-export default function ProjectSettingsIndex({}: Props) {
+export default function ProjectSettingsIndex() {
+  const [project, setProject] = useState<Project>();
   const [activeTab, setActiveTab] = useState(0);
+  const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const {
-    data: project,
-    error: projectError,
-    isLoading: projectLoading,
-  } = useQuery(
-    `${project_id}-project`,
-    async () => await getCurrentProject(project_id as string),
+  const { data: projects, refetch: refetchProjects } = useQuery(
+    "getAllProjects",
+    async () => await getProjects(),
     {
-      staleTime: 5 * 60 * 1000,
+      enabled: false,
     }
   );
-  if (projectError || projectLoading) return <LoadingScreen />;
+  useEffect(() => {
+    if (project_id) {
+      if (projects) {
+        setProject(
+          projects.find((project: Project) => project.id === project_id)
+        );
+      } else {
+        refetchProjects();
+      }
+    }
+  }, [project_id, projects]);
+
   return (
     <div className="flex w-full h-screen">
       <div className="w-17rem surface-50 h-full">
@@ -66,12 +72,14 @@ export default function ProjectSettingsIndex({}: Props) {
           </li>
         </ul>
       </div>
-      <div className="w-11 h-full">
-        {activeTab === 0 && <ProjectSettings project={project as Project} />}
-        {activeTab === 2 && (
-          <DocumentsSettingsTable project={project as Project} />
-        )}
-      </div>
+      {project && (
+        <div className="w-11 h-full">
+          {activeTab === 0 && <ProjectSettings project={project as Project} />}
+          {activeTab === 2 && (
+            <DocumentsSettingsTable project={project as Project} />
+          )}
+        </div>
+      )}
     </div>
   );
 }

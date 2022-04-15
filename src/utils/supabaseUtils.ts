@@ -38,7 +38,7 @@ export const getProjects = async () => {
   if (user) {
     const { data: projects, error } = await supabase
       .from<Project>("projects")
-      .select("id, title, cardImage")
+      .select("id, title, cardImage, categories")
       .eq("user_id", user.id);
 
     if (projects) return projects;
