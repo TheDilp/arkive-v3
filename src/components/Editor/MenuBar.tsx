@@ -316,7 +316,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           command: () => {
             let href = window.prompt("Enter the URL:", undefined);
             if (href) {
-              updateLink({ href });
+              updateLink({ href, target: "_self" });
               focus();
             }
           },

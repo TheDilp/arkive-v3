@@ -22,7 +22,11 @@ import {
   updateDocument,
   updateProject,
 } from "../../../utils/supabaseUtils";
-import { searchCategory, toastError } from "../../../utils/utils";
+import {
+  searchCategory,
+  toastError,
+  useGetDocuments,
+} from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../ProjectTree/IconSelectMenu";
 
@@ -45,16 +49,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
     show: false,
   });
   const ref = useRef(null);
-  const {
-    data: documents,
-    error: documentsError,
-    isLoading: documentsLoading,
-    refetch: documentsRefetch,
-  } = useQuery(
-    `${project_id}-documents`,
-    async () => await getDocuments(project_id as string),
-    { staleTime: 5 * 60 * 1000 }
-  );
+  const documents = useGetDocuments(project_id as string);
 
   // MUTATIONS
 
@@ -204,7 +199,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
     }
   );
 
-  if (documentsError || documentsLoading) return <LoadingScreen />;
+  if (!documents) return <LoadingScreen />;
   const categoriesBodyTemplate = (rowData: Document) => {
     return (
       <div className="cursor-pointer">

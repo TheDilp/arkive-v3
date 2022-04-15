@@ -1,9 +1,14 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
 import { Project } from "../custom-types";
-import { getProjects, updateProject } from "./supabaseUtils";
+import {
+  createDocument,
+  getDocuments,
+  getProjects,
+  updateProject,
+} from "./supabaseUtils";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
@@ -114,4 +119,34 @@ export function useUpdateProject() {
       },
     }
   );
+}
+// Custom hook for getting documents
+export function useGetDocuments(project_id: string) {
+  const { data } = useQuery(
+    `${project_id}-documents`,
+    async () => await getDocuments(project_id),
+    {
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+  return data;
+}
+// Custom hook for creating a new document
+export function useCreateDocument(project_id: string, user_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(async () => {
+    const updatedDocument = await createDocument(project_id, undefined);
+    if (updatedDocument) {
+      queryClient.setQueryData(
+        `${project_id}-documents`,
+        (oldData: Document[] | undefined) => {
+          if (oldData) {
+            return [...oldData, updatedDocument];
+          } else {
+            return [updatedDocument];
+          }
+        }
+      );
+    }
+  });
 }

@@ -44,6 +44,10 @@ div[data-callout-type="info"] {
     color: black !important;
 }
 
+.remirror-suggest-atom {
+    color: white !important;
+}
+
 .remirror-mention-atom {
     outline: none !important;
     background: none !important;

@@ -8,10 +8,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog,
+  treeItemDisplayDialog
 } from "../../../custom-types";
-import { createDocument, updateDocument } from "../../../utils/supabaseUtils";
-import { getDepth, toastError, toastSuccess } from "../../../utils/utils";
+import { auth, updateDocument } from "../../../utils/supabaseUtils";
+import {
+  getDepth,
+  toastError, useCreateDocument
+} from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import IconSelectMenu from "./IconSelectMenu";
 import ProjectTreeItem from "./ProjectTreeItem";
@@ -127,7 +130,10 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       setDocId(doc_id);
     }
   }, [doc_id]);
-
+  const createDocument = useCreateDocument(
+    project_id as string,
+    auth.user()?.id as string
+  );
   return (
     <div className="text-white w-2 flex flex-wrap surface-50 ">
       <ProjectTreeItemContext
@@ -195,26 +201,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
             icon={"pi pi-fw pi-plus"}
             iconPos="right"
             className="p-button-outlined Lato"
-            onClick={async () => {
-              const newDocument = (await createDocument(
-                project_id as string,
-                undefined
-              )) as Document;
-              if (newDocument) {
-                toastSuccess("New Document created!");
-                queryClient.setQueryData(
-                  `${project_id}-documents`,
-                  (oldData: Document[] | undefined) => {
-                    if (oldData) {
-                      const newData = [...oldData, newDocument];
-                      return newData;
-                    } else {
-                      return [newDocument];
-                    }
-                  }
-                );
-              }
-            }}
+            onClick={() => createDocument.mutate()}
           />
         </div>
         <InputText

@@ -8,7 +8,7 @@ import {
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   BoldExtension,
   BulletListExtension,
@@ -24,7 +24,12 @@ import {
 import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
 import { updateDocument } from "../../utils/supabaseUtils";
-import { toastError, toastSuccess } from "../../utils/utils";
+import {
+  toastError,
+  toastSuccess,
+  toastWarn,
+  useGetDocuments,
+} from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
 import MentionComponent from "./MentionComponent";
@@ -76,12 +81,15 @@ const hooks = [
 ];
 
 export default function RemirrorContext({
+  documents,
   setDocId,
 }: {
+  documents: Document[] | undefined;
   setDocId: (docId: string) => void;
 }) {
   const firstRender = useRef(true);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
@@ -103,9 +111,8 @@ export default function RemirrorContext({
     selection: "all",
     stringHandler: "html",
   });
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const { project_id, doc_id } = useParams();
+  const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [saving, setSaving] = useState<number | boolean>(false);
 
   const saveContentMutation = useMutation(
@@ -164,16 +171,13 @@ export default function RemirrorContext({
       setSaving(false);
       firstRender.current = false;
     }
-    // else {
-    //   firstRender.current = true;
-    // }
+
     if (doc_id) {
       setDocId(doc_id);
-      const documents: Document[] | undefined = queryClient.getQueryData(
-        `${project_id}-documents`
-      );
+      // const documents: Document[] | undefined = queryClient.getQueryData(
+      //   `${project_id}-documents`
+      // );
       if (documents) {
-        setDocuments(documents);
         const currentDocData = documents.find(
           (document) => document.id === doc_id
         );
@@ -186,6 +190,9 @@ export default function RemirrorContext({
               })
             );
           }
+        } else {
+          navigate("../");
+          toastWarn("Document doesn't seem to exist.");
         }
       }
     }

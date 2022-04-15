@@ -17,7 +17,7 @@ export default function Navbar({}: Props) {
         />
         <i
           className="pi pi-cog mr-3 cursor-pointer hover:text-primary settingsIcon"
-          onClick={() => navigate("settings")}
+          onClick={() => navigate("settings/documents-settings")}
         ></i>
         <i className="pi pi-user mr-3 cursor-pointer hover:text-primary"></i>
         <i

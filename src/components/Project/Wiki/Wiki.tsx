@@ -1,25 +1,16 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
-import { auth, getDocuments } from "../../../utils/supabaseUtils";
+import { auth } from "../../../utils/supabaseUtils";
+import { useGetDocuments } from "../../../utils/utils";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import ProjectTree from "../ProjectTree";
 import PropertiesPanel from "../PropertiesPanel";
 export default function Wiki() {
-  const { project_id } = useParams();
   const [docId, setDocId] = useState("");
-  const {
-    data: docs,
-    error: documentsError,
-    isLoading,
-  } = useQuery(
-    `${project_id}-documents`,
-    async () => await getDocuments(project_id as string),
-    { staleTime: 5 * 60 * 1000 }
-  );
-  if (documentsError || isLoading) return <LoadingScreen />;
-
+  const { project_id } = useParams();
+  const documents = useGetDocuments(project_id as string);
+  if (!documents) return <LoadingScreen />;
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (
@@ -31,7 +22,7 @@ export default function Wiki() {
           path="/:doc_id"
           element={
             <>
-              <RemirrorContext setDocId={setDocId} />
+              <RemirrorContext setDocId={setDocId} documents={documents} />
               <PropertiesPanel />
             </>
           }

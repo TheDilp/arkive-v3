@@ -108,6 +108,7 @@ export const createDocument = async (
         user_id: user.id,
         parent,
         title: "New Document",
+        icon: "akar-icons:file"
       });
     if (document) return document[0];
     if (error) {
