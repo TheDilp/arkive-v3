@@ -54,7 +54,7 @@ export const getCurrentProject = async (project_id: string) => {
   if (user) {
     const { data: project, error } = await supabase
       .from<Project>("projects")
-      .select("categories")
+      .select("id, title, categories")
       .eq("id", project_id);
 
     if (project) return project[0];

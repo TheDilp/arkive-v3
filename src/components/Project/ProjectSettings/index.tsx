@@ -5,10 +5,11 @@ import { Project } from "../../../custom-types";
 import { getCurrentProject } from "../../../utils/supabaseUtils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import DocumentsSettingsTable from "./DocumentsSettingsTable";
+import ProjectSettings from "./ProjectSettings";
 
 type Props = {};
 
-export default function ProjectSettings({}: Props) {
+export default function ProjectSettingsIndex({}: Props) {
   const [activeTab, setActiveTab] = useState(0);
   const { project_id } = useParams();
   const {
@@ -37,7 +38,7 @@ export default function ProjectSettings({}: Props) {
             }}
           >
             <i className="pi pi-fw pi-cog mr-2"></i>
-            Project Settings
+            ProjectSettings
           </li>
           <li
             className={`w-15rem text-gray-400 cursor-pointer py-2 pl-1 my-1 hover:text-white ${
@@ -66,6 +67,7 @@ export default function ProjectSettings({}: Props) {
         </ul>
       </div>
       <div className="w-11 h-full">
+        {activeTab === 0 && <ProjectSettings project={project as Project} />}
         {activeTab === 2 && (
           <DocumentsSettingsTable project={project as Project} />
         )}

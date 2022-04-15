@@ -545,7 +545,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
   };
 
   return (
-    <div className="w-full px-2  mt-4">
+    <section className="w-full px-2  mt-4">
       <ConfirmDialog />
       <Toolbar
         className="mb-2"
@@ -669,6 +669,6 @@ export default function DocumentsSettingsTable({ project }: Props) {
         />
         <Column header="Delete" body={deleteBodyTemplate} />
       </DataTable>
-    </div>
+    </section>
   );
 }
