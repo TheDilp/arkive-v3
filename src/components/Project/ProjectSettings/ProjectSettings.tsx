@@ -3,8 +3,9 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
-import { updateProject } from "../../../utils/supabaseUtils";
+import { deleteProject, updateProject } from "../../../utils/supabaseUtils";
 import { toastSuccess } from "../../../utils/utils";
 
 type Props = {
@@ -41,6 +42,7 @@ export default function ProjectSettings({ project }: Props) {
       },
     }
   );
+  const navigate = useNavigate();
   const confirmDeleteDialog = () =>
     confirmDialog({
       message: `Are you sure you want to delete the project: ${project.title}?`,
@@ -48,18 +50,9 @@ export default function ProjectSettings({ project }: Props) {
       icon: "pi pi-exclamation-triangle",
       acceptClassName: "p-button-danger",
       accept: () => {
-        //   deleteDocument(rowData.id).then(() => {
-        //     queryClient.setQueryData(
-        //       `${project_id}-documents`,
-        //       (oldData: Document[] | undefined) => {
-        //         if (oldData) {
-        //           return oldData.filter((doc) => doc.id !== rowData.id);
-        //         } else {
-        //           return [];
-        //         }
-        //       }
-        //     );
-        //   });
+        deleteProject(project.id).then(() => {
+          navigate("/");
+        });
       },
     });
   return (
@@ -86,6 +79,19 @@ export default function ProjectSettings({ project }: Props) {
             });
           }}
         />
+      </section>
+      <section className="Lato">
+        <h3>Update Project Card Image</h3>
+        <div className="w-10rem h-10rem">
+          <img
+            src={project.cardImage}
+            alt="Card"
+            className="w-full h-full"
+            style={{
+            objectFit: "cover",
+            }}
+          />
+        </div>
       </section>
       <section className="Lato mt-5">
         <hr />

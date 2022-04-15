@@ -225,3 +225,18 @@ export const deleteManyDocuments = async (doc_ids: string[]) => {
     }
   }
 };
+export const deleteProject = async (project_id: string) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase
+      .from<Project>("projects")
+      .delete()
+      .eq("id", project_id);
+
+    if (error) {
+      toastError("There was an error deleting your project.");
+      throw new Error(error.message);
+    }
+  }
+};
