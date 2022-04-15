@@ -1,12 +1,11 @@
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
-import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
-import { deleteProject, updateProject } from "../../../utils/supabaseUtils";
-import { toastSuccess, useUpdateProject } from "../../../utils/utils";
+import { deleteProject } from "../../../utils/supabaseUtils";
+import { useUpdateProject } from "../../../utils/utils";
 
 type Props = {
   project: Project;
@@ -14,7 +13,6 @@ type Props = {
 
 export default function ProjectSettings({ project }: Props) {
   const [localProject, setLocalProject] = useState<Project>(project);
-  const queryClient = useQueryClient();
   const projectMutation = useUpdateProject();
 
   const navigate = useNavigate();

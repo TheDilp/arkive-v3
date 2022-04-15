@@ -18,7 +18,6 @@ import {
   createDocument,
   deleteDocument,
   deleteManyDocuments,
-  getCurrentProject,
   getDocuments,
   updateDocument,
   updateProject,

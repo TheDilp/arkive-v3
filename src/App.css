@@ -19,9 +19,10 @@ body {
 .deleteAllDocuments div .p-confirm-dialog-message,
 .deleteAllDocuments div .p-confirm-dialog-icon {
     color: red !important;
-}r
+}
 
 /* CUSTOM SCROLLBAR */
+
 /* width */
 ::-webkit-scrollbar {
     width: 0.25rem;

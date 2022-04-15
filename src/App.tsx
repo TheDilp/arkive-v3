@@ -32,7 +32,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="project/:project_id" element={<Project />}>
               <Route path="wiki/*" element={<Wiki />} />
-              <Route path="settings" element={<ProjectSettings />} />
+              <Route path="settings/:setting" element={<ProjectSettings />} />
             </Route>
           </Routes>
         </BrowserRouter>
