@@ -9,12 +9,7 @@ export default function Home() {
     error,
     isLoading,
   } = useQuery("getAllProjects", async () => await getProjects());
-  if (error || isLoading)
-    return (
-      <div className="text-white">
-        <LoadingScreen />
-      </div>
-    );
+  if (error || isLoading) return <LoadingScreen />;
 
   return auth.user() ? (
     <div className="Home w-8">
