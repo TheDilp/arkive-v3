@@ -16,13 +16,20 @@ export type Document = {
   image: string;
   user_id: string;
   project_id: string;
-  categories: string[];
+  categories: {
+    id: string;
+    tag: string;
+  }[];
   title: string;
   parent: { id: string; title: string } | null;
   folder: boolean;
   icon: string;
 };
-
+export type Category = {
+  id: string;
+  tag: string;
+  doc_id?: string;
+};
 export type treeItemDisplayDialog = {
   id: string;
   title: string;

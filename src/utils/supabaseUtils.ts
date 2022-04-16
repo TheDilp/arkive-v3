@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
-import { Document, Profile, Project } from "../custom-types";
+import { Category, Document, Profile, Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -70,13 +70,29 @@ export const getDocuments = async (project_id: string) => {
   if (user) {
     const { data: documents, error } = await supabase
       .from<Document>("documents")
-      .select("*, parent(id, title)")
+      .select("*, parent(id, title), categories(id, tag)")
       .eq("project_id", project_id)
       .or(`user_id.eq.${user.id}, view_by.cs.{${user.id}}`)
       .order("title", { ascending: true });
     if (documents) return documents;
     if (error) {
       toastError("There was an error getting your documents.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const getCategories = async (project_id: string) => {
+  let user = auth.user();
+  if (user) {
+    const { data: categories, error } = await supabase.rpc<Category[]>(
+      "get_tags",
+      {
+        p_id: project_id,
+      }
+    );
+    if (categories) return categories;
+    if (error) {
+      toastError("There was an error getting your categories.");
       throw new Error(error.message);
     }
   }
@@ -146,6 +162,22 @@ export const createProject = async () => {
     if (project) return project[0];
     if (error) {
       toastError("There was an error creating your project.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const createCategory = async (tag: string, doc_id: string) => {
+  let user = auth.user();
+  if (user) {
+    const { data: category, error } = await supabase
+      .from<Category>("categories")
+      .insert({
+        tag,
+        doc_id,
+      });
+    if (category) return category[0];
+    if (error) {
+      toastError("There was an error creating your category.");
       throw new Error(error.message);
     }
   }

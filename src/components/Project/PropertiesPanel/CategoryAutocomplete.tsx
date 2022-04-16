@@ -2,7 +2,11 @@ import { AutoComplete } from "primereact/autocomplete";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
-import { updateDocument, updateProject } from "../../../utils/supabaseUtils";
+import {
+  createCategory,
+  updateDocument,
+  updateProject,
+} from "../../../utils/supabaseUtils";
 import { searchCategory, toastError, toastWarn } from "../../../utils/utils";
 
 type Props = {
@@ -25,7 +29,7 @@ export default function CategoryAutocomplete({
 
   const categoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>
-      await updateDocument(vars.doc_id, undefined, undefined, vars.categories),
+      await createCategory(vars.doc_id, undefined, undefined, vars.categories),
     {
       onMutate: async (updatedDocument) => {
         await queryClient.cancelQueries(`${project_id}-documents`);
@@ -60,44 +64,40 @@ export default function CategoryAutocomplete({
         return { previousDocuments };
       },
       onSuccess: async (data, vars) => {
-        let projectData: Project = queryClient.getQueryData(
-          `${project_id}-project`
-        ) as Project;
-
-        if (projectData) {
-          // Filter out any categories that are not already present in the global project categories
-
-          let difference: string[] = [];
-
-          if (projectData.categories) {
-            difference = vars.categories.filter(
-              (cat) => !projectData.categories.includes(cat)
-            );
-          }
-          // Only update if there is a new category not present in the project categories
-          if (difference.length > 0 || !projectData.categories) {
-            const updatedProject = await updateProject(
-              project_id as string,
-              undefined,
-              projectData.categories
-                ? projectData.categories.concat(difference)
-                : difference
-            );
-
-            if (updatedProject) {
-              queryClient.setQueryData(
-                `${project_id}-project`,
-                (oldData: Project | undefined) => {
-                  let newData: any = {
-                    ...oldData,
-                    categories: updatedProject.categories,
-                  };
-                  return newData;
-                }
-              );
-            }
-          }
-        }
+        // let projectData: Project = queryClient.getQueryData(
+        //   `${project_id}-project`
+        // ) as Project;
+        // if (projectData) {
+        //   // Filter out any categories that are not already present in the global project categories
+        //   let difference: string[] = [];
+        //   if (projectData.categories) {
+        //     difference = vars.categories.filter(
+        //       (cat) => !projectData.categories.includes(cat)
+        //     );
+        //   }
+        //   // Only update if there is a new category not present in the project categories
+        //   if (difference.length > 0 || !projectData.categories) {
+        //     const updatedProject = await updateProject(
+        //       project_id as string,
+        //       undefined,
+        //       projectData.categories
+        //         ? projectData.categories.concat(difference)
+        //         : difference
+        //     );
+        //     if (updatedProject) {
+        //       queryClient.setQueryData(
+        //         `${project_id}-project`,
+        //         (oldData: Project | undefined) => {
+        //           let newData: any = {
+        //             ...oldData,
+        //             categories: updatedProject.categories,
+        //           };
+        //           return newData;
+        //         }
+        //       );
+        //     }
+        //   }
+        // }
       },
       onError: (error, updatedDocument, context) => {
         if (context)
@@ -113,7 +113,7 @@ export default function CategoryAutocomplete({
 
   return (
     <AutoComplete
-      value={currentDoc.categories}
+      value={currentDoc.categories.map((cat) => cat.tag)}
       suggestions={filteredCategories}
       placeholder={
         currentDoc.categories ? "" : "Enter tags for this document..."
