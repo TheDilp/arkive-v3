@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document } from "../../../custom-types";
+import { Category, Document } from "../../../custom-types";
 import { useGetProjectData } from "../../../utils/utils";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
   const queryClient = useQueryClient();
   const [currentDoc, setCurrentDoc] = useState<Document | null>();
-  const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
+  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
   const project = useGetProjectData(project_id as string);
   useEffect(() => {
-    if (project) {
-      setFilteredCategories(project.categories);
+    if (project_id) {
+      let cats: Category[] | undefined =
+        queryClient.getQueryData("getCategories");
+      if (cats) {
+        setFilteredCategories(cats);
+      }
     }
-  }, [project]);
+  }, [project_id]);
 
   useEffect(() => {
     const allDocs: Document[] = queryClient.getQueryData(

@@ -1,24 +1,19 @@
 import { AutoComplete } from "primereact/autocomplete";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document, Project } from "../../../custom-types";
-import {
-  createCategory,
-  updateDocument,
-  updateProject,
-} from "../../../utils/supabaseUtils";
+import { Category, Document, Project } from "../../../custom-types";
+import { createCategory } from "../../../utils/supabaseUtils";
 import { searchCategory, toastError, toastWarn } from "../../../utils/utils";
 
 type Props = {
   currentDoc: Document;
-  filteredCategories: string[];
+  filteredCategories: Category[];
   currentProject: Project;
   setCurrentDoc: (doc: Document | null) => void;
-  setFilteredCategories: (categories: string[]) => void;
+  setFilteredCategories: (categories: Category[]) => void;
 };
 
 export default function CategoryAutocomplete({
-  currentProject,
   currentDoc,
   filteredCategories,
   setCurrentDoc,
@@ -26,7 +21,8 @@ export default function CategoryAutocomplete({
 }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-
+  const categories: Category[] | undefined =
+    queryClient.getQueryData("getCategories");
   const categoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>
       await createCategory(vars.doc_id, undefined, undefined, vars.categories),
@@ -119,12 +115,9 @@ export default function CategoryAutocomplete({
         currentDoc.categories ? "" : "Enter tags for this document..."
       }
       completeMethod={(e) =>
-        searchCategory(
-          e,
-          currentProject.categories || [],
-          setFilteredCategories
-        )
+        searchCategory(e, categories || [], setFilteredCategories)
       }
+      itemTemplate={(data) => <span>{data.tag}</span>}
       multiple
       onChange={async (e) =>
         categoriesMutation.mutate({

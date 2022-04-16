@@ -2,7 +2,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
-import { Project } from "../custom-types";
+import { Category, Project } from "../custom-types";
 import {
   createDocument,
   getDocuments,
@@ -22,16 +22,17 @@ export const toastWarn = (message: string) =>
 // Filter autocomplete for categories
 export const searchCategory = (
   event: any,
-  categories: string[],
-  setFilteredCategories: (categories: string[]) => void
+  categories: Category[],
+  setFilteredCategories: (categories: Category[]) => void
 ) => {
   setTimeout(() => {
+    console.log(categories);
     let _filteredCategories;
     if (!event.query.trim().length) {
       _filteredCategories = [...categories];
     } else {
       _filteredCategories = categories.filter((category) => {
-        return category.toLowerCase().startsWith(event.query.toLowerCase());
+        return category.tag.toLowerCase().startsWith(event.query.toLowerCase());
       });
     }
 
