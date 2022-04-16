@@ -37,7 +37,7 @@ export default function Home() {
         <Navbar />
       </div>
       <div className="w-1 Lato h-full">
-        <div className="w-4 h-full surface-50 text-white flex-wrap py-5">
+        <div className="w-4 h-full bg-gray-800 text-white flex-wrap py-5">
           <div className="w-full flex justify-content-center">
             <Button
               icon="pi pi-plus"

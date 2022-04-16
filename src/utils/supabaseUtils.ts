@@ -13,7 +13,9 @@ export const supabase = createClient(
 export const auth = supabase.auth;
 
 // Auth functions
-
+export const register = async (email: string, password: string) => {
+  await supabase.auth.signUp({ email, password });
+};
 export const login = async (email: string, password: string) => {
   const { user, error } = await supabase.auth.signIn({ email, password });
   if (user) return user;
@@ -22,7 +24,6 @@ export const login = async (email: string, password: string) => {
     throw new Error(error.message);
   }
 };
-
 export const logout = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) {

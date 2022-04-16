@@ -13,6 +13,7 @@ import Project from "./components/Project/Project";
 import ProjectSettings from "./components/Project/ProjectSettings";
 import Wiki from "./components/Project/Wiki/Wiki";
 import { ReactQueryDevtools } from "react-query/devtools";
+import Register from "./components/Auth/Register";
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -29,6 +30,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="project/:project_id" element={<Project />}>
               <Route path="wiki/*" element={<Wiki />} />

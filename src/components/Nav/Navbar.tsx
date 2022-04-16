@@ -24,7 +24,12 @@ export default function Navbar() {
             onClick={() => navigate("settings/documents-settings")}
           ></i>
         )}
-        <i className="pi pi-user mr-3 cursor-pointer hover:text-primary"></i>
+        <i
+          className="pi pi-user mr-3 cursor-pointer hover:text-primary"
+          onClick={async () => {
+            navigate("/profile");
+          }}
+        ></i>
         <i
           className="pi pi-sign-out cursor-pointer hover:text-primary"
           onClick={async () => {
@@ -35,5 +40,10 @@ export default function Navbar() {
       </div>
     );
   };
-  return <Menubar end={end} className="w-full border-noround" />;
+  return (
+    <Menubar
+      end={end}
+      className="w-full border-noround border-x-none shadow-5"
+    />
+  );
 }
