@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Navigate } from "react-router-dom";
 import { Project } from "../../custom-types";
 import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
+import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
 import ProjectCard from "./ProjectCard";
 export default function Home() {
@@ -31,8 +32,11 @@ export default function Home() {
   if (error || isLoading) return <LoadingScreen />;
 
   return auth.user() ? (
-    <div className="Home w-full flex h-screen">
-      <div className="w-1 Lato">
+    <div className="Home w-full flex flex-wrap align-content-start h-screen">
+      <div className="w-full">
+        <Navbar />
+      </div>
+      <div className="w-1 Lato h-full">
         <div className="w-4 h-full surface-50 text-white flex-wrap py-5">
           <div className="w-full flex justify-content-center">
             <Button
