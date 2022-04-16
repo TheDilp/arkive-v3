@@ -20,15 +20,18 @@ export default function ProjectCard({ ...Project }: Project) {
           label="Wiki"
           icon="pi pi-fw pi-file"
           iconPos="right"
-          className="p-button-outlined p-button-primary"
+          className="p-button-outlined p-button-primary Lato"
         />
       </Link>
-      <Link to={`/project/${Project.id}/settings`} className="no-underline">
+      <Link
+        to={`/project/${Project.id}/settings/project-settings`}
+        className="no-underline"
+      >
         <Button
           label="Settings"
           icon="pi pi-fw pi-cog"
           iconPos="right"
-          className="p-button-outlined p-button-secondary"
+          className="p-button-outlined p-button-secondary Lato"
         />
       </Link>
     </div>
@@ -36,7 +39,7 @@ export default function ProjectCard({ ...Project }: Project) {
   return (
     <Card
       title={Project.title}
-      className="text-center relative w-3 mx-2 h-full overflow-hidden"
+      className="text-center relative w-20rem mx-2 h-full overflow-hidden h-25rem Merriweather"
       header={header}
       footer={footer}
     ></Card>
