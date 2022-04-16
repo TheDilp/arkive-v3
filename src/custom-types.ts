@@ -16,10 +16,7 @@ export type Document = {
   image: string;
   user_id: string;
   project_id: string;
-  categories: {
-    id: string;
-    tag: string;
-  }[];
+  categories: Omit<Category, "doc_id">[];
   title: string;
   parent: { id: string; title: string } | null;
   folder: boolean;

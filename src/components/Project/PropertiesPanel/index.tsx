@@ -15,11 +15,12 @@ export default function PropertiesPanel() {
       let cats: Category[] | undefined =
         queryClient.getQueryData("getCategories");
       if (cats) {
+        console.log(cats);
+
         setFilteredCategories(cats);
       }
     }
   }, [project_id]);
-
   useEffect(() => {
     const allDocs: Document[] = queryClient.getQueryData(
       `${project_id}-documents`

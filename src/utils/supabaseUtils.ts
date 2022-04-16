@@ -169,26 +169,52 @@ export const createProject = async () => {
 export const createCategory = async (tag: string, doc_id: string) => {
   let user = auth.user();
   if (user) {
-    const { data: category, error } = await supabase
-      .from<Category>("categories")
-      .insert({
-        tag,
-        doc_id,
-      });
-    if (category) return category[0];
-    if (error) {
-      toastError("There was an error creating your category.");
-      throw new Error(error.message);
-    }
+    const { data: category, error } = await supabase.rpc("create_category", {
+      new_tag: tag,
+      doc_id,
+    });
+    // const { data: category, error } = await supabase
+    //   .from<Category>("categories")
+    //   .insert({
+    //     tag,
+    //   });
+    // if (category) return category[0];
+    // if (error) {
+    //   // Error code 23505 is for violating unique key constraint
+    //   // If the tag already exists the DB won't create it
+    //   // There is no need to show an error message for the user here
+    //   if (error.code === "23505") return;
+    //   toastError("There was an error creating your category.");
+    //   throw new Error(error.message);
+    // }
   }
 };
+// export const createDocCatRelation = async (
+//   category_id: string,
+//   doc_id: string
+// ) => {
+//   let user = auth.user();
+//   if (user) {
+//     const { error } = await supabase
+//       .from<DocCatRelation>("categories_documents")
+//       .insert({
+//         category_id,
+//         doc_id,
+//       });
+//     if (error) {
+//       toastError(
+//         "There was an error creating your document-category relation."
+//       );
+//       throw new Error(error.message);
+//     }
+//   }
+// };
 
 // UPDATE
 export const updateDocument = async (
   doc_id: string,
   title?: string,
   content?: RemirrorJSON,
-  categories?: string[],
   folder?: boolean,
   parent?: string | null,
   image?: string,
@@ -202,7 +228,6 @@ export const updateDocument = async (
       .update({
         title,
         content,
-        categories,
         folder,
         // @ts-ignore
         parent,

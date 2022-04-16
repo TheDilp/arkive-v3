@@ -2,8 +2,9 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
-import { Category, Project } from "../custom-types";
+import { Category, Document, Project } from "../custom-types";
 import {
+  createCategory,
   createDocument,
   getDocuments,
   getProjects,
@@ -26,7 +27,6 @@ export const searchCategory = (
   setFilteredCategories: (categories: Category[]) => void
 ) => {
   setTimeout(() => {
-    console.log(categories);
     let _filteredCategories;
     if (!event.query.trim().length) {
       _filteredCategories = [...categories];
@@ -150,4 +150,19 @@ export function useCreateDocument(project_id: string, user_id: string) {
       );
     }
   });
+}
+// Custom hook for creating a category
+export function useCreateCategory() {
+  return useMutation(
+    async (vars: { tag: string; doc_id: string }) => {
+      const newCategory = await createCategory(vars.tag, vars.doc_id).then(
+        (newCat) => console.log(newCat)
+      );
+    },
+    {
+      onError: () => {
+        toastError("There was an error creating that tag.");
+      },
+    }
+  );
 }
