@@ -8,13 +8,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog
+  treeItemDisplayDialog,
 } from "../../../custom-types";
 import { auth, updateDocument } from "../../../utils/supabaseUtils";
-import {
-  getDepth,
-  toastError, useCreateDocument
-} from "../../../utils/utils";
+import { getDepth, toastError, useCreateDocument } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import IconSelectMenu from "./IconSelectMenu";
 import ProjectTreeItem from "./ProjectTreeItem";
@@ -215,7 +212,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         <Tree
           classes={{
             root: "list-none w-full overflow-y-scroll projectTreeRoot ",
-            container: "list-none cursor-pointer ",
+            container: "list-none",
             placeholder: "relative",
           }}
           tree={treeData}

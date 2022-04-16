@@ -1,11 +1,9 @@
-import React from "react";
 import { Menubar } from "primereact/menubar";
-import { logout } from "../../utils/supabaseUtils";
-import { useNavigate, useParams } from "react-router-dom";
 import { Tooltip } from "primereact/tooltip";
-type Props = {};
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../utils/supabaseUtils";
 
-export default function Navbar({}: Props) {
+export default function Navbar() {
   const navigate = useNavigate();
   const end = () => {
     return (
