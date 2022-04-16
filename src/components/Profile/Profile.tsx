@@ -4,6 +4,7 @@ import { InputText } from "primereact/inputtext";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getProfile, updateProfile } from "../../utils/supabaseUtils";
+import { toastSuccess } from "../../utils/utils";
 import LoadingScreen from "../Util/LoadingScreen";
 
 export default function Profile() {
@@ -21,13 +22,26 @@ export default function Profile() {
   if (error || isLoading) return <LoadingScreen />;
 
   const header = (
-    <img
-      alt="Card"
-      src={
-        profile?.profile_image ||
-        `https://avatars.dicebear.com/api/bottts/${profile?.user_id}.svg`
-      }
-    />
+    <div className="w-15rem relative">
+      <img
+        alt="Card"
+        className="border-rounded"
+        style={{
+          objectFit: "cover",
+        }}
+        src={
+          localProfile?.profile_image ||
+          `https://avatars.dicebear.com/api/bottts/${profile?.user_id}.svg`
+        }
+        onClick={() => {
+          let newUrl = window.prompt("Enter the new profile image URL", "");
+          if (newUrl && localProfile) {
+            setLocalProfile({ ...localProfile, profile_image: newUrl });
+            //   updateProfile(localProfile.id, undefined, localProfile.profile_image);
+          }
+        }}
+      />
+    </div>
   );
   const footer = (
     <div className="flex justify-content-end">
@@ -42,7 +56,7 @@ export default function Profile() {
               localProfile.id,
               localProfile.nickname,
               localProfile.profile_image
-            );
+            ).then(() => toastSuccess("Profile successfully updated!"));
         }}
       />
     </div>
@@ -67,7 +81,7 @@ export default function Profile() {
                   localProfile.id,
                   localProfile.nickname,
                   localProfile.profile_image
-                );
+                ).then(() => toastSuccess("Profile successfully updated!"));
               }
             }}
             placeholder="Enter a nickname"
