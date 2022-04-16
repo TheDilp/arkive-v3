@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
-import ProjectCard from "./ProjectCard";
-import { Navigate } from "react-router-dom";
-import LoadingScreen from "../Util/LoadingScreen";
 import { Button } from "primereact/button";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Navigate } from "react-router-dom";
 import { Project } from "../../custom-types";
+import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
+import LoadingScreen from "../Util/LoadingScreen";
+import ProjectCard from "./ProjectCard";
 export default function Home() {
   const queryClient = useQueryClient();
   const {

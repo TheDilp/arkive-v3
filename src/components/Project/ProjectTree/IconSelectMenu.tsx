@@ -96,7 +96,7 @@ export default function IconSelectMenu({
   return (
     <div
       ref={ref}
-      className="absolute surface-100 z-5 w-13rem  h-20rem"
+      className="fixed surface-100 z-5 w-13rem  h-20rem"
       style={{
         left,
         top,

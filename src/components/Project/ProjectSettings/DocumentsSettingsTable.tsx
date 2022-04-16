@@ -548,7 +548,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
   };
 
   return (
-    <section className="w-full px-2  mt-4">
+    <section className="w-full px-2 mt-4 overflow-hidden">
       <ConfirmDialog />
       <Toolbar
         className="mb-2"
@@ -658,6 +658,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
           field="icon"
           editor={iconEditor}
           onCellEditInit={(e: any) => {
+            console.log(e);
             setIconSelect({
               doc_id: e.rowData.id,
               icon: e.rowData.icon,

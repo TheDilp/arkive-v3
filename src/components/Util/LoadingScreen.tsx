@@ -1,9 +1,8 @@
 import { ProgressSpinner } from "primereact/progressspinner";
-type Props = {};
 
-export default function LoadingScreen({}: Props) {
+export default function LoadingScreen() {
   return (
-    <div className="w-full h-screen flex justify-content-center align-items-center absolute overflow-hidden">
+    <div className="w-full h-full flex justify-content-center align-items-center fixed overflow-hidden">
       <ProgressSpinner
         style={{ width: "150px", height: "150px" }}
         strokeWidth="2"
