@@ -1,27 +1,45 @@
-import { useQuery } from "react-query";
-import { auth, getProjects } from "../../utils/supabaseUtils";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
 import ProjectCard from "./ProjectCard";
 import { Navigate } from "react-router-dom";
 import LoadingScreen from "../Util/LoadingScreen";
-import { Card } from "primereact/card";
 import { Button } from "primereact/button";
+import { Project } from "../../custom-types";
 export default function Home() {
+  const queryClient = useQueryClient();
   const {
     data: projects,
     error,
     isLoading,
   } = useQuery("getAllProjects", async () => await getProjects());
+  const createProjectMutation = useMutation(async () => await createProject(), {
+    onSuccess: (data) => {
+      if (data) {
+        queryClient.setQueryData(
+          "getAllProjects",
+          (oldData: Project[] | undefined) => {
+            if (oldData) {
+              return [...oldData, data];
+            } else {
+              return [];
+            }
+          }
+        );
+      }
+    },
+  });
   if (error || isLoading) return <LoadingScreen />;
 
   return auth.user() ? (
     <div className="Home w-full flex h-screen">
       <div className="w-1 Lato">
-        <div className="w-6 h-full surface-50 text-white flex-wrap py-5">
+        <div className="w-4 h-full surface-50 text-white flex-wrap py-5">
           <div className="w-full flex justify-content-center">
             <Button
               icon="pi pi-plus"
               className="p-button-rounded p-button-plain"
               tooltip="New Project"
+              onClick={() => createProjectMutation.mutate()}
             />
           </div>
         </div>

@@ -108,11 +108,28 @@ export const createDocument = async (
         user_id: user.id,
         parent,
         title: "New Document",
-        icon: "akar-icons:file"
+        icon: "akar-icons:file",
       });
     if (document) return document[0];
     if (error) {
       toastError("There was an error creating your document.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const createProject = async () => {
+  let user = auth.user();
+  if (user) {
+    const { data: project, error } = await supabase
+      .from<Project>("projects")
+      .insert({
+        title: "New Project",
+        user_id: user.id,
+        cardImage: "",
+      });
+    if (project) return project[0];
+    if (error) {
+      toastError("There was an error creating your project.");
       throw new Error(error.message);
     }
   }
