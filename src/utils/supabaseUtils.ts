@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
-import { Document, Project } from "../custom-types";
+import { Document, Profile, Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -77,6 +77,20 @@ export const getDocuments = async (project_id: string) => {
     if (documents) return documents;
     if (error) {
       toastError("There was an error getting your documents.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const getProfile = async () => {
+  let user = auth.user();
+  if (user) {
+    const { data: profile, error } = await supabase
+      .from<Profile>("profiles")
+      .select("id, nickname, profile_image")
+      .eq("user_id", user.id);
+    if (profile) return profile[0];
+    if (error) {
+      toastError("There was an error getting your profile.");
       throw new Error(error.message);
     }
   }

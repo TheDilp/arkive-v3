@@ -2,7 +2,12 @@ import { Button } from "primereact/button";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Navigate } from "react-router-dom";
 import { Project } from "../../custom-types";
-import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
+import {
+  auth,
+  createProject,
+  getProfile,
+  getProjects,
+} from "../../utils/supabaseUtils";
 import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
 import ProjectCard from "./ProjectCard";
@@ -13,6 +18,7 @@ export default function Home() {
     error,
     isLoading,
   } = useQuery("getAllProjects", async () => await getProjects());
+
   const createProjectMutation = useMutation(async () => await createProject(), {
     onSuccess: (data) => {
       if (data) {

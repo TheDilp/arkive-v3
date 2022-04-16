@@ -35,3 +35,10 @@ export type iconSelect = {
   left: number;
   show: boolean;
 };
+
+export type Profile = {
+  id: string;
+  nickname: string;
+  user_id: string;
+  profile_image: string;
+};

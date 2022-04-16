@@ -14,6 +14,7 @@ import ProjectSettings from "./components/Project/ProjectSettings";
 import Wiki from "./components/Project/Wiki/Wiki";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Register from "./components/Auth/Register";
+import Profile from "./components/Profile/Profile";
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="project/:project_id" element={<Project />}>
               <Route path="wiki/*" element={<Wiki />} />
               <Route path="settings/:setting" element={<ProjectSettings />} />
