@@ -228,6 +228,29 @@ export const updateMultipleDocumentsParents = async (
     }
   }
 };
+export const updateProfile = async (
+  id: string,
+  nickname?: string,
+  profile_image?: string
+) => {
+  let user = auth.user();
+
+  if (user) {
+    const { data: profile, error } = await supabase
+      .from<Profile>("profiles")
+      .update({
+        nickname,
+        profile_image,
+      })
+      .eq("id", id);
+
+    if (profile) return profile[0];
+    if (error) {
+      toastError("There was an error updating your profile.");
+      throw new Error(error.message);
+    }
+  }
+};
 
 // DELETE
 

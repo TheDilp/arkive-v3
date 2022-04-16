@@ -1,9 +1,9 @@
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { getProfile } from "../../utils/supabaseUtils";
+import { getProfile, updateProfile } from "../../utils/supabaseUtils";
 import LoadingScreen from "../Util/LoadingScreen";
 
 export default function Profile() {
@@ -14,7 +14,12 @@ export default function Profile() {
   } = useQuery("getProfile", async () => await getProfile());
   const [localProfile, setLocalProfile] = useState(profile || null);
 
+  useEffect(() => {
+    if (profile) setLocalProfile(profile);
+  }, [profile]);
+
   if (error || isLoading) return <LoadingScreen />;
+
   const header = (
     <img
       alt="Card"
@@ -31,19 +36,40 @@ export default function Profile() {
         icon="pi pi-user-edit"
         iconPos="right"
         className="p-button-success p-button-outlined"
+        onClick={() => {
+          localProfile &&
+            updateProfile(
+              localProfile.id,
+              localProfile.nickname,
+              localProfile.profile_image
+            );
+        }}
       />
     </div>
   );
   return (
     <div className="w-full h-full flex justify-content-center align-items-center">
       {localProfile && (
-        <Card title="Profile" header={header} footer={footer}>
+        <Card
+          title={`${localProfile.nickname} - Profile`}
+          header={header}
+          footer={footer}
+        >
           <InputText
             value={localProfile.nickname}
             className="w-full"
             onChange={(e) =>
               setLocalProfile({ ...localProfile, nickname: e.target.value })
             }
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && localProfile) {
+                updateProfile(
+                  localProfile.id,
+                  localProfile.nickname,
+                  localProfile.profile_image
+                );
+              }
+            }}
             placeholder="Enter a nickname"
           />
         </Card>
