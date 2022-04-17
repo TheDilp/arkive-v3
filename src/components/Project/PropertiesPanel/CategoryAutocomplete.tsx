@@ -89,16 +89,23 @@ export default function CategoryAutocomplete({
       }
       multiple
       onSelect={(e) => {
-        if (categories) {
-          if (!currentDoc.categories.includes(e.value)) {
-            updateCategoriesMutation.mutate({
-              doc_id: currentDoc.id,
-              categories: [...currentDoc.categories, e.value],
-            });
-          }
+        if (!currentDoc.categories.includes(e.value)) {
+          updateCategoriesMutation.mutate({
+            doc_id: currentDoc.id,
+            categories: [...currentDoc.categories, e.value],
+          });
         }
       }}
-      onUnselect={(e) => {}}
+      onUnselect={(e) => {
+        if (currentDoc.categories.includes(e.value)) {
+          updateCategoriesMutation.mutate({
+            doc_id: currentDoc.id,
+            categories: currentDoc.categories.filter(
+              (category) => category !== e.value
+            ),
+          });
+        }
+      }}
       onKeyPress={async (e) => {
         // For adding completely new tags
         if (e.key === "Enter" && e.currentTarget.value !== "") {
