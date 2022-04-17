@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
-import { auth, getCategories } from "../../../utils/supabaseUtils";
+import { auth } from "../../../utils/supabaseUtils";
 import { useGetDocuments } from "../../../utils/utils";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
@@ -11,14 +10,6 @@ export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();
   const documents = useGetDocuments(project_id as string);
-  const categories = useQuery(
-    "getCategories",
-    async () => await getCategories(project_id as string),
-    {
-      staleTime: 5 * 60 * 1000, //5mins
-    }
-  );
-
   if (!documents) return <LoadingScreen />;
   return !auth.user() ? (
     <Navigate to="/login" />

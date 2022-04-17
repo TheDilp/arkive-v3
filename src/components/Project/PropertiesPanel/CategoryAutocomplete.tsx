@@ -1,21 +1,16 @@
 import { AutoComplete } from "primereact/autocomplete";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Category, Document, Project } from "../../../custom-types";
-import { createCategory } from "../../../utils/supabaseUtils";
-import {
-  searchCategory,
-  toastError,
-  toastWarn,
-  useCreateCategory,
-} from "../../../utils/utils";
+import { Document, Project } from "../../../custom-types";
+import { getTags, updateDocument } from "../../../utils/supabaseUtils";
+import { searchCategory, useGetTags } from "../../../utils/utils";
 
 type Props = {
   currentDoc: Document;
-  filteredCategories: Category[];
+  filteredCategories: string[];
   currentProject: Project;
   setCurrentDoc: (doc: Document | null) => void;
-  setFilteredCategories: (categories: Category[]) => void;
+  setFilteredCategories: (categories: string[]) => void;
 };
 
 export default function CategoryAutocomplete({
@@ -25,10 +20,61 @@ export default function CategoryAutocomplete({
   setFilteredCategories,
 }: Props) {
   const queryClient = useQueryClient();
-  const categories: Category[] | undefined =
-    queryClient.getQueryData("getCategories");
-  const createCategory = useCreateCategory();
-
+  const { project_id } = useParams();
+  getTags(project_id as string);
+  const { data: categories, refetch: refetchAllTags } = useGetTags(
+    project_id as string
+  );
+  const updateCategoriesMutation = useMutation(
+    async (vars: { doc_id: string; categories: string[] }) =>
+      await updateDocument(
+        vars.doc_id,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        vars.categories
+      ),
+    {
+      onMutate: (vars) => {
+        let oldCategories = currentDoc.categories;
+        let oldDocs = queryClient.getQueryData(`${project_id}-documents`);
+        setCurrentDoc({ ...currentDoc, categories: vars.categories });
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === vars.doc_id) {
+                  return {
+                    ...doc,
+                    categories: vars.categories,
+                  };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { oldCategories, oldDocs };
+      },
+      onError: (e, v, context) => {
+        if (context) {
+          setCurrentDoc({ ...currentDoc, categories: context.oldCategories });
+          queryClient.setQueryData(`${project_id}-documents`, context.oldDocs);
+        }
+      },
+      onSuccess: () => {
+        refetchAllTags();
+      },
+    }
+  );
   return (
     <AutoComplete
       value={currentDoc.categories}
@@ -43,18 +89,23 @@ export default function CategoryAutocomplete({
       field="tag"
       onSelect={(e) => {
         if (categories) {
-          if (!categories.some((cat) => cat.tag === e.value)) {
-            createCategory.mutate({ doc_id: currentDoc.id, tag: e.value.tag });
+          if (!categories.some((cat) => cat === e.value)) {
+            setCurrentDoc({
+              ...currentDoc,
+              categories: [...currentDoc.categories, e.value],
+            });
           }
         }
       }}
+      onUnselect={(e) => {}}
       onKeyPress={async (e) => {
         if (e.key === "Enter" && e.currentTarget.value !== "") {
-          console.log(e.currentTarget.value);
-          createCategory.mutate({
-            doc_id: currentDoc.id,
-            tag: e.currentTarget.value,
-          });
+          if (!currentDoc.categories.includes(e.currentTarget.value)) {
+            updateCategoriesMutation.mutate({
+              doc_id: currentDoc.id,
+              categories: [...currentDoc.categories, e.currentTarget.value],
+            });
+          }
           e.currentTarget.value = "";
         }
       }}

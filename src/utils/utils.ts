@@ -2,12 +2,12 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
-import { Category, Document, Project } from "../custom-types";
+import { Document, Project } from "../custom-types";
 import {
-  createCategory,
   createDocument,
   getDocuments,
   getProjects,
+  getTags,
   updateProject,
 } from "./supabaseUtils";
 const defaultToastConfig: ToastOptions = {
@@ -23,8 +23,8 @@ export const toastWarn = (message: string) =>
 // Filter autocomplete for categories
 export const searchCategory = (
   event: any,
-  categories: Category[],
-  setFilteredCategories: (categories: Category[]) => void
+  categories: string[],
+  setFilteredCategories: (categories: string[]) => void
 ) => {
   setTimeout(() => {
     let _filteredCategories;
@@ -32,7 +32,7 @@ export const searchCategory = (
       _filteredCategories = [...categories];
     } else {
       _filteredCategories = categories.filter((category) => {
-        return category.tag.toLowerCase().startsWith(event.query.toLowerCase());
+        return category.toLowerCase().startsWith(event.query.toLowerCase());
       });
     }
 
@@ -151,18 +151,11 @@ export function useCreateDocument(project_id: string, user_id: string) {
     }
   });
 }
-// Custom hook for creating a category
-export function useCreateCategory() {
-  return useMutation(
-    async (vars: { tag: string; doc_id: string }) => {
-      const newCategory = await createCategory(vars.tag, vars.doc_id).then(
-        (newCat) => console.log(newCat)
-      );
-    },
-    {
-      onError: () => {
-        toastError("There was an error creating that tag.");
-      },
-    }
-  );
+// Custom hook to get tags for a project
+export function useGetTags(project_id: string) {
+  const { data, refetch }: { data: string[] | undefined; refetch: any } =
+    useQuery(`allTags`, async () => await getTags(project_id), {
+      staleTime: 5 * 60 * 1000,
+    });
+  return { data, refetch };
 }

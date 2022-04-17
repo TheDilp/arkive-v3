@@ -65,7 +65,6 @@ export default function ProjectTreeItemContext({
         vars.doc_id,
         undefined,
         undefined,
-        undefined,
         vars.folder,
         vars.parent ? vars.parent.id : null
       ),

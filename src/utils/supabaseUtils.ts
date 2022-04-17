@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
-import { Category, Document, Profile, Project } from "../custom-types";
+import { Document, Profile, Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -70,7 +70,7 @@ export const getDocuments = async (project_id: string) => {
   if (user) {
     const { data: documents, error } = await supabase
       .from<Document>("documents")
-      .select("*, parent(id, title), categories(id, tag)")
+      .select("*, parent(id, title)")
       .eq("project_id", project_id)
       .or(`user_id.eq.${user.id}, view_by.cs.{${user.id}}`)
       .order("title", { ascending: true });
@@ -81,20 +81,12 @@ export const getDocuments = async (project_id: string) => {
     }
   }
 };
-export const getCategories = async (project_id: string) => {
-  let user = auth.user();
-  if (user) {
-    const { data: categories, error } = await supabase.rpc<Category[]>(
-      "get_tags",
-      {
-        p_id: project_id,
-      }
-    );
-    if (categories) return categories;
-    if (error) {
-      toastError("There was an error getting your categories.");
-      throw new Error(error.message);
-    }
+export const getTags = async (project_id: string) => {
+  const { data, error } = await supabase.rpc("get_tags", { p_id: project_id });
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your tags.");
+    throw new Error(error.message);
   }
 };
 export const getProfile = async () => {
@@ -166,49 +158,6 @@ export const createProject = async () => {
     }
   }
 };
-export const createCategory = async (tag: string, doc_id: string) => {
-  let user = auth.user();
-  if (user) {
-    const { data: category, error } = await supabase.rpc("create_category", {
-      new_tag: tag,
-      doc_id,
-    });
-    // const { data: category, error } = await supabase
-    //   .from<Category>("categories")
-    //   .insert({
-    //     tag,
-    //   });
-    // if (category) return category[0];
-    // if (error) {
-    //   // Error code 23505 is for violating unique key constraint
-    //   // If the tag already exists the DB won't create it
-    //   // There is no need to show an error message for the user here
-    //   if (error.code === "23505") return;
-    //   toastError("There was an error creating your category.");
-    //   throw new Error(error.message);
-    // }
-  }
-};
-// export const createDocCatRelation = async (
-//   category_id: string,
-//   doc_id: string
-// ) => {
-//   let user = auth.user();
-//   if (user) {
-//     const { error } = await supabase
-//       .from<DocCatRelation>("categories_documents")
-//       .insert({
-//         category_id,
-//         doc_id,
-//       });
-//     if (error) {
-//       toastError(
-//         "There was an error creating your document-category relation."
-//       );
-//       throw new Error(error.message);
-//     }
-//   }
-// };
 
 // UPDATE
 export const updateDocument = async (
@@ -218,7 +167,8 @@ export const updateDocument = async (
   folder?: boolean,
   parent?: string | null,
   image?: string,
-  icon?: string
+  icon?: string,
+  categories?: string[]
 ) => {
   let user = auth.user();
 
@@ -233,6 +183,7 @@ export const updateDocument = async (
         parent,
         image,
         icon,
+        categories,
       })
       .eq("id", doc_id);
 
