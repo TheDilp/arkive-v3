@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
 import { deleteProject } from "../../../utils/supabaseUtils";
 import { useUpdateProject } from "../../../utils/utils";
-
+import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 type Props = {
   project: Project;
 };
@@ -58,7 +58,7 @@ export default function ProjectSettings({ project }: Props) {
         <h3>Update Project Card Image</h3>
         <div className="w-10rem">
           <img
-            src={project.cardImage}
+            src={project.cardImage || defaultImage}
             alt="Card"
             className="w-full h-full border-round cursor-pointer relative"
             style={{

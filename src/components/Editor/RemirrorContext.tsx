@@ -4,11 +4,12 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { RemirrorJSON } from "remirror";
 import {
   BoldExtension,
   BulletListExtension,
@@ -16,26 +17,22 @@ import {
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
-  ItalicExtension,
-  OrderedListExtension,
-  UnderlineExtension,
-  NodeFormattingExtension,
+  ItalicExtension, NodeFormattingExtension, OrderedListExtension,
+  UnderlineExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
+import "../../styles/Editor.css";
 import { updateDocument } from "../../utils/supabaseUtils";
 import {
   toastError,
   toastSuccess,
-  toastWarn,
-  useGetDocuments,
+  toastWarn
 } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
-import "../../styles/Editor.css";
-import { RemirrorJSON } from "remirror";
 const hooks = [
   () => {
     const { getJSON } = useHelpers();
@@ -43,7 +40,7 @@ const hooks = [
     const queryClient = useQueryClient();
     const handleSaveShortcut = useCallback(
       ({ state }) => {
-        updateDocument(doc_id as string, undefined, getJSON(state))
+        updateDocument({ doc_id: doc_id as string, content: getJSON(state) })
           .then((data: Document | undefined) => {
             if (data) {
               let updatedDocument = data;
@@ -117,12 +114,7 @@ export default function RemirrorContext({
 
   const saveContentMutation = useMutation(
     async (vars: { doc_id: string; content: RemirrorJSON }) => {
-      await updateDocument(
-        vars.doc_id,
-        undefined,
-        // @ts-ignore
-        vars.content
-      );
+      await updateDocument({ ...vars });
     },
     {
       onMutate: async (updatedDocument) => {

@@ -37,16 +37,7 @@ export default function IconSelectMenu({
   });
   const iconMutation = useMutation(
     async (vars: { doc_id: string; icon: string }) => {
-      updateDocument(
-        doc_id,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        vars.icon
-      );
+      updateDocument({ ...vars });
     },
     {
       onMutate: async (updatedDocument) => {

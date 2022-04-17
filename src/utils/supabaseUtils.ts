@@ -130,6 +130,7 @@ export const createDocument = async (
           ],
         },
         user_id: user.id,
+        // @ts-ignore
         parent,
         title: "New Document",
         icon: "akar-icons:file",
@@ -160,16 +161,25 @@ export const createProject = async () => {
 };
 
 // UPDATE
-export const updateDocument = async (
-  doc_id: string,
-  title?: string,
-  content?: RemirrorJSON,
-  folder?: boolean,
-  parent?: string | null,
-  image?: string,
-  icon?: string,
-  categories?: string[]
-) => {
+export const updateDocument = async ({
+  doc_id,
+  title,
+  content,
+  folder,
+  parent,
+  image,
+  icon,
+  categories,
+}: {
+  doc_id: string;
+  title?: string;
+  content?: RemirrorJSON;
+  folder?: boolean;
+  parent?: string | null;
+  image?: string;
+  icon?: string;
+  categories?: string[];
+}) => {
   let user = auth.user();
 
   if (user) {

@@ -51,14 +51,10 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     setTreeData(newTree);
 
     // Update the document's parent
-    updateDocument(
-      dragSourceId,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      dropTargetId === "0" ? null : dropTargetId
-    );
+    updateDocument({
+      doc_id: dragSourceId,
+      parent: dropTargetId === "0" ? null : dropTargetId,
+    });
   };
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
@@ -66,7 +62,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
 
   const documentTitleMutation = useMutation(
     async (vars: { docId: string; title: string }) => {
-      await updateDocument(vars.docId, vars.title);
+      await updateDocument({ doc_id: vars.docId, title: vars.title });
     },
     {
       onMutate: async (updatedDocument) => {

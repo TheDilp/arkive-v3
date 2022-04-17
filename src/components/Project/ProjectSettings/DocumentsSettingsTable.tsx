@@ -11,29 +11,24 @@ import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
 import { useRef, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Document, iconSelect, Project } from "../../../custom-types";
+import { Document, iconSelect } from "../../../custom-types";
 import {
   createDocument,
   deleteDocument,
-  deleteManyDocuments,
-  getDocuments,
-  updateDocument,
-  updateProject,
+  deleteManyDocuments, updateDocument
 } from "../../../utils/supabaseUtils";
 import {
   searchCategory,
   toastError,
   useGetDocuments,
+  useGetTags
 } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../ProjectTree/IconSelectMenu";
 
-type Props = {
-  project: Project;
-};
-export default function DocumentsSettingsTable({ project }: Props) {
+export default function DocumentsSettingsTable() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -50,7 +45,9 @@ export default function DocumentsSettingsTable({ project }: Props) {
   });
   const ref = useRef(null);
   const documents = useGetDocuments(project_id as string);
-
+  const { data: categories, refetch: refetchAllTags } = useGetTags(
+    project_id as string
+  );
   // MUTATIONS
 
   const updateDocumentMutation = useMutation(
@@ -62,16 +59,14 @@ export default function DocumentsSettingsTable({ project }: Props) {
       image?: string;
       icon?: string;
     }) =>
-      await updateDocument(
-        vars.doc_id,
-        vars.title,
-        undefined,
-        undefined,
-        vars.folder,
-        vars.parent,
-        vars.image,
-        vars.icon
-      ),
+      await updateDocument({
+        doc_id: vars.doc_id,
+        title: vars.title,
+        folder: vars.folder,
+        parent: vars.parent,
+        image: vars.image,
+        icon: vars.icon,
+      }),
     {
       onMutate: async (updatedDocument) => {
         await queryClient.cancelQueries(`${project_id}-documents`);
@@ -109,7 +104,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
         return { previousDocuments };
       },
       onSuccess: () => {
-        documentsRefetch();
+        // documentsRefetch();
       },
       onError: (err, newTodo, context) => {
         queryClient.setQueryData(
@@ -120,81 +115,41 @@ export default function DocumentsSettingsTable({ project }: Props) {
       },
     }
   );
-
-  const categoriesMutation = useMutation(
+  const updateCategoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>
-      await updateDocument(vars.doc_id, undefined, undefined, vars.categories),
+      await updateDocument({ ...vars }),
     {
-      onMutate: async (updatedDocument) => {
-        await queryClient.cancelQueries(`${project_id}-documents`);
-
-        const previousDocuments = queryClient.getQueryData(
-          `${project_id}-documents`
-        );
-
+      onMutate: (vars) => {
+        let oldDocs = queryClient.getQueryData(`${project_id}-documents`);
         queryClient.setQueryData(
           `${project_id}-documents`,
           (oldData: Document[] | undefined) => {
             if (oldData) {
-              return oldData.map((document: Document) => {
-                if (document.id === updatedDocument.doc_id) {
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === vars.doc_id) {
                   return {
-                    ...document,
-                    categories: updatedDocument.categories,
+                    ...doc,
+                    categories: vars.categories,
                   };
                 } else {
-                  return document;
+                  return doc;
                 }
               });
+              return newData;
             } else {
               return [];
             }
           }
         );
-
-        return { previousDocuments };
+        return { oldDocs };
       },
-      onSuccess: async (data, vars) => {
-        let projectData: Project = queryClient.getQueryData(
-          `${project_id}-project`
-        ) as Project;
-
-        if (projectData) {
-          // Filter out any categories that are not already present in the global project categories
-          let difference = vars.categories.filter(
-            (cat) => !projectData.categories.includes(cat)
-          );
-          // Only update if there is a new category not present in the project categories
-          if (difference.length > 0) {
-            const updatedProject = await updateProject(
-              project_id as string,
-              undefined,
-              projectData.categories.concat(difference)
-            );
-
-            if (updatedProject) {
-              queryClient.setQueryData(
-                `${project_id}-project`,
-                (oldData: Project | undefined) => {
-                  let newData: any = {
-                    ...oldData,
-                    categories: updatedProject.categories,
-                  };
-                  return newData;
-                }
-              );
-            }
-          }
+      onError: (e, v, context) => {
+        if (context) {
+          queryClient.setQueryData(`${project_id}-documents`, context.oldDocs);
         }
       },
-      onError: (error, updatedDocument, context) => {
-        if (context)
-          queryClient.setQueryData(
-            `${project_id}-documents`,
-            context.previousDocuments
-          );
-
-        toastError("There was an error updating your document.");
+      onSuccess: () => {
+        refetchAllTags();
       },
     }
   );
@@ -214,7 +169,7 @@ export default function DocumentsSettingsTable({ project }: Props) {
       <MultiSelect
         value={options.value}
         display="chip"
-        options={project?.categories.sort() || []}
+        options={categories.sort() || []}
         itemTemplate={categoriesItemTemplate}
         onChange={(e) => options.filterCallback(e.value)}
         placeholder="Any"
@@ -483,47 +438,48 @@ export default function DocumentsSettingsTable({ project }: Props) {
   const categoryEditor = (options: ColumnEditorOptions) => {
     return (
       <AutoComplete
-        value={
-          documents?.find((doc) => doc.id === options.rowData.id)?.categories ||
-          []
-        }
+        value={options.rowData.categories || []}
         suggestions={filteredCategories}
         placeholder={
           options.rowData.categories ? "" : "Enter tags for this document..."
         }
         completeMethod={(e) =>
-          searchCategory(e, project?.categories || [], setFilteredCategories)
+          searchCategory(e, categories || [], setFilteredCategories)
         }
         multiple
-        onChange={async (e) => {
-          categoriesMutation.mutate({
-            doc_id: options.rowData.id,
-            categories: e.value,
-          });
+        onSelect={(e) => {
+          if (!options.rowData.categories.includes(e.value)) {
+            updateCategoriesMutation.mutate({
+              doc_id: options.rowData.id,
+              categories: [...options.rowData.categories, e.value],
+            });
+          }
+        }}
+        onUnselect={(e) => {
+          if (options.rowData.categories.includes(e.value)) {
+            updateCategoriesMutation.mutate({
+              doc_id: options.rowData.id,
+              categories: options.rowData.categories.filter(
+                (category: string) => category !== e.value
+              ),
+            });
+            // @ts-ignore
+            ref.current?.closeEditingCell();
+          }
         }}
         onKeyUp={(e) => {
           if (e.key === "Enter") e.preventDefault();
-          if (e.currentTarget.value !== "") {
-            if (
-              options.rowData.categories &&
-              !options.rowData.categories.includes(e.currentTarget.value)
-            ) {
-              // @ts-ignore
-              options.editorCallback([
-                ...options.rowData.categories,
-                e.currentTarget.value,
-              ]);
-
-              // categoriesMutation.mutate({
-              //   doc_id: options.rowData.id,
-              //   categories: ,
-              // });
-            } else if (!options.rowData.categories) {
-              if (e.key === "Enter")
-                // @ts-ignore
-                options.editorCallback([e.currentTarget.value]);
+          if (e.key === "Enter" && e.currentTarget.value !== "") {
+            if (!options.rowData.categories.includes(e.currentTarget.value)) {
+              updateCategoriesMutation.mutate({
+                doc_id: options.rowData.id,
+                categories: [
+                  ...options.rowData.categories,
+                  e.currentTarget.value,
+                ],
+              });
             }
-            // e.currentTarget.value = "";
+            e.currentTarget.value = "";
           }
         }}
       />
@@ -653,7 +609,6 @@ export default function DocumentsSettingsTable({ project }: Props) {
             }
           }}
           filterElement={categoriesFilterTemplate}
-          onFilterApplyClick={(e) => console.log(e)}
           editor={categoryEditor}
         />
         <Column
@@ -661,7 +616,6 @@ export default function DocumentsSettingsTable({ project }: Props) {
           field="icon"
           editor={iconEditor}
           onCellEditInit={(e: any) => {
-            console.log(e);
             setIconSelect({
               doc_id: e.rowData.id,
               icon: e.rowData.icon,

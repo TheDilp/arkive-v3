@@ -61,13 +61,11 @@ export default function ProjectTreeItemContext({
       folder?: boolean;
       parent?: { id: string; title: string } | null;
     }) =>
-      await updateDocument(
-        vars.doc_id,
-        undefined,
-        undefined,
-        vars.folder,
-        vars.parent ? vars.parent.id : null
-      ),
+      await updateDocument({
+        doc_id: vars.doc_id,
+        folder: vars.folder,
+        parent: vars.parent ? vars.parent.id : null,
+      }),
     {
       onMutate: async (updatedDocument) => {
         await queryClient.cancelQueries(`${project_id}-documents`);
