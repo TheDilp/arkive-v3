@@ -10,20 +10,21 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, iconSelect } from "../../../custom-types";
 import {
   createDocument,
   deleteDocument,
-  deleteManyDocuments, updateDocument
+  deleteManyDocuments,
+  updateDocument,
 } from "../../../utils/supabaseUtils";
 import {
   searchCategory,
   toastError,
   useGetDocuments,
-  useGetTags
+  useGetTags,
 } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../ProjectTree/IconSelectMenu";
@@ -45,6 +46,7 @@ export default function DocumentsSettingsTable() {
   });
   const ref = useRef(null);
   const documents = useGetDocuments(project_id as string);
+  const [localDocuments, setLocalDocuments] = useState(documents);
   const { data: categories, refetch: refetchAllTags } = useGetTags(
     project_id as string
   );
@@ -153,6 +155,12 @@ export default function DocumentsSettingsTable() {
       },
     }
   );
+
+  useEffect(() => {
+    if (documents) {
+      setLocalDocuments(documents);
+    }
+  }, [documents]);
 
   if (!documents) return <LoadingScreen />;
   const categoriesBodyTemplate = (rowData: Document) => {
@@ -438,7 +446,10 @@ export default function DocumentsSettingsTable() {
   const categoryEditor = (options: ColumnEditorOptions) => {
     return (
       <AutoComplete
-        value={options.rowData.categories || []}
+        value={
+          localDocuments?.find((doc) => doc.id === options.rowData.id)
+            ?.categories || []
+        }
         suggestions={filteredCategories}
         placeholder={
           options.rowData.categories ? "" : "Enter tags for this document..."
@@ -464,10 +475,10 @@ export default function DocumentsSettingsTable() {
               ),
             });
             // @ts-ignore
-            ref.current?.closeEditingCell();
+            // ref.current?.closeEditingCell();
           }
         }}
-        onKeyUp={(e) => {
+        onKeyPress={(e) => {
           if (e.key === "Enter") e.preventDefault();
           if (e.key === "Enter" && e.currentTarget.value !== "") {
             if (!options.rowData.categories.includes(e.currentTarget.value)) {
@@ -513,7 +524,7 @@ export default function DocumentsSettingsTable() {
       ></Toolbar>
       <DataTable
         ref={ref}
-        value={documents
+        value={localDocuments
           ?.filter((doc) =>
             globalFilter ? doc.title.includes(globalFilter) : true
           )
@@ -591,15 +602,15 @@ export default function DocumentsSettingsTable() {
         ></Column>
         <Column
           header={() => <div className="text-center">Categories</div>}
-          filterField="categories"
           body={categoriesBodyTemplate}
+          filterField="categories"
           filterMenuStyle={{ width: "25rem" }}
           filter
+          filterMatchMode="custom"
+          showFilterMatchModes={false}
           style={{
             width: "25rem",
           }}
-          filterMatchMode="custom"
-          showFilterMatchModes={false}
           filterFunction={(value: string[], filter: string[] | null) => {
             if (!filter) return true;
             if (filter.every((f: string) => value.includes(f))) {
