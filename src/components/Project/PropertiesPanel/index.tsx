@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document } from "../../../custom-types";
-import { useGetProjectData } from "../../../utils/utils";
+import { useGetProjectData, useGetTags } from "../../../utils/utils";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
@@ -10,15 +10,14 @@ export default function PropertiesPanel() {
   const [currentDoc, setCurrentDoc] = useState<Document | null>();
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const project = useGetProjectData(project_id as string);
+  const { data: categories, refetch: refetchAllTags } = useGetTags(
+    project_id as string
+  );
   useEffect(() => {
-    if (project_id) {
-      let cats: string[] | undefined =
-        queryClient.getQueryData("getCategories");
-      if (cats) {
-        setFilteredCategories(cats);
-      }
+    if (categories) {
+      setFilteredCategories(categories);
     }
-  }, [project_id]);
+  }, [categories]);
   useEffect(() => {
     const allDocs: Document[] = queryClient.getQueryData(
       `${project_id}-documents`
@@ -35,6 +34,8 @@ export default function PropertiesPanel() {
           <CategoryAutocomplete
             currentDoc={currentDoc}
             currentProject={project}
+            categories={categories}
+            refetchAllTags={refetchAllTags}
             filteredCategories={filteredCategories}
             setCurrentDoc={setCurrentDoc}
             setFilteredCategories={setFilteredCategories}

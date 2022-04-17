@@ -3,10 +3,12 @@ import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
 import { getTags, updateDocument } from "../../../utils/supabaseUtils";
-import { searchCategory, useGetTags } from "../../../utils/utils";
+import { searchCategory } from "../../../utils/utils";
 
 type Props = {
   currentDoc: Document;
+  categories: string[] | undefined;
+  refetchAllTags: any;
   filteredCategories: string[];
   currentProject: Project;
   setCurrentDoc: (doc: Document | null) => void;
@@ -15,6 +17,8 @@ type Props = {
 
 export default function CategoryAutocomplete({
   currentDoc,
+  categories,
+  refetchAllTags,
   filteredCategories,
   setCurrentDoc,
   setFilteredCategories,
@@ -22,9 +26,7 @@ export default function CategoryAutocomplete({
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   getTags(project_id as string);
-  const { data: categories, refetch: refetchAllTags } = useGetTags(
-    project_id as string
-  );
+
   const updateCategoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>
       await updateDocument(
@@ -86,12 +88,11 @@ export default function CategoryAutocomplete({
         searchCategory(e, categories || [], setFilteredCategories)
       }
       multiple
-      field="tag"
       onSelect={(e) => {
         if (categories) {
-          if (!categories.some((cat) => cat === e.value)) {
-            setCurrentDoc({
-              ...currentDoc,
+          if (!currentDoc.categories.includes(e.value)) {
+            updateCategoriesMutation.mutate({
+              doc_id: currentDoc.id,
               categories: [...currentDoc.categories, e.value],
             });
           }
@@ -99,6 +100,7 @@ export default function CategoryAutocomplete({
       }}
       onUnselect={(e) => {}}
       onKeyPress={async (e) => {
+        // For adding completely new tags
         if (e.key === "Enter" && e.currentTarget.value !== "") {
           if (!currentDoc.categories.includes(e.currentTarget.value)) {
             updateCategoriesMutation.mutate({

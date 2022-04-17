@@ -153,9 +153,9 @@ export function useCreateDocument(project_id: string, user_id: string) {
 }
 // Custom hook to get tags for a project
 export function useGetTags(project_id: string) {
-  const { data, refetch }: { data: string[] | undefined; refetch: any } =
+  const { data, refetch }: { data: string[][] | undefined; refetch: any } =
     useQuery(`allTags`, async () => await getTags(project_id), {
       staleTime: 5 * 60 * 1000,
     });
-  return { data, refetch };
+  return { data: data?.[0] || [], refetch };
 }
