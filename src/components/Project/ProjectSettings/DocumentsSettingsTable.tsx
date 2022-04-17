@@ -639,6 +639,9 @@ export default function DocumentsSettingsTable({ project }: Props) {
           body={categoriesBodyTemplate}
           filterMenuStyle={{ width: "25rem" }}
           filter
+          style={{
+            width: "25rem",
+          }}
           filterMatchMode="custom"
           showFilterMatchModes={false}
           filterFunction={(value: string[], filter: string[] | null) => {
@@ -671,7 +674,13 @@ export default function DocumentsSettingsTable({ project }: Props) {
           bodyClassName="text-center"
           body={iconBodyTemplate}
         />
-        <Column header="Actions" body={actionsBodyTemplate} />
+        <Column
+          header="Actions"
+          body={actionsBodyTemplate}
+          style={{
+            width: "11rem",
+          }}
+        />
       </DataTable>
     </section>
   );
