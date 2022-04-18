@@ -2,7 +2,7 @@ import { AutoComplete } from "primereact/autocomplete";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
-import { getTags, updateDocument } from "../../../utils/supabaseUtils";
+import { updateDocument } from "../../../utils/supabaseUtils";
 import { searchCategory } from "../../../utils/utils";
 
 type Props = {
@@ -25,7 +25,6 @@ export default function CategoryAutocomplete({
 }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
-  getTags(project_id as string);
 
   const updateCategoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>

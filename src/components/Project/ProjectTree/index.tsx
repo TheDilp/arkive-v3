@@ -14,6 +14,7 @@ import { auth, updateDocument } from "../../../utils/supabaseUtils";
 import { getDepth, toastError, useCreateDocument } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import IconSelectMenu from "./IconSelectMenu";
+import PermissionDialog from "./PermissionDialog";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 type Props = {
@@ -24,9 +25,10 @@ type Props = {
 export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
   const { project_id, doc_id } = useParams();
-  const [treeData, setTreeData] = useState<NodeModel[]>([]);
   const navigate = useNavigate();
+  const [treeData, setTreeData] = useState<NodeModel[]>([]);
   const [filter, setFilter] = useState("");
+  const [permissionDialog, setPermissionDialog] = useState(false);
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
     id: "",
     title: "",
@@ -133,6 +135,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         cm={cm}
         displayDialog={displayDialog as treeItemDisplayDialog}
         setDisplayDialog={setDisplayDialog}
+        setPermissionDialog={setPermissionDialog}
       />
       <Dialog
         header={`Edit ${displayDialog.title}`}
@@ -186,6 +189,10 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           </div>
         )}
       </Dialog>
+      <PermissionDialog
+        visible={permissionDialog}
+        setVisible={setPermissionDialog}
+      />
       <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">

@@ -14,12 +14,14 @@ type Props = {
   cm: React.RefObject<ContextMenu>;
   displayDialog: treeItemDisplayDialog;
   setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
+  setPermissionDialog: (permissionDialog: boolean) => void;
 };
 
 export default function ProjectTreeItemContext({
   cm,
   displayDialog,
   setDisplayDialog,
+  setPermissionDialog,
 }: Props) {
   const queryClient = useQueryClient();
   const { project_id, doc_id } = useParams();
@@ -208,6 +210,7 @@ export default function ProjectTreeItemContext({
     {
       label: "Change Permission",
       icon: "pi pi-fw pi-user-edit",
+      command: () => setPermissionDialog(true),
     },
     { separator: true },
     {
