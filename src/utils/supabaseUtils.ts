@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
+import { StringMappingType } from "typescript";
 import { Document, Profile, Project } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -39,8 +40,8 @@ export const getProjects = async () => {
   if (user) {
     const { data: projects, error } = await supabase
       .from<Project>("projects")
-      .select("id, title, cardImage, categories")
-      .eq("user_id", user.id);
+      .select("id, title, cardImage, user_id, profiles!inner(user_id)")
+      .eq("profiles.user_id", user.id);
 
     if (projects) return projects;
     if (error) {
@@ -55,7 +56,7 @@ export const getCurrentProject = async (project_id: string) => {
   if (user) {
     const { data: project, error } = await supabase
       .from<Project>("projects")
-      .select("id, title, categories")
+      .select("id, title")
       .eq("id", project_id);
 
     if (project) return project[0];
@@ -157,6 +158,17 @@ export const createProject = async () => {
       toastError("There was an error creating your project.");
       throw new Error(error.message);
     }
+  }
+};
+export const addUserToProject = async (user_id: string, project_id: string) => {
+  const { data, error } = await supabase.from("projects_users").insert({
+    user_id,
+    project_id,
+  });
+  if (data) return data;
+  if (error) {
+    toastError("There was an error adding a user to your project.");
+    throw new Error(error.message);
   }
 };
 

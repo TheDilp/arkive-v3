@@ -205,6 +205,10 @@ export default function ProjectTreeItemContext({
         },
       ],
     },
+    {
+      label: "Change Permission",
+      icon: "pi pi-fw pi-user-edit",
+    },
     { separator: true },
     {
       label: "Delete Document",

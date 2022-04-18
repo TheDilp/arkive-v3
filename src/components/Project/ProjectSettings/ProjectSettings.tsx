@@ -32,7 +32,7 @@ export default function ProjectSettings({ project }: Props) {
     <article className="w-full px-3 justify-content-center text-white">
       <ConfirmDialog />
       <h2 className="Merriweather">{project.title} Settings</h2>
-      <section className="Lato">
+      <section className="Lato my-6">
         <h3>Update Project Name</h3>
         <InputText
           className="w-4"
@@ -54,7 +54,7 @@ export default function ProjectSettings({ project }: Props) {
           }}
         />
       </section>
-      <section className="Lato">
+      <section className="Lato my-6">
         <h3>Update Project Card Image</h3>
         <div className="w-10rem">
           <img
@@ -72,7 +72,7 @@ export default function ProjectSettings({ project }: Props) {
             onChange={(e) =>
               setLocalProject({ ...localProject, cardImage: e.target.value })
             }
-            className="w-20rem"
+            className="w-4"
           />
           <Button
             label="Save"
@@ -88,7 +88,18 @@ export default function ProjectSettings({ project }: Props) {
           />
         </div>
       </section>
-      <section className="Lato mt-5">
+      <section className="Lato my-6">
+        <h3 className="my-0">Invite Link</h3>
+        <h4 className="my-1">
+          Send this link to a registered user who you want to join this project
+        </h4>
+        <InputText
+          value={`localhost:3000/invite/${project.id}`}
+          readOnly
+          className="w-4"
+        />
+      </section>
+      <section className="Lato my-6">
         <hr />
         <div className="w-fit">
           <h3>Delete Project</h3>
@@ -110,7 +121,6 @@ export default function ProjectSettings({ project }: Props) {
           </div>
         </div>
       </section>
-      <div className="flex justify-content-center"></div>
     </article>
   );
 }

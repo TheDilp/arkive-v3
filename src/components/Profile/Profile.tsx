@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getProfile, updateProfile } from "../../utils/supabaseUtils";
 import { toastSuccess } from "../../utils/utils";
+import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
 
 export default function Profile() {
@@ -46,7 +47,7 @@ export default function Profile() {
   const footer = (
     <div className="flex justify-content-end">
       <Button
-        label="Edit Profile"
+        label="Save Profile"
         icon="pi pi-user-edit"
         iconPos="right"
         className="p-button-success p-button-outlined"
@@ -62,32 +63,37 @@ export default function Profile() {
     </div>
   );
   return (
-    <div className="w-full h-full flex justify-content-center align-items-center">
-      {localProfile && (
-        <Card
-          title={`${localProfile.nickname} - Profile`}
-          header={header}
-          footer={footer}
-        >
-          <InputText
-            value={localProfile.nickname}
-            className="w-full"
-            onChange={(e) =>
-              setLocalProfile({ ...localProfile, nickname: e.target.value })
-            }
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && localProfile) {
-                updateProfile(
-                  localProfile.id,
-                  localProfile.nickname,
-                  localProfile.profile_image
-                ).then(() => toastSuccess("Profile successfully updated!"));
+    <div className="w-full h-full flex flex-wrap align-content-start justify-content-center align-items-center ">
+      <Navbar />
+      <div className="h-full flex align-items-center">
+        {localProfile && (
+          <Card
+            title={`${
+              localProfile.nickname ? localProfile.nickname : ""
+            } - Profile`}
+            header={header}
+            footer={footer}
+          >
+            <InputText
+              value={localProfile.nickname}
+              className="w-full"
+              onChange={(e) =>
+                setLocalProfile({ ...localProfile, nickname: e.target.value })
               }
-            }}
-            placeholder="Enter a nickname"
-          />
-        </Card>
-      )}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && localProfile) {
+                  updateProfile(
+                    localProfile.id,
+                    localProfile.nickname,
+                    localProfile.profile_image
+                  ).then(() => toastSuccess("Profile successfully updated!"));
+                }
+              }}
+              placeholder="Enter a nickname"
+            />
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
