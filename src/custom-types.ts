@@ -6,6 +6,7 @@ export type Project = {
   logoImage: string;
   title: string;
   user_id: string;
+  users?: { user_id: string; role: string }[];
   categories: string[];
   createdAt: Date;
 };
