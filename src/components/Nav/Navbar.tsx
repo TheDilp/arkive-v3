@@ -2,6 +2,7 @@ import { Menubar } from "primereact/menubar";
 import { Tooltip } from "primereact/tooltip";
 import { useNavigate, useParams } from "react-router-dom";
 import { logout } from "../../utils/supabaseUtils";
+import NavSettingsButton from "./NavSettingsButton";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -18,12 +19,7 @@ export default function Navbar() {
           className="pi pi-home mr-3 cursor-pointer hover:text-primary"
           onClick={() => navigate("/")}
         ></i>
-        {project_id && (
-          <i
-            className="pi pi-cog mr-3 cursor-pointer hover:text-primary settingsIcon"
-            onClick={() => navigate("settings/documents-settings")}
-          ></i>
-        )}
+        {project_id && <NavSettingsButton />}
         <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"
           onClick={async () => {
