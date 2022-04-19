@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { auth } from "../../../utils/supabaseUtils";
-import { useGetDocuments } from "../../../utils/utils";
+import { useGetDocuments, useGetProjectData } from "../../../utils/utils";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import ProjectTree from "../ProjectTree";
@@ -10,7 +10,8 @@ export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();
   const documents = useGetDocuments(project_id as string);
-  if (!documents) return <LoadingScreen />;
+  const project = useGetProjectData(project_id as string);
+  if (!documents || !project) return <LoadingScreen />;
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (

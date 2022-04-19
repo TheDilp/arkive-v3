@@ -4,7 +4,7 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -17,18 +17,16 @@ import {
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
-  ItalicExtension, NodeFormattingExtension, OrderedListExtension,
-  UnderlineExtension
+  ItalicExtension,
+  NodeFormattingExtension,
+  OrderedListExtension,
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
 import "../../styles/Editor.css";
 import { updateDocument } from "../../utils/supabaseUtils";
-import {
-  toastError,
-  toastSuccess,
-  toastWarn
-} from "../../utils/utils";
+import { toastError, toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
 import MentionComponent from "./MentionComponent";
@@ -166,9 +164,6 @@ export default function RemirrorContext({
 
     if (doc_id) {
       setDocId(doc_id);
-      // const documents: Document[] | undefined = queryClient.getQueryData(
-      //   `${project_id}-documents`
-      // );
       if (documents) {
         const currentDocData = documents.find(
           (document) => document.id === doc_id

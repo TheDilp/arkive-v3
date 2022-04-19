@@ -6,7 +6,8 @@ export type Project = {
   logoImage: string;
   title: string;
   user_id: string;
-  users?: { user_id: string; role: string }[];
+  users?: UserPermissionType[];
+  profiles?: UserProfileType[];
   categories: string[];
   createdAt: Date;
 };
@@ -42,4 +43,16 @@ export type Profile = {
   nickname: string;
   user_id: string;
   profile_image: string;
+};
+
+export type UserPermissionType = {
+  user_id: string;
+  role: string;
+  profile: {
+    nickname: string;
+  };
+};
+export type UserProfileType = {
+  user_id: string;
+  nickname: string;
 };

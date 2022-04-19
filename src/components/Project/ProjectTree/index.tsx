@@ -28,7 +28,12 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const navigate = useNavigate();
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
   const [filter, setFilter] = useState("");
-  const [permissionDialog, setPermissionDialog] = useState(false);
+  const [permissionDialog, setPermissionDialog] =
+    useState<treeItemDisplayDialog>({
+      id: "",
+      title: "",
+      show: false,
+    });
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
     id: "",
     title: "",

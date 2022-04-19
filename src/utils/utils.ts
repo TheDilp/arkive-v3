@@ -5,6 +5,7 @@ import { toast, ToastOptions } from "react-toastify";
 import { Document, Project } from "../custom-types";
 import {
   createDocument,
+  getCurrentProject,
   getDocuments,
   getProjects,
   getTags,
@@ -75,8 +76,11 @@ export function useOnClickOutside(ref: any, handler: (event: any) => void) {
 }
 // Custom hook for getting a project's data
 export function useGetProjectData(project_id: string) {
-  const { data } = useQuery("getAllProjects", async () => await getProjects());
-  return data?.find((project) => project.id === project_id);
+  const { data } = useQuery(
+    `${project_id}-project`,
+    async () => await getCurrentProject(project_id)
+  );
+  return data;
 }
 // Custom hook for updating a project's data
 export function useUpdateProject() {
@@ -96,20 +100,18 @@ export function useUpdateProject() {
       ),
     {
       onMutate: async (updatedProject) => {
-        const previousProjects = queryClient.getQueryData(`getAllProjects`);
+        const previousProjects = queryClient.getQueryData(
+          `${updatedProject.project_id}-project`
+        );
         queryClient.setQueryData(
-          "getAllProjects",
+          `${updatedProject.project_id}-project`,
           //   @ts-ignore
-          (oldData: Project[] | undefined) => {
+          (oldData: Project | undefined) => {
             if (oldData) {
-              let newData: Project[] = oldData.map((project) => {
-                if (project.id === updatedProject.project_id) {
-                  return { ...project, ...updatedProject };
-                } else {
-                  return project;
-                }
-              });
+              let newData: Project = { ...oldData, ...updatedProject };
               return newData;
+            } else {
+              return {};
             }
           }
         );
