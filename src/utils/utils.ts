@@ -10,6 +10,7 @@ import {
   getDocuments,
   getProjects,
   getTags,
+  removeUserFromProject,
   updateDocument,
   updateProject,
 } from "./supabaseUtils";
@@ -237,4 +238,47 @@ export function useGetTags(project_id: string) {
       staleTime: 5 * 60 * 1000,
     });
   return { data: data?.[0] || [], refetch };
+}
+// Custom hook to remove user from project
+export function useRemoveUser() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { project_id: string; user_id: string }) => {
+      removeUserFromProject(vars.project_id, vars.user_id);
+    },
+    {
+      onMutate: (updatedProject) => {
+        const previousProject = queryClient.getQueryData(
+          `${updatedProject.project_id}-project`
+        );
+        queryClient.setQueryData(
+          `${updatedProject.project_id}-project`,
+          // @ts-ignore
+          (oldData: Project | undefined) => {
+            if (oldData) {
+              let newData: Project = {
+                ...oldData,
+                users: oldData.users?.filter(
+                  (el) => el.user_id !== updatedProject.user_id
+                ),
+              };
+              return newData;
+            } else {
+              return {};
+            }
+          }
+        );
+        return { previousProject };
+      },
+      onError: (err, updatedProject, context) => {
+        if (context) {
+          queryClient.setQueryData(
+            `${updatedProject.project_id}-project`,
+            context?.previousProject
+          );
+          toastError("There was an error removing this user.");
+        }
+      },
+    }
+  );
 }

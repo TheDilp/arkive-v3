@@ -4,11 +4,8 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
-import {
-  deleteProject,
-  removeUserFromProject,
-} from "../../../utils/supabaseUtils";
-import { useUpdateProject } from "../../../utils/utils";
+import { deleteProject } from "../../../utils/supabaseUtils";
+import { useRemoveUser, useUpdateProject } from "../../../utils/utils";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 type Props = {
   project: Project;
@@ -17,7 +14,7 @@ type Props = {
 export default function ProjectSettings({ project }: Props) {
   const [localProject, setLocalProject] = useState<Project>(project);
   const projectMutation = useUpdateProject();
-
+  const removeUser = useRemoveUser();
   const navigate = useNavigate();
   const confirmDeleteDialog = () =>
     confirmDialog({
@@ -103,9 +100,12 @@ export default function ProjectSettings({ project }: Props) {
                   <Button
                     className="p-button-outlined p-button-rounded"
                     icon="pi pi-user-minus"
-                    onClick={() => {
-                      removeUserFromProject(project.id, user.user_id);
-                    }}
+                    onClick={() =>
+                      removeUser.mutate({
+                        project_id: project.id,
+                        user_id: user.user_id,
+                      })
+                    }
                   />
                 </span>
               </div>
