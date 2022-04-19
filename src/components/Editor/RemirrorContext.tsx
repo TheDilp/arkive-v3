@@ -25,7 +25,7 @@ import {
 import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
 import "../../styles/Editor.css";
-import { updateDocument } from "../../utils/supabaseUtils";
+import { auth, updateDocument } from "../../utils/supabaseUtils";
 import { toastError, toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
@@ -83,6 +83,7 @@ export default function RemirrorContext({
   setDocId: (docId: string) => void;
 }) {
   const firstRender = useRef(true);
+  const user = auth.user();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { manager, state } = useRemirror({
@@ -109,7 +110,6 @@ export default function RemirrorContext({
   const { project_id, doc_id } = useParams();
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [saving, setSaving] = useState<number | boolean>(false);
-
   const saveContentMutation = useMutation(
     async (vars: { doc_id: string; content: RemirrorJSON }) => {
       await updateDocument({ ...vars });
@@ -170,7 +170,7 @@ export default function RemirrorContext({
         );
         if (currentDocData) {
           setCurrentDocument(currentDocData);
-          if (currentDocData.content) {
+          if (currentDocData.content && manager.view) {
             manager.view.updateState(
               manager.createState({
                 content: JSON.parse(JSON.stringify(currentDocData.content)),
@@ -206,22 +206,31 @@ export default function RemirrorContext({
       </h1>
       {documents && (
         <ThemeProvider>
-          <Remirror
-            manager={manager}
-            initialContent={state}
-            hooks={hooks}
-            classNames={["text-white Lato Editor overflow-y-scroll"]}
-            onChange={(props) => {
-              const { tr, firstRender } = props;
-              if (!firstRender && tr?.docChanged) {
-                setSaving(tr?.time);
+          {currentDocument && user && (
+            <Remirror
+              manager={manager}
+              initialContent={state}
+              hooks={hooks}
+              editable={
+                currentDocument.user_id === user.id ||
+                !currentDocument.view_by.includes(user.id)
               }
-            }}
-          >
-            <MenuBar saving={saving} />
-            <EditorComponent />
-            <MentionComponent documents={documents} />
-          </Remirror>
+              classNames={["text-white Lato Editor overflow-y-scroll"]}
+              onChange={(props) => {
+                const { tr, firstRender } = props;
+                if (!firstRender && tr?.docChanged) {
+                  setSaving(tr?.time);
+                }
+              }}
+            >
+              {(currentDocument.user_id === user.id ||
+                !currentDocument.view_by.includes(user.id)) && (
+                <MenuBar saving={saving} />
+              )}
+              <EditorComponent />
+              <MentionComponent documents={documents} />
+            </Remirror>
+          )}
         </ThemeProvider>
       )}
     </div>
