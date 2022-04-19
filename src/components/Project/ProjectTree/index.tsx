@@ -135,7 +135,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     auth.user()?.id as string
   );
   return (
-    <div className="text-white w-2 flex flex-wrap surface-50 ">
+    <div className="text-white w-2 flex flex-wrap surface-50">
       <ProjectTreeItemContext
         cm={cm}
         displayDialog={displayDialog}
@@ -198,7 +198,9 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         visible={permissionDialog}
         setVisible={setPermissionDialog}
       />
-      <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
+      {iconSelect.show && (
+        <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
+      )}
       <div className="pt-2 px-2 w-full">
         <div className="w-full py-1">
           <Button
@@ -219,7 +221,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {!filter && (
         <Tree
           classes={{
-            root: "list-none w-full overflow-y-scroll projectTreeRoot ",
+            root: "list-none w-full overflow-y-scroll projectTreeRoot",
             container: "list-none",
             placeholder: "relative",
           }}

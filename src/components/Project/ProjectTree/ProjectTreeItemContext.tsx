@@ -14,15 +14,15 @@ type Props = {
   cm: React.RefObject<ContextMenu>;
   displayDialog: treeItemDisplayDialog;
   setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
-  // setPermissionDialog: (permissionDialog: treeItemDisplayDialog) => void;
+  setPermissionDialog: (permissionDialog: treeItemDisplayDialog) => void;
 };
 
 export default function ProjectTreeItemContext({
   cm,
   displayDialog,
   setDisplayDialog,
-}: // setPermissionDialog,
-Props) {
+  setPermissionDialog,
+}: Props) {
   const queryClient = useQueryClient();
   const { project_id, doc_id } = useParams();
   const navigate = useNavigate();
@@ -99,11 +99,11 @@ Props) {
         {
           label: "Document",
           icon: "pi pi-fw pi-file",
-          // command: () => console.log("ASSSSSS"),
-          // updateDocumentMutation.mutate({
-          //   doc_id: displayDialog.id,
-          //   folder: false,
-          // });
+          command: () =>
+            updateDocumentMutation.mutate({
+              doc_id: displayDialog.id,
+              folder: false,
+            }),
         },
         {
           label: "Folder",
@@ -119,8 +119,9 @@ Props) {
     {
       label: "Change Permission",
       icon: "pi pi-fw pi-user-edit",
-      // command: () => setPermissionDialog({ ...displayDialog, show: true }),
+      command: () => setPermissionDialog({ ...displayDialog, show: true }),
     },
+    { separator: true },
     {
       label: "Delete Document",
       icon: "pi pi-fw pi-trash",
