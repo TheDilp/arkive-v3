@@ -5,11 +5,16 @@ import { useMutation, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import {
+  auth,
   deleteDocument,
   updateDocument,
   updateMultipleDocumentsParents,
 } from "../../../utils/supabaseUtils";
-import { toastSuccess, useUpdateDocument } from "../../../utils/utils";
+import {
+  toastSuccess,
+  useGetProjectData,
+  useUpdateDocument,
+} from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   displayDialog: treeItemDisplayDialog;
@@ -25,6 +30,7 @@ export default function ProjectTreeItemContext({
 }: Props) {
   const queryClient = useQueryClient();
   const { project_id, doc_id } = useParams();
+  const user = auth.user();
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -58,7 +64,7 @@ export default function ProjectTreeItemContext({
   folders = folders.filter((folder) => folder.folder);
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
-
+  const project = useGetProjectData(project_id as string);
   // Get all the folders a document can be moved to
   const moveToOptions = [
     {
@@ -88,11 +94,13 @@ export default function ProjectTreeItemContext({
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
     {
+      owner: true,
       label: "Move To",
       icon: "pi pi-fw pi-directions",
       items: moveToOptions,
     },
     {
+      owner: true,
       label: "Change Type",
       icon: "pi pi-fw, pi-sync",
       items: [
@@ -117,17 +125,19 @@ export default function ProjectTreeItemContext({
       ],
     },
     {
+      owner: true,
       label: "Change Permission",
       icon: "pi pi-fw pi-user-edit",
       command: () => setPermissionDialog({ ...displayDialog, show: true }),
     },
-    { separator: true },
+    { owner: true, separator: true },
     {
+      owner: true,
       label: "Delete Document",
       icon: "pi pi-fw pi-trash",
       command: confirmdelete,
     },
-  ];
+  ].filter((item) => (item.owner ? user?.id === project?.user_id : true));
   return (
     <>
       <ConfirmDialog />
