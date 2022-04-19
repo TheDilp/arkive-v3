@@ -77,9 +77,6 @@ export const getDocuments = async (project_id: string) => {
       .from<Document>("documents")
       .select("*, parent(id, title)")
       .eq("project_id", project_id)
-      .or(
-        `user_id.eq.${user.id}, view_by.cs.{${user.id}}, edit_by.cs.{${user.id}}`
-      )
       .order("title", { ascending: true });
     if (documents) return documents;
     if (error) {

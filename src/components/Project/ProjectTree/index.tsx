@@ -12,7 +12,12 @@ import {
   treeItemDisplayDialog,
 } from "../../../custom-types";
 import { auth, updateDocument } from "../../../utils/supabaseUtils";
-import { getDepth, toastError, useCreateDocument } from "../../../utils/utils";
+import {
+  getDepth,
+  toastError,
+  useCreateDocument,
+  useGetProjectData,
+} from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import IconSelectMenu from "./IconSelectMenu";
 import PermissionDialog from "./PermissionDialog";
@@ -25,7 +30,9 @@ type Props = {
 
 export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
+  const user = auth.user();
   const { project_id, doc_id } = useParams();
+  const projectData = useGetProjectData(project_id as string);
   const navigate = useNavigate();
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
   const [filter, setFilter] = useState("");
@@ -116,13 +123,24 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       `${project_id}-documents`
     );
     if (docs) {
-      const treeData = docs.map((doc) => ({
-        id: doc.id,
-        text: doc.title,
-        droppable: doc.folder,
-        parent: doc.parent ? (doc.parent.id as string) : "0",
-        data: doc,
-      }));
+      const treeData = docs
+        .filter((doc) => {
+          if (user) {
+            if (
+              projectData?.user_id === user.id ||
+              doc.view_by.includes(user.id) ||
+              doc.edit_by.includes(user.id)
+            )
+              return doc;
+          }
+        })
+        .map((doc) => ({
+          id: doc.id,
+          text: doc.title,
+          droppable: doc.folder,
+          parent: doc.parent ? (doc.parent.id as string) : "0",
+          data: doc,
+        }));
       setTreeData(treeData);
     }
   }, [queryClient.getQueryData(`${project_id}-documents`)]);
