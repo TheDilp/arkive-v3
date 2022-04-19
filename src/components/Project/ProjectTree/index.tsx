@@ -138,7 +138,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     <div className="text-white w-2 flex flex-wrap surface-50 ">
       <ProjectTreeItemContext
         cm={cm}
-        displayDialog={displayDialog as treeItemDisplayDialog}
+        displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
         setPermissionDialog={setPermissionDialog}
       />

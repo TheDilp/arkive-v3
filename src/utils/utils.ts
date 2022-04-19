@@ -181,6 +181,7 @@ export function useUpdateDocument(project_id: string) {
       }),
     {
       onMutate: async (updatedDocument) => {
+        console.log("TEST");
         await queryClient.cancelQueries(`${project_id}-documents`);
         const previousDocuments = queryClient.getQueryData(
           `${project_id}-documents`

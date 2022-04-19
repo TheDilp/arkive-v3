@@ -13,9 +13,8 @@ export default function PropertiesPanel() {
   const { data: categories, refetch: refetchAllTags } = useGetTags(
     project_id as string
   );
-
   useEffect(() => {
-    if (categories) {
+    if (categories.length > 0) {
       setFilteredCategories(categories);
     }
   }, [categories]);
