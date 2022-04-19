@@ -341,3 +341,17 @@ export const deleteProject = async (project_id: string) => {
     }
   }
 };
+export const removeUserFromProject = async (
+  project_id: string,
+  user_id: string
+) => {
+  const { error } = await supabase.from("projects_users").delete().match({
+    project_id,
+    user_id,
+  });
+
+  if (error) {
+    toastError("There was an error removign a user from your project.");
+    throw new Error(error.message);
+  }
+};

@@ -4,7 +4,10 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
-import { deleteProject } from "../../../utils/supabaseUtils";
+import {
+  deleteProject,
+  removeUserFromProject,
+} from "../../../utils/supabaseUtils";
 import { useUpdateProject } from "../../../utils/utils";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 type Props = {
@@ -86,6 +89,27 @@ export default function ProjectSettings({ project }: Props) {
               })
             }
           />
+        </div>
+      </section>
+      <section className="Lato my-6 w-4">
+        <h3>Manage Project Users</h3>
+        <div className="flex flex-wrap w-full">
+          {project.users
+            ?.filter((user) => user.user_id !== project.user_id)
+            ?.map((user) => (
+              <div className="w-full py-2 flex flex-nowrap align-items-center">
+                <span className="mr-4 w-3">{user.profile.nickname} </span>
+                <span>
+                  <Button
+                    className="p-button-outlined p-button-rounded"
+                    icon="pi pi-user-minus"
+                    onClick={() => {
+                      removeUserFromProject(project.id, user.user_id);
+                    }}
+                  />
+                </span>
+              </div>
+            ))}
         </div>
       </section>
       <section className="Lato my-6">
