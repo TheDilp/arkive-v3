@@ -14,15 +14,16 @@ export type Project = {
 
 export type Document = {
   id: string;
+  title: string;
   content: RemirrorJSON;
   image: string;
   user_id: string;
   project_id: string;
   categories: string[];
-  title: string;
   parent: { id: string; title: string } | null;
   folder: boolean;
   icon: string;
+  view_by: string[];
 };
 
 export type treeItemDisplayDialog = {

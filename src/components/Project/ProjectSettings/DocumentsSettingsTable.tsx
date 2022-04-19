@@ -25,6 +25,7 @@ import {
   toastError,
   useGetDocuments,
   useGetTags,
+  useUpdateDocument,
 } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../ProjectTree/IconSelectMenu";
@@ -52,71 +53,7 @@ export default function DocumentsSettingsTable() {
   );
   // MUTATIONS
 
-  const updateDocumentMutation = useMutation(
-    async (vars: {
-      doc_id: string;
-      title?: string;
-      folder?: boolean;
-      parent?: string | null;
-      image?: string;
-      icon?: string;
-    }) =>
-      await updateDocument({
-        doc_id: vars.doc_id,
-        title: vars.title,
-        folder: vars.folder,
-        parent: vars.parent,
-        image: vars.image,
-        icon: vars.icon,
-      }),
-    {
-      onMutate: async (updatedDocument) => {
-        await queryClient.cancelQueries(`${project_id}-documents`);
-        const previousDocuments = queryClient.getQueryData(
-          `${project_id}-documents`
-        );
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
-            if (oldData) {
-              let newParent = oldData.find(
-                (doc) => doc.id === updatedDocument.parent
-              );
-              let newData: Document[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.doc_id) {
-                  return {
-                    ...doc,
-                    ...updatedDocument,
-                    parent:
-                      updatedDocument.parent && newParent
-                        ? { id: newParent.id, title: newParent.title }
-                        : doc.parent,
-                  };
-                } else {
-                  return doc;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-
-        return { previousDocuments };
-      },
-      onSuccess: () => {
-        // documentsRefetch();
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          context?.previousDocuments
-        );
-        toastError("There was an error updating this document.");
-      },
-    }
-  );
+  const updateDocumentMutation = useUpdateDocument(project_id as string);
   const updateCategoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>
       await updateDocument({ ...vars }),

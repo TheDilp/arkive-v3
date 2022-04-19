@@ -9,6 +9,7 @@ import {
   treeItemDisplayDialog,
   UserPermissionType,
 } from "../../../custom-types";
+import { useUpdateDocument } from "../../../utils/utils";
 type Props = {
   visible: treeItemDisplayDialog;
   setVisible: (visible: treeItemDisplayDialog) => void;
@@ -23,7 +24,7 @@ export default function PermissionDialog({ visible, setVisible }: Props) {
     { value: "Watcher", icon: "pi pi-eye" },
     { value: "None", icon: "pi pi-eye-slash" },
   ];
-
+  const updateDocumentMutation = useUpdateDocument(project_id as string);
   useEffect(() => {
     if (visible) {
       const project: Project | undefined = queryClient.getQueryData(
@@ -62,6 +63,12 @@ export default function PermissionDialog({ visible, setVisible }: Props) {
                     newUsers[idx].role = e.value;
                   }
                   return newUsers;
+                });
+                updateDocumentMutation.mutate({
+                  doc_id: visible.id,
+                  view_by: users
+                    .filter((el) => el.role === "Watcher")
+                    .map((el) => el.user_id),
                 });
               }}
             />

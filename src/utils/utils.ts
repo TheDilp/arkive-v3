@@ -2,6 +2,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
+import { RemirrorJSON } from "remirror";
 import { Document, Project } from "../custom-types";
 import {
   createDocument,
@@ -9,6 +10,7 @@ import {
   getDocuments,
   getProjects,
   getTags,
+  updateDocument,
   updateProject,
 } from "./supabaseUtils";
 const defaultToastConfig: ToastOptions = {
@@ -152,6 +154,79 @@ export function useCreateDocument(project_id: string, user_id: string) {
       );
     }
   });
+}
+// Custom hook for updating a document
+export function useUpdateDocument(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      doc_id: string;
+      title?: string;
+      content?: RemirrorJSON;
+      image?: string;
+      folder?: boolean;
+      parent?: string | null;
+      icon?: string;
+      view_by?: string[];
+    }) =>
+      await updateDocument({
+        doc_id: vars.doc_id,
+        title: vars.title,
+        folder: vars.folder,
+        parent: vars.parent,
+        image: vars.image,
+        icon: vars.icon,
+        content: vars.content,
+        view_by: vars.view_by,
+      }),
+    {
+      onMutate: async (updatedDocument) => {
+        await queryClient.cancelQueries(`${project_id}-documents`);
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedDocument.parent
+              );
+              let newData: Document[] = oldData.map((doc) => {
+                if (doc.id === updatedDocument.doc_id) {
+                  return {
+                    ...doc,
+                    ...updatedDocument,
+                    parent:
+                      updatedDocument.parent && newParent
+                        ? { id: newParent.id, title: newParent.title }
+                        : doc.parent,
+                  };
+                } else {
+                  return doc;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousDocuments };
+      },
+      onSuccess: () => {
+        // documentsRefetch();
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+        toastError("There was an error updating this document.");
+      },
+    }
+  );
 }
 // Custom hook to get tags for a project
 export function useGetTags(project_id: string) {

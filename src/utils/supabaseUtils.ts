@@ -186,6 +186,7 @@ export const updateDocument = async ({
   image,
   icon,
   categories,
+  view_by,
 }: {
   doc_id: string;
   title?: string;
@@ -195,6 +196,7 @@ export const updateDocument = async ({
   image?: string;
   icon?: string;
   categories?: string[];
+  view_by?: string[];
 }) => {
   let user = auth.user();
 
@@ -210,6 +212,7 @@ export const updateDocument = async ({
         image,
         icon,
         categories,
+        view_by,
       })
       .eq("id", doc_id);
 
