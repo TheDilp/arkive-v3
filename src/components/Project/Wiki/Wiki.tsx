@@ -47,8 +47,23 @@ export default function Wiki() {
               }
             );
           } else if (eventType === "UPDATE") {
+            queryClient.setQueryData(
+              `${project_id}-documents`,
+              (oldData: Document[] | undefined) => {
+                if (oldData) {
+                  let newData = [...oldData];
+                  const index = newData.findIndex(
+                    (doc) => doc.id === payload.new.id
+                  );
+                  if (index !== -1) {
+                    newData[index] = payload.new;
+                  }
+                  return [...newData];
+                }
+                return [];
+              }
+            );
           } else if (eventType === "DELETE") {
-            console.log(eventType);
             queryClient.setQueryData(
               `${project_id}-documents`,
               (oldData: Document[] | undefined) => {
