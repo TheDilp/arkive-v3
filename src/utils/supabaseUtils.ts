@@ -77,7 +77,9 @@ export const getDocuments = async (project_id: string) => {
       .from<Document>("documents")
       .select("*, parent(id, title)")
       .eq("project_id", project_id)
-      .or(`user_id.eq.${user.id}, view_by.cs.{${user.id}}`)
+      .or(
+        `user_id.eq.${user.id}, view_by.cs.{${user.id}}, edit_by.cs.{${user.id}}`
+      )
       .order("title", { ascending: true });
     if (documents) return documents;
     if (error) {
@@ -187,6 +189,7 @@ export const updateDocument = async ({
   icon,
   categories,
   view_by,
+  edit_by,
 }: {
   doc_id: string;
   title?: string;
@@ -197,6 +200,7 @@ export const updateDocument = async ({
   icon?: string;
   categories?: string[];
   view_by?: string[];
+  edit_by?: string[];
 }) => {
   let user = auth.user();
 
@@ -213,6 +217,7 @@ export const updateDocument = async ({
         icon,
         categories,
         view_by,
+        edit_by,
       })
       .eq("id", doc_id);
 

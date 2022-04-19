@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
+  permissionDialogType,
   treeItemDisplayDialog,
 } from "../../../custom-types";
 import { auth, updateDocument } from "../../../utils/supabaseUtils";
@@ -29,10 +30,11 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
   const [filter, setFilter] = useState("");
   const [permissionDialog, setPermissionDialog] =
-    useState<treeItemDisplayDialog>({
+    useState<permissionDialogType>({
       id: "",
       title: "",
       show: false,
+      roles: [],
     });
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
     id: "",

@@ -168,6 +168,7 @@ export function useUpdateDocument(project_id: string) {
       parent?: string | null;
       icon?: string;
       view_by?: string[];
+      edit_by?: string[];
     }) =>
       await updateDocument({
         doc_id: vars.doc_id,
@@ -178,10 +179,10 @@ export function useUpdateDocument(project_id: string) {
         icon: vars.icon,
         content: vars.content,
         view_by: vars.view_by,
+        edit_by: vars.edit_by,
       }),
     {
       onMutate: async (updatedDocument) => {
-        console.log("TEST");
         await queryClient.cancelQueries(`${project_id}-documents`);
         const previousDocuments = queryClient.getQueryData(
           `${project_id}-documents`

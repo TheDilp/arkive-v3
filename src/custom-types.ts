@@ -24,6 +24,7 @@ export type Document = {
   folder: boolean;
   icon: string;
   view_by: string[];
+  edit_by: string[];
 };
 
 export type treeItemDisplayDialog = {
@@ -31,6 +32,15 @@ export type treeItemDisplayDialog = {
   title: string;
   show: boolean;
 };
+
+export interface permissionDialogType extends treeItemDisplayDialog {
+  roles?: {
+    id: number;
+    user_id: string;
+    doc_id: string;
+    role: string;
+  }[];
+}
 export type iconSelect = {
   doc_id: string;
   icon: string;
