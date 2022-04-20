@@ -15,7 +15,7 @@ export type Project = {
 export type Document = {
   id: string;
   title: string;
-  content: RemirrorJSON;
+  content: RemirrorJSON | null;
   image: string;
   user_id: string;
   project_id: string;

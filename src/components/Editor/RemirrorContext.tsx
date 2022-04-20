@@ -103,7 +103,6 @@ export default function RemirrorContext({
       new CalloutExtension(),
       new NodeFormattingExtension(),
     ],
-    content: "<p>This is awesome</p>",
     selection: "all",
     stringHandler: "html",
   });
@@ -170,10 +169,12 @@ export default function RemirrorContext({
         );
         if (currentDocData) {
           setCurrentDocument(currentDocData);
-          if (currentDocData.content && manager.view) {
+          if (manager.view) {
             manager.view.updateState(
               manager.createState({
-                content: JSON.parse(JSON.stringify(currentDocData.content)),
+                content: JSON.parse(
+                  JSON.stringify(currentDocData.content ?? "")
+                ),
               })
             );
           }
@@ -183,7 +184,7 @@ export default function RemirrorContext({
         }
       }
     }
-  }, [doc_id]);
+  }, [doc_id, manager.view]);
 
   useEffect(() => {
     const timeout = setTimeout(async () => {

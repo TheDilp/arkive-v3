@@ -17,6 +17,7 @@
 .remirror-editor {
     box-shadow: none !important;
     max-height: 83.5vh;
+    padding: 0 !important;
 }
 
 .remirror-editor>h1,

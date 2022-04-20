@@ -119,20 +119,7 @@ export const createDocument = async (
       .from<Document>("documents")
       .insert({
         project_id,
-        content: {
-          type: "doc",
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                {
-                  type: "text",
-                  text: "Write something awesome!",
-                },
-              ],
-            },
-          ],
-        },
+        content: null,
         user_id: user.id,
         // @ts-ignore
         parent,
