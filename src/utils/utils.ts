@@ -5,6 +5,7 @@ import { toast, ToastOptions } from "react-toastify";
 import { RemirrorJSON } from "remirror";
 import { Document, Project } from "../custom-types";
 import {
+  auth,
   createDocument,
   getCurrentProject,
   getDocuments,
@@ -238,69 +239,4 @@ export function useGetTags(project_id: string) {
       staleTime: 5 * 60 * 1000,
     });
   return { data: data?.[0] || [], refetch };
-}
-// Custom hook to remove user from project
-export function useRemoveUser() {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (vars: { project_id: string; user_id: string }) => {
-      removeUserFromProject(vars.project_id, vars.user_id);
-    },
-    {
-      onMutate: (updatedProject) => {
-        const previousProject = queryClient.getQueryData(
-          `${updatedProject.project_id}-project`
-        );
-        queryClient.setQueryData(
-          `${updatedProject.project_id}-project`,
-          // @ts-ignore
-          (oldData: Project | undefined) => {
-            if (oldData) {
-              let newData: Project = {
-                ...oldData,
-                users: oldData.users?.filter(
-                  (el) => el.user_id !== updatedProject.user_id
-                ),
-              };
-              return newData;
-            } else {
-              return {};
-            }
-          }
-        );
-        return { previousProject };
-      },
-      onError: (err, updatedProject, context) => {
-        if (context) {
-          queryClient.setQueryData(
-            `${updatedProject.project_id}-project`,
-            context?.previousProject
-          );
-          toastError("There was an error removing this user.");
-        }
-      },
-    }
-  );
-}
-// Custom hook to get user permission level
-export function useGetPermissionLevel(
-  user_id: string,
-  doc_id: string,
-  project_id: string
-) {
-  const queryClient = useQueryClient();
-  const documents: Document[] | undefined = queryClient.getQueryData(
-    `${project_id}-documents`
-  );
-  const projectData = useGetProjectData(project_id);
-  if (documents) {
-    const document = documents.find((doc) => doc.id === doc_id);
-    if (document) {
-      if (document.edit_by.includes(user_id)) return "Scribe";
-      if (document.view_by.includes(user_id)) return "Watcher";
-      if (projectData?.user_id === user_id) return "Owner";
-      return "None";
-    }
-  }
-  return "None";
 }

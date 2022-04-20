@@ -8,7 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  permissionDialogType,
   treeItemDisplayDialog,
 } from "../../../custom-types";
 import { auth, updateDocument } from "../../../utils/supabaseUtils";
@@ -36,13 +35,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const navigate = useNavigate();
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
   const [filter, setFilter] = useState("");
-  const [permissionDialog, setPermissionDialog] =
-    useState<permissionDialogType>({
-      id: "",
-      title: "",
-      show: false,
-      roles: [],
-    });
+
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
     id: "",
     title: "",
@@ -123,24 +116,13 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       `${project_id}-documents`
     );
     if (docs) {
-      const treeData = docs
-        .filter((doc) => {
-          if (user) {
-            if (
-              projectData?.user_id === user.id ||
-              doc.view_by.includes(user.id) ||
-              doc.edit_by.includes(user.id)
-            )
-              return doc;
-          }
-        })
-        .map((doc) => ({
-          id: doc.id,
-          text: doc.title,
-          droppable: doc.folder,
-          parent: doc.parent ? (doc.parent.id as string) : "0",
-          data: doc,
-        }));
+      const treeData = docs.map((doc) => ({
+        id: doc.id,
+        text: doc.title,
+        droppable: doc.folder,
+        parent: doc.parent ? (doc.parent.id as string) : "0",
+        data: doc,
+      }));
       setTreeData(treeData);
     }
   }, [queryClient.getQueryData(`${project_id}-documents`)]);
@@ -160,7 +142,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         cm={cm}
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
-        setPermissionDialog={setPermissionDialog}
       />
       <Dialog
         header={`Edit ${displayDialog.title}`}
@@ -214,10 +195,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           </div>
         )}
       </Dialog>
-      <PermissionDialog
-        visible={permissionDialog}
-        setVisible={setPermissionDialog}
-      />
+
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}

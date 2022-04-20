@@ -212,10 +212,6 @@ export default function RemirrorContext({
               manager={manager}
               initialContent={state}
               hooks={hooks}
-              editable={
-                currentDocument.user_id === user.id ||
-                currentDocument.edit_by.includes(user.id)
-              }
               classNames={["text-white Lato Editor overflow-y-scroll"]}
               onChange={(props) => {
                 const { tr, firstRender } = props;
@@ -224,10 +220,7 @@ export default function RemirrorContext({
                 }
               }}
             >
-              {(currentDocument.user_id === user.id ||
-                !currentDocument.view_by.includes(user.id)) && (
-                <MenuBar saving={saving} />
-              )}
+              <MenuBar saving={saving} />
               <EditorComponent />
               <MentionComponent documents={documents} />
             </Remirror>

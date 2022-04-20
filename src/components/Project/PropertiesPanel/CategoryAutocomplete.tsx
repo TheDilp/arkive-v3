@@ -25,7 +25,6 @@ export default function CategoryAutocomplete({
 }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
-
   const updateCategoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>
       await updateDocument({
@@ -70,6 +69,7 @@ export default function CategoryAutocomplete({
       },
     }
   );
+
   return (
     <AutoComplete
       value={currentDoc.categories}

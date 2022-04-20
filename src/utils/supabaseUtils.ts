@@ -40,10 +40,8 @@ export const getProjects = async () => {
   if (user) {
     const { data: projects, error } = await supabase
       .from<Project>("projects")
-      .select(
-        "id, title, cardImage, user_id, profiles!inner(user_id, nickname)"
-      )
-      .eq("profiles.user_id", user.id);
+      .select("id, title, cardImage, user_id")
+      .eq("user_id", user.id);
 
     if (projects) return projects;
     if (error) {
@@ -58,9 +56,7 @@ export const getCurrentProject = async (project_id: string) => {
   if (user) {
     const { data: project, error } = await supabase
       .from<Project>("projects")
-      .select(
-        "id, title, user_id, users:projects_users(user_id,role,profile:profiles(nickname))"
-      )
+      .select("id, title, user_id")
       .eq("id", project_id);
 
     if (project) return project[0];

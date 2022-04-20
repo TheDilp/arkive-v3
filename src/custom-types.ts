@@ -6,8 +6,6 @@ export type Project = {
   logoImage: string;
   title: string;
   user_id: string;
-  users?: UserPermissionType[];
-  profiles?: UserProfileType[];
   categories: string[];
   createdAt: Date;
 };
@@ -23,8 +21,6 @@ export type Document = {
   parent: { id: string; title: string } | null;
   folder: boolean;
   icon: string;
-  view_by: string[];
-  edit_by: string[];
 };
 
 export type treeItemDisplayDialog = {
@@ -33,14 +29,6 @@ export type treeItemDisplayDialog = {
   show: boolean;
 };
 
-export interface permissionDialogType extends treeItemDisplayDialog {
-  roles?: {
-    id: number;
-    user_id: string;
-    doc_id: string;
-    role: string;
-  }[];
-}
 export type iconSelect = {
   doc_id: string;
   icon: string;
@@ -56,13 +44,6 @@ export type Profile = {
   profile_image: string;
 };
 
-export type UserPermissionType = {
-  user_id: string;
-  role: string;
-  profile: {
-    nickname: string;
-  };
-};
 export type UserProfileType = {
   user_id: string;
   nickname: string;

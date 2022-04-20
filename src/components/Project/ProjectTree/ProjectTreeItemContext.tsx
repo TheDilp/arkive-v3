@@ -19,14 +19,12 @@ type Props = {
   cm: React.RefObject<ContextMenu>;
   displayDialog: treeItemDisplayDialog;
   setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
-  setPermissionDialog: (permissionDialog: treeItemDisplayDialog) => void;
 };
 
 export default function ProjectTreeItemContext({
   cm,
   displayDialog,
   setDisplayDialog,
-  setPermissionDialog,
 }: Props) {
   const queryClient = useQueryClient();
   const { project_id, doc_id } = useParams();
@@ -94,13 +92,11 @@ export default function ProjectTreeItemContext({
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
     {
-      owner: true,
       label: "Move To",
       icon: "pi pi-fw pi-directions",
       items: moveToOptions,
     },
     {
-      owner: true,
       label: "Change Type",
       icon: "pi pi-fw, pi-sync",
       items: [
@@ -124,20 +120,14 @@ export default function ProjectTreeItemContext({
         },
       ],
     },
+
+    { separator: true },
     {
-      owner: true,
-      label: "Change Permission",
-      icon: "pi pi-fw pi-user-edit",
-      command: () => setPermissionDialog({ ...displayDialog, show: true }),
-    },
-    { owner: true, separator: true },
-    {
-      owner: true,
       label: "Delete Document",
       icon: "pi pi-fw pi-trash",
       command: confirmdelete,
     },
-  ].filter((item) => (item.owner ? user?.id === project?.user_id : true));
+  ];
   return (
     <>
       <ConfirmDialog />

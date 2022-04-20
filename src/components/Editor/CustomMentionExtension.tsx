@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useQueryClient } from "react-query";
+import { Link, useParams } from "react-router-dom";
 import { MentionAtomExtension } from "remirror/extensions";
+import { Document } from "../../custom-types";
 
 const CustomMentionExtension = new MentionAtomExtension({
   extraTags: ["link"],
@@ -16,6 +19,17 @@ const CustomMentionExtension = new MentionAtomExtension({
 });
 
 CustomMentionExtension.ReactComponent = ({ node }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const queryClient = useQueryClient();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { project_id } = useParams();
+  const docs: Document[] | undefined = queryClient.getQueryData(
+    `${project_id}-documents`
+  );
+  const doc = docs ? docs.find((doc) => doc.id === node.attrs.id) : null;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {}, [docs]);
+
   return (
     <Link
       className="Lato text-white"
@@ -24,7 +38,7 @@ CustomMentionExtension.ReactComponent = ({ node }) => {
       }}
       to={`../${node.attrs.id}`}
     >
-      {node.attrs.label}
+      {doc ? doc?.title : node.attrs.label}
     </Link>
   );
 };

@@ -4,9 +4,9 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
-import { deleteProject } from "../../../utils/supabaseUtils";
-import { useRemoveUser, useUpdateProject } from "../../../utils/utils";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
+import { deleteProject } from "../../../utils/supabaseUtils";
+import { useUpdateProject } from "../../../utils/utils";
 type Props = {
   project: Project;
 };
@@ -14,7 +14,6 @@ type Props = {
 export default function ProjectSettings({ project }: Props) {
   const [localProject, setLocalProject] = useState<Project>(project);
   const projectMutation = useUpdateProject();
-  const removeUser = useRemoveUser();
   const navigate = useNavigate();
   const confirmDeleteDialog = () =>
     confirmDialog({
@@ -69,6 +68,7 @@ export default function ProjectSettings({ project }: Props) {
         <div className="w-full flex flex-nowrap mt-2">
           <InputText
             value={localProject.cardImage}
+            placeholder="Image Link"
             onChange={(e) =>
               setLocalProject({ ...localProject, cardImage: e.target.value })
             }
@@ -88,41 +88,7 @@ export default function ProjectSettings({ project }: Props) {
           />
         </div>
       </section>
-      <section className="Lato my-6 w-4">
-        <h3>Manage Project Users</h3>
-        <div className="flex flex-wrap w-full">
-          {project.users
-            ?.filter((user) => user.user_id !== project.user_id)
-            ?.map((user) => (
-              <div className="w-full py-2 flex flex-nowrap align-items-center">
-                <span className="mr-4 w-3">{user.profile.nickname} </span>
-                <span>
-                  <Button
-                    className="p-button-outlined p-button-rounded"
-                    icon="pi pi-user-minus"
-                    onClick={() =>
-                      removeUser.mutate({
-                        project_id: project.id,
-                        user_id: user.user_id,
-                      })
-                    }
-                  />
-                </span>
-              </div>
-            ))}
-        </div>
-      </section>
-      <section className="Lato my-6">
-        <h3 className="my-0">Invite Link</h3>
-        <h4 className="my-1">
-          Send this link to a registered user who you want to join this project
-        </h4>
-        <InputText
-          value={`localhost:3000/invite/${project.id}`}
-          readOnly
-          className="w-4"
-        />
-      </section>
+
       <section className="Lato my-6">
         <hr />
         <div className="w-fit">
