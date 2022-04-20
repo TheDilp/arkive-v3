@@ -214,7 +214,7 @@ export default function RemirrorContext({
               hooks={hooks}
               editable={
                 currentDocument.user_id === user.id ||
-                !currentDocument.view_by.includes(user.id)
+                currentDocument.edit_by.includes(user.id)
               }
               classNames={["text-white Lato Editor overflow-y-scroll"]}
               onChange={(props) => {

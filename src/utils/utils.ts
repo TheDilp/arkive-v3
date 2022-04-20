@@ -282,3 +282,25 @@ export function useRemoveUser() {
     }
   );
 }
+// Custom hook to get user permission level
+export function useGetPermissionLevel(
+  user_id: string,
+  doc_id: string,
+  project_id: string
+) {
+  const queryClient = useQueryClient();
+  const documents: Document[] | undefined = queryClient.getQueryData(
+    `${project_id}-documents`
+  );
+  const projectData = useGetProjectData(project_id);
+  if (documents) {
+    const document = documents.find((doc) => doc.id === doc_id);
+    if (document) {
+      if (document.edit_by.includes(user_id)) return "Scribe";
+      if (document.view_by.includes(user_id)) return "Watcher";
+      if (projectData?.user_id === user_id) return "Owner";
+      return "None";
+    }
+  }
+  return "None";
+}
