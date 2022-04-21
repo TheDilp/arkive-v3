@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document } from "../../../../custom-types";
+import { CreateDocumentInputs, Document } from "../../../../custom-types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
@@ -12,13 +12,7 @@ import CreateDocIconSelect from "./CreateDocIconSelect";
 import { useCreateDocument } from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { Checkbox } from "primereact/checkbox";
-type Inputs = {
-  title: string;
-  image: string;
-  parent: string;
-  icon: string;
-  folder: boolean;
-};
+
 type Props = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -44,8 +38,10 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({ defaultValues: { icon: "mdi:file", folder: false } });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  } = useForm<CreateDocumentInputs>({
+    defaultValues: { icon: "mdi:file", folder: false },
+  });
+  const onSubmit: SubmitHandler<CreateDocumentInputs> = (data) => {
     let id = uuid();
     createDocumentMutation.mutate({
       id,
@@ -60,6 +56,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
       left: 0,
     });
   };
+
   return (
     <Dialog
       className="w-3"
@@ -113,9 +110,26 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                 )}
               />
             </div>
+            <div className="w-8 mt-2">
+              <Controller
+                name="folder"
+                control={control}
+                render={({ field }) => (
+                  <Dropdown
+                    className="w-full"
+                    placeholder="Document Template"
+                    optionLabel="title"
+                    optionValue="id"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.value)}
+                    options={documents?.filter((doc) => doc.folder) || []}
+                  />
+                )}
+              />
+            </div>
             <div className="w-8 flex justify-content-between my-2">
               <div className="w-1/2 flex align-items-center">
-                <span className="pr-1">Folder:</span>{" "}
+                <span className="pr-1">Folder:</span>
                 <Controller
                   name="folder"
                   control={control}
@@ -149,6 +163,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                 />
               </div>
             </div>
+
             <div className="w-8 my-2">{/* <CategoryAutocomplete /> */}</div>
             <div className="w-8 flex mb-2 justify-content-between">
               <span>Close Dialog on Done:</span>

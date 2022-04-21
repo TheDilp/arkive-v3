@@ -49,3 +49,12 @@ export type UserProfileType = {
   user_id: string;
   nickname: string;
 };
+
+export type CreateDocumentInputs = {
+  title: string;
+  image: string;
+  parent: string;
+  icon: string;
+  folder: boolean;
+  template: string;
+};
