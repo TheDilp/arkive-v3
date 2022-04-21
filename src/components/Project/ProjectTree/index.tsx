@@ -1,13 +1,12 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog,
+  treeItemDisplayDialog
 } from "../../../custom-types";
-import { useGetProjectData } from "../../../utils/customHooks";
 import { updateDocument } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
@@ -25,8 +24,6 @@ type Props = {
 export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
   const { project_id, doc_id } = useParams();
-  const projectData = useGetProjectData(project_id as string);
-  const navigate = useNavigate();
   const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -85,7 +82,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       setDocId(doc_id);
     }
   }, [doc_id]);
-  console.log(selectedTags);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
       <ProjectTreeItemContext

@@ -26,7 +26,6 @@ export default function TreeFilter({
     project_id as string,
     user?.id as string
   );
-  console.log(selectedTags);
   return (
     <div className="pt-2 px-2 w-full">
       <div className="w-full py-1">
@@ -38,17 +37,23 @@ export default function TreeFilter({
           onClick={() => createDocument.mutate()}
         />
       </div>
-      <InputText
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        className="w-full p-1"
-        placeholder="Filter Documents"
-      />
-      <MultiSelect
-        value={selectedTags}
-        options={tags}
-        onChange={(e) => setSelectedTags(e.value)}
-      />
+      <div className="w-full flex flex-wrap">
+        <InputText
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full p-1"
+          placeholder="Filter by Title"
+        />
+        <MultiSelect
+          value={selectedTags}
+          options={tags}
+          placeholder="Filter by Tags"
+          className="w-full p-0"
+          showClear={true}
+          display="chip"
+          onChange={(e) => setSelectedTags(e.value)}
+        />
+      </div>
     </div>
   );
 }
