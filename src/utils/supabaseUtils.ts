@@ -176,15 +176,18 @@ export const createProject = async () => {
   }
 };
 export const createTemplate = async ({
+  id,
   project_id,
   title,
   content,
 }: {
+  id: string;
   project_id: string;
   title: string;
   content: RemirrorJSON;
 }) => {
   const { data, error } = await supabase.from("templates").insert({
+    id,
     project_id,
     title,
     content,

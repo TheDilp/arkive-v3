@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
-import { Document, Project } from "../custom-types";
+import { Document, Project, Template } from "../custom-types";
 import {
   auth,
   createDocument,
+  createTemplate,
   deleteDocument,
   getCurrentProject,
   getDocuments,
@@ -286,4 +287,45 @@ export function useGetTags(project_id: string) {
       staleTime: 5 * 60 * 1000,
     });
   return { data: data?.[0] || [], refetch };
+}
+export function useCreateTemplate() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: string;
+      project_id: string;
+      title: string;
+      content: RemirrorJSON;
+    }) => {
+      await createTemplate({ ...vars });
+      alert("VARSSS");
+    },
+    {
+      onMutate: async (newTemplate) => {
+        const previousTemplates = queryClient.getQueryData(
+          `${newTemplate.project_id}-templates`
+        );
+        queryClient.setQueryData(
+          `${newTemplate.project_id}-templates`,
+          //   @ts-ignore
+          (oldData: Template[] | undefined) => {
+            if (oldData) {
+              let newData: Template[] = [...oldData, newTemplate];
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTemplates };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-templates`,
+          context?.previousTemplates
+        );
+        toastError("There was an error creating this template.");
+      },
+    }
+  );
 }

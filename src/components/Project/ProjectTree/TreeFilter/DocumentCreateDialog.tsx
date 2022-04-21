@@ -9,7 +9,10 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import CreateDocIconSelect from "./CreateDocIconSelect";
-import { useCreateDocument } from "../../../../utils/customHooks";
+import {
+  useCreateDocument,
+  useCreateTemplate,
+} from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { Checkbox } from "primereact/checkbox";
 
@@ -56,7 +59,6 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
       left: 0,
     });
   };
-
   return (
     <Dialog
       className="w-3"

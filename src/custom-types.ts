@@ -22,6 +22,12 @@ export type Document = {
   folder: boolean;
   icon: string;
 };
+export type Template = {
+  id: string;
+  title: string;
+  project_id: string;
+  content: RemirrorJSON;
+};
 
 export type treeItemDisplayDialog = {
   id: string;
