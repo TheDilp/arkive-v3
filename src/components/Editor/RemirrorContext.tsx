@@ -169,6 +169,7 @@ export default function RemirrorContext({
         );
         if (currentDocData) {
           setCurrentDocument(currentDocData);
+          console.log(currentDocData, manager.view);
           if (manager.view) {
             manager.view.updateState(
               manager.createState({
@@ -207,24 +208,22 @@ export default function RemirrorContext({
       </h1>
       {documents && (
         <ThemeProvider>
-          {currentDocument && user && (
-            <Remirror
-              manager={manager}
-              initialContent={state}
-              hooks={hooks}
-              classNames={["text-white Lato Editor overflow-y-scroll"]}
-              onChange={(props) => {
-                const { tr, firstRender } = props;
-                if (!firstRender && tr?.docChanged) {
-                  setSaving(tr?.time);
-                }
-              }}
-            >
-              <MenuBar saving={saving} />
-              <EditorComponent />
-              <MentionComponent documents={documents} />
-            </Remirror>
-          )}
+          <Remirror
+            manager={manager}
+            initialContent={state}
+            hooks={hooks}
+            classNames={["text-white Lato Editor overflow-y-scroll"]}
+            onChange={(props) => {
+              const { tr, firstRender } = props;
+              if (!firstRender && tr?.docChanged) {
+                setSaving(tr?.time);
+              }
+            }}
+          >
+            <MenuBar saving={saving} />
+            <EditorComponent />
+            <MentionComponent documents={documents} />
+          </Remirror>
         </ThemeProvider>
       )}
     </div>
