@@ -11,25 +11,25 @@ import { useState } from "react";
 import CreateDocIconSelect from "./CreateDocIconSelect";
 import { useCreateDocument } from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
+import { Checkbox } from "primereact/checkbox";
 type Inputs = {
   title: string;
   image: string;
   parent: string;
   icon: string;
 };
-
 type Props = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
 };
+
 export default function DocumentCreateDialog({ visible, setVisible }: Props) {
   const [iconSelect, setIconSelect] = useState({
-    icon: "bxs:file",
     show: false,
     top: 0,
     left: 0,
   });
-
+  const [closeOnDone, setCloseOnDone] = useState(false);
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const documents = queryClient.getQueryData<Document[]>(
@@ -41,13 +41,22 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({ defaultValues: { icon: "mdi:file" } });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     let id = uuid();
     createDocumentMutation.mutate({
       id,
       ...data,
+    });
+    if (closeOnDone) {
+      setVisible(false);
+    }
+    setIconSelect({
+      show: false,
+      top: 0,
+      left: 0,
     });
   };
   return (
@@ -107,7 +116,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
               <span>Icon:</span>
               <Icon
                 className="text-2xl cursor-pointer"
-                icon={iconSelect.icon}
+                icon={watch("icon")}
                 onClick={(e) =>
                   setIconSelect({
                     ...iconSelect,
@@ -124,6 +133,13 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
               />
             </div>
             <div className="w-8 my-2">{/* <CategoryAutocomplete /> */}</div>
+            <div className="w-8 flex mb-2 justify-content-between">
+              <span>Close Dialog on Done:</span>
+              <Checkbox
+                checked={closeOnDone}
+                onChange={(e) => setCloseOnDone(e.checked)}
+              />
+            </div>
           </div>
           <div className="flex justify-content-end">
             <Button

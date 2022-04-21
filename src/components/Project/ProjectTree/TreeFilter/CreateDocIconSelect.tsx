@@ -12,7 +12,6 @@ type Props = {
   show: boolean;
   setIconSelect: Dispatch<
     SetStateAction<{
-      icon: string;
       show: boolean;
       top: number;
       left: number;
@@ -96,9 +95,6 @@ export default function CreateDocIconSelect({
                         show: false,
                         top: 0,
                         left: 0,
-                        icon: `mdi:${
-                          iconList[virtualRow.index * 6 + virtualColumn.index]
-                        }`,
                       });
                     }}
                     fontSize={30}
