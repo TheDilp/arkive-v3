@@ -34,7 +34,7 @@ export default function ProjectTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-300 py-1"
+      className="text-lg hover:bg-blue-300 py-1 cursor-pointer"
       onClick={() => {
         setDocId(node.id as string);
         navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);

@@ -2,9 +2,12 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { useParams } from "react-router-dom";
-import { useCreateDocument, useGetTags } from "../../../utils/customHooks";
-import { auth } from "../../../utils/supabaseUtils";
+import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
+import { auth } from "../../../../utils/supabaseUtils";
 import { v4 as uuid } from "uuid";
+import { Dialog } from "primereact/dialog";
+import { useState } from "react";
+import DocumentCreateDialog from "./DocumentCreateDialog";
 type Props = {
   filter: string;
   setFilter: (filter: string) => void;
@@ -22,9 +25,13 @@ export default function TreeFilter({
   const tags = useGetTags(project_id as string).data;
   const user = auth.user();
   const createDocument = useCreateDocument(project_id as string);
-
+  const [createDocumentDialog, setCreateDocumentDialog] = useState(false);
   return (
     <div className="pt-2 px-2 w-full">
+      <DocumentCreateDialog
+        visible={createDocumentDialog}
+        setVisible={setCreateDocumentDialog}
+      />
       <div className="w-full py-1 flex justify-content-between">
         <Button
           label="Quick Create"
@@ -43,7 +50,7 @@ export default function TreeFilter({
           icon={"pi pi-fw pi-plus"}
           iconPos="right"
           className="p-button-outlined Lato p-2"
-          // onClick={() => createDocument.mutate()}
+          onClick={() => setCreateDocumentDialog(true)}
         />
       </div>
       <div className="w-full flex flex-wrap">

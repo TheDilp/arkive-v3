@@ -1,0 +1,141 @@
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { Document } from "../../../../custom-types";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { Icon } from "@iconify/react";
+import { useState } from "react";
+import CreateDocIconSelect from "./CreateDocIconSelect";
+import { useCreateDocument } from "../../../../utils/customHooks";
+import { v4 as uuid } from "uuid";
+type Inputs = {
+  title: string;
+  image: string;
+  parent: string;
+  icon: string;
+};
+
+type Props = {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+};
+export default function DocumentCreateDialog({ visible, setVisible }: Props) {
+  const [iconSelect, setIconSelect] = useState({
+    icon: "bxs:file",
+    show: false,
+    top: 0,
+    left: 0,
+  });
+
+  const { project_id } = useParams();
+  const queryClient = useQueryClient();
+  const documents = queryClient.getQueryData<Document[]>(
+    `${project_id}-documents`
+  );
+  const createDocumentMutation = useCreateDocument(project_id as string);
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    let id = uuid();
+    createDocumentMutation.mutate({
+      id,
+      ...data,
+    });
+  };
+  return (
+    <Dialog
+      className="w-3"
+      header={"Create Document"}
+      visible={visible}
+      onHide={() => setVisible(false)}
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <div className="flex flex-wrap justify-content-center">
+            <div className="w-8">
+              <InputText
+                placeholder="Document Title"
+                className="w-full"
+                {...register("title", { required: true, maxLength: 100 })}
+              />
+              {errors.title?.type === "required" && (
+                <span className="py-1" style={{ color: "var(--red-500)" }}>
+                  <i className="pi pi-exclamation-triangle"></i>
+                  This field is required
+                </span>
+              )}
+              {errors.title?.type === "maxLength" && (
+                <span className="py-1" style={{ color: "var(--red-500)" }}>
+                  <i className="pi pi-exclamation-triangle"></i>
+                  Length cannot exceed 100 characters!
+                </span>
+              )}
+            </div>
+            <div className="w-8 py-2">
+              <InputText
+                placeholder="Document Image"
+                className="w-full"
+                {...register("image")}
+              />
+            </div>
+            <div className="w-8">
+              <Controller
+                name="parent"
+                control={control}
+                render={({ field }) => (
+                  <Dropdown
+                    className="w-full"
+                    placeholder="Document Parent"
+                    optionLabel="title"
+                    optionValue="id"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.value)}
+                    options={documents?.filter((doc) => doc.folder) || []}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-8 flex justify-content-start my-2">
+              <span>Icon:</span>
+              <Icon
+                className="text-2xl cursor-pointer"
+                icon={iconSelect.icon}
+                onClick={(e) =>
+                  setIconSelect({
+                    ...iconSelect,
+                    show: true,
+                    top: e.clientY,
+                    left: e.clientX,
+                  })
+                }
+              />
+              <CreateDocIconSelect
+                {...iconSelect}
+                setValue={setValue}
+                setIconSelect={setIconSelect}
+              />
+            </div>
+            <div className="w-8 my-2">{/* <CategoryAutocomplete /> */}</div>
+          </div>
+          <div className="flex justify-content-end">
+            <Button
+              label="Create Document"
+              className="p-button-success p-button-outlined p-button-raised"
+              icon="pi pi-plus"
+              iconPos="right"
+              type="submit"
+            />
+          </div>
+        </div>
+      </form>
+    </Dialog>
+  );
+}

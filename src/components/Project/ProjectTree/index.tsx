@@ -15,7 +15,7 @@ import IconSelectMenu from "./IconSelectMenu";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 import RenameDialog from "./RenameDialog";
-import TreeFilter from "./TreeFilter";
+import TreeFilter from "./TreeFilter/TreeFilter";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;

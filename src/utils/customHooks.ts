@@ -104,6 +104,7 @@ export function useCreateDocument(project_id: string) {
       image?: string | undefined;
       categories?: string[] | undefined;
       folder?: boolean;
+      icon?: string;
     }) => {
       await createDocument({ project_id, ...vars });
     },
@@ -136,7 +137,7 @@ export function useCreateDocument(project_id: string) {
                       ? { id: parent?.id, title: parent?.title }
                       : null,
                   title: newDocument.title ? newDocument.title : "New Document",
-                  icon: "akar-icons:file",
+                  icon: newDocument.icon || "akar-icons:file",
                   image: newDocument.image ? newDocument.image : "",
                   categories: newDocument.categories
                     ? newDocument.categories
