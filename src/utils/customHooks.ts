@@ -248,16 +248,33 @@ export function useDeleteDocument(project_id: string) {
           `${project_id}-documents`,
           (oldData: Document[] | undefined) => {
             if (oldData) {
-              let newData: Document[] = oldData.filter(
-                (doc) => doc.id !== deletedDocument.doc_id
-              );
-              return newData;
+              if (deletedDocument.folder) {
+                let newData: Document[] = oldData
+                  .filter((doc) => doc.id !== deletedDocument.doc_id)
+                  .filter(
+                    (doc) =>
+                      !doc.parent || doc.parent.id !== deletedDocument.doc_id
+                  );
+                return newData;
+              } else {
+                let newData: Document[] = oldData.filter(
+                  (doc) => doc.id !== deletedDocument.doc_id
+                );
+                return newData;
+              }
             } else {
               return [];
             }
           }
         );
         return { previousDocuments };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          context?.previousDocuments
+        );
+        toastError("There was an error deleting this document.");
       },
     }
   );

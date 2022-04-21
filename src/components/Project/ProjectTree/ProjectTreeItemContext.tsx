@@ -8,6 +8,7 @@ import { deleteDocument } from "../../../utils/supabaseUtils";
 import { toastSuccess } from "../../../utils/utils";
 import {
   useCreateDocument,
+  useDeleteDocument,
   useUpdateDocument,
 } from "../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
@@ -26,7 +27,7 @@ export default function ProjectTreeItemContext({
 }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const navigate = useNavigate();
+  const deleteDocumentMutation = useDeleteDocument(project_id as string);
   const confirmdelete = () => {
     confirmDialog({
       message: (
@@ -45,23 +46,10 @@ export default function ProjectTreeItemContext({
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
       accept: async () => {
-        await deleteDocument(displayDialog.id).then(() => {
-          toastSuccess("Document deleted");
-          if (docId === displayDialog.id) navigate("./");
-          queryClient.setQueryData(
-            `${project_id}-documents`,
-            (oldData: Document[] | undefined) => {
-              if (oldData) {
-                return oldData.filter(
-                  (document: Document) => document.id !== displayDialog.id
-                );
-              } else {
-                return [];
-              }
-            }
-          );
+        deleteDocumentMutation.mutate({
+          doc_id: displayDialog.id,
+          folder: displayDialog.folder,
         });
-
         setDisplayDialog({ ...displayDialog, show: false });
       },
       reject: () => {},

@@ -5,9 +5,9 @@ import { useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog,
+  treeItemDisplayDialog
 } from "../../../custom-types";
-import { updateDocument } from "../../../utils/supabaseUtils";
+import { useUpdateDocument } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import FilterList from "./FilterList";
@@ -27,13 +27,13 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
     id: "",
     title: "",
     show: false,
     folder: false,
   });
+  const updateDocumentMutation = useUpdateDocument(project_id as string);
   const [iconSelect, setIconSelect] = useState<iconSelect>({
     doc_id: "",
     icon: "",
@@ -53,7 +53,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     setTreeData(newTree);
 
     // Update the document's parent
-    updateDocument({
+    updateDocumentMutation.mutate({
       doc_id: dragSourceId,
       parent: dropTargetId === "0" ? null : dropTargetId,
     });
