@@ -21,10 +21,7 @@ export default function TreeFilter({
   const { project_id } = useParams();
   const tags = useGetTags(project_id as string).data;
   const user = auth.user();
-  const createDocument = useCreateDocument(
-    project_id as string,
-    user?.id as string
-  );
+  const createDocument = useCreateDocument(project_id as string);
 
   return (
     <div className="pt-2 px-2 w-full">

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
 import { Document, Project } from "../custom-types";
 import {
+  auth,
   createDocument,
   getCurrentProject,
   getDocuments,
@@ -92,7 +93,8 @@ export function useGetDocuments(project_id: string) {
   return data;
 }
 // Custom hook for creating a new document
-export function useCreateDocument(project_id: string, user_id: string) {
+export function useCreateDocument(project_id: string) {
+  const user_id = auth.user()?.id as string;
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: {

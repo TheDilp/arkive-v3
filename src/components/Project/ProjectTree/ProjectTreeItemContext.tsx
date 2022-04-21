@@ -4,9 +4,13 @@ import React from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
-import { auth, deleteDocument } from "../../../utils/supabaseUtils";
+import { deleteDocument } from "../../../utils/supabaseUtils";
 import { toastSuccess } from "../../../utils/utils";
-import { useUpdateDocument } from "../../../utils/customHooks";
+import {
+  useCreateDocument,
+  useUpdateDocument,
+} from "../../../utils/customHooks";
+import { v4 as uuid } from "uuid";
 type Props = {
   docId: string;
   cm: React.RefObject<ContextMenu>;
@@ -56,6 +60,7 @@ export default function ProjectTreeItemContext({
   folders = folders.filter((folder) => folder.folder);
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
+  const newDocumentMutation = useCreateDocument(project_id as string);
   // Get all the folders a document can be moved to
   const moveToOptions = [
     {
@@ -113,7 +118,78 @@ export default function ProjectTreeItemContext({
         },
       ],
     },
+    { separator: true },
+    {
+      label: "Delete Document",
+      icon: "pi pi-fw pi-trash",
+      command: confirmdelete,
+    },
+  ];
 
+  const folderItems = [
+    {
+      label: "Rename Document",
+      icon: "pi pi-fw pi-pencil",
+      command: () => setDisplayDialog({ ...displayDialog, show: true }),
+    },
+    {
+      label: "Move To",
+      icon: "pi pi-fw pi-directions",
+      items: moveToOptions,
+    },
+    {
+      label: "Change Type",
+      icon: "pi pi-fw, pi-sync",
+      items: [
+        {
+          label: "Document",
+          icon: "pi pi-fw pi-file",
+          command: () =>
+            updateDocumentMutation.mutate({
+              doc_id: displayDialog.id,
+              folder: false,
+            }),
+        },
+        {
+          label: "Folder",
+          icon: "pi pi-fw pi-folder",
+          command: () =>
+            updateDocumentMutation.mutate({
+              doc_id: displayDialog.id,
+              folder: true,
+            }),
+        },
+      ],
+    },
+    {
+      label: "Insert Into Folder",
+      icon: "pi pi-fw pi-plus",
+      items: [
+        {
+          label: "Insert Document",
+          icon: "pi pi-fw pi-file",
+          command: () => {
+            newDocumentMutation.mutate({
+              id: uuid(),
+              parent: displayDialog.id,
+              folder: false,
+            });
+          },
+        },
+        {
+          label: "Insert Folder",
+          icon: "pi pi-fw pi-folder",
+          command: () => {
+            newDocumentMutation.mutate({
+              id: uuid(),
+              title: "New Folder",
+              parent: displayDialog.id,
+              folder: true,
+            });
+          },
+        },
+      ],
+    },
     { separator: true },
     {
       label: "Delete Document",
@@ -124,7 +200,11 @@ export default function ProjectTreeItemContext({
   return (
     <>
       <ConfirmDialog />
-      <ContextMenu model={items} ref={cm} className="Lato" />
+      <ContextMenu
+        model={displayDialog.folder ? folderItems : items}
+        ref={cm}
+        className="Lato"
+      />
     </>
   );
 }

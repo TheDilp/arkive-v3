@@ -27,6 +27,7 @@ export type treeItemDisplayDialog = {
   id: string;
   title: string;
   show: boolean;
+  folder: boolean;
 };
 
 export type iconSelect = {

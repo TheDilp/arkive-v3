@@ -45,6 +45,7 @@ export default function ProjectTreeItem({
           id: node.id as string,
           title: node.text,
           show: false,
+          folder: node.data?.folder || false,
         });
       }}
     >

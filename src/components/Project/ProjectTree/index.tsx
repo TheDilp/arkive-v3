@@ -32,6 +32,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     id: "",
     title: "",
     show: false,
+    folder: false,
   });
   const [iconSelect, setIconSelect] = useState<iconSelect>({
     doc_id: "",
