@@ -26,6 +26,7 @@ export default function TreeFilter({
     project_id as string,
     user?.id as string
   );
+  console.log(selectedTags);
   return (
     <div className="pt-2 px-2 w-full">
       <div className="w-full py-1">

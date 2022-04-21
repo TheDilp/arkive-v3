@@ -26,7 +26,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const { project_id, doc_id } = useParams();
   const projectData = useGetProjectData(project_id as string);
   const navigate = useNavigate();
-  const [treeData, setTreeData] = useState<NodeModel[]>([]);
+  const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
@@ -44,7 +44,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   });
   // Function to handle the drop functionality of the tree
   const handleDrop = (
-    newTree: NodeModel[],
+    newTree: NodeModel<Document>[],
     {
       dragSourceId,
       dropTargetId,
@@ -84,7 +84,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       setDocId(doc_id);
     }
   }, [doc_id]);
-
+  console.log(selectedTags);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
       <ProjectTreeItemContext
@@ -106,7 +106,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         selectedTags={selectedTags}
         setSelectedTags={setSelectedTags}
       />
-      {!filter && (
+      {!filter && selectedTags.length === 0 && (
         <Tree
           classes={{
             root: "list-none w-full overflow-y-scroll projectTreeRoot",
@@ -162,11 +162,18 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           onDrop={handleDrop}
         />
       )}
-      {filter && (
+      {(filter || selectedTags.length > 0) && (
         <ul className="h-screen list-none text-lg ">
           {treeData
             .filter((node) =>
               node.text.toLowerCase().includes(filter.toLowerCase())
+            )
+            .filter((node) =>
+              selectedTags.length > 0
+                ? node.data?.categories.some((category) =>
+                    selectedTags.includes(category)
+                  )
+                : true
             )
             .map((node) => (
               <li
