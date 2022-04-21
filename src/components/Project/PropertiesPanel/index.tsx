@@ -35,9 +35,14 @@ export default function PropertiesPanel() {
   const createTemplateMutation = useCreateTemplate();
 
   return (
-    <div className="h-full w-2 surface-50 text-white">
+    <div
+      className="w-2 surface-50 text-white flex flex-wrap"
+      style={{
+        height: "96.4vh",
+      }}
+    >
       {project && currentDoc && (
-        <div className="p-fluid">
+        <div className="p-fluid w-full">
           <CategoryAutocomplete
             currentDoc={currentDoc}
             currentProject={project}
@@ -49,17 +54,32 @@ export default function PropertiesPanel() {
           />
         </div>
       )}
-      <div className="Lato">
-        <hr />
-        CREATE TEMPLATE FROM DOCUMENT
-        <div className="flex justify-content-end mt-2">
+      <div className="Lato w-full align-self-end">
+        <hr className="border-gray-500" />
+        <div className="flex justify-content-between py-2">
+          <Button
+            label="Quick Template"
+            icon="pi pi-fw pi-bolt"
+            iconPos="right"
+            className="p-button-outlined p-button-raised p-2"
+            onClick={() => {
+              let id = uuid();
+              if (currentDoc && currentDoc.content)
+                createTemplateMutation.mutate({
+                  id,
+                  project_id: project_id as string,
+                  title: `${currentDoc.title} template`,
+                  content: currentDoc?.content,
+                });
+            }}
+          />
           <Button
             label="Create Template"
             icon="pi pi-fw pi-copy"
-            className="p-button-outlined p-button-raised"
+            iconPos="right"
+            className="p-button-outlined p-button-raised p-2"
             onClick={() => {
               let id = uuid();
-              console.log(currentDoc);
               if (currentDoc && currentDoc.content)
                 createTemplateMutation.mutate({
                   id,
