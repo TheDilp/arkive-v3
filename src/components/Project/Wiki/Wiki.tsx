@@ -1,11 +1,7 @@
 import { useState } from "react";
-import {
-  Navigate,
-  Route,
-  Routes, useParams
-} from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { auth } from "../../../utils/supabaseUtils";
-import { useGetDocuments, useGetProjectData } from "../../../utils/utils";
+import { useGetDocuments, useGetProjectData } from "../../../utils/customHooks";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import ProjectTree from "../ProjectTree";

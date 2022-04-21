@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Document, Project } from "../../../custom-types";
-import { useGetTags } from "../../../utils/utils";
+import { useGetTags } from "../../../utils/customHooks";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();

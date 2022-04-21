@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { auth } from "../../utils/supabaseUtils";
-import { useGetProjectData } from "../../utils/utils";
+import { useGetProjectData } from "../../utils/customHooks";
 
 export default function NavSettingsButton() {
   const navigate = useNavigate();

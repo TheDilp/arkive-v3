@@ -10,16 +10,14 @@ import {
   iconSelect,
   treeItemDisplayDialog,
 } from "../../../custom-types";
-import { auth, updateDocument } from "../../../utils/supabaseUtils";
 import {
-  getDepth,
-  toastError,
   useCreateDocument,
   useGetProjectData,
-} from "../../../utils/utils";
+} from "../../../utils/customHooks";
+import { auth, updateDocument } from "../../../utils/supabaseUtils";
+import { getDepth, toastError } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import IconSelectMenu from "./IconSelectMenu";
-import PermissionDialog from "./PermissionDialog";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 type Props = {
@@ -111,10 +109,10 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     }
   );
 
+  const docs: Document[] | undefined = queryClient.getQueryData(
+    `${project_id}-documents`
+  );
   useEffect(() => {
-    let docs: Document[] | undefined = queryClient.getQueryData(
-      `${project_id}-documents`
-    );
     if (docs) {
       const treeData = docs.map((doc) => ({
         id: doc.id,
@@ -125,7 +123,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       }));
       setTreeData(treeData);
     }
-  }, [queryClient.getQueryData(`${project_id}-documents`)]);
+  }, [docs]);
 
   useEffect(() => {
     if (doc_id) {

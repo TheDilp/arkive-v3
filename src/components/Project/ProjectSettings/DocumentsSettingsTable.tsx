@@ -21,12 +21,11 @@ import {
   updateDocument,
 } from "../../../utils/supabaseUtils";
 import {
-  searchCategory,
-  toastError,
   useGetDocuments,
   useGetTags,
   useUpdateDocument,
-} from "../../../utils/utils";
+} from "../../../utils/customHooks";
+import { searchCategory } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../ProjectTree/IconSelectMenu";
 

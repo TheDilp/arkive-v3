@@ -1,9 +1,6 @@
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 
-type Props = {};
-
-export default function SettingsNav({}: Props) {
+export default function SettingsNav() {
   const { setting } = useParams();
   return (
     <ul className="list-none Lato px-1">

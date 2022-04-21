@@ -6,7 +6,8 @@ import { useVirtual } from "react-virtual";
 import { Document, iconSelect } from "../../../custom-types";
 import { iconList } from "../../../utils/iconsList";
 import { updateDocument } from "../../../utils/supabaseUtils";
-import { toastSuccess, useOnClickOutside } from "../../../utils/utils";
+import { toastSuccess } from "../../../utils/utils";
+import { useOnClickOutside } from "../../../utils/customHooks";
 interface iconSelectMenu extends iconSelect {
   setIconSelect: (iconSelect: iconSelect) => void;
   closeEdit?: () => void;

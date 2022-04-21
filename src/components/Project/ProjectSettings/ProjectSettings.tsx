@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Project } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 import { deleteProject } from "../../../utils/supabaseUtils";
-import { useUpdateProject } from "../../../utils/utils";
+import { useUpdateProject } from "../../../utils/customHooks";
 type Props = {
   project: Project;
 };

@@ -1,20 +1,15 @@
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
+import { auth, deleteDocument } from "../../../utils/supabaseUtils";
+import { toastSuccess } from "../../../utils/utils";
 import {
-  auth,
-  deleteDocument,
-  updateDocument,
-  updateMultipleDocumentsParents,
-} from "../../../utils/supabaseUtils";
-import {
-  toastSuccess,
   useGetProjectData,
   useUpdateDocument,
-} from "../../../utils/utils";
+} from "../../../utils/customHooks";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   displayDialog: treeItemDisplayDialog;
