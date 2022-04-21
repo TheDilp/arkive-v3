@@ -1,6 +1,4 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,17 +7,15 @@ import {
   iconSelect,
   treeItemDisplayDialog,
 } from "../../../custom-types";
-import {
-  useCreateDocument,
-  useGetProjectData,
-} from "../../../utils/customHooks";
-import { auth, updateDocument } from "../../../utils/supabaseUtils";
+import { useGetProjectData } from "../../../utils/customHooks";
+import { updateDocument } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import IconSelectMenu from "./IconSelectMenu";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 import RenameDialog from "./RenameDialog";
+import TreeFilter from "./TreeFilter";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -27,7 +23,6 @@ type Props = {
 
 export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
-  const user = auth.user();
   const { project_id, doc_id } = useParams();
   const projectData = useGetProjectData(project_id as string);
   const navigate = useNavigate();
@@ -88,10 +83,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       setDocId(doc_id);
     }
   }, [doc_id]);
-  const createDocument = useCreateDocument(
-    project_id as string,
-    auth.user()?.id as string
-  );
+
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
       <ProjectTreeItemContext
@@ -107,23 +99,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}
-      <div className="pt-2 px-2 w-full">
-        <div className="w-full py-1">
-          <Button
-            label="New Document"
-            icon={"pi pi-fw pi-plus"}
-            iconPos="right"
-            className="p-button-outlined Lato"
-            onClick={() => createDocument.mutate()}
-          />
-        </div>
-        <InputText
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="w-full p-1"
-          placeholder="Filter Documents"
-        />
-      </div>
+      <TreeFilter filter={filter} setFilter={setFilter} />
       {!filter && (
         <Tree
           classes={{
