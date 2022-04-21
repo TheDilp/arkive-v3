@@ -17,6 +17,7 @@ type Inputs = {
   image: string;
   parent: string;
   icon: string;
+  folder: boolean;
 };
 type Props = {
   visible: boolean;
@@ -29,7 +30,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
     top: 0,
     left: 0,
   });
-  const [closeOnDone, setCloseOnDone] = useState(false);
+  const [closeOnDone, setCloseOnDone] = useState(true);
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const documents = queryClient.getQueryData<Document[]>(
@@ -43,7 +44,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({ defaultValues: { icon: "mdi:file" } });
+  } = useForm<Inputs>({ defaultValues: { icon: "mdi:file", folder: false } });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     let id = uuid();
     createDocumentMutation.mutate({
@@ -102,7 +103,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                 render={({ field }) => (
                   <Dropdown
                     className="w-full"
-                    placeholder="Document Parent"
+                    placeholder="Document Folder"
                     optionLabel="title"
                     optionValue="id"
                     value={field.value}
@@ -112,25 +113,41 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                 )}
               />
             </div>
-            <div className="w-8 flex justify-content-start my-2">
-              <span>Icon:</span>
-              <Icon
-                className="text-2xl cursor-pointer"
-                icon={watch("icon")}
-                onClick={(e) =>
-                  setIconSelect({
-                    ...iconSelect,
-                    show: true,
-                    top: e.clientY,
-                    left: e.clientX,
-                  })
-                }
-              />
-              <CreateDocIconSelect
-                {...iconSelect}
-                setValue={setValue}
-                setIconSelect={setIconSelect}
-              />
+            <div className="w-8 flex justify-content-between my-2">
+              <div className="w-1/2 flex align-items-center">
+                <span className="pr-1">Folder:</span>{" "}
+                <Controller
+                  name="folder"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.checked)}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="w-1/2 flex align-items-center">
+                <span className="pr-1">Icon:</span>
+                <Icon
+                  className="text-2xl cursor-pointer"
+                  icon={watch("icon")}
+                  onClick={(e) =>
+                    setIconSelect({
+                      ...iconSelect,
+                      show: true,
+                      top: e.clientY,
+                      left: e.clientX,
+                    })
+                  }
+                />
+                <CreateDocIconSelect
+                  {...iconSelect}
+                  setValue={setValue}
+                  setIconSelect={setIconSelect}
+                />
+              </div>
             </div>
             <div className="w-8 my-2">{/* <CategoryAutocomplete /> */}</div>
             <div className="w-8 flex mb-2 justify-content-between">

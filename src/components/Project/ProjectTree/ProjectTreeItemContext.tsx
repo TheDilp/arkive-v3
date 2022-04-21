@@ -20,7 +20,6 @@ type Props = {
 };
 
 export default function ProjectTreeItemContext({
-  docId,
   cm,
   displayDialog,
   setDisplayDialog,
