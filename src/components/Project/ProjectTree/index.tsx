@@ -27,7 +27,8 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const projectData = useGetProjectData(project_id as string);
   const navigate = useNavigate();
   const [treeData, setTreeData] = useState<NodeModel[]>([]);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState<string>("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
     id: "",
@@ -99,7 +100,12 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}
-      <TreeFilter filter={filter} setFilter={setFilter} />
+      <TreeFilter
+        filter={filter}
+        setFilter={setFilter}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
+      />
       {!filter && (
         <Tree
           classes={{
