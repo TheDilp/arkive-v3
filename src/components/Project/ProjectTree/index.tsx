@@ -1,9 +1,8 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Document,
@@ -15,11 +14,12 @@ import {
   useGetProjectData,
 } from "../../../utils/customHooks";
 import { auth, updateDocument } from "../../../utils/supabaseUtils";
-import { getDepth, toastError } from "../../../utils/utils";
+import { getDepth } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import IconSelectMenu from "./IconSelectMenu";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
+import RenameDialog from "./RenameDialog";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -67,48 +67,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
 
-  const documentTitleMutation = useMutation(
-    async (vars: { docId: string; title: string }) => {
-      await updateDocument({ doc_id: vars.docId, title: vars.title });
-    },
-    {
-      onMutate: async (updatedDocument) => {
-        setDisplayDialog({ id: "", title: "", show: false });
-        await queryClient.cancelQueries(`${project_id}-documents`);
-
-        const previousDocuments = queryClient.getQueryData(
-          `${project_id}-documents`
-        );
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
-            if (oldData) {
-              let newData: Document[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.docId) {
-                  return { ...doc, title: updatedDocument.title };
-                } else {
-                  return doc;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-
-        return { previousDocuments };
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          context?.previousDocuments
-        );
-        toastError("There was an error updating your document.");
-      },
-    }
-  );
-
   const docs: Document[] | undefined = queryClient.getQueryData(
     `${project_id}-documents`
   );
@@ -141,58 +99,10 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
-      <Dialog
-        header={`Edit ${displayDialog.title}`}
-        visible={displayDialog.show}
-        className="w-3"
-        onHide={() =>
-          setDisplayDialog({
-            id: "",
-            title: "",
-            show: false,
-          })
-        }
-        modal={false}
-      >
-        {displayDialog && (
-          <div className="w-full">
-            <div className="my-2">
-              <InputText
-                className="w-full"
-                value={displayDialog.title}
-                onChange={(e) =>
-                  setDisplayDialog((prev) => ({
-                    ...prev,
-                    title: e.target.value,
-                  }))
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    documentTitleMutation.mutate({
-                      docId: displayDialog.id,
-                      title: displayDialog.title,
-                    });
-                  }
-                }}
-              />
-            </div>
-            <div className="flex w-full">
-              <Button
-                className="ml-auto p-button-raised p-button-text p-button-success"
-                label="Save"
-                icon="pi pi-fw pi-save"
-                iconPos="right"
-                onClick={() =>
-                  documentTitleMutation.mutate({
-                    docId: displayDialog.id,
-                    title: displayDialog.title,
-                  })
-                }
-              />
-            </div>
-          </div>
-        )}
-      </Dialog>
+      <RenameDialog
+        displayDialog={displayDialog}
+        setDisplayDialog={setDisplayDialog}
+      />
 
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
