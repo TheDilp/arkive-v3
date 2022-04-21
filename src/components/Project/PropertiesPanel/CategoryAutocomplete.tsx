@@ -75,7 +75,7 @@ export default function CategoryAutocomplete({
       value={currentDoc.categories}
       suggestions={filteredCategories}
       placeholder={
-        currentDoc.categories ? "" : "Enter tags for this document..."
+        currentDoc.categories.length > 0 ? "" : "Enter tags for this document"
       }
       completeMethod={(e) =>
         searchCategory(e, categories || [], setFilteredCategories)

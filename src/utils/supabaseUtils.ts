@@ -103,6 +103,17 @@ export const getProfile = async () => {
     }
   }
 };
+export const getTemplates = async (project_id: string) => {
+  const { data, error } = await supabase
+    .from("templates")
+    .select("id, title, content")
+    .eq("project_id", project_id);
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your templates.");
+    throw new Error(error.message);
+  }
+};
 // INSERT
 
 export const createDocument = async ({
@@ -164,14 +175,23 @@ export const createProject = async () => {
     }
   }
 };
-export const addUserToProject = async (user_id: string, project_id: string) => {
-  const { data, error } = await supabase.from("projects_users").insert({
-    user_id,
+export const createTemplate = async ({
+  project_id,
+  title,
+  content,
+}: {
+  project_id: string;
+  title: string;
+  content: RemirrorJSON;
+}) => {
+  const { data, error } = await supabase.from("templates").insert({
     project_id,
+    title,
+    content,
   });
   if (data) return data;
   if (error) {
-    toastError("There was an error adding a user to your project.");
+    toastError("There was an error creating your template.");
     throw new Error(error.message);
   }
 };

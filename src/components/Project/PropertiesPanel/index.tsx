@@ -1,3 +1,4 @@
+import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -36,7 +37,7 @@ export default function PropertiesPanel() {
   return (
     <div className="h-full w-2 surface-50 text-white">
       {project && currentDoc && (
-        <span className="p-fluid">
+        <div className="p-fluid">
           <CategoryAutocomplete
             currentDoc={currentDoc}
             currentProject={project}
@@ -46,8 +47,19 @@ export default function PropertiesPanel() {
             setCurrentDoc={setCurrentDoc}
             setFilteredCategories={setFilteredCategories}
           />
-        </span>
+        </div>
       )}
+      <div className="Lato">
+        <hr />
+        CREATE TEMPLATE FROM DOCUMENT
+        <div className="flex justify-content-end mt-2">
+          <Button
+            label="Create Template"
+            icon="pi pi-fw pi-copy"
+            className="p-button-outlined p-button-raised"
+          />
+        </div>
+      </div>
     </div>
   );
 }
