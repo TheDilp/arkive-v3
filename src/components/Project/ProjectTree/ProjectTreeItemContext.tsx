@@ -29,7 +29,19 @@ export default function ProjectTreeItemContext({
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
-      message: `Are you sure you want to delete ${displayDialog.title}?`,
+      message: (
+        <div>
+          {`Are you sure you want to delete ${displayDialog.title}?`}
+          {displayDialog.folder ? (
+            <div style={{ color: "var(--red-400)" }}>
+              <i className="pi pi-exclamation-triangle"></i>
+              This will delete all the sub-documents in this folder!
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      ),
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
       accept: async () => {
@@ -82,7 +94,6 @@ export default function ProjectTreeItemContext({
       },
     })),
   ];
-
   const items = [
     {
       label: "Rename Document",
@@ -125,7 +136,6 @@ export default function ProjectTreeItemContext({
       command: confirmdelete,
     },
   ];
-
   const folderItems = [
     {
       label: "Rename Document",

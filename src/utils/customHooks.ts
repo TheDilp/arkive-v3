@@ -5,6 +5,7 @@ import { Document, Project } from "../custom-types";
 import {
   auth,
   createDocument,
+  deleteDocument,
   getCurrentProject,
   getDocuments,
   getTags,
@@ -227,6 +228,36 @@ export function useUpdateDocument(project_id: string) {
           context?.previousDocuments
         );
         toastError("There was an error updating this document.");
+      },
+    }
+  );
+}
+// Custom hook for deleting a document
+export function useDeleteDocument(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { doc_id: string; folder: boolean }) => {
+      await deleteDocument(vars.doc_id);
+    },
+    {
+      onMutate: async (deletedDocument) => {
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = oldData.filter(
+                (doc) => doc.id !== deletedDocument.doc_id
+              );
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousDocuments };
       },
     }
   );
