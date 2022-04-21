@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog
+  treeItemDisplayDialog,
 } from "../../../custom-types";
 import { updateDocument } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
@@ -86,6 +86,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     <div className="text-white w-2 flex flex-wrap surface-50">
       <ProjectTreeItemContext
         cm={cm}
+        docId={docId}
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
@@ -106,7 +107,8 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {!filter && selectedTags.length === 0 && (
         <Tree
           classes={{
-            root: "list-none w-full overflow-y-auto projectTreeRoot",
+            root: "w-full overflow-y-auto projectTreeRoot",
+            container: "list-none",
             placeholder: "relative",
           }}
           tree={treeData}

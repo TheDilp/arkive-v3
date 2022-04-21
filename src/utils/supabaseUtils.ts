@@ -105,22 +105,40 @@ export const getProfile = async () => {
 };
 // INSERT
 
-export const createDocument = async (
-  project_id: string,
-  parent: string | undefined
-) => {
+export const createDocument = async ({
+  id,
+  project_id,
+  title,
+  parent,
+  icon,
+  image,
+  categories,
+  folder,
+}: {
+  id: string;
+  title?: string;
+  icon?: string;
+  image?: string;
+  project_id: string;
+  parent?: string | null;
+  categories?: string[];
+  folder?: boolean;
+}) => {
   let user = auth.user();
   if (user) {
     const { data: document, error } = await supabase
       .from<Document>("documents")
       .insert({
+        id,
         project_id,
-        content: null,
+        title,
+        image,
+        icon,
+        folder,
+        categories,
         user_id: user.id,
         // @ts-ignore
         parent,
-        title: "New Document",
-        icon: "akar-icons:file",
       });
     if (document) return document[0];
     if (error) {

@@ -6,24 +6,22 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { auth, deleteDocument } from "../../../utils/supabaseUtils";
 import { toastSuccess } from "../../../utils/utils";
-import {
-  useGetProjectData,
-  useUpdateDocument,
-} from "../../../utils/customHooks";
+import { useUpdateDocument } from "../../../utils/customHooks";
 type Props = {
+  docId: string;
   cm: React.RefObject<ContextMenu>;
   displayDialog: treeItemDisplayDialog;
   setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
 };
 
 export default function ProjectTreeItemContext({
+  docId,
   cm,
   displayDialog,
   setDisplayDialog,
 }: Props) {
   const queryClient = useQueryClient();
-  const { project_id, doc_id } = useParams();
-  const user = auth.user();
+  const { project_id } = useParams();
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -33,6 +31,7 @@ export default function ProjectTreeItemContext({
       accept: async () => {
         await deleteDocument(displayDialog.id).then(() => {
           toastSuccess("Document deleted");
+          if (docId === displayDialog.id) navigate("./");
           queryClient.setQueryData(
             `${project_id}-documents`,
             (oldData: Document[] | undefined) => {
@@ -46,8 +45,8 @@ export default function ProjectTreeItemContext({
             }
           );
         });
+
         setDisplayDialog({ ...displayDialog, show: false });
-        if (doc_id === displayDialog.id) navigate("./");
       },
       reject: () => {},
     });
@@ -57,7 +56,6 @@ export default function ProjectTreeItemContext({
   folders = folders.filter((folder) => folder.folder);
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
-  const project = useGetProjectData(project_id as string);
   // Get all the folders a document can be moved to
   const moveToOptions = [
     {

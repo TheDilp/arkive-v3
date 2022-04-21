@@ -94,21 +94,64 @@ export function useGetDocuments(project_id: string) {
 // Custom hook for creating a new document
 export function useCreateDocument(project_id: string, user_id: string) {
   const queryClient = useQueryClient();
-  return useMutation(async () => {
-    const updatedDocument = await createDocument(project_id, undefined);
-    if (updatedDocument) {
-      queryClient.setQueryData(
-        `${project_id}-documents`,
-        (oldData: Document[] | undefined) => {
-          if (oldData) {
-            return [...oldData, updatedDocument];
-          } else {
-            return [updatedDocument];
+  return useMutation(
+    async (vars: {
+      id: string;
+      parent?: string | null;
+      title?: string;
+      image?: string | undefined;
+      categories?: string[] | undefined;
+      folder?: boolean;
+    }) => {
+      await createDocument({ project_id, ...vars });
+    },
+    {
+      onMutate: async (newDocument) => {
+        const previousDocuments = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        const docs: Document[] | undefined = queryClient.getQueryData(
+          `${project_id}-documents`
+        );
+        let parent = newDocument.parent
+          ? docs?.find((doc) => doc.id === newDocument.parent)
+          : null;
+        queryClient.setQueryData(
+          `${project_id}-documents`,
+          //   @ts-ignore
+          (oldData: Document[] | undefined) => {
+            if (oldData) {
+              let newData: Document[] = [
+                ...oldData,
+                {
+                  id: newDocument.id,
+                  project_id,
+                  content: null,
+                  user_id,
+                  // @ts-ignore
+                  parent:
+                    newDocument.parent && parent
+                      ? { id: parent?.id, title: parent?.title }
+                      : null,
+                  title: newDocument.title ? newDocument.title : "New Document",
+                  icon: "akar-icons:file",
+                  image: newDocument.image ? newDocument.image : "",
+                  categories: newDocument.categories
+                    ? newDocument.categories
+                    : [],
+                  folder: newDocument.folder ? newDocument.folder : false,
+                },
+              ];
+              return newData;
+            } else {
+              return [];
+            }
           }
-        }
-      );
+        );
+        return { previousDocuments };
+      },
     }
-  });
+  );
 }
 // Custom hook for updating a document
 export function useUpdateDocument(project_id: string) {
