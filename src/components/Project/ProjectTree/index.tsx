@@ -11,6 +11,7 @@ import { useGetProjectData } from "../../../utils/customHooks";
 import { updateDocument } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
+import FilterList from "./FilterList";
 import IconSelectMenu from "./IconSelectMenu";
 import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
@@ -109,8 +110,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {!filter && selectedTags.length === 0 && (
         <Tree
           classes={{
-            root: "list-none w-full overflow-y-scroll projectTreeRoot",
-            container: "list-none",
+            root: "list-none w-full overflow-y-auto projectTreeRoot",
             placeholder: "relative",
           }}
           tree={treeData}
@@ -163,8 +163,8 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         />
       )}
       {(filter || selectedTags.length > 0) && (
-        <ul className="h-screen list-none text-lg ">
-          {treeData
+        <FilterList
+          filteredTree={treeData
             .filter((node) =>
               node.text.toLowerCase().includes(filter.toLowerCase())
             )
@@ -174,21 +174,9 @@ export default function ProjectTree({ docId, setDocId }: Props) {
                     selectedTags.includes(category)
                   )
                 : true
-            )
-            .map((node) => (
-              <li
-                className="hover:bg-primary cursor-pointer Lato"
-                onClick={() => {
-                  setDocId(node.id as string);
-                  navigate(
-                    doc_id === undefined ? `./${node.id}` : `./${doc_id}`
-                  );
-                }}
-              >
-                {node.text}
-              </li>
-            ))}
-        </ul>
+            )}
+          setDocId={setDocId}
+        />
       )}
     </div>
   );
