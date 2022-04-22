@@ -11,6 +11,7 @@ import {
 import CategoryAutocomplete from "./CategoryAutocomplete";
 import { v4 as uuid } from "uuid";
 import { auth } from "../../../utils/supabaseUtils";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
   const queryClient = useQueryClient();
@@ -58,28 +59,7 @@ export default function PropertiesPanel() {
       )}
       <div className="Lato w-full align-self-end">
         <hr className="border-gray-500" />
-        <div className="flex justify-content-between py-2">
-          <Button
-            label="Quick Template"
-            icon="pi pi-fw pi-bolt"
-            iconPos="right"
-            className="p-button-outlined p-button-raised p-2"
-            onClick={() => {
-              let id = uuid();
-              if (currentDoc && currentDoc.content && user)
-                createTemplateMutation.mutate({
-                  id,
-                  project_id: project_id as string,
-                  title: `${currentDoc.title}`,
-                  content: currentDoc?.content,
-                  user_id: user.id,
-                  icon: "mdi:file",
-                  image: "",
-                  categories: [],
-                  folder: false,
-                });
-            }}
-          />
+        <div className="flex justify-content-center py-2">
           <Button
             label="Create Template"
             icon="pi pi-fw pi-copy"
@@ -87,13 +67,22 @@ export default function PropertiesPanel() {
             className="p-button-outlined p-button-raised p-2"
             onClick={() => {
               let id = uuid();
-              // if (currentDoc && currentDoc.content)
-              // createTemplateMutation.mutate({
-              //   id,
-              //   project_id: project_id as string,
-              //   title: `${currentDoc.title} template`,
-              //   content: currentDoc?.content,
-              // });
+              if (currentDoc && user) {
+                if (currentDoc.content) {
+                  createTemplateMutation.mutate({
+                    ...currentDoc,
+                    content: currentDoc.content,
+                    id,
+                  });
+                  toastSuccess(
+                    `Template from document ${currentDoc.title} created.`
+                  );
+                } else {
+                  toastWarn(
+                    "Document must have some content in order to create template!"
+                  );
+                }
+              }
             }}
           />
         </div>

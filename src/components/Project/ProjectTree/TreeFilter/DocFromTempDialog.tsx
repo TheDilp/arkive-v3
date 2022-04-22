@@ -17,6 +17,7 @@ type Props = {
 export default function DocFromTempDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const [value, setValue] = useState();
+  const [customName, setCustomName] = useState<string | undefined>();
   const templates = useGetTemplates(project_id as string);
   const createDocumentMutation = useCreateDocument(project_id as string);
   return (
@@ -45,7 +46,12 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
           ))}
       </div>
       <div className="w-full my-2">
-        <InputText placeholder="Custom Document Name" className="w-full" />
+        <InputText
+          placeholder="Custom Document Name"
+          className="w-full"
+          value={customName}
+          onChange={(e) => setCustomName(e.target.value)}
+        />
       </div>
       <div className="w-full flex justify-content-end">
         <Button
@@ -57,7 +63,12 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
             let template = templates.find((temp) => temp.id === value);
             if (template) {
               let id = uuid();
-              createDocumentMutation.mutate({ ...template, id, parent: null });
+              createDocumentMutation.mutate({
+                ...template,
+                id,
+                parent: null,
+                title: customName || template.title,
+              });
             }
           }}
         />

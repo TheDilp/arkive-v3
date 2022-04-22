@@ -116,7 +116,7 @@ export const createDocument = async ({
   categories,
   folder,
 }: {
-  id: string;
+  id?: string;
   title?: string;
   icon?: string;
   image?: string;
@@ -342,10 +342,12 @@ export const deleteManyDocuments = async (doc_ids: string[]) => {
   let user = auth.user();
 
   if (user) {
-    const { error } = await supabase
-      .from<Document>("documents")
-      .delete()
-      .in("id", doc_ids);
+    const { error } = await supabase.rpc("delete_many_documents", {
+      ids: doc_ids,
+    });
+    // .from<Document>("documents")
+    // .delete()
+    // .in("id", doc_ids);
 
     if (error) {
       toastError("There was an error deleting your documents.");
@@ -353,6 +355,15 @@ export const deleteManyDocuments = async (doc_ids: string[]) => {
     }
   }
 };
+export const createManyDocuments = async () => {
+  for (let index = 0; index < 250; index++) {
+    createDocument({
+      project_id: "81b55b26-a0f3-47e2-a8d2-761bead4b5cc",
+      title: "New Document",
+    });
+  }
+};
+// createManyDocuments();
 export const deleteProject = async (project_id: string) => {
   let user = auth.user();
 

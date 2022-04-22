@@ -2,7 +2,6 @@ import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { useGetTemplates } from "../../../../utils/customHooks";
-
 type Props = {
   setDocId: (docId: string) => void;
 };
@@ -11,12 +10,14 @@ export default function TemplatesTree({ setDocId }: Props) {
   const { project_id } = useParams();
   const templates = useGetTemplates(project_id as string);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+
   const rowVirtualizer = useVirtual({
     size: templates.length,
     parentRef,
     estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
+
   return (
     <div>
       <div

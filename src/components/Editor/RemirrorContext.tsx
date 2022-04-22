@@ -107,7 +107,6 @@ export default function RemirrorContext({
         );
         if (currentDocData) {
           setCurrentDocument(currentDocData);
-          console.log(currentDocData, manager.view);
           if (manager.view) {
             manager.view.updateState(
               manager.createState({
@@ -135,7 +134,7 @@ export default function RemirrorContext({
         });
         setSaving(false);
       }
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timeout);
   }, [saving]);
@@ -164,7 +163,9 @@ export default function RemirrorContext({
           >
             <MenuBar saving={saving} />
             <EditorComponent />
-            <MentionComponent documents={documents} />
+            <MentionComponent
+              documents={documents.filter((doc) => !doc.template)}
+            />
           </Remirror>
         </ThemeProvider>
       )}

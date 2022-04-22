@@ -28,10 +28,11 @@ export default function TreeFilter({
   const [docFromTempDialog, setDocFromTempDialog] = useState(false);
   const items = [
     {
-      label: "Create Document",
+      label: "Create Document / Folder",
       icon: "pi pi-fw pi-plus",
       command: () => setCreateDocumentDialog(true),
     },
+
     {
       label: "Create from template",
       icon: "pi pi-fw pi-copy",
@@ -60,7 +61,7 @@ export default function TreeFilter({
               id,
             });
           }}
-        ></SplitButton>
+        />
       </div>
       <div className="w-full flex flex-wrap">
         <InputText
