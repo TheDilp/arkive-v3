@@ -103,17 +103,6 @@ export const getProfile = async () => {
     }
   }
 };
-export const getTemplates = async (project_id: string) => {
-  const { data, error } = await supabase
-    .from("templates")
-    .select("id, title, content")
-    .eq("project_id", project_id);
-  if (data) return data;
-  if (error) {
-    toastError("There was an error getting your templates.");
-    throw new Error(error.message);
-  }
-};
 // INSERT
 
 export const createDocument = async ({
@@ -180,22 +169,42 @@ export const createTemplate = async ({
   project_id,
   title,
   content,
+  parent,
+  icon,
+  image,
+  categories,
+  folder,
 }: {
   id: string;
-  project_id: string;
   title: string;
   content: RemirrorJSON;
+  project_id: string;
+  icon?: string;
+  image?: string;
+  parent?: string | null;
+  categories?: string[];
+  folder?: boolean;
 }) => {
-  const { data, error } = await supabase.from("templates").insert({
-    id,
-    project_id,
-    title,
-    content,
-  });
-  if (data) return data;
-  if (error) {
-    toastError("There was an error creating your template.");
-    throw new Error(error.message);
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase.from("documents").insert({
+      id,
+      project_id,
+      title,
+      content,
+      parent,
+      icon,
+      image,
+      categories,
+      folder,
+      template: true,
+      user_id: user.id,
+    });
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your template.");
+      throw new Error(error.message);
+    }
   }
 };
 
@@ -209,8 +218,6 @@ export const updateDocument = async ({
   image,
   icon,
   categories,
-  view_by,
-  edit_by,
 }: {
   doc_id: string;
   title?: string;
@@ -220,8 +227,6 @@ export const updateDocument = async ({
   image?: string;
   icon?: string;
   categories?: string[];
-  view_by?: string[];
-  edit_by?: string[];
 }) => {
   let user = auth.user();
 
@@ -237,8 +242,6 @@ export const updateDocument = async ({
         image,
         icon,
         categories,
-        view_by,
-        edit_by,
       })
       .eq("id", doc_id);
 

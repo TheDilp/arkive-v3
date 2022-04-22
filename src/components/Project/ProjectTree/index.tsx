@@ -17,6 +17,7 @@ import ProjectTreeItemContext from "./ProjectTreeItemContext";
 import RenameDialog from "./RenameDialog";
 import TreeFilter from "./TreeFilter/TreeFilter";
 import { TabView, TabPanel } from "primereact/tabview";
+import TemplatesTree from "./TemplatesTree";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -68,13 +69,15 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   );
   useEffect(() => {
     if (docs) {
-      const treeData = docs.map((doc) => ({
-        id: doc.id,
-        text: doc.title,
-        droppable: doc.folder,
-        parent: doc.parent ? (doc.parent.id as string) : "0",
-        data: doc,
-      }));
+      const treeData = docs
+        .filter((doc) => !doc.template)
+        .map((doc) => ({
+          id: doc.id,
+          text: doc.title,
+          droppable: doc.folder,
+          parent: doc.parent ? (doc.parent.id as string) : "0",
+          data: doc,
+        }));
       setTreeData(treeData);
     }
   }, [docs]);
@@ -86,7 +89,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   }, [doc_id]);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
-      <TabView className="w-full">
+      <TabView className="w-full" renderActiveOnly={true}>
         <TabPanel header="Documents">
           <ProjectTreeItemContext
             cm={cm}
@@ -182,15 +185,9 @@ export default function ProjectTree({ docId, setDocId }: Props) {
           )}
         </TabPanel>
         <TabPanel header="Templates">
-          <p>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-            quae ab illo inventore veritatis et quasi architecto beatae vitae
-            dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-            aspernatur aut odit aut fugit, sed quia consequuntur magni dolores
-            eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci
-            velit, sed quia non numquam eius modi.
-          </p>
+          <div className="h-screen">
+            <TemplatesTree />
+          </div>
         </TabPanel>
       </TabView>
     </div>

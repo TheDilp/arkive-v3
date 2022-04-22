@@ -21,12 +21,7 @@ export type Document = {
   parent: { id: string; title: string } | null;
   folder: boolean;
   icon: string;
-};
-export type Template = {
-  id: string;
-  title: string;
-  project_id: string;
-  content: RemirrorJSON;
+  template: boolean;
 };
 
 export type treeItemDisplayDialog = {

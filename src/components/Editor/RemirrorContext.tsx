@@ -7,9 +7,8 @@ import {
   useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { RemirrorJSON } from "remirror";
 import {
   BoldExtension,
   BulletListExtension,
@@ -25,8 +24,8 @@ import {
 import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
 import "../../styles/Editor.css";
-import { auth, updateDocument } from "../../utils/supabaseUtils";
-import { toastError, toastSuccess, toastWarn } from "../../utils/utils";
+import { useUpdateDocument } from "../../utils/customHooks";
+import { toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
 import MentionComponent from "./MentionComponent";
@@ -35,36 +34,13 @@ const hooks = [
   () => {
     const { getJSON } = useHelpers();
     const { project_id, doc_id } = useParams();
-    const queryClient = useQueryClient();
+    const saveContentMutation = useUpdateDocument(project_id as string);
     const handleSaveShortcut = useCallback(
       ({ state }) => {
-        updateDocument({ doc_id: doc_id as string, content: getJSON(state) })
-          .then((data: Document | undefined) => {
-            if (data) {
-              let updatedDocument = data;
-              queryClient.setQueryData(
-                `${project_id}-documents`,
-                (oldData: Document[] | undefined) => {
-                  if (oldData) {
-                    let newData: Document[] = oldData.map((doc) => {
-                      if (doc.id === updatedDocument.id) {
-                        // Return the parent from the old document because it is a foreign table query
-                        // The updated Doc has id only, but {id, title} is required
-                        return { ...updatedDocument, parent: doc.parent };
-                      } else {
-                        return doc;
-                      }
-                    });
-                    return newData;
-                  } else {
-                    return [];
-                  }
-                }
-              );
-              toastSuccess(`Document ${updatedDocument.title} saved`);
-            }
-          })
-          .catch((err) => toastError(err?.message));
+        saveContentMutation.mutate({
+          doc_id: doc_id as string,
+          content: getJSON(state),
+        });
         return true; // Prevents any further key handlers from being run.
       },
       [getJSON, doc_id]
@@ -83,8 +59,6 @@ export default function RemirrorContext({
   setDocId: (docId: string) => void;
 }) {
   const firstRender = useRef(true);
-  const user = auth.user();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { manager, state } = useRemirror({
     extensions: () => [
@@ -109,51 +83,7 @@ export default function RemirrorContext({
   const { project_id, doc_id } = useParams();
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [saving, setSaving] = useState<number | boolean>(false);
-  const saveContentMutation = useMutation(
-    async (vars: { doc_id: string; content: RemirrorJSON }) => {
-      await updateDocument({ ...vars });
-    },
-    {
-      onMutate: async (updatedDocument) => {
-        await queryClient.cancelQueries(`${project_id}-documents`);
-
-        const previousDocuments = queryClient.getQueryData(
-          `${project_id}-documents`
-        );
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
-            if (oldData) {
-              let newData: Document[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.doc_id) {
-                  return {
-                    ...doc,
-                    content: updatedDocument.content,
-                  };
-                } else {
-                  return doc;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-
-        return { previousDocuments };
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          context?.previousDocuments
-        );
-      },
-      onSuccess: () => {
-        setSaving(false);
-      },
-    }
-  );
+  const saveContentMutation = useUpdateDocument(project_id as string);
 
   useEffect(() => {
     if (firstRender.current) {
@@ -195,6 +125,7 @@ export default function RemirrorContext({
           // @ts-ignore
           content: manager.view.state.doc.toJSON(),
         });
+        setSaving(false);
       }
     }, 500);
 

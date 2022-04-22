@@ -10,6 +10,7 @@ import {
 } from "../../../utils/customHooks";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 import { v4 as uuid } from "uuid";
+import { auth } from "../../../utils/supabaseUtils";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
   const queryClient = useQueryClient();
@@ -19,6 +20,7 @@ export default function PropertiesPanel() {
   const { data: categories, refetch: refetchAllTags } = useGetTags(
     project_id as string
   );
+  const user = auth.user();
   const allDocs: Document[] = queryClient.getQueryData(
     `${project_id}-documents`
   ) as Document[];
@@ -64,12 +66,17 @@ export default function PropertiesPanel() {
             className="p-button-outlined p-button-raised p-2"
             onClick={() => {
               let id = uuid();
-              if (currentDoc && currentDoc.content)
+              if (currentDoc && currentDoc.content && user)
                 createTemplateMutation.mutate({
                   id,
                   project_id: project_id as string,
                   title: `${currentDoc.title} template`,
                   content: currentDoc?.content,
+                  user_id: user.id,
+                  icon: "mdi:file",
+                  image: "",
+                  categories: [],
+                  folder: false,
                 });
             }}
           />
@@ -80,13 +87,13 @@ export default function PropertiesPanel() {
             className="p-button-outlined p-button-raised p-2"
             onClick={() => {
               let id = uuid();
-              if (currentDoc && currentDoc.content)
-                createTemplateMutation.mutate({
-                  id,
-                  project_id: project_id as string,
-                  title: `${currentDoc.title} template`,
-                  content: currentDoc?.content,
-                });
+              // if (currentDoc && currentDoc.content)
+              // createTemplateMutation.mutate({
+              //   id,
+              //   project_id: project_id as string,
+              //   title: `${currentDoc.title} template`,
+              //   content: currentDoc?.content,
+              // });
             }}
           />
         </div>

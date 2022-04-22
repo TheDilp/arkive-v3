@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
-import { Document, Project, Template } from "../custom-types";
+import { Document, Project } from "../custom-types";
 import {
   auth,
   createDocument,
@@ -145,6 +145,7 @@ export function useCreateDocument(project_id: string) {
                     ? newDocument.categories
                     : [],
                   folder: newDocument.folder ? newDocument.folder : false,
+                  template: false,
                 },
               ];
               return newData;
@@ -170,8 +171,6 @@ export function useUpdateDocument(project_id: string) {
       folder?: boolean;
       parent?: string | null;
       icon?: string;
-      view_by?: string[];
-      edit_by?: string[];
     }) =>
       await updateDocument({
         doc_id: vars.doc_id,
@@ -181,8 +180,6 @@ export function useUpdateDocument(project_id: string) {
         image: vars.image,
         icon: vars.icon,
         content: vars.content,
-        view_by: vars.view_by,
-        edit_by: vars.edit_by,
       }),
     {
       onMutate: async (updatedDocument) => {
@@ -228,7 +225,6 @@ export function useUpdateDocument(project_id: string) {
           `${project_id}-documents`,
           context?.previousDocuments
         );
-        toastError("There was an error updating this document.");
       },
     }
   );
@@ -288,6 +284,7 @@ export function useGetTags(project_id: string) {
     });
   return { data: data?.[0] || [], refetch };
 }
+// Custom hook to create a template
 export function useCreateTemplate() {
   const queryClient = useQueryClient();
   return useMutation(
@@ -296,21 +293,28 @@ export function useCreateTemplate() {
       project_id: string;
       title: string;
       content: RemirrorJSON;
+      user_id: string;
+      icon: string;
+      image: string;
+      categories: string[];
+      folder: boolean;
     }) => {
-      await createTemplate({ ...vars });
-      alert("VARSSS");
+      await createTemplate({ ...vars, parent: undefined });
     },
     {
-      onMutate: async (newTemplate) => {
+      onMutate: async (newDocument) => {
         const previousTemplates = queryClient.getQueryData(
-          `${newTemplate.project_id}-templates`
+          `${newDocument.project_id}-documents`
         );
         queryClient.setQueryData(
-          `${newTemplate.project_id}-templates`,
-          //   @ts-ignore
-          (oldData: Template[] | undefined) => {
+          `${newDocument.project_id}-documents`,
+          (oldData: Document[] | undefined) => {
             if (oldData) {
-              let newData: Template[] = [...oldData, newTemplate];
+              // Template shouldn't have parent hence null
+              let newData: Document[] = [
+                ...oldData,
+                { ...newDocument, parent: null, template: true },
+              ];
               return newData;
             } else {
               return [];
@@ -328,4 +332,16 @@ export function useCreateTemplate() {
       },
     }
   );
+}
+// Custom hook to get templates
+export function useGetTemplates(project_id: string) {
+  const queryClient = useQueryClient();
+  const templates = queryClient.getQueryData<Document[]>(
+    `${project_id}-documents`
+  );
+  if (templates) {
+    return templates.filter((doc) => doc.template);
+  } else {
+    return [];
+  }
 }

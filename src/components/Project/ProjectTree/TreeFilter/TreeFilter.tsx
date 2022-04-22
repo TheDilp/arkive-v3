@@ -37,12 +37,12 @@ export default function TreeFilter({
         visible={createDocumentDialog}
         setVisible={setCreateDocumentDialog}
       />
-      <div className="w-full py-1 flex justify-content-between">
+      <div className="w-full py-1 flex justify-content-center">
         <SplitButton
           label="Quick Create"
           icon="pi pi-bolt"
           model={items}
-          className="p-button-outlined mr-2 mb-2 w-full"
+          className="p-button-outlined mb-2 w-full"
           onClick={() => {
             let id = uuid();
             createDocument.mutate({

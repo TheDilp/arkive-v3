@@ -131,7 +131,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
             </div>
             <div className="w-8 flex justify-content-between my-2">
               <div className="w-1/2 flex align-items-center">
-                <span className="pr-1">Folder:</span>
+                <span className="pr-1">Is Folder:</span>
                 <Controller
                   name="folder"
                   control={control}
