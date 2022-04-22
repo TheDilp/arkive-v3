@@ -297,6 +297,7 @@ export function useCreateTemplate() {
       categories: string[];
       folder: boolean;
     }) => {
+      // TEMPLATE:TRUE is hardcoded in supabaseutils.ts
       await createTemplate({ ...vars, parent: undefined });
     },
     {

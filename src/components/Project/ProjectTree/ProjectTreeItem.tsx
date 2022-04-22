@@ -3,7 +3,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog
+  treeItemDisplayDialog,
 } from "../../../custom-types";
 type Props = {
   docId: string;
@@ -34,7 +34,6 @@ export default function ProjectTreeItem({
       className="text-lg hover:bg-blue-300 py-1 cursor-pointer"
       onClick={() => {
         setDocId(node.id as string);
-        // navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
       }}
       onContextMenu={(e) => {
         cm.current.show(e);
@@ -43,6 +42,7 @@ export default function ProjectTreeItem({
           title: node.text,
           show: false,
           folder: node.data?.folder || false,
+          depth,
         });
       }}
     >

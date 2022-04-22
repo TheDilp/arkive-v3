@@ -34,6 +34,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     title: "",
     show: false,
     folder: false,
+    depth: 0,
   });
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const [iconSelect, setIconSelect] = useState<iconSelect>({
@@ -121,7 +122,11 @@ export default function ProjectTree({ docId, setDocId }: Props) {
               tree={treeData}
               rootId={"0"}
               sort={false}
-              render={(node: NodeModel, { depth, isOpen, onToggle }) => (
+              initialOpen={false}
+              render={(
+                node: NodeModel<Document>,
+                { depth, isOpen, onToggle }
+              ) => (
                 <ProjectTreeItem
                   // @ts-ignore
                   node={node}

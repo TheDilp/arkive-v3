@@ -17,6 +17,7 @@ import {
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
+  LinkExtension,
   NodeFormattingExtension,
   OrderedListExtension,
   UnderlineExtension,
@@ -77,7 +78,9 @@ export default function RemirrorContext({
       new BulletListExtension(),
       new OrderedListExtension(),
       CustomMentionExtension,
-      CustomLinkExtenstion,
+      new LinkExtension({
+        autoLink: true,
+      }),
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),

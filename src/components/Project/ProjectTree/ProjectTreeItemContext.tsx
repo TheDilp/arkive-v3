@@ -5,9 +5,10 @@ import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import { deleteDocument } from "../../../utils/supabaseUtils";
-import { toastSuccess } from "../../../utils/utils";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
 import {
   useCreateDocument,
+  useCreateTemplate,
   useDeleteDocument,
   useUpdateDocument,
 } from "../../../utils/customHooks";
@@ -54,12 +55,13 @@ export default function ProjectTreeItemContext({
       reject: () => {},
     });
   };
-  let folders: Document[] | undefined =
+  const documents: Document[] | undefined =
     queryClient.getQueryData(`${project_id}-documents`) || [];
-  folders = folders.filter((folder) => folder.folder);
+  let folders = documents.filter((doc) => doc.folder);
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const newDocumentMutation = useCreateDocument(project_id as string);
+  const createTemplateMutation = useCreateTemplate();
   // Get all the folders a document can be moved to
   const moveToOptions = [
     {
@@ -94,7 +96,7 @@ export default function ProjectTreeItemContext({
     },
     {
       label: "Change Type",
-      icon: "pi pi-fw, pi-sync",
+      icon: "pi pi-fw pi-sync",
       items: [
         {
           label: "Document",
@@ -115,6 +117,27 @@ export default function ProjectTreeItemContext({
             }),
         },
       ],
+    },
+    {
+      label: "Covert to Template",
+      icon: "pi pi-fw pi-copy",
+      command: () => {
+        let doc = documents.find((doc) => doc.id === displayDialog.id);
+        if (doc) {
+          if (doc.content) {
+            let id = uuid();
+            let vars = {
+              ...doc,
+              id,
+              title: `${doc.title}`,
+            };
+            // @ts-ignore
+            createTemplateMutation.mutate(vars);
+          } else {
+            toastWarn("Document is empty, cannot convert to template");
+          }
+        }
+      },
     },
     { separator: true },
     {
@@ -166,23 +189,31 @@ export default function ProjectTreeItemContext({
           label: "Insert Document",
           icon: "pi pi-fw pi-file",
           command: () => {
-            newDocumentMutation.mutate({
-              id: uuid(),
-              parent: displayDialog.id,
-              folder: false,
-            });
+            if (displayDialog.depth < 3) {
+              newDocumentMutation.mutate({
+                id: uuid(),
+                parent: displayDialog.id,
+                folder: false,
+              });
+            } else {
+              toastWarn("You cannot insert more than 4 levels deep.");
+            }
           },
         },
         {
           label: "Insert Folder",
           icon: "pi pi-fw pi-folder",
           command: () => {
-            newDocumentMutation.mutate({
-              id: uuid(),
-              title: "New Folder",
-              parent: displayDialog.id,
-              folder: true,
-            });
+            if (displayDialog.depth < 3) {
+              newDocumentMutation.mutate({
+                id: uuid(),
+                title: "New Folder",
+                parent: displayDialog.id,
+                folder: true,
+              });
+            } else {
+              toastWarn("You cannot insert more than 4 levels deep.");
+            }
           },
         },
       ],
