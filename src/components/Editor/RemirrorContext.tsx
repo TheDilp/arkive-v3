@@ -25,7 +25,7 @@ import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
 import "../../styles/Editor.css";
 import { useUpdateDocument } from "../../utils/customHooks";
-import { toastWarn } from "../../utils/utils";
+import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
 import MentionComponent from "./MentionComponent";
@@ -37,6 +37,8 @@ const hooks = [
     const saveContentMutation = useUpdateDocument(project_id as string);
     const handleSaveShortcut = useCallback(
       ({ state }) => {
+        toastSuccess("Document successfully saved!");
+
         saveContentMutation.mutate({
           doc_id: doc_id as string,
           content: getJSON(state),
@@ -68,6 +70,9 @@ export default function RemirrorContext({
       new UnderlineExtension(),
       new ImageExtension({
         enableResizing: true,
+        extraAttributes: {
+          displayMode: "inline-block",
+        },
       }),
       new BulletListExtension(),
       new OrderedListExtension(),

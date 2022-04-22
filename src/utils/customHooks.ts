@@ -217,9 +217,6 @@ export function useUpdateDocument(project_id: string) {
 
         return { previousDocuments };
       },
-      onSuccess: () => {
-        // documentsRefetch();
-      },
       onError: (err, newTodo, context) => {
         queryClient.setQueryData(
           `${project_id}-documents`,
@@ -323,6 +320,7 @@ export function useCreateTemplate() {
         );
         return { previousTemplates };
       },
+
       onError: (err, newTodo, context) => {
         queryClient.setQueryData(
           `${newTodo.project_id}-templates`,
