@@ -107,7 +107,7 @@ export function useCreateDocument(project_id: string) {
       categories?: string[] | undefined;
       folder?: boolean;
       icon?: string;
-      content: RemirrorJSON | null;
+      content?: RemirrorJSON | null;
     }) => {
       await createDocument({ project_id, ...vars });
     },
@@ -132,7 +132,7 @@ export function useCreateDocument(project_id: string) {
                 {
                   id: newDocument.id,
                   project_id,
-                  content: newDocument.content,
+                  content: newDocument.content || null,
                   user_id,
                   // @ts-ignore
                   parent:

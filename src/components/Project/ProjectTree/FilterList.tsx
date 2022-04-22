@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { Document } from "../../../custom-types";
@@ -15,7 +15,7 @@ export default function FilterList({ filteredTree, setDocId }: Props) {
   const rowVirtualizer = useVirtual({
     size: filteredTree.length,
     parentRef,
-    estimateSize: React.useCallback(() => 31, []),
+    estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
   const navigate = useNavigate();
