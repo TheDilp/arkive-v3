@@ -1,11 +1,10 @@
+import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useNavigate, useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog,
+  treeItemDisplayDialog
 } from "../../../custom-types";
-import { Icon } from "@iconify/react";
 type Props = {
   docId: string;
   node: NodeModel<Document>;
@@ -29,15 +28,13 @@ export default function ProjectTreeItem({
   setIconSelect,
   cm,
 }: Props) {
-  const { doc_id } = useParams();
-  const navigate = useNavigate();
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
       className="text-lg hover:bg-blue-300 py-1 cursor-pointer"
       onClick={() => {
         setDocId(node.id as string);
-        navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
+        // navigate(doc_id === undefined ? `./${node.id}` : `./${doc_id}`);
       }}
       onContextMenu={(e) => {
         cm.current.show(e);

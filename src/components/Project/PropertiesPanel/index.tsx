@@ -70,7 +70,7 @@ export default function PropertiesPanel() {
                 createTemplateMutation.mutate({
                   id,
                   project_id: project_id as string,
-                  title: `${currentDoc.title} template`,
+                  title: `${currentDoc.title}`,
                   content: currentDoc?.content,
                   user_id: user.id,
                   icon: "mdi:file",

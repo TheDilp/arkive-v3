@@ -186,7 +186,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         </TabPanel>
         <TabPanel header="Templates">
           <div className="h-screen">
-            <TemplatesTree />
+            <TemplatesTree setDocId={setDocId} />
           </div>
         </TabPanel>
       </TabView>

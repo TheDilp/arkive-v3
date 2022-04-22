@@ -135,7 +135,10 @@ export default function RemirrorContext({
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
-        {currentDocument && currentDocument.title}
+        {currentDocument &&
+          `${currentDocument.title} ${
+            currentDocument.template ? "[TEMPLATE]" : ""
+          }`}
       </h1>
       {documents && (
         <ThemeProvider>

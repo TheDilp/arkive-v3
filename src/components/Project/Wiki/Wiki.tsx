@@ -1,5 +1,11 @@
-import { useState } from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { auth } from "../../../utils/supabaseUtils";
 import { useGetDocuments, useGetProjectData } from "../../../utils/customHooks";
 import RemirrorContext from "../../Editor/RemirrorContext";
@@ -11,6 +17,12 @@ export default function Wiki() {
   const { project_id } = useParams();
   const documents = useGetDocuments(project_id as string);
   const project = useGetProjectData(project_id as string);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (docId) {
+      navigate(docId);
+    }
+  }, [docId]);
 
   if (!documents || !project) return <LoadingScreen />;
   return !auth.user() ? (
