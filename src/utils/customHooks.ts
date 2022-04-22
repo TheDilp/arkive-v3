@@ -172,6 +172,7 @@ export function useUpdateDocument(project_id: string) {
       folder?: boolean;
       parent?: string | null;
       icon?: string;
+      categories?: string[];
     }) =>
       await updateDocument({
         doc_id: vars.doc_id,

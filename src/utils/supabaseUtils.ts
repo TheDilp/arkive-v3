@@ -345,9 +345,6 @@ export const deleteManyDocuments = async (doc_ids: string[]) => {
     const { error } = await supabase.rpc("delete_many_documents", {
       ids: doc_ids,
     });
-    // .from<Document>("documents")
-    // .delete()
-    // .in("id", doc_ids);
 
     if (error) {
       toastError("There was an error deleting your documents.");
@@ -356,7 +353,7 @@ export const deleteManyDocuments = async (doc_ids: string[]) => {
   }
 };
 export const createManyDocuments = async () => {
-  for (let index = 0; index < 250; index++) {
+  for (let index = 0; index < 20; index++) {
     createDocument({
       project_id: "81b55b26-a0f3-47e2-a8d2-761bead4b5cc",
       title: "New Document",

@@ -11,24 +11,23 @@ import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Toolbar } from "primereact/toolbar";
 import { useEffect, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { Document, iconSelect } from "../../../custom-types";
 import {
-  createDocument,
-  deleteDocument,
-  deleteManyDocuments,
-  updateDocument,
-} from "../../../utils/supabaseUtils";
-import {
+  useCreateDocument,
   useGetDocuments,
   useGetTags,
   useUpdateDocument,
 } from "../../../utils/customHooks";
+import {
+  deleteDocument,
+  deleteManyDocuments,
+} from "../../../utils/supabaseUtils";
 import { searchCategory } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../ProjectTree/IconSelectMenu";
-
+import { v4 as uuid } from "uuid";
 export default function DocumentsSettingsTable() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
@@ -47,51 +46,11 @@ export default function DocumentsSettingsTable() {
   const ref = useRef(null);
   const documents = useGetDocuments(project_id as string);
   const [localDocuments, setLocalDocuments] = useState(documents);
-  const { data: categories, refetch: refetchAllTags } = useGetTags(
-    project_id as string
-  );
+  const { data: categories } = useGetTags(project_id as string);
   // MUTATIONS
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
-  const updateCategoriesMutation = useMutation(
-    async (vars: { doc_id: string; categories: string[] }) =>
-      await updateDocument({ ...vars }),
-    {
-      onMutate: (vars) => {
-        let oldDocs = queryClient.getQueryData(`${project_id}-documents`);
-        queryClient.setQueryData(
-          `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
-            if (oldData) {
-              let newData: Document[] = oldData.map((doc) => {
-                if (doc.id === vars.doc_id) {
-                  return {
-                    ...doc,
-                    categories: vars.categories,
-                  };
-                } else {
-                  return doc;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-        return { oldDocs };
-      },
-      onError: (e, v, context) => {
-        if (context) {
-          queryClient.setQueryData(`${project_id}-documents`, context.oldDocs);
-        }
-      },
-      onSuccess: () => {
-        refetchAllTags();
-      },
-    }
-  );
-
+  const createDocumentMutation = useCreateDocument(project_id as string);
   useEffect(() => {
     if (documents) {
       setLocalDocuments(documents);
@@ -246,23 +205,8 @@ export default function DocumentsSettingsTable() {
           icon="pi pi-plus"
           className="p-button-success mr-2 p-button-outlined"
           onClick={async () => {
-            const newDocument = (await createDocument(
-              project_id as string,
-              undefined
-            )) as Document;
-            if (newDocument) {
-              queryClient.setQueryData(
-                `${project_id}-documents`,
-                (oldData: Document[] | undefined) => {
-                  if (oldData) {
-                    const newData = [...oldData, newDocument];
-                    return newData;
-                  } else {
-                    return [newDocument];
-                  }
-                }
-              );
-            }
+            let id = uuid();
+            createDocumentMutation.mutate({ id });
           }}
         />
         <Button
@@ -396,7 +340,7 @@ export default function DocumentsSettingsTable() {
         multiple
         onSelect={(e) => {
           if (!options.rowData.categories.includes(e.value)) {
-            updateCategoriesMutation.mutate({
+            updateDocumentMutation.mutate({
               doc_id: options.rowData.id,
               categories: [...options.rowData.categories, e.value],
             });
@@ -404,7 +348,7 @@ export default function DocumentsSettingsTable() {
         }}
         onUnselect={(e) => {
           if (options.rowData.categories.includes(e.value)) {
-            updateCategoriesMutation.mutate({
+            updateDocumentMutation.mutate({
               doc_id: options.rowData.id,
               categories: options.rowData.categories.filter(
                 (category: string) => category !== e.value
@@ -418,7 +362,7 @@ export default function DocumentsSettingsTable() {
           if (e.key === "Enter") e.preventDefault();
           if (e.key === "Enter" && e.currentTarget.value !== "") {
             if (!options.rowData.categories.includes(e.currentTarget.value)) {
-              updateCategoriesMutation.mutate({
+              updateDocumentMutation.mutate({
                 doc_id: options.rowData.id,
                 categories: [
                   ...options.rowData.categories,
