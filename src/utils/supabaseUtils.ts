@@ -110,6 +110,7 @@ export const createDocument = async ({
   project_id,
   title,
   parent,
+  content,
   icon,
   image,
   categories,
@@ -123,6 +124,7 @@ export const createDocument = async ({
   parent?: string | null;
   categories?: string[];
   folder?: boolean;
+  content?: RemirrorJSON | null;
 }) => {
   let user = auth.user();
   if (user) {
@@ -132,6 +134,7 @@ export const createDocument = async ({
         id,
         project_id,
         title,
+        content,
         image,
         icon,
         folder,
