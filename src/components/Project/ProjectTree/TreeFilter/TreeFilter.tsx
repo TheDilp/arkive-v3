@@ -1,13 +1,12 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
-import { useParams } from "react-router-dom";
-import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
-import { auth } from "../../../../utils/supabaseUtils";
-import { v4 as uuid } from "uuid";
-import { Dialog } from "primereact/dialog";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
+import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
 import DocumentCreateDialog from "./DocumentCreateDialog";
+import { SplitButton } from "primereact/splitbutton";
 type Props = {
   filter: string;
   setFilter: (filter: string) => void;
@@ -23,9 +22,15 @@ export default function TreeFilter({
 }: Props) {
   const { project_id } = useParams();
   const tags = useGetTags(project_id as string).data;
-  const user = auth.user();
   const createDocument = useCreateDocument(project_id as string);
   const [createDocumentDialog, setCreateDocumentDialog] = useState(false);
+  const items = [
+    {
+      label: "Create Document",
+      icon: "pi pi-fw pi-plus",
+      command: () => setCreateDocumentDialog(true),
+    },
+  ];
   return (
     <div className="pt-2 px-2 w-full">
       <DocumentCreateDialog
@@ -33,25 +38,18 @@ export default function TreeFilter({
         setVisible={setCreateDocumentDialog}
       />
       <div className="w-full py-1 flex justify-content-between">
-        <Button
+        <SplitButton
           label="Quick Create"
-          icon={"pi pi-fw pi-bolt"}
-          iconPos="right"
-          className="p-button-outlined Lato p-2"
+          icon="pi pi-bolt"
+          model={items}
+          className="p-button-outlined mr-2 mb-2 w-full"
           onClick={() => {
             let id = uuid();
             createDocument.mutate({
               id,
             });
           }}
-        />
-        <Button
-          label="New Document"
-          icon={"pi pi-fw pi-plus"}
-          iconPos="right"
-          className="p-button-outlined Lato p-2"
-          onClick={() => setCreateDocumentDialog(true)}
-        />
+        ></SplitButton>
       </div>
       <div className="w-full flex flex-wrap">
         <InputText

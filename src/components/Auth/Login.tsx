@@ -19,6 +19,7 @@ export default function Login() {
     }, 5000);
     return () => clearTimeout(timeout);
   }, [index]);
+  const navigate = useNavigate();
   return auth.user() ? (
     <Navigate to="/" />
   ) : (
@@ -99,7 +100,13 @@ export default function Login() {
               label="Sign In"
               icon="pi pi-user"
               className="w-full text-white Lato"
-              onClick={() => login(email, password)}
+              onClick={() =>
+                login(email, password)
+                  .then((data) => {
+                    if (data) navigate("/");
+                  })
+                  .catch((err) => {})
+              }
             />
           </div>
         </div>

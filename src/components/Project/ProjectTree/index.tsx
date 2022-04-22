@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog
+  treeItemDisplayDialog,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
@@ -16,6 +16,7 @@ import ProjectTreeItem from "./ProjectTreeItem";
 import ProjectTreeItemContext from "./ProjectTreeItemContext";
 import RenameDialog from "./RenameDialog";
 import TreeFilter from "./TreeFilter/TreeFilter";
+import { TabView, TabPanel } from "primereact/tabview";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -85,98 +86,113 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   }, [doc_id]);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
-      <ProjectTreeItemContext
-        cm={cm}
-        docId={docId}
-        displayDialog={displayDialog}
-        setDisplayDialog={setDisplayDialog}
-      />
-      <RenameDialog
-        displayDialog={displayDialog}
-        setDisplayDialog={setDisplayDialog}
-      />
+      <TabView className="w-full">
+        <TabPanel header="Documents">
+          <ProjectTreeItemContext
+            cm={cm}
+            docId={docId}
+            displayDialog={displayDialog}
+            setDisplayDialog={setDisplayDialog}
+          />
+          <RenameDialog
+            displayDialog={displayDialog}
+            setDisplayDialog={setDisplayDialog}
+          />
 
-      {iconSelect.show && (
-        <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
-      )}
-      <TreeFilter
-        filter={filter}
-        setFilter={setFilter}
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
-      />
-      {!filter && selectedTags.length === 0 && (
-        <Tree
-          classes={{
-            root: "w-full overflow-y-auto projectTreeRoot",
-            container: "list-none",
-            placeholder: "relative",
-          }}
-          tree={treeData}
-          rootId={"0"}
-          sort={false}
-          render={(node: NodeModel, { depth, isOpen, onToggle }) => (
-            <ProjectTreeItem
-              // @ts-ignore
-              node={node}
-              depth={depth}
-              isOpen={isOpen}
-              onToggle={onToggle}
-              docId={docId}
-              setDocId={setDocId}
-              setDisplayDialog={setDisplayDialog}
-              setIconSelect={setIconSelect}
-              cm={cm}
-            />
+          {iconSelect.show && (
+            <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
           )}
-          dragPreviewRender={(monitorProps) => (
-            <DragPreview
-              text={monitorProps.item.text}
-              droppable={monitorProps.item.droppable}
-            />
-          )}
-          placeholderRender={(node, { depth }) => (
-            <div
-              style={{
-                top: 0,
-                right: 0,
-                left: depth * 24,
-                backgroundColor: "#1967d2",
-                height: "2px",
-                position: "absolute",
-                transform: "translateY(-50%)",
+          <TreeFilter
+            filter={filter}
+            setFilter={setFilter}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
+          {!filter && selectedTags.length === 0 && (
+            <Tree
+              classes={{
+                root: "w-full overflow-y-auto projectTreeRoot",
+                container: "list-none",
+                placeholder: "relative",
               }}
-            ></div>
+              tree={treeData}
+              rootId={"0"}
+              sort={false}
+              render={(node: NodeModel, { depth, isOpen, onToggle }) => (
+                <ProjectTreeItem
+                  // @ts-ignore
+                  node={node}
+                  depth={depth}
+                  isOpen={isOpen}
+                  onToggle={onToggle}
+                  docId={docId}
+                  setDocId={setDocId}
+                  setDisplayDialog={setDisplayDialog}
+                  setIconSelect={setIconSelect}
+                  cm={cm}
+                />
+              )}
+              dragPreviewRender={(monitorProps) => (
+                <DragPreview
+                  text={monitorProps.item.text}
+                  droppable={monitorProps.item.droppable}
+                />
+              )}
+              placeholderRender={(node, { depth }) => (
+                <div
+                  style={{
+                    top: 0,
+                    right: 0,
+                    left: depth * 24,
+                    backgroundColor: "#1967d2",
+                    height: "2px",
+                    position: "absolute",
+                    transform: "translateY(-50%)",
+                  }}
+                ></div>
+              )}
+              dropTargetOffset={10}
+              canDrop={(tree, { dragSource, dropTargetId }) => {
+                const depth = getDepth(treeData, dropTargetId);
+                // Don't allow nesting documents beyond this depth
+                if (depth > 3) return false;
+                if (dragSource?.parent === dropTargetId) {
+                  return true;
+                }
+              }}
+              // @ts-ignore
+              onDrop={handleDrop}
+            />
           )}
-          dropTargetOffset={10}
-          canDrop={(tree, { dragSource, dropTargetId }) => {
-            const depth = getDepth(treeData, dropTargetId);
-            // Don't allow nesting documents beyond this depth
-            if (depth > 3) return false;
-            if (dragSource?.parent === dropTargetId) {
-              return true;
-            }
-          }}
-          // @ts-ignore
-          onDrop={handleDrop}
-        />
-      )}
-      {(filter || selectedTags.length > 0) && (
-        <FilterList
-          filteredTree={treeData
-            .filter((node) =>
-              node.text.toLowerCase().includes(filter.toLowerCase())
-            )
-            .filter((node) =>
-              selectedTags.length > 0
-                ? node.data?.categories.some((category) =>
-                    selectedTags.includes(category)
-                  )
-                : true
-            )}
-          setDocId={setDocId}
-        />
-      )}
+          {(filter || selectedTags.length > 0) && (
+            <FilterList
+              filteredTree={treeData
+                .filter((node) =>
+                  node.text.toLowerCase().includes(filter.toLowerCase())
+                )
+                .filter((node) =>
+                  selectedTags.length > 0
+                    ? node.data?.categories.some((category) =>
+                        selectedTags.includes(category)
+                      )
+                    : true
+                )}
+              setDocId={setDocId}
+            />
+          )}
+        </TabPanel>
+        <TabPanel header="Templates">
+          <p>
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+            quae ab illo inventore veritatis et quasi architecto beatae vitae
+            dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+            aspernatur aut odit aut fugit, sed quia consequuntur magni dolores
+            eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci
+            velit, sed quia non numquam eius modi.
+          </p>
+        </TabPanel>
+      </TabView>
     </div>
   );
 }

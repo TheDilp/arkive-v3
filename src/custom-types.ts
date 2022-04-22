@@ -64,3 +64,8 @@ export type CreateDocumentInputs = {
   folder: boolean;
   template: string;
 };
+
+export type RegisterInputs = {
+  email: string;
+  password: string;
+};

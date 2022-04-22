@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { auth, register } from "../../utils/supabaseUtils";
 import images from "./authImages";
-
+import { useForm, SubmitHandler } from "react-hook-form";
+import { RegisterInputs } from "../../custom-types";
+import { emailRegex, passwordRegex } from "../../utils/utils";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,10 +21,21 @@ export default function Register() {
     }, 5000);
     return () => clearTimeout(timeout);
   }, [index]);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<RegisterInputs>();
+  const onSubmit: SubmitHandler<RegisterInputs> = (data) => console.log(data);
+
   return auth.user() ? (
     <Navigate to="/" />
   ) : (
-    <div className="w-full h-full flex align-items-center justify-content-center">
+    <form
+      className="w-full h-full flex align-items-center justify-content-center Lato"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="surface-card shadow-4 w-full border-round w-6 flex">
         <div className="w-7 relative">
           <h1
@@ -70,11 +83,21 @@ export default function Register() {
               id="email"
               type="text"
               className="w-full mb-3"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              {...register("email", {
+                required: true,
+                pattern: emailRegex,
+              })}
             />
-
+            {errors.email?.type === "required" && (
+              <span style={{ color: "var(--red-400)" }}>
+                This field is required
+              </span>
+            )}
+            {errors.email?.type === "pattern" && (
+              <span style={{ color: "var(--red-400)" }}>
+                Please enter a valid email
+              </span>
+            )}
             <label
               htmlFor="password"
               className="block text-900 font-medium mb-2 Lato"
@@ -85,25 +108,34 @@ export default function Register() {
               id="password"
               type="password"
               className="w-full mb-3"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  register(email, password);
-                }
-              }}
+              {...register("password", {
+                required: true,
+                minLength: 8,
+                pattern: passwordRegex,
+              })}
             />
-
-            <Button
-              label="Sign Up"
-              icon="pi pi-user-plus"
-              className="w-full text-white Lato"
-              onClick={() => register(email, password)}
-            />
+            {errors.password?.type === "required" && (
+              <span style={{ color: "var(--red-400)" }}>
+                This field is required
+              </span>
+            )}
+            {errors.password?.type === "pattern" && (
+              <span style={{ color: "var(--red-400)" }}>
+                Password must be minimum of 8 characters, at least one letter,
+                one number and one special character!
+              </span>
+            )}
+            <div className="py-1">
+              <Button
+                label="Sign Up"
+                icon="pi pi-user-plus"
+                className="w-full text-white Lato"
+                type="submit"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
