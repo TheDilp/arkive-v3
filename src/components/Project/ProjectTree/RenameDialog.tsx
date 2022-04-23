@@ -27,6 +27,9 @@ export default function RenameDialog({
           id: "",
           title: "",
           show: false,
+          folder: false,
+          depth: 0,
+          template: false,
         })
       }
       modal={false}
@@ -52,6 +55,9 @@ export default function RenameDialog({
                   id: "",
                   title: "",
                   show: false,
+                  folder: false,
+                  depth: 0,
+                  template: false,
                 });
               }
             }}
@@ -72,6 +78,9 @@ export default function RenameDialog({
                 id: "",
                 title: "",
                 show: false,
+                folder: false,
+                depth: 0,
+                template: false,
               });
             }}
           />

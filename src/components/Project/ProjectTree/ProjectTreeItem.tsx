@@ -43,6 +43,7 @@ export default function ProjectTreeItem({
           show: false,
           folder: node.data?.folder || false,
           depth,
+          template: node.data?.template || false,
         });
       }}
     >

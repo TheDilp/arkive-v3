@@ -35,6 +35,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     show: false,
     folder: false,
     depth: 0,
+    template: false,
   });
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const [iconSelect, setIconSelect] = useState<iconSelect>({
@@ -93,19 +94,18 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}
+      <ProjectTreeItemContext
+        cm={cm}
+        docId={docId}
+        displayDialog={displayDialog}
+        setDisplayDialog={setDisplayDialog}
+      />
+      <RenameDialog
+        displayDialog={displayDialog}
+        setDisplayDialog={setDisplayDialog}
+      />
       <TabView className="w-full" renderActiveOnly={true}>
         <TabPanel header="Documents">
-          <ProjectTreeItemContext
-            cm={cm}
-            docId={docId}
-            displayDialog={displayDialog}
-            setDisplayDialog={setDisplayDialog}
-          />
-          <RenameDialog
-            displayDialog={displayDialog}
-            setDisplayDialog={setDisplayDialog}
-          />
-
           <TreeFilter
             filter={filter}
             setFilter={setFilter}
@@ -191,7 +191,12 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         </TabPanel>
         <TabPanel header="Templates">
           <div className="h-screen">
-            <TemplatesTree setDocId={setDocId} setIconSelect={setIconSelect} />
+            <TemplatesTree
+              setDocId={setDocId}
+              setIconSelect={setIconSelect}
+              setDisplayDialog={setDisplayDialog}
+              cm={cm}
+            />
           </div>
         </TabPanel>
       </TabView>

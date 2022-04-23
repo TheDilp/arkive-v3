@@ -36,7 +36,7 @@ export default function Wiki() {
           path="/:doc_id"
           element={
             <>
-              <RemirrorContext setDocId={setDocId} documents={documents} />
+              <RemirrorContext setDocId={setDocId} />
               <PropertiesPanel />
             </>
           }

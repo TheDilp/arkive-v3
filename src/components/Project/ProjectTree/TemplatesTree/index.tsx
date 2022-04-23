@@ -2,14 +2,21 @@ import { Icon } from "@iconify/react";
 import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { iconSelect } from "../../../../custom-types";
+import { iconSelect, treeItemDisplayDialog } from "../../../../custom-types";
 import { useGetTemplates } from "../../../../utils/customHooks";
 type Props = {
   setDocId: (docId: string) => void;
   setIconSelect: (iconSelect: iconSelect) => void;
+  setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
+  cm: any;
 };
 
-export default function TemplatesTree({ setDocId, setIconSelect }: Props) {
+export default function TemplatesTree({
+  setDocId,
+  setIconSelect,
+  setDisplayDialog,
+  cm,
+}: Props) {
   const { project_id } = useParams();
   const templates = useGetTemplates(project_id as string);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
@@ -56,6 +63,17 @@ export default function TemplatesTree({ setDocId, setIconSelect }: Props) {
               onClick={() => {
                 setDocId(templates[virtualRow.index].id as string);
               }}
+              onContextMenu={(e) => {
+                cm.current.show(e);
+                setDisplayDialog({
+                  id: templates[virtualRow.index].id,
+                  title: templates[virtualRow.index].title,
+                  show: false,
+                  folder: templates[virtualRow.index].folder,
+                  template: templates[virtualRow.index].template,
+                  depth: 0,
+                });
+              }}
             >
               <Icon
                 icon={templates[virtualRow.index].icon}
@@ -64,7 +82,6 @@ export default function TemplatesTree({ setDocId, setIconSelect }: Props) {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-
                   setIconSelect({
                     doc_id: templates[virtualRow.index].id,
                     icon: "bxs:folder",

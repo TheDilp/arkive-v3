@@ -25,7 +25,11 @@ import {
 import "remirror/styles/all.css";
 import { Document } from "../../custom-types";
 import "../../styles/Editor.css";
-import { useUpdateDocument } from "../../utils/customHooks";
+import {
+  useGetDocumentData,
+  useGetDocuments,
+  useUpdateDocument,
+} from "../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
@@ -55,10 +59,8 @@ const hooks = [
 ];
 
 export default function RemirrorContext({
-  documents,
   setDocId,
 }: {
-  documents: Document[] | undefined;
   setDocId: (docId: string) => void;
 }) {
   const firstRender = useRef(true);
@@ -89,10 +91,13 @@ export default function RemirrorContext({
     stringHandler: "html",
   });
   const { project_id, doc_id } = useParams();
-  const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
+  const documents = useGetDocuments(project_id as string);
+  const currentDocument = useGetDocumentData(
+    project_id as string,
+    doc_id as string
+  );
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
-
   useEffect(() => {
     if (firstRender.current) {
       setSaving(false);
@@ -102,16 +107,12 @@ export default function RemirrorContext({
     if (doc_id) {
       setDocId(doc_id);
       if (documents) {
-        const currentDocData = documents.find(
-          (document) => document.id === doc_id
-        );
-        if (currentDocData) {
-          setCurrentDocument(currentDocData);
+        if (currentDocument) {
           if (manager.view) {
             manager.view.updateState(
               manager.createState({
                 content: JSON.parse(
-                  JSON.stringify(currentDocData.content ?? "")
+                  JSON.stringify(currentDocument.content ?? "")
                 ),
               })
             );
@@ -138,6 +139,11 @@ export default function RemirrorContext({
 
     return () => clearTimeout(timeout);
   }, [saving]);
+
+  useEffect(() => {
+    if (documents) {
+    }
+  }, [documents]);
 
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">

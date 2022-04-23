@@ -94,6 +94,21 @@ export function useGetDocuments(project_id: string) {
   );
   return data;
 }
+// Custom hook for getting single document data
+export function useGetDocumentData(project_id: string, doc_id: string) {
+  const queryClient = useQueryClient();
+  const docs = queryClient.getQueryData<Document[]>(`${project_id}-documents`);
+  if (docs && doc_id) {
+    const doc = docs.find((doc) => doc.id === doc_id);
+    if (doc) {
+      return doc;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
 // Custom hook for creating a new document
 export function useCreateDocument(project_id: string) {
   const user_id = auth.user()?.id as string;

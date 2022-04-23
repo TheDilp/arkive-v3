@@ -83,7 +83,42 @@ export default function ProjectTreeItemContext({
       },
     })),
   ];
-  const items = [
+  const templateItems = [
+    {
+      label: "Rename Document",
+      icon: "pi pi-fw pi-pencil",
+      command: () => setDisplayDialog({ ...displayDialog, show: true }),
+    },
+
+    {
+      label: "Create Doc From Template",
+      icon: "pi pi-fw pi-copy",
+      command: () => {
+        // let doc = documents.find((doc) => doc.id === displayDialog.id);
+        // if (doc) {
+        //   if (doc.content) {
+        //     let id = uuid();
+        //     let vars = {
+        //       ...doc,
+        //       id,
+        //       title: `${doc.title}`,
+        //     };
+        //     // @ts-ignore
+        //     createTemplateMutation.mutate(vars);
+        //   } else {
+        //     toastWarn("Document is empty, cannot convert to template");
+        //   }
+        // }
+      },
+    },
+    { separator: true },
+    {
+      label: "Delete Document",
+      icon: "pi pi-fw pi-trash",
+      command: confirmdelete,
+    },
+  ];
+  const docItems = [
     {
       label: "Rename Document",
       icon: "pi pi-fw pi-pencil",
@@ -229,7 +264,7 @@ export default function ProjectTreeItemContext({
     <>
       <ConfirmDialog />
       <ContextMenu
-        model={displayDialog.folder ? folderItems : items}
+        model={displayDialog.template ? templateItems : (displayDialog.folder ? folderItems : docItems)}
         ref={cm}
         className="Lato"
       />
