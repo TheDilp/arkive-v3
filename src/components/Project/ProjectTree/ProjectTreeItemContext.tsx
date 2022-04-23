@@ -3,16 +3,14 @@ import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import { Document, treeItemDisplayDialog } from "../../../custom-types";
-import { deleteDocument } from "../../../utils/supabaseUtils";
-import { toastSuccess, toastWarn } from "../../../utils/utils";
 import {
   useCreateDocument,
   useCreateTemplate,
-  useDeleteDocument,
-  useUpdateDocument,
+  useDeleteDocument, useUpdateDocument
 } from "../../../utils/customHooks";
-import { v4 as uuid } from "uuid";
+import { toastWarn } from "../../../utils/utils";
 type Props = {
   docId: string;
   cm: React.RefObject<ContextMenu>;
@@ -21,6 +19,7 @@ type Props = {
 };
 
 export default function ProjectTreeItemContext({
+  docId,
   cm,
   displayDialog,
   setDisplayDialog,
@@ -28,6 +27,8 @@ export default function ProjectTreeItemContext({
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const deleteDocumentMutation = useDeleteDocument(project_id as string);
+
+  const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
       message: (
@@ -46,6 +47,9 @@ export default function ProjectTreeItemContext({
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
       accept: async () => {
+        if (displayDialog.id === docId) {
+          navigate("./");
+        }
         deleteDocumentMutation.mutate({
           doc_id: displayDialog.id,
           folder: displayDialog.folder,
@@ -264,7 +268,13 @@ export default function ProjectTreeItemContext({
     <>
       <ConfirmDialog />
       <ContextMenu
-        model={displayDialog.template ? templateItems : (displayDialog.folder ? folderItems : docItems)}
+        model={
+          displayDialog.template
+            ? templateItems
+            : displayDialog.folder
+            ? folderItems
+            : docItems
+        }
         ref={cm}
         className="Lato"
       />
