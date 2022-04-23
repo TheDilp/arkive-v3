@@ -1,12 +1,15 @@
+import { Icon } from "@iconify/react";
 import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
+import { iconSelect } from "../../../../custom-types";
 import { useGetTemplates } from "../../../../utils/customHooks";
 type Props = {
   setDocId: (docId: string) => void;
+  setIconSelect: (iconSelect: iconSelect) => void;
 };
 
-export default function TemplatesTree({ setDocId }: Props) {
+export default function TemplatesTree({ setDocId, setIconSelect }: Props) {
   const { project_id } = useParams();
   const templates = useGetTemplates(project_id as string);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
@@ -54,6 +57,23 @@ export default function TemplatesTree({ setDocId }: Props) {
                 setDocId(templates[virtualRow.index].id as string);
               }}
             >
+              <Icon
+                icon={templates[virtualRow.index].icon}
+                inline={true}
+                className="mr-1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  setIconSelect({
+                    doc_id: templates[virtualRow.index].id,
+                    icon: "bxs:folder",
+                    show: true,
+                    top: e.clientY,
+                    left: e.clientX,
+                  });
+                }}
+              />
               <span className={`text-lg hover:bg-blue-300 Lato`}>
                 {templates[virtualRow.index].title}
               </span>

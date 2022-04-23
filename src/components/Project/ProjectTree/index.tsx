@@ -90,6 +90,9 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   }, [doc_id]);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
+      {iconSelect.show && (
+        <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
+      )}
       <TabView className="w-full" renderActiveOnly={true}>
         <TabPanel header="Documents">
           <ProjectTreeItemContext
@@ -103,9 +106,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
             setDisplayDialog={setDisplayDialog}
           />
 
-          {iconSelect.show && (
-            <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
-          )}
           <TreeFilter
             filter={filter}
             setFilter={setFilter}
@@ -191,7 +191,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         </TabPanel>
         <TabPanel header="Templates">
           <div className="h-screen">
-            <TemplatesTree setDocId={setDocId} />
+            <TemplatesTree setDocId={setDocId} setIconSelect={setIconSelect} />
           </div>
         </TabPanel>
       </TabView>
