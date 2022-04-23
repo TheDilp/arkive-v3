@@ -33,6 +33,7 @@ import {
 import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
+import { FloatingLinkToolbar } from "./LinkHooks";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
 const hooks = [
@@ -80,9 +81,7 @@ export default function RemirrorContext({
       new BulletListExtension(),
       new OrderedListExtension(),
       CustomMentionExtension,
-      new LinkExtension({
-        autoLink: true,
-      }),
+      CustomLinkExtenstion,
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),
@@ -169,6 +168,7 @@ export default function RemirrorContext({
           >
             <MenuBar saving={saving} />
             <EditorComponent />
+            <FloatingLinkToolbar />
             <MentionComponent
               documents={documents.filter((doc) => !doc.template)}
             />

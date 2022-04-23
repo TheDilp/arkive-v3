@@ -3,8 +3,8 @@ const CustomLinkExtenstion = new LinkExtension({
   autoLink: true,
 });
 
-CustomLinkExtenstion.addHandler("onClick", (_, data) => {
-  window.location.assign(data.href);
+CustomLinkExtenstion.addHandler("onClick", (e, data) => {
+  if (e.ctrlKey) window.location.assign(data.href);
   return true;
 });
 
