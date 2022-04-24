@@ -21,6 +21,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     centerAlign,
     rightAlign,
     focus,
+    setTextColor,
   } = useCommands();
   const active = useActive();
 
@@ -125,6 +126,35 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 : "",
               command: () => {
                 toggleHeading({ level: 6 });
+                focus();
+              },
+            },
+          ],
+        },
+        {
+          icon: "pi pi-fw pi-align-left",
+          items: [
+            {
+              label: "Align Left",
+              icon: "pi pi-fw pi-align-left",
+              command: () => {
+                leftAlign();
+                focus();
+              },
+            },
+            {
+              label: "Align Center",
+              icon: "pi pi-fw pi-align-center",
+              command: () => {
+                centerAlign();
+                focus();
+              },
+            },
+            {
+              label: "Align Right",
+              icon: "pi pi-fw pi-align-right",
+              command: () => {
+                rightAlign();
                 focus();
               },
             },
@@ -322,37 +352,40 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           },
         },
         {
-          icon: "pi pi-fw pi-align-left",
-          items: [
-            {
-              label: "Align Left",
-              icon: "pi pi-fw pi-align-left",
-              command: () => {
-                leftAlign();
-                focus();
-              },
-            },
-            {
-              label: "Align Center",
-              icon: "pi pi-fw pi-align-center",
-              command: () => {
-                centerAlign();
-                focus();
-              },
-            },
-            {
-              label: "Align Right",
-              icon: "pi pi-fw pi-align-right",
-              command: () => {
-                rightAlign();
-                focus();
-              },
-            },
-          ],
+          icon: "pi pi-palette",
+          command: () => {
+            setTextColor("red");
+          },
         },
+        // {
+        //   icon: "pi pi-fw pi-table",
+        //   items: [
+        //     {
+        //       label: "Create Table (3x3)",
+        //       command: () =>
+        //         createTable({
+        //           rowsCount: 3,
+        //           columnsCount: 3,
+        //           withHeaderRow: false,
+        //         }),
+        //     },
+        //     { label: "Add Row Before", command: () => addTableRowBefore() },
+        //     { label: "Add Row After", command: () => addTableRowAfter() },
+        //     {
+        //       label: "Add Column Before",
+        //       command: () => addTableColumnBefore(),
+        //     },
+        //     { label: "Add Column After", command: () => addTableColumnAfter() },
+        //     { label: "Delete Column", command: () => deleteTableColumn() },
+        //     { label: "Delete Table", command: () => deleteTable() },
+        //   ],
+        // },
       ]}
       end={() => (saving ? <ProgressSpinner className="w-2rem h-2rem" /> : "")}
-      className="p-0 text-lg Lato"
+      className="p-0 Lato relative"
+      style={{
+        zIndex: 999999,
+      }}
     />
   );
 }

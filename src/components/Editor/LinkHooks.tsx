@@ -106,6 +106,10 @@ export function useFloatingLinkState() {
 
     setIsEditing(true);
   }, [chain, empty, setIsEditing]);
+  const colorText = useCallback(() => {
+    chain.setTextColor("blue");
+    setIsEditing(true);
+  }, [chain, empty, setIsEditing]);
 
   return useMemo(
     () => ({
@@ -118,6 +122,7 @@ export function useFloatingLinkState() {
       onRemove,
       submitHref,
       cancelHref,
+      colorText,
     }),
     [
       href,
@@ -128,6 +133,7 @@ export function useFloatingLinkState() {
       onRemove,
       submitHref,
       cancelHref,
+      colorText,
     ]
   );
 }
@@ -160,6 +166,7 @@ export const FloatingLinkToolbar = () => {
     clickEdit,
     onRemove,
     submitHref,
+    colorText,
     href,
     setHref,
     cancelHref,
@@ -190,6 +197,11 @@ export const FloatingLinkToolbar = () => {
                 type: ComponentItem.ToolbarButton,
                 onClick: () => clickEdit(),
                 icon: "link",
+              },
+              {
+                type: ComponentItem.ToolbarButton,
+                onClick: () => colorText(),
+                icon: "fontColor",
               },
             ],
       },

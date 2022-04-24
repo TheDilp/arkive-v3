@@ -7,7 +7,6 @@ import {
   useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   BoldExtension,
@@ -17,13 +16,13 @@ import {
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
-  LinkExtension,
   NodeFormattingExtension,
   OrderedListExtension,
+  TextColorExtension,
   UnderlineExtension,
 } from "remirror/extensions";
+import { TableExtension } from "@remirror/extension-react-tables";
 import "remirror/styles/all.css";
-import { Document } from "../../custom-types";
 import "../../styles/Editor.css";
 import {
   useGetDocumentData,
@@ -34,11 +33,13 @@ import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
 import { FloatingLinkToolbar } from "./LinkHooks";
+// import { TableExtension } from "@remirror/extension-react-tables";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
+import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
 const hooks = [
   () => {
-    const { getJSON } = useHelpers();
+    const { getJSON, isSelectionEmpty } = useHelpers();
     const { project_id, doc_id } = useParams();
     const saveContentMutation = useUpdateDocument(project_id as string);
     const handleSaveShortcut = useCallback(
@@ -53,9 +54,17 @@ const hooks = [
       },
       [getJSON, doc_id]
     );
+    const isEmpty = useCallback(
+      ({ state }) => {
+        console.log(isSelectionEmpty(state));
+        return true; // Prevents any further key handlers from being run.
+      },
+      [getJSON, doc_id]
+    );
 
     // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
     useKeymap("Mod-s", handleSaveShortcut);
+    useKeymap("Mod-m", isEmpty);
   },
 ];
 
@@ -74,9 +83,6 @@ export default function RemirrorContext({
       new UnderlineExtension(),
       new ImageExtension({
         enableResizing: true,
-        extraAttributes: {
-          displayMode: "inline-block",
-        },
       }),
       new BulletListExtension(),
       new OrderedListExtension(),
@@ -85,6 +91,13 @@ export default function RemirrorContext({
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),
+      new TextColorExtension(),
+      // new TableExtension({
+      //   resizable: true,
+      //   extraAttributes: {
+      //     keydown: "(e) => e.stopPropagation()",
+      //   },
+      // }),
     ],
     selection: "all",
     stringHandler: "html",
@@ -168,7 +181,8 @@ export default function RemirrorContext({
           >
             <MenuBar saving={saving} />
             <EditorComponent />
-            <FloatingLinkToolbar />
+            {/* <FloatingLinkToolbar /> */}
+            <BubbleMenu />
             <MentionComponent
               documents={documents.filter((doc) => !doc.template)}
             />
