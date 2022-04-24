@@ -13,20 +13,35 @@ export default function Navbar() {
       <div className="flex flex-nowrap">
         {project_id && (
           <div className="flex align-items-center">
+            <Tooltip
+              target=".wikiIcon"
+              content="Project Wiki"
+              position="right"
+            />{" "}
+            <Tooltip
+              target=".mapsIcon"
+              content="Project Maps"
+              position="right"
+            />{" "}
+            <Tooltip
+              target=".boardsIcon"
+              content="Project Boards"
+              position="right"
+            />
             <i
-              className="pi pi-book mr-3 hover:text-primary cursor-pointer"
+              className="pi pi-book mr-3 hover:text-primary cursor-pointer wikiIcon"
               onClick={async () => {
                 navigate("./wiki");
               }}
             ></i>
             <i
-              className="pi pi-map mr-3 hover:text-primary cursor-pointer"
+              className="pi pi-map mr-3 hover:text-primary cursor-pointer mapsIcon"
               onClick={async () => {
                 navigate("./maps");
               }}
             ></i>
             <Icon
-              className="hover:text-primary cursor-pointer"
+              className="hover:text-primary cursor-pointer boardsIcon"
               icon="mdi:family-tree"
               fontSize={18}
               onClick={async () => {
