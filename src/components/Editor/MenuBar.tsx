@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useActive, useCommands } from "@remirror/react";
+import { useActive, useAttrs, useCommands } from "@remirror/react";
 import { Menubar } from "primereact/menubar";
 import { ProgressSpinner } from "primereact/progressspinner";
 import "../../styles/MenuBar.css";
@@ -16,6 +16,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     updateCallout,
     insertHorizontalRule,
     updateLink,
+    removeLink,
     insertImage,
     leftAlign,
     centerAlign,
@@ -24,7 +25,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     setTextColor,
   } = useCommands();
   const active = useActive();
-
+  const attrs = useAttrs();
   function calloutToggle(type: string) {
     if (active.callout()) {
       if (!active.callout({ type })) {
@@ -344,10 +345,21 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           icon: "pi pi-fw pi-link",
           className: active.link() ? "menuBarButtonActive" : "",
           command: () => {
-            let href = window.prompt("Enter the URL:", undefined);
-            if (href) {
-              updateLink({ href, target: "_self" });
-              focus();
+            let link = (attrs.link()?.href as string) ?? "";
+            if (link) {
+              let href = window.prompt("Enter the URL:", link);
+              if (href) {
+                updateLink({ href, target: "_self" });
+                focus();
+              } else {
+                removeLink();
+              }
+            } else {
+              let href = window.prompt("Enter the URL:", undefined);
+              if (href) {
+                updateLink({ href, target: "_self" });
+                focus();
+              }
             }
           },
         },
