@@ -1,15 +1,25 @@
-import { FC } from "react";
+import {
+  ChangeEvent,
+  FC,
+  HTMLProps,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   FloatingWrapper,
+  useCommands,
   useCurrentSelection,
   useHelpers,
   useSelectedText,
 } from "@remirror/react";
 import MenuBar from "../MenuBar";
+import TextColorInput from "./TextColorInput";
 
 export const BubbleMenu: FC = () => {
   const selection = useSelectedText();
-  console.log(selection);
+
   return (
     <FloatingWrapper
       positioner="always"
@@ -18,6 +28,7 @@ export const BubbleMenu: FC = () => {
       renderOutsideEditor
     >
       <MenuBar saving={false} />
+      <TextColorInput />
     </FloatingWrapper>
   );
 };

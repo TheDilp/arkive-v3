@@ -4,7 +4,7 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,24 +19,22 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
-  UnderlineExtension,
+  UnderlineExtension
 } from "remirror/extensions";
-import { TableExtension } from "@remirror/extension-react-tables";
 import "remirror/styles/all.css";
 import "../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
-import { FloatingLinkToolbar } from "./LinkHooks";
 // import { TableExtension } from "@remirror/extension-react-tables";
+import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
-import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
 const hooks = [
   () => {
     const { getJSON, isSelectionEmpty } = useHelpers();
@@ -181,7 +179,6 @@ export default function RemirrorContext({
           >
             <MenuBar saving={saving} />
             <EditorComponent />
-            {/* <FloatingLinkToolbar /> */}
             <BubbleMenu />
             <MentionComponent
               documents={documents.filter((doc) => !doc.template)}
