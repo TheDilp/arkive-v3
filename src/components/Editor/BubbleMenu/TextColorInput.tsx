@@ -1,8 +1,11 @@
 import { useCommands, useHelpers } from "@remirror/react";
 import { ChangeEvent, HTMLProps, useEffect, useRef, useState } from "react";
-type Props = {};
+type Props = {
+  colorInput: boolean;
+  setColorInput: (colorInput: boolean) => void;
+};
 
-export default function TextColorInput({}: Props) {
+export default function TextColorInput({ colorInput, setColorInput }: Props) {
   const { setTextColor } = useCommands();
 
   function useColor() {
@@ -30,6 +33,7 @@ export default function TextColorInput({}: Props) {
         }}
         onBlur={(e) => {
           setTextColor(e.target.value);
+          setColorInput(false);
         }}
         value={color}
       />
@@ -38,14 +42,12 @@ export default function TextColorInput({}: Props) {
 
   return (
     <DelayAutoFocusInput
-      // style={{ zIndex: 20 }}
-      //   autoFocus
       placeholder="Enter link..."
-      //   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-      //     setColor(event.target.value);
-      //   }}
-
       value={color}
+      style={{
+        float: "right",
+        display: !colorInput ? "none" : "",
+      }}
     />
   );
 }
