@@ -102,6 +102,21 @@ export default function DocumentsSettingsTable() {
       </div>
     );
   };
+  const templateFilterTemplate = (options: any) => {
+    return (
+      <div className="flex justify-content-evenly w-full">
+        Template:
+        <Checkbox
+          checked={options.value}
+          onChange={(e) => {
+            options.filterCallback(e.checked);
+          }}
+          placeholder="False"
+          className="p-column-filter"
+        />
+      </div>
+    );
+  };
   const parentFilterTemplate = (options: any) => {
     return (
       <Dropdown
@@ -147,6 +162,18 @@ export default function DocumentsSettingsTable() {
               folder: e.checked,
             })
           }
+        />
+      </div>
+    );
+  };
+  const templateBodyTemplate = (rowData: Document) => {
+    return (
+      <div className="relative flex justify-content-center">
+        <Checkbox
+          checked={rowData.template}
+          readOnly
+          disabled
+          className="cursor-auto"
         />
       </div>
     );
@@ -501,6 +528,17 @@ export default function DocumentsSettingsTable() {
           }}
           filterElement={categoriesFilterTemplate}
           editor={categoryEditor}
+        />
+        <Column
+          header="Is Template"
+          field="template"
+          filter
+          filterElement={templateFilterTemplate}
+          filterMatchMode="equals"
+          body={templateBodyTemplate}
+          dataType="boolean"
+          sortable
+          style={{ width: "10rem" }}
         />
         <Column
           header="Icon"

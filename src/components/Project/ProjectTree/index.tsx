@@ -104,8 +104,12 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
-      <TabView className="w-full" renderActiveOnly={true}>
-        <TabPanel header="Documents">
+      <TabView
+        className="w-full p-0"
+        panelContainerClassName="pr-0"
+        renderActiveOnly={true}
+      >
+        <TabPanel header="Documents" className="p-0">
           <TreeFilter
             filter={filter}
             setFilter={setFilter}
@@ -192,6 +196,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         <TabPanel header="Templates">
           <div className="h-screen">
             <TemplatesTree
+              docId={docId}
               setDocId={setDocId}
               setIconSelect={setIconSelect}
               setDisplayDialog={setDisplayDialog}

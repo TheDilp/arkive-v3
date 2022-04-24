@@ -31,7 +31,7 @@ export default function ProjectTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-300 py-1 cursor-pointer"
+      className="text-lg hover:bg-blue-700 py-1 cursor-pointer"
       onClick={() => {
         setDocId(node.id as string);
       }}
@@ -100,9 +100,7 @@ export default function ProjectTreeItem({
         />
       )}
       <span
-        className={`text-lg hover:bg-blue-300 Lato ${
-          docId === node.id ? "text-primary" : ""
-        }`}
+        className={`text-lg Lato ${docId === node.id ? "text-primary" : ""}`}
       >
         {node.text}
       </span>

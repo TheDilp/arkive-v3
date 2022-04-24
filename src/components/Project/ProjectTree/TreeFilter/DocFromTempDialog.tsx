@@ -9,6 +9,7 @@ import { RadioButton } from "primereact/radiobutton";
 import { Button } from "primereact/button";
 import { v4 as uuid } from "uuid";
 import { InputText } from "primereact/inputtext";
+import { Document } from "../../../../custom-types";
 type Props = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -20,6 +21,19 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
   const [customName, setCustomName] = useState<string | undefined>();
   const templates = useGetTemplates(project_id as string);
   const createDocumentMutation = useCreateDocument(project_id as string);
+
+  function createDocumentFromTemplate(
+    template: Document,
+    customName: string | undefined
+  ) {
+    let id = uuid();
+    createDocumentMutation.mutate({
+      ...template,
+      id,
+      parent: null,
+      title: customName || template.title,
+    });
+  }
   return (
     <Dialog
       className="w-3 Merriweather"
@@ -51,6 +65,14 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
           className="w-full"
           value={customName}
           onChange={(e) => setCustomName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              let template = templates.find((temp) => temp.id === value);
+              if (template) {
+                createDocumentFromTemplate(template, customName);
+              }
+            }
+          }}
         />
       </div>
       <div className="w-full flex justify-content-end">
@@ -62,13 +84,7 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
           onClick={() => {
             let template = templates.find((temp) => temp.id === value);
             if (template) {
-              let id = uuid();
-              createDocumentMutation.mutate({
-                ...template,
-                id,
-                parent: null,
-                title: customName || template.title,
-              });
+              createDocumentFromTemplate(template, customName);
             }
           }}
         />

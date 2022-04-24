@@ -5,6 +5,7 @@ import { useVirtual } from "react-virtual";
 import { iconSelect, treeItemDisplayDialog } from "../../../../custom-types";
 import { useGetTemplates } from "../../../../utils/customHooks";
 type Props = {
+  docId: string;
   setDocId: (docId: string) => void;
   setIconSelect: (iconSelect: iconSelect) => void;
   setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function TemplatesTree({
+  docId,
   setDocId,
   setIconSelect,
   setDisplayDialog,
@@ -27,7 +29,6 @@ export default function TemplatesTree({
     estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
-
   return (
     <div>
       <div
@@ -51,7 +52,7 @@ export default function TemplatesTree({
           {rowVirtualizer.virtualItems.map((virtualRow) => (
             <div
               key={virtualRow.index}
-              className="hover:bg-primary cursor-pointer Lato flex align-items-center"
+              className="hover:bg-blue-700 cursor-pointer Lato flex align-items-center"
               style={{
                 position: "absolute",
                 top: 0,
@@ -91,7 +92,11 @@ export default function TemplatesTree({
                   });
                 }}
               />
-              <span className={`text-lg hover:bg-blue-300 Lato`}>
+              <span
+                className={`text-lg Lato ${
+                  docId === templates[virtualRow.index].id ? "text-primary" : ""
+                }`}
+              >
                 {templates[virtualRow.index].title}
               </span>
             </div>

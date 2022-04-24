@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Navigate } from "react-router-dom";
@@ -39,10 +40,10 @@ export default function Home() {
       </div>
       <div className="w-1 Lato h-full">
         <div className="w-4 h-full bg-gray-800 text-white flex-wrap py-5">
-          <div className="w-full flex justify-content-center">
+          <div className="w-full flex justify-content-center mb-2">
             <Button
               icon="pi pi-plus"
-              className="p-button-rounded p-button-plain"
+              className="p-button-outlined p-button-rounded p-button-plain"
               tooltip="New Project"
               onClick={() => createProjectMutation.mutate()}
             />
