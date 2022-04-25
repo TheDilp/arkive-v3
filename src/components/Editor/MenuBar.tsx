@@ -370,6 +370,40 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           },
         },
         // {
+        //   label: "Columns",
+        //   // template: (item, options) => {
+        //   //   return (
+        //   //     <span
+        //   //       role="menuitem"
+        //   //       className={`${options.className} p-2 flex justify-content-center`}
+        //   //     >
+        //   //       <Icon
+        //   //         icon="mdi:view-column"
+        //   //         className={options.iconClassName}
+        //   //         fontSize={24}
+        //   //       />
+        //   //       <span className="p-submenu-icon pi pi-angle-down"></span>
+        //   //       <ul className="p-menu-sublist" role="menu">
+        //   //         <li>TEST</li>
+        //   //       </ul>
+        //   //     </span>
+        //   //   );
+        //   // },
+        //   items: [
+        //     { label: "1 Column", command: () => toggleColumns({}) },
+        //     {
+        //       label: "2 Columns",
+        //       command: (e) => {
+        //         e.originalEvent.preventDefault();
+        //         toggleColumns({ count: 2 });
+        //       },
+        //     },
+        //     { label: "3 Columns", command: () => toggleColumns({ count: 3 }) },
+        //     { label: "4 Columns", command: () => toggleColumns({ count: 4 }) },
+        //     { label: "5 Columns", command: () => toggleColumns({ count: 5 }) },
+        //   ],
+        // },
+        // {
         //   icon: "pi pi-fw pi-table",
         //   items: [
         //     {

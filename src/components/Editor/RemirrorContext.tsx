@@ -4,10 +4,11 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { htmlToProsemirrorNode } from "remirror";
 import {
   BoldExtension,
   BulletListExtension,
@@ -19,14 +20,14 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
-  UnderlineExtension
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
@@ -73,6 +74,9 @@ export default function RemirrorContext({
 }) {
   const firstRender = useRef(true);
   const navigate = useNavigate();
+
+  // ======================================================
+  // REMIRROR SETUP
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
@@ -90,16 +94,12 @@ export default function RemirrorContext({
       new CalloutExtension(),
       new NodeFormattingExtension(),
       new TextColorExtension(),
-      // new TableExtension({
-      //   resizable: true,
-      //   extraAttributes: {
-      //     keydown: "(e) => e.stopPropagation()",
-      //   },
-      // }),
     ],
     selection: "all",
-    stringHandler: "html",
+    stringHandler: htmlToProsemirrorNode,
   });
+  // ======================================================
+
   const { project_id, doc_id } = useParams();
   const documents = useGetDocuments(project_id as string);
   const currentDocument = useGetDocumentData(

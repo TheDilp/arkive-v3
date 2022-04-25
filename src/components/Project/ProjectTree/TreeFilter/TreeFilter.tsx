@@ -1,13 +1,12 @@
-import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
+import { SplitButton } from "primereact/splitbutton";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
-import DocumentCreateDialog from "./DocumentCreateDialog";
-import { SplitButton } from "primereact/splitbutton";
 import DocFromTempDialog from "./DocFromTempDialog";
+import DocumentCreateDialog from "./DocumentCreateDialog";
 type Props = {
   filter: string;
   setFilter: (filter: string) => void;
@@ -71,12 +70,14 @@ export default function TreeFilter({
           placeholder="Filter by Title"
         />
         <MultiSelect
-          value={selectedTags}
-          options={tags}
+          value={selectedTags ?? []}
+          options={tags.map((tag) => ({ label: tag, value: tag }))}
           placeholder="Filter by Tags"
           className="w-full p-0"
           showClear={true}
           display="chip"
+          filter
+          filterBy="label"
           onChange={(e) => setSelectedTags(e.value)}
         />
       </div>
