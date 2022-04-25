@@ -1,71 +1,45 @@
-import L from "leaflet";
-import { FeatureGroup, Marker, Popup } from "react-leaflet";
-import { EditControl } from "react-leaflet-draw";
-import { MapContainer } from "react-leaflet/MapContainer";
-import MapImage from "./MapImage";
+import ImageLayer from "ol/layer/Image";
+import Map from "ol/Map";
+import { Projection } from "ol/proj";
+import Static from "ol/source/ImageStatic";
+import View from "ol/View";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 type Props = {};
+export default function MapView({}: Props) {
+  const [mapData, setMapData] = useState();
 
-export default function Map({}: Props) {
-  //   const imgRef = useRef() as React.MutableRefObject<any>;
-  //   useEffect(() => {
-  //     if (imgRef && imgRef.current) {
-  //       imgRef.current.setBounds([
-  //         [50, 50],
-  //         [100, 100],
-  //       ]);
-  //     }
-  //   }, [imgRef]);
+  const mapRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  let img = useMemo(() => new Image(), []);
+  img.src = "https://i.imgur.com/arruiGW.jpeg";
+  useLayoutEffect(() => {
+    console.log(img.width, img.height);
+    if (img.width && img.height) {
+      const extent = [0, 0, img.width, img.height];
+      const projection = new Projection({
+        code: "xkcd-image",
+        units: "pixels",
+        extent: extent,
+      });
+      let mapp = new Map({
+        target: "map",
+        layers: [
+          new ImageLayer({
+            source: new Static({
+              url: img.src,
+              imageExtent: extent,
+              projection: projection,
+            }),
+          }),
+        ],
+        view: new View({
+          center: [img.width / 2, img.height / 2],
+          projection: projection,
+          zoom: 2,
+        }),
+      });
+      return () => mapp.dispose();
+    }
+  }, [img]);
 
-  return (
-    <div className="w-screen h-screen">
-      <MapContainer
-        className="w-full h-full bg-gray-900"
-        center={[0, 0]}
-        zoom={0}
-        minZoom={-4}
-        maxZoom={2}
-        scrollWheelZoom={true}
-        crs={L.CRS.Simple}
-      >
-        <FeatureGroup>
-          <EditControl
-            position="topright"
-            // onEdited={onEdited}
-            // onCreated={(e) => {
-            //   //   setTemp(e);
-            // }}
-            // onDeleted={onDeleted}
-            // // onMounted={onMounted}
-            // onEditStart={onEditStart}
-            // onEditStop={onEditStop}
-            // onDeleteStart={onDeleteStart}
-            // onDeleteStop={onDeleteStop}
-            // onDrawStart={onDrawStart}
-            // onDrawStop={onDrawStop}
-            draw={{
-              marker: false,
-              circlemarker: false,
-              circle: false,
-              rectangle: false,
-              polygon: false,
-              //   polyline: {
-              //     shapeOptions: {
-              //       ...pathStyle,
-              //       color: `#${pathStyle.color}`,
-              //       dashArray: `${pathStyle.dashArray[0]},${pathStyle.dashArray[1]}`,
-              //     },
-              //   },
-            }}
-            // color="black"
-          />
-        </FeatureGroup>
-        <MapImage />
-        <Marker position={[0, 0]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer>
-    </div>
-  );
+  return <div id="map" ref={mapRef} className="w-screen h-screen"></div>;
 }
