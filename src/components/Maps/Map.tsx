@@ -1,42 +1,46 @@
+import Graticule from "ol/layer/Graticule";
 import ImageLayer from "ol/layer/Image";
 import Map from "ol/Map";
 import { Projection } from "ol/proj";
 import Static from "ol/source/ImageStatic";
+import Stroke from "ol/style/Stroke";
 import View from "ol/View";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 type Props = {};
 export default function MapView({}: Props) {
-  const [mapData, setMapData] = useState();
-
   const mapRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   let img = useMemo(() => new Image(), []);
   img.src = "https://i.imgur.com/arruiGW.jpeg";
   useLayoutEffect(() => {
-    console.log(img.width, img.height);
-    if (img.width && img.height) {
+    if (img.width && img.height && mapRef.current) {
       const extent = [0, 0, img.width, img.height];
       const projection = new Projection({
-        code: "xkcd-image",
-        units: "pixels",
+        code: "whatevz",
+        units: "m",
         extent: extent,
+        worldExtent: extent,
       });
+
       let mapp = new Map({
-        target: "map",
+        target: mapRef.current || "map",
         layers: [
           new ImageLayer({
             source: new Static({
               url: img.src,
               imageExtent: extent,
-              projection: projection,
             }),
           }),
         ],
+
         view: new View({
+          resolution: 1,
           center: [img.width / 2, img.height / 2],
-          projection: projection,
-          zoom: 2,
+          projection,
+          maxZoom: 5,
+          multiWorld: false,
         }),
       });
+
       return () => mapp.dispose();
     }
   }, [img]);

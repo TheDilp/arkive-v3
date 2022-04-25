@@ -9,6 +9,7 @@ export default function Maps({}: Props) {
     <Navigate to="/login" />
   ) : (
     <div className="w-full flex flex-wrap justify-content-start">
+      
       <Routes>
         <Route path="/:map_id" element={<MapView />} />
       </Routes>
