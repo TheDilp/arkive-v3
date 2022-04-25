@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 export default function MapsTree({}: Props) {
-  return (
-    <div>MapsTree</div>
-  )
+  return <div className="w-2 bg-gray-800">MapsTree</div>;
 }
