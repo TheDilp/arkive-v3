@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { auth } from "../../utils/supabaseUtils";
 import MapView from "./Map";
-import MapsTree from "./MapsTree/MapsTree";
+import MapsTree from "./MapsTree";
 
 type Props = {};
 

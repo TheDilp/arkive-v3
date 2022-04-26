@@ -89,6 +89,17 @@ export const getTags = async (project_id: string) => {
     throw new Error(error.message);
   }
 };
+export const getMaps = async (project_id: string) => {
+  const { data, error } = await supabase
+    .from("maps")
+    .select("*")
+    .eq("project_id", project_id);
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your maps.");
+    throw new Error(error.message);
+  }
+};
 export const getProfile = async () => {
   let user = auth.user();
   if (user) {
