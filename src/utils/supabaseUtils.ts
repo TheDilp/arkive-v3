@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
 import { StringMappingType } from "typescript";
-import { Document, Profile, Project } from "../custom-types";
+import { Document, Map, Profile, Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -91,7 +91,7 @@ export const getTags = async (project_id: string) => {
 };
 export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
-    .from("maps")
+    .from<Map>("maps")
     .select("*")
     .eq("project_id", project_id);
   if (data) return data;

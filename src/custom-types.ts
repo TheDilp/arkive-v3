@@ -24,6 +24,15 @@ export type Document = {
   template: boolean;
 };
 
+export type Map = {
+  id: string;
+  title: string;
+  map_image: string;
+  parent: string;
+  user_id: string;
+  project_id: string;
+};
+
 export type treeItemDisplayDialog = {
   id: string;
   title: string;

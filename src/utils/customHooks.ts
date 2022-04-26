@@ -9,11 +9,13 @@ import {
   deleteDocument,
   getCurrentProject,
   getDocuments,
+  getMaps,
   getTags,
   updateDocument,
   updateProject,
 } from "./supabaseUtils";
 import { toastError, toastSuccess } from "./utils";
+import { Map } from "../custom-types";
 // CUSTOM HOOKS
 
 // Custom hook for detecting if user clicked outside of element (ref)
@@ -360,4 +362,16 @@ export function useGetTemplates(project_id: string) {
   } else {
     return [];
   }
+}
+
+// Custom hook to get maps
+export function useGetMaps(project_id: string) {
+  const { data } = useQuery(
+    `${project_id}-maps`,
+    async () => await getMaps(project_id),
+    {
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+  return data;
 }
