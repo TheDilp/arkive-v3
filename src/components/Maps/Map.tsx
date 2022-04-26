@@ -18,28 +18,23 @@ export default function MapView() {
   const maps: MapType[] | undefined = queryClient.getQueryData(
     `${project_id}-maps`
   );
+
   useEffect(() => {
     if (map_id) {
       const map = maps?.find((m) => m.id === map_id);
       if (map) {
-        setTimeout(() => {
-          let img = new Image();
-          img.src = map.map_image;
-          img.onload = () =>
-            setImageData({
-              width: img.width,
-              height: img.height,
-              src: img.src,
-            });
-          setImageData({ width: img.width, height: img.height, src: img.src });
-          setTest(true);
-        }, 750);
+        let img = new Image();
+        img.src = map.map_image;
+        img.onload = () =>
+          setImageData({
+            width: img.width,
+            height: img.height,
+            src: img.src,
+          });
+        console.log(img.width);
       }
     }
-
-    // return () => clearTimeout(timeout);
   }, [map_id]);
-
   useEffect(() => {
     if (imageData.width && imageData.height) {
       const extent = [0, 0, imageData.width, imageData.height];
@@ -72,29 +67,12 @@ export default function MapView() {
 
       return () => mapp.dispose();
     }
-  }, [bounds]);
-
-  useEffect(() => {
-    if (imgRef.current) {
-      imgRef.current.on("contextmenu", (e) => {});
-    }
-  }, [imgRef]);
+  }, [imageData]);
   return (
     <div className="w-10 h-screen">
-      <AnimatePresence exitBeforeEnter>
-        {test && imageData.src && (
-          <motion.div
-            id="map"
-            key={map_id}
-            ref={mapRef}
-            className="w-full h-full"
-            transition={{ ease: "easeInOut", duration: 0.5 }}
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          ></motion.div>
-        )}
-      </AnimatePresence>
+      {imageData.width && (
+        <div id="map" key={map_id} ref={mapRef} className="w-full h-full"></div>
+      )}
     </div>
   );
 }
