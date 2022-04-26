@@ -1,51 +1,76 @@
-import { useEffect, useRef, useState } from "react";
+import ImageLayer from "ol/layer/Image";
+import Map from "ol/Map";
+import { Projection } from "ol/proj";
+import Static from "ol/source/ImageStatic";
+import View from "ol/View";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Map } from "../../custom-types";
-import { MapContainer, Marker, Popup, ImageOverlay } from "react-leaflet";
-import L, { LatLngBoundsExpression } from "leaflet";
-import { Icon } from "@iconify/react";
-import ReactDOM from "react-dom/server";
+import { Map as MapType } from "../../custom-types";
+import LoadingScreen from "../Util/LoadingScreen";
+import { motion, AnimatePresence } from "framer-motion";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
-  const cm = useRef(null);
-  const imgRef = useRef() as any;
-  const [mapData, setMapData] = useState({ width: 0, height: 0, src: "" });
-  const [bounds, setBounds] = useState<LatLngBoundsExpression>([
-    [0, 0],
-    [0, 0],
-  ]);
-  const maps: Map[] | undefined = queryClient.getQueryData(
+  const mapRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const [imageData, setImageData] = useState({ width: 0, height: 0, src: "" });
+  const [test, setTest] = useState(true);
+  const maps: MapType[] | undefined = queryClient.getQueryData(
     `${project_id}-maps`
   );
   useEffect(() => {
     if (map_id) {
       const map = maps?.find((m) => m.id === map_id);
       if (map) {
-        let img = new Image();
-        img.src = map.map_image;
-        img.onload = () => {
-          setBounds([
-            [0 - img.height, 0 - img.width],
-            [img.height, img.width],
-          ]);
-          setMapData({
-            width: img.width,
-            height: img.height,
-            src: map.map_image,
-          });
-        };
+        setTimeout(() => {
+          let img = new Image();
+          img.src = map.map_image;
+          img.onload = () =>
+            setImageData({
+              width: img.width,
+              height: img.height,
+              src: img.src,
+            });
+          setImageData({ width: img.width, height: img.height, src: img.src });
+          setTest(true);
+        }, 750);
       }
     }
+
+    // return () => clearTimeout(timeout);
   }, [map_id]);
 
   useEffect(() => {
-    if (imgRef.current) {
-      imgRef.current.setBounds([
-        [0 - mapData.height, 0 - mapData.width],
-        [mapData.height, mapData.width],
-      ]);
+    if (imageData.width && imageData.height) {
+      const extent = [0, 0, imageData.width, imageData.height];
+      const projection = new Projection({
+        code: "whatevz",
+        units: "m",
+        extent: extent,
+        worldExtent: extent,
+      });
+
+      let mapp = new Map({
+        target: mapRef.current || "map",
+        layers: [
+          new ImageLayer({
+            source: new Static({
+              url: imageData.src,
+              imageExtent: extent,
+            }),
+          }),
+        ],
+
+        view: new View({
+          resolution: 1,
+          center: [imageData.width / 2, imageData.height / 2],
+          projection,
+          maxZoom: 5,
+          multiWorld: false,
+        }),
+      });
+
+      return () => mapp.dispose();
     }
   }, [bounds]);
 
@@ -56,44 +81,20 @@ export default function MapView() {
   }, [imgRef]);
   return (
     <div className="w-10 h-screen">
-      {mapData.width && mapData.height && (
-        <MapContainer
-          className="w-full h-full bg-gray-900"
-          center={[mapData.width / 2, mapData.height / 2]}
-          zoom={0}
-          minZoom={-3}
-          maxZoom={2}
-          scrollWheelZoom={true}
-          crs={L.CRS.Simple}
-          bounds={bounds}
-        >
-          <ImageOverlay url={mapData.src} bounds={bounds} ref={imgRef} />
-          <Marker
-            position={[51.505, -0.09]}
-            icon={L.divIcon({
-              className: "bg-transparent rounded-full relative",
-              html: ReactDOM.renderToString(
-                <div className="text-xl w-2rem h-2rem absolute">
-                  <div
-                    style={{
-                      zIndex: 999999,
-                      background:
-                        "url('https://api.iconify.design/mdi/wizard-hat.svg?color=white') no-repeat",
-                      backgroundSize: "2rem",
-                      color: "white",
-                    }}
-                    className="w-full h-full absolute"
-                  ></div>
-                </div>
-              ),
-            })}
-          >
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
-        </MapContainer>
-      )}
+      <AnimatePresence exitBeforeEnter>
+        {test && imageData.src && (
+          <motion.div
+            id="map"
+            key={map_id}
+            ref={mapRef}
+            className="w-full h-full"
+            transition={{ ease: "easeInOut", duration: 0.5 }}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          ></motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
