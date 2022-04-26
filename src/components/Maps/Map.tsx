@@ -3,14 +3,14 @@ import Map from "ol/Map";
 import { Projection } from "ol/proj";
 import Static from "ol/source/ImageStatic";
 import View from "ol/View";
-import { useEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 type Props = {};
 export default function MapView({}: Props) {
   const mapRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   let img = useMemo(() => new Image(), []);
   img.src = "https://i.imgur.com/vKRh6Nu.png";
-  useEffect(() => {
-    if (img && img.width && img.height && mapRef.current) {
+  useLayoutEffect(() => {
+    if (img.width && img.height && mapRef.current) {
       const extent = [0, 0, img.width, img.height];
       const projection = new Projection({
         code: "whatevz",
@@ -41,7 +41,7 @@ export default function MapView({}: Props) {
 
       return () => mapp.dispose();
     }
-  }, [img, mapRef]);
+  }, [img]);
 
   return <div id="map" ref={mapRef} className="w-10 h-screen"></div>;
 }

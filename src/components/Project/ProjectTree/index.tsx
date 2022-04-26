@@ -9,11 +9,11 @@ import {
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
-import DragPreview from "../../Util/DragPreview";
+import DragPreview from "./DragPreview";
 import FilterList from "./FilterList";
-import IconSelectMenu from "../../Util/IconSelectMenu";
-import TreeItem from "../../Util/TreeItem";
-import ProjectTreeItemContext from "./ProjectTreeItemContextMenu";
+import IconSelectMenu from "./IconSelectMenu";
+import ProjectTreeItem from "./ProjectTreeItem";
+import ProjectTreeItemContext from "./ProjectTreeItemContext";
 import RenameDialog from "./RenameDialog";
 import TreeFilter from "./TreeFilter/TreeFilter";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -131,7 +131,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
                 node: NodeModel<Document>,
                 { depth, isOpen, onToggle }
               ) => (
-                <TreeItem
+                <ProjectTreeItem
                   // @ts-ignore
                   node={node}
                   depth={depth}

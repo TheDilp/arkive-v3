@@ -3,11 +3,11 @@ import React, { useCallback, useRef } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { Document, iconSelect } from "../../custom-types";
-import { iconList } from "../../utils/iconsList";
-import { updateDocument } from "../../utils/supabaseUtils";
-import { toastSuccess } from "../../utils/utils";
-import { useOnClickOutside } from "../../utils/customHooks";
+import { Document, iconSelect } from "../../../custom-types";
+import { iconList } from "../../../utils/iconsList";
+import { updateDocument } from "../../../utils/supabaseUtils";
+import { toastSuccess } from "../../../utils/utils";
+import { useOnClickOutside } from "../../../utils/customHooks";
 interface iconSelectMenu extends iconSelect {
   setIconSelect: (iconSelect: iconSelect) => void;
   closeEdit?: () => void;

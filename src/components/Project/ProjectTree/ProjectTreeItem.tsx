@@ -4,7 +4,7 @@ import {
   Document,
   iconSelect,
   treeItemDisplayDialog,
-} from "../../custom-types";
+} from "../../../custom-types";
 type Props = {
   docId: string;
   node: NodeModel<Document>;
@@ -17,7 +17,7 @@ type Props = {
   cm: any;
 };
 
-export default function TreeItem({
+export default function ProjectTreeItem({
   node,
   docId,
   depth,
