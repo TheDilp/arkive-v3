@@ -3,15 +3,37 @@ import Map from "ol/Map";
 import { Projection } from "ol/proj";
 import Static from "ol/source/ImageStatic";
 import View from "ol/View";
-import { useLayoutEffect, useMemo, useRef } from "react";
-type Props = {};
-export default function MapView({}: Props) {
+import { useLayoutEffect, useRef, useState } from "react";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { Map as MapType } from "../../custom-types";
+import LoadingScreen from "../Util/LoadingScreen";
+
+export default function MapView() {
+  const { project_id, map_id } = useParams();
+  const queryClient = useQueryClient();
   const mapRef = useRef() as React.MutableRefObject<HTMLDivElement>;
-  let img = useMemo(() => new Image(), []);
-  img.src = "https://i.imgur.com/vKRh6Nu.png";
+  const [imageData, setImageData] = useState({ width: 0, height: 0, src: "" });
+
   useLayoutEffect(() => {
-    if (img.width && img.height && mapRef.current) {
-      const extent = [0, 0, img.width, img.height];
+    const maps: MapType[] | undefined = queryClient.getQueryData(
+      `${project_id}-maps`
+    );
+    if (maps) {
+      const map = maps.find((m) => m.id === map_id);
+      if (map) {
+        let img = new Image();
+        img.src = map.map_image;
+        img.onload = () =>
+          setImageData({ width: img.width, height: img.height, src: img.src });
+        setImageData({ width: img.width, height: img.height, src: img.src });
+      }
+    }
+  }, [map_id]);
+
+  useLayoutEffect(() => {
+    if (imageData.width && imageData.height) {
+      const extent = [0, 0, imageData.width, imageData.height];
       const projection = new Projection({
         code: "whatevz",
         units: "m",
@@ -24,7 +46,7 @@ export default function MapView({}: Props) {
         layers: [
           new ImageLayer({
             source: new Static({
-              url: img.src,
+              url: imageData.src,
               imageExtent: extent,
             }),
           }),
@@ -32,7 +54,7 @@ export default function MapView({}: Props) {
 
         view: new View({
           resolution: 1,
-          center: [img.width / 2, img.height / 2],
+          center: [imageData.width / 2, imageData.height / 2],
           projection,
           maxZoom: 5,
           multiWorld: false,
@@ -41,7 +63,11 @@ export default function MapView({}: Props) {
 
       return () => mapp.dispose();
     }
-  }, [img]);
+  }, [imageData]);
 
-  return <div id="map" ref={mapRef} className="w-10 h-screen"></div>;
+  return (
+    <div id="map" ref={mapRef} className="w-10 h-screen">
+      <LoadingScreen />
+    </div>
+  );
 }

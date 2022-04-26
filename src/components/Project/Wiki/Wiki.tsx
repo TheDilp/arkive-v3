@@ -10,7 +10,7 @@ import { auth } from "../../../utils/supabaseUtils";
 import { useGetDocuments, useGetProjectData } from "../../../utils/customHooks";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
-import ProjectTree from "../ProjectTree";
+import ProjectTree from "../DocumentTree";
 import PropertiesPanel from "../PropertiesPanel";
 export default function Wiki() {
   const [docId, setDocId] = useState("");

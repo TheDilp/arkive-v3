@@ -26,7 +26,7 @@ import {
 } from "../../../utils/supabaseUtils";
 import { searchCategory } from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
-import IconSelectMenu from "../ProjectTree/IconSelectMenu";
+import IconSelectMenu from "../../Util/IconSelectMenu";
 import { v4 as uuid } from "uuid";
 export default function DocumentsSettingsTable() {
   const { project_id } = useParams();

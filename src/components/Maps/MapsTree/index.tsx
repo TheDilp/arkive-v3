@@ -1,14 +1,18 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
-import { useGetMaps } from "../../../utils/customHooks";
+import MapTreeItem from "./MapTreeItem";
 
 type Props = {};
 
 export default function MapsTree({}: Props) {
   const { project_id } = useParams();
-  const maps = useGetMaps(project_id as string);
+  const queryClient = useQueryClient();
+  const maps: Map[] | undefined = queryClient.getQueryData(
+    `${project_id}-maps`
+  );
   const [treeData, setTreeData] = useState<NodeModel<Map>[]>([]);
   useLayoutEffect(() => {
     if (maps && maps.length > 0) {
@@ -23,7 +27,6 @@ export default function MapsTree({}: Props) {
       setTreeData(temp);
     }
   }, [maps]);
-  console.log(maps);
   const handleDrop = (
     newTree: NodeModel<Map>[],
     {
@@ -36,7 +39,7 @@ export default function MapsTree({}: Props) {
   };
 
   return (
-    <div className="w-2 bg-gray-800">
+    <div className="w-2 bg-gray-800 text-white">
       <Tree
         classes={{
           root: "w-full overflow-y-auto projectTreeRoot",
@@ -47,22 +50,16 @@ export default function MapsTree({}: Props) {
         rootId={"0"}
         sort={false}
         initialOpen={false}
-        onDrop={handleDrop}
         render={(node: NodeModel<Map>, { depth, isOpen, onToggle }) => (
-          <div>{node.text}</div>
-          // <ProjectTreeItem
-          //   // @ts-ignore
-          //   node={node}
-          //   depth={depth}
-          //   isOpen={isOpen}
-          //   onToggle={onToggle}
-          //   docId={docId}
-          //   setDocId={setDocId}
-          //   setDisplayDialog={setDisplayDialog}
-          //   setIconSelect={setIconSelect}
-          //   cm={cm}
-          // />
+          <MapTreeItem
+            node={node}
+            depth={depth}
+            isOpen={isOpen}
+            onToggle={onToggle}
+          />
         )}
+        //@ts-ignore
+        onDrop={handleDrop}
       />
     </div>
   );
