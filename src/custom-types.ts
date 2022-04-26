@@ -31,6 +31,12 @@ export type Map = {
   parent: string;
   user_id: string;
   project_id: string;
+  markers: {
+    id: number;
+    icon: string;
+    color: string;
+    map_id: string;
+  }[];
 };
 
 export type treeItemDisplayDialog = {

@@ -1,17 +1,26 @@
 import L, { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
-import { ImageOverlay, MapContainer } from "react-leaflet";
+import { MapContainer } from "react-leaflet";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
-import DraggableMarker from "./DraggableMarker";
 import MapImage from "./MapImage";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
   const cm = useRef(null);
   const imgRef = useRef() as any;
-  const [mapData, setMapData] = useState({ width: 0, height: 0, src: "" });
+  const [mapData, setMapData] = useState<{
+    width: number;
+    height: number;
+    src: string;
+    markers: Map["markers"];
+  }>({
+    width: 0,
+    height: 0,
+    src: "",
+    markers: [],
+  });
   const [bounds, setBounds] = useState<LatLngBoundsExpression>([
     [0, 0],
     [0, 0],
@@ -34,6 +43,7 @@ export default function MapView() {
             width: img.width,
             height: img.height,
             src: map.map_image,
+            markers: map.markers,
           });
         };
       }
@@ -70,7 +80,12 @@ export default function MapView() {
           crs={L.CRS.Simple}
           bounds={bounds}
         >
-          <MapImage src={mapData.src} bounds={bounds} imgRef={imgRef} />
+          <MapImage
+            src={mapData.src}
+            bounds={bounds}
+            imgRef={imgRef}
+            markers={mapData.markers}
+          />
         </MapContainer>
       )}
     </div>

@@ -1,9 +1,11 @@
 import L from "leaflet";
 import ReactDOM from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
-type Props = {};
-
-export default function DraggableMarker({}: Props) {
+type Props = {
+  icon: string;
+  color: string;
+};
+export default function DraggableMarker({ icon, color }: Props) {
   return (
     <Marker
       eventHandlers={{
@@ -26,8 +28,7 @@ export default function DraggableMarker({}: Props) {
             <div
               style={{
                 zIndex: 999999,
-                background:
-                  "url('https://api.iconify.design/mdi/wizard-hat.svg?color=white') no-repeat",
+                background: `url('https://api.iconify.design/mdi/${icon}.svg?color=${color}') no-repeat`,
                 backgroundSize: "2rem",
                 color: "white",
               }}
