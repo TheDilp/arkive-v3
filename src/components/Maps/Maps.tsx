@@ -2,7 +2,7 @@ import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useGetMaps } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
 import LoadingScreen from "../Util/LoadingScreen";
-import MapView from "./Map";
+import MapView from "./Map/Map";
 import MapsTree from "./MapsTree";
 
 type Props = {};

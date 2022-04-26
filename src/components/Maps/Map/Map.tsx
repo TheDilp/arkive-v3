@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Map } from "../../custom-types";
+import { Map } from "../../../custom-types";
 import { MapContainer, Marker, Popup, ImageOverlay } from "react-leaflet";
 import L, { LatLngBoundsExpression } from "leaflet";
 import { Icon } from "@iconify/react";
 import ReactDOM from "react-dom/server";
+import DraggableMarker from "./DraggableMarker";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
@@ -51,7 +52,10 @@ export default function MapView() {
 
   useEffect(() => {
     if (imgRef.current) {
-      imgRef.current.on("contextmenu", (e) => {});
+      imgRef.current.on("context", (e: any) => {
+        e.preventDefault();
+        alert("AYYYY");
+      });
     }
   }, [imgRef]);
   return (
@@ -68,30 +72,7 @@ export default function MapView() {
           bounds={bounds}
         >
           <ImageOverlay url={mapData.src} bounds={bounds} ref={imgRef} />
-          <Marker
-            position={[51.505, -0.09]}
-            icon={L.divIcon({
-              className: "bg-transparent rounded-full relative",
-              html: ReactDOM.renderToString(
-                <div className="text-xl w-2rem h-2rem absolute">
-                  <div
-                    style={{
-                      zIndex: 999999,
-                      background:
-                        "url('https://api.iconify.design/mdi/wizard-hat.svg?color=white') no-repeat",
-                      backgroundSize: "2rem",
-                      color: "white",
-                    }}
-                    className="w-full h-full absolute"
-                  ></div>
-                </div>
-              ),
-            })}
-          >
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
+          <DraggableMarker />
         </MapContainer>
       )}
     </div>
