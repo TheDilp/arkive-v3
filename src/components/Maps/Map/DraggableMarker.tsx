@@ -1,22 +1,28 @@
 import L from "leaflet";
 import ReactDOM from "react-dom/server";
-import { Marker, Popup, useMapEvents } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
 type Props = {};
 
 export default function DraggableMarker({}: Props) {
-  const map = useMapEvents({
-    contextmenu() {
-      alert("AYYY");
-    },
-  });
-
   return (
     <Marker
+      eventHandlers={{
+        contextmenu: (e: any) => {
+          alert("BZZZZ");
+        },
+      }}
       position={[51.505, -0.09]}
       icon={L.divIcon({
         className: "bg-transparent rounded-full relative",
         html: ReactDOM.renderToString(
-          <div className="text-xl w-2rem h-2rem absolute">
+          <div
+            className="text-xl w-2rem h-2rem absolute"
+            onContextMenu={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              alert("BZZZZZ");
+            }}
+          >
             <div
               style={{
                 zIndex: 999999,

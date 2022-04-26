@@ -1,12 +1,11 @@
+import L, { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
+import { ImageOverlay, MapContainer } from "react-leaflet";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
-import { MapContainer, Marker, Popup, ImageOverlay } from "react-leaflet";
-import L, { LatLngBoundsExpression } from "leaflet";
-import { Icon } from "@iconify/react";
-import ReactDOM from "react-dom/server";
 import DraggableMarker from "./DraggableMarker";
+import MapImage from "./MapImage";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
@@ -71,8 +70,7 @@ export default function MapView() {
           crs={L.CRS.Simple}
           bounds={bounds}
         >
-          <ImageOverlay url={mapData.src} bounds={bounds} ref={imgRef} />
-          <DraggableMarker />
+          <MapImage src={mapData.src} bounds={bounds} imgRef={imgRef} />
         </MapContainer>
       )}
     </div>
