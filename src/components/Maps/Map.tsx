@@ -2,13 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../custom-types";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  ImageOverlay,
-} from "react-leaflet";
+import { MapContainer, Marker, Popup, ImageOverlay } from "react-leaflet";
 import L, { LatLngBoundsExpression } from "leaflet";
 export default function MapView() {
   const { project_id, map_id } = useParams();
@@ -52,6 +46,12 @@ export default function MapView() {
       ]);
     }
   }, [bounds]);
+
+  useEffect(() => {
+    if (imgRef.current) {
+      imgRef.current.on("contextmenu", (e) => {});
+    }
+  }, [imgRef]);
   return (
     <div className="w-10 h-screen">
       {mapData.width && mapData.height && (
