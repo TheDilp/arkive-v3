@@ -1,11 +1,15 @@
 import L from "leaflet";
 import ReactDOM from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
-type Props = {
-  icon: string;
-  color: string;
-};
-export default function DraggableMarker({ icon, color, text }: Props) {
+import { MapMarker } from "../../../custom-types";
+
+export default function DraggableMarker({
+  icon,
+  color,
+  text,
+  x,
+  y,
+}: Omit<MapMarker, "id" | "map_id">) {
   return (
     <Marker
       eventHandlers={{
@@ -13,7 +17,7 @@ export default function DraggableMarker({ icon, color, text }: Props) {
           alert("BZZZZ");
         },
       }}
-      position={[51.505, -0.09]}
+      position={[x, y]}
       icon={L.divIcon({
         popupAnchor: [18, 0],
         className: "bg-transparent  relative ",

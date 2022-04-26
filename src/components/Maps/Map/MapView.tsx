@@ -36,7 +36,7 @@ export default function MapView() {
         img.src = map.map_image;
         img.onload = () => {
           setBounds([
-            [0 - img.height, 0 - img.width],
+            [0, 0],
             [img.height, img.width],
           ]);
           setMapData({
@@ -53,7 +53,7 @@ export default function MapView() {
   useEffect(() => {
     if (imgRef.current) {
       imgRef.current.setBounds([
-        [0 - mapData.height, 0 - mapData.width],
+        [0, 0],
         [mapData.height, mapData.width],
       ]);
     }
@@ -68,10 +68,10 @@ export default function MapView() {
     }
   }, [imgRef]);
   return (
-    <div className="w-10 h-screen">
+    <div className="w-10 h-full">
       {mapData.width && mapData.height && (
         <MapContainer
-          className="w-full h-full bg-gray-900"
+          className="w-full h-full bg-gray-900 relative"
           center={[mapData.width / 2, mapData.height / 2]}
           zoom={0}
           minZoom={-3}

@@ -29,6 +29,8 @@ export default function MapImage({ src, bounds, imgRef, markers }: Props) {
           icon={marker.icon}
           color={marker.color}
           text={marker.text}
+          x={marker.x}
+          y={marker.y}
         />
       ))}
     </>
