@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
 import { StringMappingType } from "typescript";
-import { Document, Map, Profile, Project } from "../custom-types";
+import { Document, Map, MapMarker, Profile, Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -289,6 +289,40 @@ export const updateProject = async (
       toastError("There was an error updating your project.");
       throw new Error(error.message);
     }
+  }
+};
+export const updateMapMarker = async ({
+  id,
+  icon,
+  color,
+  text,
+  x,
+  y,
+}: {
+  id: number;
+  map_id: string;
+  text?: string;
+  icon?: string;
+  color?: string;
+  x?: number;
+  y?: number;
+}) => {
+  console.log(x, y);
+  const { data, error } = await supabase
+    .from<MapMarker>("markers")
+    .update({
+      icon,
+      color,
+      text,
+      x,
+      y,
+    })
+    .eq("id", id);
+
+  if (data) return data;
+  if (error) {
+    toastError("There was an error updating your map marker.");
+    throw new Error(error.message);
   }
 };
 export const updateMultipleDocumentsParents = async (

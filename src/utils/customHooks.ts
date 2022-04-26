@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
-import { Document, Project } from "../custom-types";
+import { Document, Map, Project } from "../custom-types";
 import {
   auth,
   createDocument,
@@ -12,10 +12,10 @@ import {
   getMaps,
   getTags,
   updateDocument,
+  updateMapMarker,
   updateProject,
 } from "./supabaseUtils";
 import { toastError, toastSuccess } from "./utils";
-import { Map } from "../custom-types";
 // CUSTOM HOOKS
 
 // Custom hook for detecting if user clicked outside of element (ref)
@@ -374,4 +374,86 @@ export function useGetMaps(project_id: string) {
     }
   );
   return data;
+}
+
+// Custom hook to update map marker
+export function useUpdateMapMarker() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: number;
+      map_id: string;
+      project_id: string;
+      icon?: string;
+      color?: string;
+      text?: string;
+      x?: number;
+      y?: number;
+    }) => {
+      await updateMapMarker({
+        id: vars.id,
+        icon: vars.icon,
+        color: vars.color,
+        text: vars.text,
+        x: vars.x,
+        y: vars.y,
+        map_id: vars.map_id,
+      });
+    },
+    {
+      onMutate: async (updatedMarker) => {
+        const previousMaps = queryClient.getQueryData(
+          `${updatedMarker.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${updatedMarker.project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              let newData: Map[] = oldData.map((map) => {
+                if (map.id === updatedMarker.map_id) {
+                  return {
+                    ...map,
+                    markers: map.markers.map((marker) => {
+                      if (marker.id === updatedMarker.id) {
+                        return {
+                          ...marker,
+                          // Check what values were given and set to new ones, otherwise keep old one
+                          icon: updatedMarker.icon
+                            ? updatedMarker.icon
+                            : marker.icon,
+                          color: updatedMarker.color
+                            ? updatedMarker.color
+                            : marker.color,
+                          text: updatedMarker.text
+                            ? updatedMarker.text
+                            : marker.text,
+                          x: updatedMarker.x ? updatedMarker.x : marker.x,
+                          y: updatedMarker.y ? updatedMarker.y : marker.y,
+                        };
+                      } else {
+                        return marker;
+                      }
+                    }),
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-maps`,
+          context?.previousMaps
+        );
+        toastError("There was an error updating this map marker.");
+      },
+    }
+  );
 }

@@ -24,14 +24,7 @@ export default function MapImage({ src, bounds, imgRef, markers }: Props) {
     <>
       <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
       {markers.map((marker) => (
-        <DraggableMarker
-          key={marker.id}
-          icon={marker.icon}
-          color={marker.color}
-          text={marker.text}
-          x={marker.x}
-          y={marker.y}
-        />
+        <DraggableMarker key={marker.id} {...marker} />
       ))}
     </>
   );

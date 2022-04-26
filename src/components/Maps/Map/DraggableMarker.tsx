@@ -1,23 +1,47 @@
-import L from "leaflet";
+import L, { LatLngExpression } from "leaflet";
+import { useMemo, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
+import { useParams } from "react-router-dom";
 import { MapMarker } from "../../../custom-types";
+import { useUpdateMapMarker } from "../../../utils/customHooks";
 
 export default function DraggableMarker({
+  id,
+  map_id,
   icon,
   color,
   text,
   x,
   y,
-}: Omit<MapMarker, "id" | "map_id">) {
+}: MapMarker) {
+  const { project_id } = useParams();
+  const updateMarkerMutation = useUpdateMapMarker();
+  const [position, setPosition] = useState<LatLngExpression>([x, y]);
+  const eventHandlers = useMemo(
+    () => ({
+      contextmenu: (e: any) => {
+        alert("BZZZZ");
+      },
+      dragend(e: any) {
+        setPosition(e.target._latlng);
+        updateMarkerMutation.mutate({
+          id,
+          map_id,
+          x: e.target._latlng.lat,
+          y: e.target._latlng.lng,
+          project_id: project_id as string,
+        });
+      },
+    }),
+    []
+  );
+  console.log(position);
   return (
     <Marker
-      eventHandlers={{
-        contextmenu: (e: any) => {
-          alert("BZZZZ");
-        },
-      }}
-      position={[x, y]}
+      draggable={true}
+      eventHandlers={eventHandlers}
+      position={position}
       icon={L.divIcon({
         popupAnchor: [18, 0],
         className: "bg-transparent  relative ",
@@ -44,7 +68,11 @@ export default function DraggableMarker({
         ),
       })}
     >
-      {text && <Popup position={[51.505, -0]}>{text}</Popup>}
+      {text && (
+        <Popup position={[51.505, -0]}>
+          <span className="Lato">{text}</span>
+        </Popup>
+      )}
     </Marker>
   );
 }
