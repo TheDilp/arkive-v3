@@ -7,17 +7,17 @@ import {
   iconSelect,
   treeItemDisplayDialog,
 } from "../../../custom-types";
+import { TabView, TabPanel } from "primereact/tabview";
 import { useUpdateDocument } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Util/DragPreview";
-import FilterList from "./FilterList";
+// import FilterList from "./FilterList";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import TreeItem from "../../Util/TreeItem";
-import ProjectTreeItemContext from "./ProjectTreeItemContextMenu";
-import RenameDialog from "./RenameDialog";
-import TreeFilter from "./TreeFilter/TreeFilter";
-import { TabView, TabPanel } from "primereact/tabview";
-import TemplatesTree from "./TemplatesTree";
+// import ProjectTreeItemContext from "./ProjectTreeItemContext";
+// import RenameDialog from "./RenameDialog";
+// import TreeFilter from "./TreeFilter/TreeFilter";
+// import TemplatesTree from "./TemplatesTree";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -94,7 +94,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}
-      <ProjectTreeItemContext
+      {/* <ProjectTreeItemContext
         cm={cm}
         docId={docId}
         displayDialog={displayDialog}
@@ -103,19 +103,19 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       <RenameDialog
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
-      />
+      /> */}
       <TabView
         className="w-full p-0"
         panelContainerClassName="pr-0"
         renderActiveOnly={true}
       >
         <TabPanel header="Documents" className="p-0">
-          <TreeFilter
+          {/* <TreeFilter
             filter={filter}
             setFilter={setFilter}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
-          />
+          /> */}
           {!filter && selectedTags.length === 0 && (
             <Tree
               classes={{
@@ -176,7 +176,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
               onDrop={handleDrop}
             />
           )}
-          {(filter || selectedTags.length > 0) && (
+          {/* {(filter || selectedTags.length > 0) && (
             <FilterList
               filteredTree={treeData
                 .filter((node) =>
@@ -191,17 +191,17 @@ export default function ProjectTree({ docId, setDocId }: Props) {
                 )}
               setDocId={setDocId}
             />
-          )}
+          )} */}
         </TabPanel>
         <TabPanel header="Templates">
           <div className="h-screen">
-            <TemplatesTree
+            {/* <TemplatesTree
               docId={docId}
               setDocId={setDocId}
               setIconSelect={setIconSelect}
               setDisplayDialog={setDisplayDialog}
               cm={cm}
-            />
+            /> */}
           </div>
         </TabPanel>
       </TabView>
