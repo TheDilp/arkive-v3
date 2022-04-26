@@ -35,6 +35,7 @@ export type Map = {
     id: number;
     icon: string;
     color: string;
+    text: string;
     map_id: string;
   }[];
 };
