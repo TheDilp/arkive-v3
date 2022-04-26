@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { Map } from "../../custom-types";
 import { MapContainer, Marker, Popup, ImageOverlay } from "react-leaflet";
 import L, { LatLngBoundsExpression } from "leaflet";
+import { Icon } from "@iconify/react";
+import ReactDOM from "react-dom/server";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
@@ -60,12 +62,32 @@ export default function MapView() {
           center={[mapData.width / 2, mapData.height / 2]}
           zoom={0}
           minZoom={-3}
+          maxZoom={2}
           scrollWheelZoom={true}
           crs={L.CRS.Simple}
           bounds={bounds}
         >
           <ImageOverlay url={mapData.src} bounds={bounds} ref={imgRef} />
-          <Marker position={[51.505, -0.09]}>
+          <Marker
+            position={[51.505, -0.09]}
+            icon={L.divIcon({
+              className: "bg-transparent rounded-full relative",
+              html: ReactDOM.renderToString(
+                <div className="text-xl w-2rem h-2rem absolute">
+                  <div
+                    style={{
+                      zIndex: 999999,
+                      background:
+                        "url('https://api.iconify.design/mdi/wizard-hat.svg?color=white') no-repeat",
+                      backgroundSize: "2rem",
+                      color: "white",
+                    }}
+                    className="w-full h-full absolute"
+                  ></div>
+                </div>
+              ),
+            })}
+          >
             <Popup>
               A pretty CSS3 popup. <br /> Easily customizable.
             </Popup>
