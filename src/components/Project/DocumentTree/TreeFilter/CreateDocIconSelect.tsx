@@ -40,11 +40,9 @@ export default function CreateDocIconSelect({
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
-  useOnClickOutside(
-    ref,
-    () => {}
-    // setIconSelect({ doc_id: "", icon: "", top: 0, left: 0, show: false })
-  );
+  useOnClickOutside(ref, () => {
+    setIconSelect({ top: 0, left: 0, show: false });
+  });
   return (
     <div
       ref={ref}

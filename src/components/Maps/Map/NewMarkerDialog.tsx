@@ -63,12 +63,14 @@ export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
             {...register("text")}
             autoComplete={"false"}
             className="w-full"
-            placeholder="Icon popup text"
+            placeholder="Marker popup text"
           />
         </div>
-        <div className="w-full my-2">
+        <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">
+          <span>Marker Icon:</span>
           <Icon
-            className="text-2xl cursor-pointer"
+            className="cursor-pointer"
+            fontSize={40}
             icon={`mdi:${watch("icon")}`}
             color={watch("color")}
             onClick={(e) =>
@@ -85,10 +87,11 @@ export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
             setValue={setValue}
             setIconSelect={setIconSelect}
           />
-        </div>
-        <div className="w-full">
           <Controller
             control={control}
+            rules={{
+              required: true,
+            }}
             name="color"
             render={({ field: { onChange, onBlur, value, name, ref } }) => (
               <div className="flex align-items-center flex-row-reverse">
@@ -101,6 +104,16 @@ export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
               </div>
             )}
           />
+          {errors.color?.type === "required" && (
+            <div
+              className="w-full text-center my-2"
+              style={{
+                color: "var(--red-600)",
+              }}
+            >
+              The color property is required!
+            </div>
+          )}
         </div>
         <div className="w-full flex justify-content-end mt-2">
           <Button

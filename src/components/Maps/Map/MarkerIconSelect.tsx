@@ -53,7 +53,9 @@ export default function CreateMarkerIconSelect({
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
-  useOnClickOutside(ref, () => {});
+  useOnClickOutside(ref, () => {
+    setIconSelect({ top: 0, left: 0, show: false });
+  });
   return (
     <div
       ref={ref}
