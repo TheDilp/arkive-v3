@@ -1,5 +1,12 @@
 import { Icon } from "@iconify/react";
-import React, { Dispatch, SetStateAction, useCallback, useRef } from "react";
+import { InputText } from "primereact/inputtext";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { useVirtual } from "react-virtual";
 import { useOnClickOutside } from "../../../utils/customHooks";
 import { iconList } from "../../../utils/iconsList";
@@ -27,8 +34,14 @@ export default function CreateMarkerIconSelect({
 }: Props) {
   const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const [search, setSearch] = useState<string | null>(null);
+
   const rowVirtualizer = useVirtual({
-    size: Math.ceil(iconList.length / 6),
+    size: Math.ceil(
+      iconList.filter((icon) =>
+        search ? icon.startsWith(search.toLowerCase()) : true
+      ).length / 6
+    ),
     parentRef,
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
@@ -52,6 +65,12 @@ export default function CreateMarkerIconSelect({
       }}
     >
       <div ref={parentRef} className="List w-full h-full overflow-auto">
+        <InputText
+          type="text"
+          className="w-full py-0 mb-2"
+          placeholder="Search icons"
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <div
           style={{
             width: "100%",
@@ -73,6 +92,9 @@ export default function CreateMarkerIconSelect({
                     height: `${virtualRow.size}px`,
                     transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
                   }}
+                  title={`${
+                    iconList[virtualRow.index * 6 + virtualColumn.index]
+                  }`}
                 >
                   <Icon
                     className="mx-auto hover:text-blue-300 cursor-pointer"

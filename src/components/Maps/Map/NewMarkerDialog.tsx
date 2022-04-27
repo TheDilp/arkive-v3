@@ -36,7 +36,7 @@ export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
     control,
     formState: { errors },
   } = useForm<Inputs>({
-    defaultValues: { icon: "mdi:wizard-hat", color: "ffffff" },
+    defaultValues: { icon: "wizard-hat", color: "ffffff" },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     let id = uuid();
