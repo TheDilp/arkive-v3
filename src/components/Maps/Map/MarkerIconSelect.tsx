@@ -1,8 +1,8 @@
 import { Icon } from "@iconify/react";
 import React, { Dispatch, SetStateAction, useCallback, useRef } from "react";
 import { useVirtual } from "react-virtual";
-import { useOnClickOutside } from "../../../../utils/customHooks";
-import { iconList } from "../../../../utils/iconsList";
+import { useOnClickOutside } from "../../../utils/customHooks";
+import { iconList } from "../../../utils/iconsList";
 
 type Props = {
   top: number;
@@ -18,7 +18,7 @@ type Props = {
   setValue: (name: "icon", value: string, config?: Object) => void;
 };
 
-export default function CreateDocIconSelect({
+export default function CreateMarkerIconSelect({
   top,
   left,
   show,
@@ -40,11 +40,7 @@ export default function CreateDocIconSelect({
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
-  useOnClickOutside(
-    ref,
-    () => {}
-    // setIconSelect({ doc_id: "", icon: "", top: 0, left: 0, show: false })
-  );
+  useOnClickOutside(ref, () => {});
   return (
     <div
       ref={ref}
@@ -83,7 +79,7 @@ export default function CreateDocIconSelect({
                     onClick={() => {
                       setValue(
                         "icon",
-                        `mdi:${
+                        `${
                           iconList[virtualRow.index * 6 + virtualColumn.index]
                         }`
                       );

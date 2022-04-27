@@ -36,6 +36,7 @@ export default function DraggableMarker({
     }),
     []
   );
+  console.log(color);
   return (
     <Marker
       draggable={true}
@@ -58,7 +59,7 @@ export default function DraggableMarker({
             <div
               style={{
                 zIndex: 999999,
-                background: `url('https://api.iconify.design/mdi/${icon}.svg?color=${color}') no-repeat`,
+                background: `url('https://api.iconify.design/mdi/${icon}.svg?color=%23${color}') no-repeat`,
                 backgroundSize: "2rem",
                 backgroundPosition: "center",
                 backgroundColor: "black",

@@ -412,7 +412,7 @@ export function useCreateMapMarker() {
                       {
                         ...newMarker,
                         icon: newMarker.icon || "wizard-hat",
-                        color: newMarker.color || "white",
+                        color: newMarker.color || "ffffff",
                         text: newMarker.text || "",
                       },
                     ],

@@ -9,10 +9,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import CreateDocIconSelect from "./CreateDocIconSelect";
-import {
-  useCreateDocument,
-  useCreateTemplate,
-} from "../../../../utils/customHooks";
+import { useCreateDocument } from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { Checkbox } from "primereact/checkbox";
 
