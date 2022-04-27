@@ -5,6 +5,7 @@ import { Document, Map, Project } from "../custom-types";
 import {
   auth,
   createDocument,
+  createMapMarker,
   createTemplate,
   deleteDocument,
   getCurrentProject,
@@ -376,12 +377,75 @@ export function useGetMaps(project_id: string) {
   return data;
 }
 
+// Custom hoom to create a map marker
+export function useCreateMapMarker() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: string;
+      map_id: string;
+      project_id: string;
+      text?: string;
+      icon?: string;
+      color?: string;
+      lat: number;
+      lng: number;
+    }) => {
+      await createMapMarker({ ...vars });
+    },
+    {
+      onMutate: async (newMarker) => {
+        const previousMaps = queryClient.getQueryData(
+          `${newMarker.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${newMarker.project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              // Template shouldn't have parent hence null
+              let newData: Map[] = oldData.map((map) => {
+                if (map.id === newMarker.map_id) {
+                  return {
+                    ...map,
+                    markers: [
+                      ...map.markers,
+                      {
+                        ...newMarker,
+                        icon: "wizard-hat",
+                        color: "white",
+                        text: "",
+                      },
+                    ],
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-documents`,
+          context?.previousMaps
+        );
+        toastError("There was an error creating this map marker.");
+      },
+    }
+  );
+}
 // Custom hook to update map marker
 export function useUpdateMapMarker() {
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: {
-      id: number;
+      id: string;
       map_id: string;
       project_id: string;
       icon?: string;

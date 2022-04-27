@@ -221,6 +221,43 @@ export const createTemplate = async ({
     }
   }
 };
+export const createMapMarker = async ({
+  id,
+  map_id,
+  text,
+  icon,
+  color,
+  lat,
+  lng,
+  doc_id,
+}: {
+  id: string;
+  map_id: string;
+  lat: number;
+  lng: number;
+  icon?: string;
+  color?: string;
+  text?: string;
+  doc_id?: string;
+}) => {
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase.from("markers").insert({
+      id,
+      map_id,
+      text,
+      icon,
+      color,
+      lat,
+      lng,
+    });
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your map marker.");
+      throw new Error(error.message);
+    }
+  }
+};
 
 // UPDATE
 export const updateDocument = async ({
@@ -299,7 +336,7 @@ export const updateMapMarker = async ({
   lat,
   lng,
 }: {
-  id: number;
+  id: string;
   map_id: string;
   text?: string;
   icon?: string;

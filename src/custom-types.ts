@@ -34,7 +34,7 @@ export type Map = {
   markers: MapMarker[];
 };
 export type MapMarker = {
-  id: number;
+  id: string;
   icon: string;
   color: string;
   lat: number;
