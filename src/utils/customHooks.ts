@@ -387,16 +387,16 @@ export function useUpdateMapMarker() {
       icon?: string;
       color?: string;
       text?: string;
-      x?: number;
-      y?: number;
+      lat?: number;
+      lng?: number;
     }) => {
       await updateMapMarker({
         id: vars.id,
         icon: vars.icon,
         color: vars.color,
         text: vars.text,
-        x: vars.x,
-        y: vars.y,
+        lat: vars.lat,
+        lng: vars.lng,
         map_id: vars.map_id,
       });
     },
@@ -427,8 +427,12 @@ export function useUpdateMapMarker() {
                           text: updatedMarker.text
                             ? updatedMarker.text
                             : marker.text,
-                          x: updatedMarker.x ? updatedMarker.x : marker.x,
-                          y: updatedMarker.y ? updatedMarker.y : marker.y,
+                          lat: updatedMarker.lat
+                            ? updatedMarker.lat
+                            : marker.lat,
+                          lng: updatedMarker.lng
+                            ? updatedMarker.lng
+                            : marker.lng,
                         };
                       } else {
                         return marker;

@@ -27,11 +27,18 @@ export default function MapView() {
     [0, 0],
     [0, 0],
   ]);
-  const [newTokenDialog, setNewTokenDialog] = useState({ lat: 0, lng: 0 });
+  const [newTokenDialog, setNewTokenDialog] = useState({
+    title: "",
+    document: "",
+    lat: 0,
+    lng: 0,
+    show: false,
+  });
   const maps: Map[] | undefined = queryClient.getQueryData(
     `${project_id}-maps`
   );
   useEffect(() => {
+    // setMapData({ width: 0, height: 0, src: "", markers: [] });
     if (map_id) {
       const map = maps?.find((m) => m.id === map_id);
       if (map) {
@@ -76,8 +83,9 @@ export default function MapView() {
       <AnimatePresence exitBeforeEnter={true}>
         {mapData.width && mapData.height && (
           <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="w-full h-full"
           >
             <MapContainer

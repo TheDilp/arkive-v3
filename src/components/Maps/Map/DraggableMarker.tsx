@@ -12,12 +12,12 @@ export default function DraggableMarker({
   icon,
   color,
   text,
-  x,
-  y,
+  lat,
+  lng,
 }: MapMarker) {
   const { project_id } = useParams();
   const updateMarkerMutation = useUpdateMapMarker();
-  const [position, setPosition] = useState<LatLngExpression>([x, y]);
+  const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const eventHandlers = useMemo(
     () => ({
       contextmenu: (e: any) => {
@@ -28,15 +28,14 @@ export default function DraggableMarker({
         updateMarkerMutation.mutate({
           id,
           map_id,
-          x: e.target._latlng.lat,
-          y: e.target._latlng.lng,
+          lat: e.target._latlng.lat,
+          lng: e.target._latlng.lng,
           project_id: project_id as string,
         });
       },
     }),
     []
   );
-  console.log(position);
   return (
     <Marker
       draggable={true}

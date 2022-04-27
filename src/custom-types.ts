@@ -37,8 +37,8 @@ export type MapMarker = {
   id: number;
   icon: string;
   color: string;
-  x: number;
-  y: number;
+  lat: number;
+  lng: number;
   text: string;
   map_id: string;
 };

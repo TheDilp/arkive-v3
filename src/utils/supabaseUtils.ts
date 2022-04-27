@@ -296,26 +296,25 @@ export const updateMapMarker = async ({
   icon,
   color,
   text,
-  x,
-  y,
+  lat,
+  lng,
 }: {
   id: number;
   map_id: string;
   text?: string;
   icon?: string;
   color?: string;
-  x?: number;
-  y?: number;
+  lat?: number;
+  lng?: number;
 }) => {
-  console.log(x, y);
   const { data, error } = await supabase
     .from<MapMarker>("markers")
     .update({
       icon,
       color,
       text,
-      x,
-      y,
+      lat,
+      lng,
     })
     .eq("id", id);
 
