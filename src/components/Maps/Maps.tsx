@@ -1,11 +1,13 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { useGetMaps } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
 import MapView from "./Map/MapView";
 import MapsTree from "./MapsTree";
 
-type Props = {};
+export default function Maps() {
+  const { project_id } = useParams();
+  const maps = useGetMaps(project_id as string);
 
-export default function Maps({}: Props) {
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (

@@ -3,16 +3,17 @@ import { ImageOverlay, useMapEvents } from "react-leaflet";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import DraggableMarker from "./DraggableMarker";
-import { Map } from "../../../custom-types";
+import { Map, MapMarker } from "../../../custom-types";
+import { useEffect, useState } from "react";
+import { useGetMapData } from "../../../utils/customHooks";
 type Props = {
   src: string;
   bounds: LatLngBoundsExpression;
   imgRef: any;
-  markers: Map["markers"];
   cm: any;
 };
 
-export default function MapImage({ src, bounds, imgRef, markers, cm }: Props) {
+export default function MapImage({ src, bounds, imgRef, cm }: Props) {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
   const map = useMapEvents({
@@ -20,11 +21,16 @@ export default function MapImage({ src, bounds, imgRef, markers, cm }: Props) {
       cm.current.show(e.originalEvent);
     },
   });
+  const mapData = useGetMapData(project_id as string, map_id as string);
+
+  useEffect(() => {
+    console.log(mapData);
+  }, [mapData]);
 
   return (
     <>
       <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
-      {markers.map((marker) => (
+      {mapData?.markers.map((marker) => (
         <DraggableMarker key={marker.id} {...marker} />
       ))}
     </>

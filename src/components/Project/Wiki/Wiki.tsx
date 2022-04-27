@@ -6,6 +6,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { useGetDocuments } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
@@ -14,6 +15,7 @@ import PropertiesPanel from "../PropertiesPanel";
 export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();
+  const documents = useGetDocuments(project_id as string);
 
   const navigate = useNavigate();
   useEffect(() => {

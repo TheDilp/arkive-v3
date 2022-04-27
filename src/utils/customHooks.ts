@@ -525,3 +525,19 @@ export function useUpdateMapMarker() {
     }
   );
 }
+
+// Custom hook for getting single map data
+export function useGetMapData(project_id: string, map_id: string) {
+  const queryClient = useQueryClient();
+  const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
+  if (maps && map_id) {
+    const map = maps.find((map) => map.id === map_id);
+    if (map) {
+      return map;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}

@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
+import NewMarkerDialog from "./NewMarkerDialog";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
@@ -28,8 +29,6 @@ export default function MapView() {
     [0, 0],
   ]);
   const [newTokenDialog, setNewTokenDialog] = useState({
-    title: "",
-    document: "",
     lat: 0,
     lng: 0,
     show: false,
@@ -79,7 +78,11 @@ export default function MapView() {
   }, [imgRef]);
   return (
     <div className="w-10 h-full">
-      <MapContextMenu cm={cm} />
+      <MapContextMenu cm={cm} setNewTokenDialog={setNewTokenDialog} />
+      <NewMarkerDialog
+        visible={newTokenDialog.show}
+        setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
+      />
       <AnimatePresence exitBeforeEnter={true}>
         {mapData.width && mapData.height && (
           <motion.div
@@ -103,7 +106,6 @@ export default function MapView() {
                 src={mapData.src}
                 bounds={bounds}
                 imgRef={imgRef}
-                markers={mapData.markers}
                 cm={cm}
               />
             </MapContainer>

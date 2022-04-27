@@ -3,7 +3,10 @@ import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { iconSelect, treeItemDisplayDialog } from "../../../../custom-types";
-import { useGetTemplates } from "../../../../utils/customHooks";
+import {
+  useGetDocuments,
+  useGetTemplates,
+} from "../../../../utils/customHooks";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -29,6 +32,7 @@ export default function TemplatesTree({
     estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
+
   return (
     <div>
       <div

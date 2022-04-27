@@ -3,26 +3,21 @@ import { ContextMenu } from "primereact/contextmenu";
 import { useCreateMapMarker } from "../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { useParams } from "react-router-dom";
-type Props = { cm: any };
+type Props = {
+  cm: any;
+  setNewTokenDialog: React.Dispatch<
+    React.SetStateAction<{ lat: number; lng: number; show: boolean }>
+  >;
+};
 
-export default function MapContextMenu({ cm }: Props) {
+export default function MapContextMenu({ cm, setNewTokenDialog }: Props) {
   const createMapMarkerMutation = useCreateMapMarker();
   const { project_id } = useParams();
   const items = [
     {
       label: "New Token",
       icon: "pi pi-fw pi-bookmark-fill",
-      command: () => {
-        let id = uuid();
-
-        createMapMarkerMutation.mutate({
-          id,
-          lat: 500,
-          lng: 500,
-          project_id: project_id as string,
-          map_id: "ed7e030a-4129-4eff-8a60-227b2ee43a87",
-        });
-      },
+      command: () => setNewTokenDialog((prev) => ({ ...prev, show: true })),
     },
   ];
   return <ContextMenu model={items} ref={cm} />;

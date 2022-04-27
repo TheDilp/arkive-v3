@@ -150,11 +150,6 @@ export default function RemirrorContext({
     return () => clearTimeout(timeout);
   }, [saving]);
 
-  useEffect(() => {
-    if (documents) {
-    }
-  }, [documents]);
-
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
