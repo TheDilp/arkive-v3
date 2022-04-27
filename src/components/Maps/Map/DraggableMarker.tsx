@@ -46,26 +46,29 @@ export default function DraggableMarker({
         iconSize: [48, 48],
         iconAnchor: [30, 46],
         popupAnchor: [18, 0],
-        className: "bg-transparent  relative ",
+        className: "relative",
+
         html: ReactDOM.renderToString(
-          <div
-            className="text-xl w-2rem h-2rem absolute"
-            onContextMenu={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              alert("BZZZZZ");
-            }}
-          >
-            <div
-              style={{
-                zIndex: 999999,
-                background: `url('https://api.iconify.design/mdi/${icon}.svg?color=%23${color}') no-repeat`,
-                backgroundSize: "2rem",
-                backgroundPosition: "center",
-                backgroundColor: "black",
-              }}
-              className="w-full h-full absolute border-circle p-4"
-            ></div>
+          <div className="relative">
+            <div className="absolute w-3rem h-3rem flex justify-content-center align-items-center">
+              <div
+                style={{
+                  zIndex: 999999,
+                  background: `url('https://api.iconify.design/mdi/${icon}.svg?color=%23${color}') no-repeat`,
+                  backgroundSize: "2rem",
+                  backgroundPosition: "center",
+                  backgroundColor: "#000",
+                }}
+                className="w-full h-full border-circle fixed p-4"
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  alert("BZZZZZ");
+                }}
+              >
+                {" "}
+              </div>
+            </div>
           </div>
         ),
       })}
