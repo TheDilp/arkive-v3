@@ -48,7 +48,10 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
       <div className="field-radiobutton flex flex-wrap align-items-start h-5rem overflow-y-auto">
         {templates &&
           templates.map((template) => (
-            <div className="w-6 my-1 Lato flex align-items-center">
+            <div
+              className="w-6 my-1 Lato flex align-items-center"
+              key={template.id}
+            >
               <RadioButton
                 className="mr-2"
                 value={template.id}

@@ -115,7 +115,6 @@ export default function RemirrorContext({
     }
 
     if (doc_id) {
-      setDocId(doc_id);
       if (documents) {
         if (currentDocument) {
           if (manager.view) {

@@ -84,11 +84,6 @@ export default function ProjectTree({ docId, setDocId }: Props) {
     }
   }, [docs]);
 
-  useEffect(() => {
-    if (doc_id) {
-      setDocId(doc_id);
-    }
-  }, [doc_id]);
   return (
     <div className="text-white w-2 flex flex-wrap surface-50">
       {iconSelect.show && (
