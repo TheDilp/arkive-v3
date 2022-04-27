@@ -9,8 +9,7 @@ type Props = {};
 
 export default function Maps({}: Props) {
   const { project_id } = useParams();
-  const maps = useGetMaps(project_id as string);
-  if (!maps) return <LoadingScreen />;
+
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (
