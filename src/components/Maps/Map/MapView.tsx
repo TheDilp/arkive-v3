@@ -5,6 +5,7 @@ import { MapContainer } from "react-leaflet";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
+import { useGetMapData } from "../../../utils/customHooks";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
 import NewMarkerDialog from "./NewMarkerDialog";
@@ -13,17 +14,8 @@ export default function MapView() {
   const queryClient = useQueryClient();
   const cm = useRef(null);
   const imgRef = useRef() as any;
-  const [mapData, setMapData] = useState<{
-    width: number;
-    height: number;
-    src: string;
-    markers: Map["markers"];
-  }>({
-    width: 0,
-    height: 0,
-    src: "",
-    markers: [],
-  });
+  const mapData = useGetMapData(project_id as string, map_id as string);
+  const [imgData, setImgData] = useState({ height: 0, width: 0, src: "" });
   const [bounds, setBounds] = useState<LatLngBoundsExpression>([
     [0, 0],
     [0, 0],
@@ -48,11 +40,10 @@ export default function MapView() {
             [0, 0],
             [img.height, img.width],
           ]);
-          setMapData({
-            width: img.width,
+          setImgData({
             height: img.height,
+            width: img.width,
             src: map.map_image,
-            markers: map.markers,
           });
         };
       }
@@ -63,7 +54,7 @@ export default function MapView() {
     if (imgRef.current) {
       imgRef.current.setBounds([
         [0, 0],
-        [mapData.height, mapData.width],
+        [imgData.height, imgData.width],
       ]);
     }
   }, [bounds]);
@@ -80,11 +71,11 @@ export default function MapView() {
     <div className="w-10 h-full">
       <MapContextMenu cm={cm} setNewTokenDialog={setNewTokenDialog} />
       <NewMarkerDialog
-        visible={newTokenDialog.show}
+        {...newTokenDialog}
         setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
       />
       <AnimatePresence exitBeforeEnter={true}>
-        {mapData.width && mapData.height && (
+        {imgData.width && imgData.height && mapData && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -93,7 +84,7 @@ export default function MapView() {
           >
             <MapContainer
               className="w-full h-full bg-gray-900 relative"
-              center={[mapData.width / 2, mapData.height / 2]}
+              center={[imgData.width / 2, imgData.height / 2]}
               zoom={0}
               minZoom={-3}
               maxZoom={2}
@@ -103,9 +94,11 @@ export default function MapView() {
               bounds={bounds}
             >
               <MapImage
-                src={mapData.src}
+                src={imgData.src}
                 bounds={bounds}
                 imgRef={imgRef}
+                markers={mapData.markers}
+                setNewTokenDialog={setNewTokenDialog}
                 cm={cm}
               />
             </MapContainer>

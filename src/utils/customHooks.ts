@@ -411,9 +411,9 @@ export function useCreateMapMarker() {
                       ...map.markers,
                       {
                         ...newMarker,
-                        icon: "wizard-hat",
-                        color: "white",
-                        text: "",
+                        icon: newMarker.icon || "wizard-hat",
+                        color: newMarker.color || "white",
+                        text: newMarker.text || "",
                       },
                     ],
                   };

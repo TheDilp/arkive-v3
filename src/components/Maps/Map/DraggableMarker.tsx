@@ -42,6 +42,8 @@ export default function DraggableMarker({
       eventHandlers={eventHandlers}
       position={position}
       icon={L.divIcon({
+        iconSize: [48, 48],
+        iconAnchor: [30, 46],
         popupAnchor: [18, 0],
         className: "bg-transparent  relative ",
         html: ReactDOM.renderToString(

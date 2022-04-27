@@ -16,7 +16,7 @@ export default function MapContextMenu({ cm, setNewTokenDialog }: Props) {
   const items = [
     {
       label: "New Token",
-      icon: "pi pi-fw pi-bookmark-fill",
+      icon: "pi pi-fw pi-map-marker",
       command: () => setNewTokenDialog((prev) => ({ ...prev, show: true })),
     },
   ];
