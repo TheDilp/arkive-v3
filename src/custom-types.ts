@@ -41,6 +41,7 @@ export type MapMarker = {
   lng: number;
   text: string;
   map_id: string;
+  doc_id?: string;
 };
 export type treeItemDisplayDialog = {
   id: string;

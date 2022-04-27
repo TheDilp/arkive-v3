@@ -388,6 +388,7 @@ export function useCreateMapMarker() {
       text?: string;
       icon?: string;
       color?: string;
+      doc_id?: string;
       lat: number;
       lng: number;
     }) => {

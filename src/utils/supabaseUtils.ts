@@ -250,6 +250,7 @@ export const createMapMarker = async ({
       color,
       lat,
       lng,
+      doc_id,
     });
     if (data) return data;
     if (error) {

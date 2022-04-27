@@ -2,7 +2,7 @@ import L, { LatLngExpression } from "leaflet";
 import { useMemo, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MapMarker } from "../../../custom-types";
 import { useUpdateMapMarker } from "../../../utils/customHooks";
 
@@ -14,6 +14,7 @@ export default function DraggableMarker({
   text,
   lat,
   lng,
+  doc_id,
 }: MapMarker) {
   const { project_id } = useParams();
   const updateMarkerMutation = useUpdateMapMarker();
@@ -36,7 +37,6 @@ export default function DraggableMarker({
     }),
     []
   );
-  console.log(color);
   return (
     <Marker
       draggable={true}
@@ -72,7 +72,11 @@ export default function DraggableMarker({
     >
       {text && (
         <Popup position={[51.505, -0]}>
-          <span className="Lato">{text}</span>
+          {doc_id ? (
+            <Link to={`../../wiki/${doc_id}`}>{text}</Link>
+          ) : (
+            <span className="Lato">{text}</span>
+          )}
         </Popup>
       )}
     </Marker>

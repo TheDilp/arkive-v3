@@ -4,11 +4,16 @@ import { InputText } from "primereact/inputtext";
 import { ColorPicker } from "primereact/colorpicker";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Button } from "primereact/button";
-import { useCreateMapMarker } from "../../../utils/customHooks";
+import {
+  useCreateMapMarker,
+  useGetDocuments,
+} from "../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { useParams } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import CreateMarkerIconSelect from "./MarkerIconSelect";
+import { AutoComplete } from "primereact/autocomplete";
+import { Dropdown } from "primereact/dropdown";
 type Props = {
   lat: number;
   lng: number;
@@ -19,6 +24,7 @@ type Inputs = {
   icon: string;
   text: string;
   color: string;
+  doc_id: string;
 };
 export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
   const { project_id, map_id } = useParams();
@@ -49,6 +55,7 @@ export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
       ...data,
     });
   };
+  const documents = useGetDocuments(project_id as string);
   return (
     <Dialog
       header="New Map Marker"
@@ -114,6 +121,23 @@ export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
               The color property is required!
             </div>
           )}
+        </div>
+        <div className="w-full">
+          <Controller
+            control={control}
+            name="doc_id"
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+              <Dropdown
+                className="w-full"
+                placeholder="Link Document"
+                value={value}
+                onChange={(e) => onChange(e.value)}
+                options={documents}
+                optionLabel={"title"}
+                optionValue={"id"}
+              />
+            )}
+          />
         </div>
         <div className="w-full flex justify-content-end mt-2">
           <Button
