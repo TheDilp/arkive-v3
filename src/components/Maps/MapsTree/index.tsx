@@ -39,7 +39,12 @@ export default function MapsTree({}: Props) {
   };
 
   return (
-    <div className="w-2 bg-gray-800 text-white">
+    <div
+      className="w-2 bg-gray-800 text-white"
+      style={{
+        height: "96vh",
+      }}
+    >
       <Tree
         classes={{
           root: "w-full overflow-y-auto projectTreeRoot",

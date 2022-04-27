@@ -6,8 +6,8 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { useGetDocuments } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
-import { useGetDocuments, useGetProjectData } from "../../../utils/customHooks";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import ProjectTree from "../DocumentTree";
@@ -16,7 +16,7 @@ export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();
   const documents = useGetDocuments(project_id as string);
-  const project = useGetProjectData(project_id as string);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (docId) {
@@ -24,7 +24,6 @@ export default function Wiki() {
     }
   }, [docId]);
 
-  if (!documents || !project) return <LoadingScreen />;
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (

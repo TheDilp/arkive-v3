@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
-import { Document, Project } from "../custom-types";
+import { Document, Map, Project } from "../custom-types";
 import {
   auth,
   createDocument,
+  createMapMarker,
   createTemplate,
   deleteDocument,
   getCurrentProject,
@@ -12,10 +13,10 @@ import {
   getMaps,
   getTags,
   updateDocument,
+  updateMapMarker,
   updateProject,
 } from "./supabaseUtils";
 import { toastError, toastSuccess } from "./utils";
-import { Map } from "../custom-types";
 // CUSTOM HOOKS
 
 // Custom hook for detecting if user clicked outside of element (ref)
@@ -374,4 +375,169 @@ export function useGetMaps(project_id: string) {
     }
   );
   return data;
+}
+
+// Custom hoom to create a map marker
+export function useCreateMapMarker() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: string;
+      map_id: string;
+      project_id: string;
+      text?: string;
+      icon?: string;
+      color?: string;
+      lat: number;
+      lng: number;
+    }) => {
+      await createMapMarker({ ...vars });
+    },
+    {
+      onMutate: async (newMarker) => {
+        const previousMaps = queryClient.getQueryData(
+          `${newMarker.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${newMarker.project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              // Template shouldn't have parent hence null
+              let newData: Map[] = oldData.map((map) => {
+                if (map.id === newMarker.map_id) {
+                  return {
+                    ...map,
+                    markers: [
+                      ...map.markers,
+                      {
+                        ...newMarker,
+                        icon: newMarker.icon || "wizard-hat",
+                        color: newMarker.color || "white",
+                        text: newMarker.text || "",
+                      },
+                    ],
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-documents`,
+          context?.previousMaps
+        );
+        toastError("There was an error creating this map marker.");
+      },
+    }
+  );
+}
+// Custom hook to update map marker
+export function useUpdateMapMarker() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: string;
+      map_id: string;
+      project_id: string;
+      icon?: string;
+      color?: string;
+      text?: string;
+      lat?: number;
+      lng?: number;
+    }) => {
+      await updateMapMarker({
+        id: vars.id,
+        icon: vars.icon,
+        color: vars.color,
+        text: vars.text,
+        lat: vars.lat,
+        lng: vars.lng,
+        map_id: vars.map_id,
+      });
+    },
+    {
+      onMutate: async (updatedMarker) => {
+        const previousMaps = queryClient.getQueryData(
+          `${updatedMarker.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${updatedMarker.project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              let newData: Map[] = oldData.map((map) => {
+                if (map.id === updatedMarker.map_id) {
+                  return {
+                    ...map,
+                    markers: map.markers.map((marker) => {
+                      if (marker.id === updatedMarker.id) {
+                        return {
+                          ...marker,
+                          // Check what values were given and set to new ones, otherwise keep old one
+                          icon: updatedMarker.icon
+                            ? updatedMarker.icon
+                            : marker.icon,
+                          color: updatedMarker.color
+                            ? updatedMarker.color
+                            : marker.color,
+                          text: updatedMarker.text
+                            ? updatedMarker.text
+                            : marker.text,
+                          lat: updatedMarker.lat
+                            ? updatedMarker.lat
+                            : marker.lat,
+                          lng: updatedMarker.lng
+                            ? updatedMarker.lng
+                            : marker.lng,
+                        };
+                      } else {
+                        return marker;
+                      }
+                    }),
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-maps`,
+          context?.previousMaps
+        );
+        toastError("There was an error updating this map marker.");
+      },
+    }
+  );
+}
+
+// Custom hook for getting single map data
+export function useGetMapData(project_id: string, map_id: string) {
+  const queryClient = useQueryClient();
+  const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
+  if (maps && map_id) {
+    const map = maps.find((map) => map.id === map_id);
+    if (map) {
+      return map;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
 }

@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
 import { StringMappingType } from "typescript";
-import { Document, Map, Profile, Project } from "../custom-types";
+import { Document, Map, MapMarker, Profile, Project } from "../custom-types";
 import { toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -92,7 +92,7 @@ export const getTags = async (project_id: string) => {
 export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<Map>("maps")
-    .select("*")
+    .select("*, markers(*)")
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {
@@ -221,6 +221,43 @@ export const createTemplate = async ({
     }
   }
 };
+export const createMapMarker = async ({
+  id,
+  map_id,
+  text,
+  icon,
+  color,
+  lat,
+  lng,
+  doc_id,
+}: {
+  id: string;
+  map_id: string;
+  lat: number;
+  lng: number;
+  icon?: string;
+  color?: string;
+  text?: string;
+  doc_id?: string;
+}) => {
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase.from("markers").insert({
+      id,
+      map_id,
+      text,
+      icon,
+      color,
+      lat,
+      lng,
+    });
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your map marker.");
+      throw new Error(error.message);
+    }
+  }
+};
 
 // UPDATE
 export const updateDocument = async ({
@@ -289,6 +326,39 @@ export const updateProject = async (
       toastError("There was an error updating your project.");
       throw new Error(error.message);
     }
+  }
+};
+export const updateMapMarker = async ({
+  id,
+  icon,
+  color,
+  text,
+  lat,
+  lng,
+}: {
+  id: string;
+  map_id: string;
+  text?: string;
+  icon?: string;
+  color?: string;
+  lat?: number;
+  lng?: number;
+}) => {
+  const { data, error } = await supabase
+    .from<MapMarker>("markers")
+    .update({
+      icon,
+      color,
+      text,
+      lat,
+      lng,
+    })
+    .eq("id", id);
+
+  if (data) return data;
+  if (error) {
+    toastError("There was an error updating your map marker.");
+    throw new Error(error.message);
   }
 };
 export const updateMultipleDocumentsParents = async (
