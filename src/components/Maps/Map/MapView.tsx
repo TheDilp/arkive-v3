@@ -1,9 +1,11 @@
+import { AnimatePresence, motion } from "framer-motion";
 import L, { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
+import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
 export default function MapView() {
   const { project_id, map_id } = useParams();
@@ -25,6 +27,7 @@ export default function MapView() {
     [0, 0],
     [0, 0],
   ]);
+  const [newTokenDialog, setNewTokenDialog] = useState({ lat: 0, lng: 0 });
   const maps: Map[] | undefined = queryClient.getQueryData(
     `${project_id}-maps`
   );
@@ -69,25 +72,36 @@ export default function MapView() {
   }, [imgRef]);
   return (
     <div className="w-10 h-full">
-      {mapData.width && mapData.height && (
-        <MapContainer
-          className="w-full h-full bg-gray-900 relative"
-          center={[mapData.width / 2, mapData.height / 2]}
-          zoom={0}
-          minZoom={-3}
-          maxZoom={2}
-          scrollWheelZoom={true}
-          crs={L.CRS.Simple}
-          bounds={bounds}
-        >
-          <MapImage
-            src={mapData.src}
-            bounds={bounds}
-            imgRef={imgRef}
-            markers={mapData.markers}
-          />
-        </MapContainer>
-      )}
+      <MapContextMenu cm={cm} />
+      <AnimatePresence exitBeforeEnter={true}>
+        {mapData.width && mapData.height && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 1 }}
+            className="w-full h-full"
+          >
+            <MapContainer
+              className="w-full h-full bg-gray-900 relative"
+              center={[mapData.width / 2, mapData.height / 2]}
+              zoom={0}
+              minZoom={-3}
+              maxZoom={2}
+              scrollWheelZoom={true}
+              zoomSnap={0}
+              crs={L.CRS.Simple}
+              bounds={bounds}
+            >
+              <MapImage
+                src={mapData.src}
+                bounds={bounds}
+                imgRef={imgRef}
+                markers={mapData.markers}
+                cm={cm}
+              />
+            </MapContainer>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

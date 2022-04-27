@@ -9,14 +9,15 @@ type Props = {
   bounds: LatLngBoundsExpression;
   imgRef: any;
   markers: Map["markers"];
+  cm: any;
 };
 
-export default function MapImage({ src, bounds, imgRef, markers }: Props) {
+export default function MapImage({ src, bounds, imgRef, markers, cm }: Props) {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
   const map = useMapEvents({
-    contextmenu() {
-      alert("AYYY");
+    contextmenu(e: any) {
+      cm.current.show(e.originalEvent);
     },
   });
 
