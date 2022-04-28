@@ -45,7 +45,7 @@ export default function DraggableMarker({
       icon={L.divIcon({
         iconSize: [48, 48],
         iconAnchor: [30, 46],
-        popupAnchor: [18, 0],
+        popupAnchor: [-5, -20],
         className: "relative",
 
         html: ReactDOM.renderToString(
