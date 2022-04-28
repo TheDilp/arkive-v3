@@ -1,4 +1,6 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { LatLngBoundsExpression } from "leaflet";
+import { useEffect, useState } from "react";
 import { ImageOverlay, useMapEvents } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";

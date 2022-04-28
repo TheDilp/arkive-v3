@@ -15,7 +15,9 @@ export default function MapView() {
   const cm = useRef(null);
   const imgRef = useRef() as any;
   const mapData = useGetMapData(project_id as string, map_id as string);
-  const [imgData, setImgData] = useState({ height: 0, width: 0, src: "" });
+  const [imgData, setImgData] = useState<
+    (Map & { height: number; width: number; src: string }) | null
+  >(null);
   const [bounds, setBounds] = useState<LatLngBoundsExpression>([
     [0, 0],
     [0, 0],
@@ -25,30 +27,30 @@ export default function MapView() {
     lng: 0,
     show: false,
   });
-  const maps: Map[] | undefined = queryClient.getQueryData(
-    `${project_id}-maps`
-  );
+
   useEffect(() => {
-    // setMapData({ width: 0, height: 0, src: "", markers: [] });
     if (map_id) {
-      const map = maps?.find((m) => m.id === map_id);
-      if (map) {
-        let img = new Image();
-        img.src = map.map_image;
-        img.onload = () => {
-          setBounds([
-            [0, 0],
-            [img.height, img.width],
-          ]);
-          setImgData({
-            height: img.height,
-            width: img.width,
-            src: map.map_image,
-          });
-        };
-      }
+      setImgData(null);
+      setTimeout(() => {
+        if (mapData) {
+          let img = new Image();
+          img.src = mapData.map_image;
+          img.onload = () => {
+            setBounds([
+              [0, 0],
+              [img.height, img.width],
+            ]);
+            setImgData({
+              ...mapData,
+              height: img.height,
+              width: img.width,
+              src: mapData.map_image,
+            });
+          };
+        }
+      }, 750);
     }
-  }, [map_id, maps]);
+  }, [map_id, mapData]);
 
   useEffect(() => {
     if (imgRef.current) {
@@ -67,8 +69,9 @@ export default function MapView() {
         setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
       />
       <AnimatePresence exitBeforeEnter={true}>
-        {imgData.width && imgData.height && (
+        {imgData && imgData.width && imgData.height && (
           <motion.div
+            transition={{ duration: 0.5 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -89,7 +92,7 @@ export default function MapView() {
                 src={imgData.src}
                 bounds={bounds}
                 imgRef={imgRef}
-                markers={mapData.markers}
+                markers={imgData.markers}
                 setNewTokenDialog={setNewTokenDialog}
                 cm={cm}
               />
