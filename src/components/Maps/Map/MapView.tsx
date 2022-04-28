@@ -69,7 +69,7 @@ export default function MapView() {
         setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
       />
       <AnimatePresence exitBeforeEnter={true}>
-        {imgData && imgData.width && imgData.height && (
+        {imgData && mapData && imgData.width && imgData.height && (
           <motion.div
             transition={{ duration: 0.5 }}
             initial={{ opacity: 0 }}
@@ -92,7 +92,7 @@ export default function MapView() {
                 src={imgData.src}
                 bounds={bounds}
                 imgRef={imgRef}
-                markers={imgData.markers}
+                markers={mapData.markers}
                 setNewTokenDialog={setNewTokenDialog}
                 cm={cm}
               />

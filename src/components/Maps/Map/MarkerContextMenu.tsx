@@ -4,21 +4,25 @@ import { useCreateMapMarker } from "../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { useParams } from "react-router-dom";
 type Props = {
-  cm: any;
-  setNewTokenDialog: React.Dispatch<
-    React.SetStateAction<{ lat: number; lng: number; show: boolean }>
-  >;
+  mcm: any;
+  setUpdateTokenDialog: any;
 };
 
-export default function MarkerContextMenu({ cm, setNewTokenDialog }: Props) {
+export default function MarkerContextMenu({
+  mcm,
+  setUpdateTokenDialog,
+}: Props) {
   const createMapMarkerMutation = useCreateMapMarker();
   const { project_id } = useParams();
   const items = [
     {
-      label: "New Token",
+      label: "Update Token",
       icon: "pi pi-fw pi-map-marker",
-      command: () => setNewTokenDialog((prev) => ({ ...prev, show: true })),
+    },
+    {
+      label: "Delete Token",
+      icon: "pi pi-fw pi-trash",
     },
   ];
-  return <ContextMenu model={items} ref={cm} />;
+  return <ContextMenu model={items} ref={mcm} />;
 }

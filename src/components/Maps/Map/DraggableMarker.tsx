@@ -15,14 +15,15 @@ export default function DraggableMarker({
   lat,
   lng,
   doc_id,
-}: MapMarker) {
+  mcm,
+}: MapMarker & { mcm: any }) {
   const { project_id } = useParams();
   const updateMarkerMutation = useUpdateMapMarker();
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const eventHandlers = useMemo(
     () => ({
       contextmenu: (e: any) => {
-        alert("BZZZZ");
+        mcm.current.show(e.originalEvent);
       },
       dragend(e: any) {
         setPosition(e.target._latlng);

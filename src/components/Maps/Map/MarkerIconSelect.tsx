@@ -78,7 +78,7 @@ export default function CreateMarkerIconSelect({
       <div ref={parentRef} className="List w-full h-full overflow-auto">
         <InputText
           type="text"
-          className="w-full py-0 mb-2"
+          className="w-full py-1 mb-2"
           placeholder="Search icons"
           onChange={(e) => setSearch(e.target.value)}
         />
