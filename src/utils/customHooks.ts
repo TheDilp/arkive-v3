@@ -8,6 +8,7 @@ import {
   createMapMarker,
   createTemplate,
   deleteDocument,
+  deleteMapMarker,
   getCurrentProject,
   getDocuments,
   getMaps,
@@ -541,4 +542,51 @@ export function useGetMapData(project_id: string, map_id: string) {
   } else {
     return null;
   }
+}
+
+// Custom hook for deleting a single map marker
+export function useDeleteMapMarker() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; map_id: string; project_id: string }) => {
+      await deleteMapMarker(vars.id);
+    },
+    {
+      onMutate: async (deletedMarker) => {
+        const previousMaps = queryClient.getQueryData(
+          `${deletedMarker.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${deletedMarker.project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              let newData: Map[] = oldData.map((map) => {
+                if (map.id === deletedMarker.map_id) {
+                  return {
+                    ...map,
+                    markers: map.markers.filter(
+                      (marker) => marker.id !== deletedMarker.id
+                    ),
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-maps`,
+          context?.previousMaps
+        );
+        toastError("There was an error deleting this map marker.");
+      },
+    }
+  );
 }

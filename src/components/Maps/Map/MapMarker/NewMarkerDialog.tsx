@@ -7,7 +7,7 @@ import { Button } from "primereact/button";
 import {
   useCreateMapMarker,
   useGetDocuments,
-} from "../../../utils/customHooks";
+} from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { useParams } from "react-router-dom";
 import { Icon } from "@iconify/react";

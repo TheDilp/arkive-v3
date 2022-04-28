@@ -3,9 +3,10 @@ import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { ImageOverlay, useMapEvents } from "react-leaflet";
 import { useParams } from "react-router-dom";
-import { Map } from "../../../custom-types";
-import DraggableMarker from "./DraggableMarker";
-import MarkerContextMenu from "./MarkerContextMenu";
+import { Map, MapMarker } from "../../../custom-types";
+import DraggableMarker from "./MapMarker/DraggableMarker";
+import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
+import UpdateMarkerDialog from "./MapMarker/UpdateMarkerDialog";
 type Props = {
   src: string;
   bounds: LatLngBoundsExpression;
@@ -28,24 +29,50 @@ export default function MapImage({
   setNewTokenDialog,
 }: Props) {
   const mcm = useRef() as any;
-  const [updateTokenDialog, setUpdateTokenDialog] = useState();
+  const [updateMarkerDialog, setUpdateMarkerDialog] = useState<{
+    id: string;
+    text: string;
+    icon: string;
+    color: string;
+    doc_id?: string;
+    show: boolean;
+  }>({
+    id: "",
+    text: "",
+    icon: "",
+    color: "",
+    doc_id: "",
+    show: false,
+  });
   const map = useMapEvents({
     contextmenu(e: any) {
       setNewTokenDialog({ ...e.latlng, show: false });
       cm.current.show(e.originalEvent);
     },
   });
-
   return (
     <>
       <MarkerContextMenu
         mcm={mcm}
-        setUpdateTokenDialog={setUpdateTokenDialog}
+        marker_id={updateMarkerDialog.id}
+        setUpdateTokenDialog={setUpdateMarkerDialog}
       />
-      ;
+      {updateMarkerDialog.show && (
+        <UpdateMarkerDialog
+          {...updateMarkerDialog}
+          setVisible={() =>
+            setUpdateMarkerDialog({ ...updateMarkerDialog, show: false })
+          }
+        />
+      )}
       <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
       {markers.map((marker) => (
-        <DraggableMarker key={marker.id} {...marker} mcm={mcm} />
+        <DraggableMarker
+          key={marker.id}
+          {...marker}
+          mcm={mcm}
+          setUpdateMarkerDialog={setUpdateMarkerDialog}
+        />
       ))}
     </>
   );

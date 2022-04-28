@@ -3,8 +3,8 @@ import { useMemo, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
 import { Link, useParams } from "react-router-dom";
-import { MapMarker } from "../../../custom-types";
-import { useUpdateMapMarker } from "../../../utils/customHooks";
+import { MapMarker } from "../../../../custom-types";
+import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
 export default function DraggableMarker({
   id,
@@ -16,7 +16,25 @@ export default function DraggableMarker({
   lng,
   doc_id,
   mcm,
-}: MapMarker & { mcm: any }) {
+  setUpdateMarkerDialog,
+}: MapMarker & {
+  mcm: any;
+  setUpdateMarkerDialog: ({
+    id,
+    icon,
+    text,
+    color,
+    doc_id,
+    show,
+  }: {
+    id: string;
+    icon: string;
+    text: string;
+    color: string;
+    doc_id?: string;
+    show: boolean;
+  }) => void;
+}) {
   const { project_id } = useParams();
   const updateMarkerMutation = useUpdateMapMarker();
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
@@ -24,6 +42,8 @@ export default function DraggableMarker({
     () => ({
       contextmenu: (e: any) => {
         mcm.current.show(e.originalEvent);
+        setUpdateMarkerDialog({ id, icon, text, color, doc_id, show: false });
+        console.log(icon);
       },
       dragend(e: any) {
         setPosition(e.target._latlng);
@@ -64,7 +84,14 @@ export default function DraggableMarker({
                 onContextMenu={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  alert("BZZZZZ");
+                  setUpdateMarkerDialog({
+                    id,
+                    icon,
+                    text,
+                    color,
+                    doc_id,
+                    show: true,
+                  });
                 }}
               >
                 {" "}

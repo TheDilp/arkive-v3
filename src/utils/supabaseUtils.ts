@@ -434,15 +434,6 @@ export const deleteManyDocuments = async (doc_ids: string[]) => {
     }
   }
 };
-export const createManyDocuments = async () => {
-  for (let index = 0; index < 20; index++) {
-    createDocument({
-      project_id: "81b55b26-a0f3-47e2-a8d2-761bead4b5cc",
-      title: "New Document",
-    });
-  }
-};
-// createManyDocuments();
 export const deleteProject = async (project_id: string) => {
   let user = auth.user();
 
@@ -458,17 +449,14 @@ export const deleteProject = async (project_id: string) => {
     }
   }
 };
-export const removeUserFromProject = async (
-  project_id: string,
-  user_id: string
-) => {
-  const { error } = await supabase.from("projects_users").delete().match({
-    project_id,
-    user_id,
-  });
+export const deleteMapMarker = async (id: string) => {
+  const { error } = await supabase
+    .from<MapMarker>("markers")
+    .delete()
+    .eq("id", id);
 
   if (error) {
-    toastError("There was an error removign a user from your project.");
+    toastError("There was an error deleting your map marker.");
     throw new Error(error.message);
   }
 };

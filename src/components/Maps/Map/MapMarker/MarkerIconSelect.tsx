@@ -9,8 +9,8 @@ import React, {
   useState,
 } from "react";
 import { useVirtual } from "react-virtual";
-import { useOnClickOutside } from "../../../utils/customHooks";
-import { iconList } from "../../../utils/iconsList";
+import { useOnClickOutside } from "../../../../utils/customHooks";
+import { iconList } from "../../../../utils/iconsList";
 
 type Props = {
   top: number;

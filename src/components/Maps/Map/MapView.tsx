@@ -8,7 +8,7 @@ import { Map } from "../../../custom-types";
 import { useGetMapData } from "../../../utils/customHooks";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
-import NewMarkerDialog from "./NewMarkerDialog";
+import NewMarkerDialog from "./MapMarker/NewMarkerDialog";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
