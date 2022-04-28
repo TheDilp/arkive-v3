@@ -50,10 +50,10 @@ export default function MapView() {
         }
       }, 750);
     }
-  }, [map_id, mapData]);
+  }, [map_id, mapData?.id]);
 
   useEffect(() => {
-    if (imgRef.current) {
+    if (imgRef.current && imgData) {
       imgRef.current.setBounds([
         [0, 0],
         [imgData.height, imgData.width],
