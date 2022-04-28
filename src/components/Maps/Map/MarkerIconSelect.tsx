@@ -4,6 +4,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useCallback,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -35,7 +36,7 @@ export default function CreateMarkerIconSelect({
   const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const [search, setSearch] = useState<string | null>(null);
-
+  const [filteredIconList, setFilteredIconList] = useState(iconList);
   const rowVirtualizer = useVirtual({
     size: Math.ceil(
       iconList.filter((icon) =>
@@ -56,6 +57,14 @@ export default function CreateMarkerIconSelect({
   useOnClickOutside(ref, () => {
     setIconSelect({ top: 0, left: 0, show: false });
   });
+
+  useEffect(() => {
+    setFilteredIconList(
+      iconList.filter((icon) =>
+        search ? icon.startsWith(search.toLowerCase()) : true
+      )
+    );
+  }, [search]);
   return (
     <div
       ref={ref}
@@ -95,7 +104,7 @@ export default function CreateMarkerIconSelect({
                     transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
                   }}
                   title={`${
-                    iconList[virtualRow.index * 6 + virtualColumn.index]
+                    filteredIconList[virtualRow.index * 6 + virtualColumn.index]
                   }`}
                 >
                   <Icon
@@ -104,7 +113,9 @@ export default function CreateMarkerIconSelect({
                       setValue(
                         "icon",
                         `${
-                          iconList[virtualRow.index * 6 + virtualColumn.index]
+                          filteredIconList[
+                            virtualRow.index * 6 + virtualColumn.index
+                          ]
                         }`
                       );
                       setIconSelect({
@@ -115,7 +126,9 @@ export default function CreateMarkerIconSelect({
                     }}
                     fontSize={30}
                     icon={`mdi:${
-                      iconList[virtualRow.index * 6 + virtualColumn.index]
+                      filteredIconList[
+                        virtualRow.index * 6 + virtualColumn.index
+                      ]
                     }`}
                   />
                 </div>
