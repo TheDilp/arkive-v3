@@ -8,7 +8,7 @@ import { Map } from "../../../custom-types";
 import { useGetMapData } from "../../../utils/customHooks";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
-import NewMarkerDialog from "./MapMarker/NewMarkerDialog";
+import CreateMarkerDialog from "./MapMarker/CreateMarkerDialog";
 export default function MapView() {
   const { project_id, map_id } = useParams();
   const queryClient = useQueryClient();
@@ -63,8 +63,14 @@ export default function MapView() {
 
   return (
     <div className="w-10 h-full">
-      <MapContextMenu cm={cm} setNewTokenDialog={setNewTokenDialog} />
-      <NewMarkerDialog
+      <MapContextMenu
+        cm={cm}
+        lat={newTokenDialog.lat}
+        lng={newTokenDialog.lng}
+        setNewTokenDialog={setNewTokenDialog}
+        bounds={bounds as number[][]}
+      />
+      <CreateMarkerDialog
         {...newTokenDialog}
         setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
       />

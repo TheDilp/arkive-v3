@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
-import { ColorPicker } from "primereact/colorpicker";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
+import { ColorPicker } from "primereact/colorpicker";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import {
   useCreateMapMarker,
-  useGetDocuments,
+  useGetDocuments
 } from "../../../../utils/customHooks";
-import { v4 as uuid } from "uuid";
-import { useParams } from "react-router-dom";
-import { Icon } from "@iconify/react";
 import CreateMarkerIconSelect from "./MarkerIconSelect";
-import { AutoComplete } from "primereact/autocomplete";
-import { Dropdown } from "primereact/dropdown";
 type Props = {
   lat: number;
   lng: number;
@@ -26,7 +25,12 @@ type Inputs = {
   color: string;
   doc_id: string;
 };
-export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
+export default function CreateMarkerDialog({
+  show,
+  setVisible,
+  lat,
+  lng,
+}: Props) {
   const { project_id, map_id } = useParams();
   const createMapMarkerMutation = useCreateMapMarker();
   const [iconSelect, setIconSelect] = useState({
@@ -56,6 +60,7 @@ export default function NewMarkerDialog({ show, setVisible, lat, lng }: Props) {
     });
   };
   const documents = useGetDocuments(project_id as string);
+
   return (
     <Dialog
       header="New Map Marker"
