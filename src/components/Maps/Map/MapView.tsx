@@ -48,7 +48,7 @@ export default function MapView() {
         };
       }
     }
-  }, [map_id]);
+  }, [map_id, maps]);
 
   useEffect(() => {
     if (imgRef.current) {
@@ -59,14 +59,6 @@ export default function MapView() {
     }
   }, [bounds]);
 
-  useEffect(() => {
-    if (imgRef.current) {
-      imgRef.current.on("context", (e: any) => {
-        e.preventDefault();
-        alert("AYYYY");
-      });
-    }
-  }, [imgRef]);
   return (
     <div className="w-10 h-full">
       <MapContextMenu cm={cm} setNewTokenDialog={setNewTokenDialog} />
@@ -75,7 +67,7 @@ export default function MapView() {
         setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
       />
       <AnimatePresence exitBeforeEnter={true}>
-        {imgData.width && imgData.height && mapData && (
+        {imgData.width && imgData.height && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
