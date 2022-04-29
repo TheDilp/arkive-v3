@@ -28,8 +28,6 @@ export default function ProjectTreeItemContext({
 }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const deleteDocumentMutation = useDeleteDocument(project_id as string);
-
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -63,11 +61,14 @@ export default function ProjectTreeItemContext({
   };
   const documents: Document[] | undefined =
     queryClient.getQueryData(`${project_id}-documents`) || [];
+  const document = documents.find((doc) => doc.id === displayDialog.id);
   let folders = documents.filter((doc) => doc.folder);
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const newDocumentMutation = useCreateDocument(project_id as string);
+  const deleteDocumentMutation = useDeleteDocument(project_id as string);
   const createTemplateMutation = useCreateTemplate();
+
   // Get all the folders a document can be moved to
   const moveToOptions = [
     {
@@ -163,14 +164,13 @@ export default function ProjectTreeItemContext({
       label: "Covert to Template",
       icon: "pi pi-fw pi-copy",
       command: () => {
-        let doc = documents.find((doc) => doc.id === displayDialog.id);
-        if (doc) {
-          if (doc.content) {
+        if (document) {
+          if (document.content) {
             let id = uuid();
             let vars = {
-              ...doc,
+              ...document,
               id,
-              title: `${doc.title}`,
+              title: `${document.title}`,
             };
             // @ts-ignore
             createTemplateMutation.mutate(vars);
@@ -184,12 +184,13 @@ export default function ProjectTreeItemContext({
       label: "Export Document",
       icon: "pi pi-fw pi-download",
       command: () => {
-        saveAs(
-          new Blob([JSON.stringify(displayDialog)], {
-            type: "text/plain;charset=utf-8",
-          }),
-          `${displayDialog.title}.json`
-        );
+        if (document)
+          saveAs(
+            new Blob([JSON.stringify(document)], {
+              type: "text/plain;charset=utf-8",
+            }),
+            `${document.title}.json`
+          );
       },
     },
     { separator: true },

@@ -25,7 +25,7 @@ type Props = {
 
 export default function ProjectTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
-  const { project_id, doc_id } = useParams();
+  const { project_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);

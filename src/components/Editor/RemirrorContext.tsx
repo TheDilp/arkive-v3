@@ -21,14 +21,11 @@ import {
   OrderedListExtension,
   TextColorExtension,
   UnderlineExtension,
+  MarkdownExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../styles/Editor.css";
-import {
-  useGetDocumentData,
-  useGetDocuments,
-  useUpdateDocument,
-} from "../../utils/customHooks";
+import { useGetDocumentData, useUpdateDocument } from "../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
@@ -36,15 +33,18 @@ import CustomMentionExtension from "./CustomMentionExtension";
 import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
+import { saveAs } from "file-saver";
+import { useQueryClient } from "react-query";
+import { Document } from "../../custom-types";
 const hooks = [
   () => {
-    const { getJSON, isSelectionEmpty } = useHelpers();
+    const { getJSON, getText, getMarkdown } = useHelpers();
     const { project_id, doc_id } = useParams();
     const saveContentMutation = useUpdateDocument(project_id as string);
+    const document = useGetDocumentData(project_id as string, doc_id as string);
     const handleSaveShortcut = useCallback(
       ({ state }) => {
         toastSuccess("Document successfully saved!");
-
         saveContentMutation.mutate({
           doc_id: doc_id as string,
           content: getJSON(state),
@@ -53,28 +53,33 @@ const hooks = [
       },
       [getJSON, doc_id]
     );
-    const isEmpty = useCallback(
+    const handleExportShortcut = useCallback(
       ({ state }) => {
-        console.log(isSelectionEmpty(state));
+        saveAs(
+          new Blob([getMarkdown(state)], {
+            type: "text/plain;charset=utf-8",
+          }),
+          `${document?.title || `Arkive Document - ${doc_id}`}.txt`
+        );
         return true; // Prevents any further key handlers from being run.
       },
-      [getJSON, doc_id]
+      [getText, doc_id]
     );
 
     // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
     useKeymap("Mod-s", handleSaveShortcut);
-    useKeymap("Mod-m", isEmpty);
+    useKeymap("Mod-e", handleExportShortcut);
   },
 ];
 
 export default function RemirrorContext({
   setDocId,
 }: {
-  setDocId: (docId: string) => void;
+  setDocId: (id: string) => void;
 }) {
   const firstRender = useRef(true);
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   // ======================================================
   // REMIRROR SETUP
   const { manager, state } = useRemirror({
@@ -94,6 +99,7 @@ export default function RemirrorContext({
       new CalloutExtension(),
       new NodeFormattingExtension(),
       new TextColorExtension(),
+      new MarkdownExtension(),
     ],
     selection: "all",
     stringHandler: htmlToProsemirrorNode,
@@ -101,7 +107,9 @@ export default function RemirrorContext({
   // ======================================================
 
   const { project_id, doc_id } = useParams();
-  const documents = useGetDocuments(project_id as string);
+  const documents = queryClient.getQueryData<Document[]>(
+    `${project_id}-documents`
+  );
   const currentDocument = useGetDocumentData(
     project_id as string,
     doc_id as string
@@ -114,25 +122,27 @@ export default function RemirrorContext({
       firstRender.current = false;
     }
 
-    if (doc_id) {
-      if (documents) {
-        if (currentDocument) {
-          if (manager.view) {
-            manager.view.updateState(
-              manager.createState({
-                content: JSON.parse(
-                  JSON.stringify(currentDocument.content ?? "")
-                ),
-              })
-            );
-          }
-        } else {
-          navigate("../");
-          toastWarn("Document doesn't seem to exist.");
+    if (doc_id && documents) {
+      if (currentDocument) {
+        if (manager.view) {
+          manager.view.updateState(
+            manager.createState({
+              content: JSON.parse(
+                JSON.stringify(currentDocument.content ?? "")
+              ),
+            })
+          );
         }
+      } else {
+        navigate("../");
+        toastWarn("Document doesn't seem to exist.");
       }
     }
-  }, [doc_id, manager.view]);
+  }, [doc_id, documents]);
+
+  useEffect(() => {
+    if (doc_id) setDocId(doc_id);
+  }, [doc_id]);
 
   useEffect(() => {
     const timeout = setTimeout(async () => {

@@ -38,6 +38,7 @@ export function useOnClickOutside(ref: any, handler: (event: any) => void) {
     };
   }, [ref, handler]);
 }
+
 // Custom hook for getting a project's data
 export function useGetProjectData(project_id: string) {
   const { data } = useQuery(
@@ -89,14 +90,14 @@ export function useUpdateProject() {
 }
 // Custom hook for getting documents
 export function useGetDocuments(project_id: string) {
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     `${project_id}-documents`,
     async () => await getDocuments(project_id),
     {
       staleTime: 5 * 60 * 1000,
     }
   );
-  return data;
+  return { data, isLoading };
 }
 // Custom hook for getting single document data
 export function useGetDocumentData(project_id: string, doc_id: string) {

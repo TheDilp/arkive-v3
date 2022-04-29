@@ -4,6 +4,7 @@ const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
 };
+
 export const toastSuccess = (message: string) =>
   toast.success(message, defaultToastConfig);
 export const toastError = (message: string) =>

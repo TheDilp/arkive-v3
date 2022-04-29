@@ -15,7 +15,7 @@ import PropertiesPanel from "../PropertiesPanel";
 export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();
-  const documents = useGetDocuments(project_id as string);
+  const { data: documents, isLoading } = useGetDocuments(project_id as string);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function Wiki() {
       navigate(docId);
     }
   }, [docId]);
-
+  if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (
