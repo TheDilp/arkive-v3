@@ -4,7 +4,7 @@ import { useLayoutEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
-import { useCreateMap } from "../../../utils/customHooks";
+import { useCreateMap, useUpdateMap } from "../../../utils/customHooks";
 import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
 import { v4 as uuid } from "uuid";
@@ -20,11 +20,12 @@ export default function MapsTree({}: Props) {
   const [treeData, setTreeData] = useState<NodeModel<Map>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
   const createMapMutation = useCreateMap();
+  const updateMapMutation = useUpdateMap(project_id as string);
   useLayoutEffect(() => {
     if (maps && maps.length > 0) {
       let temp = maps.map((m) => ({
         id: m.id,
-        parent: "0",
+        parent: m.parent,
         text: m.title,
         droppable: m.folder,
         data: {
@@ -43,6 +44,7 @@ export default function MapsTree({}: Props) {
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
+    updateMapMutation.mutate({ id: dragSourceId, parent: dropTargetId });
   };
 
   return (

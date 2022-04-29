@@ -363,6 +363,36 @@ export const updateProject = async (
     }
   }
 };
+export const updateMap = async ({
+  id,
+  title,
+  map_image,
+  parent,
+}: {
+  id: string;
+  title?: string;
+  map_image?: string;
+  parent?: string;
+}) => {
+  let user = auth.user();
+
+  if (user) {
+    const { data: map, error } = await supabase
+      .from<Map>("maps")
+      .update({
+        title,
+        map_image,
+        parent,
+      })
+      .eq("id", id);
+
+    if (map) return map[0];
+    if (error) {
+      toastError("There was an error updating your map.");
+      throw new Error(error.message);
+    }
+  }
+};
 export const updateMapMarker = async ({
   id,
   icon,

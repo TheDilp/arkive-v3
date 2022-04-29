@@ -15,6 +15,7 @@ import {
   getMaps,
   getTags,
   updateDocument,
+  updateMap,
   updateMapMarker,
   updateProject,
 } from "./supabaseUtils";
@@ -449,7 +450,53 @@ export function useGetMapData(project_id: string, map_id: string) {
     return null;
   }
 }
+// Custom hook for updating a map
+export function useUpdateMap(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: string;
+      title?: string;
+      map_image?: string;
+      parent?: string;
+    }) => {
+      await updateMap(vars);
+    },
+    {
+      onMutate: async (updatedMap) => {
+        const previousMaps = queryClient.getQueryData(`${project_id}-maps`);
+        queryClient.setQueryData(
+          `${project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              // Template shouldn't have parent hence null
+              let newData: Map[] = oldData.map((map) => {
+                if (map.id === updatedMap.id) {
+                  return {
+                    ...map,
+                    ...updatedMap,
+                    parent: updatedMap.parent ? updatedMap.parent : "0",
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
 
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(`${project_id}-maps`, context?.previousMaps);
+        toastError("There was an error updating this map.");
+      },
+    }
+  );
+}
 // Custom hoom to create a map marker
 export function useCreateMapMarker() {
   const queryClient = useQueryClient();
