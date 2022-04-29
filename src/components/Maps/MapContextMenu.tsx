@@ -1,9 +1,7 @@
-import React from "react";
 import { ContextMenu } from "primereact/contextmenu";
-import { useCreateMapMarker } from "../../utils/customHooks";
-import { v4 as uuid } from "uuid";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { toastWarn } from "../../utils/utils";
+import { useCreateMapMarker } from "../../utils/customHooks";
 type Props = {
   cm: any;
   lat: number;

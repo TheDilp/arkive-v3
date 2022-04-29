@@ -8,9 +8,11 @@ import { Document, treeItemDisplayDialog } from "../../../custom-types";
 import {
   useCreateDocument,
   useCreateTemplate,
-  useDeleteDocument, useUpdateDocument
+  useDeleteDocument,
+  useUpdateDocument,
 } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
+import { saveAs } from "file-saver";
 type Props = {
   docId: string;
   cm: React.RefObject<ContextMenu>;
@@ -176,6 +178,18 @@ export default function ProjectTreeItemContext({
             toastWarn("Document is empty, cannot convert to template");
           }
         }
+      },
+    },
+    {
+      label: "Export Document",
+      icon: "pi pi-fw pi-download",
+      command: () => {
+        saveAs(
+          new Blob([JSON.stringify(displayDialog)], {
+            type: "text/plain;charset=utf-8",
+          }),
+          `${displayDialog.title}.json`
+        );
       },
     },
     { separator: true },
