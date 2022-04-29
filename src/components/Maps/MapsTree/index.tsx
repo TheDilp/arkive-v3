@@ -4,8 +4,11 @@ import { useLayoutEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
+import { useCreateMap } from "../../../utils/customHooks";
 import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
+import { v4 as uuid } from "uuid";
+
 type Props = {};
 
 export default function MapsTree({}: Props) {
@@ -16,12 +19,14 @@ export default function MapsTree({}: Props) {
   );
   const [treeData, setTreeData] = useState<NodeModel<Map>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
+  const createMapMutation = useCreateMap();
   useLayoutEffect(() => {
     if (maps && maps.length > 0) {
       let temp = maps.map((m) => ({
         id: m.id,
         parent: "0",
         text: m.title,
+        droppable: m.folder,
         data: {
           ...m,
         },
@@ -57,6 +62,16 @@ export default function MapsTree({}: Props) {
           icon="pi pi-fw pi-folder"
           iconPos="right"
           className="p-button-outlined"
+          onClick={() => {
+            let id = uuid();
+            createMapMutation.mutate({
+              id,
+              project_id: project_id as string,
+              title: "New Folder",
+              map_image: "",
+              folder: true,
+            });
+          }}
         />
         <Button
           label="New Map"

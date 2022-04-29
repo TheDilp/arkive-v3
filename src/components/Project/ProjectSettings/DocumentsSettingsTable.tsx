@@ -45,7 +45,7 @@ export default function DocumentsSettingsTable() {
   });
   const ref = useRef(null);
   const documents = useGetDocuments(project_id as string);
-  const [localDocuments, setLocalDocuments] = useState(documents);
+  const [localDocuments, setLocalDocuments] = useState(documents.data);
   const { data: categories } = useGetTags(project_id as string);
   // MUTATIONS
 
@@ -53,7 +53,7 @@ export default function DocumentsSettingsTable() {
   const createDocumentMutation = useCreateDocument(project_id as string);
   useEffect(() => {
     if (documents) {
-      setLocalDocuments(documents);
+      setLocalDocuments(documents.data);
     }
   }, [documents]);
 
@@ -121,7 +121,7 @@ export default function DocumentsSettingsTable() {
     return (
       <Dropdown
         value={options.value}
-        options={documents?.filter((doc) => doc.folder) || []}
+        options={documents.data?.filter((doc) => doc.folder) || []}
         optionLabel="title"
         optionValue="title"
         onChange={(e) => {
@@ -308,7 +308,7 @@ export default function DocumentsSettingsTable() {
     return (
       <Dropdown
         value={options.value}
-        options={documents?.filter((doc) => doc.folder) || []}
+        options={documents.data?.filter((doc) => doc.folder) || []}
         optionLabel="title"
         optionValue="id"
         onChange={(e) => {
@@ -446,7 +446,7 @@ export default function DocumentsSettingsTable() {
         onSelectionChange={(e) => {
           const value = e.value;
           setSelectedDocuments(value);
-          setSelectAll(value.length === documents?.length);
+          setSelectAll(value.length === documents.data?.length);
         }}
         filterDisplay="menu"
         sortMode="multiple"

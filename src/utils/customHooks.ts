@@ -527,15 +527,17 @@ export function useUpdateMapMarker() {
       text?: string;
       lat?: number;
       lng?: number;
+      doc_id?: string;
     }) => {
       await updateMapMarker({
         id: vars.id,
+        map_id: vars.map_id,
         icon: vars.icon,
         color: vars.color,
         text: vars.text,
         lat: vars.lat,
         lng: vars.lng,
-        map_id: vars.map_id,
+        doc_id: vars.doc_id,
       });
     },
     {
@@ -571,6 +573,10 @@ export function useUpdateMapMarker() {
                           lng: updatedMarker.lng
                             ? updatedMarker.lng
                             : marker.lng,
+
+                          doc_id: updatedMarker.doc_id
+                            ? updatedMarker.doc_id
+                            : marker.doc_id,
                         };
                       } else {
                         return marker;

@@ -370,6 +370,7 @@ export const updateMapMarker = async ({
   text,
   lat,
   lng,
+  doc_id,
 }: {
   id: string;
   map_id: string;
@@ -378,6 +379,7 @@ export const updateMapMarker = async ({
   color?: string;
   lat?: number;
   lng?: number;
+  doc_id?: string;
 }) => {
   const { data, error } = await supabase
     .from<MapMarker>("markers")
@@ -387,6 +389,7 @@ export const updateMapMarker = async ({
       text,
       lat,
       lng,
+      doc_id,
     })
     .eq("id", id);
 

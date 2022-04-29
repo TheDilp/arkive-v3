@@ -57,7 +57,7 @@ export default function UpdateMarkerDialog({
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     // Project_id is required to set data with queryclient since the
     // query name is `${project_id}-maps`
-
+    console.log(data);
     updateMarkerMutation.mutate({
       id,
       map_id: map_id as string,
@@ -142,7 +142,7 @@ export default function UpdateMarkerDialog({
                 placeholder="Link Document"
                 value={value}
                 onChange={(e) => onChange(e.value)}
-                options={documents}
+                options={documents.data?.filter((doc) => !doc.template)}
                 optionLabel={"title"}
                 optionValue={"id"}
               />
@@ -152,7 +152,7 @@ export default function UpdateMarkerDialog({
         <div className="w-full flex justify-content-end mt-2">
           <Button
             className="p-button-outlined"
-            label="Create Marker"
+            label="Update Marker"
             icon="pi pi-map-marker"
             iconPos="right"
             type="submit"

@@ -28,7 +28,7 @@ Props) {
       style={{ marginInlineStart: depth * 10 }}
       className="text-lg hover:bg-blue-700 py-1 cursor-pointer"
       onClick={() => {
-        navigate(node.id as string);
+        if (!node.droppable) navigate(node.id as string);
       }}
       onContextMenu={(e) => {
         // cm.current.show(e);
@@ -57,25 +57,9 @@ Props) {
         </span>
       )}
       {node.droppable ? (
-        <Icon
-          icon="bxs:folder"
-          inline={true}
-          className="mr-1"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        />
+        <Icon icon="bxs:folder" inline={true} className="mr-1" />
       ) : (
-        <Icon
-          icon={"mdi:map"}
-          inline={true}
-          className="mr-1"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        />
+        <Icon icon={"mdi:map"} inline={true} className="mr-1" />
       )}
       <span className={`text-lg Lato `}>{node.text}</span>
     </div>

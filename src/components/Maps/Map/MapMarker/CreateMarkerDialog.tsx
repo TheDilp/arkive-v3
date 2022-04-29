@@ -137,7 +137,7 @@ export default function CreateMarkerDialog({
                 placeholder="Link Document"
                 value={value}
                 onChange={(e) => onChange(e.value)}
-                options={documents.data}
+                options={documents.data?.filter((doc) => !doc.template)}
                 optionLabel={"title"}
                 optionValue={"id"}
               />
