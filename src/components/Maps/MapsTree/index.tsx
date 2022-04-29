@@ -8,6 +8,8 @@ import { useCreateMap, useUpdateMap } from "../../../utils/customHooks";
 import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
 import { v4 as uuid } from "uuid";
+import DragPreview from "../../Project/DocumentTree/DragPreview";
+import { getDepth } from "../../../utils/utils";
 
 type Props = {};
 
@@ -101,6 +103,34 @@ export default function MapsTree({}: Props) {
             onToggle={onToggle}
           />
         )}
+        dragPreviewRender={(monitorProps) => (
+          <DragPreview
+            text={monitorProps.item.text}
+            droppable={monitorProps.item.droppable}
+          />
+        )}
+        placeholderRender={(node, { depth }) => (
+          <div
+            style={{
+              top: 0,
+              right: 0,
+              left: depth * 24,
+              backgroundColor: "#1967d2",
+              height: "2px",
+              position: "absolute",
+              transform: "translateY(-50%)",
+            }}
+          ></div>
+        )}
+        dropTargetOffset={10}
+        canDrop={(tree, { dragSource, dropTargetId }) => {
+          const depth = getDepth(treeData, dropTargetId);
+          // Don't allow nesting documents beyond this depth
+          if (depth > 3) return false;
+          if (dragSource?.parent === dropTargetId) {
+            return true;
+          }
+        }}
         //@ts-ignore
         onDrop={handleDrop}
       />
