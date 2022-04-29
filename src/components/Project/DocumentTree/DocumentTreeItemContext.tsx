@@ -181,7 +181,7 @@ export default function ProjectTreeItemContext({
       },
     },
     {
-      label: "Export Document",
+      label: "Export JSON",
       icon: "pi pi-fw pi-download",
       command: () => {
         if (document)

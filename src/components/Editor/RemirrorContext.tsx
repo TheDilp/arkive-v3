@@ -59,7 +59,7 @@ const hooks = [
           new Blob([getMarkdown(state)], {
             type: "text/plain;charset=utf-8",
           }),
-          `${document?.title || `Arkive Document - ${doc_id}`}.txt`
+          `${document?.title || `Arkive Document - ${doc_id}`}.md`
         );
         return true; // Prevents any further key handlers from being run.
       },

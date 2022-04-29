@@ -14,7 +14,7 @@ type Props = {
   setSelectedTags: (selectedTags: string[]) => void;
 };
 
-export default function TreeFilter({
+export default function DocTreeFilter({
   filter,
   setFilter,
   selectedTags,

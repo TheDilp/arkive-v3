@@ -15,7 +15,7 @@ import IconSelectMenu from "../../Util/IconSelectMenu";
 import ProjectTreeItem from "./DocumentTreeItem";
 import ProjectTreeItemContext from "./DocumentTreeItemContext";
 import RenameDialog from "./RenameDialog";
-import TreeFilter from "./TreeFilter/TreeFilter";
+import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 import { TabView, TabPanel } from "primereact/tabview";
 import TemplatesTree from "./TemplatesTree";
 type Props = {
@@ -105,7 +105,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
         renderActiveOnly={true}
       >
         <TabPanel header="Documents" className="p-0">
-          <TreeFilter
+          <DocTreeFilter
             filter={filter}
             setFilter={setFilter}
             selectedTags={selectedTags}

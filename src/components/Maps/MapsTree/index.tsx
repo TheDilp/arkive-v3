@@ -1,10 +1,11 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import { Button } from "primereact/button";
 import { useLayoutEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Map } from "../../../custom-types";
+import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
-
 type Props = {};
 
 export default function MapsTree({}: Props) {
@@ -14,6 +15,7 @@ export default function MapsTree({}: Props) {
     `${project_id}-maps`
   );
   const [treeData, setTreeData] = useState<NodeModel<Map>[]>([]);
+  const [createMapDialog, setCreateMapDialog] = useState(false);
   useLayoutEffect(() => {
     if (maps && maps.length > 0) {
       let temp = maps.map((m) => ({
@@ -40,11 +42,30 @@ export default function MapsTree({}: Props) {
 
   return (
     <div
-      className="w-2 bg-gray-800 text-white"
+      className="w-2 bg-gray-800 text-white pt-2 px-2"
       style={{
         height: "96vh",
       }}
     >
+      <MapCreateDialog
+        visible={createMapDialog}
+        setVisible={() => setCreateMapDialog(false)}
+      />
+      <div className="w-full py-1 flex justify-content-between">
+        <Button
+          label="New Folder"
+          icon="pi pi-fw pi-folder"
+          iconPos="right"
+          className="p-button-outlined"
+        />
+        <Button
+          label="New Map"
+          icon="pi pi-fw pi-map"
+          iconPos="right"
+          className="p-button-outlined"
+          onClick={() => setCreateMapDialog(true)}
+        />
+      </div>
       <Tree
         classes={{
           root: "w-full overflow-y-auto projectTreeRoot",

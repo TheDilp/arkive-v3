@@ -29,6 +29,7 @@ export type Map = {
   title: string;
   map_image: string;
   parent: string;
+  folder: boolean;
   user_id: string;
   project_id: string;
   markers: MapMarker[];
@@ -79,6 +80,13 @@ export type CreateDocumentInputs = {
   icon: string;
   folder: boolean;
   template: string;
+};
+
+export type CreateMapInputs = {
+  title: string;
+  map_image: string;
+  parent: string;
+  folder: boolean;
 };
 
 export type RegisterInputs = {

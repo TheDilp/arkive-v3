@@ -21,6 +21,10 @@ body {
     color: red !important;
 }
 
+.p-tabview-panels {
+    padding: 0 !important;
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */

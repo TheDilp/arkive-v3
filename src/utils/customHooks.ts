@@ -5,6 +5,7 @@ import { Document, Map, Project } from "../custom-types";
 import {
   auth,
   createDocument,
+  createMap,
   createMapMarker,
   createTemplate,
   deleteDocument,
@@ -369,14 +370,84 @@ export function useGetTemplates(project_id: string) {
 
 // Custom hook to get maps
 export function useGetMaps(project_id: string) {
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     `${project_id}-maps`,
     async () => await getMaps(project_id),
     {
       staleTime: 5 * 60 * 1000,
     }
   );
-  return data;
+  return { data, isLoading };
+}
+
+// Custom hook to create a map
+export function useCreateMap() {
+  const queryClient = useQueryClient();
+  const user_id = auth.user()?.id as string;
+  return useMutation(
+    async (vars: {
+      id: string;
+      project_id: string;
+      title: string;
+      map_image: string;
+      folder?: boolean;
+      parent?: string | null;
+    }) => {
+      await createMap({ ...vars, parent: undefined });
+    },
+    {
+      onMutate: async (newMap) => {
+        const previousMaps = queryClient.getQueryData(
+          `${newMap.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${newMap.project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              // Template shouldn't have parent hence null
+              let newData: Map[] = [
+                ...oldData,
+                {
+                  ...newMap,
+                  parent: newMap.parent ? newMap.parent : "0",
+                  user_id,
+                  folder: newMap.folder ? newMap.folder : false,
+                  markers: [],
+                },
+              ];
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-maps`,
+          context?.previousMaps
+        );
+        toastError("There was an error creating this map.");
+      },
+    }
+  );
+}
+// Custom hook for getting single map data
+export function useGetMapData(project_id: string, map_id: string) {
+  const queryClient = useQueryClient();
+  const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
+  if (maps && map_id) {
+    const map = maps.find((map) => map.id === map_id);
+    if (map) {
+      return map;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
 }
 
 // Custom hoom to create a map marker
@@ -527,22 +598,6 @@ export function useUpdateMapMarker() {
       },
     }
   );
-}
-
-// Custom hook for getting single map data
-export function useGetMapData(project_id: string, map_id: string) {
-  const queryClient = useQueryClient();
-  const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
-  if (maps && map_id) {
-    const map = maps.find((map) => map.id === map_id);
-    if (map) {
-      return map;
-    } else {
-      return null;
-    }
-  } else {
-    return null;
-  }
 }
 
 // Custom hook for deleting a single map marker

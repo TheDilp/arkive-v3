@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
   useCreateMapMarker,
-  useGetDocuments
+  useGetDocuments,
 } from "../../../../utils/customHooks";
 import CreateMarkerIconSelect from "./MarkerIconSelect";
 type Props = {
@@ -137,7 +137,7 @@ export default function CreateMarkerDialog({
                 placeholder="Link Document"
                 value={value}
                 onChange={(e) => onChange(e.value)}
-                options={documents}
+                options={documents.data}
                 optionLabel={"title"}
                 optionValue={"id"}
               />

@@ -1,13 +1,14 @@
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useGetMaps } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
+import LoadingScreen from "../Util/LoadingScreen";
 import MapView from "./Map/MapView";
 import MapsTree from "./MapsTree";
 
 export default function Maps() {
   const { project_id } = useParams();
-  const maps = useGetMaps(project_id as string);
-
+  const { data: maps, isLoading } = useGetMaps(project_id as string);
+  if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (
