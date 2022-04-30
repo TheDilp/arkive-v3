@@ -62,7 +62,10 @@ export default function MapsTree({
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
-    updateMapMutation.mutate({ id: dragSourceId, parent: dropTargetId });
+    updateMapMutation.mutate({
+      id: dragSourceId,
+      parent: dropTargetId === "0" ? null : dropTargetId,
+    });
   };
 
   return (

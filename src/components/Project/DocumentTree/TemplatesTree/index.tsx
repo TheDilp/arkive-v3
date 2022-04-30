@@ -3,10 +3,7 @@ import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { iconSelect, docItemDisplayDialog } from "../../../../custom-types";
-import {
-  useGetDocuments,
-  useGetTemplates,
-} from "../../../../utils/customHooks";
+import { useGetTemplates } from "../../../../utils/customHooks";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
