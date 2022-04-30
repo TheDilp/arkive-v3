@@ -1,13 +1,9 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useNavigate } from "react-router-dom";
-import {
-  iconSelect,
-  Map,
-  docItemDisplayDialog,
-  mapItemDisplayDialog,
-} from "../../../custom-types";
+import { Map, mapItemDisplayDialog } from "../../../custom-types";
 type Props = {
+  mapId: string;
   node: NodeModel<Map>;
   depth: number;
   isOpen: boolean;
@@ -18,7 +14,7 @@ type Props = {
 
 export default function MapTreeItem({
   node,
-  // mapId,
+  mapId,
   depth,
   isOpen,
   setDisplayDialog,
@@ -42,7 +38,7 @@ export default function MapTreeItem({
           map_image: node.data?.map_image || "",
           parent: node.parent as string,
           depth,
-        show: false,
+          show: false,
         });
       }}
     >
@@ -66,7 +62,11 @@ export default function MapTreeItem({
       ) : (
         <Icon icon={"mdi:map"} inline={true} className="mr-1" />
       )}
-      <span className={`text-lg Lato `}>{node.text}</span>
+      <span
+        className={`text-lg Lato ${mapId === node.id ? "text-primary" : ""}`}
+      >
+        {node.text}
+      </span>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import L, { LatLngExpression } from "leaflet";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -26,7 +26,6 @@ export default function DraggableMarker({
     text,
     color,
     doc_id,
-
     show,
   }: {
     id: string;
@@ -34,6 +33,7 @@ export default function DraggableMarker({
     text: string;
     color: string;
     doc_id?: string;
+    map_link?: string;
     show: boolean;
   }) => void;
 }) {
@@ -41,31 +41,36 @@ export default function DraggableMarker({
   const navigate = useNavigate();
   const updateMarkerMutation = useUpdateMapMarker();
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
-  const eventHandlers = useMemo(
-    () => ({
-      click: (e: any) => {
-        if (e.originalEvent.shiftKey && map_link) {
-          navigate(`../${map_link}`);
-        }
-      },
-      contextmenu: (e: any) => {
-        mcm.current.show(e.originalEvent);
-        setUpdateMarkerDialog({ id, icon, text, color, doc_id, show: false });
-        console.log(icon);
-      },
-      dragend(e: any) {
-        setPosition(e.target._latlng);
-        updateMarkerMutation.mutate({
-          id,
-          map_id,
-          lat: e.target._latlng.lat,
-          lng: e.target._latlng.lng,
-          project_id: project_id as string,
-        });
-      },
-    }),
-    []
-  );
+  const eventHandlers = {
+    click: (e: any) => {
+      if (e.originalEvent.shiftKey && map_link) {
+        navigate(`../${map_link}`);
+      }
+    },
+    contextmenu: (e: any) => {
+      mcm.current.show(e.originalEvent);
+      setUpdateMarkerDialog({
+        id,
+        icon,
+        text,
+        color,
+        doc_id,
+        map_link,
+        show: false,
+      });
+    },
+    dragend(e: any) {
+      setPosition(e.target._latlng);
+      updateMarkerMutation.mutate({
+        id,
+        map_id,
+        lat: e.target._latlng.lat,
+        lng: e.target._latlng.lng,
+        project_id: project_id as string,
+      });
+    },
+  };
+  console.log(map_link);
   return (
     <Marker
       draggable={true}
@@ -114,7 +119,7 @@ export default function DraggableMarker({
           {doc_id ? (
             <Link to={`../../wiki/${doc_id}`}>{text}</Link>
           ) : (
-            <span className="Lato">{text}</span>
+            <div className="Lato text-center">{text}</div>
           )}
         </Popup>
       )}

@@ -7,8 +7,10 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import { UpdateMarkerInputs } from "../../../../custom-types";
 import {
   useGetDocuments,
+  useGetMaps,
   useUpdateMapMarker,
 } from "../../../../utils/customHooks";
 import CreateMarkerIconSelect from "./MarkerIconSelect";
@@ -19,14 +21,18 @@ type Props = {
   color: string;
   icon: string;
   doc_id?: string;
-  setVisible: () => void;
+  map_link?: string;
+  setVisible: (visible: {
+    id: string;
+    text: string;
+    icon: string;
+    color: string;
+    doc_id: string;
+    map_link: string;
+    show: false;
+  }) => void;
 };
-type Inputs = {
-  icon: string;
-  text: string;
-  color: string;
-  doc_id?: string;
-};
+
 export default function UpdateMarkerDialog({
   id,
   show,
@@ -35,6 +41,7 @@ export default function UpdateMarkerDialog({
   color,
   icon,
   doc_id,
+  map_link,
 }: Props) {
   const { project_id, map_id } = useParams();
   const [iconSelect, setIconSelect] = useState({
@@ -50,28 +57,47 @@ export default function UpdateMarkerDialog({
     watch,
     control,
     formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: { icon, color, text, doc_id },
+  } = useForm<UpdateMarkerInputs>({
+    defaultValues: { icon, color, text, doc_id, map_link },
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<UpdateMarkerInputs> = (data) => {
     // Project_id is required to set data with queryclient since the
     // query name is `${project_id}-maps`
-    console.log(data);
     updateMarkerMutation.mutate({
       id,
       map_id: map_id as string,
       project_id: project_id as string,
       ...data,
     });
+    setVisible({
+      id: "",
+      text: "",
+      icon: "",
+      color: "",
+      doc_id: "",
+      show: false,
+      map_link: "",
+    });
   };
   const documents = useGetDocuments(project_id as string);
+  const maps = useGetMaps(project_id as string);
   return (
     <Dialog
-      header="New Map Marker"
+      header={`Update Marker - ${text}`}
       visible={show}
       style={{ width: "25vw" }}
-      onHide={() => setVisible()}
+      onHide={() =>
+        setVisible({
+          id: "",
+          text: "",
+          icon: "",
+          color: "",
+          doc_id: "",
+          show: false,
+          map_link: "",
+        })
+      }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap">
         <div className="w-full"></div>
@@ -147,6 +173,27 @@ export default function UpdateMarkerDialog({
                 optionValue={"id"}
               />
             )}
+          />
+        </div>
+        <div className="w-full">
+          <Controller
+            control={control}
+            name="map_link"
+            render={({ field: { onChange, onBlur, value, name, ref } }) => {
+              return (
+                <Dropdown
+                  className="w-full mt-2"
+                  placeholder="Map Link"
+                  value={value}
+                  onChange={(e) => {
+                    onChange(e.value);
+                  }}
+                  options={maps.data?.filter((map) => !map.folder)}
+                  optionLabel={"title"}
+                  optionValue={"id"}
+                />
+              );
+            }}
           />
         </div>
         <div className="w-full flex justify-content-end mt-2">

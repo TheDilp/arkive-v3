@@ -136,6 +136,7 @@ export default function MapsTree({
         render={(node: NodeModel<Map>, { depth, isOpen, onToggle }) => (
           <MapTreeItem
             node={node}
+            mapId={mapId}
             depth={depth}
             isOpen={isOpen}
             onToggle={onToggle}

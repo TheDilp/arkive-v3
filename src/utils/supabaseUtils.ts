@@ -274,7 +274,7 @@ export const createMapMarker = async ({
   color?: string;
   text?: string;
   doc_id?: string;
-  map_link: string;
+  map_link?: string;
 }) => {
   let user = auth.user();
   if (user) {
@@ -404,6 +404,7 @@ export const updateMapMarker = async ({
   lat,
   lng,
   doc_id,
+  map_link,
 }: {
   id: string;
   map_id: string;
@@ -413,6 +414,7 @@ export const updateMapMarker = async ({
   lat?: number;
   lng?: number;
   doc_id?: string;
+  map_link?: string;
 }) => {
   const { data, error } = await supabase
     .from<MapMarker>("markers")
@@ -423,6 +425,7 @@ export const updateMapMarker = async ({
       lat,
       lng,
       doc_id,
+      map_link,
     })
     .eq("id", id);
 

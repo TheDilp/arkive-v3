@@ -35,6 +35,7 @@ export default function MapImage({
     icon: string;
     color: string;
     doc_id?: string;
+    map_link?: string;
     show: boolean;
   }>({
     id: "",
@@ -42,6 +43,7 @@ export default function MapImage({
     icon: "",
     color: "",
     doc_id: "",
+    map_link: "",
     show: false,
   });
   const map = useMapEvents({
@@ -78,7 +80,14 @@ export default function MapImage({
         <UpdateMarkerDialog
           {...updateMarkerDialog}
           setVisible={() =>
-            setUpdateMarkerDialog({ ...updateMarkerDialog, show: false })
+            setUpdateMarkerDialog({
+              id: "",
+              text: "",
+              icon: "",
+              color: "",
+              doc_id: "",
+              show: false,
+            })
           }
         />
       )}

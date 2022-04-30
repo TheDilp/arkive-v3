@@ -107,6 +107,14 @@ export type CreateMarkerInputs = {
   map_link: string;
 };
 
+export type UpdateMarkerInputs = {
+  icon: string;
+  text: string;
+  color: string;
+  doc_id?: string;
+  map_link?: string;
+};
+
 export type RegisterInputs = {
   email: string;
   password: string;

@@ -549,6 +549,7 @@ export function useCreateMapMarker() {
       icon?: string;
       color?: string;
       doc_id?: string;
+      map_link?: string;
       lat: number;
       lng: number;
     }) => {
@@ -615,6 +616,7 @@ export function useUpdateMapMarker() {
       lat?: number;
       lng?: number;
       doc_id?: string;
+      map_link?: string;
     }) => {
       await updateMapMarker({
         id: vars.id,
@@ -625,6 +627,7 @@ export function useUpdateMapMarker() {
         lat: vars.lat,
         lng: vars.lng,
         doc_id: vars.doc_id,
+        map_link: vars.map_link,
       });
     },
     {
@@ -660,10 +663,12 @@ export function useUpdateMapMarker() {
                           lng: updatedMarker.lng
                             ? updatedMarker.lng
                             : marker.lng,
-
                           doc_id: updatedMarker.doc_id
                             ? updatedMarker.doc_id
                             : marker.doc_id,
+                          map_link: updatedMarker.map_link
+                            ? updatedMarker.map_link
+                            : marker.map_link,
                         };
                       } else {
                         return marker;
@@ -692,7 +697,6 @@ export function useUpdateMapMarker() {
     }
   );
 }
-
 // Custom hook for deleting a single map marker
 export function useDeleteMapMarker() {
   const queryClient = useQueryClient();
