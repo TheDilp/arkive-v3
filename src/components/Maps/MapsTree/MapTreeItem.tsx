@@ -24,9 +24,7 @@ export default function MapTreeItem({
   setDisplayDialog,
   onToggle,
   cm,
-}: //
-//   setIconSelect,
-Props) {
+}: Props) {
   const navigate = useNavigate();
   return (
     <div
@@ -40,11 +38,11 @@ Props) {
         setDisplayDialog({
           id: node.id as string,
           title: node.text,
-          show: false,
           folder: node.data?.folder || false,
           map_image: node.data?.map_image || "",
           parent: node.parent as string,
           depth,
+        show: false,
         });
       }}
     >

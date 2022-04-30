@@ -8,9 +8,11 @@ import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+import { CreateMarkerInputs } from "../../../../custom-types";
 import {
   useCreateMapMarker,
   useGetDocuments,
+  useGetMaps,
 } from "../../../../utils/customHooks";
 import CreateMarkerIconSelect from "./MarkerIconSelect";
 type Props = {
@@ -19,12 +21,7 @@ type Props = {
   show: boolean;
   setVisible: () => void;
 };
-type Inputs = {
-  icon: string;
-  text: string;
-  color: string;
-  doc_id: string;
-};
+
 export default function CreateMarkerDialog({
   show,
   setVisible,
@@ -45,10 +42,10 @@ export default function CreateMarkerDialog({
     watch,
     control,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<CreateMarkerInputs>({
     defaultValues: { icon: "wizard-hat", color: "ffffff" },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<CreateMarkerInputs> = (data) => {
     let id = uuid();
     createMapMarkerMutation.mutate({
       id,
@@ -60,7 +57,7 @@ export default function CreateMarkerDialog({
     });
   };
   const documents = useGetDocuments(project_id as string);
-
+  const maps = useGetMaps(project_id as string);
   return (
     <Dialog
       header="New Map Marker"
@@ -138,6 +135,25 @@ export default function CreateMarkerDialog({
                 value={value}
                 onChange={(e) => onChange(e.value)}
                 options={documents.data?.filter((doc) => !doc.template)}
+                optionLabel={"title"}
+                optionValue={"id"}
+              />
+            )}
+          />
+        </div>
+        <div className="w-full">
+          <Controller
+            control={control}
+            name="map_link"
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+              <Dropdown
+                className="w-full mt-2"
+                placeholder="Link Map"
+                value={value}
+                onChange={(e) => onChange(e.value)}
+                options={maps.data?.filter(
+                  (map) => !map.folder && map.id !== map_id
+                )}
                 optionLabel={"title"}
                 optionValue={"id"}
               />

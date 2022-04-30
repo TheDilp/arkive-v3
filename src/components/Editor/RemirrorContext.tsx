@@ -1,5 +1,4 @@
 import {
-  EditorComponent,
   Remirror,
   ThemeProvider,
   useHelpers,
@@ -7,7 +6,7 @@ import {
   useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode } from "remirror";
 import {
   BoldExtension,
@@ -17,25 +16,25 @@ import {
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
+  MarkdownExtension,
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
   UnderlineExtension,
-  MarkdownExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../styles/Editor.css";
-import { useGetDocumentData, useUpdateDocument } from "../../utils/customHooks";
-import { toastSuccess, toastWarn } from "../../utils/utils";
+import {
+  useGetDocumentData,
+  useGetDocuments,
+  useUpdateDocument,
+} from "../../utils/customHooks";
+import { toastSuccess } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
 // import { TableExtension } from "@remirror/extension-react-tables";
-import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
-import MentionComponent from "./MentionComponent";
-import MenuBar from "./MenuBar";
 import { saveAs } from "file-saver";
-import { useQueryClient } from "react-query";
-import { Document } from "../../custom-types";
+import EditorView from "./EditorView";
 const hooks = [
   () => {
     const { getJSON, getText, getMarkdown } = useHelpers();
@@ -78,8 +77,7 @@ export default function RemirrorContext({
   setDocId: (id: string) => void;
 }) {
   const firstRender = useRef(true);
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+
   // ======================================================
   // REMIRROR SETUP
   const { manager, state } = useRemirror({
@@ -107,38 +105,13 @@ export default function RemirrorContext({
   // ======================================================
 
   const { project_id, doc_id } = useParams();
-  const documents = queryClient.getQueryData<Document[]>(
-    `${project_id}-documents`
-  );
+  const documents = useGetDocuments(project_id as string);
   const currentDocument = useGetDocumentData(
     project_id as string,
     doc_id as string
   );
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
-  useEffect(() => {
-    if (firstRender.current) {
-      setSaving(false);
-      firstRender.current = false;
-    }
-
-    if (doc_id && documents) {
-      if (currentDocument) {
-        if (manager.view) {
-          manager.view.updateState(
-            manager.createState({
-              content: JSON.parse(
-                JSON.stringify(currentDocument.content ?? "")
-              ),
-            })
-          );
-        }
-      } else {
-        navigate("../");
-        toastWarn("Document doesn't seem to exist.");
-      }
-    }
-  }, [doc_id, documents]);
 
   useEffect(() => {
     if (doc_id) setDocId(doc_id);
@@ -181,11 +154,10 @@ export default function RemirrorContext({
               }
             }}
           >
-            <MenuBar saving={saving} />
-            <EditorComponent />
-            <BubbleMenu />
-            <MentionComponent
-              documents={documents.filter((doc) => !doc.template)}
+            <EditorView
+              saving={saving}
+              setSaving={setSaving}
+              firstRender={firstRender}
             />
           </Remirror>
         </ThemeProvider>

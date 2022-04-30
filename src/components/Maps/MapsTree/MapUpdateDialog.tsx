@@ -2,18 +2,19 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Checkbox } from "primereact/checkbox";
-import { useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { v4 as uuid } from "uuid";
-import { CreateMapInputs, Map } from "../../../custom-types";
-import { useCreateMap, useUpdateMap } from "../../../utils/customHooks";
+import {
+  CreateMapInputs,
+  Map,
+  mapItemDisplayDialog,
+} from "../../../custom-types";
+import { useUpdateMap } from "../../../utils/customHooks";
 
 type Props = {
-  visible: boolean;
-  setVisible: (visible: boolean) => void;
+  visible: mapItemDisplayDialog;
+  setVisible: (visible: mapItemDisplayDialog) => void;
 };
 
 export default function MapUpdateDialog({ visible, setVisible }: Props) {
@@ -27,21 +28,43 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
     handleSubmit,
     formState: { errors },
   } = useForm<Omit<CreateMapInputs, "folder">>({
-    defaultValues: { title: "New Map" },
+    defaultValues: {
+      title: visible.title,
+      map_image: visible.map_image,
+      parent: visible.parent === "0" ? undefined : visible.parent,
+    },
   });
   const onSubmit: SubmitHandler<Omit<CreateMapInputs, "folder">> = (data) => {
-    let id = uuid();
     updateMapMutation.mutate({
-      id,
+      id: visible.id,
       ...data,
+    });
+    setVisible({
+      id: "",
+      title: "",
+      map_image: "",
+      parent: "",
+      show: false,
+      folder: false,
+      depth: 0,
     });
   };
   return (
     <Dialog
       className="w-3"
-      header={"Create Map"}
-      visible={visible}
-      onHide={() => setVisible(false)}
+      header={`Update Map - ${visible.title}`}
+      visible={visible.show}
+      onHide={() =>
+        setVisible({
+          id: "",
+          title: "",
+          map_image: "",
+          parent: "",
+          show: false,
+          folder: false,
+          depth: 0,
+        })
+      }
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap justify-content-center">
@@ -93,8 +116,8 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
 
           <div className="w-full flex justify-content-end">
             <Button
-              label="Create Map"
-              className="p-button-success p-button-outlined p-button-raised"
+              label="Update Map"
+              className="p-button-success p-button-outlined mt-2"
               icon="pi pi-plus"
               iconPos="right"
               type="submit"

@@ -43,6 +43,7 @@ export type MapMarker = {
   text: string;
   map_id: string;
   doc_id?: string;
+  map_link?: string;
 };
 export type docItemDisplayDialog = {
   id: string;
@@ -96,6 +97,14 @@ export type CreateMapInputs = {
   map_image: string;
   parent: string;
   folder: boolean;
+};
+
+export type CreateMarkerInputs = {
+  icon: string;
+  text: string;
+  color: string;
+  doc_id: string;
+  map_link: string;
 };
 
 export type RegisterInputs = {

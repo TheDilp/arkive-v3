@@ -11,6 +11,7 @@ import { v4 as uuid } from "uuid";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
 import { getDepth } from "../../../utils/utils";
 import MapTreeItemContext from "./MapTreeItemContext";
+import MapUpdateDialog from "./MapUpdateDialog";
 
 export default function MapsTree({
   mapId,
@@ -81,6 +82,22 @@ export default function MapsTree({
         visible={createMapDialog}
         setVisible={() => setCreateMapDialog(false)}
       />
+      {updateMapDialog.show && (
+        <MapUpdateDialog
+          visible={updateMapDialog}
+          setVisible={() =>
+            setUpdateMapDialog({
+              id: "",
+              title: "",
+              map_image: "",
+              parent: "",
+              show: false,
+              folder: false,
+              depth: 0,
+            })
+          }
+        />
+      )}
       <div className="w-full py-1 flex justify-content-between">
         <Button
           label="New Folder"

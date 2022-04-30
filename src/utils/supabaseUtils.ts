@@ -92,7 +92,7 @@ export const getTags = async (project_id: string) => {
 export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<Map>("maps")
-    .select("*, markers(*)")
+    .select("*, markers:markers!map_id(*)")
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {
@@ -264,6 +264,7 @@ export const createMapMarker = async ({
   lat,
   lng,
   doc_id,
+  map_link,
 }: {
   id: string;
   map_id: string;
@@ -273,6 +274,7 @@ export const createMapMarker = async ({
   color?: string;
   text?: string;
   doc_id?: string;
+  map_link: string;
 }) => {
   let user = auth.user();
   if (user) {
@@ -285,6 +287,7 @@ export const createMapMarker = async ({
       lat,
       lng,
       doc_id,
+      map_link,
     });
     if (data) return data;
     if (error) {

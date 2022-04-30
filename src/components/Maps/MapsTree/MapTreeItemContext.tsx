@@ -66,7 +66,7 @@ export default function MapTreeItemContext({
 
   const docItems = [
     {
-      label: "Rename Map",
+      label: "Update Map",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
