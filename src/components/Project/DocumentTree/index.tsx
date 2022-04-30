@@ -12,7 +12,7 @@ import { getDepth } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
 import FilterList from "./FilterList";
 import IconSelectMenu from "../../Util/IconSelectMenu";
-import ProjectTreeItem from "./DocumentTreeItem";
+import DocumentTreeItem from "./DocumentTreeItem";
 import DocumentTreeItemContext from "./DocumentTreeItemContext";
 import RenameDialog from "./RenameDialog";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
@@ -23,7 +23,7 @@ type Props = {
   setDocId: (docId: string) => void;
 };
 
-export default function ProjectTree({ docId, setDocId }: Props) {
+export default function DocumentTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
@@ -126,7 +126,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
                 node: NodeModel<Document>,
                 { depth, isOpen, onToggle }
               ) => (
-                <ProjectTreeItem
+                <DocumentTreeItem
                   // @ts-ignore
                   node={node}
                   depth={depth}

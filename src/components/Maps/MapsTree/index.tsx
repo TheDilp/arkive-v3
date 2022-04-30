@@ -42,7 +42,7 @@ export default function MapsTree({
     if (maps && maps.length > 0) {
       let temp = maps.map((m) => ({
         id: m.id,
-        parent: m.parent,
+        parent: m.parent || "0",
         text: m.title,
         droppable: m.folder,
         data: {

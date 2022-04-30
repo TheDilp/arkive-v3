@@ -17,7 +17,7 @@ type Props = {
   cm: any;
 };
 
-export default function ProjectTreeItem({
+export default function DocumentTreeItem({
   node,
   docId,
   depth,
