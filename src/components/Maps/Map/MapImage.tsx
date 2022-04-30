@@ -50,6 +50,23 @@ export default function MapImage({
       cm.current.show(e.originalEvent);
     },
   });
+  const [markerFilter, setMarkerFilter] = useState(false);
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.shiftKey) {
+        setMarkerFilter(true);
+      }
+    });
+    document.addEventListener("keyup", (e) => {
+      if (!e.shiftKey) {
+        setMarkerFilter(false);
+      }
+    });
+    return () => {
+      document.removeEventListener("keydown", () => {});
+      document.removeEventListener("keyup", () => {});
+    };
+  }, []);
   return (
     <>
       <MarkerContextMenu
@@ -66,14 +83,16 @@ export default function MapImage({
         />
       )}
       <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
-      {markers.map((marker) => (
-        <DraggableMarker
-          key={marker.id}
-          {...marker}
-          mcm={mcm}
-          setUpdateMarkerDialog={setUpdateMarkerDialog}
-        />
-      ))}
+      {markers
+        .filter((marker) => (markerFilter ? marker.map_link : true))
+        .map((marker) => (
+          <DraggableMarker
+            key={marker.id}
+            {...marker}
+            mcm={mcm}
+            setUpdateMarkerDialog={setUpdateMarkerDialog}
+          />
+        ))}
     </>
   );
 }

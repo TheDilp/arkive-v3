@@ -75,7 +75,7 @@ export default function MapView({
             className="w-full h-full"
           >
             <MapContainer
-              className="w-full h-full bg-gray-900 relative"
+              className="w-full h-full bg-gray-900 relative outline-none"
               center={[bounds[1][0] / 2, bounds[1][1] / 2]}
               zoom={0}
               minZoom={-3}
