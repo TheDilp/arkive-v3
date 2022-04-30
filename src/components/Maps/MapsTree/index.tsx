@@ -1,26 +1,41 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { Button } from "primereact/button";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Map } from "../../../custom-types";
+import { Map, mapItemDisplayDialog } from "../../../custom-types";
 import { useCreateMap, useUpdateMap } from "../../../utils/customHooks";
 import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
 import { v4 as uuid } from "uuid";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
 import { getDepth } from "../../../utils/utils";
+import MapTreeItemContext from "./MapTreeItemContext";
 
-type Props = {};
-
-export default function MapsTree({}: Props) {
+export default function MapsTree({
+  mapId,
+  setMapId,
+}: {
+  mapId: string;
+  setMapId: (mapId: string) => void;
+}) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
+  const cm = useRef() as any;
   const maps: Map[] | undefined = queryClient.getQueryData(
     `${project_id}-maps`
   );
   const [treeData, setTreeData] = useState<NodeModel<Map>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
+  const [updateMapDialog, setUpdateMapDialog] = useState<mapItemDisplayDialog>({
+    id: "",
+    title: "",
+    map_image: "",
+    parent: "",
+    show: false,
+    folder: false,
+    depth: 0,
+  });
   const createMapMutation = useCreateMap();
   const updateMapMutation = useUpdateMap(project_id as string);
   useLayoutEffect(() => {
@@ -56,6 +71,12 @@ export default function MapsTree({}: Props) {
         height: "96vh",
       }}
     >
+      <MapTreeItemContext
+        cm={cm}
+        mapId={mapId}
+        displayDialog={updateMapDialog}
+        setDisplayDialog={setUpdateMapDialog}
+      />
       <MapCreateDialog
         visible={createMapDialog}
         setVisible={() => setCreateMapDialog(false)}
@@ -101,6 +122,8 @@ export default function MapsTree({}: Props) {
             depth={depth}
             isOpen={isOpen}
             onToggle={onToggle}
+            setDisplayDialog={setUpdateMapDialog}
+            cm={cm}
           />
         )}
         dragPreviewRender={(monitorProps) => (

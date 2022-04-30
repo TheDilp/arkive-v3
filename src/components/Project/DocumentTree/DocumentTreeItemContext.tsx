@@ -4,7 +4,7 @@ import React from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { Document, treeItemDisplayDialog } from "../../../custom-types";
+import { Document, docItemDisplayDialog } from "../../../custom-types";
 import {
   useCreateDocument,
   useCreateTemplate,
@@ -16,11 +16,11 @@ import { saveAs } from "file-saver";
 type Props = {
   docId: string;
   cm: React.RefObject<ContextMenu>;
-  displayDialog: treeItemDisplayDialog;
-  setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
+  displayDialog: docItemDisplayDialog;
+  setDisplayDialog: (displayDialog: docItemDisplayDialog) => void;
 };
 
-export default function ProjectTreeItemContext({
+export default function DocumentTreeItemContext({
   docId,
   cm,
   displayDialog,

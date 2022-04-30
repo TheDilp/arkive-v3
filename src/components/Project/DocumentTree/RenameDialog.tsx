@@ -3,12 +3,12 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { treeItemDisplayDialog } from "../../../custom-types";
+import { docItemDisplayDialog } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 
 type Props = {
-  displayDialog: treeItemDisplayDialog;
-  setDisplayDialog: React.Dispatch<React.SetStateAction<treeItemDisplayDialog>>;
+  displayDialog: docItemDisplayDialog;
+  setDisplayDialog: React.Dispatch<React.SetStateAction<docItemDisplayDialog>>;
 };
 
 export default function RenameDialog({

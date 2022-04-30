@@ -7,7 +7,7 @@ import {
   useRemirror,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode } from "remirror";
 import {
   BoldExtension,
@@ -158,7 +158,7 @@ export default function RemirrorContext({
 
     return () => clearTimeout(timeout);
   }, [saving]);
-
+  if (!currentDocument) return <Navigate to="../" />;
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">

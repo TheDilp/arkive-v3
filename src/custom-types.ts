@@ -44,12 +44,21 @@ export type MapMarker = {
   map_id: string;
   doc_id?: string;
 };
-export type treeItemDisplayDialog = {
+export type docItemDisplayDialog = {
   id: string;
   title: string;
   show: boolean;
   folder: boolean;
   template: boolean;
+  depth: number;
+};
+export type mapItemDisplayDialog = {
+  id: string;
+  title: string;
+  map_image: string;
+  parent: string;
+  show: boolean;
+  folder: boolean;
   depth: number;
 };
 

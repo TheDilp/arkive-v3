@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { iconSelect, treeItemDisplayDialog } from "../../../../custom-types";
+import { iconSelect, docItemDisplayDialog } from "../../../../custom-types";
 import {
   useGetDocuments,
   useGetTemplates,
@@ -11,7 +11,7 @@ type Props = {
   docId: string;
   setDocId: (docId: string) => void;
   setIconSelect: (iconSelect: iconSelect) => void;
-  setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
+  setDisplayDialog: (displayDialog: docItemDisplayDialog) => void;
   cm: any;
 };
 

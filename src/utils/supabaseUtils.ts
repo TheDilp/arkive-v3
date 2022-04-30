@@ -516,6 +516,21 @@ export const deleteProject = async (project_id: string) => {
     }
   }
 };
+export const deleteMap = async (map_id: string) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase
+      .from<Map>("maps")
+      .delete()
+      .eq("id", map_id);
+
+    if (error) {
+      toastError("There was an error deleting your map.");
+      throw new Error(error.message);
+    }
+  }
+};
 export const deleteMapMarker = async (id: string) => {
   const { error } = await supabase
     .from<MapMarker>("markers")

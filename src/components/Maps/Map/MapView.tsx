@@ -7,7 +7,11 @@ import { useGetMapData } from "../../../utils/customHooks";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
 import CreateMarkerDialog from "./MapMarker/CreateMarkerDialog";
-export default function MapView() {
+export default function MapView({
+  setMapId,
+}: {
+  setMapId: (id: string) => void;
+}) {
   const { project_id, map_id } = useParams();
   const cm = useRef(null);
   const imgRef = useRef() as any;
@@ -24,6 +28,7 @@ export default function MapView() {
 
   useEffect(() => {
     if (map_id) {
+      setMapId(map_id);
       if (mapData) {
         let img = new Image();
         img.src = mapData.map_image;

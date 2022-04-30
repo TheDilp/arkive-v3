@@ -9,37 +9,32 @@ import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { CreateMapInputs, Map } from "../../../custom-types";
-import { useCreateMap } from "../../../utils/customHooks";
+import { useCreateMap, useUpdateMap } from "../../../utils/customHooks";
 
 type Props = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
 };
 
-export default function MapCreateDialog({ visible, setVisible }: Props) {
-  const [closeOnDone, setCloseOnDone] = useState(true);
+export default function MapUpdateDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
-  const createMapMutation = useCreateMap();
+  const updateMapMutation = useUpdateMap(project_id as string);
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateMapInputs>({
-    defaultValues: { title: "New Map", folder: false },
+  } = useForm<Omit<CreateMapInputs, "folder">>({
+    defaultValues: { title: "New Map" },
   });
-  const onSubmit: SubmitHandler<CreateMapInputs> = (data) => {
+  const onSubmit: SubmitHandler<Omit<CreateMapInputs, "folder">> = (data) => {
     let id = uuid();
-    createMapMutation.mutate({
+    updateMapMutation.mutate({
       id,
-      project_id: project_id as string,
       ...data,
     });
-    if (closeOnDone) {
-      setVisible(false);
-    }
   };
   return (
     <Dialog
@@ -85,7 +80,7 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
               render={({ field }) => (
                 <Dropdown
                   className="w-full"
-                  placeholder="Map Parent"
+                  placeholder="Map Folder"
                   optionLabel="title"
                   optionValue="id"
                   value={field.value}
@@ -95,28 +90,7 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
               )}
             />
           </div>
-          <div className="w-8 flex justify-content-between my-2">
-            <div className="w-1/2 flex align-items-center">
-              <span className="pr-1">Is Folder:</span>
-              <Controller
-                name="folder"
-                control={control}
-                render={({ field }) => (
-                  <Checkbox
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.checked)}
-                  />
-                )}
-              />
-            </div>
-          </div>
-          <div className="w-8 flex mb-2 justify-content-between  align-items-center">
-            <span>Close Dialog on Done:</span>
-            <Checkbox
-              checked={closeOnDone}
-              onChange={(e) => setCloseOnDone(e.checked)}
-            />
-          </div>
+
           <div className="w-full flex justify-content-end">
             <Button
               label="Create Map"

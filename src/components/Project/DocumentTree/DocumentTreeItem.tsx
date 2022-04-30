@@ -3,7 +3,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog,
+  docItemDisplayDialog,
 } from "../../../custom-types";
 type Props = {
   docId: string;
@@ -12,7 +12,7 @@ type Props = {
   isOpen: boolean;
   onToggle: () => void;
   setDocId: (docId: string) => void;
-  setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
+  setDisplayDialog: (displayDialog: docItemDisplayDialog) => void;
   setIconSelect: (iconSelect: iconSelect) => void;
   cm: any;
 };

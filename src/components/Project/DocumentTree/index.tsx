@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
-  treeItemDisplayDialog,
+  docItemDisplayDialog,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
@@ -13,7 +13,7 @@ import DragPreview from "./DragPreview";
 import FilterList from "./FilterList";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import ProjectTreeItem from "./DocumentTreeItem";
-import ProjectTreeItemContext from "./DocumentTreeItemContext";
+import DocumentTreeItemContext from "./DocumentTreeItemContext";
 import RenameDialog from "./RenameDialog";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -29,7 +29,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
   const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [displayDialog, setDisplayDialog] = useState<treeItemDisplayDialog>({
+  const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialog>({
     id: "",
     title: "",
     show: false,
@@ -89,7 +89,7 @@ export default function ProjectTree({ docId, setDocId }: Props) {
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}
-      <ProjectTreeItemContext
+      <DocumentTreeItemContext
         cm={cm}
         docId={docId}
         displayDialog={displayDialog}

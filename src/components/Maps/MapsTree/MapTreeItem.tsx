@@ -1,26 +1,31 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useNavigate } from "react-router-dom";
-import { iconSelect, Map, treeItemDisplayDialog } from "../../../custom-types";
+import {
+  iconSelect,
+  Map,
+  docItemDisplayDialog,
+  mapItemDisplayDialog,
+} from "../../../custom-types";
 type Props = {
   node: NodeModel<Map>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  //   setDisplayDialog: (displayDialog: treeItemDisplayDialog) => void;
-  //   setIconSelect: (iconSelect: iconSelect) => void;
-  //   cm: any;
+  setDisplayDialog: (displayDialog: mapItemDisplayDialog) => void;
+  cm: any;
 };
 
 export default function MapTreeItem({
   node,
-  //   docId,
+  // mapId,
   depth,
   isOpen,
+  setDisplayDialog,
   onToggle,
-}: //   setDisplayDialog,
+  cm,
+}: //
 //   setIconSelect,
-//   cm,
 Props) {
   const navigate = useNavigate();
   return (
@@ -31,14 +36,16 @@ Props) {
         if (!node.droppable) navigate(node.id as string);
       }}
       onContextMenu={(e) => {
-        // cm.current.show(e);
-        // setDisplayDialog({
-        //   id: node.id as string,
-        //   title: node.text,
-        //   show: false,
-        //   folder: node.data?.folder || false,
-        //   depth,
-        // });
+        cm.current.show(e);
+        setDisplayDialog({
+          id: node.id as string,
+          title: node.text,
+          show: false,
+          folder: node.data?.folder || false,
+          map_image: node.data?.map_image || "",
+          parent: node.parent as string,
+          depth,
+        });
       }}
     >
       {node.droppable && (

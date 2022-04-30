@@ -9,6 +9,7 @@ import {
   createMapMarker,
   createTemplate,
   deleteDocument,
+  deleteMap,
   deleteMapMarker,
   getCurrentProject,
   getDocuments,
@@ -394,7 +395,7 @@ export function useCreateMap() {
       folder?: boolean;
       parent?: string | null;
     }) => {
-      await createMap({ ...vars, parent: undefined });
+      await createMap({ ...vars });
     },
     {
       onMutate: async (newMap) => {
@@ -493,6 +494,45 @@ export function useUpdateMap(project_id: string) {
       onError: (err, newTodo, context) => {
         queryClient.setQueryData(`${project_id}-maps`, context?.previousMaps);
         toastError("There was an error updating this map.");
+      },
+    }
+  );
+}
+// Custom hook to DELETE a map
+export function useDeleteMap() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; project_id: string }) => {
+      await deleteMap(vars.id);
+    },
+    {
+      onMutate: async (deletedMap) => {
+        const previousMaps = queryClient.getQueryData(
+          `${deletedMap.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${deletedMap.project_id}-maps`,
+          (oldData: Map[] | undefined) => {
+            if (oldData) {
+              // Template shouldn't have parent hence null
+              let newData: Map[] = oldData.filter(
+                (map) => map.id !== deletedMap.id
+              );
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+
+      onError: (err, deletedMap, context) => {
+        queryClient.setQueryData(
+          `${deletedMap.project_id}-maps`,
+          context?.previousMaps
+        );
+        toastError("There was an error deleting this map.");
       },
     }
   );
