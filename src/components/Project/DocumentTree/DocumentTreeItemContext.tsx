@@ -11,7 +11,7 @@ import {
   useDeleteDocument,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { saveAs } from "file-saver";
 type Props = {
   docId: string;
@@ -174,8 +174,9 @@ export default function DocumentTreeItemContext({
             };
             // @ts-ignore
             createTemplateMutation.mutate(vars);
+            toastSuccess("Template created from document!");
           } else {
-            toastWarn("Document is empty, cannot convert to template");
+            toastWarn("Document is empty, cannot convert to template!");
           }
         }
       },
