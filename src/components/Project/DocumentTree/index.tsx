@@ -23,7 +23,7 @@ type Props = {
   setDocId: (docId: string) => void;
 };
 
-export default function DocumentTree({ docId, setDocId }: Props) {
+export default function DocumentsTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
@@ -114,7 +114,7 @@ export default function DocumentTree({ docId, setDocId }: Props) {
           {!filter && selectedTags.length === 0 && (
             <Tree
               classes={{
-                root: "w-full overflow-y-auto projectTreeRoot",
+                root: "w-full overflow-y-auto projectTreeRoot p-0",
                 container: "list-none",
                 placeholder: "relative",
               }}

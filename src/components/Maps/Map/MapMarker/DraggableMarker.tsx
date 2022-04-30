@@ -70,7 +70,6 @@ export default function DraggableMarker({
       });
     },
   };
-  console.log(map_link);
   return (
     <Marker
       draggable={true}

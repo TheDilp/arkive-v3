@@ -70,7 +70,7 @@ export default function DocTreeFilter({
           placeholder="Filter by Title"
         />
         <MultiSelect
-          value={selectedTags ?? []}
+          value={selectedTags}
           options={tags.map((tag) => ({ label: tag, value: tag }))}
           placeholder="Filter by Tags"
           className="w-full p-0"
@@ -78,7 +78,13 @@ export default function DocTreeFilter({
           display="chip"
           filter
           filterBy="label"
-          onChange={(e) => setSelectedTags(e.value)}
+          onChange={(e) => {
+            if (e.value === null) {
+              setSelectedTags([]);
+            } else {
+              setSelectedTags(e.value);
+            }
+          }}
         />
       </div>
     </div>

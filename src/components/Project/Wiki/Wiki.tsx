@@ -10,7 +10,7 @@ import { useGetDocuments } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
-import DocumentTree from "../DocumentTree";
+import DocumentsTree from "../DocumentTree";
 import PropertiesPanel from "../PropertiesPanel";
 export default function Wiki() {
   const [docId, setDocId] = useState("");
@@ -28,7 +28,7 @@ export default function Wiki() {
     <Navigate to="/login" />
   ) : (
     <div className="w-full flex flex-wrap justify-content-start">
-      <DocumentTree docId={docId} setDocId={setDocId} />
+      <DocumentsTree docId={docId} setDocId={setDocId} />
 
       <Routes>
         <Route

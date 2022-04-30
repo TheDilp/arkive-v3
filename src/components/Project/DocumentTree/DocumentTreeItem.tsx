@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
+import { Tooltip } from "primereact/tooltip";
 import {
   Document,
   iconSelect,
@@ -31,7 +32,7 @@ export default function DocumentTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer"
+      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2"
       onClick={() => {
         setDocId(node.id as string);
       }}
@@ -47,6 +48,7 @@ export default function DocumentTreeItem({
         });
       }}
     >
+      <Tooltip target=".selectableIcon" content="Change Icon" showDelay={750} />
       {node.droppable && (
         <span
           onClick={(e) => {
@@ -84,7 +86,7 @@ export default function DocumentTreeItem({
         <Icon
           icon={node.data?.icon as string}
           inline={true}
-          className="mr-1"
+          className="mr-1 hover:bg-blue-400 border-circle selectableIcon"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
