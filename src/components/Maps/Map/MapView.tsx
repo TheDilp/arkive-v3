@@ -15,6 +15,7 @@ export default function MapView({
   const { project_id, map_id } = useParams();
   const cm = useRef(null);
   const imgRef = useRef() as any;
+  const mapRef = useRef() as any;
   const mapData = useGetMapData(project_id as string, map_id as string);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
@@ -44,6 +45,13 @@ export default function MapView({
                 [0, 0],
                 [img.height, img.width],
               ]);
+              if (mapRef.current) {
+                mapRef.current.panTo([img.height / 2, img.width / 2]);
+                mapRef.current.fitBounds([
+                  [0, 0],
+                  [img.height, img.width],
+                ]);
+              }
             }, 250);
           }
         };
@@ -75,6 +83,7 @@ export default function MapView({
             className="w-full h-full"
           >
             <MapContainer
+              ref={mapRef}
               className="w-full h-full bg-gray-900 relative outline-none"
               center={[bounds[1][0] / 2, bounds[1][1] / 2]}
               zoom={0}

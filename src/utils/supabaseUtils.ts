@@ -375,7 +375,7 @@ export const updateMap = async ({
   id: string;
   title?: string;
   map_image?: string;
-  parent?: string;
+  parent?: string | null;
 }) => {
   let user = auth.user();
 
@@ -385,7 +385,7 @@ export const updateMap = async ({
       .update({
         title,
         map_image,
-        parent,
+        parent: parent || undefined,
       })
       .eq("id", id);
 

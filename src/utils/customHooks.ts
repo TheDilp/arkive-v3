@@ -459,7 +459,7 @@ export function useUpdateMap(project_id: string) {
       id: string;
       title?: string;
       map_image?: string;
-      parent?: string;
+      parent?: string | null;
     }) => {
       await updateMap(vars);
     },
