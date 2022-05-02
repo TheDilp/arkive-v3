@@ -13,11 +13,7 @@ const CustomMentionExtension = new MentionAtomExtension({
     {
       name: "at",
       char: "@",
-      supportedCharacters: /[^\s][\w\d_ ]+/,
-    },
-    {
-      name: "hash",
-      char: "#",
+      appendText: "",
       supportedCharacters: /[^\s][\w\d_ ]+/,
     },
   ],
@@ -28,17 +24,12 @@ CustomMentionExtension.ReactComponent = ({ node }) => {
   const queryClient = useQueryClient();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { project_id } = useParams();
-
-  let item: Document | Map | undefined;
-  if (node.attrs.name === "at") {
-    const items = queryClient.getQueryData<Document[]>(
-      `${project_id}-documents`
-    );
-    item = items?.find((doc) => doc.id === node.attrs.id);
-  } else {
-    const items = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
-    item = items?.find((map) => map.id === node.attrs.id);
-  }
+  const docs: Document[] | undefined = queryClient.getQueryData(
+    `${project_id}-documents`
+  );
+  const doc = docs ? docs.find((doc) => doc.id === node.attrs.id) : null;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {}, [docs]);
 
   return (
     <Link
@@ -46,11 +37,7 @@ CustomMentionExtension.ReactComponent = ({ node }) => {
       style={{
         fontWeight: "700",
       }}
-      to={
-        node.attrs.name === "at"
-          ? `../${node.attrs.id}`
-          : `../../maps/${node.attrs.id}`
-      }
+      to={`../${node.attrs.id}`}
     >
       {node.attrs.name === "hash" ? (
         <Icon icon="mdi:map-marker" className="underline" />

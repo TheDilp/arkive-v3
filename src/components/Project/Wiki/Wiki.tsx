@@ -6,7 +6,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { useGetDocuments, useGetMaps } from "../../../utils/customHooks";
+import { useGetDocuments } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
@@ -16,7 +16,6 @@ export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();
   const { data: documents, isLoading } = useGetDocuments(project_id as string);
-  const { data: maps } = useGetMaps(project_id as string);
 
   const navigate = useNavigate();
   useEffect(() => {
