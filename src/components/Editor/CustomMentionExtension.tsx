@@ -16,6 +16,12 @@ const CustomMentionExtension = new MentionAtomExtension({
       appendText: "",
       supportedCharacters: /[^\s][\w\d_ ]+/,
     },
+    {
+      name: "hash",
+      char: "#",
+      appendText: "",
+      supportedCharacters: /[^\s][\w\d_ ]+/,
+    },
   ],
 });
 
@@ -27,7 +33,15 @@ CustomMentionExtension.ReactComponent = ({ node }) => {
   const docs: Document[] | undefined = queryClient.getQueryData(
     `${project_id}-documents`
   );
-  const doc = docs ? docs.find((doc) => doc.id === node.attrs.id) : null;
+  const maps: Map[] | undefined = queryClient.getQueryData<Map[]>(
+    `${project_id}-maps`
+  );
+  let item: Document | Map | undefined;
+  if (node.attrs.name === "at") {
+    item = docs ? docs.find((doc) => doc.id === node.attrs.id) : undefined;
+  } else {
+    item = maps ? maps.find((map) => map.id === node.attrs.id) : undefined;
+  }
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {}, [docs]);
 
@@ -40,11 +54,11 @@ CustomMentionExtension.ReactComponent = ({ node }) => {
       to={`../${node.attrs.id}`}
     >
       {node.attrs.name === "hash" ? (
-        <Icon icon="mdi:map-marker" className="underline" />
+        <i className="pi pi-map-marker underline"></i>
       ) : (
         ""
       )}
-      {item ? item?.title : node.attrs.label}
+      {item ? item.title : node.attrs.label}
     </Link>
   );
 };
