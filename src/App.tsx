@@ -16,7 +16,6 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import Register from "./components/Auth/Register";
 import Profile from "./components/Profile/Profile";
 import Maps from "./components/Maps/Maps";
-import Boards from "./components/Boards/Boards";
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -39,7 +38,6 @@ function App() {
             <Route path="project/:project_id" element={<Project />}>
               <Route path="wiki/*" element={<Wiki />} />
               <Route path="maps/*" element={<Maps />} />
-              <Route path="boards/*" element={<Boards />} />
               <Route path="settings/:setting" element={<ProjectSettings />} />
             </Route>
           </Routes>
