@@ -12,7 +12,11 @@ const CustomMentionExtension = new MentionAtomExtension({
     {
       name: "at",
       char: "@",
-      appendText: "",
+      supportedCharacters: /[^\s][\w\d_ ]+/,
+    },
+    {
+      name: "hash",
+      char: "#",
       supportedCharacters: /[^\s][\w\d_ ]+/,
     },
   ],
@@ -29,14 +33,17 @@ CustomMentionExtension.ReactComponent = ({ node }) => {
   const doc = docs ? docs.find((doc) => doc.id === node.attrs.id) : null;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {}, [docs]);
-
   return (
     <Link
       className="Lato text-white"
       style={{
         fontWeight: "700",
       }}
-      to={`../${node.attrs.id}`}
+      to={
+        node.attrs.name === "at"
+          ? `../${node.attrs.id}`
+          : `../../maps/${node.attrs.id}`
+      }
     >
       {doc ? doc?.title : node.attrs.label}
     </Link>

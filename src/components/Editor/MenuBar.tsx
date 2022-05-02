@@ -23,6 +23,13 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     rightAlign,
     focus,
     setTextColor,
+    // addTableColumnAfter,
+    // addTableColumnBefore,
+    // addTableRowAfter,
+    // addTableRowBefore,
+    // createTable,
+    // deleteTable,
+    // deleteTableColumn,
   } = useCommands();
   const active = useActive();
   const attrs = useAttrs();
