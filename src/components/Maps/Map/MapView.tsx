@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { useGetMapData } from "../../../utils/customHooks";
+import LoadingScreen from "../../Util/LoadingScreen";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
 import CreateMarkerDialog from "./MapMarker/CreateMarkerDialog";
@@ -26,6 +27,7 @@ export default function MapView({
     lng: 0,
     show: false,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (map_id) {
@@ -52,6 +54,7 @@ export default function MapView({
                   [img.height, img.width],
                 ]);
               }
+              setLoading(false);
             }, 250);
           }
         };
@@ -59,6 +62,15 @@ export default function MapView({
     }
   }, [map_id, mapData?.id]);
 
+  if (loading)
+    return (
+      <div className="w-10 h-full flex align-items-center justify-content-center">
+        <h1 className="text-white Merriweather align-self-start">
+          Loading Map...
+        </h1>
+        <LoadingScreen />;
+      </div>
+    );
   return (
     <div className="w-10 h-full">
       <MapContextMenu
