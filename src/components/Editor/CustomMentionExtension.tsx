@@ -51,7 +51,11 @@ CustomMentionExtension.ReactComponent = ({ node }) => {
       style={{
         fontWeight: "700",
       }}
-      to={`../${node.attrs.id}`}
+      to={
+        node.attrs.name === "at"
+          ? `../${node.attrs.id}`
+          : `../../maps/${node.attrs.id}`
+      }
     >
       {node.attrs.name === "hash" ? (
         <i className="pi pi-map-marker underline"></i>
