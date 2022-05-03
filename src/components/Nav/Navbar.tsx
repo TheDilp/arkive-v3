@@ -3,11 +3,13 @@ import { Menubar } from "primereact/menubar";
 import { Tooltip } from "primereact/tooltip";
 import { useNavigate, useParams } from "react-router-dom";
 import { logout } from "../../utils/supabaseUtils";
+import NavbarTitle from "./NavbarTitle";
 import NavSettingsButton from "./NavSettingsButton";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { project_id } = useParams();
+
   const start = () => {
     return (
       <div className="flex flex-nowrap">
@@ -50,6 +52,8 @@ export default function Navbar() {
             />
           </div>
         )}
+        {/* Use project title only if in project */}
+        {project_id && <NavbarTitle />}
       </div>
     );
   };

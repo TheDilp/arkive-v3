@@ -54,9 +54,9 @@ export default function MapView({
                   [img.height, img.width],
                 ]);
               }
-              setLoading(false);
             }, 250);
           }
+          setLoading(false);
         };
       }
     }
