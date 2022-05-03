@@ -38,7 +38,7 @@ export default function DocumentTreeItem({
       style={{ marginInlineStart: depth * 10 }}
       className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2"
       onClick={() => {
-        setDocId(node.id as string);
+        if (!node.droppable) setDocId(node.id as string);
       }}
       onContextMenu={(e) => {
         cm.current.show(e);
@@ -95,6 +95,17 @@ export default function DocumentTreeItem({
       )}
       <span
         className={`text-lg Lato ${docId === node.id ? "text-primary" : ""}`}
+        onClick={(e) => {
+          if (node.droppable) {
+            e.preventDefault();
+            e.stopPropagation();
+            updateDocumentMutation.mutate({
+              doc_id: node.id as string,
+              expanded: !isOpen,
+            });
+            onToggle();
+          }
+        }}
       >
         {node.text}
       </span>
