@@ -1,11 +1,13 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Tooltip } from "primereact/tooltip";
+import { useParams } from "react-router-dom";
 import {
   Document,
   iconSelect,
   docItemDisplayDialog,
 } from "../../../custom-types";
+import { useUpdateDocument } from "../../../utils/customHooks";
 type Props = {
   docId: string;
   node: NodeModel<Document>;
@@ -29,6 +31,8 @@ export default function DocumentTreeItem({
   setIconSelect,
   cm,
 }: Props) {
+  const { project_id } = useParams();
+  const updateDocumentMutation = useUpdateDocument(project_id as string);
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
@@ -54,6 +58,10 @@ export default function DocumentTreeItem({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            updateDocumentMutation.mutate({
+              doc_id: node.id as string,
+              expanded: !isOpen,
+            });
             onToggle();
           }}
         >

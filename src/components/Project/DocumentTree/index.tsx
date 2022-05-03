@@ -121,7 +121,10 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
               tree={treeData}
               rootId={"0"}
               sort={false}
-              initialOpen={false}
+              initialOpen={
+                docs?.filter((doc) => doc.expanded).map((doc) => doc.id) ||
+                false
+              }
               render={(
                 node: NodeModel<Document>,
                 { depth, isOpen, onToggle }

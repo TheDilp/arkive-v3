@@ -170,6 +170,7 @@ export function useCreateDocument(project_id: string) {
                     : [],
                   folder: newDocument.folder ? newDocument.folder : false,
                   template: false,
+                  expanded: false,
                 },
               ];
               return newData;
@@ -195,6 +196,7 @@ export function useUpdateDocument(project_id: string) {
       folder?: boolean;
       parent?: string | null;
       icon?: string;
+      expanded?: boolean;
       categories?: string[];
     }) =>
       await updateDocument({
@@ -205,6 +207,7 @@ export function useUpdateDocument(project_id: string) {
         image: vars.image,
         icon: vars.icon,
         content: vars.content,
+        expanded: vars.expanded,
       }),
     {
       onMutate: async (updatedDocument) => {
@@ -336,7 +339,12 @@ export function useCreateTemplate() {
               // Template shouldn't have parent hence null
               let newData: Document[] = [
                 ...oldData,
-                { ...newDocument, parent: null, template: true },
+                {
+                  ...newDocument,
+                  parent: null,
+                  template: true,
+                  expanded: false,
+                },
               ];
               return newData;
             } else {

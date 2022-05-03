@@ -22,6 +22,7 @@ export type Document = {
   folder: boolean;
   icon: string;
   template: boolean;
+  expanded: boolean;
 };
 
 export type Map = {

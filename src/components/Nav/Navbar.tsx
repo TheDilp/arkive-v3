@@ -12,7 +12,7 @@ export default function Navbar() {
 
   const start = () => {
     return (
-      <div className="flex flex-nowrap py-2 align-items-start">
+      <div className="flex flex-nowrap py-2 align-items-start pl-2">
         {project_id && (
           <div className="flex align-items-center">
             <Tooltip
@@ -59,7 +59,7 @@ export default function Navbar() {
   };
   const end = () => {
     return (
-      <div className="flex flex-nowrap">
+      <div className="flex flex-nowrap pr-2">
         <Tooltip
           target=".settingsIcon"
           content="Project Settings"
