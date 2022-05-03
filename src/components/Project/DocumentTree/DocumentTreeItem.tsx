@@ -73,23 +73,7 @@ export default function DocumentTreeItem({
         </span>
       )}
       {node.droppable ? (
-        <Icon
-          icon="bxs:folder"
-          inline={true}
-          className="mr-1"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            setIconSelect({
-              doc_id: node.id as string,
-              icon: "bxs:folder",
-              show: true,
-              top: e.clientY,
-              left: e.clientX,
-            });
-          }}
-        />
+        <Icon icon="bxs:folder" inline={true} className="mr-1" />
       ) : (
         <Icon
           icon={node.data?.icon as string}
