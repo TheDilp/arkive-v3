@@ -7,6 +7,7 @@ import { useState } from "react";
 import "../../styles/MenuBar.css";
 import { Slider } from "primereact/slider";
 import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
 export default function MenuBar({ saving }: { saving: number | boolean }) {
   const {
     toggleBold,
@@ -41,6 +42,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
   const [showDialog, setShowDialog] = useState({
     columns: 1,
     rows: 1,
+    header: true,
     show: false,
   });
   function calloutToggle(type: string) {
@@ -54,7 +56,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
       toggleCallout({ type });
     }
   }
-  console.log(showDialog);
   return (
     // Model is passed in directly here to ensure rerenders on change of the active booleans
     // active.bold(), active.italic(), etc
@@ -62,7 +63,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
       <Dialog
         header="Create New Table"
         visible={showDialog.show}
-        onHide={() => setShowDialog({ columns: 1, rows: 1, show: false })}
+        onHide={() =>
+          setShowDialog({ columns: 1, rows: 1, header: true, show: false })
+        }
       >
         <div className="flex flex-wrap">
           <div className="w-full my-3">
@@ -89,6 +92,16 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               max={15}
             />
           </div>
+          <div className="w-full flex align-items-center">
+            <h5>Table Header:</h5>
+            <Checkbox
+              checked={showDialog.header}
+              onChange={(e) =>
+                setShowDialog({ ...showDialog, header: e.checked })
+              }
+              className="ml-2"
+            />
+          </div>
           <div className="w-full flex justify-content-end">
             <Button
               label="Create Table"
@@ -100,6 +113,13 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                   createTable({
                     rowsCount: showDialog.rows,
                     columnsCount: showDialog.columns,
+                    withHeaderRow: showDialog.header,
+                  });
+                  setShowDialog({
+                    rows: 1,
+                    columns: 1,
+                    header: true,
+                    show: false,
                   });
                 }
               }}
@@ -475,7 +495,12 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               {
                 label: "Create Table",
                 command: () =>
-                  setShowDialog({ columns: 1, rows: 1, show: true }),
+                  setShowDialog({
+                    columns: 1,
+                    rows: 1,
+                    header: true,
+                    show: true,
+                  }),
               },
 
               { label: "Add Row Before", command: () => addTableRowBefore() },
