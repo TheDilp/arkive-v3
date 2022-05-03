@@ -87,6 +87,13 @@ export default function DocumentsSettingsTable() {
       </div>
     );
   };
+  const titleBodyTemplate = (rowData: Document) => {
+    return (
+      <div>
+        {rowData.title} {rowData.template ? "[TEMPLATE]" : ""}
+      </div>
+    );
+  };
   const folderFilterTemplate = (options: any) => {
     return (
       <div className="flex justify-content-evenly w-full">
@@ -463,6 +470,7 @@ export default function DocumentsSettingsTable() {
           style={{ width: "20rem" }}
           editor={titleEditor}
           sortable
+          body={titleBodyTemplate}
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
               updateDocumentMutation.mutate({
