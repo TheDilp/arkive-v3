@@ -4,6 +4,7 @@ import {
   useHelpers,
   useKeymap,
   useRemirror,
+  tableControllerPluginKey,
 } from "@remirror/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
@@ -32,7 +33,7 @@ import {
 import { toastSuccess } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import CustomMentionExtension from "./CustomMentionExtension";
-// import { TableExtension } from "@remirror/extension-react-tables";
+import { TableExtension } from "@remirror/extension-react-tables";
 import { saveAs } from "file-saver";
 import EditorView from "./EditorView";
 const hooks = [
@@ -98,6 +99,7 @@ export default function RemirrorContext({
       new NodeFormattingExtension(),
       new TextColorExtension(),
       new MarkdownExtension(),
+      new TableExtension(),
     ],
     selection: "all",
     stringHandler: htmlToProsemirrorNode,
@@ -148,7 +150,11 @@ export default function RemirrorContext({
             hooks={hooks}
             classNames={["text-white Lato Editor overflow-y-scroll"]}
             onChange={(props) => {
-              const { tr, firstRender } = props;
+              const { tr, firstRender, view } = props;
+              let tValues = tableControllerPluginKey.getState(
+                view.state
+              )?.values;
+              console.log(tValues);
               if (!firstRender && tr?.docChanged) {
                 setSaving(tr?.time);
               }

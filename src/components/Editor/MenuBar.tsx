@@ -23,6 +23,14 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     rightAlign,
     focus,
     setTextColor,
+    createTable,
+    addTableRowBefore,
+    addTableRowAfter,
+    addTableColumnBefore,
+    addTableColumnAfter,
+    deleteTableColumn,
+    deleteTableRow,
+    deleteTable,
   } = useCommands();
   const active = useActive();
   const attrs = useAttrs();
@@ -403,33 +411,43 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
         //     { label: "5 Columns", command: () => toggleColumns({ count: 5 }) },
         //   ],
         // },
-        // {
-        //   icon: "pi pi-fw pi-table",
-        //   items: [
-        //     {
-        //       label: "Create Table (3x3)",
-        //       command: () =>
-        //         createTable({
-        //           rowsCount: 3,
-        //           columnsCount: 3,
-        //           withHeaderRow: false,
-        //         }),
-        //     },
-        //     { label: "Add Row Before", command: () => addTableRowBefore() },
-        //     { label: "Add Row After", command: () => addTableRowAfter() },
-        //     {
-        //       label: "Add Column Before",
-        //       command: () => addTableColumnBefore(),
-        //     },
-        //     { label: "Add Column After", command: () => addTableColumnAfter() },
-        //     { label: "Delete Column", command: () => deleteTableColumn() },
-        //     { label: "Delete Table", command: () => deleteTable() },
-        //   ],
-        // },
+        {
+          icon: "pi pi-fw pi-table",
+          items: [
+            {
+              label: "Create Table (3x3)",
+              command: () =>
+                createTable({
+                  rowsCount: 3,
+                  columnsCount: 3,
+                  withHeaderRow: true,
+                }),
+            },
+            {
+              label: "Create Table (3x3) 2",
+              command: () =>
+                createTable({
+                  rowsCount: 3,
+                  columnsCount: 3,
+                  withHeaderRow: false,
+                }),
+            },
+            { label: "Add Row Before", command: () => addTableRowBefore() },
+            { label: "Add Row After", command: () => addTableRowAfter() },
+            {
+              label: "Add Column Before",
+              command: () => addTableColumnBefore(),
+            },
+            { label: "Add Column After", command: () => addTableColumnAfter() },
+            { label: "Delete Column", command: () => deleteTableColumn() },
+            { label: "Delete Row", command: () => deleteTableRow() },
+            { label: "Delete Table", command: () => deleteTable() },
+          ],
+        },
       ]}
       end={() => (saving ? <ProgressSpinner className="w-2rem h-2rem" /> : "")}
       className="p-0 Lato relative"
-      style={{}}
+      style={{ zIndex: 99999 }}
     />
   );
 }
