@@ -34,6 +34,19 @@ body {
     display: none !important;
 }
 
+.p-tabview-nav li {
+    width: 100%;
+}
+
+.p-tabview-nav li a {
+    border-radius: 0 !important;
+}
+
+.p-tabview-nav span {
+    width: 100% !important;
+    text-align: center !important;
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */

@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
-import React, { useCallback, useRef } from "react";
+import { InputText } from "primereact/inputtext";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { iconSelect } from "../../custom-types";
@@ -18,9 +19,15 @@ export default function IconSelectMenu({
   setIconSelect,
 }: iconSelectMenu) {
   const { project_id } = useParams();
+  const [search, setSearch] = useState<string | null>(null);
+  const [filteredIconList, setFilteredIconList] = useState(iconList);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const rowVirtualizer = useVirtual({
-    size: Math.ceil(iconList.length / 6),
+    size: Math.ceil(
+      iconList.filter((icon) =>
+        search ? icon.startsWith(search.toLowerCase()) : true
+      ).length / 6
+    ),
     parentRef,
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
@@ -37,6 +44,13 @@ export default function IconSelectMenu({
   useOnClickOutside(ref, () =>
     setIconSelect({ doc_id: "", icon: "", top: 0, left: 0, show: false })
   );
+  useEffect(() => {
+    setFilteredIconList(
+      iconList.filter((icon) =>
+        search ? icon.startsWith(search.toLowerCase()) : true
+      )
+    );
+  }, [search]);
   return (
     <div
       ref={ref}
@@ -48,6 +62,12 @@ export default function IconSelectMenu({
       }}
     >
       <div ref={parentRef} className="List w-full h-full overflow-auto">
+        <InputText
+          type="text"
+          className="w-full py-1 mb-2"
+          placeholder="Search icons"
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <div
           style={{
             width: "100%",
@@ -77,7 +97,9 @@ export default function IconSelectMenu({
                       iconMutation.mutate({
                         doc_id,
                         icon: `mdi:${
-                          iconList[virtualRow.index * 6 + virtualColumn.index]
+                          filteredIconList[
+                            virtualRow.index * 6 + virtualColumn.index
+                          ]
                         }`,
                       });
                       setIconSelect({
@@ -90,7 +112,9 @@ export default function IconSelectMenu({
                     }}
                     fontSize={30}
                     icon={`mdi:${
-                      iconList[virtualRow.index * 6 + virtualColumn.index]
+                      filteredIconList[
+                        virtualRow.index * 6 + virtualColumn.index
+                      ]
                     }`}
                   />
                 </div>

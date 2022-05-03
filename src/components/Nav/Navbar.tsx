@@ -12,7 +12,7 @@ export default function Navbar() {
 
   const start = () => {
     return (
-      <div className="flex flex-nowrap">
+      <div className="flex flex-nowrap py-2 align-items-start">
         {project_id && (
           <div className="flex align-items-center">
             <Tooltip
@@ -90,7 +90,7 @@ export default function Navbar() {
     <Menubar
       start={start}
       end={end}
-      className="w-full border-noround border-x-none shadow-5"
+      className="w-full border-noround border-x-none shadow-5 p-0"
     />
   );
 }
