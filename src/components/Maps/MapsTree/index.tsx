@@ -13,13 +13,7 @@ import { getDepth } from "../../../utils/utils";
 import MapTreeItemContext from "./MapTreeItemContext";
 import MapUpdateDialog from "./MapUpdateDialog";
 
-export default function MapsTree({
-  mapId,
-  setMapId,
-}: {
-  mapId: string;
-  setMapId: (mapId: string) => void;
-}) {
+export default function MapsTree({ mapId }: { mapId: string }) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const cm = useRef() as any;

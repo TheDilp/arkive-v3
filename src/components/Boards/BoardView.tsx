@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
-import { CytoscapeNode, Node } from "../../custom-types";
+import { CytoscapeNode } from "../../custom-types";
 import { useGetBoardData } from "../../utils/customHooks";
 
 export default function BoardView() {

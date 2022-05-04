@@ -49,6 +49,8 @@ export type MapMarker = {
 export type Board = {
   id: string;
   title: string;
+  parent?: string | null;
+  folder: boolean;
   project_id: string;
   nodes: Node[];
 };
