@@ -90,6 +90,14 @@ export type mapItemDisplayDialog = {
   folder: boolean;
   depth: number;
 };
+export type boardItemDisplayDialog = {
+  id: string;
+  title: string;
+  parent: string;
+  show: boolean;
+  folder: boolean;
+  depth: number;
+};
 
 export type iconSelect = {
   doc_id: string;

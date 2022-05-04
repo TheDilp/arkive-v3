@@ -19,9 +19,7 @@ export default function Boards() {
   if (isLoading) return <LoadingScreen />;
   return (
     <div className="w-full h-screen flex flex-nowrap">
-      <div className="w-2 h-full bg-gray-800">
-        <BoardsTree boardId={boardId} setBoardId={setBoardId} />
-      </div>
+      <BoardsTree boardId={boardId} setBoardId={setBoardId} />
       <div className="w-10 h-full relative">
         <Routes>
           <Route path="/:board_id" element={<BoardView />} />

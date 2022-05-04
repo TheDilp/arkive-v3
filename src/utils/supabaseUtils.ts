@@ -272,7 +272,6 @@ export const createMap = async ({
     }
   }
 };
-
 export const createMapMarker = async ({
   id,
   map_id,
@@ -310,6 +309,35 @@ export const createMapMarker = async ({
     if (data) return data;
     if (error) {
       toastError("There was an error creating your map marker.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const createBoard = async ({
+  id,
+  title,
+  project_id,
+  parent,
+  folder,
+}: {
+  id: string;
+  title: string;
+  project_id: string;
+  parent?: string;
+  folder: boolean;
+}) => {
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase.from("boards").insert({
+      id,
+      title,
+      project_id,
+      parent,
+      folder,
+    });
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your board.");
       throw new Error(error.message);
     }
   }

@@ -5,6 +5,7 @@ import { RemirrorJSON } from "remirror";
 import { Board, Document, Map, Project } from "../custom-types";
 import {
   auth,
+  createBoard,
   createDocument,
   createMap,
   createMapMarker,
@@ -776,4 +777,55 @@ export function useGetBoardData(project_id: string, board_id: string) {
     if (board) return board;
   }
   return undefined;
+}
+// Custom hook for creating a new board
+export function useCreateBoard() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: string;
+      title: string;
+      project_id: string;
+      folder: boolean;
+      parent?: string;
+      nodes: [];
+    }) => {
+      const newBoard = await createBoard({
+        ...vars,
+      });
+      return newBoard;
+    },
+    {
+      onMutate: async (newBoard) => {
+        const previousBoards = queryClient.getQueryData(
+          `${newBoard.project_id}-boards`
+        );
+        queryClient.setQueryData(
+          `${newBoard.project_id}-boards`,
+          (oldData: Board[] | undefined) => {
+            if (oldData) {
+              return [
+                ...oldData,
+                {
+                  ...newBoard,
+                  parent: newBoard.parent ? newBoard.parent : "0",
+                  nodes: [],
+                },
+              ];
+            } else {
+              return [newBoard];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-boards`,
+          context?.previousBoards
+        );
+        toastError("There was an error creating this board.");
+      },
+    }
+  );
 }

@@ -1,8 +1,10 @@
+import { Icon } from "@iconify/react";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import React, { useLayoutEffect, useState } from "react";
+import { Button } from "primereact/button";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Board } from "../../../custom-types";
+import { Board, boardItemDisplayDialog } from "../../../custom-types";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
 import BoardTreeItem from "./BoardTreeItem";
@@ -15,10 +17,20 @@ type Props = {
 export default function BoardsTree({ boardId, setBoardId }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
+  const cm = useRef() as any;
   const [treeData, setTreeData] = useState<NodeModel<Board>[]>([]);
   const boards: Board[] | undefined = queryClient.getQueryData<Board[]>(
     `${project_id}-boards`
   );
+  const [updateBoardDialog, setUpdateBoardDialog] =
+    useState<boardItemDisplayDialog>({
+      id: "",
+      title: "",
+      parent: "",
+      show: false,
+      folder: false,
+      depth: 0,
+    });
   const handleDrop = (
     newTree: NodeModel<Board>[],
     {
@@ -48,7 +60,44 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
     }
   }, [boards]);
   return (
-    <div>
+    <div
+      className="w-2 bg-gray-800 text-white pt-2 px-2"
+      style={{
+        height: "96vh",
+      }}
+    >
+      <div className="w-full py-1 flex justify-content-between">
+        <Button
+          label="New Folder"
+          icon="pi pi-fw pi-folder"
+          iconPos="right"
+          className="p-button-outlined"
+          onClick={() => {
+            // let id = uuid();
+            // createMapMutation.mutate({
+            //   id,
+            //   project_id: project_id as string,
+            //   title: "New Folder",
+            //   map_image: "",
+            //   folder: true,
+            // });
+          }}
+        />
+        <Button
+          label="New Board"
+          icon={() => (
+            <span className="p-button-icon p-c p-button-icon-right pi pi-fw">
+              <Icon
+                icon={"mdi:draw"}
+                style={{ float: "right" }}
+                fontSize={18}
+              />
+            </span>
+          )}
+          className="p-button-outlined"
+          //   onClick={() => setCreateMapDialog(true)}
+        />
+      </div>
       <Tree
         tree={treeData}
         classes={{
@@ -66,8 +115,8 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
             depth={depth}
             isOpen={isOpen}
             onToggle={onToggle}
-            // setDisplayDialog={setUpdateMapDialog}
-            // cm={cm}
+            setDisplayDialog={setUpdateBoardDialog}
+            cm={cm}
           />
         )}
         dragPreviewRender={(monitorProps) => (
