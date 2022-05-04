@@ -46,6 +46,20 @@ export type MapMarker = {
   doc_id?: string;
   map_link?: string;
 };
+export type Board = {
+  id: string;
+  title: string;
+  project_id: string;
+};
+export type Node = {
+  id: string;
+  label?: string;
+  x: number;
+  y: number;
+  source?: string;
+  target?: string;
+  board_id: string;
+};
 export type docItemDisplayDialog = {
   id: string;
   title: string;
