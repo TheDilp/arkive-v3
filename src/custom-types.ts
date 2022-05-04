@@ -62,6 +62,7 @@ export type Node = {
   source?: string;
   target?: string;
   type: string;
+  document: Pick<Document, "id" | "image">;
   board_id: string;
 };
 export type CytoscapeNode = {

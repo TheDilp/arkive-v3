@@ -110,7 +110,7 @@ export const getMaps = async (project_id: string) => {
 export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<Board>("boards")
-    .select("*, nodes(*)")
+    .select("*, nodes(*, document:documents(id, image))")
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {

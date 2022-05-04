@@ -13,7 +13,14 @@ export default function BoardView() {
     if (board) {
       if (board.nodes.length > 0) {
         let temp_nodes: CytoscapeNode[] = board.nodes.map((node) => ({
-          data: { id: node.id, label: node.label, type: node.type },
+          data: {
+            id: node.id,
+            label: node.label,
+            type: node.type,
+            ...(node.document.image
+              ? { backgroundImage: node.document.image }
+              : { backgroundImage: [] }),
+          },
           position: { x: node.x, y: node.y },
         }));
 
@@ -30,7 +37,6 @@ export default function BoardView() {
       console.log(cyRef.current);
     }
   }, [cyRef]);
-
   return (
     <div className="w-10 h-screen" onContextMenu={(e) => cm.current.show(e)}>
       <ContextMenu
@@ -45,6 +51,7 @@ export default function BoardView() {
                     id: Math.random().toString(),
                     label: "",
                     type: "triangle",
+                    backgroundImage: [],
                   },
                   position: { x: 657, y: 255 },
                 },
@@ -62,6 +69,8 @@ export default function BoardView() {
             selector: "node",
             style: {
               shape: "data(type)",
+              backgroundImage: "data(backgroundImage)",
+              backgroundFit: "cover",
             },
           },
         ]}
