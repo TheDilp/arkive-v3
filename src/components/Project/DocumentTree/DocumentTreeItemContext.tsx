@@ -274,7 +274,7 @@ export default function DocumentTreeItemContext({
     },
     { separator: true },
     {
-      label: "Delete Document",
+      label: "Delete Folder",
       icon: "pi pi-fw pi-trash",
       command: confirmdelete,
     },

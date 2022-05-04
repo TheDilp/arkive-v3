@@ -132,7 +132,7 @@ export default function BoardTreeItemContext({
     },
     { separator: true },
     {
-      label: "Delete Map",
+      label: "Delete Folder",
       icon: "pi pi-fw pi-trash",
       command: confirmdelete,
     },

@@ -31,6 +31,10 @@ export default function Navbar() {
               position="right"
             />
             <i
+              className="pi pi-home mr-3 cursor-pointer hover:text-primary"
+              onClick={() => navigate("/")}
+            ></i>
+            <i
               className="pi pi-book mr-3 hover:text-primary cursor-pointer wikiIcon"
               onClick={async () => {
                 navigate("./wiki");
@@ -65,10 +69,7 @@ export default function Navbar() {
           content="Project Settings"
           position="bottom"
         />
-        <i
-          className="pi pi-home mr-3 cursor-pointer hover:text-primary"
-          onClick={() => navigate("/")}
-        ></i>
+
         {project_id && <NavSettingsButton />}
         <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"
