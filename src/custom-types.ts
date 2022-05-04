@@ -50,15 +50,26 @@ export type Board = {
   id: string;
   title: string;
   project_id: string;
+  nodes: Node[];
 };
 export type Node = {
   id: string;
-  label?: string;
+  label: string;
   x: number;
   y: number;
   source?: string;
   target?: string;
   board_id: string;
+};
+export type CytoscapeNode = {
+  data: {
+    id: string;
+    label: string;
+  };
+  position: {
+    x: number;
+    y: number;
+  };
 };
 export type docItemDisplayDialog = {
   id: string;

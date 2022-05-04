@@ -15,7 +15,7 @@ import PropertiesPanel from "../PropertiesPanel";
 export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();
-  const { data: documents, isLoading } = useGetDocuments(project_id as string);
+  const { isLoading } = useGetDocuments(project_id as string);
 
   const navigate = useNavigate();
   useEffect(() => {

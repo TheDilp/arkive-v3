@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
-import { Document, Map, Project } from "../custom-types";
+import { Board, Document, Map, Project } from "../custom-types";
 import {
   auth,
   createDocument,
@@ -11,6 +12,7 @@ import {
   deleteDocument,
   deleteMap,
   deleteMapMarker,
+  getBoards,
   getCurrentProject,
   getDocuments,
   getMaps,
@@ -750,4 +752,28 @@ export function useDeleteMapMarker() {
       },
     }
   );
+}
+
+// Custom hook for getting boards
+export function useGetBoards(project_id: string) {
+  const { data, isLoading } = useQuery(
+    `${project_id}-boards`,
+    async () => await getBoards(project_id),
+    {
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+  return { data, isLoading };
+}
+// Custom hook for getting a single board's data
+export function useGetBoardData(project_id: string, board_id: string) {
+  const queryClient = useQueryClient();
+  const boards: Board[] | undefined = queryClient.getQueryData(
+    `${project_id}-boards`
+  );
+  if (boards) {
+    let board = boards.find((board) => board.id === board_id);
+    if (board) return board;
+  }
+  return undefined;
 }
