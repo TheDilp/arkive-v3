@@ -1,36 +1,28 @@
+import { Icon } from "@iconify/react";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { mapItemDisplayDialog } from "../../../custom-types";
-import {
-  useCreateMap,
-  useCreateTemplate,
-  useDeleteDocument,
-  useDeleteMap,
-  useGetMapData,
-  useUpdateDocument,
-  useUpdateMap,
-} from "../../../utils/customHooks";
+import { boardItemDisplayDialog } from "../../../custom-types";
+import { useCreateBoard, useDeleteMap } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
-  mapId: string;
-  displayDialog: mapItemDisplayDialog;
-  setDisplayDialog: (displayDialog: mapItemDisplayDialog) => void;
+  boardId: string;
+  displayDialog: boardItemDisplayDialog;
+  setDisplayDialog: (displayDialog: boardItemDisplayDialog) => void;
 };
 
-export default function MapTreeItemContext({
+export default function BoardTreeItemContext({
   cm,
-  mapId,
+  boardId,
   displayDialog,
   setDisplayDialog,
 }: Props) {
   const { project_id } = useParams();
-  const map = useGetMapData(project_id as string, mapId);
 
-  const newMapMutation = useCreateMap();
+  const newBoardMutation = useCreateBoard();
   const deleteDocumentMutation = useDeleteMap();
   const navigate = useNavigate();
   const confirmdelete = () => {
@@ -51,7 +43,7 @@ export default function MapTreeItemContext({
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
       accept: async () => {
-        if (displayDialog.id === mapId) {
+        if (displayDialog.id === boardId) {
           navigate("./");
         }
         deleteDocumentMutation.mutate({
@@ -64,9 +56,9 @@ export default function MapTreeItemContext({
     });
   };
 
-  const docItems = [
+  const boardItems = [
     {
-      label: "Update Map",
+      label: "Update Board",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
@@ -97,22 +89,39 @@ export default function MapTreeItemContext({
       icon: "pi pi-fw pi-plus",
       items: [
         {
-          label: "Insert Map",
-          icon: "pi pi-fw pi-file",
-          command: () => setDisplayDialog({ ...displayDialog, show: true }),
+          label: "Insert Board",
+          template: (item: any, options: any) => {
+            return (
+              <span className={options.className} onClick={options.onClick}>
+                <span className="p-button-icon p-c p-button-icon-left pi pi-fw">
+                  <Icon icon={"mdi:draw"} fontSize={18} />
+                </span>
+                <span className={options.labelClassName}>{item.label}</span>
+              </span>
+            );
+          },
+          command: () =>
+            newBoardMutation.mutate({
+              id: uuid(),
+              title: "New Board",
+              parent: displayDialog.id,
+              project_id: project_id as string,
+              folder: false,
+              nodes: [],
+            }),
         },
         {
           label: "Insert Folder",
           icon: "pi pi-fw pi-folder",
           command: () => {
             if (displayDialog.depth < 3) {
-              newMapMutation.mutate({
+              newBoardMutation.mutate({
                 id: uuid(),
                 title: "New Folder",
                 parent: displayDialog.id,
-                map_image: "",
                 project_id: project_id as string,
                 folder: true,
+                nodes: [],
               });
             } else {
               toastWarn("You cannot insert more than 4 levels deep.");
@@ -132,7 +141,7 @@ export default function MapTreeItemContext({
     <>
       <ConfirmDialog />
       <ContextMenu
-        model={displayDialog.folder ? folderItems : docItems}
+        model={displayDialog.folder ? folderItems : boardItems}
         ref={cm}
         className="Lato"
       />

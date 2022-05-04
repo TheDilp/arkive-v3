@@ -1,14 +1,14 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useNavigate } from "react-router-dom";
-import { Board, Map, mapItemDisplayDialog } from "../../../custom-types";
+import { Board, boardItemDisplayDialog } from "../../../custom-types";
 type Props = {
   boardId: string;
   node: NodeModel<Board>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDisplayDialog: (displayDialog: mapItemDisplayDialog) => void;
+  setDisplayDialog: (displayDialog: boardItemDisplayDialog) => void;
   cm: any;
 };
 
@@ -30,6 +30,14 @@ export default function BoardTreeItem({
         if (!node.droppable) navigate(node.id as string);
       }}
       onContextMenu={(e) => {
+        setDisplayDialog({
+          id: node.id as string,
+          title: node.text,
+          parent: node.data?.parent || "0",
+          folder: node.droppable || false,
+          depth,
+          show: true,
+        });
         cm.current.show(e);
       }}
     >

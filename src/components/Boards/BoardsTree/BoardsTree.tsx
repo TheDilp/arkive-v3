@@ -5,10 +5,12 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Board, boardItemDisplayDialog } from "../../../custom-types";
+import { useCreateBoard } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
 import BoardTreeItem from "./BoardTreeItem";
-
+import { v4 as uuid } from "uuid";
+import BoardTreeItemContext from "./BoardTreeItemContext";
 type Props = {
   boardId: string;
   setBoardId: (boardId: string) => void;
@@ -22,6 +24,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const boards: Board[] | undefined = queryClient.getQueryData<Board[]>(
     `${project_id}-boards`
   );
+  const createBoardMutation = useCreateBoard();
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<boardItemDisplayDialog>({
       id: "",
@@ -59,6 +62,28 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
       setTreeData(temp);
     }
   }, [boards]);
+
+  function createNewBoard(type: string) {
+    let id = uuid();
+    if (type === "folder") {
+      createBoardMutation.mutate({
+        id,
+        project_id: project_id as string,
+        title: "New Folder",
+        folder: true,
+        nodes: [],
+      });
+    } else {
+      createBoardMutation.mutate({
+        id,
+        project_id: project_id as string,
+        title: "New Board",
+        folder: false,
+        nodes: [],
+      });
+    }
+  }
+
   return (
     <div
       className="w-2 bg-gray-800 text-white pt-2 px-2"
@@ -66,22 +91,19 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
         height: "96vh",
       }}
     >
+      <BoardTreeItemContext
+        cm={cm}
+        boardId={boardId}
+        displayDialog={updateBoardDialog}
+        setDisplayDialog={setUpdateBoardDialog}
+      />
       <div className="w-full py-1 flex justify-content-between">
         <Button
           label="New Folder"
           icon="pi pi-fw pi-folder"
           iconPos="right"
           className="p-button-outlined"
-          onClick={() => {
-            // let id = uuid();
-            // createMapMutation.mutate({
-            //   id,
-            //   project_id: project_id as string,
-            //   title: "New Folder",
-            //   map_image: "",
-            //   folder: true,
-            // });
-          }}
+          onClick={() => createNewBoard("folder")}
         />
         <Button
           label="New Board"
@@ -95,7 +117,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
             </span>
           )}
           className="p-button-outlined"
-          //   onClick={() => setCreateMapDialog(true)}
+          onClick={() => createNewBoard("board")}
         />
       </div>
       <Tree
