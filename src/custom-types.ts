@@ -61,12 +61,14 @@ export type Node = {
   y: number;
   source?: string;
   target?: string;
+  type: string;
   board_id: string;
 };
 export type CytoscapeNode = {
   data: {
     id: string;
     label: string;
+    type: string;
   };
   position: {
     x: number;

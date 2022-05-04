@@ -13,7 +13,7 @@ export default function BoardView() {
     if (board) {
       if (board.nodes.length > 0) {
         let temp_nodes: CytoscapeNode[] = board.nodes.map((node) => ({
-          data: { id: node.id, label: node.label },
+          data: { id: node.id, label: node.label, type: node.type },
           position: { x: node.x, y: node.y },
         }));
 
@@ -33,11 +33,38 @@ export default function BoardView() {
 
   return (
     <div className="w-10 h-screen" onContextMenu={(e) => cm.current.show(e)}>
-      <ContextMenu model={[{ label: "New Node" }]} ref={cm}></ContextMenu>
+      <ContextMenu
+        model={[
+          {
+            label: "New Node",
+            command: () =>
+              setNodes((prev) => [
+                ...prev,
+                {
+                  data: {
+                    id: Math.random().toString(),
+                    label: "",
+                    type: "triangle",
+                  },
+                  position: { x: 657, y: 255 },
+                },
+              ]),
+          },
+        ]}
+        ref={cm}
+      ></ContextMenu>
       <CytoscapeComponent
         elements={nodes}
         style={{ width: "100%", height: "100%" }}
         cy={(cy: any) => (cyRef.current = cy)}
+        stylesheet={[
+          {
+            selector: "node",
+            style: {
+              shape: "data(type)",
+            },
+          },
+        ]}
       />
     </div>
   );
