@@ -530,6 +530,8 @@ export const updateNode = async ({
   target,
   width,
   height,
+  fontSize,
+  backgroundColor,
   doc_id,
 }: {
   id: string;
@@ -541,6 +543,8 @@ export const updateNode = async ({
   type?: string;
   source?: string;
   target?: string;
+  fontSize?: number;
+  backgroundColor?: string;
   doc_id?: string;
 }) => {
   let user = auth.user();
@@ -557,6 +561,8 @@ export const updateNode = async ({
         target,
         width,
         height,
+        fontSize,
+        backgroundColor,
         doc_id,
       })
       .eq("id", id);

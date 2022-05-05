@@ -6,7 +6,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
 import { useParams } from "react-router-dom";
-import { boardNodeShapes } from "../../utils/utils";
+import { boardNodeFontSizes, boardNodeShapes } from "../../utils/utils";
 import { Slider } from "primereact/slider";
 type Props = {
   nodeUpdateDialog: nodeUpdateDialog;
@@ -15,7 +15,13 @@ type Props = {
 
 type Inputs = Pick<
   nodeUpdateDialog,
-  "label" | "type" | "doc_id" | "width" | "height"
+  | "label"
+  | "type"
+  | "doc_id"
+  | "width"
+  | "height"
+  | "fontSize"
+  | "backgroundColor"
 >;
 
 export default function NodeUpdateDialog({
@@ -36,6 +42,8 @@ export default function NodeUpdateDialog({
       doc_id: nodeUpdateDialog.doc_id,
       width: nodeUpdateDialog.width,
       height: nodeUpdateDialog.height,
+      fontSize: nodeUpdateDialog.fontSize,
+      backgroundColor: nodeUpdateDialog.backgroundColor,
     },
   });
 
@@ -51,6 +59,7 @@ export default function NodeUpdateDialog({
     <Dialog
       header={`Update Node ${nodeUpdateDialog.label || ""}`}
       visible={nodeUpdateDialog.show}
+      modal={false}
       onHide={() =>
         setNodeUpdateDialog({
           id: "",
@@ -59,12 +68,28 @@ export default function NodeUpdateDialog({
           doc_id: "",
           width: 0,
           height: 0,
+          fontSize: 0,
+          backgroundColor: "",
           show: false,
         })
       }
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <InputText {...register("label")} placeholder="Node Label" />
+        <div className="w-full flex flex-nowrap">
+          <InputText {...register("label")} placeholder="Node Label" />
+          <Controller
+            control={control}
+            name="fontSize"
+            render={({ field: { onChange, value } }) => (
+              <Dropdown
+                options={boardNodeFontSizes}
+                placeholder="Label Font Size"
+                value={value}
+                onChange={(e) => onChange(e.value)}
+              />
+            )}
+          />
+        </div>
         <Controller
           control={control}
           name="type"

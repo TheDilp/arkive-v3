@@ -862,7 +862,13 @@ export function useCreateNode(project_id: string) {
                     ...board,
                     nodes: [
                       ...board.nodes,
-                      { ...newNode, width: 100, height: 100 },
+                      {
+                        ...newNode,
+                        width: 100,
+                        height: 100,
+                        fontSize: 16,
+                        backgroundColor: "#1e1e1e",
+                      },
                     ],
                   };
                 } else {

@@ -61,9 +61,11 @@ export type BoardNode = {
   y: number;
   width: number;
   height: number;
+  type: string;
+  fontSize: number;
+  backgroundColor: string;
   source?: string;
   target?: string;
-  type: string;
   document?: Pick<Document, "id" | "image">;
   board_id: string;
 };
@@ -74,6 +76,8 @@ export type CytoscapeNode = {
     type: string;
     width: number;
     height: number;
+    fontSize: number;
+    backgroundColor: string;
   };
   position: {
     x: number;
@@ -111,6 +115,8 @@ export type nodeUpdateDialog = {
   type: string;
   height: number;
   width: number;
+  fontSize: number;
+  backgroundColor: string;
   doc_id: string;
   show: boolean;
 };

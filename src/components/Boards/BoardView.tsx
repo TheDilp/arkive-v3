@@ -27,6 +27,8 @@ export default function BoardView() {
     doc_id: "",
     width: 0,
     height: 0,
+    fontSize: 0,
+    backgroundColor: "",
     show: false,
   });
   const createNodeMutation = useCreateNode(project_id as string);
@@ -41,6 +43,8 @@ export default function BoardView() {
             type: node.type,
             width: node.width,
             height: node.height,
+            fontSize: node.fontSize,
+            backgroundColor: node.backgroundColor,
             ...(node.document?.image
               ? { backgroundImage: node.document.image }
               : { backgroundImage: [] }),
@@ -68,13 +72,14 @@ export default function BoardView() {
       });
       cyRef.current.on("dbltap", "node", function (evt: any) {
         let target = evt.target._private;
-        console.log(target);
         setNodeUpdateDialog({
           id: target.data.id,
           label: target.data.label,
           type: target.data.type,
           width: target.data.width,
           height: target.data.height,
+          fontSize: target.data.fontSize,
+          backgroundColor: target.data.backgroundColor,
           doc_id: target.scratch.doc_id,
           show: true,
         });
@@ -139,6 +144,8 @@ export default function BoardView() {
               height: "data(height)",
               label: "data(label)",
               fontFamily: "Lato",
+              fontSize: "data(fontSize)",
+              backgroundColor: "data(backgroundColor)",
               backgroundImage: "data(backgroundImage)",
               backgroundFit: "cover",
               textValign: "top",
