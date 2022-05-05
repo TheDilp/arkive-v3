@@ -81,21 +81,23 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
               </span>
             )}
           </div>
-          <div className="w-8 py-2">
-            <InputText
-              placeholder="Map Image"
-              className="w-full"
-              {...register("map_image", {
-                required: true,
-              })}
-            />
-            {errors.map_image?.type === "required" && (
-              <span className="py-1" style={{ color: "var(--red-500)" }}>
-                <i className="pi pi-exclamation-triangle"></i>
-                This field is required!
-              </span>
-            )}
-          </div>
+          {!visible.folder && (
+            <div className="w-8 py-2">
+              <InputText
+                placeholder="Map Image"
+                className="w-full"
+                {...register("map_image", {
+                  required: true,
+                })}
+              />
+              {errors.map_image?.type === "required" && (
+                <span className="py-1" style={{ color: "var(--red-500)" }}>
+                  <i className="pi pi-exclamation-triangle"></i>
+                  This field is required!
+                </span>
+              )}
+            </div>
+          )}
           <div className="w-8">
             <Controller
               name="parent"
@@ -108,7 +110,11 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
                   optionValue="id"
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={maps?.filter((map) => map.folder) || []}
+                  options={
+                    maps?.filter(
+                      (map) => map.folder && map.id !== visible.id
+                    ) || []
+                  }
                 />
               )}
             />

@@ -90,7 +90,11 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
                   optionValue="id"
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
-                  options={boards.data?.filter((board) => board.folder) || []}
+                  options={
+                    boards.data?.filter(
+                      (board) => board.folder && board.id !== visible.id
+                    ) || []
+                  }
                 />
               )}
             />
