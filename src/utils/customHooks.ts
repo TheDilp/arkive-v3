@@ -920,13 +920,29 @@ export function useUpdateNode(project_id: string) {
           `${project_id}-boards`,
           (oldData: Board[] | undefined) => {
             if (oldData) {
+              // Init document variable as undefined
+              let document: { id: string; image: string } | undefined;
+              // Then if there is a document that is linked, find it and map the data
+              if (updatedNode.doc_id) {
+                const documents: Document[] | undefined =
+                  queryClient.getQueryData(`${project_id}-documents`);
+                const doc = documents?.find(
+                  (doc) => doc.id === updatedNode.doc_id
+                );
+                if (doc) document = { id: doc.id, image: doc.image };
+              }
+
               let newData = oldData.map((board) => {
                 if (board.id === updatedNode.board_id) {
                   return {
                     ...board,
                     nodes: board.nodes.map((node) => {
                       if (node.id === updatedNode.id) {
-                        return { ...node, ...updatedNode };
+                        return {
+                          ...node,
+                          ...updatedNode,
+                          document: document ?? undefined,
+                        };
                       } else {
                         return node;
                       }
