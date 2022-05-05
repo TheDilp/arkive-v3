@@ -29,7 +29,7 @@ export type Map = {
   id: string;
   title: string;
   map_image: string;
-  parent: string;
+  parent: string | null;
   folder: boolean;
   user_id: string;
   project_id: string;

@@ -324,7 +324,7 @@ export const createBoard = async ({
   id: string;
   title: string;
   project_id: string;
-  parent?: string;
+  parent?: string | null;
   folder: boolean;
 }) => {
   let user = auth.user();
@@ -462,6 +462,7 @@ export const updateMap = async ({
   map_image?: string;
   parent?: string | null;
 }) => {
+  console.log(parent);
   let user = auth.user();
 
   if (user) {
@@ -470,7 +471,7 @@ export const updateMap = async ({
       .update({
         title,
         map_image,
-        parent: parent || undefined,
+        parent,
       })
       .eq("id", id);
 

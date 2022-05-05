@@ -5,7 +5,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Board, boardItemDisplayDialog } from "../../../custom-types";
-import { useCreateBoard } from "../../../utils/customHooks";
+import { useCreateBoard, useUpdateBoard } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
 import BoardTreeItem from "./BoardTreeItem";
@@ -25,7 +25,7 @@ export default function BoardsTree({ boardId }: Props) {
     `${project_id}-boards`
   );
   const createBoardMutation = useCreateBoard();
-
+  const updateBoardMutation = useUpdateBoard(project_id as string);
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<boardItemDisplayDialog>({
       id: "",
@@ -44,10 +44,10 @@ export default function BoardsTree({ boardId }: Props) {
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
-    // updateMapMutation.mutate({
-    //   id: dragSourceId,
-    //   parent: dropTargetId === "0" ? null : dropTargetId,
-    // });
+    updateBoardMutation.mutate({
+      id: dragSourceId,
+      parent: dropTargetId === "0" ? null : dropTargetId,
+    });
   };
   useLayoutEffect(() => {
     if (boards && boards.length > 0) {
