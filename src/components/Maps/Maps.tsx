@@ -15,7 +15,7 @@ export default function Maps() {
     <Navigate to="/login" />
   ) : (
     <div className="w-full flex flex-wrap justify-content-start">
-      <MapsTree mapId={mapId} setMapId={setMapId} />
+      <MapsTree mapId={mapId} />
       <Routes>
         <Route path="/:map_id" element={<MapView setMapId={setMapId} />} />
       </Routes>

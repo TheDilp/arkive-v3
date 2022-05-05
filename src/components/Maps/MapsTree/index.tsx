@@ -40,9 +40,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
         parent: m.parent || "0",
         text: m.title,
         droppable: m.folder,
-        data: {
-          ...m,
-        },
+        data: m,
       }));
       setTreeData(temp);
     }

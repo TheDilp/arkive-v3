@@ -10,7 +10,10 @@ import {
   useUpdateNode,
 } from "../../utils/customHooks";
 import NodeUpdateDialog from "./NodeUpdateDialog";
-export default function BoardView() {
+type Props = {
+  setBoardId: (boardId: string) => void;
+};
+export default function BoardView({ setBoardId }: Props) {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
   const [nodes, setNodes] = useState<CytoscapeNode[]>([]);
@@ -97,7 +100,8 @@ export default function BoardView() {
   }, [cyRef]);
 
   useEffect(() => {
-    if (cyRef.current) cyRef.current.mount();
+    if (board_id) setBoardId(board_id);
+    // if (cyRef.current) cyRef.current.mount();
     // return () => cyRef.current.unmount();
   }, [board_id]);
 

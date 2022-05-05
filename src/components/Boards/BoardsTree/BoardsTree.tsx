@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { Button } from "primereact/button";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Board, boardItemDisplayDialog } from "../../../custom-types";
@@ -13,10 +13,9 @@ import { v4 as uuid } from "uuid";
 import BoardTreeItemContext from "./BoardTreeItemContext";
 type Props = {
   boardId: string;
-  setBoardId: (boardId: string) => void;
 };
 
-export default function BoardsTree({ boardId, setBoardId }: Props) {
+export default function BoardsTree({ boardId }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const cm = useRef() as any;
@@ -50,14 +49,12 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   };
   useLayoutEffect(() => {
     if (boards && boards.length > 0) {
-      let temp = boards.map((m) => ({
-        id: m.id,
-        parent: m.parent || "0",
-        text: m.title,
-        droppable: m.folder,
-        data: {
-          ...m,
-        },
+      let temp = boards.map((board) => ({
+        id: board.id,
+        parent: board.parent || "0",
+        text: board.title,
+        droppable: board.folder,
+        data: board,
       }));
       setTreeData(temp);
     }

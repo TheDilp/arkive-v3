@@ -25,7 +25,7 @@ export default function BoardTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer text-white"
+      className="text-lg hover:bg-blue-700 py-1 cursor-pointer"
       onClick={() => {
         if (!node.droppable) navigate(node.id as string);
       }}
