@@ -19,6 +19,7 @@ import {
   getDocuments,
   getMaps,
   getTags,
+  updateBoard,
   updateDocument,
   updateMap,
   updateMapMarker,
@@ -837,7 +838,7 @@ export function useUpdateBoard(project_id: string) {
 
   return useMutation(
     async (vars: { id: string; title?: string; parent?: string }) => {
-      await updateNode(vars);
+      await updateBoard(vars);
     },
     {
       onMutate: async (updatedBoard) => {

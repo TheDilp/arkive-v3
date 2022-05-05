@@ -96,10 +96,12 @@ export default function BoardsTree({ boardId }: Props) {
         displayDialog={updateBoardDialog}
         setDisplayDialog={setUpdateBoardDialog}
       />
-      <BoardUpdateDialog
-        visible={updateBoardDialog}
-        setVisible={setUpdateBoardDialog}
-      />
+      {updateBoardDialog.show && (
+        <BoardUpdateDialog
+          visible={updateBoardDialog}
+          setVisible={setUpdateBoardDialog}
+        />
+      )}
       <div className="w-full py-1 flex justify-content-between">
         <Button
           label="New Folder"
