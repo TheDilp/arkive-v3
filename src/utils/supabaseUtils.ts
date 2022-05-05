@@ -528,12 +528,16 @@ export const updateNode = async ({
   type,
   source,
   target,
+  width,
+  height,
   doc_id,
 }: {
   id: string;
   label?: string;
   x?: number;
   y?: number;
+  width?: number;
+  height?: number;
   type?: string;
   source?: string;
   target?: string;
@@ -551,6 +555,8 @@ export const updateNode = async ({
         type,
         source,
         target,
+        width,
+        height,
         doc_id,
       })
       .eq("id", id);

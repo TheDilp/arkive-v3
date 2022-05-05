@@ -860,7 +860,10 @@ export function useCreateNode(project_id: string) {
                 if (board.id === newNode.board_id) {
                   return {
                     ...board,
-                    nodes: [...board.nodes, newNode],
+                    nodes: [
+                      ...board.nodes,
+                      { ...newNode, width: 100, height: 100 },
+                    ],
                   };
                 } else {
                   return board;
@@ -894,6 +897,8 @@ export function useUpdateNode(project_id: string) {
       label?: string;
       x?: number;
       y?: number;
+      width?: number;
+      height?: number;
       type?: string;
       source?: string;
       target?: string;

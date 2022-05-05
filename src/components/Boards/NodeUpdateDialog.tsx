@@ -7,12 +7,16 @@ import { Dropdown } from "primereact/dropdown";
 import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
 import { useParams } from "react-router-dom";
 import { boardNodeShapes } from "../../utils/utils";
+import { Slider } from "primereact/slider";
 type Props = {
   nodeUpdateDialog: nodeUpdateDialog;
   setNodeUpdateDialog: (nodeUpdateDialog: nodeUpdateDialog) => void;
 };
 
-type Inputs = Pick<nodeUpdateDialog, "label" | "type" | "doc_id">;
+type Inputs = Pick<
+  nodeUpdateDialog,
+  "label" | "type" | "doc_id" | "width" | "height"
+>;
 
 export default function NodeUpdateDialog({
   nodeUpdateDialog,
@@ -23,12 +27,15 @@ export default function NodeUpdateDialog({
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
       label: nodeUpdateDialog.label,
       type: nodeUpdateDialog.type,
       doc_id: nodeUpdateDialog.doc_id,
+      width: nodeUpdateDialog.width,
+      height: nodeUpdateDialog.height,
     },
   });
 
@@ -36,9 +43,7 @@ export default function NodeUpdateDialog({
     updateNodeMutation.mutate({
       id: nodeUpdateDialog.id,
       board_id: board_id as string,
-      label: data.label,
-      type: data.type,
-      doc_id: data.doc_id,
+      ...data,
     });
   const documents = useGetDocuments(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
@@ -52,19 +57,14 @@ export default function NodeUpdateDialog({
           label: "",
           type: "",
           doc_id: "",
+          width: 0,
+          height: 0,
           show: false,
         })
       }
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <InputText
-          {...register("label")}
-          placeholder="Node Label"
-          //   value={nodeUpdateDialog.label}
-          //   onChange={(e) =>
-          //     setNodeUpdateDialog({ ...nodeUpdateDialog, label: e.target.value })
-          //   }
-        />
+        <InputText {...register("label")} placeholder="Node Label" />
         <Controller
           control={control}
           name="type"
@@ -93,6 +93,38 @@ export default function NodeUpdateDialog({
             />
           )}
         />
+        <div className="my-3">
+          <div className="my-2">Width: {watch("width")}</div>
+          <Controller
+            control={control}
+            name="width"
+            render={({ field: { onChange, value } }) => (
+              <Slider
+                min={50}
+                max={1000}
+                step={10}
+                value={value}
+                onChange={(e) => onChange(e.value)}
+              />
+            )}
+          />
+        </div>
+        <div className="my-3">
+          <div className="my-2">Height: {watch("height")}</div>
+          <Controller
+            control={control}
+            name="height"
+            render={({ field: { onChange, value } }) => (
+              <Slider
+                min={50}
+                max={1000}
+                step={10}
+                value={value}
+                onChange={(e) => onChange(e.value)}
+              />
+            )}
+          />
+        </div>
         <Button label="Save Node" type="submit" />
       </form>
     </Dialog>

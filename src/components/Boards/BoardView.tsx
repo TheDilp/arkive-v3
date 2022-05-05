@@ -25,6 +25,8 @@ export default function BoardView() {
     label: "",
     type: "",
     doc_id: "",
+    width: 0,
+    height: 0,
     show: false,
   });
   const createNodeMutation = useCreateNode(project_id as string);
@@ -37,6 +39,8 @@ export default function BoardView() {
             id: node.id,
             label: node.label,
             type: node.type,
+            width: node.width,
+            height: node.height,
             ...(node.document?.image
               ? { backgroundImage: node.document.image }
               : { backgroundImage: [] }),
@@ -69,6 +73,8 @@ export default function BoardView() {
           id: target.data.id,
           label: target.data.label,
           type: target.data.type,
+          width: target.data.width,
+          height: target.data.height,
           doc_id: target.scratch.doc_id,
           show: true,
         });
@@ -129,6 +135,8 @@ export default function BoardView() {
             selector: "node",
             style: {
               shape: "data(type)",
+              width: "data(width)",
+              height: "data(height)",
               label: "data(label)",
               fontFamily: "Lato",
               backgroundImage: "data(backgroundImage)",
