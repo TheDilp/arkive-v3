@@ -11,6 +11,7 @@ import DragPreview from "../../Project/DocumentTree/DragPreview";
 import BoardTreeItem from "./BoardTreeItem";
 import { v4 as uuid } from "uuid";
 import BoardTreeItemContext from "./BoardTreeItemContext";
+import BoardUpdateDialog from "./BoardUpdateDialog";
 type Props = {
   boardId: string;
 };
@@ -24,6 +25,7 @@ export default function BoardsTree({ boardId }: Props) {
     `${project_id}-boards`
   );
   const createBoardMutation = useCreateBoard();
+
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<boardItemDisplayDialog>({
       id: "",
@@ -93,6 +95,10 @@ export default function BoardsTree({ boardId }: Props) {
         boardId={boardId}
         displayDialog={updateBoardDialog}
         setDisplayDialog={setUpdateBoardDialog}
+      />
+      <BoardUpdateDialog
+        visible={updateBoardDialog}
+        setVisible={setUpdateBoardDialog}
       />
       <div className="w-full py-1 flex justify-content-between">
         <Button

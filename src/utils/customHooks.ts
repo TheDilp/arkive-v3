@@ -831,6 +831,49 @@ export function useCreateBoard() {
     }
   );
 }
+// Custom hook for updating a new board
+export function useUpdateBoard(project_id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (vars: { id: string; title?: string; parent?: string }) => {
+      await updateNode(vars);
+    },
+    {
+      onMutate: async (updatedBoard) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: Board[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((board) => {
+                if (board.id === updatedBoard.id) {
+                  return {
+                    ...board,
+                    ...updatedBoard,
+                  };
+                } else {
+                  return board;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+        toastError("There was an error updating this board.");
+      },
+    }
+  );
+}
 // Custom hook for creating a node
 export function useCreateNode(project_id: string) {
   const queryClient = useQueryClient();
@@ -961,8 +1004,11 @@ export function useUpdateNode(project_id: string) {
         return { previousBoards };
       },
       onError: (err, newTodo, context) => {
-        queryClient.setQueryData(`${project_id}-maps`, context?.previousBoards);
-        toastError("There was an error updating this map.");
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+        toastError("There was an error updating this node.");
       },
     }
   );

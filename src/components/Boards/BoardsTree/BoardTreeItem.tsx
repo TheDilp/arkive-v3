@@ -36,7 +36,7 @@ export default function BoardTreeItem({
           parent: node.data?.parent || "0",
           folder: node.droppable || false,
           depth,
-          show: true,
+          show: false,
         });
         cm.current.show(e);
       }}

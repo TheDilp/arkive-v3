@@ -520,6 +520,35 @@ export const updateMapMarker = async ({
     throw new Error(error.message);
   }
 };
+
+export const updateBoard = async ({
+  id,
+  title,
+  parent,
+}: {
+  id: string;
+  title?: string;
+  parent?: string | null;
+}) => {
+  let user = auth.user();
+
+  if (user) {
+    const { data, error } = await supabase
+      .from("boards")
+      .update({
+        title,
+        parent,
+      })
+      .eq("id", id);
+
+    if (data) return data;
+    if (error) {
+      toastError("There was an error updating your board.");
+      throw new Error(error.message);
+    }
+  }
+};
+
 export const updateNode = async ({
   id,
   label,
