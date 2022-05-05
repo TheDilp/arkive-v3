@@ -13,7 +13,6 @@ type Props = {
 
 export default function ProjectSettings({ project }: Props) {
   const [localProject, setLocalProject] = useState<Project>(project);
-  console.log(localProject);
   const projectMutation = useUpdateProject();
   const navigate = useNavigate();
   const confirmDeleteDialog = () =>

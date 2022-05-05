@@ -864,8 +864,8 @@ export function useCreateNode(project_id: string) {
                       ...board.nodes,
                       {
                         ...newNode,
-                        width: 100,
-                        height: 100,
+                        width: 50,
+                        height: 50,
                         fontSize: 16,
                         backgroundColor: "#1e1e1e",
                       },
@@ -911,7 +911,7 @@ export function useUpdateNode(project_id: string) {
       doc_id?: string;
     }) => {
       const { board_id, ...updateVars } = vars;
-      await updateNode(updateVars);
+      await updateNode({ ...updateVars });
     },
     {
       onMutate: async (updatedNode) => {

@@ -46,13 +46,13 @@ export default function NodeUpdateDialog({
       backgroundColor: nodeUpdateDialog.backgroundColor,
     },
   });
-
-  const onSubmit: SubmitHandler<Inputs> = (data) =>
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
     updateNodeMutation.mutate({
       id: nodeUpdateDialog.id,
       board_id: board_id as string,
       ...data,
     });
+  };
   const documents = useGetDocuments(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
   return (
@@ -65,7 +65,7 @@ export default function NodeUpdateDialog({
           id: "",
           label: "",
           type: "",
-          doc_id: "",
+          doc_id: undefined,
           width: 0,
           height: 0,
           fontSize: 0,

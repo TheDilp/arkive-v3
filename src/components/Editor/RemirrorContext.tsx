@@ -154,7 +154,6 @@ export default function RemirrorContext({
               let tValues = tableControllerPluginKey.getState(
                 view.state
               )?.values;
-              console.log(tValues);
               if (!firstRender && tr?.docChanged) {
                 setSaving(tr?.time);
               }

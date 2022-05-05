@@ -117,7 +117,7 @@ export type nodeUpdateDialog = {
   width: number;
   fontSize: number;
   backgroundColor: string;
-  doc_id: string;
+  doc_id?: string;
   show: boolean;
 };
 export type iconSelect = {

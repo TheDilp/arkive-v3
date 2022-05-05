@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { CytoscapeNode } from "../../custom-types";
+import { CytoscapeNode, nodeUpdateDialog } from "../../custom-types";
 import {
   useCreateNode,
   useGetBoardData,
@@ -20,11 +20,11 @@ export default function BoardView() {
     x: 0,
     y: 0,
   });
-  const [nodeUpdateDialog, setNodeUpdateDialog] = useState({
+  const [nodeUpdateDialog, setNodeUpdateDialog] = useState<nodeUpdateDialog>({
     id: "",
     label: "",
     type: "",
-    doc_id: "",
+    doc_id: undefined,
     width: 0,
     height: 0,
     fontSize: 0,
@@ -39,7 +39,7 @@ export default function BoardView() {
         let temp_nodes: CytoscapeNode[] = board.nodes.map((node) => ({
           data: {
             id: node.id,
-            label: node.label,
+            label: node.label || "",
             type: node.type,
             width: node.width,
             height: node.height,
@@ -50,7 +50,7 @@ export default function BoardView() {
               : { backgroundImage: [] }),
           },
           scratch: {
-            doc_id: node.document?.id || "",
+            doc_id: node.document?.id,
           },
           position: { x: node.x, y: node.y },
         }));
@@ -107,15 +107,25 @@ export default function BoardView() {
         model={[
           {
             label: "New Node",
-            command: () =>
+            command: () => {
+              let id = uuid();
               createNodeMutation.mutate({
-                id: uuid(),
+                id,
                 label: undefined,
                 board_id: board_id as string,
                 type: "rectangle",
                 // X & Y coordinates set by right-clicking the background of the canvas
                 ...contextMenu,
-              }),
+              });
+            },
+          },
+          {
+            label: "Go to center of nodes",
+            command: () => cyRef.current.center(),
+          },
+          {
+            label: "Fit view to nodes",
+            command: () => cyRef.current.fit(),
           },
         ]}
         ref={cm}
