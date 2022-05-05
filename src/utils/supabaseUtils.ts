@@ -717,3 +717,14 @@ export const deleteMapMarker = async (id: string) => {
     throw new Error(error.message);
   }
 };
+export const deleteBoard = async (id: string) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase.from("boards").delete().eq("id", id);
+    if (error) {
+      toastError("There was an error deleting your board.");
+      throw new Error(error.message);
+    }
+  }
+};

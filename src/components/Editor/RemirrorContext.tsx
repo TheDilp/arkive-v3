@@ -6,7 +6,7 @@ import {
   useRemirror,
   tableControllerPluginKey,
 } from "@remirror/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode } from "remirror";
 import {
@@ -18,6 +18,7 @@ import {
   ImageExtension,
   ItalicExtension,
   MarkdownExtension,
+  MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
@@ -32,10 +33,10 @@ import {
 } from "../../utils/customHooks";
 import { toastSuccess } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
-import CustomMentionExtension from "./CustomMentionExtension";
 import { TableExtension } from "@remirror/extension-react-tables";
 import { saveAs } from "file-saver";
 import EditorView from "./EditorView";
+import MentionReactComponent from "./MentionReactComponent";
 const hooks = [
   () => {
     const { getJSON, getText, getMarkdown } = useHelpers();
@@ -77,10 +78,41 @@ export default function RemirrorContext({
 }: {
   setDocId: (id: string) => void;
 }) {
+  const { project_id, doc_id } = useParams();
   const firstRender = useRef(true);
-
+  const currentDocument = useGetDocumentData(
+    project_id as string,
+    doc_id as string
+  );
   // ======================================================
   // REMIRROR SETUP
+  const CustomMentionExtension = new MentionAtomExtension({
+    matchers: [
+      {
+        name: "at",
+        char: "@",
+        appendText: "",
+        supportedCharacters: /[^\s][\w\d_ ]+/,
+      },
+      {
+        name: "hash",
+        char: "#",
+        appendText: "",
+        supportedCharacters: /[^\s][\w\d_ ]+/,
+      },
+      {
+        name: "dollah",
+        char: "$",
+        appendText: "",
+        supportedCharacters: /[^\s][\w\d_ ]+/,
+      },
+    ],
+  });
+  CustomMentionExtension.ReactComponent = useMemo(
+    () => MentionReactComponent,
+    []
+  );
+
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
@@ -102,16 +134,13 @@ export default function RemirrorContext({
       new TableExtension(),
     ],
     selection: "all",
+    content: currentDocument?.content || "",
     stringHandler: htmlToProsemirrorNode,
   });
   // ======================================================
 
-  const { project_id, doc_id } = useParams();
   const documents = useGetDocuments(project_id as string);
-  const currentDocument = useGetDocumentData(
-    project_id as string,
-    doc_id as string
-  );
+
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
 
@@ -133,6 +162,7 @@ export default function RemirrorContext({
 
     return () => clearTimeout(timeout);
   }, [saving]);
+
   if (!currentDocument) return <Navigate to="../" />;
   return (
     <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
@@ -150,10 +180,7 @@ export default function RemirrorContext({
             hooks={hooks}
             classNames={["text-white Lato Editor overflow-y-scroll"]}
             onChange={(props) => {
-              const { tr, firstRender, view } = props;
-              let tValues = tableControllerPluginKey.getState(
-                view.state
-              )?.values;
+              const { tr, firstRender } = props;
               if (!firstRender && tr?.docChanged) {
                 setSaving(tr?.time);
               }

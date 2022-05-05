@@ -11,6 +11,7 @@ import {
   createMapMarker,
   createNode,
   createTemplate,
+  deleteBoard,
   deleteDocument,
   deleteMap,
   deleteMapMarker,
@@ -832,7 +833,7 @@ export function useCreateBoard() {
     }
   );
 }
-// Custom hook for updating a new board
+// Custom hook for updating a board
 export function useUpdateBoard(project_id: string) {
   const queryClient = useQueryClient();
 
@@ -875,6 +876,39 @@ export function useUpdateBoard(project_id: string) {
     }
   );
 }
+// Custom hook for deleting a board
+
+export function useDeleteBoard(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string }) => {
+      await deleteBoard(vars.id);
+    },
+    {
+      onMutate: async (deletedBoard) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: Board[] | undefined) => {
+            if (oldData) {
+              return oldData.filter((board) => board.id !== deletedBoard.id);
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+      },
+    }
+  );
+}
+
 // Custom hook for creating a node
 export function useCreateNode(project_id: string) {
   const queryClient = useQueryClient();

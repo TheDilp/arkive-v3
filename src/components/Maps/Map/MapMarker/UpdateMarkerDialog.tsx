@@ -168,7 +168,9 @@ export default function UpdateMarkerDialog({
                 placeholder="Link Document"
                 value={value}
                 onChange={(e) => onChange(e.value)}
-                options={documents.data?.filter((doc) => !doc.template)}
+                options={documents.data?.filter(
+                  (doc) => !doc.template && !doc.folder
+                )}
                 optionLabel={"title"}
                 optionValue={"id"}
               />

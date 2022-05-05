@@ -1,20 +1,19 @@
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document, Project } from "../../../custom-types";
+import { v4 as uuid } from "uuid";
+import { Document } from "../../../custom-types";
 import {
   useCreateTemplate,
+  useGetDocuments,
   useGetProjectData,
   useGetTags,
 } from "../../../utils/customHooks";
-import CategoryAutocomplete from "./CategoryAutocomplete";
-import { v4 as uuid } from "uuid";
 import { auth } from "../../../utils/supabaseUtils";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
+import CategoryAutocomplete from "./CategoryAutocomplete";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
-  const queryClient = useQueryClient();
   const [currentDoc, setCurrentDoc] = useState<Document | null>();
   const project = useGetProjectData(project_id as string);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
@@ -22,9 +21,7 @@ export default function PropertiesPanel() {
     project_id as string
   );
   const user = auth.user();
-  const allDocs: Document[] = queryClient.getQueryData(
-    `${project_id}-documents`
-  ) as Document[];
+  const allDocs = useGetDocuments(project_id as string);
   useEffect(() => {
     if (categories.length > 0) {
       setFilteredCategories(categories);
@@ -32,7 +29,7 @@ export default function PropertiesPanel() {
   }, [categories]);
   useEffect(() => {
     if (allDocs) {
-      setCurrentDoc(allDocs.filter((doc) => doc.id === doc_id)[0]);
+      setCurrentDoc(allDocs.data?.filter((doc) => doc.id === doc_id)[0]);
     }
   }, [doc_id, allDocs]);
   const createTemplateMutation = useCreateTemplate();

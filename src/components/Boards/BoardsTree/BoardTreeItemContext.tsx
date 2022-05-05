@@ -5,7 +5,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { boardItemDisplayDialog } from "../../../custom-types";
-import { useCreateBoard, useDeleteMap } from "../../../utils/customHooks";
+import { useCreateBoard, useDeleteBoard } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
@@ -23,7 +23,7 @@ export default function BoardTreeItemContext({
   const { project_id } = useParams();
 
   const newBoardMutation = useCreateBoard();
-  const deleteDocumentMutation = useDeleteMap();
+  const deleteBoardMutation = useDeleteBoard(project_id as string);
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -42,13 +42,13 @@ export default function BoardTreeItemContext({
       ),
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
+      acceptClassName: "p-button-danger",
       accept: async () => {
         if (displayDialog.id === boardId) {
           navigate("./");
         }
-        deleteDocumentMutation.mutate({
+        deleteBoardMutation.mutate({
           id: displayDialog.id,
-          project_id: project_id as string,
         });
         setDisplayDialog({ ...displayDialog, show: false });
       },
@@ -69,7 +69,7 @@ export default function BoardTreeItemContext({
 
     { separator: true },
     {
-      label: "Delete Map",
+      label: "Delete Board",
       icon: "pi pi-fw pi-trash",
       command: confirmdelete,
     },

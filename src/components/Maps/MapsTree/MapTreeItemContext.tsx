@@ -41,6 +41,7 @@ export default function MapTreeItemContext({
       ),
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
+      acceptClassName: "p-button-danger",
       accept: async () => {
         if (displayDialog.id === mapId) {
           navigate("./");
