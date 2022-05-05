@@ -162,7 +162,7 @@ export default function UpdateMarkerDialog({
           <Controller
             control={control}
             name="doc_id"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            render={({ field: { onChange, value } }) => (
               <Dropdown
                 className="w-full"
                 placeholder="Link Document"
@@ -179,15 +179,13 @@ export default function UpdateMarkerDialog({
           <Controller
             control={control}
             name="map_link"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => {
+            render={({ field: { onChange, value } }) => {
               return (
                 <Dropdown
                   className="w-full mt-2"
                   placeholder="Map Link"
                   value={value}
-                  onChange={(e) => {
-                    onChange(e.value);
-                  }}
+                  onChange={(e) => onChange(e.value)}
                   options={maps.data?.filter((map) => !map.folder)}
                   optionLabel={"title"}
                   optionValue={"id"}

@@ -2,14 +2,14 @@ import { ContextMenu } from "primereact/contextmenu";
 import { useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import { CytoscapeNode } from "../../custom-types";
 import {
   useCreateNode,
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
-import { toastSuccess } from "../../utils/utils";
-import { v4 as uuid } from "uuid";
+import NodeUpdateDialog from "./NodeUpdateDialog";
 export default function BoardView() {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
@@ -19,6 +19,13 @@ export default function BoardView() {
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
+  });
+  const [nodeUpdateDialog, setNodeUpdateDialog] = useState({
+    id: "",
+    label: "",
+    type: "",
+    doc_id: "",
+    show: false,
   });
   const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
@@ -33,6 +40,9 @@ export default function BoardView() {
             ...(node.document?.image
               ? { backgroundImage: node.document.image }
               : { backgroundImage: [] }),
+          },
+          scratch: {
+            doc_id: node.document?.id || "",
           },
           position: { x: node.x, y: node.y },
         }));
@@ -53,12 +63,18 @@ export default function BoardView() {
         }
       });
       cyRef.current.on("dbltap", "node", function (evt: any) {
-        // cm.current.show(evt.originalEvent);
-        toastSuccess("ayy clicked a node 🎉p");
+        let target = evt.target._private;
+        console.log(target);
+        setNodeUpdateDialog({
+          id: target.data.id,
+          label: target.data.label,
+          type: target.data.type,
+          doc_id: target.scratch.doc_id,
+          show: true,
+        });
       });
       cyRef.current.on("dragfree", "node", function (evt: any) {
         let target = evt.target._private;
-        console.log(target);
         updateNodeMutation.mutate({
           id: target.data.id,
           board_id: board_id as string,
@@ -93,10 +109,17 @@ export default function BoardView() {
         ]}
         ref={cm}
       ></ContextMenu>
+      {nodeUpdateDialog.show && (
+        <NodeUpdateDialog
+          nodeUpdateDialog={nodeUpdateDialog}
+          setNodeUpdateDialog={setNodeUpdateDialog}
+        />
+      )}
       <CytoscapeComponent
         elements={nodes}
         minZoom={0.1}
         maxZoom={5}
+        className="Lato Merriweather"
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
         cy={(cy: any) => (cyRef.current = cy)}
         id="cy"
@@ -106,8 +129,11 @@ export default function BoardView() {
             selector: "node",
             style: {
               shape: "data(type)",
+              label: "data(label)",
+              fontFamily: "Lato",
               backgroundImage: "data(backgroundImage)",
               backgroundFit: "cover",
+              textValign: "top",
             },
           },
         ]}

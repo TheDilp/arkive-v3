@@ -101,7 +101,13 @@ export type boardItemDisplayDialog = {
   folder: boolean;
   depth: number;
 };
-
+export type nodeUpdateDialog = {
+  id: string;
+  label: string;
+  type: string;
+  doc_id: string;
+  show: boolean;
+};
 export type iconSelect = {
   doc_id: string;
   icon: string;

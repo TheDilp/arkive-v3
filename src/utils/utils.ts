@@ -50,3 +50,29 @@ export const emailRegex =
 export const passwordRegex =
   /"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"/g;
 
+export const boardNodeShapes = [
+  "ellipse",
+  "triangle",
+  "round-triangle",
+  "rectangle",
+  "round-rectangle",
+  "bottom-round-rectangle",
+  "cut-rectangle",
+  "barrel",
+  "rhomboid",
+  "diamond",
+  "round-diamond",
+  "pentagon",
+  "round-pentagon",
+  "hexagon",
+  "round-hexagon",
+  "concave-hexagon",
+  "heptagon",
+  "round-heptagon",
+  "octagon",
+  "round-octagon",
+  "star",
+  "tag",
+  "round-tag",
+  "vee",
+];
