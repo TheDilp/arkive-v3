@@ -3,12 +3,25 @@ import { useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { CytoscapeNode } from "../../custom-types";
-import { useGetBoardData } from "../../utils/customHooks";
-
+import {
+  useCreateNode,
+  useGetBoardData,
+  useUpdateNode,
+} from "../../utils/customHooks";
+import { toastSuccess } from "../../utils/utils";
+import { v4 as uuid } from "uuid";
 export default function BoardView() {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
   const [nodes, setNodes] = useState<CytoscapeNode[]>([]);
+  const cyRef = useRef() as any;
+  const cm = useRef() as any;
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const createNodeMutation = useCreateNode(project_id as string);
+  const updateNodeMutation = useUpdateNode(project_id as string);
   useEffect(() => {
     if (board) {
       if (board.nodes.length > 0) {
@@ -17,7 +30,7 @@ export default function BoardView() {
             id: node.id,
             label: node.label,
             type: node.type,
-            ...(node.document.image
+            ...(node.document?.image
               ? { backgroundImage: node.document.image }
               : { backgroundImage: [] }),
           },
@@ -30,40 +43,64 @@ export default function BoardView() {
       }
     }
   }, [board]);
-  const cyRef = useRef() as any;
-  const cm = useRef() as any;
   useEffect(() => {
     if (cyRef.current) {
-      console.log(cyRef.current);
+      cyRef.current.on("cxttap", function (evt: any) {
+        // If the target is the background of the canvas
+        if (evt.target === cyRef.current) {
+          cm.current.show(evt.originalEvent);
+          setContextMenu(evt.position);
+        }
+      });
+      cyRef.current.on("dbltap", "node", function (evt: any) {
+        // cm.current.show(evt.originalEvent);
+        toastSuccess("ayy clicked a node 🎉p");
+      });
+      cyRef.current.on("dragfree", "node", function (evt: any) {
+        let target = evt.target._private;
+        console.log(target);
+        updateNodeMutation.mutate({
+          id: target.data.id,
+          board_id: board_id as string,
+          x: target.position.x,
+          y: target.position.y,
+        });
+      });
     }
   }, [cyRef]);
+
+  useEffect(() => {
+    if (cyRef.current) cyRef.current.mount();
+    // return () => cyRef.current.unmount();
+  }, [board_id]);
+
   return (
-    <div className="w-10 h-screen" onContextMenu={(e) => cm.current.show(e)}>
+    <div className="w-full h-screen">
       <ContextMenu
         model={[
           {
             label: "New Node",
             command: () =>
-              setNodes((prev) => [
-                ...prev,
-                {
-                  data: {
-                    id: Math.random().toString(),
-                    label: "",
-                    type: "triangle",
-                    backgroundImage: [],
-                  },
-                  position: { x: 657, y: 255 },
-                },
-              ]),
+              createNodeMutation.mutate({
+                id: uuid(),
+                label: undefined,
+                board_id: board_id as string,
+                type: "rectangle",
+                // X & Y coordinates set by right-clicking the background of the canvas
+                ...contextMenu,
+              }),
           },
         ]}
         ref={cm}
       ></ContextMenu>
       <CytoscapeComponent
         elements={nodes}
-        style={{ width: "100%", height: "100%" }}
+        minZoom={0.1}
+        maxZoom={5}
+        style={{ width: "100%", height: "100%", backgroundColor: "white" }}
         cy={(cy: any) => (cyRef.current = cy)}
+        id="cy"
+        wheelSensitivity={0.25}
         stylesheet={[
           {
             selector: "node",

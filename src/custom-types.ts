@@ -52,23 +52,23 @@ export type Board = {
   parent?: string | null;
   folder: boolean;
   project_id: string;
-  nodes: Node[];
+  nodes: BoardNode[];
 };
-export type Node = {
+export type BoardNode = {
   id: string;
-  label: string;
+  label?: string;
   x: number;
   y: number;
   source?: string;
   target?: string;
   type: string;
-  document: Pick<Document, "id" | "image">;
+  document?: Pick<Document, "id" | "image">;
   board_id: string;
 };
 export type CytoscapeNode = {
   data: {
     id: string;
-    label: string;
+    label?: string;
     type: string;
   };
   position: {

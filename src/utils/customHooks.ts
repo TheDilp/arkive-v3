@@ -9,6 +9,7 @@ import {
   createDocument,
   createMap,
   createMapMarker,
+  createNode,
   createTemplate,
   deleteDocument,
   deleteMap,
@@ -21,6 +22,7 @@ import {
   updateDocument,
   updateMap,
   updateMapMarker,
+  updateNode,
   updateProject,
 } from "./supabaseUtils";
 import { toastError, toastSuccess } from "./utils";
@@ -825,6 +827,115 @@ export function useCreateBoard() {
           context?.previousBoards
         );
         toastError("There was an error creating this board.");
+      },
+    }
+  );
+}
+// Custom hook for creating a node
+export function useCreateNode(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      id: string;
+      label?: string;
+      board_id: string;
+      x: number;
+      y: number;
+      type: string;
+      doc_id?: string;
+    }) => {
+      const newNode = await createNode({
+        ...vars,
+      });
+      return newNode;
+    },
+    {
+      onMutate: async (newNode) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: Board[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((board) => {
+                if (board.id === newNode.board_id) {
+                  return {
+                    ...board,
+                    nodes: [...board.nodes, newNode],
+                  };
+                } else {
+                  return board;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+        toastError("There was an error creating this node.");
+      },
+    }
+  );
+}
+export function useUpdateNode(project_id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (vars: {
+      id: string;
+      board_id: string;
+      label?: string;
+      x?: number;
+      y?: number;
+      type?: string;
+      source?: string;
+      target?: string;
+      doc_id?: string;
+    }) => {
+      const { board_id, ...updateVars } = vars;
+      await updateNode(updateVars);
+    },
+    {
+      onMutate: async (updatedNode) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: Board[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((board) => {
+                if (board.id === updatedNode.board_id) {
+                  return {
+                    ...board,
+                    nodes: board.nodes.map((node) => {
+                      if (node.id === updatedNode.id) {
+                        return { ...node, ...updatedNode };
+                      } else {
+                        return node;
+                      }
+                    }),
+                  };
+                } else {
+                  return board;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(`${project_id}-maps`, context?.previousBoards);
+        toastError("There was an error updating this map.");
       },
     }
   );

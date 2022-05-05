@@ -6,6 +6,7 @@ import {
   Document,
   Map,
   MapMarker,
+  BoardNode,
   Profile,
   Project,
 } from "../custom-types";
@@ -342,6 +343,41 @@ export const createBoard = async ({
     }
   }
 };
+export const createNode = async ({
+  id,
+  label,
+  x,
+  y,
+  board_id,
+  type,
+  doc_id,
+}: {
+  id: string;
+  label?: string;
+  x: number;
+  y: number;
+  board_id: string;
+  type: string;
+  doc_id?: string;
+}) => {
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase.from("nodes").insert({
+      id,
+      label,
+      x,
+      y,
+      board_id,
+      type,
+      doc_id,
+    });
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your node.");
+      throw new Error(error.message);
+    }
+  }
+};
 
 // UPDATE
 export const updateDocument = async ({
@@ -482,6 +518,48 @@ export const updateMapMarker = async ({
   if (error) {
     toastError("There was an error updating your map marker.");
     throw new Error(error.message);
+  }
+};
+export const updateNode = async ({
+  id,
+  label,
+  x,
+  y,
+  type,
+  source,
+  target,
+  doc_id,
+}: {
+  id: string;
+  label?: string;
+  x?: number;
+  y?: number;
+  type?: string;
+  source?: string;
+  target?: string;
+  doc_id?: string;
+}) => {
+  let user = auth.user();
+
+  if (user) {
+    const { data, error } = await supabase
+      .from("nodes")
+      .update({
+        label,
+        x,
+        y,
+        type,
+        source,
+        target,
+        doc_id,
+      })
+      .eq("id", id);
+
+    if (data) return data;
+    if (error) {
+      toastError("There was an error updating your node.");
+      throw new Error(error.message);
+    }
   }
 };
 export const updateMultipleDocumentsParents = async (
