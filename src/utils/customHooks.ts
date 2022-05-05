@@ -941,7 +941,7 @@ export function useUpdateNode(project_id: string) {
                         return {
                           ...node,
                           ...updatedNode,
-                          document: document ?? undefined,
+                          document: document || node.document,
                         };
                       } else {
                         return node;
