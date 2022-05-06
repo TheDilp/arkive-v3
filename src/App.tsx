@@ -17,7 +17,11 @@ import Register from "./components/Auth/Register";
 import Profile from "./components/Profile/Profile";
 import Maps from "./components/Maps/Maps";
 import Boards from "./components/Boards/Boards";
+import cytoscape from "cytoscape";
+import edgehandles from "cytoscape-edgehandles";
+
 function App() {
+  cytoscape.use(edgehandles);
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

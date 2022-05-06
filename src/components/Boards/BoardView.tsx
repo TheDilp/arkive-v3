@@ -1,7 +1,6 @@
 import { ContextMenu } from "primereact/contextmenu";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import cytoscape from "cytoscape";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
@@ -9,25 +8,25 @@ import {
   CytoscapeNode,
   nodeUpdateDialog,
 } from "../../custom-types";
-import edgehandles from "cytoscape-edgehandles";
 import {
-  useCreateNode,
   useCreateEdge,
+  useCreateNode,
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
-import NodeUpdateDialog from "./NodeUpdateDialog";
 import { edgehandlesSettings } from "../../utils/utils";
+import NodeUpdateDialog from "./NodeUpdateDialog";
 type Props = {
   setBoardId: (boardId: string) => void;
 };
 export default function BoardView({ setBoardId }: Props) {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
-  const [nodes, setNodes] = useState<CytoscapeNode[]>([]);
+  const [elements, setElements] = useState<(CytoscapeNode | CytoscapeEdge)[]>(
+    []
+  );
   const cyRef = useRef() as any;
   const cm = useRef() as any;
-  const firstRender = useRef(true) as any;
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -49,8 +48,10 @@ export default function BoardView({ setBoardId }: Props) {
   const createEdgeMutation = useCreateEdge(project_id as string);
   useEffect(() => {
     if (board) {
+      let temp_nodes: CytoscapeNode[] = [];
+      let temp_edges: CytoscapeEdge[] = [];
       if (board.nodes.length > 0) {
-        let temp_nodes: CytoscapeNode[] = board.nodes.map((node) => ({
+        temp_nodes = board.nodes.map((node) => ({
           data: {
             id: node.id,
             label: node.label || "",
@@ -68,19 +69,35 @@ export default function BoardView({ setBoardId }: Props) {
           },
           position: { x: node.x, y: node.y },
         }));
-        setNodes(temp_nodes);
-      } else {
-        setNodes([]);
       }
+      if (board.edges.length > 0) {
+        temp_edges = board.edges.map((edge) => ({
+          data: {
+            source: edge.source,
+            target: edge.target,
+          },
+        }));
+      }
+      const elements = [...temp_nodes, ...temp_edges];
+      setElements(elements);
     }
   }, [board]);
-  useEffect(() => {
-    // Ensure plugin is only enabled once (on the first render)
-    if (firstRender.current) {
-      firstRender.current = false;
-      cytoscape.use(edgehandles);
-    }
 
+  const makeEdgeCallback = useCallback(
+    (source, target) => {
+      let boardId = board_id;
+      createEdgeMutation.mutate({
+        id: uuid(),
+        board_id: boardId as string,
+        source,
+        target,
+        curveStyle: "straight",
+      });
+    },
+    [board_id]
+  );
+
+  useEffect(() => {
     if (cyRef.current) {
       cyRef.current.edgehandles(edgehandlesSettings);
       cyRef.current.on("cxttap", function (evt: any) {
@@ -119,24 +136,18 @@ export default function BoardView({ setBoardId }: Props) {
         (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
           let sourceData = sourceNode._private.data;
           let targetData = targetNode._private.data;
-          createEdgeMutation.mutate({
-            id: sourceData.id,
-            board_id: board_id as string,
-            source: sourceData.id,
-            target: targetData.id,
-            curveStyle: "straight",
-          });
+          makeEdgeCallback(sourceData.id, targetData.id);
         }
       );
 
       cyRef.current.edgehandles().enableDrawMode();
     }
-  }, [cyRef]);
+  }, [cyRef, board_id]);
 
   useEffect(() => {
     if (board_id) setBoardId(board_id);
     // if (cyRef.current) cyRef.current.mount();
-    // return () => cyRef.current.unmount();
+    return () => cyRef.current.removeAllListeners();
   }, [board_id]);
 
   return (
@@ -174,18 +185,17 @@ export default function BoardView({ setBoardId }: Props) {
           setNodeUpdateDialog={setNodeUpdateDialog}
         />
       )}
+
       <CytoscapeComponent
-        elements={nodes}
+        elements={elements}
         minZoom={0.1}
         maxZoom={5}
         className="Lato Merriweather"
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
         cy={(cy: any) => {
           cyRef.current = cy;
-          // cy.edgehandles(edgehandlesSettings);
         }}
         id="cy"
-        wheelSensitivity={0.25}
         stylesheet={[
           {
             selector: "node[class != 'eh-presumptive-target']",
@@ -238,29 +248,6 @@ export default function BoardView({ setBoardId }: Props) {
               "background-fit": "contain",
               "background-color": "red",
               opacity: 0,
-            },
-          },
-          {
-            selector: "edge",
-            style: {
-              color: "white",
-              "text-outline-color": "black",
-              "text-outline-width": "2px",
-              "target-arrow-shape": "triangle-backcurve",
-              "line-dash-pattern": [5, 10],
-              "control-point-distances": "-300 20 -20 45 -100 40",
-              "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",
-            },
-          },
-          {
-            selector: ".eh-ghost-edge",
-            style: {
-              "target-arrow-shape": "triangle-backcurve",
-              "target-arrow-color": "white",
-              "line-color": "white",
-              "line-style": "solid",
-              "line-dash-pattern": [5, 10],
-              "curve-style": "straight",
             },
           },
         ]}
