@@ -1,15 +1,18 @@
 import { ContextMenu } from "primereact/contextmenu";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
+import cytoscape from "cytoscape";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { CytoscapeNode, nodeUpdateDialog } from "../../custom-types";
+import edgehandles from "cytoscape-edgehandles";
 import {
   useCreateNode,
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
 import NodeUpdateDialog from "./NodeUpdateDialog";
+import { edgehandlesSettings } from "../../utils/utils";
 type Props = {
   setBoardId: (boardId: string) => void;
 };
@@ -19,10 +22,12 @@ export default function BoardView({ setBoardId }: Props) {
   const [nodes, setNodes] = useState<CytoscapeNode[]>([]);
   const cyRef = useRef() as any;
   const cm = useRef() as any;
+  const firstRender = useRef(true) as any;
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
   });
+
   const [nodeUpdateDialog, setNodeUpdateDialog] = useState<nodeUpdateDialog>({
     id: "",
     label: "",
@@ -36,6 +41,7 @@ export default function BoardView({ setBoardId }: Props) {
   });
   const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
+
   useEffect(() => {
     if (board) {
       if (board.nodes.length > 0) {
@@ -65,7 +71,14 @@ export default function BoardView({ setBoardId }: Props) {
     }
   }, [board]);
   useEffect(() => {
+    // Ensure plugin is only enabled once (on the first render)
+    if (firstRender.current) {
+      firstRender.current = false;
+      cytoscape.use(edgehandles);
+    }
+
     if (cyRef.current) {
+      cyRef.current.edgehandles(edgehandlesSettings);
       cyRef.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
         if (evt.target === cyRef.current) {
@@ -96,6 +109,7 @@ export default function BoardView({ setBoardId }: Props) {
           y: target.position.y,
         });
       });
+      cyRef.current.edgehandles().enableDrawMode();
     }
   }, [cyRef]);
 
@@ -146,23 +160,87 @@ export default function BoardView({ setBoardId }: Props) {
         maxZoom={5}
         className="Lato Merriweather"
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
-        cy={(cy: any) => (cyRef.current = cy)}
+        cy={(cy: any) => {
+          cyRef.current = cy;
+          // cy.edgehandles(edgehandlesSettings);
+        }}
         id="cy"
         wheelSensitivity={0.25}
         stylesheet={[
           {
-            selector: "node",
+            selector: "node[class != 'eh-presumptive-target']",
             style: {
               shape: "data(type)",
               width: "data(width)",
               height: "data(height)",
               label: "data(label)",
               fontFamily: "Lato",
-              fontSize: "data(fontSize)",
+              // fontSize: "data(fontSize)",
               backgroundColor: "data(backgroundColor)",
               backgroundImage: "data(backgroundImage)",
               backgroundFit: "cover",
               textValign: "top",
+            },
+          },
+          {
+            selector: "node[class = '.eh-presumptive-target']",
+            style: {
+              shape: "rectangle",
+              width: "50rem",
+              height: "50rem",
+              "font-size": "20rem",
+              label: "TARGET",
+              color: "white",
+              "text-outline-color": "black",
+              "text-outline-width": "2px",
+              "background-image": "a",
+              "background-opacity": "1",
+              "background-image-opacity": "0",
+              "background-fit": "cover",
+              "background-clip": "node",
+              "background-color": "black",
+              "overlay-color": "lightblue",
+              "overlay-opacity": "0",
+            },
+          },
+          {
+            selector: ".eh-ghost-node",
+            style: {
+              shape: "square",
+              width: "50",
+              height: "50",
+
+              label: "New Edge",
+              color: "white",
+              "text-outline-color": "black",
+              "text-outline-width": "2px",
+              "background-image": "a",
+              "background-fit": "contain",
+              "background-color": "red",
+              opacity: 0,
+            },
+          },
+          {
+            selector: "edge",
+            style: {
+              color: "white",
+              "text-outline-color": "black",
+              "text-outline-width": "2px",
+              "target-arrow-shape": "triangle-backcurve",
+              "line-dash-pattern": [5, 10],
+              "control-point-distances": "-300 20 -20 45 -100 40",
+              "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",
+            },
+          },
+          {
+            selector: ".eh-ghost-edge",
+            style: {
+              "target-arrow-shape": "triangle-backcurve",
+              "target-arrow-color": "white",
+              "line-color": "white",
+              "line-style": "solid",
+              "line-dash-pattern": [5, 10],
+              "curve-style": "straight",
             },
           },
         ]}
