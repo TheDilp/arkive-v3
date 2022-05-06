@@ -22,8 +22,7 @@ import {
 } from "../../utils/customHooks";
 import { cytoscapeStylesheet, edgehandlesSettings } from "../../utils/utils";
 import NodeUpdateDialog from "./NodeUpdateDialog";
-import cytoscape from "cytoscape";
-import edgehandles from "cytoscape-edgehandles";
+
 type Props = {
   setBoardId: (boardId: string) => void;
 };
@@ -34,6 +33,7 @@ export default function BoardView({ setBoardId }: Props) {
     []
   );
   const cyRef = useRef() as any;
+  const ehRef = useRef() as any;
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number }>({
@@ -144,7 +144,16 @@ export default function BoardView({ setBoardId }: Props) {
           y: target.position.y,
         });
       });
+    }
+  }, [cyRef, board_id]);
+  useEffect(() => {
+    if (board_id) setBoardId(board_id);
+    // if (cyRef.current) cyRef.current.mount();
+    return () => cyRef.current.removeAllListeners();
+  }, [board_id]);
 
+  useEffect(() => {
+    if (elements.length > 0) {
       cyRef.current.on(
         "ehcomplete",
         (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
@@ -154,34 +163,18 @@ export default function BoardView({ setBoardId }: Props) {
           // Check due to weird edgehandles behavior when toggling drawmode
           // When drawmode is turned on and then off and then back on
           // It can add an edges to a node that doesn't exist
-          // This checls if the source and target node exist so it doesn't lead to errors
-          if (
-            elements.some((el) => el.data.id === sourceData.id) &&
-            elements.some((el) => el.data.id === targetData.id)
-          ) {
-            makeEdgeCallback(sourceData.id, targetData.id);
-          }
+
+          makeEdgeCallback(sourceData.id, targetData.id);
         }
       );
     }
-  }, [cyRef, board_id]);
-  useEffect(() => {
-    if (board_id) setBoardId(board_id);
-    // if (cyRef.current) cyRef.current.mount();
-    return () => cyRef.current.removeAllListeners();
-  }, [board_id]);
+    return () => cyRef.current.removeListener("ehcomplete");
+  }, [elements]);
 
   useLayoutEffect(() => {
     if (firstRender.current) {
-      cytoscape.use(edgehandles);
       firstRender.current = false;
     }
-
-    if (cyRef.current) {
-      cyRef.current.edgehandles(edgehandlesSettings);
-    }
-
-    return () => {};
   }, []);
 
   return (
@@ -214,14 +207,16 @@ export default function BoardView({ setBoardId }: Props) {
             label: "Draw Mode On",
             icon: "pi pi-fw pi-pencil",
             command: () => {
-              cyRef.current.edgehandles().enableDrawMode();
+              ehRef.current.enable();
+              ehRef.current.enableDrawMode();
             },
           },
           {
-            label: "Draw Mode On",
+            label: "Draw Mode Off",
             icon: "pi pi-fw pi-pencil",
             command: () => {
-              cyRef.current.edgehandles().disableDrawMode();
+              ehRef.current.disable();
+              ehRef.current.disableDrawMode();
               cyRef.current.autoungrabify(false);
               cyRef.current.autounselectify(false);
               cyRef.current.autolock(false);
@@ -245,6 +240,7 @@ export default function BoardView({ setBoardId }: Props) {
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
         cy={(cy: any) => {
           cyRef.current = cy;
+          ehRef.current = cy.edgehandles(edgehandlesSettings);
         }}
         id="cy"
         stylesheet={cytoscapeStylesheet}

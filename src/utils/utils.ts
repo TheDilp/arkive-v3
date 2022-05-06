@@ -80,7 +80,6 @@ export const boardNodeFontSizes = [
 
 export const edgehandlesSettings = {
   canConnect: function (sourceNode: any, targetNode: any) {
-    console.log(sourceNode);
     // whether an edge can be created between source and target
     return !sourceNode.same(targetNode); // e.g. disallow loops
   },
