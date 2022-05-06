@@ -13,11 +13,10 @@ export default function Project() {
   const { isLoading: isLoadingDocuments } = useGetDocuments(
     project_id as string
   );
-  const { isLoading: isLoadingMaps } = useGetMaps(project_id as string);
+  // const { isLoading: isLoadingMaps } = useGetMaps(project_id as string);
   const { isLoading: isLoadingBoards } = useGetBoards(project_id as string);
 
-  if (isLoadingDocuments || isLoadingMaps || isLoadingBoards)
-    return <LoadingScreen />;
+  if (isLoadingDocuments || isLoadingBoards) return <LoadingScreen />;
 
   return (
     <>

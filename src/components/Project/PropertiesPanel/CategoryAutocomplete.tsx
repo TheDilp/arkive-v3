@@ -72,6 +72,7 @@ export default function CategoryAutocomplete({
 
   return (
     <AutoComplete
+      inputClassName="Lato"
       value={currentDoc.categories}
       suggestions={filteredCategories}
       placeholder={

@@ -47,6 +47,11 @@ body {
     text-align: center !important;
 }
 
+.p-autocomplete-token-label {
+    font-family: 'Lato', 'Times New Roman', Times, serif;
+
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */

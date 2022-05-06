@@ -1,17 +1,22 @@
+import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { Document } from "../../../custom-types";
 import {
   useCreateTemplate,
   useGetDocuments,
+  useGetMaps,
   useGetProjectData,
   useGetTags,
 } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
+import LoadingScreen from "../../Util/LoadingScreen";
 import CategoryAutocomplete from "./CategoryAutocomplete";
+import LinkedItems from "./LinkedItems";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
   const [currentDoc, setCurrentDoc] = useState<Document | null>();
@@ -36,7 +41,7 @@ export default function PropertiesPanel() {
 
   return (
     <div
-      className="w-2 surface-50 text-white flex flex-wrap"
+      className="w-2 surface-50 text-white flex flex-wrap align-items-start align-content-start Lato"
       style={{
         height: "96.4vh",
       }}
@@ -54,7 +59,10 @@ export default function PropertiesPanel() {
           />
         </div>
       )}
-      <div className="Lato w-full align-self-end">
+      <div className="w-full">
+        <LinkedItems />
+      </div>
+      <div className="w-full">
         <hr className="border-gray-500" />
         <div className="flex justify-content-center py-2">
           <Button
