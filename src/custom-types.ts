@@ -53,6 +53,7 @@ export type Board = {
   folder: boolean;
   project_id: string;
   nodes: BoardNode[];
+  edges: BoardEdge[];
 };
 export type BoardNode = {
   id: string;
@@ -64,11 +65,19 @@ export type BoardNode = {
   type: string;
   fontSize: number;
   backgroundColor: string;
-  source?: string;
-  target?: string;
   document?: Pick<Document, "id" | "image">;
   board_id: string;
 };
+
+export type BoardEdge = {
+  id: string;
+  label?: string;
+  source: string;
+  target: string;
+  curveStyle: string;
+  board_id: string;
+};
+
 export type CytoscapeNode = {
   data: {
     id: string;

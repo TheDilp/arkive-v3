@@ -9,6 +9,7 @@ import {
   BoardNode,
   Profile,
   Project,
+  BoardEdge,
 } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -375,6 +376,29 @@ export const createNode = async ({
     }
   }
 };
+export const createEdge = async ({
+  id,
+  source,
+  target,
+  board_id,
+  curveStyle,
+}: Omit<BoardEdge, "label">) => {
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase.from("edges").insert({
+      id,
+      source,
+      target,
+      board_id,
+      curveStyle,
+    });
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your edge.");
+      throw new Error(error.message);
+    }
+  }
+};
 
 // UPDATE
 export const updateDocument = async ({
@@ -553,8 +577,6 @@ export const updateNode = async ({
   x,
   y,
   type,
-  source,
-  target,
   width,
   height,
   fontSize,
@@ -568,8 +590,6 @@ export const updateNode = async ({
   width?: number;
   height?: number;
   type?: string;
-  source?: string;
-  target?: string;
   fontSize?: number;
   backgroundColor?: string;
   doc_id?: string;
@@ -584,8 +604,6 @@ export const updateNode = async ({
         x,
         y,
         type,
-        source,
-        target,
         width,
         height,
         fontSize,

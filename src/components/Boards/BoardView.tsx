@@ -12,6 +12,7 @@ import {
 import edgehandles from "cytoscape-edgehandles";
 import {
   useCreateNode,
+  useCreateEdge,
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
@@ -45,7 +46,7 @@ export default function BoardView({ setBoardId }: Props) {
   });
   const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
-
+  const createEdgeMutation = useCreateEdge(project_id as string);
   useEffect(() => {
     if (board) {
       if (board.nodes.length > 0) {
@@ -67,17 +68,7 @@ export default function BoardView({ setBoardId }: Props) {
           },
           position: { x: node.x, y: node.y },
         }));
-        let temp_edges: CytoscapeEdge[] = board.nodes
-          .filter((node) => node.target)
-          .map((node) => {
-            return { data: { source: node.id, target: node.target as string } };
-          });
-        const elements = CytoscapeComponent.normalizeElements({
-          nodes: temp_nodes,
-          edges: temp_edges,
-        });
-        console.log(elements);
-        setNodes(elements);
+        setNodes(temp_nodes);
       } else {
         setNodes([]);
       }
@@ -128,10 +119,12 @@ export default function BoardView({ setBoardId }: Props) {
         (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
           let sourceData = sourceNode._private.data;
           let targetData = targetNode._private.data;
-          updateNodeMutation.mutate({
+          createEdgeMutation.mutate({
             id: sourceData.id,
             board_id: board_id as string,
+            source: sourceData.id,
             target: targetData.id,
+            curveStyle: "straight",
           });
         }
       );
