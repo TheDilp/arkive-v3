@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Menubar } from "primereact/menubar";
 import { Tooltip } from "primereact/tooltip";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { logout } from "../../utils/supabaseUtils";
 import NavbarTitle from "./NavbarTitle";
@@ -87,6 +88,32 @@ export default function Navbar() {
       </div>
     );
   };
+
+  useEffect(() => {
+    document.addEventListener("keydown", function (e) {
+      if (e.ctrlKey && project_id) {
+        if (e.key === "1") {
+          e.preventDefault();
+          e.stopPropagation();
+          navigate("/");
+        } else if (e.key === "2") {
+          e.preventDefault();
+          e.stopPropagation();
+          navigate("./wiki");
+        } else if (e.key === "3") {
+          e.preventDefault();
+          e.stopPropagation();
+          navigate("./maps");
+        } else if (e.key === "4") {
+          e.preventDefault();
+          e.stopPropagation();
+          navigate("./boards");
+        }
+      }
+    });
+    return () => document.removeEventListener("keydown", function (e) {});
+  }, []);
+
   return (
     <Menubar
       start={start}
