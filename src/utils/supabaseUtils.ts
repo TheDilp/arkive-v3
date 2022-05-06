@@ -111,11 +111,11 @@ export const getMaps = async (project_id: string) => {
 export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<Board>("boards")
-    .select("*, nodes(*, document:documents(id, image))")
+    .select("*, nodes(*, document:documents(id, image)), edges(*)")
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {
-    toastError("There was an error getting your maps.");
+    toastError("There was an error getting your boards.");
     throw new Error(error.message);
   }
 };
@@ -169,7 +169,6 @@ export const createDocument = async ({
         icon,
         folder,
         categories,
-        user_id: user.id,
         // @ts-ignore
         parent,
       });
@@ -231,7 +230,6 @@ export const createTemplate = async ({
       categories,
       folder,
       template: true,
-      user_id: user.id,
     });
     if (data) return data;
     if (error) {
@@ -264,7 +262,6 @@ export const createMap = async ({
       map_image,
       parent,
       folder,
-      user_id: user.id,
     });
     if (data) return data;
     if (error) {

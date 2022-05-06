@@ -2,14 +2,12 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { auth, register } from "../../utils/supabaseUtils";
+import { auth, register as accountRegister } from "../../utils/supabaseUtils";
 import images from "./authImages";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { RegisterInputs } from "../../custom-types";
 import { emailRegex, passwordRegex } from "../../utils/utils";
 export default function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [index, set] = useState(0);
   useEffect(() => {
     let timeout = setTimeout(() => {
@@ -24,11 +22,10 @@ export default function Register() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<RegisterInputs>();
-  const onSubmit: SubmitHandler<RegisterInputs> = (data) => console.log(data);
-
+  const onSubmit: SubmitHandler<RegisterInputs> = (data) =>
+    accountRegister(data.email, data.password);
   return auth.user() ? (
     <Navigate to="/" />
   ) : (
@@ -111,7 +108,7 @@ export default function Register() {
               {...register("password", {
                 required: true,
                 minLength: 8,
-                pattern: passwordRegex,
+                // pattern: passwordRegex,
               })}
             />
             {errors.password?.type === "required" && (
