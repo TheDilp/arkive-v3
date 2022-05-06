@@ -1,5 +1,11 @@
 import { ContextMenu } from "primereact/contextmenu";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -14,8 +20,10 @@ import {
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
-import { edgehandlesSettings } from "../../utils/utils";
+import { cytoscapeStylesheet, edgehandlesSettings } from "../../utils/utils";
 import NodeUpdateDialog from "./NodeUpdateDialog";
+import cytoscape from "cytoscape";
+import edgehandles from "cytoscape-edgehandles";
 type Props = {
   setBoardId: (boardId: string) => void;
 };
@@ -27,6 +35,7 @@ export default function BoardView({ setBoardId }: Props) {
   );
   const cyRef = useRef() as any;
   const cm = useRef() as any;
+  const firstRender = useRef(true) as any;
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
@@ -73,6 +82,7 @@ export default function BoardView({ setBoardId }: Props) {
       if (board.edges.length > 0) {
         temp_edges = board.edges.map((edge) => ({
           data: {
+            id: edge.id,
             source: edge.source,
             target: edge.target,
             curveStyle: edge.curveStyle,
@@ -104,7 +114,6 @@ export default function BoardView({ setBoardId }: Props) {
 
   useEffect(() => {
     if (cyRef.current) {
-      cyRef.current.edgehandles(edgehandlesSettings);
       cyRef.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
         if (evt.target === cyRef.current) {
@@ -141,22 +150,42 @@ export default function BoardView({ setBoardId }: Props) {
         (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
           let sourceData = sourceNode._private.data;
           let targetData = targetNode._private.data;
-          makeEdgeCallback(sourceData.id, targetData.id);
+
+          // Check due to weird edgehandles behavior when toggling drawmode
+          // When drawmode is turned on and then off and then back on
+          // It can add an edges to a node that doesn't exist
+          // This checls if the source and target node exist so it doesn't lead to errors
+          if (
+            elements.some((el) => el.data.id === sourceData.id) &&
+            elements.some((el) => el.data.id === targetData.id)
+          ) {
+            makeEdgeCallback(sourceData.id, targetData.id);
+          }
         }
       );
-
-      cyRef.current.edgehandles().enableDrawMode();
     }
   }, [cyRef, board_id]);
-
   useEffect(() => {
     if (board_id) setBoardId(board_id);
     // if (cyRef.current) cyRef.current.mount();
     return () => cyRef.current.removeAllListeners();
   }, [board_id]);
 
+  useLayoutEffect(() => {
+    if (firstRender.current) {
+      cytoscape.use(edgehandles);
+      firstRender.current = false;
+    }
+
+    if (cyRef.current) {
+      cyRef.current.edgehandles(edgehandlesSettings);
+    }
+
+    return () => {};
+  }, []);
+
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-full">
       <ContextMenu
         model={[
           {
@@ -181,6 +210,23 @@ export default function BoardView({ setBoardId }: Props) {
             label: "Fit view to nodes",
             command: () => cyRef.current.fit(),
           },
+          {
+            label: "Draw Mode On",
+            icon: "pi pi-fw pi-pencil",
+            command: () => {
+              cyRef.current.edgehandles().enableDrawMode();
+            },
+          },
+          {
+            label: "Draw Mode On",
+            icon: "pi pi-fw pi-pencil",
+            command: () => {
+              cyRef.current.edgehandles().disableDrawMode();
+              cyRef.current.autoungrabify(false);
+              cyRef.current.autounselectify(false);
+              cyRef.current.autolock(false);
+            },
+          },
         ]}
         ref={cm}
       ></ContextMenu>
@@ -201,77 +247,7 @@ export default function BoardView({ setBoardId }: Props) {
           cyRef.current = cy;
         }}
         id="cy"
-        stylesheet={[
-          {
-            selector: "node[class != 'eh-presumptive-target']",
-            style: {
-              shape: "data(type)",
-              width: "data(width)",
-              height: "data(height)",
-              label: "data(label)",
-              fontFamily: "Lato",
-              // fontSize: "data(fontSize)",
-              backgroundColor: "data(backgroundColor)",
-              backgroundImage: "data(backgroundImage)",
-              backgroundFit: "cover",
-              textValign: "top",
-            },
-          },
-          {
-            selector: "node[class = '.eh-presumptive-target']",
-            style: {
-              shape: "rectangle",
-              width: "50rem",
-              height: "50rem",
-              "font-size": "20rem",
-              label: "TARGET",
-              color: "white",
-              "text-outline-color": "black",
-              "text-outline-width": "2px",
-              "background-image": "a",
-              "background-opacity": "1",
-              "background-image-opacity": "0",
-              "background-fit": "cover",
-              "background-clip": "node",
-              "background-color": "black",
-              "overlay-color": "lightblue",
-              "overlay-opacity": "0",
-            },
-          },
-          {
-            selector: "edge",
-            style: {
-              // label: "data(label)",
-              "text-outline-color": "black",
-              "text-outline-width": "2px",
-              "target-arrow-shape": "triangle-backcurve",
-              "target-arrow-color": "data(lineColor)",
-              "line-color": "data(lineColor)",
-              "line-style": "data(lineStyle)",
-              "line-dash-pattern": [5, 10],
-              "curve-style": "data(curveStyle)",
-              "control-point-distances": "-300 20 -20 45 -100 40",
-              "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",
-            },
-          },
-          {
-            selector: ".eh-ghost-node",
-            style: {
-              shape: "square",
-              width: "50",
-              height: "50",
-
-              label: "New Edge",
-              color: "white",
-              "text-outline-color": "black",
-              "text-outline-width": "2px",
-              "background-image": "a",
-              "background-fit": "contain",
-              "background-color": "red",
-              opacity: 0,
-            },
-          },
-        ]}
+        stylesheet={cytoscapeStylesheet}
       />
     </div>
   );

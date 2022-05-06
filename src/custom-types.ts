@@ -81,24 +81,28 @@ export type BoardEdge = {
 };
 
 export type CytoscapeNode = {
-  data: {
-    id: string;
-    label?: string;
-    type: string;
-    width: number;
-    height: number;
-    fontSize: number;
-    backgroundColor: string;
-  };
-  position: {
-    x: number;
-    y: number;
-  };
+  data: Pick<
+    BoardNode,
+    | "id"
+    | "label"
+    | "width"
+    | "height"
+    | "type"
+    | "fontSize"
+    | "backgroundColor"
+  >;
+  position: Pick<BoardNode, "x" | "y">;
 };
 export type CytoscapeEdge = {
   data: Pick<
     BoardEdge,
-    "label" | "source" | "target" | "curveStyle" | "lineStyle" | "lineColor"
+    | "id"
+    | "label"
+    | "source"
+    | "target"
+    | "curveStyle"
+    | "lineStyle"
+    | "lineColor"
   >;
 };
 export type docItemDisplayDialog = {
