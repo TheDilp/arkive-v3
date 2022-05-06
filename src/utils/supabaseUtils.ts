@@ -382,6 +382,8 @@ export const createEdge = async ({
   target,
   board_id,
   curveStyle,
+  lineStyle,
+  lineColor,
 }: Omit<BoardEdge, "label">) => {
   let user = auth.user();
   if (user) {
@@ -391,6 +393,8 @@ export const createEdge = async ({
       target,
       board_id,
       curveStyle,
+      lineStyle,
+      lineColor,
     });
     if (data) return data;
     if (error) {

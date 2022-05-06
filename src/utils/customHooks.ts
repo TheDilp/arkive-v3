@@ -1062,6 +1062,8 @@ export function useCreateEdge(project_id: string) {
       target: string;
       board_id: string;
       curveStyle: string;
+      lineStyle: string;
+      lineColor: string;
     }) => {
       const newEdge = await createEdge({
         ...vars,

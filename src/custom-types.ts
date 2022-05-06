@@ -71,11 +71,13 @@ export type BoardNode = {
 
 export type BoardEdge = {
   id: string;
+  board_id: string;
   label?: string;
   source: string;
   target: string;
   curveStyle: string;
-  board_id: string;
+  lineStyle: string;
+  lineColor: string;
 };
 
 export type CytoscapeNode = {
@@ -94,10 +96,10 @@ export type CytoscapeNode = {
   };
 };
 export type CytoscapeEdge = {
-  data: {
-    source: string;
-    target: string;
-  };
+  data: Pick<
+    BoardEdge,
+    "label" | "source" | "target" | "curveStyle" | "lineStyle" | "lineColor"
+  >;
 };
 export type docItemDisplayDialog = {
   id: string;

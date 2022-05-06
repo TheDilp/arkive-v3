@@ -75,6 +75,9 @@ export default function BoardView({ setBoardId }: Props) {
           data: {
             source: edge.source,
             target: edge.target,
+            curveStyle: edge.curveStyle,
+            lineStyle: edge.lineStyle,
+            lineColor: edge.lineColor,
           },
         }));
       }
@@ -92,6 +95,8 @@ export default function BoardView({ setBoardId }: Props) {
         source,
         target,
         curveStyle: "straight",
+        lineStyle: "solid",
+        lineColor: "#1e1e1e",
       });
     },
     [board_id]
@@ -231,6 +236,22 @@ export default function BoardView({ setBoardId }: Props) {
               "background-color": "black",
               "overlay-color": "lightblue",
               "overlay-opacity": "0",
+            },
+          },
+          {
+            selector: "edge",
+            style: {
+              // label: "data(label)",
+              "text-outline-color": "black",
+              "text-outline-width": "2px",
+              "target-arrow-shape": "triangle-backcurve",
+              "target-arrow-color": "data(lineColor)",
+              "line-color": "data(lineColor)",
+              "line-style": "data(lineStyle)",
+              "line-dash-pattern": [5, 10],
+              "curve-style": "data(curveStyle)",
+              "control-point-distances": "-300 20 -20 45 -100 40",
+              "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",
             },
           },
           {
