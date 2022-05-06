@@ -84,6 +84,12 @@ export type CytoscapeNode = {
     y: number;
   };
 };
+export type CytoscapeEdge = {
+  data: {
+    source: string;
+    target: string;
+  };
+};
 export type docItemDisplayDialog = {
   id: string;
   title: string;

@@ -4,7 +4,11 @@ import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { CytoscapeNode, nodeUpdateDialog } from "../../custom-types";
+import {
+  CytoscapeEdge,
+  CytoscapeNode,
+  nodeUpdateDialog,
+} from "../../custom-types";
 import edgehandles from "cytoscape-edgehandles";
 import {
   useCreateNode,
@@ -63,8 +67,17 @@ export default function BoardView({ setBoardId }: Props) {
           },
           position: { x: node.x, y: node.y },
         }));
-
-        setNodes(temp_nodes);
+        let temp_edges: CytoscapeEdge[] = board.nodes
+          .filter((node) => node.target)
+          .map((node) => {
+            return { data: { source: node.id, target: node.target as string } };
+          });
+        const elements = CytoscapeComponent.normalizeElements({
+          nodes: temp_nodes,
+          edges: temp_edges,
+        });
+        console.log(elements);
+        setNodes(elements);
       } else {
         setNodes([]);
       }
@@ -109,6 +122,20 @@ export default function BoardView({ setBoardId }: Props) {
           y: target.position.y,
         });
       });
+
+      cyRef.current.on(
+        "ehcomplete",
+        (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
+          let sourceData = sourceNode._private.data;
+          let targetData = targetNode._private.data;
+          updateNodeMutation.mutate({
+            id: sourceData.id,
+            board_id: board_id as string,
+            target: targetData.id,
+          });
+        }
+      );
+
       cyRef.current.edgehandles().enableDrawMode();
     }
   }, [cyRef]);
