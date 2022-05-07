@@ -281,7 +281,6 @@ export default function BubbleMenuBar({
       ]}
       end={() => (saving ? <ProgressSpinner className="w-2rem h-2rem" /> : "")}
       className="p-0 Lato absolute"
-      style={{ zIndex: 99999 }}
     />
   );
 }

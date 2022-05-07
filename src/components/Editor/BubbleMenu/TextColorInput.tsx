@@ -42,11 +42,14 @@ export default function TextColorInput({ colorInput, setColorInput }: Props) {
 
   return (
     <DelayAutoFocusInput
-      placeholder="Enter link..."
+      placeholder="Enter color..."
       value={color}
       style={{
+        zIndex: 999999999,
+        top: "50px",
         float: "right",
         display: !colorInput ? "none" : "",
+        position: "relative",
       }}
     />
   );

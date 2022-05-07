@@ -1,9 +1,7 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { ImageOverlay, useMapEvents } from "react-leaflet";
-import { useParams } from "react-router-dom";
-import { Map, MapMarker } from "../../../custom-types";
+import { Map } from "../../../custom-types";
 import DraggableMarker from "./MapMarker/DraggableMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
 import UpdateMarkerDialog from "./MapMarker/UpdateMarkerDialog";

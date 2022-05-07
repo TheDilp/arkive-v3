@@ -167,7 +167,7 @@ export type CreateDocumentInputs = {
   parent: string;
   icon: string;
   folder: boolean;
-  template: string;
+  template: boolean;
 };
 
 export type CreateMapInputs = {

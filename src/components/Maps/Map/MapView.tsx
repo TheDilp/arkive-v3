@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import L, { LatLngBoundsExpression } from "leaflet";
+import L, { LatLngBoundsExpression, map } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
@@ -60,7 +60,7 @@ export default function MapView({
         };
       }
     }
-  }, [map_id, mapData?.id]);
+  }, [map_id, mapData?.id, mapData?.map_image]);
 
   if (loading)
     return (

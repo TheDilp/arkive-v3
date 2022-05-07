@@ -121,7 +121,10 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                     optionValue="id"
                     value={field.value}
                     onChange={(e) => field.onChange(e.value)}
-                    options={documents?.filter((doc) => doc.folder) || []}
+                    options={
+                      documents?.filter((doc) => !doc.folder && doc.template) ||
+                      []
+                    }
                   />
                 )}
               />
