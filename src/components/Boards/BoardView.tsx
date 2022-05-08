@@ -138,9 +138,6 @@ export default function BoardView({ setBoardId }: Props) {
           }
         }
       });
-      cyRef.current.on("click", "edge", function (evt: any) {
-        console.log(evt);
-      });
       cyRef.current.on("dbltap", "node", function (evt: any) {
         let target = evt.target._private;
         setNodeUpdateDialog({

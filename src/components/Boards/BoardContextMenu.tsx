@@ -5,6 +5,7 @@ import { BoardContextMenuProps } from "../../custom-types";
 import {
   useCreateNode,
   useDeleteEdge,
+  useDeleteNode,
   useUpdateNode,
 } from "../../utils/customHooks";
 import { deleteEdge } from "../../utils/supabaseUtils";
@@ -27,6 +28,7 @@ export default function BoardContextMenu({
   const { project_id, board_id } = useParams();
   const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
+  const deleteNodeMutation = useDeleteNode(project_id as string);
 
   const deleteEdgeMutation = useDeleteEdge(project_id as string);
   const boardItems = [
@@ -89,12 +91,23 @@ export default function BoardContextMenu({
     {
       label: "Delete Node",
       command: () => {
-        contextMenu.selected.outgoers("edge").forEach((el) =>
+        contextMenu.selected.outgoers("edge").forEach((el: any) =>
           deleteEdgeMutation.mutate({
             id: el._private.data.id,
             board_id: board_id as string,
           })
         );
+        contextMenu.selected.incomers("edge").forEach((el: any) =>
+          deleteEdgeMutation.mutate({
+            id: el._private.data.id,
+            board_id: board_id as string,
+          })
+        );
+        cyRef.current.remove(contextMenu.selected);
+        deleteNodeMutation.mutate({
+          id: contextMenu.selected._private.data.id,
+          board_id: board_id as string,
+        });
       },
     },
   ];
