@@ -8,6 +8,8 @@ import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
 import { useParams } from "react-router-dom";
 import { boardNodeFontSizes, boardNodeShapes } from "../../utils/utils";
 import { Slider } from "primereact/slider";
+import { ColorPicker } from "primereact/colorpicker";
+
 type Props = {
   nodeUpdateDialog: nodeUpdateDialogProps;
   setNodeUpdateDialog: (nodeUpdateDialog: nodeUpdateDialogProps) => void;
@@ -51,6 +53,7 @@ export default function NodeUpdateDialog({
       id: nodeUpdateDialog.id,
       board_id: board_id as string,
       ...data,
+      backgroundColor: `#${data.backgroundColor}`,
     });
   };
   const documents = useGetDocuments(project_id as string);
@@ -147,6 +150,25 @@ export default function NodeUpdateDialog({
                 value={value}
                 onChange={(e) => onChange(e.value)}
               />
+            )}
+          />
+        </div>
+        <div className="my-3">
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            name="backgroundColor"
+            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+              <div className="flex align-items-center flex-row-reverse">
+                <InputText
+                  value={value}
+                  className="w-full ml-2"
+                  onChange={onChange}
+                />
+                <ColorPicker value={value} onChange={onChange} />
+              </div>
             )}
           />
         </div>

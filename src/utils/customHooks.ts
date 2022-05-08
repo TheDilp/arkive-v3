@@ -393,7 +393,6 @@ export function useGetTemplates(project_id: string) {
     return [];
   }
 }
-
 // Custom hook to get maps
 export function useGetMaps(project_id: string) {
   const { data, isLoading } = useQuery(
@@ -405,7 +404,6 @@ export function useGetMaps(project_id: string) {
   );
   return { data, isLoading };
 }
-
 // Custom hook to create a map
 export function useCreateMap() {
   const queryClient = useQueryClient();
@@ -767,7 +765,6 @@ export function useDeleteMapMarker() {
     }
   );
 }
-
 // Custom hook for getting boards
 export function useGetBoards(project_id: string) {
   const { data, isLoading } = useQuery(
@@ -888,7 +885,6 @@ export function useUpdateBoard(project_id: string) {
   );
 }
 // Custom hook for deleting a board
-
 export function useDeleteBoard(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
@@ -919,7 +915,6 @@ export function useDeleteBoard(project_id: string) {
     }
   );
 }
-
 // Custom hook for creating a node
 export function useCreateNode(project_id: string) {
   const queryClient = useQueryClient();
@@ -995,6 +990,7 @@ export function useUpdateNode(project_id: string) {
       y?: number;
       width?: number;
       height?: number;
+      backgroundColor?: string;
       type?: string;
       doc_id?: string;
     }) => {
@@ -1058,7 +1054,6 @@ export function useUpdateNode(project_id: string) {
     }
   );
 }
-
 // Custom hook for deleting a node
 export function useDeleteNode(project_id: string) {
   const queryClient = useQueryClient();
@@ -1103,9 +1098,7 @@ export function useDeleteNode(project_id: string) {
     }
   );
 }
-
 // Custom hook for creating an edge
-
 export function useCreateEdge(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(

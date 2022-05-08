@@ -1,11 +1,4 @@
-import { Button } from "primereact/button";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -109,7 +102,7 @@ export default function BoardView({ setBoardId }: Props) {
         target,
         curveStyle: "straight",
         lineStyle: "solid",
-        lineColor: "#1e1e1e",
+        lineColor: "#595959",
       });
     },
     [board_id]
@@ -164,7 +157,6 @@ export default function BoardView({ setBoardId }: Props) {
   }, [cyRef, board_id]);
   useEffect(() => {
     if (board_id) setBoardId(board_id);
-    // if (cyRef.current) cyRef.current.mount();
     return () => cyRef.current.removeAllListeners();
   }, [board_id]);
 
@@ -173,7 +165,6 @@ export default function BoardView({ setBoardId }: Props) {
       cyRef.current.on(
         "ehcomplete",
         (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
-          console.log("TEST");
           let sourceData = sourceNode._private.data;
           let targetData = targetNode._private.data;
 
@@ -202,7 +193,11 @@ export default function BoardView({ setBoardId }: Props) {
         } p-button-outlined`}
       >
         <span>Draw mode: </span>
-        {drawMode ? <span className="text-green-400 ml-2"> ON</span> : "OFF"}
+        {drawMode ? (
+          <span className="text-green-400 ml-2"> ON</span>
+        ) : (
+          <span className="ml-2"> OFF</span>
+        )}
       </div>
       <BoardContextMenu
         cm={cm}
