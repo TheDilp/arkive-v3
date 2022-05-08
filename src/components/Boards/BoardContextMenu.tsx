@@ -9,6 +9,7 @@ type Props = {
   cyRef: any;
   cm: any;
   contextMenu: BoardContextMenuProps;
+  setDrawMode: (drawMode: boolean) => void;
 };
 
 export default function BoardContextMenu({
@@ -16,6 +17,7 @@ export default function BoardContextMenu({
   cyRef,
   cm,
   contextMenu,
+  setDrawMode,
 }: Props) {
   const { project_id, board_id } = useParams();
   const createNodeMutation = useCreateNode(project_id as string);
@@ -50,6 +52,7 @@ export default function BoardContextMenu({
       command: () => {
         ehRef.current.enable();
         ehRef.current.enableDrawMode();
+        setDrawMode(true);
       },
     },
     {
@@ -64,6 +67,7 @@ export default function BoardContextMenu({
         cyRef.current.zoomingEnabled(true);
         cyRef.current.userZoomingEnabled(true);
         cyRef.current.panningEnabled(true);
+        setDrawMode(false);
       },
     },
   ];
@@ -79,28 +83,6 @@ export default function BoardContextMenu({
     {
       label: "Fit view to nodes",
       command: () => cyRef.current.fit(),
-    },
-    {
-      label: "Draw Mode On",
-      icon: "pi pi-fw pi-pencil",
-      command: () => {
-        ehRef.current.enable();
-        ehRef.current.enableDrawMode();
-      },
-    },
-    {
-      label: "Draw Mode Off",
-      icon: "pi pi-fw pi-pencil",
-      command: () => {
-        ehRef.current.disable();
-        ehRef.current.disableDrawMode();
-        cyRef.current.autoungrabify(false);
-        cyRef.current.autounselectify(false);
-        cyRef.current.autolock(false);
-        cyRef.current.zoomingEnabled(true);
-        cyRef.current.userZoomingEnabled(true);
-        cyRef.current.panningEnabled(true);
-      },
     },
   ];
   const edgeItems = [

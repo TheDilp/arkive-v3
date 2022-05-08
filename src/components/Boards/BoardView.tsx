@@ -1,3 +1,4 @@
+import { Button } from "primereact/button";
 import {
   useCallback,
   useEffect,
@@ -54,6 +55,7 @@ export default function BoardView({ setBoardId }: Props) {
     y: 0,
     type: "board",
   });
+  const [drawMode, setDrawMode] = useState(false);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
   useEffect(() => {
@@ -186,7 +188,7 @@ export default function BoardView({ setBoardId }: Props) {
     return () => cyRef.current.removeListener("ehcomplete");
   }, [elements]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
     }
@@ -194,11 +196,20 @@ export default function BoardView({ setBoardId }: Props) {
 
   return (
     <div className="w-full h-full">
+      <div
+        className={`text-white absolute Lato p-button ${
+          drawMode ? "border-green-500" : ""
+        } p-button-outlined`}
+      >
+        <span>Draw mode: </span>
+        {drawMode ? <span className="text-green-400 ml-2"> ON</span> : "OFF"}
+      </div>
       <BoardContextMenu
         cm={cm}
         ehRef={ehRef}
         cyRef={cyRef}
         contextMenu={contextMenu}
+        setDrawMode={setDrawMode}
       />
       {nodeUpdateDialog.show && (
         <NodeUpdateDialog
