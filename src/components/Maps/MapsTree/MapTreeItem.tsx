@@ -1,14 +1,14 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useNavigate } from "react-router-dom";
-import { Map, mapItemDisplayDialog } from "../../../custom-types";
+import { MapProps, mapItemDisplayDialogProps } from "../../../custom-types";
 type Props = {
   mapId: string;
-  node: NodeModel<Map>;
+  node: NodeModel<MapProps>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDisplayDialog: (displayDialog: mapItemDisplayDialog) => void;
+  setDisplayDialog: (displayDialog: mapItemDisplayDialogProps) => void;
   cm: any;
 };
 

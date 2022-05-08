@@ -13,7 +13,7 @@ import { Toolbar } from "primereact/toolbar";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { Document, iconSelect } from "../../../custom-types";
+import { DocumentProps, iconSelectProps } from "../../../custom-types";
 import {
   useCreateDocument,
   useGetDocuments,
@@ -33,10 +33,12 @@ export default function DocumentsSettingsTable() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [globalFilter, setGlobalFilter] = useState("");
-  const [selectedDocuments, setSelectedDocuments] = useState<Document[]>([]);
+  const [selectedDocuments, setSelectedDocuments] = useState<DocumentProps[]>(
+    []
+  );
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
-  const [iconSelect, setIconSelect] = useState<iconSelect>({
+  const [iconSelect, setIconSelect] = useState<iconSelectProps>({
     doc_id: "",
     icon: "",
     top: 0,
@@ -58,7 +60,7 @@ export default function DocumentsSettingsTable() {
   }, [documents]);
 
   if (!documents) return <LoadingScreen />;
-  const categoriesBodyTemplate = (rowData: Document) => {
+  const categoriesBodyTemplate = (rowData: DocumentProps) => {
     return (
       <div className="cursor-pointer">
         {rowData.categories?.map((cat, index) => (
@@ -87,7 +89,7 @@ export default function DocumentsSettingsTable() {
       </div>
     );
   };
-  const titleBodyTemplate = (rowData: Document) => {
+  const titleBodyTemplate = (rowData: DocumentProps) => {
     return (
       <div>
         {rowData.title} {rowData.template ? "[TEMPLATE]" : ""}
@@ -141,7 +143,7 @@ export default function DocumentsSettingsTable() {
     );
   };
 
-  const imageBodyTemplate = (rowData: Document) => {
+  const imageBodyTemplate = (rowData: DocumentProps) => {
     return (
       <div className="w-full h-auto cursor-pointer flex justify-content-center">
         {rowData.image && (
@@ -158,7 +160,7 @@ export default function DocumentsSettingsTable() {
       </div>
     );
   };
-  const folderBodyTemplate = (rowData: Document) => {
+  const folderBodyTemplate = (rowData: DocumentProps) => {
     return (
       <div className="relative flex justify-content-center">
         <Checkbox
@@ -173,7 +175,7 @@ export default function DocumentsSettingsTable() {
       </div>
     );
   };
-  const templateBodyTemplate = (rowData: Document) => {
+  const templateBodyTemplate = (rowData: DocumentProps) => {
     return (
       <div className="relative flex justify-content-center">
         <Checkbox
@@ -185,7 +187,7 @@ export default function DocumentsSettingsTable() {
       </div>
     );
   };
-  const actionsBodyTemplate = (rowData: Document) => {
+  const actionsBodyTemplate = (rowData: DocumentProps) => {
     return (
       <div className="">
         <Button
@@ -203,7 +205,7 @@ export default function DocumentsSettingsTable() {
                 deleteDocument(rowData.id).then(() => {
                   queryClient.setQueryData(
                     `${project_id}-documents`,
-                    (oldData: Document[] | undefined) => {
+                    (oldData: DocumentProps[] | undefined) => {
                       if (oldData) {
                         return oldData.filter((doc) => doc.id !== rowData.id);
                       } else {
@@ -226,7 +228,7 @@ export default function DocumentsSettingsTable() {
       </div>
     );
   };
-  const iconBodyTemplate = (rowData: Document) => {
+  const iconBodyTemplate = (rowData: DocumentProps) => {
     return (
       <Icon icon={rowData.icon} fontSize={30} className="cursor-pointer" />
     );
@@ -259,12 +261,12 @@ export default function DocumentsSettingsTable() {
               className: selectAll ? "deleteAllDocuments" : "",
               accept: () => {
                 let documentIdsForDeletion = selectedDocuments.map(
-                  (doc: Document) => doc.id
+                  (doc: DocumentProps) => doc.id
                 );
                 deleteManyDocuments(documentIdsForDeletion).then(() => {
                   queryClient.setQueryData(
                     `${project_id}-documents`,
-                    (oldData: Document[] | undefined) => {
+                    (oldData: DocumentProps[] | undefined) => {
                       if (oldData) {
                         return oldData.filter(
                           (doc) => !documentIdsForDeletion.includes(doc.id)

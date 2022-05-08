@@ -1,6 +1,6 @@
 import { useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
-import { Board, Document, Map } from "../../custom-types";
+import { BoardProps, DocumentProps, MapProps } from "../../custom-types";
 
 type Props = {
   node: any;
@@ -12,16 +12,16 @@ export default function MentionReactComponent({ node }: Props) {
   const queryClient = useQueryClient();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { project_id } = useParams();
-  const docs: Document[] | undefined = queryClient.getQueryData(
+  const docs: DocumentProps[] | undefined = queryClient.getQueryData(
     `${project_id}-documents`
   );
-  const maps: Map[] | undefined = queryClient.getQueryData<Map[]>(
+  const maps: MapProps[] | undefined = queryClient.getQueryData<MapProps[]>(
     `${project_id}-maps`
   );
-  const boards: Board[] | undefined = queryClient.getQueryData<Board[]>(
-    `${project_id}-boards`
-  );
-  let item: Document | Map | Board | undefined;
+  const boards: BoardProps[] | undefined = queryClient.getQueryData<
+    BoardProps[]
+  >(`${project_id}-boards`);
+  let item: DocumentProps | MapProps | BoardProps | undefined;
   if (node.attrs.name === "at") {
     item = docs ? docs.find((doc) => doc.id === node.attrs.id) : undefined;
   } else if (node.attrs.name === "hash") {

@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { nodeUpdateDialog } from "../../custom-types";
+import { nodeUpdateDialogProps } from "../../custom-types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
@@ -9,12 +9,12 @@ import { useParams } from "react-router-dom";
 import { boardNodeFontSizes, boardNodeShapes } from "../../utils/utils";
 import { Slider } from "primereact/slider";
 type Props = {
-  nodeUpdateDialog: nodeUpdateDialog;
-  setNodeUpdateDialog: (nodeUpdateDialog: nodeUpdateDialog) => void;
+  nodeUpdateDialog: nodeUpdateDialogProps;
+  setNodeUpdateDialog: (nodeUpdateDialog: nodeUpdateDialogProps) => void;
 };
 
 type Inputs = Pick<
-  nodeUpdateDialog,
+  nodeUpdateDialogProps,
   | "label"
   | "type"
   | "doc_id"

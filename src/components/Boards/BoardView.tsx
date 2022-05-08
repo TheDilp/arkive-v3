@@ -1,4 +1,3 @@
-import { ContextMenu } from "primereact/contextmenu";
 import {
   useCallback,
   useEffect,
@@ -10,17 +9,18 @@ import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
-  CytoscapeEdge,
-  CytoscapeNode,
-  nodeUpdateDialog,
+  BoardContextMenuProps,
+  CytoscapeEdgeProps,
+  CytoscapeNodeProps,
+  nodeUpdateDialogProps,
 } from "../../custom-types";
 import {
   useCreateEdge,
-  useCreateNode,
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
 import { cytoscapeStylesheet, edgehandlesSettings } from "../../utils/utils";
+import BoardContextMenu from "./BoardContextMenu";
 import NodeUpdateDialog from "./NodeUpdateDialog";
 
 type Props = {
@@ -29,36 +29,37 @@ type Props = {
 export default function BoardView({ setBoardId }: Props) {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
-  const [elements, setElements] = useState<(CytoscapeNode | CytoscapeEdge)[]>(
-    []
-  );
+  const [elements, setElements] = useState<
+    (CytoscapeNodeProps | CytoscapeEdgeProps)[]
+  >([]);
   const cyRef = useRef() as any;
   const ehRef = useRef() as any;
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number }>({
+
+  const [nodeUpdateDialog, setNodeUpdateDialog] =
+    useState<nodeUpdateDialogProps>({
+      id: "",
+      label: "",
+      type: "",
+      doc_id: undefined,
+      width: 0,
+      height: 0,
+      fontSize: 0,
+      backgroundColor: "",
+      show: false,
+    });
+  const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
     x: 0,
     y: 0,
+    type: "board",
   });
-
-  const [nodeUpdateDialog, setNodeUpdateDialog] = useState<nodeUpdateDialog>({
-    id: "",
-    label: "",
-    type: "",
-    doc_id: undefined,
-    width: 0,
-    height: 0,
-    fontSize: 0,
-    backgroundColor: "",
-    show: false,
-  });
-  const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
   useEffect(() => {
     if (board) {
-      let temp_nodes: CytoscapeNode[] = [];
-      let temp_edges: CytoscapeEdge[] = [];
+      let temp_nodes: CytoscapeNodeProps[] = [];
+      let temp_edges: CytoscapeEdgeProps[] = [];
       if (board.nodes.length > 0) {
         temp_nodes = board.nodes.map((node) => ({
           data: {
@@ -118,7 +119,20 @@ export default function BoardView({ setBoardId }: Props) {
         // If the target is the background of the canvas
         if (evt.target === cyRef.current) {
           cm.current.show(evt.originalEvent);
-          setContextMenu(evt.position);
+          setContextMenu({ ...evt.position, type: "board" });
+        } else {
+          let group = evt.target._private.group;
+          if (group === "nodes") {
+            cm.current.show(evt.originalEvent);
+            setContextMenu({
+              ...evt.position,
+              type: "node",
+              selected: evt.target,
+            });
+          } else if (group === "edges") {
+            cm.current.show(evt.originalEvent);
+            setContextMenu({ ...evt.position, type: "edge" });
+          }
         }
       });
       cyRef.current.on("dbltap", "node", function (evt: any) {
@@ -180,55 +194,12 @@ export default function BoardView({ setBoardId }: Props) {
 
   return (
     <div className="w-full h-full">
-      <ContextMenu
-        model={[
-          {
-            label: "New Node",
-            command: () => {
-              let id = uuid();
-              createNodeMutation.mutate({
-                id,
-                label: undefined,
-                board_id: board_id as string,
-                type: "rectangle",
-                // X & Y coordinates set by right-clicking the background of the canvas
-                ...contextMenu,
-              });
-            },
-          },
-          {
-            label: "Go to center of nodes",
-            command: () => cyRef.current.center(),
-          },
-          {
-            label: "Fit view to nodes",
-            command: () => cyRef.current.fit(),
-          },
-          {
-            label: "Draw Mode On",
-            icon: "pi pi-fw pi-pencil",
-            command: () => {
-              ehRef.current.enable();
-              ehRef.current.enableDrawMode();
-            },
-          },
-          {
-            label: "Draw Mode Off",
-            icon: "pi pi-fw pi-pencil",
-            command: () => {
-              ehRef.current.disable();
-              ehRef.current.disableDrawMode();
-              cyRef.current.autoungrabify(false);
-              cyRef.current.autounselectify(false);
-              cyRef.current.autolock(false);
-              cyRef.current.zoomingEnabled(true);
-              cyRef.current.userZoomingEnabled(true);
-              cyRef.current.panningEnabled(true);
-            },
-          },
-        ]}
-        ref={cm}
-      ></ContextMenu>
+      <BoardContextMenu
+        cm={cm}
+        ehRef={ehRef}
+        cyRef={cyRef}
+        contextMenu={contextMenu}
+      />
       {nodeUpdateDialog.show && (
         <NodeUpdateDialog
           nodeUpdateDialog={nodeUpdateDialog}

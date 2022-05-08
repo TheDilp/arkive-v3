@@ -3,20 +3,20 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Tooltip } from "primereact/tooltip";
 import { useParams } from "react-router-dom";
 import {
-  Document,
-  iconSelect,
-  docItemDisplayDialog,
+  DocumentProps,
+  iconSelectProps,
+  docItemDisplayDialogProps,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 type Props = {
   docId: string;
-  node: NodeModel<Document>;
+  node: NodeModel<DocumentProps>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
   setDocId: (docId: string) => void;
-  setDisplayDialog: (displayDialog: docItemDisplayDialog) => void;
-  setIconSelect: (iconSelect: iconSelect) => void;
+  setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
+  setIconSelect: (iconSelect: iconSelectProps) => void;
   cm: any;
 };
 

@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { CreateDocumentInputs, Document } from "../../../../custom-types";
+import { CreateDocumentInputs, DocumentProps } from "../../../../custom-types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
@@ -27,7 +27,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
   const [closeOnDone, setCloseOnDone] = useState(true);
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const documents = queryClient.getQueryData<Document[]>(
+  const documents = queryClient.getQueryData<DocumentProps[]>(
     `${project_id}-documents`
   );
   const createDocumentMutation = useCreateDocument(project_id as string);

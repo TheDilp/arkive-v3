@@ -1,7 +1,7 @@
 import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { ImageOverlay, useMapEvents } from "react-leaflet";
-import { Map } from "../../../custom-types";
+import { MapProps } from "../../../custom-types";
 import DraggableMarker from "./MapMarker/DraggableMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
 import UpdateMarkerDialog from "./MapMarker/UpdateMarkerDialog";
@@ -10,7 +10,7 @@ type Props = {
   bounds: LatLngBoundsExpression;
   imgRef: any;
   cm: any;
-  markers: Map["markers"];
+  markers: MapProps["markers"];
   setNewTokenDialog: (newTokenDialog: {
     lat: number;
     lng: number;

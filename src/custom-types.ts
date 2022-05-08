@@ -1,5 +1,5 @@
 import { RemirrorJSON } from "@remirror/core";
-export type Project = {
+export type ProjectProps = {
   id: string;
   backgroundImage: string;
   cardImage: string;
@@ -10,7 +10,7 @@ export type Project = {
   createdAt: Date;
 };
 
-export type Document = {
+export type DocumentProps = {
   id: string;
   title: string;
   content: RemirrorJSON | null;
@@ -25,7 +25,7 @@ export type Document = {
   expanded: boolean;
 };
 
-export type Map = {
+export type MapProps = {
   id: string;
   title: string;
   map_image: string;
@@ -33,9 +33,9 @@ export type Map = {
   folder: boolean;
   user_id: string;
   project_id: string;
-  markers: MapMarker[];
+  markers: MapMarkerProps[];
 };
-export type MapMarker = {
+export type MapMarkerProps = {
   id: string;
   icon: string;
   color: string;
@@ -46,16 +46,16 @@ export type MapMarker = {
   doc_id?: string;
   map_link?: string;
 };
-export type Board = {
+export type BoardProps = {
   id: string;
   title: string;
   parent?: string | null;
   folder: boolean;
   project_id: string;
-  nodes: BoardNode[];
-  edges: BoardEdge[];
+  nodes: BoardNodeProps[];
+  edges: BoardEdgeProps[];
 };
-export type BoardNode = {
+export type BoardNodeProps = {
   id: string;
   label?: string;
   x: number;
@@ -65,11 +65,11 @@ export type BoardNode = {
   type: string;
   fontSize: number;
   backgroundColor: string;
-  document?: Pick<Document, "id" | "image">;
+  document?: Pick<DocumentProps, "id" | "image">;
   board_id: string;
 };
 
-export type BoardEdge = {
+export type BoardEdgeProps = {
   id: string;
   board_id: string;
   label?: string;
@@ -80,9 +80,9 @@ export type BoardEdge = {
   lineColor: string;
 };
 
-export type CytoscapeNode = {
+export type CytoscapeNodeProps = {
   data: Pick<
-    BoardNode,
+    BoardNodeProps,
     | "id"
     | "label"
     | "width"
@@ -91,11 +91,11 @@ export type CytoscapeNode = {
     | "fontSize"
     | "backgroundColor"
   >;
-  position: Pick<BoardNode, "x" | "y">;
+  position: Pick<BoardNodeProps, "x" | "y">;
 };
-export type CytoscapeEdge = {
+export type CytoscapeEdgeProps = {
   data: Pick<
-    BoardEdge,
+    BoardEdgeProps,
     | "id"
     | "label"
     | "source"
@@ -105,7 +105,7 @@ export type CytoscapeEdge = {
     | "lineColor"
   >;
 };
-export type docItemDisplayDialog = {
+export type docItemDisplayDialogProps = {
   id: string;
   title: string;
   show: boolean;
@@ -113,7 +113,7 @@ export type docItemDisplayDialog = {
   template: boolean;
   depth: number;
 };
-export type mapItemDisplayDialog = {
+export type mapItemDisplayDialogProps = {
   id: string;
   title: string;
   map_image: string;
@@ -122,7 +122,7 @@ export type mapItemDisplayDialog = {
   folder: boolean;
   depth: number;
 };
-export type boardItemDisplayDialog = {
+export type boardItemDisplayDialogProps = {
   id: string;
   title: string;
   parent: string;
@@ -130,7 +130,7 @@ export type boardItemDisplayDialog = {
   folder: boolean;
   depth: number;
 };
-export type nodeUpdateDialog = {
+export type nodeUpdateDialogProps = {
   id: string;
   label: string;
   type: string;
@@ -141,7 +141,7 @@ export type nodeUpdateDialog = {
   doc_id?: string;
   show: boolean;
 };
-export type iconSelect = {
+export type iconSelectProps = {
   doc_id: string;
   icon: string;
   top: number;
@@ -149,16 +149,23 @@ export type iconSelect = {
   show: boolean;
 };
 
-export type Profile = {
+export type ProfileProps = {
   id: string;
   nickname: string;
   user_id: string;
   profile_image: string;
 };
 
-export type UserProfileType = {
+export type UserProfileProps = {
   user_id: string;
   nickname: string;
+};
+
+export type BoardContextMenuProps = {
+  x: number;
+  y: number;
+  type: "board" | "node" | "edge";
+  selected?: any;
 };
 
 export type CreateDocumentInputs = {

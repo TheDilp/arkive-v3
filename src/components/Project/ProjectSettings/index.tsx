@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Project } from "../../../custom-types";
+import { ProjectProps } from "../../../custom-types";
 import { useGetProjectData } from "../../../utils/customHooks";
 import DocumentsSettingsTable from "./DocumentsSettingsTable";
 import ProjectSettings from "./ProjectSettings";
@@ -17,7 +17,7 @@ export default function ProjectSettingsIndex() {
       {project && (
         <div className="w-11 h-full">
           {setting === "project-settings" && (
-            <ProjectSettings project={project as Project} />
+            <ProjectSettings project={project as ProjectProps} />
           )}
           {setting === "documents-settings" && <DocumentsSettingsTable />}
         </div>

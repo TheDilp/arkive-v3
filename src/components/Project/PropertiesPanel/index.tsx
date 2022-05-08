@@ -4,7 +4,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { Document } from "../../../custom-types";
+import { DocumentProps } from "../../../custom-types";
 import {
   useCreateTemplate,
   useGetDocuments,
@@ -19,7 +19,7 @@ import CategoryAutocomplete from "./CategoryAutocomplete";
 import LinkedItems from "./LinkedItems";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
-  const [currentDoc, setCurrentDoc] = useState<Document | null>();
+  const [currentDoc, setCurrentDoc] = useState<DocumentProps | null>();
   const project = useGetProjectData(project_id as string);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const { data: categories, refetch: refetchAllTags } = useGetTags(

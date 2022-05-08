@@ -5,12 +5,12 @@ import { InputText } from "primereact/inputtext";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { boardItemDisplayDialog } from "../../../custom-types";
+import { boardItemDisplayDialogProps } from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 
 type Props = {
-  visible: boardItemDisplayDialog;
-  setVisible: (visible: boardItemDisplayDialog) => void;
+  visible: boardItemDisplayDialogProps;
+  setVisible: (visible: boardItemDisplayDialogProps) => void;
 };
 
 type Inputs = {

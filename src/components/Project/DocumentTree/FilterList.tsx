@@ -3,10 +3,10 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import React, { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { Document } from "../../../custom-types";
+import { DocumentProps } from "../../../custom-types";
 
 type Props = {
-  filteredTree: NodeModel<Document>[];
+  filteredTree: NodeModel<DocumentProps>[];
   setDocId: (docId: string) => void;
 };
 

@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Board, boardItemDisplayDialog } from "../../../custom-types";
+import { BoardProps, boardItemDisplayDialogProps } from "../../../custom-types";
 import { useCreateBoard, useUpdateBoard } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
@@ -20,14 +20,14 @@ export default function BoardsTree({ boardId }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const cm = useRef() as any;
-  const [treeData, setTreeData] = useState<NodeModel<Board>[]>([]);
-  const boards: Board[] | undefined = queryClient.getQueryData<Board[]>(
-    `${project_id}-boards`
-  );
+  const [treeData, setTreeData] = useState<NodeModel<BoardProps>[]>([]);
+  const boards: BoardProps[] | undefined = queryClient.getQueryData<
+    BoardProps[]
+  >(`${project_id}-boards`);
   const createBoardMutation = useCreateBoard();
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const [updateBoardDialog, setUpdateBoardDialog] =
-    useState<boardItemDisplayDialog>({
+    useState<boardItemDisplayDialogProps>({
       id: "",
       title: "",
       parent: "",
@@ -36,7 +36,7 @@ export default function BoardsTree({ boardId }: Props) {
       depth: 0,
     });
   const handleDrop = (
-    newTree: NodeModel<Board>[],
+    newTree: NodeModel<BoardProps>[],
     {
       dragSourceId,
       dropTargetId,
@@ -135,7 +135,7 @@ export default function BoardsTree({ boardId }: Props) {
         sort={false}
         initialOpen={false}
         rootId="0"
-        render={(node: NodeModel<Board>, { depth, isOpen, onToggle }) => (
+        render={(node: NodeModel<BoardProps>, { depth, isOpen, onToggle }) => (
           <BoardTreeItem
             node={node}
             boardId={boardId}

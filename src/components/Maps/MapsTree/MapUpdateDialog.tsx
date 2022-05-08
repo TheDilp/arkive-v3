@@ -7,20 +7,20 @@ import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import {
   CreateMapInputs,
-  Map,
-  mapItemDisplayDialog,
+  MapProps,
+  mapItemDisplayDialogProps,
 } from "../../../custom-types";
 import { useUpdateMap } from "../../../utils/customHooks";
 
 type Props = {
-  visible: mapItemDisplayDialog;
-  setVisible: (visible: mapItemDisplayDialog) => void;
+  visible: mapItemDisplayDialogProps;
+  setVisible: (visible: mapItemDisplayDialogProps) => void;
 };
 
 export default function MapUpdateDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
+  const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   const updateMapMutation = useUpdateMap(project_id as string);
   const {
     control,

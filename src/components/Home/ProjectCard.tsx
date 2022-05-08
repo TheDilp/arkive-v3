@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { Project } from "../../custom-types";
+import { ProjectProps } from "../../custom-types";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import defaultImage from "../../styles/DefaultProjectImage.jpg";
-export default function ProjectCard({ ...Project }: Project) {
+export default function ProjectCard({ ...Project }: ProjectProps) {
   const header = (
     <Link
       to={`/project/${Project.id}/wiki`}

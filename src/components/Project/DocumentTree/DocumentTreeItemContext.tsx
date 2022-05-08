@@ -4,7 +4,10 @@ import React from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { Document, docItemDisplayDialog } from "../../../custom-types";
+import {
+  DocumentProps,
+  docItemDisplayDialogProps,
+} from "../../../custom-types";
 import {
   useCreateDocument,
   useCreateTemplate,
@@ -16,8 +19,8 @@ import { saveAs } from "file-saver";
 type Props = {
   docId: string;
   cm: React.RefObject<ContextMenu>;
-  displayDialog: docItemDisplayDialog;
-  setDisplayDialog: (displayDialog: docItemDisplayDialog) => void;
+  displayDialog: docItemDisplayDialogProps;
+  setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
 };
 
 export default function DocumentTreeItemContext({
@@ -59,7 +62,7 @@ export default function DocumentTreeItemContext({
       reject: () => {},
     });
   };
-  const documents: Document[] | undefined =
+  const documents: DocumentProps[] | undefined =
     queryClient.getQueryData(`${project_id}-documents`) || [];
   const document = documents.find((doc) => doc.id === displayDialog.id);
   let folders = documents.filter((doc) => doc.folder);

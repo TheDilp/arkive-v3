@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Navigate } from "react-router-dom";
-import { Project } from "../../custom-types";
+import { ProjectProps } from "../../custom-types";
 import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
 import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
@@ -20,7 +20,7 @@ export default function Home() {
       if (data) {
         queryClient.setQueryData(
           "getAllProjects",
-          (oldData: Project[] | undefined) => {
+          (oldData: ProjectProps[] | undefined) => {
             if (oldData) {
               return [...oldData, data];
             } else {

@@ -1,17 +1,17 @@
 import { AutoComplete } from "primereact/autocomplete";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Document, Project } from "../../../custom-types";
+import { DocumentProps, ProjectProps } from "../../../custom-types";
 import { updateDocument } from "../../../utils/supabaseUtils";
 import { searchCategory } from "../../../utils/utils";
 
 type Props = {
-  currentDoc: Document;
+  currentDoc: DocumentProps;
   categories: string[] | undefined;
   refetchAllTags: any;
   filteredCategories: string[];
-  currentProject: Project;
-  setCurrentDoc: (doc: Document | null) => void;
+  currentProject: ProjectProps;
+  setCurrentDoc: (doc: DocumentProps | null) => void;
   setFilteredCategories: (categories: string[]) => void;
 };
 
@@ -38,9 +38,9 @@ export default function CategoryAutocomplete({
         setCurrentDoc({ ...currentDoc, categories: vars.categories });
         queryClient.setQueryData(
           `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
+          (oldData: DocumentProps[] | undefined) => {
             if (oldData) {
-              let newData: Document[] = oldData.map((doc) => {
+              let newData: DocumentProps[] = oldData.map((doc) => {
                 if (doc.id === vars.doc_id) {
                   return {
                     ...doc,

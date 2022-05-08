@@ -3,7 +3,7 @@ import { useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Popup } from "react-leaflet";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { MapMarker } from "../../../../custom-types";
+import { MapMarkerProps } from "../../../../custom-types";
 import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
 export default function DraggableMarker({
@@ -18,7 +18,7 @@ export default function DraggableMarker({
   map_link,
   mcm,
   setUpdateMarkerDialog,
-}: MapMarker & {
+}: MapMarkerProps & {
   mcm: any;
   setUpdateMarkerDialog: ({
     id,

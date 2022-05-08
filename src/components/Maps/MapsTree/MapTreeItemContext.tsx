@@ -3,14 +3,14 @@ import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { mapItemDisplayDialog } from "../../../custom-types";
+import { mapItemDisplayDialogProps } from "../../../custom-types";
 import { useCreateMap, useDeleteMap } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   mapId: string;
-  displayDialog: mapItemDisplayDialog;
-  setDisplayDialog: (displayDialog: mapItemDisplayDialog) => void;
+  displayDialog: mapItemDisplayDialogProps;
+  setDisplayDialog: (displayDialog: mapItemDisplayDialogProps) => void;
 };
 
 export default function MapTreeItemContext({

@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import {
-  Document,
-  iconSelect,
-  docItemDisplayDialog,
+  DocumentProps,
+  iconSelectProps,
+  docItemDisplayDialogProps,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
@@ -26,19 +26,21 @@ type Props = {
 export default function DocumentsTree({ docId, setDocId }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const [treeData, setTreeData] = useState<NodeModel<Document>[]>([]);
+  const [treeData, setTreeData] = useState<NodeModel<DocumentProps>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialog>({
-    id: "",
-    title: "",
-    show: false,
-    folder: false,
-    depth: 0,
-    template: false,
-  });
+  const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
+    {
+      id: "",
+      title: "",
+      show: false,
+      folder: false,
+      depth: 0,
+      template: false,
+    }
+  );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
-  const [iconSelect, setIconSelect] = useState<iconSelect>({
+  const [iconSelect, setIconSelect] = useState<iconSelectProps>({
     doc_id: "",
     icon: "",
     top: 0,
@@ -47,7 +49,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
   });
   // Function to handle the drop functionality of the tree
   const handleDrop = (
-    newTree: NodeModel<Document>[],
+    newTree: NodeModel<DocumentProps>[],
     {
       dragSourceId,
       dropTargetId,
@@ -66,7 +68,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
 
-  const docs: Document[] | undefined = queryClient.getQueryData(
+  const docs: DocumentProps[] | undefined = queryClient.getQueryData(
     `${project_id}-documents`
   );
   useEffect(() => {
@@ -126,7 +128,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
                 false
               }
               render={(
-                node: NodeModel<Document>,
+                node: NodeModel<DocumentProps>,
                 { depth, isOpen, onToggle }
               ) => (
                 <DocumentTreeItem

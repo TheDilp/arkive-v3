@@ -8,7 +8,7 @@ import { Checkbox } from "primereact/checkbox";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
-import { CreateMapInputs, Map } from "../../../custom-types";
+import { CreateMapInputs, MapProps } from "../../../custom-types";
 import { useCreateMap } from "../../../utils/customHooks";
 
 type Props = {
@@ -20,7 +20,7 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
   const [closeOnDone, setCloseOnDone] = useState(true);
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
+  const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   const createMapMutation = useCreateMap();
   const {
     control,

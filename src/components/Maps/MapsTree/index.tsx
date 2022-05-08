@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { Map, mapItemDisplayDialog } from "../../../custom-types";
+import { MapProps, mapItemDisplayDialogProps } from "../../../custom-types";
 import { useCreateMap, useUpdateMap } from "../../../utils/customHooks";
 import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
@@ -17,20 +17,21 @@ export default function MapsTree({ mapId }: { mapId: string }) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const cm = useRef() as any;
-  const maps: Map[] | undefined = queryClient.getQueryData(
+  const maps: MapProps[] | undefined = queryClient.getQueryData(
     `${project_id}-maps`
   );
-  const [treeData, setTreeData] = useState<NodeModel<Map>[]>([]);
+  const [treeData, setTreeData] = useState<NodeModel<MapProps>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
-  const [updateMapDialog, setUpdateMapDialog] = useState<mapItemDisplayDialog>({
-    id: "",
-    title: "",
-    map_image: "",
-    parent: "",
-    show: false,
-    folder: false,
-    depth: 0,
-  });
+  const [updateMapDialog, setUpdateMapDialog] =
+    useState<mapItemDisplayDialogProps>({
+      id: "",
+      title: "",
+      map_image: "",
+      parent: "",
+      show: false,
+      folder: false,
+      depth: 0,
+    });
   const createMapMutation = useCreateMap();
   const updateMapMutation = useUpdateMap(project_id as string);
   useLayoutEffect(() => {
@@ -46,7 +47,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
     }
   }, [maps]);
   const handleDrop = (
-    newTree: NodeModel<Map>[],
+    newTree: NodeModel<MapProps>[],
     {
       dragSourceId,
       dropTargetId,
@@ -128,7 +129,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
         rootId={"0"}
         sort={false}
         initialOpen={false}
-        render={(node: NodeModel<Map>, { depth, isOpen, onToggle }) => (
+        render={(node: NodeModel<MapProps>, { depth, isOpen, onToggle }) => (
           <MapTreeItem
             node={node}
             mapId={mapId}

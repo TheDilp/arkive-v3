@@ -9,7 +9,7 @@ import { RadioButton } from "primereact/radiobutton";
 import { Button } from "primereact/button";
 import { v4 as uuid } from "uuid";
 import { InputText } from "primereact/inputtext";
-import { Document } from "../../../../custom-types";
+import { DocumentProps } from "../../../../custom-types";
 type Props = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -23,7 +23,7 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
   const createDocumentMutation = useCreateDocument(project_id as string);
 
   function createDocumentFromTemplate(
-    template: Document,
+    template: DocumentProps,
     customName: string | undefined
   ) {
     let id = uuid();

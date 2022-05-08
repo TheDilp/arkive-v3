@@ -2,7 +2,12 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
-import { Board, Document, Map, Project } from "../custom-types";
+import {
+  BoardProps,
+  DocumentProps,
+  MapProps,
+  ProjectProps,
+} from "../custom-types";
 import {
   auth,
   createBoard,
@@ -16,6 +21,7 @@ import {
   deleteDocument,
   deleteMap,
   deleteMapMarker,
+  deleteNode,
   getBoards,
   getCurrentProject,
   getDocuments,
@@ -82,9 +88,9 @@ export function useUpdateProject() {
         queryClient.setQueryData(
           `${updatedProject.project_id}-project`,
           //   @ts-ignore
-          (oldData: Project | undefined) => {
+          (oldData: ProjectProps | undefined) => {
             if (oldData) {
-              let newData: Project = { ...oldData, ...updatedProject };
+              let newData: ProjectProps = { ...oldData, ...updatedProject };
               return newData;
             } else {
               return {};
@@ -113,7 +119,9 @@ export function useGetDocuments(project_id: string) {
 // Custom hook for getting single document data
 export function useGetDocumentData(project_id: string, doc_id: string) {
   const queryClient = useQueryClient();
-  const docs = queryClient.getQueryData<Document[]>(`${project_id}-documents`);
+  const docs = queryClient.getQueryData<DocumentProps[]>(
+    `${project_id}-documents`
+  );
   if (docs && doc_id) {
     const doc = docs.find((doc) => doc.id === doc_id);
     if (doc) {
@@ -147,7 +155,7 @@ export function useCreateDocument(project_id: string) {
         const previousDocuments = queryClient.getQueryData(
           `${project_id}-documents`
         );
-        const docs: Document[] | undefined = queryClient.getQueryData(
+        const docs: DocumentProps[] | undefined = queryClient.getQueryData(
           `${project_id}-documents`
         );
         let parent = newDocument.parent
@@ -156,9 +164,9 @@ export function useCreateDocument(project_id: string) {
         queryClient.setQueryData(
           `${project_id}-documents`,
           //   @ts-ignore
-          (oldData: Document[] | undefined) => {
+          (oldData: DocumentProps[] | undefined) => {
             if (oldData) {
-              let newData: Document[] = [
+              let newData: DocumentProps[] = [
                 ...oldData,
                 {
                   id: newDocument.id,
@@ -225,12 +233,12 @@ export function useUpdateDocument(project_id: string) {
         );
         queryClient.setQueryData(
           `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
+          (oldData: DocumentProps[] | undefined) => {
             if (oldData) {
               let newParent = oldData.find(
                 (doc) => doc.id === updatedDocument.parent
               );
-              let newData: Document[] = oldData.map((doc) => {
+              let newData: DocumentProps[] = oldData.map((doc) => {
                 if (doc.id === updatedDocument.doc_id) {
                   return {
                     ...doc,
@@ -276,10 +284,10 @@ export function useDeleteDocument(project_id: string) {
         );
         queryClient.setQueryData(
           `${project_id}-documents`,
-          (oldData: Document[] | undefined) => {
+          (oldData: DocumentProps[] | undefined) => {
             if (oldData) {
               if (deletedDocument.folder) {
-                let newData: Document[] = oldData
+                let newData: DocumentProps[] = oldData
                   .filter((doc) => doc.id !== deletedDocument.doc_id)
                   .filter(
                     (doc) =>
@@ -287,7 +295,7 @@ export function useDeleteDocument(project_id: string) {
                   );
                 return newData;
               } else {
-                let newData: Document[] = oldData.filter(
+                let newData: DocumentProps[] = oldData.filter(
                   (doc) => doc.id !== deletedDocument.doc_id
                 );
                 return newData;
@@ -342,10 +350,10 @@ export function useCreateTemplate() {
         );
         queryClient.setQueryData(
           `${newDocument.project_id}-documents`,
-          (oldData: Document[] | undefined) => {
+          (oldData: DocumentProps[] | undefined) => {
             if (oldData) {
               // Template shouldn't have parent hence null
-              let newData: Document[] = [
+              let newData: DocumentProps[] = [
                 ...oldData,
                 {
                   ...newDocument,
@@ -376,7 +384,7 @@ export function useCreateTemplate() {
 // Custom hook to get templates
 export function useGetTemplates(project_id: string) {
   const queryClient = useQueryClient();
-  const templates = queryClient.getQueryData<Document[]>(
+  const templates = queryClient.getQueryData<DocumentProps[]>(
     `${project_id}-documents`
   );
   if (templates) {
@@ -420,10 +428,10 @@ export function useCreateMap() {
         );
         queryClient.setQueryData(
           `${newMap.project_id}-maps`,
-          (oldData: Map[] | undefined) => {
+          (oldData: MapProps[] | undefined) => {
             if (oldData) {
               // Template shouldn't have parent hence null
-              let newData: Map[] = [
+              let newData: MapProps[] = [
                 ...oldData,
                 {
                   ...newMap,
@@ -455,7 +463,7 @@ export function useCreateMap() {
 // Custom hook for getting single map data
 export function useGetMapData(project_id: string, map_id: string) {
   const queryClient = useQueryClient();
-  const maps = queryClient.getQueryData<Map[]>(`${project_id}-maps`);
+  const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   if (maps && map_id) {
     const map = maps.find((map) => map.id === map_id);
     if (map) {
@@ -484,10 +492,10 @@ export function useUpdateMap(project_id: string) {
         const previousMaps = queryClient.getQueryData(`${project_id}-maps`);
         queryClient.setQueryData(
           `${project_id}-maps`,
-          (oldData: Map[] | undefined) => {
+          (oldData: MapProps[] | undefined) => {
             if (oldData) {
               // Template shouldn't have parent hence null
-              let newData: Map[] = oldData.map((map) => {
+              let newData: MapProps[] = oldData.map((map) => {
                 if (map.id === updatedMap.id) {
                   return {
                     ...map,
@@ -528,10 +536,10 @@ export function useDeleteMap() {
         );
         queryClient.setQueryData(
           `${deletedMap.project_id}-maps`,
-          (oldData: Map[] | undefined) => {
+          (oldData: MapProps[] | undefined) => {
             if (oldData) {
               // Template shouldn't have parent hence null
-              let newData: Map[] = oldData.filter(
+              let newData: MapProps[] = oldData.filter(
                 (map) => map.id !== deletedMap.id
               );
               return newData;
@@ -578,10 +586,10 @@ export function useCreateMapMarker() {
         );
         queryClient.setQueryData(
           `${newMarker.project_id}-maps`,
-          (oldData: Map[] | undefined) => {
+          (oldData: MapProps[] | undefined) => {
             if (oldData) {
               // Template shouldn't have parent hence null
-              let newData: Map[] = oldData.map((map) => {
+              let newData: MapProps[] = oldData.map((map) => {
                 if (map.id === newMarker.map_id) {
                   return {
                     ...map,
@@ -653,9 +661,9 @@ export function useUpdateMapMarker() {
         );
         queryClient.setQueryData(
           `${updatedMarker.project_id}-maps`,
-          (oldData: Map[] | undefined) => {
+          (oldData: MapProps[] | undefined) => {
             if (oldData) {
-              let newData: Map[] = oldData.map((map) => {
+              let newData: MapProps[] = oldData.map((map) => {
                 if (map.id === updatedMarker.map_id) {
                   return {
                     ...map,
@@ -727,9 +735,9 @@ export function useDeleteMapMarker() {
         );
         queryClient.setQueryData(
           `${deletedMarker.project_id}-maps`,
-          (oldData: Map[] | undefined) => {
+          (oldData: MapProps[] | undefined) => {
             if (oldData) {
-              let newData: Map[] = oldData.map((map) => {
+              let newData: MapProps[] = oldData.map((map) => {
                 if (map.id === deletedMarker.map_id) {
                   return {
                     ...map,
@@ -774,7 +782,7 @@ export function useGetBoards(project_id: string) {
 // Custom hook for getting a single board's data
 export function useGetBoardData(project_id: string, board_id: string) {
   const queryClient = useQueryClient();
-  const boards: Board[] | undefined = queryClient.getQueryData(
+  const boards: BoardProps[] | undefined = queryClient.getQueryData(
     `${project_id}-boards`
   );
   if (boards) {
@@ -808,7 +816,7 @@ export function useCreateBoard() {
         );
         queryClient.setQueryData(
           `${newBoard.project_id}-boards`,
-          (oldData: Board[] | undefined) => {
+          (oldData: BoardProps[] | undefined) => {
             if (oldData) {
               return [
                 ...oldData,
@@ -849,7 +857,7 @@ export function useUpdateBoard(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: Board[] | undefined) => {
+          (oldData: BoardProps[] | undefined) => {
             if (oldData) {
               let newData = oldData.map((board) => {
                 if (board.id === updatedBoard.id) {
@@ -892,7 +900,7 @@ export function useDeleteBoard(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: Board[] | undefined) => {
+          (oldData: BoardProps[] | undefined) => {
             if (oldData) {
               return oldData.filter((board) => board.id !== deletedBoard.id);
             } else {
@@ -935,7 +943,7 @@ export function useCreateNode(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: Board[] | undefined) => {
+          (oldData: BoardProps[] | undefined) => {
             if (oldData) {
               let newData = oldData.map((board) => {
                 if (board.id === newNode.board_id) {
@@ -998,13 +1006,13 @@ export function useUpdateNode(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: Board[] | undefined) => {
+          (oldData: BoardProps[] | undefined) => {
             if (oldData) {
               // Init document variable as undefined
               let document: { id: string; image: string } | undefined;
               // Then if there is a document that is linked, find it and map the data
               if (updatedNode.doc_id) {
-                const documents: Document[] | undefined =
+                const documents: DocumentProps[] | undefined =
                   queryClient.getQueryData(`${project_id}-documents`);
                 const doc = documents?.find(
                   (doc) => doc.id === updatedNode.doc_id
@@ -1051,6 +1059,51 @@ export function useUpdateNode(project_id: string) {
   );
 }
 
+// Custom hook for deleting a node
+export function useDeleteNode(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; board_id: string }) => {
+      await deleteNode(vars.id);
+    },
+    {
+      onMutate: async (deletedNode) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              return oldData.map((board) => {
+                if (board.id === deletedNode.board_id) {
+                  return {
+                    ...board,
+                    nodes: board.nodes.filter(
+                      (node) => node.id !== deletedNode.id
+                    ),
+                  };
+                } else {
+                  return board;
+                }
+              });
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousBoards };
+      },
+
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+      },
+    }
+  );
+}
+
 // Custom hook for creating an edge
 
 export function useCreateEdge(project_id: string) {
@@ -1075,7 +1128,7 @@ export function useCreateEdge(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: Board[] | undefined) => {
+          (oldData: BoardProps[] | undefined) => {
             if (oldData) {
               let newData = oldData.map((board) => {
                 if (board.id === newEdge.board_id) {

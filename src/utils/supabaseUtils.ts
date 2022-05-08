@@ -2,14 +2,14 @@ import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
 import { StringMappingType } from "typescript";
 import {
-  Board,
-  Document,
-  Map,
-  MapMarker,
-  BoardNode,
-  Profile,
-  Project,
-  BoardEdge,
+  BoardProps,
+  DocumentProps,
+  MapProps,
+  MapMarkerProps,
+  BoardNodeProps,
+  ProfileProps,
+  ProjectProps,
+  BoardEdgeProps,
 } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -48,7 +48,7 @@ export const getProjects = async () => {
   let user = auth.user();
   if (user) {
     const { data: projects, error } = await supabase
-      .from<Project>("projects")
+      .from<ProjectProps>("projects")
       .select("id, title, cardImage, user_id")
       .eq("user_id", user.id);
 
@@ -64,7 +64,7 @@ export const getCurrentProject = async (project_id: string) => {
 
   if (user) {
     const { data: project, error } = await supabase
-      .from<Project>("projects")
+      .from<ProjectProps>("projects")
       .select("id, title, user_id, cardImage")
       .eq("id", project_id);
 
@@ -79,7 +79,7 @@ export const getDocuments = async (project_id: string) => {
   let user = auth.user();
   if (user) {
     const { data: documents, error } = await supabase
-      .from<Document>("documents")
+      .from<DocumentProps>("documents")
       .select("*, parent(id, title)")
       .eq("project_id", project_id)
       .order("title", { ascending: true });
@@ -100,7 +100,7 @@ export const getTags = async (project_id: string) => {
 };
 export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
-    .from<Map>("maps")
+    .from<MapProps>("maps")
     .select("*, markers:markers!map_id(*)")
     .eq("project_id", project_id);
   if (data) return data;
@@ -111,7 +111,7 @@ export const getMaps = async (project_id: string) => {
 };
 export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
-    .from<Board>("boards")
+    .from<BoardProps>("boards")
     .select("*, nodes(*, document:documents(id, image)), edges(*)")
     .eq("project_id", project_id);
   if (data) return data;
@@ -124,7 +124,7 @@ export const getProfile = async () => {
   let user = auth.user();
   if (user) {
     const { data: profile, error } = await supabase
-      .from<Profile>("profiles")
+      .from<ProfileProps>("profiles")
       .select("id, nickname, profile_image")
       .eq("user_id", user.id);
     if (profile) return profile[0];
@@ -160,7 +160,7 @@ export const createDocument = async ({
   let user = auth.user();
   if (user) {
     const { data: document, error } = await supabase
-      .from<Document>("documents")
+      .from<DocumentProps>("documents")
       .insert({
         id,
         project_id,
@@ -184,7 +184,7 @@ export const createProject = async () => {
   let user = auth.user();
   if (user) {
     const { data: project, error } = await supabase
-      .from<Project>("projects")
+      .from<ProjectProps>("projects")
       .insert({
         title: "New Project",
         user_id: user.id,
@@ -384,7 +384,7 @@ export const createEdge = async ({
   curveStyle,
   lineStyle,
   lineColor,
-}: Omit<BoardEdge, "label">) => {
+}: Omit<BoardEdgeProps, "label">) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase.from("edges").insert({
@@ -430,7 +430,7 @@ export const updateDocument = async ({
 
   if (user) {
     const { data: document, error } = await supabase
-      .from<Document>("documents")
+      .from<DocumentProps>("documents")
       .update({
         title,
         content,
@@ -461,7 +461,7 @@ export const updateProject = async (
 
   if (user) {
     const { data: project, error } = await supabase
-      .from<Project>("projects")
+      .from<ProjectProps>("projects")
       .update({
         title,
         categories,
@@ -492,7 +492,7 @@ export const updateMap = async ({
 
   if (user) {
     const { data: map, error } = await supabase
-      .from<Map>("maps")
+      .from<MapProps>("maps")
       .update({
         title,
         map_image,
@@ -528,7 +528,7 @@ export const updateMapMarker = async ({
   map_link?: string;
 }) => {
   const { data, error } = await supabase
-    .from<MapMarker>("markers")
+    .from<MapMarkerProps>("markers")
     .update({
       icon,
       color,
@@ -624,13 +624,13 @@ export const updateNode = async ({
   }
 };
 export const updateMultipleDocumentsParents = async (
-  documents: Pick<Document, "id" | "parent">[]
+  documents: Pick<DocumentProps, "id" | "parent">[]
 ) => {
   let user = auth.user();
 
   if (user) {
     const { data: updatedDocuments, error } = await supabase
-      .from<Document>("documents")
+      .from<DocumentProps>("documents")
       .upsert(documents);
 
     if (updatedDocuments) return updatedDocuments;
@@ -649,7 +649,7 @@ export const updateProfile = async (
 
   if (user) {
     const { data: profile, error } = await supabase
-      .from<Profile>("profiles")
+      .from<ProfileProps>("profiles")
       .update({
         nickname,
         profile_image,
@@ -671,7 +671,7 @@ export const deleteDocument = async (doc_id: string) => {
 
   if (user) {
     const { error } = await supabase
-      .from<Document>("documents")
+      .from<DocumentProps>("documents")
       .delete()
       .eq("id", doc_id);
 
@@ -700,7 +700,7 @@ export const deleteProject = async (project_id: string) => {
 
   if (user) {
     const { error } = await supabase
-      .from<Project>("projects")
+      .from<ProjectProps>("projects")
       .delete()
       .eq("id", project_id);
 
@@ -715,7 +715,7 @@ export const deleteMap = async (map_id: string) => {
 
   if (user) {
     const { error } = await supabase
-      .from<Map>("maps")
+      .from<MapProps>("maps")
       .delete()
       .eq("id", map_id);
 
@@ -727,7 +727,7 @@ export const deleteMap = async (map_id: string) => {
 };
 export const deleteMapMarker = async (id: string) => {
   const { error } = await supabase
-    .from<MapMarker>("markers")
+    .from<MapMarkerProps>("markers")
     .delete()
     .eq("id", id);
 
@@ -745,5 +745,12 @@ export const deleteBoard = async (id: string) => {
       toastError("There was an error deleting your board.");
       throw new Error(error.message);
     }
+  }
+};
+export const deleteNode = async (id: string) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase.from("nodes").delete().eq("id", id);
   }
 };

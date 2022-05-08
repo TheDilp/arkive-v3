@@ -2,13 +2,16 @@ import { Icon } from "@iconify/react";
 import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { iconSelect, docItemDisplayDialog } from "../../../../custom-types";
+import {
+  iconSelectProps,
+  docItemDisplayDialogProps,
+} from "../../../../custom-types";
 import { useGetTemplates } from "../../../../utils/customHooks";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
-  setIconSelect: (iconSelect: iconSelect) => void;
-  setDisplayDialog: (displayDialog: docItemDisplayDialog) => void;
+  setIconSelect: (iconSelect: iconSelectProps) => void;
+  setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
   cm: any;
 };
 
