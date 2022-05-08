@@ -80,8 +80,12 @@ export const boardNodeFontSizes = [
 
 export const edgehandlesSettings = {
   canConnect: function (sourceNode: any, targetNode: any) {
+    return (
+      !sourceNode.outgoers().includes(targetNode) &&
+      !sourceNode.same(targetNode)
+    );
     // whether an edge can be created between source and target
-    return !sourceNode.same(targetNode); // e.g. disallow loops
+    // e.g. disallow loops
   },
   edgeParams: function (sourceNode: any, targetNode: any) {
     // for edges between the specified source and target
@@ -104,138 +108,6 @@ export const edgehandlesSettings = {
   noEdgeEventsInDraw: true, // set events:no to edges during draws, prevents mouseouts on compounds
   disableBrowserGestures: true, // during an edge drawing gesture, disable browser gestures such as two-finger trackpad swipe and pinch-to-zoom
 };
-
-// export const cytoscapeStylesheet = [
-//   {
-//     selector: "edge",
-//     style: {
-//       // label: "data(label)",
-//       "text-outline-color": "black",
-//       "text-outline-width": "2px",
-//       "target-arrow-shape": "triangle-backcurve",
-//       "target-arrow-color": "data(lineColor)",
-//       "line-color": "data(lineColor)",
-//       "line-style": "data(lineStyle)",
-//       "line-dash-pattern": [5, 10],
-//       "curve-style": "data(curveStyle)",
-//       "control-point-distances": "-300 20 -20 45 -100 40",
-//       "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",
-//     },
-//   },
-//   {
-//     selector: ".eh-ghost-edge",
-//     style: {
-//       "target-arrow-shape": "triangle-backcurve",
-//       "target-arrow-color": "red",
-//       "line-color": "red",
-//       "line-style": "solid",
-//       "line-dash-pattern": [5, 10],
-//       "curve-style": "straight",
-//     },
-//   },
-//   {
-//     selector: ".eh-preview",
-//     style: {
-//       "target-arrow-shape": "triangle-backcurve",
-//       "target-arrow-color": "red",
-//       "line-color": "red",
-//       "line-style": "solid",
-//       "line-dash-pattern": [5, 10],
-//       "curve-style": "straight",
-//     },
-//   },
-//   {
-//     selector: ".eh-ghost-node",
-//     style: {
-//       shape: "square",
-//       width: "50",
-//       height: "50",
-//       label: "New Edge",
-//       color: "white",
-//       "text-outline-color": "black",
-//       "text-outline-width": "2px",
-//       "background-image": "a",
-//       "background-fit": "contain",
-//       "background-color": "red",
-//       opacity: 0,
-//     },
-//   },
-//   {
-//     selector: ".eh-ghost",
-//     style: {
-//       shape: "square",
-//       width: "50",
-//       height: "50",
-//       label: "New Edge",
-//       color: "white",
-//       "text-outline-color": "black",
-//       "text-outline-width": "2px",
-//       "background-image": "a",
-//       "background-fit": "contain",
-//       "background-color": "red",
-//       opacity: 0,
-//     },
-//   },
-//   {
-//     selector: "node[class != 'eh-presumptive-target']",
-//     style: {
-//       shape: "data(type)",
-//       width: "data(width)",
-//       height: "data(height)",
-//       label: "data(label)",
-//       fontFamily: "Lato",
-//       // fontSize: "data(fontSize)",
-//       backgroundColor: "data(backgroundColor)",
-//       backgroundImage: "data(backgroundImage)",
-//       backgroundFit: "cover",
-//       textValign: "top",
-//     },
-//   },
-
-//   {
-//     selector: "node[class = '.eh-presumptive-target']",
-//     style: {
-//       shape: "rectangle",
-//       width: "50rem",
-//       height: "50rem",
-//       "font-size": "20rem",
-//       label: "TARGET",
-//       color: "white",
-//       "text-outline-color": "black",
-//       "text-outline-width": "2px",
-//       "background-image": "a",
-//       "background-opacity": "1",
-//       "background-image-opacity": "0",
-//       "background-fit": "cover",
-//       "background-clip": "node",
-//       "background-color": "black",
-//       "overlay-color": "lightblue",
-//       "overlay-opacity": "0",
-//     },
-//   },
-//   {
-//     selector: "node[class = '.eh-hover']",
-//     style: {
-//       shape: "rectangle",
-//       width: "50rem",
-//       height: "50rem",
-//       "font-size": "20rem",
-//       label: "TARGET",
-//       color: "white",
-//       "text-outline-color": "black",
-//       "text-outline-width": "2px",
-//       "background-image": "a",
-//       "background-opacity": "1",
-//       "background-image-opacity": "0",
-//       "background-fit": "cover",
-//       "background-clip": "node",
-//       "background-color": "black",
-//       "overlay-color": "lightblue",
-//       "overlay-opacity": "0",
-//     },
-//   },
-// ];
-
 export const cytoscapeStylesheet = [
   {
     selector: "node[class != 'eh-presumptive-target']",
@@ -301,10 +173,13 @@ export const cytoscapeStylesheet = [
       "text-outline-color": "black",
       "text-outline-width": "2px",
       "target-arrow-shape": "triangle-backcurve",
+      "arrow-scale": 2,
       "target-arrow-color": "data(lineColor)",
       "line-color": "data(lineColor)",
       "line-style": "data(lineStyle)",
       "line-dash-pattern": [5, 10],
+      "taxi-turn-min-distance": "10px",
+      "taxi-direction": "downward",
       "curve-style": "data(curveStyle)",
       "control-point-distances": "-300 20 -20 45 -100 40",
       "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",

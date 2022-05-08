@@ -157,6 +157,7 @@ export default function BoardView({ setBoardId }: Props) {
       cyRef.current.on(
         "ehcomplete",
         (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
+          console.log("TEST");
           let sourceData = sourceNode._private.data;
           let targetData = targetNode._private.data;
 
@@ -220,6 +221,9 @@ export default function BoardView({ setBoardId }: Props) {
               cyRef.current.autoungrabify(false);
               cyRef.current.autounselectify(false);
               cyRef.current.autolock(false);
+              cyRef.current.zoomingEnabled(true);
+              cyRef.current.userZoomingEnabled(true);
+              cyRef.current.panningEnabled(true);
             },
           },
         ]}
@@ -237,7 +241,7 @@ export default function BoardView({ setBoardId }: Props) {
         minZoom={0.1}
         maxZoom={5}
         className="Lato Merriweather"
-        style={{ width: "100%", height: "100%", backgroundColor: "white" }}
+        style={{ width: "100%", height: "100%", backgroundColor: "#1e1e1e`" }}
         cy={(cy: any) => {
           cyRef.current = cy;
           ehRef.current = cy.edgehandles(edgehandlesSettings);
