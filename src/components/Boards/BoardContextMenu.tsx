@@ -2,7 +2,12 @@ import { ContextMenu } from "primereact/contextmenu";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { BoardContextMenuProps } from "../../custom-types";
-import { useCreateNode, useUpdateNode } from "../../utils/customHooks";
+import {
+  useCreateNode,
+  useDeleteEdge,
+  useUpdateNode,
+} from "../../utils/customHooks";
+import { deleteEdge } from "../../utils/supabaseUtils";
 
 type Props = {
   ehRef: any;
@@ -23,6 +28,7 @@ export default function BoardContextMenu({
   const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
 
+  const deleteEdgeMutation = useDeleteEdge(project_id as string);
   const boardItems = [
     {
       label: "New Node",
@@ -81,8 +87,15 @@ export default function BoardContextMenu({
       command: () => cyRef.current.center(contextMenu.selected),
     },
     {
-      label: "Fit view to nodes",
-      command: () => cyRef.current.fit(),
+      label: "Delete Node",
+      command: () => {
+        contextMenu.selected.outgoers("edge").forEach((el) =>
+          deleteEdgeMutation.mutate({
+            id: el._private.data.id,
+            board_id: board_id as string,
+          })
+        );
+      },
     },
   ];
   const edgeItems = [
@@ -92,6 +105,14 @@ export default function BoardContextMenu({
     },
     {
       label: "Highlight Connected Nodes",
+    },
+    {
+      label: "Delete Edge",
+      command: () =>
+        deleteEdgeMutation.mutate({
+          id: contextMenu.selected._private.data.id,
+          board_id: board_id as string,
+        }),
     },
   ];
   return (

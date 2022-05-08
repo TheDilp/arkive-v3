@@ -19,6 +19,7 @@ import {
   createTemplate,
   deleteBoard,
   deleteDocument,
+  deleteEdge,
   deleteMap,
   deleteMapMarker,
   deleteNode,
@@ -1139,6 +1140,49 @@ export function useCreateEdge(project_id: string) {
             }
           }
         );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+      },
+    }
+  );
+}
+// Custom hook for deleting an edge
+export function useDeleteEdge(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; board_id: string }) => {
+      await deleteEdge(vars.id);
+    },
+    {
+      onMutate: async (deletedEdge) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              return oldData.map((board) => {
+                if (board.id === deletedEdge.board_id) {
+                  return {
+                    ...board,
+                    edges: board.edges.filter(
+                      (edge) => edge.id !== deletedEdge.id
+                    ),
+                  };
+                } else {
+                  return board;
+                }
+              });
+            } else {
+              return [];
+            }
+          }
+        );
+
         return { previousBoards };
       },
       onError: (err, newTodo, context) => {

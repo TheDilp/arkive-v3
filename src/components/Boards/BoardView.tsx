@@ -13,7 +13,11 @@ import {
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
-import { cytoscapeStylesheet, edgehandlesSettings } from "../../utils/utils";
+import {
+  cytoscapeStylesheet,
+  edgehandlesSettings,
+  toastWarn,
+} from "../../utils/utils";
 import BoardContextMenu from "./BoardContextMenu";
 import NodeUpdateDialog from "./NodeUpdateDialog";
 
@@ -126,9 +130,16 @@ export default function BoardView({ setBoardId }: Props) {
             });
           } else if (group === "edges") {
             cm.current.show(evt.originalEvent);
-            setContextMenu({ ...evt.position, type: "edge" });
+            setContextMenu({
+              ...evt.position,
+              type: "edge",
+              selected: evt.target,
+            });
           }
         }
+      });
+      cyRef.current.on("click", "edge", function (evt: any) {
+        console.log(evt);
       });
       cyRef.current.on("dbltap", "node", function (evt: any) {
         let target = evt.target._private;
@@ -171,7 +182,13 @@ export default function BoardView({ setBoardId }: Props) {
           // Check due to weird edgehandles behavior when toggling drawmode
           // When drawmode is turned on and then off and then back on
           // It can add an edges to a node that doesn't exist
-
+          try {
+            cyRef.current.remove(addedEdge);
+          } catch (error) {
+            toastWarn(
+              "Cytoedge couldn't be removed, there was an error (BoardView 184)"
+            );
+          }
           makeEdgeCallback(sourceData.id, targetData.id);
         }
       );

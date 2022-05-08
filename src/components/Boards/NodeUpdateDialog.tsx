@@ -45,7 +45,7 @@ export default function NodeUpdateDialog({
       width: nodeUpdateDialog.width,
       height: nodeUpdateDialog.height,
       fontSize: nodeUpdateDialog.fontSize,
-      backgroundColor: nodeUpdateDialog.backgroundColor,
+      backgroundColor: nodeUpdateDialog.backgroundColor.replace("#", ""),
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -160,14 +160,17 @@ export default function NodeUpdateDialog({
               required: true,
             }}
             name="backgroundColor"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            render={({ field: { onChange, value } }) => (
               <div className="flex align-items-center flex-row-reverse">
                 <InputText
-                  value={value}
+                  value={value.replace("#", "")}
                   className="w-full ml-2"
                   onChange={onChange}
                 />
-                <ColorPicker value={value} onChange={onChange} />
+                <ColorPicker
+                  value={value.replace("#", "")}
+                  onChange={onChange}
+                />
               </div>
             )}
           />

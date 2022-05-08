@@ -754,3 +754,14 @@ export const deleteNode = async (id: string) => {
     const { error } = await supabase.from("nodes").delete().eq("id", id);
   }
 };
+export const deleteEdge = async (id: string) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase.from("edges").delete().eq("id", id);
+    if (error) {
+      toastError("There was an error deleting your edge.");
+      throw new Error(error.message);
+    }
+  }
+};
