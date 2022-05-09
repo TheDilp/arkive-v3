@@ -74,9 +74,7 @@ export const boardNodeShapes = [
   "star",
 ];
 export const boardEdgeCurveStyles = [
-  "bezier",
   "unbundled-bezier",
-  "haystack",
   "taxi",
   "straight-triangle",
   "straight",
@@ -192,9 +190,9 @@ export const cytoscapeStylesheet = [
       "taxi-turn-min-distance": "10px",
       "taxi-direction": "downward",
       "curve-style": "data(curveStyle)",
-      "control-point-distances": "-300 20 -20 45 -100 40",
-      "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",
       "text-rotation": "autorotate",
+      "control-point-distances": "data(controlPointDistances)",
+      "control-point-weights": "data(controlPointWeights)",
     },
   },
   {

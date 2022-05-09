@@ -80,6 +80,8 @@ export type BoardEdgeProps = {
   curveStyle: string;
   lineStyle: string;
   lineColor: string;
+  controlPointDistances: number;
+  controlPointWeights: number;
 };
 
 export type CytoscapeNodeProps = {
@@ -107,6 +109,8 @@ export type CytoscapeEdgeProps = {
     | "curveStyle"
     | "lineStyle"
     | "lineColor"
+    | "controlPointDistances"
+    | "controlPointWeights"
   >;
 };
 export type docItemDisplayDialogProps = {
@@ -151,6 +155,8 @@ export type edgeUpdateDialogProps = {
   curveStyle: string;
   lineStyle: string;
   lineColor: string;
+  controlPointDistances: number;
+  controlPointWeights: number;
   show: boolean;
 };
 export type iconSelectProps = {
@@ -211,7 +217,15 @@ export type UpdateMarkerInputs = {
   doc_id?: string;
   map_link?: string;
 };
-
+export type UpdateEdgeInputs = Pick<
+  edgeUpdateDialogProps,
+  | "label"
+  | "curveStyle"
+  | "lineStyle"
+  | "lineColor"
+  | "controlPointDistances"
+  | "controlPointWeights"
+>;
 export type RegisterInputs = {
   email: string;
   password: string;
@@ -251,4 +265,6 @@ export type UpdateEdgeProps = {
   curveStyle?: string;
   lineStyle?: string;
   lineColor?: string;
+  controlPointDistances?: number;
+  controlPointWeights?: number;
 };

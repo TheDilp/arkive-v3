@@ -6,19 +6,14 @@ import { InputText } from "primereact/inputtext";
 import { Slider } from "primereact/slider";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { edgeUpdateDialogProps } from "../../custom-types";
-import { useGetDocuments, useUpdateEdge } from "../../utils/customHooks";
+import { edgeUpdateDialogProps, UpdateEdgeInputs } from "../../custom-types";
+import { useUpdateEdge } from "../../utils/customHooks";
 import { boardEdgeCurveStyles, boardEdgeLineStyles } from "../../utils/utils";
 
 type Props = {
   edgeUpdateDialog: edgeUpdateDialogProps;
   setEdgeUpdateDialog: (edgeUpdateDialog: edgeUpdateDialogProps) => void;
 };
-
-type Inputs = Pick<
-  edgeUpdateDialogProps,
-  "label" | "curveStyle" | "lineStyle" | "lineColor"
->;
 
 export default function EdgeUpdateDialog({
   edgeUpdateDialog,
@@ -29,8 +24,9 @@ export default function EdgeUpdateDialog({
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<UpdateEdgeInputs>({
     defaultValues: {
       label: edgeUpdateDialog.label,
       curveStyle: edgeUpdateDialog.curveStyle,
@@ -38,7 +34,7 @@ export default function EdgeUpdateDialog({
       lineColor: edgeUpdateDialog.lineColor.replace("#", ""),
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<UpdateEdgeInputs> = (data) => {
     updateEdgeMutation.mutate({
       id: edgeUpdateDialog.id,
       board_id: board_id as string,
@@ -46,7 +42,7 @@ export default function EdgeUpdateDialog({
       lineColor: `#${data.lineColor}`,
     });
   };
-  const documents = useGetDocuments(project_id as string);
+
   const updateEdgeMutation = useUpdateEdge(project_id as string);
   return (
     <Dialog
@@ -60,6 +56,8 @@ export default function EdgeUpdateDialog({
           curveStyle: "",
           lineStyle: "",
           lineColor: "",
+          controlPointDistances: 0,
+          controlPointWeights: 0,
           show: false,
         })
       }
@@ -80,19 +78,61 @@ export default function EdgeUpdateDialog({
             )}
           /> */}
         </div>
-        <Controller
-          control={control}
-          name="curveStyle"
-          render={({ field: { onChange, value } }) => (
-            <Dropdown
-              options={boardEdgeCurveStyles}
-              className="w-full"
-              placeholder="Curve Type"
-              value={value}
-              onChange={(e) => onChange(e.value)}
-            />
+        <div className="w-full my-2">
+          <Controller
+            control={control}
+            name="curveStyle"
+            render={({ field: { onChange, value } }) => (
+              <Dropdown
+                options={boardEdgeCurveStyles}
+                className="w-full"
+                placeholder="Curve Type"
+                value={value}
+                onChange={(e) => onChange(e.value)}
+              />
+            )}
+          />
+          {watch("curveStyle") === "unbundled-bezier" && (
+            <div>
+              <Controller
+                control={control}
+                name={"controlPointDistances"}
+                render={({ field: { onChange, value } }) => (
+                  <div className="my-2">
+                    <div className="my-2">
+                      Curve Strength: {watch("controlPointDistances")}
+                    </div>
+                    <Slider
+                      value={value}
+                      min={-1000}
+                      max={1000}
+                      step={10}
+                      onChange={(e) => onChange(e.value)}
+                    />
+                  </div>
+                )}
+              />
+              <Controller
+                control={control}
+                name={"controlPointWeights"}
+                render={({ field: { onChange, value } }) => (
+                  <div className="my-2">
+                    <div className="my-2">
+                      Curve Center: {watch("controlPointWeights")}
+                    </div>
+                    <Slider
+                      value={value}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      onChange={(e) => onChange(e.value)}
+                    />
+                  </div>
+                )}
+              />
+            </div>
           )}
-        />
+        </div>
         <Controller
           control={control}
           name="lineStyle"

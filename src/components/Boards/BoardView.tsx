@@ -56,6 +56,8 @@ export default function BoardView({ setBoardId }: Props) {
       curveStyle: "",
       lineStyle: "",
       lineColor: "",
+      controlPointDistances: 0,
+      controlPointWeights: 0,
       show: false,
     });
   const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
@@ -102,6 +104,8 @@ export default function BoardView({ setBoardId }: Props) {
             curveStyle: edge.curveStyle,
             lineStyle: edge.lineStyle,
             lineColor: edge.lineColor,
+            controlPointDistances: edge.controlPointDistances,
+            controlPointWeights: edge.controlPointWeights,
           },
         }));
       }
@@ -121,6 +125,8 @@ export default function BoardView({ setBoardId }: Props) {
         curveStyle: "straight",
         lineStyle: "solid",
         lineColor: "#595959",
+        controlPointDistances: -100,
+        controlPointWeights: 0.5,
       });
     },
     [board_id]
@@ -174,7 +180,8 @@ export default function BoardView({ setBoardId }: Props) {
           curveStyle: target.data.curveStyle,
           lineStyle: target.data.lineStyle,
           lineColor: target.data.lineColor,
-
+          controlPointDistances: target.data.controlPointDistances,
+          controlPointWeights: target.data.controlPointWeights,
           show: true,
         });
       });
