@@ -73,6 +73,15 @@ export const boardNodeShapes = [
   "round-octagon",
   "star",
 ];
+export const boardEdgeCurveStyles = [
+  "bezier",
+  "unbundled-bezier",
+  "haystack",
+  "taxi",
+  "straight-triangle",
+  "straight",
+];
+export const boardEdgeLineStyles = ["solid", "dashed", "dotted"];
 export const boardNodeFontSizes = [
   10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46,
   48, 50, 52, 54, 56, 58, 60,
@@ -167,9 +176,10 @@ export const cytoscapeStylesheet = [
     },
   },
   {
+    // Edges in general
     selector: "edge[class != '.eh-ghost']",
     style: {
-      // label: "data(label)",
+      label: "data(label)",
       color: "white",
       "text-outline-color": "black",
       "text-outline-width": "2px",
@@ -184,6 +194,7 @@ export const cytoscapeStylesheet = [
       "curve-style": "data(curveStyle)",
       "control-point-distances": "-300 20 -20 45 -100 40",
       "control-point-weights": "0.50 0.5 1 1 0.5 0.1 ",
+      "text-rotation": "autorotate",
     },
   },
   {

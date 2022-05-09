@@ -232,8 +232,8 @@ export type CreateNodeProps = {
 export type UpdateNodeProps = {
   id: string;
   label?: string;
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   width?: number;
   height?: number;
   type?: string;

@@ -1,21 +1,18 @@
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
-import {
-  edgeUpdateDialogProps,
-  nodeUpdateDialogProps,
-} from "../../custom-types";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { Dropdown } from "primereact/dropdown";
-import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
-import { useParams } from "react-router-dom";
-import { boardNodeFontSizes, boardNodeShapes } from "../../utils/utils";
-import { Slider } from "primereact/slider";
 import { ColorPicker } from "primereact/colorpicker";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { Slider } from "primereact/slider";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { edgeUpdateDialogProps } from "../../custom-types";
+import { useGetDocuments, useUpdateEdge } from "../../utils/customHooks";
+import { boardEdgeCurveStyles, boardEdgeLineStyles } from "../../utils/utils";
 
 type Props = {
   edgeUpdateDialog: edgeUpdateDialogProps;
-  setEdgeUpdateDialog: (nodeUpdateDialog: edgeUpdateDialogProps) => void;
+  setEdgeUpdateDialog: (edgeUpdateDialog: edgeUpdateDialogProps) => void;
 };
 
 type Inputs = Pick<
@@ -23,49 +20,46 @@ type Inputs = Pick<
   "label" | "curveStyle" | "lineStyle" | "lineColor"
 >;
 
-export default function NodeUpdateDialog({
-  edgeUpdateDialog: nodeUpdateDialog,
-  setEdgeUpdateDialog: setNodeUpdateDialog,
+export default function EdgeUpdateDialog({
+  edgeUpdateDialog,
+  setEdgeUpdateDialog,
 }: Props) {
   const { project_id, board_id } = useParams();
   const {
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      label: nodeUpdateDialog.label,
-      curveStyle: nodeUpdateDialog.curveStyle,
-      lineStyle: nodeUpdateDialog.lineStyle,
-      lineColor: nodeUpdateDialog.lineColor,
+      label: edgeUpdateDialog.label,
+      curveStyle: edgeUpdateDialog.curveStyle,
+      lineStyle: edgeUpdateDialog.lineStyle,
+      lineColor: edgeUpdateDialog.lineColor.replace("#", ""),
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    updateNodeMutation.mutate({
-      id: nodeUpdateDialog.id,
+    updateEdgeMutation.mutate({
+      id: edgeUpdateDialog.id,
       board_id: board_id as string,
       ...data,
+      lineColor: `#${data.lineColor}`,
     });
   };
   const documents = useGetDocuments(project_id as string);
-  const updateNodeMutation = useUpdateNode(project_id as string);
+  const updateEdgeMutation = useUpdateEdge(project_id as string);
   return (
     <Dialog
-      header={`Update Node ${nodeUpdateDialog.label || ""}`}
-      visible={nodeUpdateDialog.show}
+      header={`Update Edge ${edgeUpdateDialog.label || ""}`}
+      visible={edgeUpdateDialog.show}
       modal={false}
       onHide={() =>
-        setNodeUpdateDialog({
+        setEdgeUpdateDialog({
           id: "",
           label: "",
-          type: "",
-          doc_id: undefined,
-          width: 0,
-          height: 0,
-          fontSize: 0,
-          backgroundColor: "",
+          curveStyle: "",
+          lineStyle: "",
+          lineColor: "",
           show: false,
         })
       }
@@ -73,7 +67,7 @@ export default function NodeUpdateDialog({
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex flex-nowrap">
           <InputText {...register("label")} placeholder="Node Label" />
-          <Controller
+          {/* <Controller
             control={control}
             name="fontSize"
             render={({ field: { onChange, value } }) => (
@@ -84,16 +78,16 @@ export default function NodeUpdateDialog({
                 onChange={(e) => onChange(e.value)}
               />
             )}
-          />
+          /> */}
         </div>
         <Controller
           control={control}
-          name="type"
+          name="curveStyle"
           render={({ field: { onChange, value } }) => (
             <Dropdown
-              options={boardNodeShapes}
+              options={boardEdgeCurveStyles}
               className="w-full"
-              placeholder="Node Shape"
+              placeholder="Curve Type"
               value={value}
               onChange={(e) => onChange(e.value)}
             />
@@ -101,69 +95,27 @@ export default function NodeUpdateDialog({
         />
         <Controller
           control={control}
-          name="doc_id"
+          name="lineStyle"
           render={({ field: { onChange, value } }) => (
             <Dropdown
               className="w-full"
-              placeholder="Link Document"
+              placeholder="Line style"
               value={value}
               filter
               emptyFilterMessage="No documents found"
               onChange={(e) => onChange(e.value)}
-              options={
-                documents.data
-                  ? [
-                      { title: "No document", id: null },
-                      ...documents.data.filter(
-                        (doc) => !doc.template && !doc.folder
-                      ),
-                    ]
-                  : []
-              }
-              optionLabel={"title"}
-              optionValue={"id"}
+              options={boardEdgeLineStyles}
             />
           )}
         />
-        <div className="my-3">
-          <div className="my-2">Width: {watch("width")}</div>
-          <Controller
-            control={control}
-            name="width"
-            render={({ field: { onChange, value } }) => (
-              <Slider
-                min={50}
-                max={1000}
-                step={10}
-                value={value}
-                onChange={(e) => onChange(e.value)}
-              />
-            )}
-          />
-        </div>
-        <div className="my-3">
-          <div className="my-2">Height: {watch("height")}</div>
-          <Controller
-            control={control}
-            name="height"
-            render={({ field: { onChange, value } }) => (
-              <Slider
-                min={50}
-                max={1000}
-                step={10}
-                value={value}
-                onChange={(e) => onChange(e.value)}
-              />
-            )}
-          />
-        </div>
+
         <div className="my-3">
           <Controller
             control={control}
             rules={{
               required: true,
             }}
-            name="backgroundColor"
+            name="lineColor"
             render={({ field: { onChange, value } }) => (
               <div className="flex align-items-center flex-row-reverse">
                 <InputText
@@ -179,7 +131,7 @@ export default function NodeUpdateDialog({
             )}
           />
         </div>
-        <Button label="Save Node" type="submit" />
+        <Button label="Save Edge" type="submit" />
       </form>
     </Dialog>
   );

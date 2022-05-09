@@ -20,6 +20,7 @@ import {
   toastWarn,
 } from "../../utils/utils";
 import BoardContextMenu from "./BoardContextMenu";
+import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
 
 type Props = {
@@ -95,6 +96,7 @@ export default function BoardView({ setBoardId }: Props) {
         temp_edges = board.edges.map((edge) => ({
           data: {
             id: edge.id,
+            label: edge.label,
             source: edge.source,
             target: edge.target,
             curveStyle: edge.curveStyle,
@@ -161,6 +163,18 @@ export default function BoardView({ setBoardId }: Props) {
           fontSize: target.data.fontSize,
           backgroundColor: target.data.backgroundColor,
           doc_id: target.scratch.doc_id,
+          show: true,
+        });
+      });
+      cyRef.current.on("dbltap", "edge", function (evt: any) {
+        let target = evt.target._private;
+        setEdgeUpdateDialog({
+          id: target.data.id,
+          label: target.data.label,
+          curveStyle: target.data.curveStyle,
+          lineStyle: target.data.lineStyle,
+          lineColor: target.data.lineColor,
+
           show: true,
         });
       });
@@ -238,10 +252,10 @@ export default function BoardView({ setBoardId }: Props) {
           setNodeUpdateDialog={setNodeUpdateDialog}
         />
       )}
-      {nodeUpdateDialog.show && (
-        <NodeUpdateDialog
-          nodeUpdateDialog={nodeUpdateDialog}
-          setNodeUpdateDialog={setNodeUpdateDialog}
+      {edgeUpdateDialog.show && (
+        <EdgeUpdateDialog
+          edgeUpdateDialog={edgeUpdateDialog}
+          setEdgeUpdateDialog={setEdgeUpdateDialog}
         />
       )}
 
