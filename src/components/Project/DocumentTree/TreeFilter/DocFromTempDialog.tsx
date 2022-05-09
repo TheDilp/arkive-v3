@@ -36,7 +36,7 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
   }
   return (
     <Dialog
-      className="w-3 Merriweather"
+      className="w-3"
       header={"Create Document From Template"}
       visible={visible}
       onHide={() => {

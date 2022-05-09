@@ -68,7 +68,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap justify-content-center">
-          <div className="w-8">
+          <div className="w-8 py-1">
             <InputText
               placeholder="Map Title"
               className="w-full"
@@ -82,7 +82,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
             )}
           </div>
           {!visible.folder && (
-            <div className="w-8 py-2">
+            <div className="w-8 py-1">
               <InputText
                 placeholder="Map Image"
                 className="w-full"
@@ -98,7 +98,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
               )}
             </div>
           )}
-          <div className="w-8">
+          <div className="w-8 py-1">
             <Controller
               name="parent"
               control={control}

@@ -103,8 +103,16 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                     optionLabel="title"
                     optionValue="id"
                     value={field.value}
+                    filter
                     onChange={(e) => field.onChange(e.value)}
-                    options={documents?.filter((doc) => doc.folder) || []}
+                    options={
+                      documents
+                        ? [
+                            { title: "No Folder", id: null },
+                            ...documents?.filter((doc) => doc.folder),
+                          ]
+                        : []
+                    }
                   />
                 )}
               />
@@ -122,8 +130,14 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                     value={field.value}
                     onChange={(e) => field.onChange(e.value)}
                     options={
-                      documents?.filter((doc) => !doc.folder && doc.template) ||
-                      []
+                      documents
+                        ? [
+                            { title: "No Template", id: null },
+                            ...documents?.filter(
+                              (doc) => doc.template && !doc.folder
+                            ),
+                          ]
+                        : []
                     }
                   />
                 )}
