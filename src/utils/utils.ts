@@ -127,7 +127,7 @@ export const edgehandlesSettings = {
 };
 export const cytoscapeStylesheet = [
   {
-    selector: "node[class != 'eh-presumptive-target']",
+    selector: "node[classes]",
     style: {
       shape: "data(type)",
       width: "data(width)",
@@ -157,12 +157,6 @@ export const cytoscapeStylesheet = [
       color: "white",
       "text-outline-color": "black",
       "text-outline-width": "2px",
-      "background-image": "a",
-      "background-opacity": "1",
-      "background-image-opacity": "0",
-      "background-fit": "cover",
-      "background-clip": "node",
-      "background-color": "black",
       "overlay-color": "lightblue",
       "overlay-opacity": "0",
     },
@@ -178,15 +172,14 @@ export const cytoscapeStylesheet = [
       color: "red",
       "text-outline-color": "black",
       "text-outline-width": "2px",
-      "background-image": "a",
-      "background-fit": "contain",
-      "background-color": "red",
+      "text-halign": "center",
+      "text-valign": "top",
       opacity: 0,
     },
   },
   {
     // Edges in general
-    selector: "edge[class != '.eh-ghost']",
+    selector: "edge[class != '.eh-ghost-edge']",
     style: {
       label: "data(label)",
       color: "white",
@@ -215,6 +208,11 @@ export const cytoscapeStylesheet = [
       "line-style": "solid",
       "line-dash-pattern": [5, 10],
       "curve-style": "straight",
+      "taxi-turn": "100",
+      "taxi-direction": "auto",
+      label: "",
+      "control-point-distances": "10",
+      "control-point-weights": "0.5",
     },
   },
   {
@@ -226,8 +224,15 @@ export const cytoscapeStylesheet = [
       "line-style": "solid",
       "line-dash-pattern": [5, 10],
       "curve-style": "straight",
+      "taxi-turn": "100",
+      "taxi-direction": "auto",
+      label: "",
+      "control-point-distances": "10",
+      "control-point-weights": "0.5",
     },
   },
+
+  // Classes for highlighting
   {
     selector: ".edgeHighlight",
     style: {

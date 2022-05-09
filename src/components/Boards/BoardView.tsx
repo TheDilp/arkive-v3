@@ -78,6 +78,7 @@ export default function BoardView({ setBoardId }: Props) {
         temp_nodes = board.nodes.map((node) => ({
           data: {
             id: node.id,
+            classes: "boardNode",
             label: node.label || "",
             type: node.type,
             width: node.width,
@@ -201,6 +202,15 @@ export default function BoardView({ setBoardId }: Props) {
           x: target.position.x,
           y: target.position.y,
         });
+      });
+
+      cyRef.current.on("ehhoverover", function (evt: any) {
+        console.log(
+          cyRef.current.nodes().filter((node) => {
+            console.log(node.classes());
+            return node.isNode();
+          })
+        );
       });
     }
   }, [cyRef, board_id]);
