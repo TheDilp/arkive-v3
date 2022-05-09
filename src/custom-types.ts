@@ -145,6 +145,14 @@ export type nodeUpdateDialogProps = {
   doc_id?: string;
   show: boolean;
 };
+export type edgeUpdateDialogProps = {
+  id: string;
+  label: string;
+  curveStyle: string;
+  lineStyle: string;
+  lineColor: string;
+  show: boolean;
+};
 export type iconSelectProps = {
   doc_id: string;
   icon: string;
@@ -234,4 +242,13 @@ export type UpdateNodeProps = {
   textVAlign?: "top" | "center" | "bottom";
   backgroundColor?: string;
   doc_id?: string;
+};
+
+export type UpdateEdgeProps = {
+  id: string;
+  board_id: string;
+  label?: string;
+  curveStyle?: string;
+  lineStyle?: string;
+  lineColor?: string;
 };

@@ -6,7 +6,7 @@ import {
   DocumentProps,
   MapProps,
   MapMarkerProps,
-  BoardNodeProps,
+  UpdateEdgeProps,
   ProfileProps,
   ProjectProps,
   BoardEdgeProps,
@@ -604,6 +604,32 @@ export const updateNode = async ({
     if (data) return data;
     if (error) {
       toastError("There was an error updating your node.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const updateEdge = async ({
+  id,
+  label,
+  curveStyle,
+  lineStyle,
+  lineColor,
+}: UpdateEdgeProps) => {
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase
+      .from("edges")
+      .update({
+        label,
+        curveStyle,
+        lineStyle,
+        lineColor,
+      })
+      .eq("id", id);
+
+    if (data) return data;
+    if (error) {
+      toastError("There was an error updating your edge.");
       throw new Error(error.message);
     }
   }

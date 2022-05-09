@@ -8,6 +8,7 @@ import {
   DocumentProps,
   MapProps,
   ProjectProps,
+  UpdateEdgeProps,
   UpdateNodeProps,
 } from "../custom-types";
 import {
@@ -32,6 +33,7 @@ import {
   getTags,
   updateBoard,
   updateDocument,
+  updateEdge,
   updateMap,
   updateMapMarker,
   updateNode,
@@ -1126,6 +1128,55 @@ export function useCreateEdge(project_id: string) {
                 }
               });
               return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+      },
+    }
+  );
+}
+// Custom hook for updating an edge
+export function useUpdateEdge(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: UpdateEdgeProps) => {
+      await updateEdge(vars);
+    },
+    {
+      onMutate: async (updatedEdge) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              return oldData.map((board) => {
+                if (board.id === updatedEdge.board_id) {
+                  return {
+                    ...board,
+                    edges: board.edges.map((edge) => {
+                      if (edge.id === updatedEdge.id) {
+                        return {
+                          ...edge,
+                          ...updatedEdge,
+                        };
+                      } else {
+                        return edge;
+                      }
+                    }),
+                  };
+                } else {
+                  return board;
+                }
+              });
             } else {
               return [];
             }

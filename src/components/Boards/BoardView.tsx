@@ -6,6 +6,7 @@ import {
   BoardContextMenuProps,
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
+  edgeUpdateDialogProps,
   nodeUpdateDialogProps,
 } from "../../custom-types";
 import {
@@ -45,6 +46,15 @@ export default function BoardView({ setBoardId }: Props) {
       height: 0,
       fontSize: 0,
       backgroundColor: "",
+      show: false,
+    });
+  const [edgeUpdateDialog, setEdgeUpdateDialog] =
+    useState<edgeUpdateDialogProps>({
+      id: "",
+      label: "",
+      curveStyle: "",
+      lineStyle: "",
+      lineColor: "",
       show: false,
     });
   const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
@@ -222,6 +232,12 @@ export default function BoardView({ setBoardId }: Props) {
         contextMenu={contextMenu}
         setDrawMode={setDrawMode}
       />
+      {nodeUpdateDialog.show && (
+        <NodeUpdateDialog
+          nodeUpdateDialog={nodeUpdateDialog}
+          setNodeUpdateDialog={setNodeUpdateDialog}
+        />
+      )}
       {nodeUpdateDialog.show && (
         <NodeUpdateDialog
           nodeUpdateDialog={nodeUpdateDialog}
