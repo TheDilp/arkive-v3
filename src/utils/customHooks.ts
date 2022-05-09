@@ -1009,6 +1009,7 @@ export function useUpdateNode(project_id: string) {
               } else if (updatedNode.doc_id === null) {
                 document = undefined;
               }
+              console.log(updatedNode.doc_id);
 
               let newData = oldData.map((board) => {
                 if (board.id === updatedNode.board_id) {
@@ -1019,7 +1020,11 @@ export function useUpdateNode(project_id: string) {
                         return {
                           ...node,
                           ...updatedNode,
-                          document: document,
+                          document: updatedNode.doc_id
+                            ? document
+                            : updatedNode.doc_id === null
+                            ? undefined
+                            : node.document,
                         };
                       } else {
                         return node;
