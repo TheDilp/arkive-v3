@@ -4,9 +4,11 @@ import { useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import {
   BoardProps,
+  CreateNodeProps,
   DocumentProps,
   MapProps,
   ProjectProps,
+  UpdateNodeProps,
 } from "../custom-types";
 import {
   auth,
@@ -924,15 +926,7 @@ export function useDeleteBoard(project_id: string) {
 export function useCreateNode(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: {
-      id: string;
-      label?: string;
-      board_id: string;
-      x: number;
-      y: number;
-      type: string;
-      doc_id?: string;
-    }) => {
+    async (vars: CreateNodeProps) => {
       const newNode = await createNode({
         ...vars,
       });
@@ -957,6 +951,8 @@ export function useCreateNode(project_id: string) {
                         height: 50,
                         fontSize: 16,
                         backgroundColor: "#1e1e1e",
+                        textHAlign: "center" as const,
+                        textVAlign: "top" as const,
                       },
                     ],
                   };
@@ -987,18 +983,7 @@ export function useUpdateNode(project_id: string) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (vars: {
-      id: string;
-      board_id: string;
-      label?: string;
-      x?: number;
-      y?: number;
-      width?: number;
-      height?: number;
-      backgroundColor?: string;
-      type?: string;
-      doc_id?: string;
-    }) => {
+    async (vars: UpdateNodeProps & { board_id: string }) => {
       const { board_id, ...updateVars } = vars;
       await updateNode({ ...updateVars });
     },

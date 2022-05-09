@@ -10,6 +10,8 @@ import {
   ProfileProps,
   ProjectProps,
   BoardEdgeProps,
+  UpdateNodeProps,
+  CreateNodeProps,
 } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -349,15 +351,7 @@ export const createNode = async ({
   board_id,
   type,
   doc_id,
-}: {
-  id: string;
-  label?: string;
-  x: number;
-  y: number;
-  board_id: string;
-  type: string;
-  doc_id?: string;
-}) => {
+}: CreateNodeProps) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase.from("nodes").insert({
@@ -583,19 +577,10 @@ export const updateNode = async ({
   height,
   fontSize,
   backgroundColor,
+  textVAlign,
+  textHAlign,
   doc_id,
-}: {
-  id: string;
-  label?: string;
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-  type?: string;
-  fontSize?: number;
-  backgroundColor?: string;
-  doc_id?: string;
-}) => {
+}: UpdateNodeProps) => {
   let user = auth.user();
 
   if (user) {
@@ -609,6 +594,8 @@ export const updateNode = async ({
         width,
         height,
         fontSize,
+        textHAlign,
+        textVAlign,
         backgroundColor,
         doc_id,
       })

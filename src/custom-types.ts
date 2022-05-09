@@ -65,6 +65,8 @@ export type BoardNodeProps = {
   type: string;
   fontSize: number;
   backgroundColor: string;
+  textHAlign: "left" | "center" | "right";
+  textVAlign: "top" | "center" | "bottom";
   document?: Pick<DocumentProps, "id" | "image">;
   board_id: string;
 };
@@ -90,6 +92,8 @@ export type CytoscapeNodeProps = {
     | "type"
     | "fontSize"
     | "backgroundColor"
+    | "textHAlign"
+    | "textVAlign"
   >;
   position: Pick<BoardNodeProps, "x" | "y">;
 };
@@ -203,4 +207,31 @@ export type UpdateMarkerInputs = {
 export type RegisterInputs = {
   email: string;
   password: string;
+};
+
+// DATA CREATION TYPES
+
+export type CreateNodeProps = {
+  id: string;
+  label?: string;
+  x: number;
+  y: number;
+  board_id: string;
+  type: string;
+  doc_id?: string;
+};
+
+export type UpdateNodeProps = {
+  id: string;
+  label?: string;
+  x: number;
+  y: number;
+  width?: number;
+  height?: number;
+  type?: string;
+  fontSize?: number;
+  textHAlign?: "left" | "center" | "right";
+  textVAlign?: "top" | "center" | "bottom";
+  backgroundColor?: string;
+  doc_id?: string;
 };

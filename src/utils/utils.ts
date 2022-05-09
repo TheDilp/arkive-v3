@@ -124,8 +124,8 @@ export const cytoscapeStylesheet = [
       "background-fit": "cover",
       "background-clip": "node",
       "background-color": "data(backgroundColor)",
-      "text-halign": "center",
-      "text-valign": "top",
+      "text-halign": "data(textHAlign)",
+      "text-valign": "data(textVAlign)",
     },
   },
   {

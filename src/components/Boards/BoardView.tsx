@@ -68,6 +68,8 @@ export default function BoardView({ setBoardId }: Props) {
             width: node.width,
             height: node.height,
             fontSize: node.fontSize,
+            textHAlign: node.textHAlign,
+            textVAlign: node.textVAlign,
             backgroundColor: node.backgroundColor,
             ...(node.document?.image
               ? { backgroundImage: node.document.image }
@@ -231,7 +233,7 @@ export default function BoardView({ setBoardId }: Props) {
         elements={elements}
         minZoom={0.1}
         maxZoom={5}
-        className="Lato Merriweather"
+        className="Lato"
         style={{ width: "100%", height: "100%", backgroundColor: "#1e1e1e`" }}
         cy={(cy: any) => {
           cyRef.current = cy;
