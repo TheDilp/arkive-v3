@@ -82,6 +82,8 @@ export type BoardEdgeProps = {
   lineColor: string;
   controlPointDistances: number;
   controlPointWeights: number;
+  taxiDirection: string;
+  taxiTurn: number;
 };
 
 export type CytoscapeNodeProps = {
@@ -111,6 +113,8 @@ export type CytoscapeEdgeProps = {
     | "lineColor"
     | "controlPointDistances"
     | "controlPointWeights"
+    | "taxiDirection"
+    | "taxiTurn"
   >;
 };
 export type docItemDisplayDialogProps = {
@@ -157,6 +161,8 @@ export type edgeUpdateDialogProps = {
   lineColor: string;
   controlPointDistances: number;
   controlPointWeights: number;
+  taxiDirection: string;
+  taxiTurn: number;
   show: boolean;
 };
 export type iconSelectProps = {
@@ -225,6 +231,8 @@ export type UpdateEdgeInputs = Pick<
   | "lineColor"
   | "controlPointDistances"
   | "controlPointWeights"
+  | "taxiDirection"
+  | "taxiTurn"
 >;
 export type RegisterInputs = {
   email: string;
@@ -267,4 +275,6 @@ export type UpdateEdgeProps = {
   lineColor?: string;
   controlPointDistances?: number;
   controlPointWeights?: number;
+  taxiDirection?: string;
+  taxiTurn?: number;
 };

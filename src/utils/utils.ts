@@ -80,6 +80,17 @@ export const boardEdgeCurveStyles = [
   "straight",
 ];
 export const boardEdgeLineStyles = ["solid", "dashed", "dotted"];
+
+export const boardEdgeTaxiDirections = [
+  "auto",
+  "vertical",
+  "horizontal",
+  "upward",
+  "downward",
+  "leftward",
+  "rightward",
+];
+
 export const boardNodeFontSizes = [
   10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46,
   48, 50, 52, 54, 56, 58, 60,
@@ -187,8 +198,8 @@ export const cytoscapeStylesheet = [
       "line-color": "data(lineColor)",
       "line-style": "data(lineStyle)",
       "line-dash-pattern": [5, 10],
-      "taxi-turn-min-distance": "10px",
-      "taxi-direction": "downward",
+      "taxi-turn": "data(taxiTurn)",
+      "taxi-direction": "data(taxiDirection)",
       "curve-style": "data(curveStyle)",
       "text-rotation": "autorotate",
       "control-point-distances": "data(controlPointDistances)",

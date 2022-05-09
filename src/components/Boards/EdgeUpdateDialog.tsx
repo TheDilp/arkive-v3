@@ -8,7 +8,11 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { edgeUpdateDialogProps, UpdateEdgeInputs } from "../../custom-types";
 import { useUpdateEdge } from "../../utils/customHooks";
-import { boardEdgeCurveStyles, boardEdgeLineStyles } from "../../utils/utils";
+import {
+  boardEdgeCurveStyles,
+  boardEdgeLineStyles,
+  boardEdgeTaxiDirections,
+} from "../../utils/utils";
 
 type Props = {
   edgeUpdateDialog: edgeUpdateDialogProps;
@@ -32,6 +36,10 @@ export default function EdgeUpdateDialog({
       curveStyle: edgeUpdateDialog.curveStyle,
       lineStyle: edgeUpdateDialog.lineStyle,
       lineColor: edgeUpdateDialog.lineColor.replace("#", ""),
+      controlPointDistances: edgeUpdateDialog.controlPointDistances,
+      controlPointWeights: edgeUpdateDialog.controlPointWeights,
+      taxiDirection: edgeUpdateDialog.taxiDirection,
+      taxiTurn: edgeUpdateDialog.taxiTurn,
     },
   });
   const onSubmit: SubmitHandler<UpdateEdgeInputs> = (data) => {
@@ -58,6 +66,8 @@ export default function EdgeUpdateDialog({
           lineColor: "",
           controlPointDistances: 0,
           controlPointWeights: 0,
+          taxiDirection: "",
+          taxiTurn: 0,
           show: false,
         })
       }
@@ -125,6 +135,42 @@ export default function EdgeUpdateDialog({
                       min={0}
                       max={1}
                       step={0.1}
+                      onChange={(e) => onChange(e.value)}
+                    />
+                  </div>
+                )}
+              />
+            </div>
+          )}
+          {watch("curveStyle") === "taxi" && (
+            <div>
+              <Controller
+                control={control}
+                name={"taxiDirection"}
+                render={({ field: { onChange, value } }) => (
+                  <div className="my-2">
+                    <Dropdown
+                      value={value}
+                      options={boardEdgeTaxiDirections}
+                      min={-1000}
+                      max={1000}
+                      step={10}
+                      onChange={(e) => onChange(e.value)}
+                    />
+                  </div>
+                )}
+              />
+              <Controller
+                control={control}
+                name={"taxiTurn"}
+                render={({ field: { onChange, value } }) => (
+                  <div className="my-2">
+                    <div className="my-2">Edge Turn: {watch("taxiTurn")}</div>
+                    <Slider
+                      value={value}
+                      min={-1000}
+                      max={1000}
+                      step={10}
                       onChange={(e) => onChange(e.value)}
                     />
                   </div>

@@ -1110,6 +1110,8 @@ export function useCreateEdge(project_id: string) {
       lineColor: string;
       controlPointDistances: number;
       controlPointWeights: number;
+      taxiDirection: string;
+      taxiTurn: number;
     }) => {
       const newEdge = await createEdge({
         ...vars,

@@ -616,6 +616,8 @@ export const updateEdge = async ({
   lineColor,
   controlPointDistances,
   controlPointWeights,
+  taxiDirection,
+  taxiTurn,
 }: UpdateEdgeProps) => {
   let user = auth.user();
   if (user) {
@@ -628,6 +630,8 @@ export const updateEdge = async ({
         lineColor,
         controlPointDistances,
         controlPointWeights,
+        taxiDirection,
+        taxiTurn,
       })
       .eq("id", id);
 

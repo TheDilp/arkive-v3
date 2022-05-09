@@ -58,6 +58,8 @@ export default function BoardView({ setBoardId }: Props) {
       lineColor: "",
       controlPointDistances: 0,
       controlPointWeights: 0,
+      taxiDirection: "",
+      taxiTurn: 0,
       show: false,
     });
   const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
@@ -98,7 +100,7 @@ export default function BoardView({ setBoardId }: Props) {
         temp_edges = board.edges.map((edge) => ({
           data: {
             id: edge.id,
-            label: edge.label,
+            label: edge.label || "",
             source: edge.source,
             target: edge.target,
             curveStyle: edge.curveStyle,
@@ -106,6 +108,8 @@ export default function BoardView({ setBoardId }: Props) {
             lineColor: edge.lineColor,
             controlPointDistances: edge.controlPointDistances,
             controlPointWeights: edge.controlPointWeights,
+            taxiDirection: edge.taxiDirection,
+            taxiTurn: edge.taxiTurn,
           },
         }));
       }
@@ -127,6 +131,8 @@ export default function BoardView({ setBoardId }: Props) {
         lineColor: "#595959",
         controlPointDistances: -100,
         controlPointWeights: 0.5,
+        taxiDirection: "auto",
+        taxiTurn: 50,
       });
     },
     [board_id]
@@ -182,6 +188,8 @@ export default function BoardView({ setBoardId }: Props) {
           lineColor: target.data.lineColor,
           controlPointDistances: target.data.controlPointDistances,
           controlPointWeights: target.data.controlPointWeights,
+          taxiDirection: target.data.taxiDirection,
+          taxiTurn: target.data.taxiTurn,
           show: true,
         });
       });
