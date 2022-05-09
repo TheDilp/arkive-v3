@@ -89,6 +89,13 @@ export default function BoardContextMenu({
       command: () => cyRef.current.center(contextMenu.selected),
     },
     {
+      label: "Highlight connected nodes",
+      command: () => {
+        contextMenu.selected.neighborhood().flashClass("edgeHighlight", 1500);
+        contextMenu.selected.neighborhood().flashClass("nodeHighlight", 1500);
+      },
+    },
+    {
       label: "Delete Node",
       command: () => {
         contextMenu.selected.outgoers("edge").forEach((el: any) =>
@@ -118,6 +125,10 @@ export default function BoardContextMenu({
     },
     {
       label: "Highlight Connected Nodes",
+      command: () => {
+        contextMenu.selected.sources().flashClass("nodeHighlight", 1500);
+        contextMenu.selected.targets().flashClass("nodeHighlight", 1500);
+      },
     },
     {
       label: "Delete Edge",

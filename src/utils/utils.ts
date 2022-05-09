@@ -208,4 +208,30 @@ export const cytoscapeStylesheet = [
       "curve-style": "straight",
     },
   },
+  {
+    selector: ".edgeHighlight",
+    style: {
+      "target-arrow-shape": "triangle-backcurve",
+      "target-arrow-color": "cyan",
+      "line-color": "cyan",
+      "line-style": "solid",
+      "line-dash-pattern": [5, 10],
+      "curve-style": "straight",
+    },
+  },
+  {
+    selector: ".nodeHighlight",
+    style: {
+      "background-image-opacity": 0,
+      "background-color": "cyan",
+      padding: "15px",
+    },
+  },
+  {
+    selector: ".selectedHighlight",
+    style: {
+      "background-image-opacity": 0,
+      "background-color": "yellow",
+    },
+  },
 ];

@@ -52,6 +52,11 @@ body {
 
 }
 
+.highlight {
+    color: cyan;
+    background-color: cyan;
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */
