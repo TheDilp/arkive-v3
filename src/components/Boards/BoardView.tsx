@@ -101,6 +101,7 @@ export default function BoardView({ setBoardId }: Props) {
         temp_edges = board.edges.map((edge) => ({
           data: {
             id: edge.id,
+            classes: "boardEdge",
             label: edge.label || "",
             source: edge.source,
             target: edge.target,

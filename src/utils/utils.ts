@@ -179,7 +179,7 @@ export const cytoscapeStylesheet = [
   },
   {
     // Edges in general
-    selector: "edge[class != '.eh-ghost-edge']",
+    selector: "edge[classes]",
     style: {
       label: "data(label)",
       color: "white",
