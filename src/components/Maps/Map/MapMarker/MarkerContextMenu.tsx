@@ -16,7 +16,7 @@ export default function MarkerContextMenu({
   const deleteMarkerMutation = useDeleteMapMarker();
   const items = [
     {
-      label: "Update Token",
+      label: "Update Marker",
       icon: "pi pi-fw pi-map-marker",
       command: () =>
         setUpdateTokenDialog((prev: any) => {

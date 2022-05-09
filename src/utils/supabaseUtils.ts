@@ -546,7 +546,6 @@ export const updateMapMarker = async ({
     throw new Error(error.message);
   }
 };
-
 export const updateBoard = async ({
   id,
   title,
@@ -574,7 +573,6 @@ export const updateBoard = async ({
     }
   }
 };
-
 export const updateNode = async ({
   id,
   label,

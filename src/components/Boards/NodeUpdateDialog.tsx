@@ -114,8 +114,19 @@ export default function NodeUpdateDialog({
               className="w-full"
               placeholder="Link Document"
               value={value}
+              filter
+              emptyFilterMessage="No documents found"
               onChange={(e) => onChange(e.value)}
-              options={documents.data?.filter((doc) => !doc.template)}
+              options={
+                documents.data
+                  ? [
+                      { title: "No document", id: null },
+                      ...documents.data.filter(
+                        (doc) => !doc.template && !doc.folder
+                      ),
+                    ]
+                  : []
+              }
               optionLabel={"title"}
               optionValue={"id"}
             />

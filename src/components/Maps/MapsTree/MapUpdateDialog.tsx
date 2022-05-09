@@ -109,11 +109,15 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
                   optionLabel="title"
                   optionValue="id"
                   value={field.value}
+                  filter
                   onChange={(e) => field.onChange(e.value)}
                   options={
-                    maps?.filter(
-                      (map) => map.folder && map.id !== visible.id
-                    ) || []
+                    maps
+                      ? [
+                          { title: "No Folder", id: null },
+                          ...maps.filter((map) => map.folder),
+                        ]
+                      : []
                   }
                 />
               )}

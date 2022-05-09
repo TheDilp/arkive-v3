@@ -136,7 +136,7 @@ export default function UpdateMarkerDialog({
               required: true,
             }}
             name="color"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
+            render={({ field: { onChange, value } }) => (
               <div className="flex align-items-center flex-row-reverse">
                 <InputText
                   value={value}
@@ -168,9 +168,16 @@ export default function UpdateMarkerDialog({
                 placeholder="Link Document"
                 value={value}
                 onChange={(e) => onChange(e.value)}
-                options={documents.data?.filter(
-                  (doc) => !doc.template && !doc.folder
-                )}
+                options={
+                  documents.data
+                    ? [
+                        { title: "No document", id: null },
+                        ...documents.data.filter(
+                          (doc) => !doc.template && !doc.folder
+                        ),
+                      ]
+                    : []
+                }
                 optionLabel={"title"}
                 optionValue={"id"}
               />
@@ -188,7 +195,14 @@ export default function UpdateMarkerDialog({
                   placeholder="Map Link"
                   value={value}
                   onChange={(e) => onChange(e.value)}
-                  options={maps.data?.filter((map) => !map.folder)}
+                  options={
+                    maps.data
+                      ? [
+                          { title: "No map", id: null },
+                          ...maps.data.filter((map) => !map.folder),
+                        ]
+                      : []
+                  }
                   optionLabel={"title"}
                   optionValue={"id"}
                 />

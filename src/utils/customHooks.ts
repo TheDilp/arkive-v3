@@ -688,9 +688,13 @@ export function useUpdateMapMarker() {
                             : marker.lng,
                           doc_id: updatedMarker.doc_id
                             ? updatedMarker.doc_id
+                            : updatedMarker.doc_id === null
+                            ? undefined
                             : marker.doc_id,
                           map_link: updatedMarker.map_link
                             ? updatedMarker.map_link
+                            : updatedMarker.map_link === null
+                            ? undefined
                             : marker.map_link,
                         };
                       } else {
@@ -1015,6 +1019,8 @@ export function useUpdateNode(project_id: string) {
                   (doc) => doc.id === updatedNode.doc_id
                 );
                 if (doc) document = { id: doc.id, image: doc.image };
+              } else if (updatedNode.doc_id === null) {
+                document = undefined;
               }
 
               let newData = oldData.map((board) => {
@@ -1026,7 +1032,7 @@ export function useUpdateNode(project_id: string) {
                         return {
                           ...node,
                           ...updatedNode,
-                          document: document || node.document,
+                          document: document,
                         };
                       } else {
                         return node;
