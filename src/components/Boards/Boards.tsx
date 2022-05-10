@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useGetBoards } from "../../utils/customHooks";
 import LoadingScreen from "../Util/LoadingScreen";
@@ -16,6 +16,7 @@ export default function Boards() {
       navigate(boardId);
     }
   }, [boardId]);
+
   if (isLoading) return <LoadingScreen />;
   return (
     <div className="w-full h-screen flex flex-nowrap">

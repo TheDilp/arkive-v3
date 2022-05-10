@@ -17,8 +17,7 @@ import Register from "./components/Auth/Register";
 import Profile from "./components/Profile/Profile";
 import Maps from "./components/Maps/Maps";
 import Boards from "./components/Boards/Boards";
-import cytoscape from "cytoscape";
-import edgehandles from "cytoscape-edgehandles";
+
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -27,7 +26,6 @@ function App() {
       },
     },
   });
-  cytoscape.use(edgehandles);
 
   return (
     <main className="App flex flex-wrap align-content-start justify-content-center h-screen surface-0 overflow-y-hidden">

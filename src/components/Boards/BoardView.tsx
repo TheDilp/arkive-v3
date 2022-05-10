@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -16,7 +22,9 @@ import {
 } from "../../utils/customHooks";
 import {
   cytoscapeStylesheet,
+  dagreLayoutSettings,
   edgehandlesSettings,
+  presetLayoutSettings,
   toastWarn,
 } from "../../utils/utils";
 import BoardContextMenu from "./BoardContextMenu";
@@ -32,6 +40,7 @@ export default function BoardView({ setBoardId }: Props) {
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
+  const [layout, setLayout] = useState<string>("preset");
   const cyRef = useRef() as any;
   const ehRef = useRef() as any;
   const cm = useRef() as any;
@@ -71,6 +80,7 @@ export default function BoardView({ setBoardId }: Props) {
   const [drawMode, setDrawMode] = useState(false);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
+
   useEffect(() => {
     if (board) {
       let temp_nodes: CytoscapeNodeProps[] = [];
@@ -88,6 +98,8 @@ export default function BoardView({ setBoardId }: Props) {
             textHAlign: node.textHAlign,
             textVAlign: node.textVAlign,
             backgroundColor: node.backgroundColor,
+            x: node.x,
+            y: node.y,
             ...(node.document?.image
               ? { backgroundImage: node.document.image }
               : { backgroundImage: [] }),
@@ -210,7 +222,11 @@ export default function BoardView({ setBoardId }: Props) {
       });
     }
   }, [cyRef, board_id]);
+
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+    }
     if (board_id) setBoardId(board_id);
     return () => cyRef.current.removeAllListeners();
   }, [board_id]);
@@ -241,13 +257,36 @@ export default function BoardView({ setBoardId }: Props) {
   }, [elements]);
 
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
+    if (layout) {
+      if (layout === "preset") {
+        cyRef.current.autolock(false);
+        cyRef.current.layout({ name: "grid" });
+      } else {
+        cyRef.current.autolock(true);
+      }
     }
-  }, []);
+  }, [layout]);
 
   return (
     <div className="w-full h-full">
+      <button
+        className="absolute left-50 top-50 z-5"
+        onClick={() => {
+          setLayout("preset");
+          cyRef.current.layout(presetLayoutSettings).run();
+        }}
+      >
+        Preset
+      </button>
+      <button
+        className="absolute left-50 top-75 z-5"
+        onClick={() => {
+          setLayout("grid");
+          cyRef.current.layout({ name: "grid" }).run();
+        }}
+      >
+        Grid
+      </button>
       <div
         className={`text-white absolute Lato p-button ${
           drawMode ? "border-green-500" : ""
@@ -285,10 +324,14 @@ export default function BoardView({ setBoardId }: Props) {
         minZoom={0.1}
         maxZoom={5}
         className="Lato"
-        style={{ width: "100%", height: "100%", backgroundColor: "#1e1e1e`" }}
+        style={{ width: "100%", height: "100%" }}
         cy={(cy: any) => {
-          cyRef.current = cy;
-          ehRef.current = cy.edgehandles(edgehandlesSettings);
+          if (!cyRef.current) {
+            cyRef.current = cy;
+          }
+          if (!ehRef.current) {
+            ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
+          }
         }}
         id="cy"
         stylesheet={cytoscapeStylesheet}

@@ -95,6 +95,8 @@ export type CytoscapeNodeProps = {
     | "width"
     | "height"
     | "type"
+    | "x"
+    | "y"
     | "fontSize"
     | "backgroundColor"
     | "textHAlign"

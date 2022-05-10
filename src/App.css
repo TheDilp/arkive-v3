@@ -4,6 +4,10 @@ body {
     height: 100vh;
 }
 
+#cy {
+    opacity: 0.9999;
+}
+
 .projectTreeRoot {
     height: 72vh;
 }
