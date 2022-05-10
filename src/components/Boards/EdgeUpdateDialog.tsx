@@ -77,7 +77,11 @@ export default function EdgeUpdateDialog({
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex flex-nowrap">
-          <InputText {...register("label")} placeholder="Node Label" />
+          <InputText
+            {...register("label")}
+            placeholder="Edge Label"
+            className="w-full"
+          />
           {/* <Controller
             control={control}
             name="fontSize"
@@ -92,6 +96,7 @@ export default function EdgeUpdateDialog({
           /> */}
         </div>
         <div className="w-full my-2">
+          <label className="w-full text-sm">Edge Curve Type</label>
           <Controller
             control={control}
             name="curveStyle"
@@ -146,12 +151,13 @@ export default function EdgeUpdateDialog({
             </div>
           )}
           {watch("curveStyle") === "taxi" && (
-            <div>
+            <div className="my-1">
+              <label className="w-full text-sm">Taxi Edge Direction</label>
               <Controller
                 control={control}
                 name={"taxiDirection"}
                 render={({ field: { onChange, value } }) => (
-                  <div className="my-2">
+                  <div className="">
                     <Dropdown
                       value={value}
                       options={boardEdgeTaxiDirections}
@@ -167,8 +173,11 @@ export default function EdgeUpdateDialog({
                 control={control}
                 name={"taxiTurn"}
                 render={({ field: { onChange, value } }) => (
-                  <div className="my-2">
-                    <div className="my-2">Edge Turn: {watch("taxiTurn")}</div>
+                  <div className="my-1">
+                    <label className="w-full text-sm">
+                      Edge Turn: {watch("taxiTurn")}
+                    </label>
+
                     <Slider
                       value={value}
                       min={-1000}
@@ -182,37 +191,42 @@ export default function EdgeUpdateDialog({
             </div>
           )}
         </div>
-        <Controller
-          control={control}
-          name="lineStyle"
-          render={({ field: { onChange, value } }) => (
-            <Dropdown
-              className="w-full"
-              placeholder="Line style"
-              value={value}
-              filter
-              emptyFilterMessage="No documents found"
-              onChange={(e) => onChange(e.value)}
-              options={boardEdgeLineStyles}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="targetArrowShape"
-          render={({ field: { onChange, value } }) => (
-            <Dropdown
-              className="w-full"
-              placeholder="Arrow Shape"
-              value={value}
-              optionLabel="label"
-              optionValue="value"
-              emptyFilterMessage="No documents found"
-              onChange={(e) => onChange(e.value)}
-              options={edgeTargetArrowShapes}
-            />
-          )}
-        />
+        <div className="w-full my-1">
+          <label className="w-full text-sm">Line Style</label>
+          <Controller
+            control={control}
+            name="lineStyle"
+            render={({ field: { onChange, value } }) => (
+              <Dropdown
+                className="w-full"
+                placeholder="Line style"
+                value={value}
+                emptyFilterMessage="No documents found"
+                onChange={(e) => onChange(e.value)}
+                options={boardEdgeLineStyles}
+              />
+            )}
+          />
+        </div>
+        <div className="w-full my-1">
+          <label className="w-full text-sm">Arrow Shape</label>
+          <Controller
+            control={control}
+            name="targetArrowShape"
+            render={({ field: { onChange, value } }) => (
+              <Dropdown
+                className="w-full"
+                placeholder="Arrow Shape"
+                value={value}
+                optionLabel="label"
+                optionValue="value"
+                emptyFilterMessage="No documents found"
+                onChange={(e) => onChange(e.value)}
+                options={edgeTargetArrowShapes}
+              />
+            )}
+          />
+        </div>
 
         <div className="my-3">
           <Controller

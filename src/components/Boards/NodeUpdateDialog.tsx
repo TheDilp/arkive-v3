@@ -79,60 +79,76 @@ export default function NodeUpdateDialog({
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex flex-nowrap">
-          <InputText {...register("label")} placeholder="Node Label" />
+          <div className="w-full flex flex-wrap my-1">
+            <label className="w-full text-sm">Node Label</label>
+            <div className="w-full">
+              <InputText
+                {...register("label")}
+                placeholder="Node Label"
+                className="w-9"
+              />
+              <Controller
+                control={control}
+                name="fontSize"
+                render={({ field: { onChange, value } }) => (
+                  <Dropdown
+                    className="w-3"
+                    options={boardNodeFontSizes}
+                    placeholder="Label Font Size"
+                    value={value}
+                    onChange={(e) => onChange(e.value)}
+                  />
+                )}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="w-full my-1">
+          <label className="w-full text-sm">Node Shape</label>
           <Controller
             control={control}
-            name="fontSize"
+            name="type"
             render={({ field: { onChange, value } }) => (
               <Dropdown
-                options={boardNodeFontSizes}
-                placeholder="Label Font Size"
+                options={boardNodeShapes}
+                className="w-full"
+                placeholder="Node Shape"
+                filter
                 value={value}
                 onChange={(e) => onChange(e.value)}
               />
             )}
           />
         </div>
-        <Controller
-          control={control}
-          name="type"
-          render={({ field: { onChange, value } }) => (
-            <Dropdown
-              options={boardNodeShapes}
-              className="w-full"
-              placeholder="Node Shape"
-              filter
-              value={value}
-              onChange={(e) => onChange(e.value)}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="doc_id"
-          render={({ field: { onChange, value } }) => (
-            <Dropdown
-              className="w-full"
-              placeholder="Link Document"
-              value={value}
-              filter
-              emptyFilterMessage="No documents found"
-              onChange={(e) => onChange(e.value)}
-              options={
-                documents.data
-                  ? [
-                      { title: "No document", id: null },
-                      ...documents.data.filter(
-                        (doc) => !doc.template && !doc.folder
-                      ),
-                    ]
-                  : []
-              }
-              optionLabel={"title"}
-              optionValue={"id"}
-            />
-          )}
-        />
+        <div className="w-full my-1">
+          <label className="w-full text-sm">Linked Document</label>
+          <Controller
+            control={control}
+            name="doc_id"
+            render={({ field: { onChange, value } }) => (
+              <Dropdown
+                className="w-full"
+                placeholder="Link Document"
+                value={value}
+                filter
+                emptyFilterMessage="No documents found"
+                onChange={(e) => onChange(e.value)}
+                options={
+                  documents.data
+                    ? [
+                        { title: "No document", id: null },
+                        ...documents.data.filter(
+                          (doc) => !doc.template && !doc.folder
+                        ),
+                      ]
+                    : []
+                }
+                optionLabel={"title"}
+                optionValue={"id"}
+              />
+            )}
+          />
+        </div>
         <div className="my-3">
           <div className="my-2">Width: {watch("width")}</div>
           <Controller
@@ -166,6 +182,7 @@ export default function NodeUpdateDialog({
           />
         </div>
         <div className="my-3">
+          <label className="w-full text-sm">Node Background Color</label>
           <Controller
             control={control}
             rules={{
