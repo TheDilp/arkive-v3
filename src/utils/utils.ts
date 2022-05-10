@@ -51,44 +51,151 @@ export const passwordRegex =
   /"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"/g;
 
 export const boardNodeShapes = [
-  "ellipse",
-  "triangle",
-  "round-triangle",
-  "rectangle",
-  "round-rectangle",
-  "bottom-round-rectangle",
-  "cut-rectangle",
-  "barrel",
-  "rhomboid",
-  "diamond",
-  "round-diamond",
-  "pentagon",
-  "round-pentagon",
-  "hexagon",
-  "round-hexagon",
-  "concave-hexagon",
-  "heptagon",
-  "round-heptagon",
-  "octagon",
-  "round-octagon",
-  "star",
+  {
+    label: "Rectangle",
+    value: "rectangle",
+  },
+  {
+    label: "Ellipse",
+    value: "ellipse",
+  },
+  {
+    label: "Triangle",
+    value: "triangle",
+  },
+  {
+    label: "Barrel",
+    value: "barrel",
+  },
+  {
+    label: "Rhomboid",
+    value: "rhomboid",
+  },
+
+  {
+    label: "Diamond",
+    value: "diamond",
+  },
+  {
+    label: "Pentagon",
+    value: "pentagon",
+  },
+  {
+    label: "Hexagon",
+    value: "hexagon",
+  },
+  {
+    label: "Heptagon",
+    value: "heptagon",
+  },
+  {
+    label: "Octagon",
+    value: "octagon",
+  },
+  {
+    label: "Star",
+    value: "star",
+  },
+  {
+    label: "Cut Rectangle",
+    value: "cut-rectangle",
+  },
+  {
+    label: "Round Triangle",
+    value: "round-triangle",
+  },
+  {
+    label: "Round Rectangle",
+    value: "round-rectangle",
+  },
+  {
+    label: "Bottom Round Rectangle",
+    value: "bottom-round-rectangle",
+  },
+
+  {
+    label: "Round Diamond",
+    value: "round-diamond",
+  },
+  {
+    label: "Round Pentagon",
+    value: "round-pentagon",
+  },
+  {
+    label: "Round Hexagon",
+    value: "round-hexagon",
+  },
+  {
+    label: "Round Heptagon",
+    value: "round-heptagon",
+  },
+  {
+    label: "Round Octagon",
+    value: "round-octagon",
+  },
+  {
+    label: "Round Diamond",
+    value: "round-diamond",
+  },
 ];
 export const boardEdgeCurveStyles = [
-  "unbundled-bezier",
-  "taxi",
-  "straight-triangle",
-  "straight",
+  {
+    label: "Straight",
+    value: "straight",
+  },
+  {
+    label: "Bezier",
+    value: "unbundled-bezier",
+  },
+  {
+    label: "Taxi",
+    value: "taxi",
+  },
 ];
-export const boardEdgeLineStyles = ["solid", "dashed", "dotted"];
+export const boardEdgeLineStyles = [
+  {
+    label: "Solid",
+    value: "solid",
+  },
+  {
+    label: "Dashed",
+    value: "dashed",
+  },
+  {
+    label: "Dotted",
+    value: "dotted",
+  },
+];
 
 export const boardEdgeTaxiDirections = [
-  "auto",
-  "vertical",
-  "horizontal",
-  "upward",
-  "downward",
-  "leftward",
-  "rightward",
+  {
+    label: "Auto",
+    value: "auto",
+  },
+  {
+    label: "Vertical",
+    value: "vertical",
+  },
+  {
+    label: "Horizontal",
+    value: "horizontal",
+  },
+  {
+    label: "Upward",
+    value: "upward",
+  },
+  {
+    label: "Downward",
+    value: "downward",
+  },
+  {
+    label: "Leftward",
+    value: "leftward",
+  },
+  {
+    label: "Rightward",
+    value: "rightward",
+  },
 ];
 export const edgeTargetArrowShapes = [
   {

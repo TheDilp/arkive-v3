@@ -101,6 +101,7 @@ export default function NodeUpdateDialog({
               options={boardNodeShapes}
               className="w-full"
               placeholder="Node Shape"
+              filter
               value={value}
               onChange={(e) => onChange(e.value)}
             />
