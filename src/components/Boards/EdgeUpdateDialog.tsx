@@ -199,7 +199,7 @@ export default function EdgeUpdateDialog({
             render={({ field: { onChange, value } }) => (
               <Dropdown
                 className="w-full"
-                placeholder="Line style"
+                placeholder="Edge Line style"
                 value={value}
                 emptyFilterMessage="No documents found"
                 onChange={(e) => onChange(e.value)}
@@ -228,7 +228,8 @@ export default function EdgeUpdateDialog({
           />
         </div>
 
-        <div className="my-3">
+        <div className="my-1">
+          <label className="w-full text-sm">Edge Color</label>
           <Controller
             control={control}
             rules={{
