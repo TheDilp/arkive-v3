@@ -12,6 +12,7 @@ import {
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
   boardEdgeTaxiDirections,
+  edgeTargetArrowShapes,
 } from "../../utils/utils";
 
 type Props = {
@@ -40,6 +41,7 @@ export default function EdgeUpdateDialog({
       controlPointWeights: edgeUpdateDialog.controlPointWeights,
       taxiDirection: edgeUpdateDialog.taxiDirection,
       taxiTurn: edgeUpdateDialog.taxiTurn,
+      targetArrowShape: edgeUpdateDialog.targetArrowShape,
     },
   });
   const onSubmit: SubmitHandler<UpdateEdgeInputs> = (data) => {
@@ -68,6 +70,7 @@ export default function EdgeUpdateDialog({
           controlPointWeights: 0,
           taxiDirection: "",
           taxiTurn: 0,
+          targetArrowShape: "",
           show: false,
         })
       }
@@ -191,6 +194,22 @@ export default function EdgeUpdateDialog({
               emptyFilterMessage="No documents found"
               onChange={(e) => onChange(e.value)}
               options={boardEdgeLineStyles}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="targetArrowShape"
+          render={({ field: { onChange, value } }) => (
+            <Dropdown
+              className="w-full"
+              placeholder="Arrow Shape"
+              value={value}
+              optionLabel="label"
+              optionValue="value"
+              emptyFilterMessage="No documents found"
+              onChange={(e) => onChange(e.value)}
+              options={edgeTargetArrowShapes}
             />
           )}
         />

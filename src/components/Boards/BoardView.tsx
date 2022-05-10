@@ -60,6 +60,7 @@ export default function BoardView({ setBoardId }: Props) {
       controlPointWeights: 0,
       taxiDirection: "",
       taxiTurn: 0,
+      targetArrowShape: "",
       show: false,
     });
   const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
@@ -112,6 +113,7 @@ export default function BoardView({ setBoardId }: Props) {
             controlPointWeights: edge.controlPointWeights,
             taxiDirection: edge.taxiDirection,
             taxiTurn: edge.taxiTurn,
+            targetArrowShape: edge.targetArrowShape,
           },
         }));
       }
@@ -135,6 +137,7 @@ export default function BoardView({ setBoardId }: Props) {
         controlPointWeights: 0.5,
         taxiDirection: "auto",
         taxiTurn: 50,
+        targetArrowShape: "triangle",
       });
     },
     [board_id]
@@ -192,6 +195,7 @@ export default function BoardView({ setBoardId }: Props) {
           controlPointWeights: target.data.controlPointWeights,
           taxiDirection: target.data.taxiDirection,
           taxiTurn: target.data.taxiTurn,
+          targetArrowShape: target.data.targetArrowShape,
           show: true,
         });
       });
@@ -203,15 +207,6 @@ export default function BoardView({ setBoardId }: Props) {
           x: target.position.x,
           y: target.position.y,
         });
-      });
-
-      cyRef.current.on("ehhoverover", function (evt: any) {
-        console.log(
-          cyRef.current.nodes().filter((node) => {
-            console.log(node.classes());
-            return node.isNode();
-          })
-        );
       });
     }
   }, [cyRef, board_id]);

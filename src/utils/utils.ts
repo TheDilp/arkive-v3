@@ -90,7 +90,52 @@ export const boardEdgeTaxiDirections = [
   "leftward",
   "rightward",
 ];
-
+export const edgeTargetArrowShapes = [
+  {
+    label: "Triangle",
+    value: "triangle",
+  },
+  {
+    label: "Triangle-tee",
+    value: "triangle-tee",
+  },
+  {
+    label: "Triangle-cross",
+    value: "triangle-cross",
+  },
+  {
+    label: "Triangle-backcurve",
+    value: "triangle-backcurve",
+  },
+  {
+    label: "Circle-triangle",
+    value: "circle-triangle",
+  },
+  {
+    label: "Vee",
+    value: "vee",
+  },
+  {
+    label: "Tee",
+    value: "tee",
+  },
+  {
+    label: "Circle",
+    value: "circle",
+  },
+  {
+    label: "Diamond",
+    value: "diamond",
+  },
+  {
+    label: "Chevron",
+    value: "chevron",
+  },
+  {
+    label: "None",
+    value: "none",
+  },
+];
 export const boardNodeFontSizes = [
   10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46,
   48, 50, 52, 54, 56, 58, 60,
@@ -185,7 +230,7 @@ export const cytoscapeStylesheet = [
       color: "white",
       "text-outline-color": "black",
       "text-outline-width": "2px",
-      "target-arrow-shape": "triangle-backcurve",
+      "target-arrow-shape": "data(targetArrowShape)",
       "arrow-scale": 2,
       "target-arrow-color": "data(lineColor)",
       "line-color": "data(lineColor)",

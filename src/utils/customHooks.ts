@@ -1112,6 +1112,7 @@ export function useCreateEdge(project_id: string) {
       controlPointWeights: number;
       taxiDirection: string;
       taxiTurn: number;
+      targetArrowShape: string;
     }) => {
       const newEdge = await createEdge({
         ...vars,

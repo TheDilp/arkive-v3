@@ -618,6 +618,7 @@ export const updateEdge = async ({
   controlPointWeights,
   taxiDirection,
   taxiTurn,
+  targetArrowShape,
 }: UpdateEdgeProps) => {
   let user = auth.user();
   if (user) {
@@ -632,6 +633,7 @@ export const updateEdge = async ({
         controlPointWeights,
         taxiDirection,
         taxiTurn,
+        targetArrowShape,
       })
       .eq("id", id);
 
