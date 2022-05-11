@@ -14,9 +14,10 @@ import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
 type Props = {
   boardId: string;
+  cyRef: any;
 };
 
-export default function BoardsTree({ boardId }: Props) {
+export default function BoardsTree({ boardId, cyRef }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const cm = useRef() as any;
@@ -100,6 +101,7 @@ export default function BoardsTree({ boardId }: Props) {
         boardId={boardId}
         displayDialog={updateBoardDialog}
         setDisplayDialog={setUpdateBoardDialog}
+        cyRef={cyRef}
       />
       {updateBoardDialog.show && (
         <BoardUpdateDialog

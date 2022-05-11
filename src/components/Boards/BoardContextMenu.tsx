@@ -27,7 +27,6 @@ export default function BoardContextMenu({
 }: Props) {
   const { project_id, board_id } = useParams();
   const createNodeMutation = useCreateNode(project_id as string);
-  const updateNodeMutation = useUpdateNode(project_id as string);
   const deleteNodeMutation = useDeleteNode(project_id as string);
 
   const deleteEdgeMutation = useDeleteEdge(project_id as string);
@@ -91,8 +90,13 @@ export default function BoardContextMenu({
     {
       label: "Highlight connected nodes",
       command: () => {
-        contextMenu.selected.neighborhood().flashClass("edgeHighlight", 1500);
-        contextMenu.selected.neighborhood().flashClass("nodeHighlight", 1500);
+        const incomers = contextMenu.selected.incomers();
+        const outgoers = contextMenu.selected.outgoers();
+
+        incomers.nodes().flashClass("incomingNodeHighlight", 1500);
+        incomers.edges().flashClass("incomingEdgeHighlight", 1500);
+        outgoers.nodes().flashClass("outgoingNodeHighlight", 1500);
+        outgoers.edges().flashClass("outgoingEdgeHighlight", 1500);
       },
     },
     {

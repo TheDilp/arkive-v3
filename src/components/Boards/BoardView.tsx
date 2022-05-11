@@ -24,15 +24,9 @@ import {
 } from "../../utils/customHooks";
 import {
   boardLayouts,
-  breadthFirstLayoutSettings,
   changeLayout,
-  circleLayoutSettings,
-  concentricLayoutSettings,
   cytoscapeStylesheet,
-  dagreLayoutSettings,
   edgehandlesSettings,
-  presetLayoutSettings,
-  randomLayoutSettings,
   toastWarn,
 } from "../../utils/utils";
 import BoardContextMenu from "./BoardContextMenu";
@@ -41,15 +35,15 @@ import NodeUpdateDialog from "./NodeUpdateDialog";
 
 type Props = {
   setBoardId: (boardId: string) => void;
+  cyRef: any;
 };
-export default function BoardView({ setBoardId }: Props) {
+export default function BoardView({ setBoardId, cyRef }: Props) {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
   const [layout, setLayout] = useState<string>(board?.layout || "Preset");
-  const cyRef = useRef() as any;
   const ehRef = useRef() as any;
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
@@ -142,6 +136,7 @@ export default function BoardView({ setBoardId }: Props) {
     }
   }, [board]);
 
+  // Change function when the board_id changes
   const makeEdgeCallback = useCallback(
     (source, target) => {
       let boardId = board_id;
@@ -238,14 +233,16 @@ export default function BoardView({ setBoardId }: Props) {
     if (board_id) {
       setBoardId(board_id);
     }
-    if (board) {
-      // Timeout waits until cytoscape is ready
-      setTimeout(() => {
-        changeLayout(board.layout, cyRef);
-      }, 1);
-    }
+
     return () => cyRef.current.removeAllListeners();
   }, [board_id]);
+
+  useEffect(() => {
+    if (board?.layout) {
+      // Timeout waits until cytoscape is ready
+      changeLayout(board.layout, cyRef);
+    }
+  }, [board?.layout]);
 
   useEffect(() => {
     if (elements.length > 0) {
@@ -278,7 +275,7 @@ export default function BoardView({ setBoardId }: Props) {
         <div className="relative">
           <Dropdown
             options={boardLayouts}
-            value={layout}
+            value={board?.layout || "Preset"}
             onChange={(e) => {
               setLayout(e.value);
               changeLayout(e.value as string, cyRef);
@@ -319,6 +316,7 @@ export default function BoardView({ setBoardId }: Props) {
         maxZoom={5}
         className="Lato"
         style={{ width: "100%", height: "100%" }}
+        id={board_id}
         cy={(cy: any) => {
           if (!cyRef.current) {
             cyRef.current = cy;
@@ -327,7 +325,6 @@ export default function BoardView({ setBoardId }: Props) {
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
           }
         }}
-        id="cy"
         stylesheet={cytoscapeStylesheet}
       />
     </div>

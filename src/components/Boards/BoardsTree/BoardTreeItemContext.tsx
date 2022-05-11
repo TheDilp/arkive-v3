@@ -5,13 +5,19 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { boardItemDisplayDialogProps } from "../../../custom-types";
-import { useCreateBoard, useDeleteBoard } from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
+import {
+  useCreateBoard,
+  useDeleteBoard,
+  useUpdateBoard,
+  useUpdateNode,
+} from "../../../utils/customHooks";
+import { boardLayouts, toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   boardId: string;
   displayDialog: boardItemDisplayDialogProps;
   setDisplayDialog: (displayDialog: boardItemDisplayDialogProps) => void;
+  cyRef: any;
 };
 
 export default function BoardTreeItemContext({
@@ -19,11 +25,14 @@ export default function BoardTreeItemContext({
   boardId,
   displayDialog,
   setDisplayDialog,
+  cyRef,
 }: Props) {
   const { project_id } = useParams();
 
   const newBoardMutation = useCreateBoard();
+  const updateBoardMutation = useUpdateBoard(project_id as string);
   const deleteBoardMutation = useDeleteBoard(project_id as string);
+  const updateNodeMutation = useUpdateNode(project_id as string);
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -66,7 +75,39 @@ export default function BoardTreeItemContext({
       label: "Move To",
       icon: "pi pi-fw pi-directions",
     },
-
+    {
+      label: "Set Default Layout",
+      items: [
+        ...boardLayouts.map((layout) => {
+          return {
+            label: layout,
+            command: () => {
+              updateBoardMutation.mutate({
+                id: displayDialog.id,
+                layout,
+              });
+            },
+          };
+        }),
+      ],
+    },
+    {
+      label: "Convert To Preset",
+      command: () => {
+        if (boardId === displayDialog.id && cyRef.current) {
+          const nodes = cyRef.current.nodes();
+          for (const node of nodes) {
+            const { x, y } = node.position();
+            updateNodeMutation.mutate({
+              id: node.id(),
+              board_id: displayDialog.id,
+              x,
+              y,
+            });
+          }
+        }
+      },
+    },
     { separator: true },
     {
       label: "Delete Board",

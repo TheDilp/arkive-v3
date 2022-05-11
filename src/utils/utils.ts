@@ -320,7 +320,7 @@ export const dagreLayoutSettings = {
   nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
   animate: false, // whether to transition the node positions
   animateFilter: function (node: any, i: any) {
-    return true;
+    return false;
   }, // whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
   animationDuration: 500, // duration of animation in ms if enabled
   animationEasing: undefined, // easing of animation if enabled
@@ -484,7 +484,26 @@ export const cytoscapeStylesheet = [
 
   // Classes for highlighting
   {
-    selector: ".edgeHighlight",
+    selector: ".incomingEdgeHighlight",
+    style: {
+      "target-arrow-shape": "triangle-backcurve",
+      "target-arrow-color": "blue",
+      "line-color": "blue",
+      "line-style": "dotted",
+      "line-dash-pattern": [5, 10],
+      "curve-style": "straight",
+    },
+  },
+  {
+    selector: ".incomingNodeHighlight",
+    style: {
+      "background-image-opacity": 0,
+      "background-color": "blue",
+      padding: "15px",
+    },
+  },
+  {
+    selector: ".outgoingEdgeHighlight",
     style: {
       "target-arrow-shape": "triangle-backcurve",
       "target-arrow-color": "cyan",
@@ -495,7 +514,7 @@ export const cytoscapeStylesheet = [
     },
   },
   {
-    selector: ".nodeHighlight",
+    selector: ".outgoingNodeHighlight",
     style: {
       "background-image-opacity": 0,
       "background-color": "cyan",
