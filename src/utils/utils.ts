@@ -314,7 +314,7 @@ export const dagreLayoutSettings = {
   }, // higher weight edges are generally made shorter and straighter than lower weight edges
 
   // general layout options
-  fit: true, // whether to fit to viewport
+  fit: false, // whether to fit to viewport
   padding: 30, // fit padding
   spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
   nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
@@ -335,9 +335,11 @@ export const breadthFirstLayoutSettings = {
   name: "breadthfirst",
   directed: true,
   padding: 10,
+  fit: false,
 };
 export const concentricLayoutSettings = {
   name: "concentric",
+  fit: false,
   concentric: function (node: any) {
     return node.degree();
   },
@@ -347,9 +349,11 @@ export const concentricLayoutSettings = {
 };
 export const circleLayoutSettings = {
   name: "circle",
+  fit: false,
 };
 export const randomLayoutSettings = {
   name: "random",
+  fit: false,
 };
 export function changeLayout(layout: string, cyRef: any) {
   if (layout === "Preset") {
@@ -371,6 +375,29 @@ export function changeLayout(layout: string, cyRef: any) {
       cyRef.current.layout(circleLayoutSettings).run();
     } else if (layout === "Random") {
       cyRef.current.layout(randomLayoutSettings).run();
+    }
+  }
+}
+export function initialLayout(layout: string, cy: any) {
+  if (layout === "Preset") {
+    // Enable movement only when in the default positions set by the user
+    cy.autoungrabify(false);
+    cy.layout(presetLayoutSettings).run();
+  } else {
+    // Disable movement when using layouts so the default positions don't get messed up
+    cy.autoungrabify(true);
+    if (layout === "Grid") {
+      cy.layout({ name: "grid" }).run();
+    } else if (layout === "Dagre") {
+      cy.layout(dagreLayoutSettings).run();
+    } else if (layout === "Breadthfirst") {
+      cy.layout(breadthFirstLayoutSettings).run();
+    } else if (layout === "Concentric") {
+      cy.layout(concentricLayoutSettings).run();
+    } else if (layout === "Circle") {
+      cy.layout(circleLayoutSettings).run();
+    } else if (layout === "Random") {
+      cy.layout(randomLayoutSettings).run();
     }
   }
 }

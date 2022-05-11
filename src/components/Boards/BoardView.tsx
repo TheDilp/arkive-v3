@@ -27,6 +27,7 @@ import {
   changeLayout,
   cytoscapeStylesheet,
   edgehandlesSettings,
+  initialLayout,
   toastWarn,
 } from "../../utils/utils";
 import BoardContextMenu from "./BoardContextMenu";
@@ -43,7 +44,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
-  const [layout, setLayout] = useState<string>(board?.layout || "Preset");
+  const [layout, setLayout] = useState<string | null>();
   const ehRef = useRef() as any;
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
@@ -82,6 +83,31 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const [drawMode, setDrawMode] = useState(false);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
+
+  useEffect(() => {
+    console.log("EJEKLJRLKEJ");
+    if (elements.length > 0) {
+      cyRef.current.on(
+        "ehcomplete",
+        (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
+          let sourceData = sourceNode._private.data;
+          let targetData = targetNode._private.data;
+          // Check due to weird edgehandles behavior when toggling drawmode
+          // When drawmode is turned on and then off and then back on
+          // It can add an edges to a node that doesn't exist
+          try {
+            cyRef.current.remove(addedEdge);
+          } catch (error) {
+            toastWarn(
+              "Cytoedge couldn't be removed, there was an error (BoardView 102)"
+            );
+          }
+          makeEdgeCallback(sourceData.id, targetData.id);
+        }
+      );
+    }
+    return () => cyRef.current.removeListener("ehcomplete");
+  }, [elements]);
 
   useEffect(() => {
     if (board) {
@@ -158,7 +184,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     [board_id]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (cyRef.current) {
       cyRef.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
@@ -239,35 +265,15 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
   useEffect(() => {
     if (board?.layout) {
-      // Timeout waits until cytoscape is ready
-      changeLayout(board.layout, cyRef);
+      setLayout(board.layout);
     }
   }, [board?.layout]);
 
-  useEffect(() => {
-    if (elements.length > 0) {
-      cyRef.current.on(
-        "ehcomplete",
-        (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
-          let sourceData = sourceNode._private.data;
-          let targetData = targetNode._private.data;
-
-          // Check due to weird edgehandles behavior when toggling drawmode
-          // When drawmode is turned on and then off and then back on
-          // It can add an edges to a node that doesn't exist
-          try {
-            cyRef.current.remove(addedEdge);
-          } catch (error) {
-            toastWarn(
-              "Cytoedge couldn't be removed, there was an error (BoardView 184)"
-            );
-          }
-          makeEdgeCallback(sourceData.id, targetData.id);
-        }
-      );
+  useLayoutEffect(() => {
+    if (layout && cyRef.current) {
+      changeLayout(layout, cyRef);
     }
-    return () => cyRef.current.removeListener("ehcomplete");
-  }, [elements]);
+  }, [layout, cyRef.current]);
 
   return (
     <div className="w-full h-full">
@@ -275,7 +281,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         <div className="relative">
           <Dropdown
             options={boardLayouts}
-            value={board?.layout || "Preset"}
+            value={layout || "Preset"}
             onChange={(e) => {
               setLayout(e.value);
               changeLayout(e.value as string, cyRef);
@@ -314,6 +320,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         elements={elements}
         minZoom={0.1}
         maxZoom={5}
+        zoom={1}
         className="Lato"
         style={{ width: "100%", height: "100%" }}
         id={board_id}
