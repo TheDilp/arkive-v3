@@ -351,6 +351,29 @@ export const circleLayoutSettings = {
 export const randomLayoutSettings = {
   name: "random",
 };
+export function changeLayout(layout: string, cyRef: any) {
+  if (layout === "Preset") {
+    // Enable movement only when in the default positions set by the user
+    cyRef.current.autoungrabify(false);
+    cyRef.current.layout(presetLayoutSettings).run();
+  } else {
+    // Disable movement when using layouts so the default positions don't get messed up
+    cyRef.current.autoungrabify(true);
+    if (layout === "Grid") {
+      cyRef.current.layout({ name: "grid" }).run();
+    } else if (layout === "Dagre") {
+      cyRef.current.layout(dagreLayoutSettings).run();
+    } else if (layout === "Breadthfirst") {
+      cyRef.current.layout(breadthFirstLayoutSettings).run();
+    } else if (layout === "Concentric") {
+      cyRef.current.layout(concentricLayoutSettings).run();
+    } else if (layout === "Circle") {
+      cyRef.current.layout(circleLayoutSettings).run();
+    } else if (layout === "Random") {
+      cyRef.current.layout(randomLayoutSettings).run();
+    }
+  }
+}
 
 export const cytoscapeStylesheet = [
   {

@@ -33,6 +33,7 @@ export default function BoardsTree({ boardId }: Props) {
       parent: "",
       show: false,
       folder: false,
+      layout: "",
       depth: 0,
     });
   const handleDrop = (
@@ -70,7 +71,9 @@ export default function BoardsTree({ boardId }: Props) {
         project_id: project_id as string,
         title: "New Folder",
         folder: true,
+        layout: "Preset",
         nodes: [],
+        edges: [],
       });
     } else {
       createBoardMutation.mutate({
@@ -78,7 +81,9 @@ export default function BoardsTree({ boardId }: Props) {
         project_id: project_id as string,
         title: "New Board",
         folder: false,
+        layout: "Preset",
         nodes: [],
+        edges: [],
       });
     }
   }

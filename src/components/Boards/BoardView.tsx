@@ -25,6 +25,7 @@ import {
 import {
   boardLayouts,
   breadthFirstLayoutSettings,
+  changeLayout,
   circleLayoutSettings,
   concentricLayoutSettings,
   cytoscapeStylesheet,
@@ -47,7 +48,7 @@ export default function BoardView({ setBoardId }: Props) {
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
-  const [layout, setLayout] = useState<string>("Preset");
+  const [layout, setLayout] = useState<string>(board?.layout || "Preset");
   const cyRef = useRef() as any;
   const ehRef = useRef() as any;
   const cm = useRef() as any;
@@ -162,7 +163,7 @@ export default function BoardView({ setBoardId }: Props) {
     [board_id]
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (cyRef.current) {
       cyRef.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
@@ -234,7 +235,15 @@ export default function BoardView({ setBoardId }: Props) {
     if (firstRender.current) {
       firstRender.current = false;
     }
-    if (board_id) setBoardId(board_id);
+    if (board_id) {
+      setBoardId(board_id);
+    }
+    if (board) {
+      // Timeout waits until cytoscape is ready
+      setTimeout(() => {
+        changeLayout(board.layout, cyRef);
+      }, 1);
+    }
     return () => cyRef.current.removeAllListeners();
   }, [board_id]);
 
@@ -272,27 +281,7 @@ export default function BoardView({ setBoardId }: Props) {
             value={layout}
             onChange={(e) => {
               setLayout(e.value);
-              if (e.value === "Preset") {
-                // Enable movement only when in the default positions set by the user
-                cyRef.current.autoungrabify(false);
-                cyRef.current.layout(presetLayoutSettings).run();
-              } else {
-                // Disable movement when using layouts so the default positions don't get messed up
-                cyRef.current.autoungrabify(true);
-                if (e.value === "Grid") {
-                  cyRef.current.layout({ name: "grid" }).run();
-                } else if (e.value === "Dagre") {
-                  cyRef.current.layout(dagreLayoutSettings).run();
-                } else if (e.value === "Breadthfirst") {
-                  cyRef.current.layout(breadthFirstLayoutSettings).run();
-                } else if (e.value === "Concentric") {
-                  cyRef.current.layout(concentricLayoutSettings).run();
-                } else if (e.value === "Circle") {
-                  cyRef.current.layout(circleLayoutSettings).run();
-                } else if (e.value === "Random") {
-                  cyRef.current.layout(randomLayoutSettings).run();
-                }
-              }
+              changeLayout(e.value as string, cyRef);
             }}
           />
         </div>

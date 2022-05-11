@@ -807,6 +807,7 @@ export function useCreateBoard() {
       project_id: string;
       folder: boolean;
       parent?: string | null;
+      layout: string;
       nodes: [];
       edges: [];
     }) => {
@@ -855,7 +856,12 @@ export function useUpdateBoard(project_id: string) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (vars: { id: string; title?: string; parent?: string | null }) => {
+    async (vars: {
+      id: string;
+      title?: string;
+      parent?: string | null;
+      layout?: string;
+    }) => {
       await updateBoard(vars);
     },
     {

@@ -320,12 +320,14 @@ export const createBoard = async ({
   project_id,
   parent,
   folder,
+  layout,
 }: {
   id: string;
   title: string;
   project_id: string;
   parent?: string | null;
   folder: boolean;
+  layout: string;
 }) => {
   let user = auth.user();
   if (user) {
@@ -335,6 +337,7 @@ export const createBoard = async ({
       project_id,
       parent,
       folder,
+      layout,
     });
     if (data) return data;
     if (error) {
@@ -544,10 +547,12 @@ export const updateBoard = async ({
   id,
   title,
   parent,
+  layout,
 }: {
   id: string;
   title?: string;
   parent?: string | null;
+  layout?: string;
 }) => {
   let user = auth.user();
 
@@ -557,6 +562,7 @@ export const updateBoard = async ({
       .update({
         title,
         parent,
+        layout,
       })
       .eq("id", id);
 

@@ -5,18 +5,18 @@ import { InputText } from "primereact/inputtext";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { boardItemDisplayDialogProps } from "../../../custom-types";
+import {
+  boardItemDisplayDialogProps,
+  UpdateBoardInputs,
+} from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
+import { boardLayouts } from "../../../utils/utils";
 
 type Props = {
   visible: boardItemDisplayDialogProps;
   setVisible: (visible: boardItemDisplayDialogProps) => void;
 };
 
-type Inputs = {
-  title: string;
-  parent: string;
-};
 export default function BoardUpdateDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const updateBoardMutation = useUpdateBoard(project_id as string);
@@ -26,13 +26,14 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<UpdateBoardInputs>({
     defaultValues: {
       title: visible.title,
       parent: visible.parent === "0" ? undefined : visible.parent,
+      layout: visible.layout,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<UpdateBoardInputs> = (data) => {
     updateBoardMutation.mutate({
       id: visible.id,
       ...data,
@@ -41,9 +42,10 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
       id: "",
       title: "",
       parent: "",
-      show: false,
       folder: false,
       depth: 0,
+      layout: "",
+      show: false,
     });
   };
 
@@ -58,6 +60,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
           parent: "",
           folder: false,
           depth: 0,
+          layout: "",
           show: false,
         })
       }
@@ -95,6 +98,21 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
                       (board) => board.folder && board.id !== visible.id
                     ) || []
                   }
+                />
+              )}
+            />
+          </div>
+          <div className="w-8">
+            <Controller
+              name="layout"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  className="w-full"
+                  placeholder="Board Layout"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.value)}
+                  options={boardLayouts}
                 />
               )}
             />
