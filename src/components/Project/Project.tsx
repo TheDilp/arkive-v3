@@ -10,7 +10,6 @@ import { useEffect } from "react";
 import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import dagre from "cytoscape-dagre";
-
 export default function Project() {
   const { project_id } = useParams();
   const project = useGetProjectData(project_id as string);

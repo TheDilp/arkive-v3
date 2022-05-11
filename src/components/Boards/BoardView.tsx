@@ -1,3 +1,5 @@
+import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import {
   useCallback,
   useEffect,
@@ -21,10 +23,15 @@ import {
   useUpdateNode,
 } from "../../utils/customHooks";
 import {
+  boardLayouts,
+  breadthFirstLayoutSettings,
+  circleLayoutSettings,
+  concentricLayoutSettings,
   cytoscapeStylesheet,
   dagreLayoutSettings,
   edgehandlesSettings,
   presetLayoutSettings,
+  randomLayoutSettings,
   toastWarn,
 } from "../../utils/utils";
 import BoardContextMenu from "./BoardContextMenu";
@@ -40,7 +47,7 @@ export default function BoardView({ setBoardId }: Props) {
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
-  const [layout, setLayout] = useState<string>("preset");
+  const [layout, setLayout] = useState<string>("Preset");
   const cyRef = useRef() as any;
   const ehRef = useRef() as any;
   const cm = useRef() as any;
@@ -256,49 +263,47 @@ export default function BoardView({ setBoardId }: Props) {
     return () => cyRef.current.removeListener("ehcomplete");
   }, [elements]);
 
-  useEffect(() => {
-    if (layout) {
-      if (layout === "preset") {
-        cyRef.current.autolock(false);
-        cyRef.current.layout({ name: "grid" });
-      } else {
-        cyRef.current.autolock(true);
-      }
-    }
-  }, [layout]);
-
   return (
     <div className="w-full h-full">
-      <button
-        className="absolute left-50 top-50 z-5"
-        onClick={() => {
-          setLayout("preset");
-          cyRef.current.layout(presetLayoutSettings).run();
-        }}
-      >
-        Preset
-      </button>
-      <button
-        className="absolute left-50 top-75 z-5"
-        onClick={() => {
-          setLayout("grid");
-          cyRef.current.layout({ name: "grid" }).run();
-        }}
-      >
-        Grid
-      </button>
-      <div
-        className={`text-white absolute Lato p-button ${
-          drawMode ? "border-green-500" : ""
-        } p-button-outlined`}
-      >
-        <span>Draw mode: </span>
-        {drawMode ? (
-          <span className="text-green-400 ml-2"> ON</span>
-        ) : (
-          <span className="ml-2"> OFF</span>
-        )}
+      <div className="absolute flex flex-nowrap z-5">
+        <div className="relative">
+          <Dropdown
+            options={boardLayouts}
+            value={layout}
+            onChange={(e) => {
+              setLayout(e.value);
+              if (e.value === "Preset") {
+                // Enable movement only when in the default positions set by the user
+                cyRef.current.autoungrabify(false);
+                cyRef.current.layout(presetLayoutSettings).run();
+              } else {
+                // Disable movement when using layouts so the default positions don't get messed up
+                cyRef.current.autoungrabify(true);
+                if (e.value === "Grid") {
+                  cyRef.current.layout({ name: "grid" }).run();
+                } else if (e.value === "Dagre") {
+                  cyRef.current.layout(dagreLayoutSettings).run();
+                } else if (e.value === "Breadthfirst") {
+                  cyRef.current.layout(breadthFirstLayoutSettings).run();
+                } else if (e.value === "Concentric") {
+                  cyRef.current.layout(concentricLayoutSettings).run();
+                } else if (e.value === "Circle") {
+                  cyRef.current.layout(circleLayoutSettings).run();
+                } else if (e.value === "Random") {
+                  cyRef.current.layout(randomLayoutSettings).run();
+                }
+              }
+            }}
+          />
+        </div>
+        <Button
+          className={`p-button-rounded ${
+            drawMode ? "p-button-success" : "p-button-secondary"
+          }`}
+          icon="pi pi-pencil"
+        />
       </div>
+
       <BoardContextMenu
         cm={cm}
         ehRef={ehRef}

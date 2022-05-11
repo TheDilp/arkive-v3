@@ -279,17 +279,24 @@ export const edgehandlesSettings = {
   disableBrowserGestures: true, // during an edge drawing gesture, disable browser gestures such as two-finger trackpad swipe and pinch-to-zoom
 };
 export const boardLayouts = [
-  "Random",
+  "Preset",
+  "Grid",
   "Dagre",
   "Breadthfirst",
-  "Spread",
-  "Concentric",
-  "Cola",
   "Circle",
-  "cose-bilkent",
-  "Euler",
+  "Concentric",
+  "Random",
 ];
+export const presetLayoutSettings = {
+  name: "preset",
+  fit: false,
+  positions: function (node: any) {
+    let { x, y } = node.data();
+    return { x, y };
+  },
+};
 export const dagreLayoutSettings = {
+  name: "dagre",
   // dagre algo options, uses default value on undefined
   nodeSep: undefined, // the separation between adjacent nodes in the same rank
   edgeSep: undefined, // the separation between adjacent edges in the same rank
@@ -324,14 +331,27 @@ export const dagreLayoutSettings = {
   ready: function () {}, // on layoutready
   stop: function () {}, // on layoutstop
 };
-export const presetLayoutSettings = {
-  name: "preset",
-  fit: false,
-  positions: function (node: any) {
-    let { x, y } = node.data();
-    return { x, y };
+export const breadthFirstLayoutSettings = {
+  name: "breadthfirst",
+  directed: true,
+  padding: 10,
+};
+export const concentricLayoutSettings = {
+  name: "concentric",
+  concentric: function (node: any) {
+    return node.degree();
+  },
+  levelWidth: function (nodes: any) {
+    return 2;
   },
 };
+export const circleLayoutSettings = {
+  name: "circle",
+};
+export const randomLayoutSettings = {
+  name: "random",
+};
+
 export const cytoscapeStylesheet = [
   {
     selector: "node[classes]",
