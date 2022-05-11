@@ -85,7 +85,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const createEdgeMutation = useCreateEdge(project_id as string);
 
   useEffect(() => {
-    console.log("EJEKLJRLKEJ");
     if (elements.length > 0) {
       cyRef.current.on(
         "ehcomplete",
@@ -126,11 +125,14 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             textHAlign: node.textHAlign,
             textVAlign: node.textVAlign,
             backgroundColor: node.backgroundColor,
+            customImage: node.customImage,
             x: node.x,
             y: node.y,
-            ...(node.document?.image
-              ? { backgroundImage: node.document.image }
-              : { backgroundImage: [] }),
+            backgroundImage: node.customImage
+              ? node.customImage
+              : node.document?.image
+              ? node.document.image
+              : [],
           },
           scratch: {
             doc_id: node.document?.id,
@@ -220,6 +222,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           height: target.data.height,
           fontSize: target.data.fontSize,
           backgroundColor: target.data.backgroundColor,
+          customImage: target.data.customImage,
           doc_id: target.scratch.doc_id,
           show: true,
         });

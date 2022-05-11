@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { nodeUpdateDialogProps } from "../../custom-types";
+import { nodeUpdateDialogProps, UpdateNodeInputs } from "../../custom-types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
@@ -15,17 +15,6 @@ type Props = {
   setNodeUpdateDialog: (nodeUpdateDialog: nodeUpdateDialogProps) => void;
 };
 
-type Inputs = Pick<
-  nodeUpdateDialogProps,
-  | "label"
-  | "type"
-  | "doc_id"
-  | "width"
-  | "height"
-  | "fontSize"
-  | "backgroundColor"
->;
-
 export default function NodeUpdateDialog({
   nodeUpdateDialog,
   setNodeUpdateDialog,
@@ -37,7 +26,7 @@ export default function NodeUpdateDialog({
     control,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<UpdateNodeInputs>({
     defaultValues: {
       label: nodeUpdateDialog.label,
       type: nodeUpdateDialog.type,
@@ -46,9 +35,10 @@ export default function NodeUpdateDialog({
       height: nodeUpdateDialog.height,
       fontSize: nodeUpdateDialog.fontSize,
       backgroundColor: nodeUpdateDialog.backgroundColor.replace("#", ""),
+      customImage: nodeUpdateDialog.customImage,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<UpdateNodeInputs> = (data) => {
     updateNodeMutation.mutate({
       id: nodeUpdateDialog.id,
       board_id: board_id as string,
@@ -73,6 +63,7 @@ export default function NodeUpdateDialog({
           height: 0,
           fontSize: 0,
           backgroundColor: "",
+          customImage: "",
           show: false,
         })
       }
@@ -149,6 +140,24 @@ export default function NodeUpdateDialog({
             )}
           />
         </div>
+        <div className="w-full my-1">
+          <label className="w-full text-sm">Custom Image</label>
+          <div className="text-xs">
+            Note: Custom images override linked documents.
+          </div>
+          <Controller
+            control={control}
+            name="customImage"
+            render={({ field: { onChange, value } }) => (
+              <InputText
+                className="w-full"
+                placeholder="Custom Image"
+                value={value as string}
+                onChange={(e) => onChange(e.target.value)}
+              />
+            )}
+          />
+        </div>
         <div className="my-3">
           <div className="my-2">Width: {watch("width")}</div>
           <Controller
@@ -204,7 +213,13 @@ export default function NodeUpdateDialog({
             )}
           />
         </div>
-        <Button label="Save Node" type="submit" />
+        <Button
+          label="Save Node"
+          type="submit"
+          className="p-button-outlined p-button-success"
+          icon="pi pi-save"
+          iconPos="right"
+        />
       </form>
     </Dialog>
   );

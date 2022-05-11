@@ -68,6 +68,7 @@ export type BoardNodeProps = {
   backgroundColor: string;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
+  customImage?: string | null;
   document?: Pick<DocumentProps, "id" | "image">;
   board_id: string;
 };
@@ -102,6 +103,7 @@ export type CytoscapeNodeProps = {
     | "backgroundColor"
     | "textHAlign"
     | "textVAlign"
+    | "customImage"
   >;
   position: Pick<BoardNodeProps, "x" | "y">;
 };
@@ -157,6 +159,7 @@ export type nodeUpdateDialogProps = {
   fontSize: number;
   backgroundColor: string;
   doc_id?: string;
+  customImage?: string | null;
   show: boolean;
 };
 export type edgeUpdateDialogProps = {
@@ -232,7 +235,17 @@ export type UpdateMarkerInputs = {
 };
 
 export type UpdateBoardInputs = Pick<BoardProps, "title" | "layout" | "parent">;
-
+export type UpdateNodeInputs = Pick<
+  nodeUpdateDialogProps,
+  | "label"
+  | "type"
+  | "doc_id"
+  | "width"
+  | "height"
+  | "fontSize"
+  | "backgroundColor"
+  | "customImage"
+>;
 export type UpdateEdgeInputs = Pick<
   edgeUpdateDialogProps,
   | "label"
@@ -274,6 +287,7 @@ export type UpdateNodeProps = {
   textHAlign?: "left" | "center" | "right";
   textVAlign?: "top" | "center" | "bottom";
   backgroundColor?: string;
+  customImage?: string | null;
   doc_id?: string;
 };
 
