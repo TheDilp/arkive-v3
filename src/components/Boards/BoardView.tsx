@@ -291,6 +291,26 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             drawMode ? "p-button-success" : "p-button-secondary"
           }`}
           icon="pi pi-pencil"
+          onClick={() => {
+            setDrawMode((prev) => {
+              if (prev) {
+                ehRef.current.disable();
+                ehRef.current.disableDrawMode();
+                cyRef.current.autoungrabify(false);
+                cyRef.current.autounselectify(false);
+                cyRef.current.autolock(false);
+                cyRef.current.zoomingEnabled(true);
+                cyRef.current.userZoomingEnabled(true);
+                cyRef.current.panningEnabled(true);
+                setDrawMode(false);
+              } else {
+                ehRef.current.enable();
+                ehRef.current.enableDrawMode();
+                setDrawMode(true);
+              }
+              return !prev;
+            });
+          }}
         />
       </div>
 
