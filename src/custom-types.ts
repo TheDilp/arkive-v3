@@ -15,7 +15,6 @@ export type DocumentProps = {
   title: string;
   content: RemirrorJSON | null;
   image: string;
-  user_id: string;
   project_id: string;
   categories: string[];
   parent: { id: string; title: string } | null;

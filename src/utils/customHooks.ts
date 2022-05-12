@@ -150,6 +150,7 @@ export function useCreateDocument(project_id: string) {
       image?: string | undefined;
       categories?: string[] | undefined;
       folder?: boolean;
+      template?: boolean;
       icon?: string;
       content?: RemirrorJSON | null;
     }) => {
@@ -177,7 +178,6 @@ export function useCreateDocument(project_id: string) {
                   id: newDocument.id,
                   project_id,
                   content: newDocument.content || null,
-                  user_id,
                   // @ts-ignore
                   parent:
                     newDocument.parent && parent
@@ -339,9 +339,7 @@ export function useCreateTemplate() {
       project_id: string;
       title: string;
       content: RemirrorJSON;
-      user_id: string;
       icon: string;
-      image: string;
       categories: string[];
       folder: boolean;
     }) => {
@@ -365,6 +363,7 @@ export function useCreateTemplate() {
                   parent: null,
                   template: true,
                   expanded: false,
+                  image: "",
                 },
               ];
               return newData;

@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { Button } from "primereact/button";
 import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
@@ -6,7 +7,12 @@ import {
   iconSelectProps,
   docItemDisplayDialogProps,
 } from "../../../../custom-types";
-import { useGetTemplates } from "../../../../utils/customHooks";
+import {
+  useCreateDocument,
+  useCreateTemplate,
+  useGetTemplates,
+} from "../../../../utils/customHooks";
+import { v4 as uuid } from "uuid";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -23,8 +29,9 @@ export default function TemplatesTree({
   cm,
 }: Props) {
   const { project_id } = useParams();
-  const templates = useGetTemplates(project_id as string);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const templates = useGetTemplates(project_id as string);
+  const createDocumentMutation = useCreateTemplate();
 
   const rowVirtualizer = useVirtual({
     size: templates.length,
@@ -34,7 +41,46 @@ export default function TemplatesTree({
   });
 
   return (
-    <div>
+    <div className="">
+      <div className="w-full flex flex-nowrap justify-content-center">
+        <Button
+          className="p-button-outlined my-2"
+          label="New Template"
+          icon="pi pi-copy"
+          iconPos="right"
+          onClick={() => {
+            let id = uuid();
+            createDocumentMutation.mutate({
+              id,
+              title: "New Template",
+              project_id: project_id as string,
+              icon: "mdi:file",
+              categories: [],
+              folder: false,
+              content: {
+                type: "doc",
+                content: [
+                  {
+                    type: "paragraph",
+                    attrs: {
+                      style: "",
+                      nodeIndent: null,
+                      nodeLineHeight: null,
+                      nodeTextAlignment: null,
+                    },
+                    content: [
+                      {
+                        text: "Customize your new template!",
+                        type: "text",
+                      },
+                    ],
+                  },
+                ],
+              },
+            });
+          }}
+        />
+      </div>
       <div
         ref={parentRef}
         className="h-screen list-none text-lg"

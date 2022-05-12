@@ -22,7 +22,7 @@ export default function DocTreeFilter({
 }: Props) {
   const { project_id } = useParams();
   const tags = useGetTags(project_id as string).data;
-  const createDocument = useCreateDocument(project_id as string);
+  const createDocumentMutation = useCreateDocument(project_id as string);
   const [createDocumentDialog, setCreateDocumentDialog] = useState(false);
   const [docFromTempDialog, setDocFromTempDialog] = useState(false);
   const items = [
@@ -56,7 +56,7 @@ export default function DocTreeFilter({
           className="p-button-outlined mb-2 w-full"
           onClick={() => {
             let id = uuid();
-            createDocument.mutate({
+            createDocumentMutation.mutate({
               id,
             });
           }}
