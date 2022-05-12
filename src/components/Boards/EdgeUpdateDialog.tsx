@@ -3,6 +3,7 @@ import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
 import { Slider } from "primereact/slider";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -182,7 +183,7 @@ export default function EdgeUpdateDialog({
                       value={value}
                       min={-1000}
                       max={1000}
-                      step={10}
+                      step={5}
                       onChange={(e) => onChange(e.value)}
                     />
                   </div>

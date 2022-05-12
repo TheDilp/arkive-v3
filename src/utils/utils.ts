@@ -200,6 +200,10 @@ export const boardEdgeTaxiDirections = [
 ];
 export const edgeTargetArrowShapes = [
   {
+    label: "None",
+    value: "none",
+  },
+  {
     label: "Triangle",
     value: "triangle",
   },
@@ -238,10 +242,6 @@ export const edgeTargetArrowShapes = [
   {
     label: "Chevron",
     value: "chevron",
-  },
-  {
-    label: "None",
-    value: "none",
   },
 ];
 export const boardNodeFontSizes = [
@@ -510,6 +510,15 @@ export const cytoscapeStylesheet = [
   },
 
   // Classes for highlighting
+  {
+    selector: ":selected",
+    style: {
+      "border-width": 4,
+      "border-color": "green",
+      "line-color": "green",
+      "target-arrow-color": "green",
+    },
+  },
   {
     selector: ".incomingEdgeHighlight",
     style: {

@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
   BoardContextMenuProps,
@@ -340,6 +340,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         maxZoom={5}
         zoom={1}
         className="Lato"
+        wheelSensitivity={0.1}
         style={{ width: "100%", height: "100%" }}
         cy={(cy: any) => {
           if (!cyRef.current) {
