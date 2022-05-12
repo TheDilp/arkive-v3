@@ -7,7 +7,6 @@ type Props = {
 };
 
 export default function MentionReactComponent({ node }: Props) {
-  console.log(node);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const queryClient = useQueryClient();
   // eslint-disable-next-line react-hooks/rules-of-hooks

@@ -27,7 +27,6 @@ import {
   changeLayout,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  initialLayout,
   toastWarn,
 } from "../../utils/utils";
 import BoardContextMenu from "./BoardContextMenu";
@@ -254,29 +253,33 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       });
     }
   }, [cyRef, board_id]);
-
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
     }
+
     if (board_id) {
+      setLayout(null);
       setBoardId(board_id);
     }
-
     return () => cyRef.current.removeAllListeners();
   }, [board_id]);
 
   useEffect(() => {
-    if (board?.layout) {
-      setLayout(board.layout);
+    if (cyRef && board?.layout) {
+      setTimeout(() => {
+        changeLayout(board.layout, cyRef);
+        setLayout(board.layout);
+        cyRef.current.fit();
+      }, 1);
     }
-  }, [board?.layout]);
+  }, [board, cyRef]);
 
-  useLayoutEffect(() => {
-    if (layout && cyRef.current) {
-      changeLayout(layout, cyRef);
+  useEffect(() => {
+    if (layout) {
+      setTimeout(() => {}, 10);
     }
-  }, [layout, cyRef.current]);
+  }, [board_id, layout]);
 
   return (
     <div className="w-full h-full">

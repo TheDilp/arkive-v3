@@ -77,6 +77,7 @@ export default function NodeUpdateDialog({
                 {...register("label")}
                 placeholder="Node Label"
                 className="w-9"
+                autoComplete="false"
               />
               <Controller
                 control={control}

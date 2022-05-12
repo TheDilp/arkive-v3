@@ -105,6 +105,7 @@ export default function MapView({
               zoomSnap={0}
               crs={L.CRS.Simple}
               bounds={bounds as LatLngBoundsExpression}
+              attributionControl={false}
             >
               <MapImage
                 src={mapData.map_image}

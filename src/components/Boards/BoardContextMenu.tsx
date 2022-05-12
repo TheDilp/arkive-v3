@@ -6,9 +6,7 @@ import {
   useCreateNode,
   useDeleteEdge,
   useDeleteNode,
-  useUpdateNode,
 } from "../../utils/customHooks";
-import { deleteEdge } from "../../utils/supabaseUtils";
 
 type Props = {
   ehRef: any;
