@@ -17,6 +17,7 @@ import Register from "./components/Auth/Register";
 import Profile from "./components/Profile/Profile";
 import Maps from "./components/Maps/Maps";
 import Boards from "./components/Boards/Boards";
+import Help from "./components/Help/Help";
 
 function App() {
   const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="help" element={<Help />} />
             <Route path="project/:project_id" element={<Project />}>
               <Route path="wiki/*" element={<Wiki />} />
               <Route path="maps/*" element={<Maps />} />
