@@ -140,7 +140,6 @@ export default function RemirrorContext({
   // ======================================================
 
   const documents = useGetDocuments(project_id as string);
-
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
 

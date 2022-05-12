@@ -38,6 +38,7 @@ type Props = {
   cyRef: any;
 };
 export default function BoardView({ setBoardId, cyRef }: Props) {
+  const navigate = useNavigate();
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
   const [elements, setElements] = useState<
@@ -187,6 +188,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
   useEffect(() => {
     if (cyRef.current) {
+      cyRef.current.on("click", "node", function (evt: any) {
+        const scratch = evt.target._private.scratch;
+        if (scratch?.doc_id && evt.originalEvent.shiftKey) {
+          navigate(`../../wiki/${scratch?.doc_id}`);
+        }
+      });
       cyRef.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
         if (evt.target === cyRef.current) {
