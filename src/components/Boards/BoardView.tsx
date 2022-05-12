@@ -257,9 +257,9 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     if (firstRender.current) {
       firstRender.current = false;
     }
-
+    setDrawMode(false);
+    ehRef.current = null;
     if (board_id) {
-      setLayout(null);
       setBoardId(board_id);
     }
     return () => cyRef.current.removeAllListeners();
@@ -267,19 +267,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
   useEffect(() => {
     if (cyRef && board?.layout) {
-      setTimeout(() => {
-        changeLayout(board.layout, cyRef);
-        setLayout(board.layout);
-        cyRef.current.fit();
-      }, 1);
+      changeLayout(board.layout, cyRef);
+      setLayout(board.layout);
     }
-  }, [board, cyRef]);
-
-  useEffect(() => {
-    if (layout) {
-      setTimeout(() => {}, 10);
-    }
-  }, [board_id, layout]);
+  }, [board?.layout, cyRef]);
 
   return (
     <div className="w-full h-full">
@@ -291,6 +282,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             onChange={(e) => {
               setLayout(e.value);
               changeLayout(e.value as string, cyRef);
+              cyRef.current.fit();
             }}
           />
         </div>
@@ -329,12 +321,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         zoom={1}
         className="Lato"
         style={{ width: "100%", height: "100%" }}
-        id={board_id}
         cy={(cy: any) => {
           if (!cyRef.current) {
             cyRef.current = cy;
           }
           if (!ehRef.current) {
+            cy.center();
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
           }
         }}
