@@ -27,6 +27,7 @@ import {
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
+import { saveAs } from "file-saver";
 
 type Props = {
   setBoardId: (boardId: string) => void;
@@ -347,6 +348,26 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             setSnap((prev) => {
               return !prev;
             });
+          }}
+        />
+        <Button
+          icon="pi pi-save"
+          onClick={() => {
+            saveAs(
+              new Blob(
+                [
+                  cyRef.current.png({
+                    output: "blob",
+                    bg: "#121212",
+                    full: true,
+                  }),
+                ],
+                {
+                  type: "image/png",
+                }
+              ),
+              `${board?.title || "ArkiveBoard"}.png`
+            );
           }}
         />
       </div>

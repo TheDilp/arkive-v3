@@ -33,6 +33,8 @@ export default function NodeUpdateDialog({
     setValue,
     formState: { errors },
   } = useForm<UpdateNodeInputs>({});
+
+  // Submit handler to update the node
   const onSubmit: SubmitHandler<UpdateNodeInputs> = (data) => {
     updateNodeMutation.mutate({
       id: nodeUpdateDialog.id,
@@ -44,6 +46,7 @@ export default function NodeUpdateDialog({
   const documents = useGetDocuments(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
 
+  // Update the form data when a new node is opened
   useEffect(() => {
     Object.entries(nodeUpdateDialog).forEach(([key, value]) => {
       if (key === "backgroundColor" && typeof value === "string") {
