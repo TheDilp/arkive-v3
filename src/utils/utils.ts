@@ -405,7 +405,6 @@ export const cytoscapeGridOptions = {
   // On/Off Modules
   /* From the following four snap options, at most one should be true at a given time */
   snapToGridOnRelease: false, // Snap to grid on release
-  snapToGridDuringDrag: true, // Snap to grid during drag
   snapToAlignmentLocationOnRelease: false, // Snap to alignment location on release
   snapToAlignmentLocationDuringDrag: false, // Snap to alignment location during drag
   distributionGuidelines: false, // Distribution guidelines
@@ -434,7 +433,7 @@ export const cytoscapeGridOptions = {
     // Set ctx properties of line. Properties are here:
     strokeStyle: "#fff", // color of geometric guidelines
     geometricGuidelineRange: 400, // range of geometric guidelines
-    range: 5000, // max range of distribution guidelines
+    range: 500, // max range of distribution guidelines
     minDistRange: 10, // min range for distribution guidelines
     distGuidelineOffset: 10, // shift amount of distribution guidelines
     horizontalDistColor: "#ff0000", // color of horizontal distribution alignment

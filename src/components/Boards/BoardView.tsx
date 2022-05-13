@@ -83,6 +83,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     type: "board",
   });
   const [drawMode, setDrawMode] = useState(false);
+  const [snap, setSnap] = useState(true);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
 
@@ -278,13 +279,20 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       setBoardId("");
     };
   }, [board_id]);
-
   useEffect(() => {
     if (cyRef && board?.layout) {
       changeLayout(board.layout, cyRef);
       setLayout(board.layout);
     }
   }, [board?.layout, cyRef]);
+  useEffect(() => {
+    grRef.current = null;
+
+    grRef.current = cyRef.current.gridGuide({
+      ...cytoscapeGridOptions,
+      snapToGridDuringDrag: snap,
+    });
+  }, [snap]);
 
   return (
     <div className="w-full h-full">
@@ -301,7 +309,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           />
         </div>
         <Button
-          className={`p-button-rounded ${
+          className={`p-button-rounded mx-2 ${
             drawMode ? "p-button-success" : "p-button-secondary"
           }`}
           icon="pi pi-pencil"
@@ -322,6 +330,18 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
                 ehRef.current.enableDrawMode();
                 setDrawMode(true);
               }
+              return !prev;
+            });
+          }}
+        />
+        <Button
+          className={`p-button-rounded ${
+            snap ? "p-button-success" : "p-button-secondary"
+          }`}
+          icon="pi pi-th-large"
+          tooltip="Snapping"
+          onClick={() => {
+            setSnap((prev) => {
               return !prev;
             });
           }}
@@ -363,7 +383,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           if (!ehRef.current) {
             cy.center();
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
-            grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
+            grRef.current = cyRef.current.gridGuide({
+              ...cytoscapeGridOptions,
+              snapToGridDuringDrag: snap,
+            });
           }
         }}
         stylesheet={cytoscapeStylesheet}
