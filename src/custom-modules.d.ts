@@ -4,5 +4,6 @@ declare module "file-saver";
 declare module "cytoscape";
 declare module "react-cytoscapejs";
 declare module "cytoscape-edgehandles";
+declare module "cytoscape-grid-guide";
 declare module "cytoscape-dagre";
 declare module "cytoscape-euler";

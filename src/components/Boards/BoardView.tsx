@@ -25,6 +25,7 @@ import {
 import {
   boardLayouts,
   changeLayout,
+  cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
   toastWarn,
@@ -46,6 +47,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   >([]);
   const [layout, setLayout] = useState<string | null>();
   const ehRef = useRef() as any;
+  const grRef = useRef() as any;
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
 
@@ -249,7 +251,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           show: true,
         });
       });
-      cyRef.current.on("dragfree", "node", function (evt: any) {
+      cyRef.current.on("free", "node", function (evt: any) {
         let target = evt.target._private;
         updateNodeMutation.mutate({
           id: target.data.id,
@@ -264,13 +266,15 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     if (firstRender.current) {
       firstRender.current = false;
     }
+    // Reset when changing board_id
     setDrawMode(false);
     ehRef.current = null;
+    grRef.current = null;
     if (board_id) {
       setBoardId(board_id);
     }
     return () => {
-      cyRef.current.removeAllListeners();
+      cyRef.current.removeListener("click cxttap dbltap free");
       setBoardId("");
     };
   }, [board_id]);
@@ -359,6 +363,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           if (!ehRef.current) {
             cy.center();
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
+            grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
           }
         }}
         stylesheet={cytoscapeStylesheet}

@@ -20,10 +20,12 @@ import Boards from "./components/Boards/Boards";
 import Help from "./components/Help/Help";
 import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
 import dagre from "cytoscape-dagre";
 function App() {
   cytoscape.use(edgehandles);
   cytoscape.use(dagre);
+  cytoscape.use(gridguide);
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

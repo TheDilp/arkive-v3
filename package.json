@@ -21,6 +21,7 @@
     "cytoscape": "^3.21.1",
     "cytoscape-dagre": "^2.4.0",
     "cytoscape-edgehandles": "^4.0.1",
+    "cytoscape-grid-guide": "^2.3.3",
     "file-saver": "^2.0.5",
     "framer-motion": "^6.3.2",
     "leaflet": "^1.8.0",
