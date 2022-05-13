@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useGetBoards } from "../../utils/customHooks";
 import LoadingScreen from "../Util/LoadingScreen";

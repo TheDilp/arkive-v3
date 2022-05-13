@@ -269,7 +269,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     if (board_id) {
       setBoardId(board_id);
     }
-    return () => cyRef.current.removeAllListeners();
+    return () => {
+      cyRef.current.removeAllListeners();
+      setBoardId("");
+    };
   }, [board_id]);
 
   useEffect(() => {

@@ -30,37 +30,39 @@ export default function MapView({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (map_id) {
-      setMapId(map_id);
-      if (mapData) {
-        let img = new Image();
-        img.src = mapData.map_image;
-        img.onload = () => {
-          setBounds([
-            [0, 0],
-            [img.height, img.width],
-          ]);
-          if (imgRef.current) {
-            // Timeout to ensure transition happens during fade animation
-            setTimeout(() => {
-              imgRef.current.setBounds([
+    if (mapData) {
+      let img = new Image();
+      img.src = mapData.map_image;
+      img.onload = () => {
+        setBounds([
+          [0, 0],
+          [img.height, img.width],
+        ]);
+        if (imgRef.current) {
+          // Timeout to ensure transition happens during fade animation
+          setTimeout(() => {
+            imgRef.current.setBounds([
+              [0, 0],
+              [img.height, img.width],
+            ]);
+            if (mapRef.current) {
+              mapRef.current.panTo([img.height / 2, img.width / 2]);
+              mapRef.current.fitBounds([
                 [0, 0],
                 [img.height, img.width],
               ]);
-              if (mapRef.current) {
-                mapRef.current.panTo([img.height / 2, img.width / 2]);
-                mapRef.current.fitBounds([
-                  [0, 0],
-                  [img.height, img.width],
-                ]);
-              }
-            }, 250);
-          }
-          setLoading(false);
-        };
-      }
+            }
+          }, 250);
+        }
+        setLoading(false);
+      };
     }
-  }, [map_id, mapData?.id, mapData?.map_image]);
+  }, [mapData?.id, mapData?.map_image]);
+
+  useEffect(() => {
+    if (map_id) setMapId(map_id);
+    return () => setMapId("");
+  }, [map_id]);
 
   if (loading)
     return (

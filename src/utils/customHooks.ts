@@ -140,7 +140,6 @@ export function useGetDocumentData(project_id: string, doc_id: string) {
 }
 // Custom hook for creating a new document
 export function useCreateDocument(project_id: string) {
-  const user_id = auth.user()?.id as string;
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: {
@@ -957,7 +956,7 @@ export function useCreateNode(project_id: string) {
                         width: 50,
                         height: 50,
                         fontSize: 16,
-                        backgroundColor: "#1e1e1e",
+                        backgroundColor: "#595959",
                         textHAlign: "center" as const,
                         textVAlign: "top" as const,
                       },

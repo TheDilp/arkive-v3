@@ -18,8 +18,12 @@ import Profile from "./components/Profile/Profile";
 import Maps from "./components/Maps/Maps";
 import Boards from "./components/Boards/Boards";
 import Help from "./components/Help/Help";
-
+import cytoscape from "cytoscape";
+import edgehandles from "cytoscape-edgehandles";
+import dagre from "cytoscape-dagre";
 function App() {
+  cytoscape.use(edgehandles);
+  cytoscape.use(dagre);
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

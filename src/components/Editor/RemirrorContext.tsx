@@ -145,6 +145,7 @@ export default function RemirrorContext({
 
   useEffect(() => {
     if (doc_id) setDocId(doc_id);
+    return () => setDocId("");
   }, [doc_id]);
 
   useEffect(() => {
