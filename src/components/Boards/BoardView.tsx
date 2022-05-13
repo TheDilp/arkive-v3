@@ -75,6 +75,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       taxiDirection: "",
       taxiTurn: 0,
       targetArrowShape: "",
+      zIndex: 1,
       show: false,
     });
   const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
@@ -159,6 +160,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             taxiDirection: edge.taxiDirection,
             taxiTurn: edge.taxiTurn,
             targetArrowShape: edge.targetArrowShape,
+            zIndex: edge.zIndex,
           },
         }));
       }
@@ -249,6 +251,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           taxiDirection: target.data.taxiDirection,
           taxiTurn: target.data.taxiTurn,
           targetArrowShape: target.data.targetArrowShape,
+          zIndex: target.data.zIndex,
           show: true,
         });
       });

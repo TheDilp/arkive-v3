@@ -522,6 +522,7 @@ export const cytoscapeStylesheet = [
       "text-rotation": "autorotate",
       "control-point-distances": "data(controlPointDistances)",
       "control-point-weights": "data(controlPointWeights)",
+      "z-index": "data(zIndex)",
     },
   },
   {

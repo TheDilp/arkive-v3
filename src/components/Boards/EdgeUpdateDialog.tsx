@@ -43,6 +43,7 @@ export default function EdgeUpdateDialog({
       taxiDirection: edgeUpdateDialog.taxiDirection,
       taxiTurn: edgeUpdateDialog.taxiTurn,
       targetArrowShape: edgeUpdateDialog.targetArrowShape,
+      zIndex: edgeUpdateDialog.zIndex,
     },
   });
   const onSubmit: SubmitHandler<UpdateEdgeInputs> = (data) => {
@@ -72,6 +73,7 @@ export default function EdgeUpdateDialog({
           taxiDirection: "",
           taxiTurn: 0,
           targetArrowShape: "",
+          zIndex: 1,
           show: false,
         })
       }
@@ -224,6 +226,26 @@ export default function EdgeUpdateDialog({
                 emptyFilterMessage="No documents found"
                 onChange={(e) => onChange(e.value)}
                 options={edgeTargetArrowShapes}
+              />
+            )}
+          />
+        </div>
+        <div className="w-full my-2">
+          <div className="w-full flex flex-wrap">
+            <label className="w-full text-sm">Edge Level</label>
+            <span className="w-full text-xs">
+              Changes if edge is above or below others
+            </span>
+          </div>
+          <Controller
+            control={control}
+            name="zIndex"
+            render={({ field: { onChange, value } }) => (
+              <InputNumber
+                className="w-8"
+                value={value}
+                onChange={(e) => onChange(e.value)}
+                showButtons
               />
             )}
           />

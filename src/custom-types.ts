@@ -86,6 +86,7 @@ export type BoardEdgeProps = {
   taxiDirection: string;
   taxiTurn: number;
   targetArrowShape: string;
+  zIndex: number;
 };
 
 export type CytoscapeNodeProps = {
@@ -121,6 +122,7 @@ export type CytoscapeEdgeProps = {
     | "taxiDirection"
     | "taxiTurn"
     | "targetArrowShape"
+    | "zIndex"
   >;
 };
 export type docItemDisplayDialogProps = {
@@ -172,6 +174,7 @@ export type edgeUpdateDialogProps = {
   taxiDirection: string;
   taxiTurn: number;
   targetArrowShape: string;
+  zIndex: number;
   show: boolean;
 };
 export type iconSelectProps = {
@@ -200,7 +203,7 @@ export type BoardContextMenuProps = {
   type: "board" | "node" | "edge";
   selected?: any;
 };
-
+// Inputs for creating
 export type CreateDocumentInputs = {
   title: string;
   image: string;
@@ -209,14 +212,12 @@ export type CreateDocumentInputs = {
   folder: boolean;
   template: boolean;
 };
-
 export type CreateMapInputs = {
   title: string;
   map_image: string;
   parent: string;
   folder: boolean;
 };
-
 export type CreateMarkerInputs = {
   icon: string;
   text: string;
@@ -225,6 +226,7 @@ export type CreateMarkerInputs = {
   map_link: string;
 };
 
+// Inputs for updating
 export type UpdateMarkerInputs = {
   icon: string;
   text: string;
@@ -232,7 +234,6 @@ export type UpdateMarkerInputs = {
   doc_id?: string;
   map_link?: string;
 };
-
 export type UpdateBoardInputs = Pick<BoardProps, "title" | "layout" | "parent">;
 export type UpdateNodeInputs = Pick<
   nodeUpdateDialogProps,
@@ -256,6 +257,7 @@ export type UpdateEdgeInputs = Pick<
   | "taxiDirection"
   | "taxiTurn"
   | "targetArrowShape"
+  | "zIndex"
 >;
 export type RegisterInputs = {
   email: string;
@@ -302,4 +304,5 @@ export type UpdateEdgeProps = {
   taxiDirection?: string;
   taxiTurn?: number;
   targetArrowShape?: string;
+  zIndex: number;
 };

@@ -627,6 +627,7 @@ export const updateEdge = async ({
   taxiDirection,
   taxiTurn,
   targetArrowShape,
+  zIndex,
 }: UpdateEdgeProps) => {
   let user = auth.user();
   if (user) {
@@ -642,6 +643,7 @@ export const updateEdge = async ({
         taxiDirection,
         taxiTurn,
         targetArrowShape,
+        zIndex,
       })
       .eq("id", id);
 
