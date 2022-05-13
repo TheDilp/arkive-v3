@@ -355,6 +355,34 @@ export const randomLayoutSettings = {
   name: "random",
   fit: false,
 };
+export const textHAlignOptions = [
+  {
+    label: "Left",
+    value: "left",
+  },
+  {
+    label: "Center",
+    value: "center",
+  },
+  {
+    label: "Right",
+    value: "right",
+  },
+];
+export const textVAlignOptions = [
+  {
+    label: "Top",
+    value: "top",
+  },
+  {
+    label: "Center",
+    value: "center",
+  },
+  {
+    label: "Bottom",
+    value: "bottom",
+  },
+];
 export function changeLayout(layout: string, cyRef: any) {
   if (layout === "Preset") {
     // Enable movement only when in the default positions set by the user

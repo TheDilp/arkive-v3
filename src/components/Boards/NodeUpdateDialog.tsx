@@ -6,9 +6,15 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
 import { useParams } from "react-router-dom";
-import { boardNodeFontSizes, boardNodeShapes } from "../../utils/utils";
+import {
+  boardNodeFontSizes,
+  boardNodeShapes,
+  textHAlignOptions,
+  textVAlignOptions,
+} from "../../utils/utils";
 import { ColorPicker } from "primereact/colorpicker";
 import { InputNumber } from "primereact/inputnumber";
+import { useEffect } from "react";
 
 type Props = {
   nodeUpdateDialog: nodeUpdateDialogProps;
@@ -24,31 +30,30 @@ export default function NodeUpdateDialog({
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
-  } = useForm<UpdateNodeInputs>({
-    defaultValues: {
-      label: nodeUpdateDialog.label,
-      type: nodeUpdateDialog.type,
-      doc_id: nodeUpdateDialog.doc_id,
-      width: nodeUpdateDialog.width,
-      height: nodeUpdateDialog.height,
-      fontSize: nodeUpdateDialog.fontSize,
-      backgroundColor: nodeUpdateDialog.backgroundColor.replace("#", ""),
-      customImage: nodeUpdateDialog.customImage,
-      textHAlign: nodeUpdateDialog.textHAlign,
-      textVAlign: nodeUpdateDialog.textVAlign,
-    },
-  });
+  } = useForm<UpdateNodeInputs>({});
   const onSubmit: SubmitHandler<UpdateNodeInputs> = (data) => {
     updateNodeMutation.mutate({
       id: nodeUpdateDialog.id,
       board_id: board_id as string,
       ...data,
-      backgroundColor: `#${data.backgroundColor}`,
+      backgroundColor: `#${data.backgroundColor.replace("#", "")}`,
     });
   };
   const documents = useGetDocuments(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
+
+  useEffect(() => {
+    Object.entries(nodeUpdateDialog).forEach(([key, value]) => {
+      if (key === "backgroundColor" && typeof value === "string") {
+        setValue(key as any, value.replace("#", ""));
+      } else {
+        setValue(key as any, value);
+      }
+    });
+  }, [nodeUpdateDialog]);
+
   return (
     <Dialog
       header={`Update Node ${nodeUpdateDialog.label || ""}`}
@@ -78,7 +83,7 @@ export default function NodeUpdateDialog({
         <div className="w-full flex flex-nowrap">
           <div className="w-full flex flex-wrap my-1">
             <label className="w-full text-sm">Node Label</label>
-            <div className="w-full">
+            <div className="w-full flex flex-wrap">
               <InputText
                 {...register("label")}
                 placeholder="Node Label"
@@ -98,30 +103,42 @@ export default function NodeUpdateDialog({
                   />
                 )}
               />
-              <Controller
-                control={control}
-                name="textHAlign"
-                render={({ field: { onChange, value } }) => (
-                  <Dropdown
-                    className="w-6"
-                    options={["left", "center", "right"]}
-                    value={value}
-                    onChange={(e) => onChange(e.value)}
+              <div className="flex flex-nowrap w-full mt-1">
+                <div className="w-6">
+                  <label htmlFor="" className="text-xs">
+                    Horizontal Align
+                  </label>
+                  <Controller
+                    control={control}
+                    name="textHAlign"
+                    render={({ field: { onChange, value } }) => (
+                      <Dropdown
+                        className="w-full"
+                        options={textHAlignOptions}
+                        value={value}
+                        onChange={(e) => onChange(e.value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                control={control}
-                name="textVAlign"
-                render={({ field: { onChange, value } }) => (
-                  <Dropdown
-                    className="w-6"
-                    options={["top", "center", "bottom"]}
-                    value={value}
-                    onChange={(e) => onChange(e.value)}
+                </div>
+                <div className="w-6">
+                  <label htmlFor="" className="text-xs">
+                    Vertical Align
+                  </label>
+                  <Controller
+                    control={control}
+                    name="textVAlign"
+                    render={({ field: { onChange, value } }) => (
+                      <Dropdown
+                        className="w-full"
+                        options={textVAlignOptions}
+                        value={value}
+                        onChange={(e) => onChange(e.value)}
+                      />
+                    )}
                   />
-                )}
-              />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -183,7 +200,7 @@ export default function NodeUpdateDialog({
               <InputText
                 className="w-full"
                 placeholder="Custom Image"
-                value={value as string}
+                value={(value as string) || ""}
                 onChange={(e) => onChange(e.target.value)}
               />
             )}

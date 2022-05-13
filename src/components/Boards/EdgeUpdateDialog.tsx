@@ -15,6 +15,7 @@ import {
   boardEdgeTaxiDirections,
   edgeTargetArrowShapes,
 } from "../../utils/utils";
+import { useEffect } from "react";
 
 type Props = {
   edgeUpdateDialog: edgeUpdateDialogProps;
@@ -29,6 +30,7 @@ export default function EdgeUpdateDialog({
   const {
     register,
     handleSubmit,
+    setValue,
     control,
     watch,
     formState: { errors },
@@ -51,11 +53,23 @@ export default function EdgeUpdateDialog({
       id: edgeUpdateDialog.id,
       board_id: board_id as string,
       ...data,
-      lineColor: `#${data.lineColor}`,
+      lineColor: `#${data.lineColor.replace("#", "")}`,
     });
   };
 
   const updateEdgeMutation = useUpdateEdge(project_id as string);
+
+  useEffect(() => {
+    console.log("TEST");
+    Object.entries(edgeUpdateDialog).forEach(([key, value]) => {
+      if (key === "backgroundColor" && typeof value === "string") {
+        setValue(key as any, value.replace("#", ""));
+      } else {
+        setValue(key as any, value);
+      }
+    });
+  }, [edgeUpdateDialog]);
+
   return (
     <Dialog
       header={`Update Edge ${edgeUpdateDialog.label || ""}`}
