@@ -333,6 +333,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
               return !prev;
             });
           }}
+          tooltip="Draw Mode"
         />
         <Button
           className={`p-button-rounded ${

@@ -90,7 +90,6 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    console.log(project_id);
     window.addEventListener("keydown", function (e) {
       if (e.ctrlKey && project_id) {
         if (e.key === "1") {
@@ -113,10 +112,9 @@ export default function Navbar() {
       }
     });
     return () => {
-      console.log("TEST");
       window.removeEventListener("keydown", function (e) {});
     };
-  }, [project_id]);
+  }, []);
 
   return (
     <Menubar

@@ -467,6 +467,8 @@ export const cytoscapeStylesheet = [
       "background-color": "data(backgroundColor)",
       "text-halign": "data(textHAlign)",
       "text-valign": "data(textVAlign)",
+      "text-wrap": "wrap",
+      "text-max-width": "data(width)",
     },
   },
   {

@@ -166,7 +166,7 @@ export default function NodeUpdateDialog({
             name="width"
             render={({ field: { onChange, value } }) => (
               <Slider
-                min={50}
+                min={10}
                 max={1000}
                 step={10}
                 value={value}
@@ -182,7 +182,7 @@ export default function NodeUpdateDialog({
             name="height"
             render={({ field: { onChange, value } }) => (
               <Slider
-                min={50}
+                min={10}
                 max={1000}
                 step={10}
                 value={value}
