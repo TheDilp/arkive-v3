@@ -55,6 +55,8 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       height: 0,
       fontSize: 0,
       backgroundColor: "",
+      textHAlign: "center",
+      textVAlign: "top",
       show: false,
     });
   const [edgeUpdateDialog, setEdgeUpdateDialog] =
@@ -230,6 +232,8 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           backgroundColor: target.data.backgroundColor,
           customImage: target.data.customImage,
           doc_id: target.scratch.doc_id,
+          textHAlign: target.data.textHAlign,
+          textVAlign: target.data.textVAlign,
           show: true,
         });
       });

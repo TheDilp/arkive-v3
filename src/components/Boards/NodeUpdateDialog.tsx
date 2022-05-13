@@ -7,7 +7,6 @@ import { Dropdown } from "primereact/dropdown";
 import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
 import { useParams } from "react-router-dom";
 import { boardNodeFontSizes, boardNodeShapes } from "../../utils/utils";
-import { Slider } from "primereact/slider";
 import { ColorPicker } from "primereact/colorpicker";
 import { InputNumber } from "primereact/inputnumber";
 
@@ -36,6 +35,8 @@ export default function NodeUpdateDialog({
       fontSize: nodeUpdateDialog.fontSize,
       backgroundColor: nodeUpdateDialog.backgroundColor.replace("#", ""),
       customImage: nodeUpdateDialog.customImage,
+      textHAlign: nodeUpdateDialog.textHAlign,
+      textVAlign: nodeUpdateDialog.textVAlign,
     },
   });
   const onSubmit: SubmitHandler<UpdateNodeInputs> = (data) => {
@@ -67,6 +68,8 @@ export default function NodeUpdateDialog({
           fontSize: 0,
           backgroundColor: "",
           customImage: "",
+          textHAlign: "center",
+          textVAlign: "top",
           show: false,
         })
       }
@@ -90,6 +93,30 @@ export default function NodeUpdateDialog({
                     className="w-3"
                     options={boardNodeFontSizes}
                     placeholder="Label Font Size"
+                    value={value}
+                    onChange={(e) => onChange(e.value)}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="textHAlign"
+                render={({ field: { onChange, value } }) => (
+                  <Dropdown
+                    className="w-6"
+                    options={["left", "center", "right"]}
+                    value={value}
+                    onChange={(e) => onChange(e.value)}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="textVAlign"
+                render={({ field: { onChange, value } }) => (
+                  <Dropdown
+                    className="w-6"
+                    options={["top", "center", "bottom"]}
                     value={value}
                     onChange={(e) => onChange(e.value)}
                   />

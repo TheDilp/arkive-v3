@@ -161,6 +161,8 @@ export type nodeUpdateDialogProps = {
   backgroundColor: string;
   doc_id?: string;
   customImage?: string | null;
+  textHAlign: "left" | "center" | "right";
+  textVAlign: "top" | "center" | "bottom";
   show: boolean;
 };
 export type edgeUpdateDialogProps = {
@@ -245,6 +247,8 @@ export type UpdateNodeInputs = Pick<
   | "fontSize"
   | "backgroundColor"
   | "customImage"
+  | "textHAlign"
+  | "textVAlign"
 >;
 export type UpdateEdgeInputs = Pick<
   edgeUpdateDialogProps,
