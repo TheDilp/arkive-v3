@@ -408,7 +408,7 @@ export const cytoscapeGridOptions = {
   snapToAlignmentLocationOnRelease: false, // Snap to alignment location on release
   snapToAlignmentLocationDuringDrag: false, // Snap to alignment location during drag
   distributionGuidelines: false, // Distribution guidelines
-  geometricGuideline: true, // Geometric guidelines
+  geometricGuideline: false, // Geometric guidelines
   initPosAlignment: false, // Guideline to initial mouse position
   centerToEdgeAlignment: false, // Center to edge alignment
   resize: false, // Adjust node sizes to cell sizes
@@ -433,7 +433,7 @@ export const cytoscapeGridOptions = {
     // Set ctx properties of line. Properties are here:
     strokeStyle: "#fff", // color of geometric guidelines
     geometricGuidelineRange: 400, // range of geometric guidelines
-    range: 500, // max range of distribution guidelines
+    range: 100, // max range of distribution guidelines
     minDistRange: 10, // min range for distribution guidelines
     distGuidelineOffset: 10, // shift amount of distribution guidelines
     horizontalDistColor: "#ff0000", // color of horizontal distribution alignment
@@ -582,8 +582,8 @@ export const cytoscapeStylesheet = [
   {
     selector: ".incomingNodeHighlight",
     style: {
-      "background-image-opacity": 0,
-      "background-color": "blue",
+      "border-width": 4,
+      "border-color": "blue",
       padding: "15px",
     },
   },
@@ -601,9 +601,8 @@ export const cytoscapeStylesheet = [
   {
     selector: ".outgoingNodeHighlight",
     style: {
-      "background-image-opacity": 0,
-      "background-color": "cyan",
-      padding: "15px",
+      "border-width": 4,
+      "border-color": "cyan",
     },
   },
   {

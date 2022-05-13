@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { boardNodeFontSizes, boardNodeShapes } from "../../utils/utils";
 import { Slider } from "primereact/slider";
 import { ColorPicker } from "primereact/colorpicker";
+import { InputNumber } from "primereact/inputnumber";
 
 type Props = {
   nodeUpdateDialog: nodeUpdateDialogProps;
@@ -24,7 +25,6 @@ export default function NodeUpdateDialog({
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
   } = useForm<UpdateNodeInputs>({
     defaultValues: {
@@ -51,6 +51,9 @@ export default function NodeUpdateDialog({
   return (
     <Dialog
       header={`Update Node ${nodeUpdateDialog.label || ""}`}
+      style={{
+        maxWidth: "20vw",
+      }}
       visible={nodeUpdateDialog.show}
       modal={false}
       onHide={() =>
@@ -159,13 +162,15 @@ export default function NodeUpdateDialog({
             )}
           />
         </div>
-        <div className="my-3">
-          <div className="my-2">Width: {watch("width")}</div>
+        <div className="my-1">
+          <div className="mt-2">Width</div>
           <Controller
             control={control}
             name="width"
             render={({ field: { onChange, value } }) => (
-              <Slider
+              <InputNumber
+                className="w-full"
+                showButtons
                 min={10}
                 max={1000}
                 step={10}
@@ -175,16 +180,18 @@ export default function NodeUpdateDialog({
             )}
           />
         </div>
-        <div className="my-3">
-          <div className="my-2">Height: {watch("height")}</div>
+        <div className="my-1">
+          <div className="mt-2">Height</div>
           <Controller
             control={control}
             name="height"
             render={({ field: { onChange, value } }) => (
-              <Slider
+              <InputNumber
+                className="w-full"
                 min={10}
                 max={1000}
                 step={10}
+                showButtons
                 value={value}
                 onChange={(e) => onChange(e.value)}
               />

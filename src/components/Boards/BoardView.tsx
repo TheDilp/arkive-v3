@@ -1,14 +1,8 @@
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
   BoardContextMenuProps,
@@ -186,6 +180,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         taxiDirection: "auto",
         taxiTurn: 50,
         targetArrowShape: "triangle",
+        zIndex: 1,
       });
     },
     [board_id]
