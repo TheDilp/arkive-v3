@@ -60,7 +60,6 @@ export default function EdgeUpdateDialog({
   const updateEdgeMutation = useUpdateEdge(project_id as string);
 
   useEffect(() => {
-    console.log("TEST");
     Object.entries(edgeUpdateDialog).forEach(([key, value]) => {
       if (key === "backgroundColor" && typeof value === "string") {
         setValue(key as any, value.replace("#", ""));

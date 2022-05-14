@@ -58,6 +58,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       backgroundColor: "",
       textHAlign: "center",
       textVAlign: "top",
+      zIndex: 1,
       show: false,
     });
   const [edgeUpdateDialog, setEdgeUpdateDialog] =
@@ -129,6 +130,9 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             customImage: node.customImage,
             x: node.x,
             y: node.y,
+            zIndex: node.zIndex,
+            // Custom image has priority, if not set use document image, if neither - empty array
+            // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage
               ? node.customImage
               : node.document?.image
@@ -235,6 +239,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           doc_id: target.scratch.doc_id,
           textHAlign: target.data.textHAlign,
           textVAlign: target.data.textVAlign,
+          zIndex: target.data.zIndex,
           show: true,
         });
       });

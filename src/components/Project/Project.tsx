@@ -6,7 +6,6 @@ import {
 } from "../../utils/customHooks";
 import LoadingScreen from "../Util/LoadingScreen";
 import Navbar from "../Nav/Navbar";
-import { useEffect } from "react";
 
 export default function Project() {
   const { project_id } = useParams();
@@ -17,9 +16,6 @@ export default function Project() {
   // const { isLoading: isLoadingMaps } = useGetMaps(project_id as string);
   const { isLoading: isLoadingBoards } = useGetBoards(project_id as string);
 
-  useEffect(() => {
-   
-  }, []);
   if (isLoadingDocuments || isLoadingBoards) return <LoadingScreen />;
 
   return (

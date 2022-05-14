@@ -497,6 +497,7 @@ export const cytoscapeStylesheet = [
       "text-valign": "data(textVAlign)",
       "text-wrap": "wrap",
       "text-max-width": "data(width)",
+      "z-index": "data(zIndex)",
     },
   },
   {

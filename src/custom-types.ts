@@ -68,6 +68,7 @@ export type BoardNodeProps = {
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
   customImage?: string | null;
+  zIndex: number;
   document?: Pick<DocumentProps, "id" | "image">;
   board_id: string;
 };
@@ -163,6 +164,7 @@ export type nodeUpdateDialogProps = {
   customImage?: string | null;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
+  zIndex: number;
   show: boolean;
 };
 export type edgeUpdateDialogProps = {
@@ -249,6 +251,7 @@ export type UpdateNodeInputs = Pick<
   | "customImage"
   | "textHAlign"
   | "textVAlign"
+  | "zIndex"
 >;
 export type UpdateEdgeInputs = Pick<
   edgeUpdateDialogProps,
@@ -293,6 +296,7 @@ export type UpdateNodeProps = {
   textVAlign?: "top" | "center" | "bottom";
   backgroundColor?: string;
   customImage?: string | null;
+  zIndex?: number;
   doc_id?: string;
 };
 

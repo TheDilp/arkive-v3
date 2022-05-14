@@ -78,6 +78,7 @@ export default function NodeUpdateDialog({
           customImage: "",
           textHAlign: "center",
           textVAlign: "top",
+          zIndex: 1,
           show: false,
         })
       }
@@ -241,6 +242,26 @@ export default function NodeUpdateDialog({
                 showButtons
                 value={value}
                 onChange={(e) => onChange(e.value)}
+              />
+            )}
+          />
+        </div>
+        <div className="w-full my-2">
+          <div className="w-full flex flex-wrap">
+            <label className="w-full text-sm">Node Level</label>
+            <span className="w-full text-xs">
+              Changes if node is above or below others
+            </span>
+          </div>
+          <Controller
+            control={control}
+            name="zIndex"
+            render={({ field: { onChange, value } }) => (
+              <InputNumber
+                className="w-full"
+                value={value}
+                onChange={(e) => onChange(e.value)}
+                showButtons
               />
             )}
           />
