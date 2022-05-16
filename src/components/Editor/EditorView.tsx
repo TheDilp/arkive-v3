@@ -8,7 +8,6 @@ import { toastWarn } from "../../utils/utils";
 import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
-import UserTest from "./UserTest";
 type Props = {
   saving: boolean | number;
   setSaving: (saving: boolean | number) => void;

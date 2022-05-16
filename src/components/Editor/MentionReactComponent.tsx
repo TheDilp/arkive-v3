@@ -1,7 +1,10 @@
 import { useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { BoardProps, DocumentProps, MapProps } from "../../custom-types";
-
+import { Tooltip } from "primereact/tooltip";
+import { Card } from "primereact/card";
+import RemirrorContext from "./RemirrorContext";
+import LinkHoverWindow from "./LinkHover/LinkHoverWindow";
 type Props = {
   node: any;
 };
@@ -20,37 +23,61 @@ export default function MentionReactComponent({ node }: Props) {
   const boards: BoardProps[] | undefined = queryClient.getQueryData<
     BoardProps[]
   >(`${project_id}-boards`);
-  let item: DocumentProps | MapProps | BoardProps | undefined;
+  let docItem: DocumentProps | undefined;
+  let mapItem: MapProps | undefined;
+  let boardItem: BoardProps | undefined;
+
   if (node.attrs.name === "at") {
-    item = docs ? docs.find((doc) => doc.id === node.attrs.id) : undefined;
+    docItem = docs ? docs.find((doc) => doc.id === node.attrs.id) : undefined;
   } else if (node.attrs.name === "hash") {
-    item = maps ? maps.find((map) => map.id === node.attrs.id) : undefined;
+    mapItem = maps ? maps.find((map) => map.id === node.attrs.id) : undefined;
   } else {
-    item = boards
+    boardItem = boards
       ? boards.find((board) => board.id === node.attrs.id)
       : undefined;
   }
-
+  let { id: nodeId, name: nodeName, label: nodeLabel } = node.attrs;
   return (
-    <Link
-      className="Lato text-white "
-      style={{
-        fontWeight: "700",
-      }}
-      to={
-        node.attrs.name === "at"
-          ? `../${node.attrs.id}`
-          : node.attrs.name === "hash"
-          ? `../../maps/${node.attrs.id}`
-          : `../../boards/${node.attrs.id}`
-      }
-    >
-      {node.attrs.name === "hash" ? (
-        <i className="pi pi-map-marker underline"></i>
-      ) : (
-        ""
+    <>
+      {nodeName === "at" && docItem && (
+        <Tooltip
+          target={`#link-${nodeId}`}
+          className="w-20rem h-20rem"
+          showDelay={500}
+          hideDelay={750}
+          autoHide={false}
+          baseZIndex={5555}
+          event="hover"
+        >
+          <Card title={docItem.title} className="w-full h-full overflow-y-auto">
+            <LinkHoverWindow content={docItem.content} />
+          </Card>
+        </Tooltip>
       )}
-      {item ? item.title : node.attrs.label}
-    </Link>
+      <Link
+        className={`Lato text-white test`}
+        id={`link-${nodeId}`}
+        style={{
+          fontWeight: "700",
+        }}
+        to={
+          nodeName === "at"
+            ? `../${nodeId}`
+            : nodeName === "hash"
+            ? `../../maps/${nodeId}`
+            : `../../boards/${nodeId}`
+        }
+      >
+        {nodeName === "hash" ? (
+          <i className="pi pi-map-marker underline"></i>
+        ) : (
+          ""
+        )}
+        {nodeName === "at" && docItem ? docItem.title : null}
+        {nodeName === "hash" ? mapItem && mapItem.title : null}
+        {nodeName === "dollah" && boardItem ? boardItem.title : null}
+        {!nodeName && nodeLabel}
+      </Link>
+    </>
   );
 }

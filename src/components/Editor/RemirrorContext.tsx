@@ -4,7 +4,6 @@ import {
   useHelpers,
   useKeymap,
   useRemirror,
-  tableControllerPluginKey,
 } from "@remirror/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
@@ -75,8 +74,10 @@ const hooks = [
 
 export default function RemirrorContext({
   setDocId,
+  editable,
 }: {
   setDocId: (id: string) => void;
+  editable?: boolean;
 }) {
   const { project_id, doc_id } = useParams();
   const firstRender = useRef(true);
@@ -185,6 +186,7 @@ export default function RemirrorContext({
                 setSaving(tr?.time);
               }
             }}
+            editable={editable || true}
           >
             <EditorView
               saving={saving}

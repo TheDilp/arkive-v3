@@ -1,8 +1,4 @@
-import {
-  MentionAtomPopupComponent,
-  MentionAtomState,
-  MentionState,
-} from "@remirror/react";
+import { MentionAtomPopupComponent, MentionState } from "@remirror/react";
 import { useMemo, useState } from "react";
 import { DocumentProps, MapProps, BoardProps } from "../../custom-types";
 import { useQueryClient } from "react-query";
@@ -11,7 +7,7 @@ import { useParams } from "react-router-dom";
 export default function MentionComponent() {
   const [mentionState, setMentionState] = useState<MentionState | null>();
   const queryClient = useQueryClient();
-  const { project_id, doc_id } = useParams();
+  const { project_id } = useParams();
   const documents: DocumentProps[] | undefined = queryClient.getQueryData(
     `${project_id}-documents`
   );

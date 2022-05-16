@@ -524,7 +524,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
         }
         className="p-0 Lato relative"
         style={{
-          zIndex: 999999,
+          zIndex: 5000,
         }}
       />
     </>
