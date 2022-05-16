@@ -1,5 +1,5 @@
-import { useCommands, useHelpers } from "@remirror/react";
-import { ChangeEvent, HTMLProps, useEffect, useRef, useState } from "react";
+import { useCommands } from "@remirror/react";
+import { HTMLProps, useRef, useState } from "react";
 type Props = {
   colorInput: boolean;
   setColorInput: (colorInput: boolean) => void;

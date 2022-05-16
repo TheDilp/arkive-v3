@@ -36,6 +36,7 @@ import { TableExtension } from "@remirror/extension-react-tables";
 import { saveAs } from "file-saver";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent";
+import { CustomImageExtension } from "./CustomImageExtension";
 const hooks = [
   () => {
     const { getJSON, getText, getMarkdown } = useHelpers();
@@ -120,9 +121,10 @@ export default function RemirrorContext({
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
-      new ImageExtension({
-        enableResizing: true,
-      }),
+      // new ImageExtension({
+      //   enableResizing: true,
+      // }),
+      new CustomImageExtension(),
       new BulletListExtension(),
       new OrderedListExtension(),
       CustomMentionExtension,
