@@ -353,6 +353,7 @@ export const createNode = async ({
   y,
   board_id,
   type,
+  backgroundColor,
   doc_id,
 }: CreateNodeProps) => {
   let user = auth.user();
@@ -364,6 +365,7 @@ export const createNode = async ({
       y,
       board_id,
       type,
+      backgroundColor,
       doc_id,
     });
     if (data) return data;
@@ -587,6 +589,7 @@ export const updateNode = async ({
   textHAlign,
   customImage,
   zIndex,
+  parent,
   doc_id,
 }: UpdateNodeProps) => {
   let user = auth.user();
@@ -607,6 +610,7 @@ export const updateNode = async ({
         backgroundColor,
         customImage,
         zIndex,
+        parent,
         doc_id,
       })
       .eq("id", id);

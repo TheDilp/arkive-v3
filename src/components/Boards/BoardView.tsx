@@ -13,12 +13,14 @@ import {
 } from "../../custom-types";
 import {
   useCreateEdge,
+  useCreateNode,
   useGetBoardData,
   useUpdateNode,
 } from "../../utils/customHooks";
 import {
   boardLayouts,
   changeLayout,
+  cytoscapeCompoundDnDOptions,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
@@ -83,6 +85,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   });
   const [drawMode, setDrawMode] = useState(false);
   const [snap, setSnap] = useState(true);
+  const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
 
@@ -128,6 +131,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             textVAlign: node.textVAlign,
             backgroundColor: node.backgroundColor,
             customImage: node.customImage,
+            parent: node.parent,
             x: node.x,
             y: node.y,
             zIndex: node.zIndex,

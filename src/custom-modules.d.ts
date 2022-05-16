@@ -5,5 +5,6 @@ declare module "cytoscape";
 declare module "react-cytoscapejs";
 declare module "cytoscape-edgehandles";
 declare module "cytoscape-grid-guide";
+declare module "cytoscape-compound-drag-and-drop";
 declare module "cytoscape-dagre";
 declare module "cytoscape-euler";

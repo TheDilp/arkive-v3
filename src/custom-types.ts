@@ -69,6 +69,7 @@ export type BoardNodeProps = {
   textVAlign: "top" | "center" | "bottom";
   customImage?: string | null;
   zIndex: number;
+  parent: string | null;
   document?: Pick<DocumentProps, "id" | "image">;
   board_id: string;
 };
@@ -280,6 +281,7 @@ export type CreateNodeProps = {
   y: number;
   board_id: string;
   type: string;
+  backgroundColor?: string;
   doc_id?: string;
 };
 
@@ -297,6 +299,7 @@ export type UpdateNodeProps = {
   backgroundColor?: string;
   customImage?: string | null;
   zIndex?: number;
+  parent?: string;
   doc_id?: string;
 };
 

@@ -14,13 +14,12 @@ import {
 } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
-import LoadingScreen from "../../Util/LoadingScreen";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 import LinkedItems from "./LinkedItems";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
   const [currentDoc, setCurrentDoc] = useState<DocumentProps | null>();
-  // const project = useGetProjectData(project_id as string);
+  const project = useGetProjectData(project_id as string);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const { data: categories, refetch: refetchAllTags } = useGetTags(
     project_id as string
@@ -46,7 +45,7 @@ export default function PropertiesPanel() {
         height: "96.4vh",
       }}
     >
-      {/* {project && currentDoc && (
+      {project && currentDoc && (
         <div className="p-fluid w-full">
           <CategoryAutocomplete
             currentDoc={currentDoc}
@@ -58,7 +57,7 @@ export default function PropertiesPanel() {
             setFilteredCategories={setFilteredCategories}
           />
         </div>
-      )} */}
+      )}
       <div className="w-full">
         <LinkedItems />
       </div>

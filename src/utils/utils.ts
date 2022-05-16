@@ -45,12 +45,43 @@ export const getDepth = (
 
   return depth;
 };
+
+// Regex for email and password
 export const emailRegex =
   /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g;
 
 export const passwordRegex =
   /"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"/g;
 
+// Template Tree Utils
+export const defaultTemplate = {
+  title: "New Template",
+  icon: "mdi:file",
+  categories: [],
+  folder: false,
+  content: {
+    type: "doc",
+    content: [
+      {
+        type: "paragraph",
+        attrs: {
+          style: "",
+          nodeIndent: null,
+          nodeLineHeight: null,
+          nodeTextAlignment: null,
+        },
+        content: [
+          {
+            text: "Customize your new template!",
+            type: "text",
+          },
+        ],
+      },
+    ],
+  },
+};
+
+// Board Utils
 export const boardNodeShapes = [
   {
     label: "Rectangle",
@@ -476,6 +507,19 @@ export const cytoscapeGridOptions = {
   // Parent Padding
   parentSpacing: -1, // -1 to set paddings of parents to gridSpacing
 };
+// export const cytoscapeCompoundDnDOptions = {
+//   grabbedNode: (node: any) => true, // filter function to specify which nodes are valid to grab and drop into other nodes
+//   dropTarget: (dropTarget: any, grabbedNode: any) => true, // filter function to specify which parent nodes are valid drop targets
+//   dropSibling: (dropSibling: any, grabbedNode: any) => true, // filter function to specify which orphan nodes are valid drop siblings
+//   newParentNode: (grabbedNode: any, dropSibling: any) => ({}), // specifies element json for parent nodes added by dropping an orphan node on another orphan (a drop sibling). You can chose to return the dropSibling in which case it becomes the parent node and will be preserved after all its children are removed.
+//   boundingBoxOptions: {
+//     // same as https://js.cytoscape.org/#eles.boundingBox, used when calculating if one node is dragged over another
+//     includeOverlays: false,
+//     includeLabels: true,
+//   },
+//   overThreshold: 50, // make dragging over a drop target easier by expanding the hit area by this amount on all sides
+//   outThreshold: 50, // make dragging out of a drop target a bit harder by expanding the hit area by this amount on all sides
+// };
 export const cytoscapeStylesheet = [
   {
     selector: "node[classes]",

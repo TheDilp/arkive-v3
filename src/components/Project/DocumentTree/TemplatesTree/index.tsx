@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import {
@@ -13,6 +13,8 @@ import {
   useGetTemplates,
 } from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
+import { defaultTemplate } from "../../../../utils/utils";
+import { InputText } from "primereact/inputtext";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
@@ -32,17 +34,18 @@ export default function TemplatesTree({
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const templates = useGetTemplates(project_id as string);
   const createDocumentMutation = useCreateTemplate();
-
+  const [filter, setFilter] = useState("");
   const rowVirtualizer = useVirtual({
-    size: templates.length,
+    size: templates.filter((template) =>
+      filter ? template.title.includes(filter) : true
+    ).length,
     parentRef,
     estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
-
   return (
     <div className="">
-      <div className="w-full flex flex-nowrap justify-content-center">
+      <div className="w-full flex flex-wrap justify-content-center">
         <Button
           className="p-button-outlined my-2"
           label="New Template"
@@ -52,33 +55,16 @@ export default function TemplatesTree({
             let id = uuid();
             createDocumentMutation.mutate({
               id,
-              title: "New Template",
               project_id: project_id as string,
-              icon: "mdi:file",
-              categories: [],
-              folder: false,
-              content: {
-                type: "doc",
-                content: [
-                  {
-                    type: "paragraph",
-                    attrs: {
-                      style: "",
-                      nodeIndent: null,
-                      nodeLineHeight: null,
-                      nodeTextAlignment: null,
-                    },
-                    content: [
-                      {
-                        text: "Customize your new template!",
-                        type: "text",
-                      },
-                    ],
-                  },
-                ],
-              },
+              ...defaultTemplate,
             });
           }}
+        />
+        <InputText
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full p-1"
+          placeholder="Filter by Title"
         />
       </div>
       <div
@@ -112,7 +98,11 @@ export default function TemplatesTree({
                 transform: `translateY(${virtualRow.start}px)`,
               }}
               onClick={() => {
-                setDocId(templates[virtualRow.index].id as string);
+                setDocId(
+                  templates.filter((template) =>
+                    filter ? template.title.includes(filter) : true
+                  )[virtualRow.index].id as string
+                );
               }}
               onContextMenu={(e) => {
                 cm.current.show(e);
@@ -127,14 +117,20 @@ export default function TemplatesTree({
               }}
             >
               <Icon
-                icon={templates[virtualRow.index].icon}
+                icon={
+                  templates.filter((template) =>
+                    filter ? template.title.includes(filter) : true
+                  )[virtualRow.index].icon
+                }
                 inline={true}
                 className="mr-1"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   setIconSelect({
-                    doc_id: templates[virtualRow.index].id,
+                    doc_id: templates.filter((template) =>
+                      filter ? template.title.includes(filter) : true
+                    )[virtualRow.index].id,
                     icon: "bxs:folder",
                     show: true,
                     top: e.clientY,
@@ -144,10 +140,19 @@ export default function TemplatesTree({
               />
               <span
                 className={`text-lg Lato ${
-                  docId === templates[virtualRow.index].id ? "text-primary" : ""
+                  docId ===
+                  templates.filter((template) =>
+                    filter ? template.title.includes(filter) : true
+                  )[virtualRow.index].id
+                    ? "text-primary"
+                    : ""
                 }`}
               >
-                {templates[virtualRow.index].title}
+                {
+                  templates.filter((template) =>
+                    filter ? template.title.includes(filter) : true
+                  )[virtualRow.index].title
+                }
               </span>
             </div>
           ))}
