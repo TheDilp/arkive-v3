@@ -13,6 +13,7 @@ import {
   useDismiss,
   autoPlacement,
   inline,
+  safePolygon,
 } from "@floating-ui/react-dom-interactions";
 
 interface Props {
@@ -38,9 +39,7 @@ export const HoverTooltip = ({
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     useHover(context, {
-      delay: {
-        close: 500,
-      },
+      handleClose: safePolygon(),
     }),
     useFocus(context),
     useRole(context, { role: "tooltip" }),
