@@ -47,6 +47,7 @@ export default function MentionReactComponent({ node }: Props) {
           autoHide={false}
           baseZIndex={5555}
           event="hover"
+          position="top"
         >
           <Card
             title={<div className="text-center p-0">{docItem.title}</div>}

@@ -22,16 +22,6 @@ export class CustomResizableImageView
     const imageEl = document.createElement("img");
     imageEl.setAttribute("src", node.attrs.src);
 
-    if (node.attrs.figtext) {
-      const figEl = document.createElement("figcaption");
-      setStyle(figEl, {
-        backgroundColor: "#3d3d3d",
-        color: "#f1f1f1",
-      });
-      figEl.innerText = node.attrs.figtext || "";
-      contEl.appendChild(figEl);
-    }
-
     contEl.appendChild(imageEl);
 
     setStyle(imageEl, {
@@ -41,8 +31,21 @@ export class CustomResizableImageView
     });
     setStyle(contEl, {
       textAlign: "center",
+      display: "flex",
+      flexWrap: "wrap",
       margin: "0",
     });
+    if (node.attrs.figtext) {
+      const figEl = document.createElement("figcaption");
+      setStyle(figEl, {
+        backgroundColor: "#3d3d3d",
+        color: "#f1f1f1",
+        height: "10rem",
+        width: "100%",
+      });
+      figEl.innerText = node.attrs.figtext || "";
+      contEl.appendChild(figEl);
+    }
 
     return contEl;
   }
