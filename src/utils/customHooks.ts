@@ -959,7 +959,6 @@ export function useCreateNode(project_id: string) {
                         backgroundColor: "#595959",
                         textHAlign: "center" as const,
                         textVAlign: "top" as const,
-                        parent: null,
                         zIndex: 1,
                       },
                     ],

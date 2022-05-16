@@ -20,7 +20,6 @@ import {
 import {
   boardLayouts,
   changeLayout,
-  cytoscapeCompoundDnDOptions,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
@@ -131,7 +130,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             textVAlign: node.textVAlign,
             backgroundColor: node.backgroundColor,
             customImage: node.customImage,
-            parent: node.parent,
             x: node.x,
             y: node.y,
             zIndex: node.zIndex,

@@ -589,7 +589,6 @@ export const updateNode = async ({
   textHAlign,
   customImage,
   zIndex,
-  parent,
   doc_id,
 }: UpdateNodeProps) => {
   let user = auth.user();
@@ -610,7 +609,6 @@ export const updateNode = async ({
         backgroundColor,
         customImage,
         zIndex,
-        parent,
         doc_id,
       })
       .eq("id", id);

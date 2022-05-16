@@ -542,6 +542,7 @@ export const cytoscapeStylesheet = [
       "text-wrap": "wrap",
       "text-max-width": "data(width)",
       "z-index": "data(zIndex)",
+      "z-index-compare": "manual",
     },
   },
   {
@@ -575,8 +576,8 @@ export const cytoscapeStylesheet = [
       opacity: 0,
     },
   },
+  // Edges in general
   {
-    // Edges in general
     selector: "edge[classes]",
     style: {
       label: "data(label)",
@@ -596,6 +597,7 @@ export const cytoscapeStylesheet = [
       "control-point-distances": "data(controlPointDistances)",
       "control-point-weights": "data(controlPointWeights)",
       "z-index": "data(zIndex)",
+      "z-index-compare": "manual",
     },
   },
   {
