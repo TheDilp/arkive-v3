@@ -36,14 +36,17 @@ export class CustomResizableImageView
       margin: "0",
     });
     if (node.attrs.figtext) {
-      const figEl = document.createElement("figcaption");
+      const figEl = document.createElement("div");
+      figEl.textContent = "asdasdasdasdasd1a45sd4a56sd4a65sd4a65sd456asd4asd";
       setStyle(figEl, {
         backgroundColor: "#3d3d3d",
         color: "#f1f1f1",
-        height: "10rem",
+        height: "5rem",
+        wordBreak: "break-all",
+        overflowWrap: "break-word",
+        display: "inline",
         width: "100%",
       });
-      figEl.innerText = node.attrs.figtext || "";
       contEl.appendChild(figEl);
     }
 

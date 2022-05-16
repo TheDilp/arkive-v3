@@ -224,11 +224,12 @@ export default function BubbleMenuBar({
           icon: "pi pi-fw pi-image",
           className: active.image() ? "menuBarButtonActive" : "",
           command: () => {
-            let src = window.prompt("Enter the URL of the image:", undefined);
-            if (src) {
-              insertImage({ src });
-              focus();
-            }
+            console.log(active.image());
+            // let src = window.prompt("Enter the URL of the image:", undefined);
+            // if (src) {
+            //   insertImage({ src });
+            //   focus();
+            // }
           },
         },
         {

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@floating-ui/react-dom-interactions": "^0.6.0",
     "@iconify/utils": "^1.0.32",
     "@minoru/react-dnd-treeview": "^1.6.1",
     "@remirror/extension-react-tables": "^1.0.33",

@@ -22,6 +22,8 @@ import {
   OrderedListExtension,
   TextColorExtension,
   UnderlineExtension,
+  GapCursorExtension,
+  DropCursorExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../styles/Editor.css";
@@ -35,8 +37,7 @@ import CustomLinkExtenstion from "./CustomLinkExtension";
 import { TableExtension } from "@remirror/extension-react-tables";
 import { saveAs } from "file-saver";
 import EditorView from "./EditorView";
-import MentionReactComponent from "./MentionReactComponent";
-import { CustomImageExtension } from "./CustomImageExtension";
+import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
 const hooks = [
   () => {
     const { getJSON, getText, getMarkdown } = useHelpers();
@@ -121,10 +122,10 @@ export default function RemirrorContext({
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
-      // new ImageExtension({
-      //   enableResizing: true,
-      // }),
-      new CustomImageExtension(),
+      new ImageExtension({
+        enableResizing: true,
+      }),
+      // new CustomImageExtension(),
       new BulletListExtension(),
       new OrderedListExtension(),
       CustomMentionExtension,
@@ -135,6 +136,8 @@ export default function RemirrorContext({
       new TextColorExtension(),
       new MarkdownExtension(),
       new TableExtension(),
+      new GapCursorExtension(),
+      new DropCursorExtension(),
     ],
     selection: "all",
     content: currentDocument?.content || "",

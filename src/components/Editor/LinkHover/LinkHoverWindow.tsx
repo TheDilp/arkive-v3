@@ -20,7 +20,7 @@ import {
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import CustomLinkExtenstion from "../CustomLinkExtension";
-import MentionReactComponent from "../MentionReactComponent";
+import MentionReactComponent from "../MentionReactComponent/MentionReactComponent";
 import LinkHoverEditor from "./LinkHoverEditor";
 
 export default function LinkHoverWindow({
