@@ -54,3 +54,13 @@ div[data-callout-type="info"] {
     background: none !important;
     padding: 0 !important;
 }
+
+.viewOnlyEditor img {
+    max-width: 100% !important;
+}
+
+/* Style of content of cards in the tooltip that
+appeears when a mention link is hovered */
+.mention-tooltip .p-card-content {
+    padding: 0 !important;
+}

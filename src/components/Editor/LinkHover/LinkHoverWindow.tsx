@@ -71,7 +71,7 @@ export default function LinkHoverWindow({
       new HeadingExtension(),
       new UnderlineExtension(),
       new ImageExtension({
-        enableResizing: true,
+        enableResizing: false,
       }),
       new BulletListExtension(),
       new OrderedListExtension(),
@@ -97,7 +97,7 @@ export default function LinkHoverWindow({
         <Remirror
           manager={manager}
           initialContent={state}
-          classNames={["text-white Lato Editor w-full h-20rem"]}
+          classNames={["text-white Lato viewOnlyEditor w-full h-20rem"]}
           editable={false}
         >
           <LinkHoverEditor content={content} />

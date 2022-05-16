@@ -9,9 +9,11 @@ type Props = {
 
 export default function LinkHoverEditor({ content }: Props) {
   const { setContent } = useRemirrorContext();
-
   useEffect(() => {
-    setContent(content ?? "");
+    //   The custom mention react component does not load unless a minimal timeout is set
+    setTimeout(() => {
+      setContent(content ?? "");
+    }, 1);
   }, []);
   return content ? (
     <>

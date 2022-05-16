@@ -42,13 +42,16 @@ export default function MentionReactComponent({ node }: Props) {
       {nodeName === "at" && docItem && (
         <Tooltip
           target={`#link-${nodeId}`}
-          className=" w-30rem h-20rem"
+          className=" w-30rem h-20rem mention-tooltip"
           showDelay={500}
           autoHide={false}
           baseZIndex={5555}
           event="hover"
         >
-          <Card title={docItem.title} className="w-1/3 h-full">
+          <Card
+            title={<div className="text-center p-0">{docItem.title}</div>}
+            className="w-1/3 h-full"
+          >
             <LinkHoverWindow content={docItem.content} />
           </Card>
         </Tooltip>
