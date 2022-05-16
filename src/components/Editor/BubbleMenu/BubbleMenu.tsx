@@ -10,7 +10,7 @@ export const BubbleMenu: FC = () => {
   return (
     <FloatingWrapper
       positioner="always"
-      placement="top"
+      placement="bottom"
       enabled={selection ? true : false}
       renderOutsideEditor
     >
