@@ -19,10 +19,12 @@ export default function MentionComponent() {
   );
   const documentItems = useMemo(
     () =>
-      (documents?.filter((doc) => !doc.folder) ?? []).map((doc) => ({
-        id: doc.id,
-        label: doc.title,
-      })),
+      (documents?.filter((doc) => !doc.folder && !doc.template) ?? []).map(
+        (doc) => ({
+          id: doc.id,
+          label: doc.title,
+        })
+      ),
     [documents]
   );
   const mapItems = useMemo(

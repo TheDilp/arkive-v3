@@ -92,12 +92,12 @@ export default function LinkHoverWindow({
 
   if (!currentDocument) return <Navigate to="../../wiki" />;
   return (
-    <div className="editorContainer w-full">
+    <div className="editorContainer w-full h-20rem ">
       <ThemeProvider>
         <Remirror
           manager={manager}
           initialContent={state}
-          classNames={["text-white Lato Editor"]}
+          classNames={["text-white Lato Editor w-full h-20rem"]}
           editable={false}
         >
           <LinkHoverEditor content={content} />
