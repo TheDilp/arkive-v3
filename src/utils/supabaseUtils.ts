@@ -700,6 +700,13 @@ export const updateProfile = async (
     }
   }
 };
+export const updateManyNodesPosition = async (
+  nodes: { id: string; x: number; y: number }[]
+) => {
+  await supabase.rpc("update_many_nodes", {
+    payload: nodes,
+  });
+};
 
 // DELETE
 

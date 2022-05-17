@@ -11,6 +11,7 @@ import {
   useUpdateBoard,
   useUpdateNode,
 } from "../../../utils/customHooks";
+import { updateManyNodesPosition } from "../../../utils/supabaseUtils";
 import { boardLayouts, toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
@@ -192,15 +193,12 @@ export default function BoardTreeItemContext({
         accept={async () => {
           if (boardId === displayDialog.id && cyRef.current) {
             const nodes = cyRef.current.nodes();
+            let newNodePositions = [];
             for (const node of nodes) {
               const { x, y } = node.position();
-              updateNodeMutation.mutate({
-                id: node.id(),
-                board_id: displayDialog.id,
-                x,
-                y,
-              });
+              newNodePositions.push({ id: node.id(), x, y });
             }
+            updateManyNodesPosition(newNodePositions);
           }
         }}
       />
