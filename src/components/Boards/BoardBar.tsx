@@ -3,8 +3,9 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
-import { boardLayouts, changeLayout } from "../../utils/utils";
+import { boardLayouts, changeLayout, toastWarn } from "../../utils/utils";
 import { SelectButton } from "primereact/selectbutton";
+import { BoardExportProps } from "../../custom-types";
 type Props = {
   layout: string | null | undefined;
   setLayout: (layout: string) => void;
@@ -28,12 +29,62 @@ export default function BoardBar({
   ehRef,
   boardTitle,
 }: Props) {
-  const [exportDialog, setExportDialog] = useState({
+  const [exportDialog, setExportDialog] = useState<BoardExportProps>({
     view: "Graph",
     background: "Color",
     type: "PNG",
     show: false,
   });
+
+  const exportBoardFunction = (
+    view: "Graph" | "View",
+    background: "Color" | "Transparent",
+    type: "PNG" | "JPEG" | "JSON",
+    boardTitle?: string
+  ) => {
+    if (type === "PNG") {
+      console.log(cyRef.current);
+      saveAs(
+        new Blob(
+          [
+            cyRef.current.png({
+              output: "blob",
+              bg: background === "Color" ? "#121212" : "transparent",
+              full: view === "Graph" ? true : false,
+            }),
+          ],
+          {
+            type: "image/png",
+          }
+        ),
+        `${boardTitle || "ArkiveBoard"}.png`
+      );
+    } else if (type === "JPEG") {
+      saveAs(
+        new Blob(
+          [
+            cyRef.current.jpg({
+              output: "blob",
+              bg: background === "Color" ? "#121212" : "transparent",
+              full: view === "Graph" ? true : false,
+            }),
+          ],
+          {
+            type: "image/jpg",
+          }
+        ),
+        `${boardTitle || "ArkiveBoard"}.jpg`
+      );
+    } else if (type === "JSON") {
+      saveAs(
+        new Blob([JSON.stringify(cyRef.current.json(true))], {
+          type: "application/json",
+        }),
+        `${boardTitle || "ArkiveBoard"}.json`
+      );
+    }
+  };
+
   return (
     <div className="absolute flex flex-nowrap z-5">
       <Dialog
@@ -78,7 +129,7 @@ export default function BoardBar({
             <h3 className="my-2">File Type</h3>
             <SelectButton
               value={exportDialog.type}
-              options={["PNG", "JPEN", "JSON"]}
+              options={["PNG", "JPEG", "JSON"]}
               onChange={(e) =>
                 setExportDialog({ ...exportDialog, type: e.value })
               }
@@ -90,6 +141,18 @@ export default function BoardBar({
               className="p-button-outlined p-button-success"
               icon="pi pi-download"
               iconPos="right"
+              onClick={() => {
+                if (cyRef.current) {
+                  exportBoardFunction(
+                    exportDialog.view,
+                    exportDialog.background,
+                    exportDialog.type,
+                    boardTitle
+                  );
+                } else {
+                  toastWarn("Ooops");
+                }
+              }}
             />
           </div>
         </div>
@@ -148,21 +211,6 @@ export default function BoardBar({
         icon="pi pi-save"
         onClick={() => {
           setExportDialog({ ...exportDialog, show: true });
-          //   saveAs(
-          //     new Blob(
-          //       [
-          //         cyRef.current.png({
-          //           output: "blob",
-          //           bg: "#121212",
-          //           full: true,
-          //         }),
-          //       ],
-          //       {
-          //         type: "image/png",
-          //       }
-          //     ),
-          //     `${boardTitle || "ArkiveBoard"}.png`
-          //   );
         }}
       />
     </div>

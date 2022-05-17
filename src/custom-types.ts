@@ -182,6 +182,12 @@ export type edgeUpdateDialogProps = {
   zIndex: number;
   show: boolean;
 };
+export type BoardExportProps = {
+  view: "Graph" | "View";
+  background: "Color" | "Transparent";
+  type: "PNG" | "JPEG" | "JSON";
+  show: boolean;
+};
 export type iconSelectProps = {
   doc_id: string;
   icon: string;
@@ -273,7 +279,7 @@ export type RegisterInputs = {
   password: string;
 };
 
-// DATA CREATION TYPES
+// DATA CREATION AND UPDATE TYPES
 
 export type CreateNodeProps = {
   id: string;

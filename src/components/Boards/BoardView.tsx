@@ -1,5 +1,3 @@
-import { Button } from "primereact/button";
-import { Dropdown } from "primereact/dropdown";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,27 +7,23 @@ import {
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
   edgeUpdateDialogProps,
-  nodeUpdateDialogProps,
+  nodeUpdateDialogProps
 } from "../../custom-types";
 import {
-  useCreateEdge,
-  useCreateNode,
-  useGetBoardData,
-  useUpdateNode,
+  useCreateEdge, useGetBoardData,
+  useUpdateNode
 } from "../../utils/customHooks";
 import {
-  boardLayouts,
   changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  toastWarn,
+  toastWarn
 } from "../../utils/utils";
+import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
-import { saveAs } from "file-saver";
-import BoardBar from "./BoardBar";
 
 type Props = {
   setBoardId: (boardId: string) => void;
