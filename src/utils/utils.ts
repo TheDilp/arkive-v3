@@ -648,6 +648,7 @@ export const cytoscapeStylesheet = [
       "target-arrow-color": "green",
     },
   },
+
   {
     selector: ".incomingEdgeHighlight",
     style: {
