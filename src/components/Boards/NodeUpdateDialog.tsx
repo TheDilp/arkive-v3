@@ -278,28 +278,56 @@ export default function NodeUpdateDialog({
                 )}
               />
             </div>
-            <div className="my-3">
-              <label className="w-full text-sm">Node Background Color</label>
-              <Controller
-                control={control}
-                rules={{
-                  required: true,
-                }}
-                name="backgroundColor"
-                render={({ field: { onChange, value } }) => (
-                  <div className="flex align-items-center flex-row-reverse">
-                    <InputText
-                      value={value.replace("#", "")}
-                      className="w-full ml-2"
-                      onChange={onChange}
-                    />
-                    <ColorPicker
-                      value={value.replace("#", "")}
-                      onChange={onChange}
-                    />
-                  </div>
-                )}
-              />
+            <div className="w-full flex flex-nowrap my-1">
+              <div className="w-4">
+                <label className="w-full text-sm">Node Background Color</label>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  name="backgroundColor"
+                  render={({ field: { onChange, value } }) => (
+                    <div className="flex align-items-center flex-row-reverse">
+                      <InputText
+                        value={value.replace("#", "")}
+                        className="w-full ml-2"
+                        onChange={onChange}
+                      />
+                      <ColorPicker
+                        value={value.replace("#", "")}
+                        onChange={onChange}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+              <div className="w-8">
+                <label className="w-full text-sm">
+                  Node Background Opacity
+                </label>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                  }}
+                  name="backgroundOpacity"
+                  render={({ field: { onChange, value } }) => (
+                    <div className="flex align-items-center flex-row-reverse">
+                      <InputNumber
+                        showButtons
+                        mode="decimal"
+                        min={0}
+                        step={0.01}
+                        max={1}
+                        value={value}
+                        className="w-full ml-1"
+                        onChange={(e) => onChange(e.value)}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
             </div>
           </TabPanel>
         </TabView>
