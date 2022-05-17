@@ -64,10 +64,11 @@ export type BoardNodeProps = {
   height: number;
   type: string;
   fontSize: number;
-  backgroundColor: string;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
   customImage?: string | null;
+  backgroundColor: string;
+  backgroundOpacity: number;
   zIndex: number;
   document?: Pick<DocumentProps, "id" | "image">;
   board_id: string;
@@ -89,7 +90,6 @@ export type BoardEdgeProps = {
   targetArrowShape: string;
   zIndex: number;
 };
-
 export type CytoscapeNodeProps = {
   data: Pick<
     BoardNodeProps,
@@ -159,11 +159,12 @@ export type nodeUpdateDialogProps = {
   height: number;
   width: number;
   fontSize: number;
-  backgroundColor: string;
   doc_id?: string;
   customImage?: string | null;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
+  backgroundColor: string;
+  backgroundOpacity: number;
   zIndex: number;
   show: boolean;
 };
@@ -247,10 +248,11 @@ export type UpdateNodeInputs = Pick<
   | "width"
   | "height"
   | "fontSize"
-  | "backgroundColor"
   | "customImage"
   | "textHAlign"
   | "textVAlign"
+  | "backgroundColor"
+  | "backgroundOpacity"
   | "zIndex"
 >;
 export type UpdateEdgeInputs = Pick<
@@ -296,6 +298,7 @@ export type UpdateNodeProps = {
   textHAlign?: "left" | "center" | "right";
   textVAlign?: "top" | "center" | "bottom";
   backgroundColor?: string;
+  backgroundOpacity?: number;
   customImage?: string | null;
   zIndex?: number;
   doc_id?: string;

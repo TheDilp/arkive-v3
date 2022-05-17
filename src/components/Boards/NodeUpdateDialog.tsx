@@ -15,7 +15,7 @@ import {
 import { ColorPicker } from "primereact/colorpicker";
 import { InputNumber } from "primereact/inputnumber";
 import { useEffect } from "react";
-
+import { TabView, TabPanel } from "primereact/tabview";
 type Props = {
   nodeUpdateDialog: nodeUpdateDialogProps;
   setNodeUpdateDialog: (nodeUpdateDialog: nodeUpdateDialogProps) => void;
@@ -61,10 +61,11 @@ export default function NodeUpdateDialog({
     <Dialog
       header={`Update Node ${nodeUpdateDialog.label || ""}`}
       style={{
-        maxWidth: "20vw",
+        minWidth: "30vw",
       }}
       visible={nodeUpdateDialog.show}
       modal={false}
+      position="left"
       onHide={() =>
         setNodeUpdateDialog({
           id: "",
@@ -74,221 +75,235 @@ export default function NodeUpdateDialog({
           width: 0,
           height: 0,
           fontSize: 0,
-          backgroundColor: "",
           customImage: "",
           textHAlign: "center",
           textVAlign: "top",
+          backgroundColor: "",
+          backgroundOpacity: 1,
           zIndex: 1,
           show: false,
         })
       }
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="w-full flex flex-nowrap">
-          <div className="w-full flex flex-wrap my-1">
-            <label className="w-full text-sm">Node Label</label>
-            <div className="w-full flex flex-wrap">
-              <InputText
-                {...register("label")}
-                placeholder="Node Label"
-                className="w-9"
-                autoComplete="false"
-              />
-              <Controller
-                control={control}
-                name="fontSize"
-                render={({ field: { onChange, value } }) => (
-                  <Dropdown
-                    className="w-3"
-                    options={boardNodeFontSizes}
-                    placeholder="Label Font Size"
-                    value={value}
-                    onChange={(e) => onChange(e.value)}
+        <TabView scrollable className="w-full">
+          <TabPanel header="Node Label">
+            <div className="w-full flex flex-nowrap">
+              <div className="w-full flex flex-wrap my-1">
+                <label className="w-full text-sm">Node Label</label>
+                <div className="w-full flex flex-wrap">
+                  <InputText
+                    {...register("label")}
+                    placeholder="Node Label"
+                    className="w-9"
+                    autoComplete="false"
                   />
-                )}
-              />
-              <div className="flex flex-nowrap w-full mt-1">
-                <div className="w-6">
-                  <label htmlFor="" className="text-xs">
-                    Horizontal Align
-                  </label>
                   <Controller
                     control={control}
-                    name="textHAlign"
+                    name="fontSize"
                     render={({ field: { onChange, value } }) => (
                       <Dropdown
-                        className="w-full"
-                        options={textHAlignOptions}
+                        className="w-3"
+                        options={boardNodeFontSizes}
+                        placeholder="Label Font Size"
                         value={value}
                         onChange={(e) => onChange(e.value)}
                       />
                     )}
                   />
-                </div>
-                <div className="w-6">
-                  <label htmlFor="" className="text-xs">
-                    Vertical Align
-                  </label>
-                  <Controller
-                    control={control}
-                    name="textVAlign"
-                    render={({ field: { onChange, value } }) => (
-                      <Dropdown
-                        className="w-full"
-                        options={textVAlignOptions}
-                        value={value}
-                        onChange={(e) => onChange(e.value)}
+                  <div className="flex flex-nowrap w-full mt-1">
+                    <div className="w-6">
+                      <label htmlFor="" className="text-xs">
+                        Horizontal Align
+                      </label>
+                      <Controller
+                        control={control}
+                        name="textHAlign"
+                        render={({ field: { onChange, value } }) => (
+                          <Dropdown
+                            className="w-full"
+                            options={textHAlignOptions}
+                            value={value}
+                            onChange={(e) => onChange(e.value)}
+                          />
+                        )}
                       />
-                    )}
-                  />
+                    </div>
+                    <div className="w-6">
+                      <label htmlFor="" className="text-xs">
+                        Vertical Align
+                      </label>
+                      <Controller
+                        control={control}
+                        name="textVAlign"
+                        render={({ field: { onChange, value } }) => (
+                          <Dropdown
+                            className="w-full"
+                            options={textVAlignOptions}
+                            value={value}
+                            onChange={(e) => onChange(e.value)}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="w-full my-1">
-          <label className="w-full text-sm">Node Shape</label>
-          <Controller
-            control={control}
-            name="type"
-            render={({ field: { onChange, value } }) => (
-              <Dropdown
-                options={boardNodeShapes}
-                className="w-full"
-                placeholder="Node Shape"
-                filter
-                value={value}
-                onChange={(e) => onChange(e.value)}
-              />
-            )}
-          />
-        </div>
-        <div className="w-full my-1">
-          <label className="w-full text-sm">Linked Document</label>
-          <Controller
-            control={control}
-            name="doc_id"
-            render={({ field: { onChange, value } }) => (
-              <Dropdown
-                className="w-full"
-                placeholder="Link Document"
-                value={value}
-                filter
-                emptyFilterMessage="No documents found"
-                onChange={(e) => onChange(e.value)}
-                options={
-                  documents.data
-                    ? [
-                        { title: "No document", id: null },
-                        ...documents.data.filter(
-                          (doc) => !doc.template && !doc.folder
-                        ),
-                      ]
-                    : []
-                }
-                optionLabel={"title"}
-                optionValue={"id"}
-              />
-            )}
-          />
-        </div>
-        <div className="w-full my-1">
-          <label className="w-full text-sm">Custom Image</label>
-          <div className="text-xs">
-            Note: Custom images override linked documents.
-          </div>
-          <Controller
-            control={control}
-            name="customImage"
-            render={({ field: { onChange, value } }) => (
-              <InputText
-                className="w-full"
-                placeholder="Custom Image"
-                value={(value as string) || ""}
-                onChange={(e) => onChange(e.target.value)}
-              />
-            )}
-          />
-        </div>
-        <div className="my-1">
-          <div className="mt-2">Width</div>
-          <Controller
-            control={control}
-            name="width"
-            render={({ field: { onChange, value } }) => (
-              <InputNumber
-                className="w-full"
-                showButtons
-                min={10}
-                max={1000}
-                step={10}
-                value={value}
-                onChange={(e) => onChange(e.value)}
-              />
-            )}
-          />
-        </div>
-        <div className="my-1">
-          <div className="mt-2">Height</div>
-          <Controller
-            control={control}
-            name="height"
-            render={({ field: { onChange, value } }) => (
-              <InputNumber
-                className="w-full"
-                min={10}
-                max={1000}
-                step={10}
-                showButtons
-                value={value}
-                onChange={(e) => onChange(e.value)}
-              />
-            )}
-          />
-        </div>
-        <div className="w-full my-2">
-          <div className="w-full flex flex-wrap">
-            <label className="w-full text-sm">Node Level</label>
-            <span className="w-full text-xs">
-              Changes if node is above or below others
-            </span>
-          </div>
-          <Controller
-            control={control}
-            name="zIndex"
-            render={({ field: { onChange, value } }) => (
-              <InputNumber
-                className="w-full"
-                value={value}
-                onChange={(e) => onChange(e.value)}
-                showButtons
-              />
-            )}
-          />
-        </div>
-        <div className="my-3">
-          <label className="w-full text-sm">Node Background Color</label>
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            name="backgroundColor"
-            render={({ field: { onChange, value } }) => (
-              <div className="flex align-items-center flex-row-reverse">
-                <InputText
-                  value={value.replace("#", "")}
-                  className="w-full ml-2"
-                  onChange={onChange}
-                />
-                <ColorPicker
-                  value={value.replace("#", "")}
-                  onChange={onChange}
+          </TabPanel>
+          <TabPanel header="Node Shape">
+            <div className="w-full flex flex-wrap">
+              <div className="w-full my-1">
+                <label className="w-full text-sm">Node Shape</label>
+                <Controller
+                  control={control}
+                  name="type"
+                  render={({ field: { onChange, value } }) => (
+                    <Dropdown
+                      options={boardNodeShapes}
+                      className="w-full"
+                      placeholder="Node Shape"
+                      filter
+                      value={value}
+                      onChange={(e) => onChange(e.value)}
+                    />
+                  )}
                 />
               </div>
-            )}
-          />
-        </div>
+              <div className="w-6">
+                <div className="">Width</div>
+                <Controller
+                  control={control}
+                  name="width"
+                  render={({ field: { onChange, value } }) => (
+                    <InputNumber
+                      inputClassName="w-full"
+                      showButtons
+                      min={10}
+                      max={5000}
+                      step={10}
+                      value={value}
+                      onChange={(e) => onChange(e.value)}
+                    />
+                  )}
+                />
+              </div>
+              <div className="w-6">
+                <div className="">Height</div>
+                <Controller
+                  control={control}
+                  name="height"
+                  render={({ field: { onChange, value } }) => (
+                    <InputNumber
+                      inputClassName="w-full"
+                      min={10}
+                      max={5000}
+                      step={10}
+                      showButtons
+                      value={value}
+                      onChange={(e) => onChange(e.value)}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel header="Node Image">
+            <div className="w-full my-1">
+              <label className="w-full text-sm">Linked Document</label>
+              <Controller
+                control={control}
+                name="doc_id"
+                render={({ field: { onChange, value } }) => (
+                  <Dropdown
+                    className="w-full"
+                    placeholder="Link Document"
+                    value={value}
+                    filter
+                    emptyFilterMessage="No documents found"
+                    onChange={(e) => onChange(e.value)}
+                    options={
+                      documents.data
+                        ? [
+                            { title: "No document", id: null },
+                            ...documents.data.filter(
+                              (doc) => !doc.template && !doc.folder
+                            ),
+                          ]
+                        : []
+                    }
+                    optionLabel={"title"}
+                    optionValue={"id"}
+                  />
+                )}
+              />
+            </div>
+            <div className="w-full my-1">
+              <label className="w-full text-sm">Custom Image</label>
+              <div className="text-xs">
+                Note: Custom images override linked documents.
+              </div>
+              <Controller
+                control={control}
+                name="customImage"
+                render={({ field: { onChange, value } }) => (
+                  <InputText
+                    className="w-full"
+                    placeholder="Custom Image"
+                    value={(value as string) || ""}
+                    onChange={(e) => onChange(e.target.value)}
+                  />
+                )}
+              />
+            </div>
+          </TabPanel>
+          <TabPanel header="Misc">
+            <div className="w-full my-2">
+              <div className="w-full flex flex-wrap">
+                <label className="w-full text-sm">Node Level</label>
+                <span className="w-full text-xs">
+                  Changes if node is above or below others
+                </span>
+              </div>
+              <Controller
+                control={control}
+                name="zIndex"
+                render={({ field: { onChange, value } }) => (
+                  <InputNumber
+                    className="w-full"
+                    value={value}
+                    onChange={(e) => onChange(e.value)}
+                    showButtons
+                  />
+                )}
+              />
+            </div>
+            <div className="my-3">
+              <label className="w-full text-sm">Node Background Color</label>
+              <Controller
+                control={control}
+                rules={{
+                  required: true,
+                }}
+                name="backgroundColor"
+                render={({ field: { onChange, value } }) => (
+                  <div className="flex align-items-center flex-row-reverse">
+                    <InputText
+                      value={value.replace("#", "")}
+                      className="w-full ml-2"
+                      onChange={onChange}
+                    />
+                    <ColorPicker
+                      value={value.replace("#", "")}
+                      onChange={onChange}
+                    />
+                  </div>
+                )}
+              />
+            </div>
+          </TabPanel>
+        </TabView>
+
         <Button
           label="Save Node"
           type="submit"

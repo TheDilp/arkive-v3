@@ -584,10 +584,11 @@ export const updateNode = async ({
   width,
   height,
   fontSize,
-  backgroundColor,
   textVAlign,
   textHAlign,
   customImage,
+  backgroundColor,
+  backgroundOpacity,
   zIndex,
   doc_id,
 }: UpdateNodeProps) => {
@@ -606,8 +607,9 @@ export const updateNode = async ({
         fontSize,
         textHAlign,
         textVAlign,
-        backgroundColor,
         customImage,
+        backgroundColor,
+        backgroundOpacity,
         zIndex,
         doc_id,
       })

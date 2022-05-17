@@ -56,10 +56,11 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       width: 0,
       height: 0,
       fontSize: 0,
-      backgroundColor: "",
       textHAlign: "center",
       textVAlign: "top",
       zIndex: 1,
+      backgroundColor: "",
+      backgroundOpacity: 1,
       show: false,
     });
   const [edgeUpdateDialog, setEdgeUpdateDialog] =
@@ -84,7 +85,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   });
   const [drawMode, setDrawMode] = useState(false);
   const [snap, setSnap] = useState(true);
-  const createNodeMutation = useCreateNode(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
 
@@ -128,11 +128,13 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             fontSize: node.fontSize,
             textHAlign: node.textHAlign,
             textVAlign: node.textVAlign,
-            backgroundColor: node.backgroundColor,
             customImage: node.customImage,
             x: node.x,
             y: node.y,
+            backgroundColor: node.backgroundColor,
+            backgroundOpacity: node.backgroundOpacity,
             zIndex: node.zIndex,
+            zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage
@@ -236,11 +238,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           width: target.data.width,
           height: target.data.height,
           fontSize: target.data.fontSize,
-          backgroundColor: target.data.backgroundColor,
           customImage: target.data.customImage,
           doc_id: target.scratch.doc_id,
           textHAlign: target.data.textHAlign,
           textVAlign: target.data.textVAlign,
+          backgroundColor: target.data.backgroundColor,
+          backgroundOpacity: target.data.backgroundOpacity,
           zIndex: target.data.zIndex,
           show: true,
         });
