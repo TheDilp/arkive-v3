@@ -1,8 +1,10 @@
 import { saveAs } from "file-saver";
 import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
+import { useState } from "react";
 import { boardLayouts, changeLayout } from "../../utils/utils";
-
+import { SelectButton } from "primereact/selectbutton";
 type Props = {
   layout: string | null | undefined;
   setLayout: (layout: string) => void;
@@ -26,9 +28,73 @@ export default function BoardBar({
   ehRef,
   boardTitle,
 }: Props) {
+  const [exportDialog, setExportDialog] = useState({
+    view: "Graph",
+    background: "Color",
+    type: "PNG",
+    show: false,
+  });
   return (
     <div className="absolute flex flex-nowrap z-5">
-      <div className="relative">
+      <Dialog
+        header={`Export Board - ${boardTitle}`}
+        modal={false}
+        position="top-left"
+        style={{
+          maxWidth: "14vw",
+        }}
+        visible={exportDialog.show}
+        onHide={() =>
+          setExportDialog({
+            view: "Graph",
+            background: "Color",
+            type: "PNG",
+            show: false,
+          })
+        }
+      >
+        <div className="flex flex-wrap">
+          <div className="w-full flex flex-wrap justify-content-center">
+            <h3 className="w-full text-center mb-1 mt-0">View</h3>
+            <SelectButton
+              value={exportDialog.view}
+              options={["Graph", "Current"]}
+              onChange={(e) =>
+                setExportDialog({ ...exportDialog, view: e.value })
+              }
+            />
+          </div>
+          <div className="w-full flex flex-wrap justify-content-center">
+            <h3 className="my-2">Background</h3>
+            <SelectButton
+              value={exportDialog.background}
+              options={["Color", "Transparent"]}
+              onChange={(e) =>
+                setExportDialog({ ...exportDialog, background: e.value })
+              }
+            />
+          </div>
+          <div className="w-full flex flex-wrap justify-content-center">
+            <h3 className="my-2">File Type</h3>
+            <SelectButton
+              value={exportDialog.type}
+              options={["PNG", "JPEN", "JSON"]}
+              onChange={(e) =>
+                setExportDialog({ ...exportDialog, type: e.value })
+              }
+            />
+          </div>
+          <div className="w-full flex justify-content-center mt-2">
+            <Button
+              label="Export"
+              className="p-button-outlined p-button-success"
+              icon="pi pi-download"
+              iconPos="right"
+            />
+          </div>
+        </div>
+      </Dialog>
+      <div className="relative mr-2">
         <Dropdown
           options={boardLayouts}
           value={layout || "Preset"}
@@ -81,21 +147,22 @@ export default function BoardBar({
       <Button
         icon="pi pi-save"
         onClick={() => {
-          saveAs(
-            new Blob(
-              [
-                cyRef.current.png({
-                  output: "blob",
-                  bg: "#121212",
-                  full: true,
-                }),
-              ],
-              {
-                type: "image/png",
-              }
-            ),
-            `${boardTitle || "ArkiveBoard"}.png`
-          );
+          setExportDialog({ ...exportDialog, show: true });
+          //   saveAs(
+          //     new Blob(
+          //       [
+          //         cyRef.current.png({
+          //           output: "blob",
+          //           bg: "#121212",
+          //           full: true,
+          //         }),
+          //       ],
+          //       {
+          //         type: "image/png",
+          //       }
+          //     ),
+          //     `${boardTitle || "ArkiveBoard"}.png`
+          //   );
         }}
       />
     </div>
