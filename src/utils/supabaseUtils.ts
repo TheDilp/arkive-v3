@@ -825,11 +825,13 @@ export const deleteManyEdges = async (ids: string[]) => {
 
 // STORAGE
 
-export const getImages = async () => {
+export const getImages = async (project_id: string) => {
   let user = auth.user();
 
   if (user) {
-    const { data, error } = await supabase.storage.from("images").list();
+    const { data, error } = await supabase.storage
+      .from("images")
+      .list(project_id);
 
     console.log(data);
     if (data) return data;
