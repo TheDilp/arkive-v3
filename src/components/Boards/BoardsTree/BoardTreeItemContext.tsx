@@ -75,22 +75,7 @@ export default function BoardTreeItemContext({
       label: "Move To",
       icon: "pi pi-fw pi-directions",
     },
-    {
-      label: "Set Default Layout",
-      items: [
-        ...boardLayouts.map((layout) => {
-          return {
-            label: layout,
-            command: () => {
-              updateBoardMutation.mutate({
-                id: displayDialog.id,
-                layout,
-              });
-            },
-          };
-        }),
-      ],
-    },
+
     {
       label: "Convert To Preset",
       command: () => {
@@ -107,6 +92,22 @@ export default function BoardTreeItemContext({
           }
         }
       },
+    },
+    {
+      label: "Set Default Layout",
+      items: [
+        ...boardLayouts.map((layout) => {
+          return {
+            label: layout,
+            command: () => {
+              updateBoardMutation.mutate({
+                id: displayDialog.id,
+                layout,
+              });
+            },
+          };
+        }),
+      ],
     },
     { separator: true },
     {

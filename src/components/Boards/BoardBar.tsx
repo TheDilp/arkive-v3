@@ -160,7 +160,7 @@ export default function BoardBar({
       <div className="relative mr-2">
         <Dropdown
           options={boardLayouts}
-          value={layout || "Preset"}
+          value={layout}
           onChange={(e) => {
             setLayout(e.value);
             changeLayout(e.value as string, cyRef);

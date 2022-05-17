@@ -7,18 +7,19 @@ import {
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
   edgeUpdateDialogProps,
-  nodeUpdateDialogProps
+  nodeUpdateDialogProps,
 } from "../../custom-types";
 import {
-  useCreateEdge, useGetBoardData,
-  useUpdateNode
+  useCreateEdge,
+  useGetBoardData,
+  useUpdateNode,
 } from "../../utils/customHooks";
 import {
   changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  toastWarn
+  toastWarn,
 } from "../../utils/utils";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
@@ -289,13 +290,15 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   }, [board_id]);
   useEffect(() => {
     if (cyRef && board?.layout) {
-      changeLayout(board.layout, cyRef);
-      setLayout(board.layout);
+      // Timeout necessary to wait for cytoscape to render and then apply layout
+      setTimeout(() => {
+        changeLayout(board.layout, cyRef);
+        setLayout(board.layout);
+      }, 1);
     }
   }, [board?.layout, cyRef]);
   useEffect(() => {
     grRef.current = null;
-
     grRef.current = cyRef.current.gridGuide({
       ...cytoscapeGridOptions,
       snapToGridDuringDrag: snap,
@@ -315,6 +318,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         ehRef={ehRef}
         boardTitle={board?.title}
       />
+
       <BoardContextMenu
         cm={cm}
         ehRef={ehRef}
