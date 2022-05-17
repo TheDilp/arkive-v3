@@ -7,6 +7,7 @@ import {
   useDeleteEdge,
   useDeleteNode,
 } from "../../utils/customHooks";
+import { deleteManyEdges } from "../../utils/supabaseUtils";
 
 type Props = {
   ehRef: any;
@@ -100,18 +101,15 @@ export default function BoardContextMenu({
     {
       label: "Delete Node",
       command: () => {
-        contextMenu.selected.outgoers("edge").forEach((el: any) =>
-          deleteEdgeMutation.mutate({
-            id: el._private.data.id,
-            board_id: board_id as string,
-          })
-        );
-        contextMenu.selected.incomers("edge").forEach((el: any) =>
-          deleteEdgeMutation.mutate({
-            id: el._private.data.id,
-            board_id: board_id as string,
-          })
-        );
+        const edge_ids = [
+          ...contextMenu.selected
+            .incomers("edge")
+            .map((edge: any) => edge.id()),
+          ...contextMenu.selected
+            .outgoers("edge")
+            .map((edge: any) => edge.id()),
+        ];
+        if (edge_ids.length > 0) deleteManyEdges(edge_ids);
         cyRef.current.remove(contextMenu.selected);
         deleteNodeMutation.mutate({
           id: contextMenu.selected._private.data.id,

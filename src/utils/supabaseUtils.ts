@@ -809,3 +809,16 @@ export const deleteEdge = async (id: string) => {
     }
   }
 };
+export const deleteManyEdges = async (ids: string[]) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase.rpc("delete_many_edges", {
+      ids,
+    });
+    if (error) {
+      toastError("There was an error deleting your edges.");
+      throw new Error(error.message);
+    }
+  }
+};

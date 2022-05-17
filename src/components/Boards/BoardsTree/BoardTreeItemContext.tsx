@@ -8,8 +8,7 @@ import { boardItemDisplayDialogProps } from "../../../custom-types";
 import {
   useCreateBoard,
   useDeleteBoard,
-  useUpdateBoard,
-  useUpdateNode,
+  useUpdateBoard
 } from "../../../utils/customHooks";
 import { updateManyNodesPosition } from "../../../utils/supabaseUtils";
 import { boardLayouts, toastWarn } from "../../../utils/utils";
@@ -33,7 +32,6 @@ export default function BoardTreeItemContext({
   const newBoardMutation = useCreateBoard();
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const deleteBoardMutation = useDeleteBoard(project_id as string);
-  const updateNodeMutation = useUpdateNode(project_id as string);
   const navigate = useNavigate();
   const confirmDelete = () => {
     confirmDialog({
