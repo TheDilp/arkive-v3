@@ -22,6 +22,7 @@ import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
 import dagre from "cytoscape-dagre";
+import FileBrowser from "./components/FileBrowser/FileBrowser";
 function App() {
   cytoscape.use(edgehandles);
   cytoscape.use(dagre);
@@ -33,7 +34,6 @@ function App() {
       },
     },
   });
-
   return (
     <main className="App flex flex-wrap align-content-start justify-content-center h-screen surface-0 overflow-y-hidden">
       <ToastContainer />
@@ -50,6 +50,7 @@ function App() {
               <Route path="wiki/*" element={<Wiki />} />
               <Route path="maps/*" element={<Maps />} />
               <Route path="boards/*" element={<Boards />} />
+              <Route path="filebrowser" element={<FileBrowser />} />
               <Route path="settings/:setting" element={<ProjectSettings />} />
             </Route>
           </Routes>

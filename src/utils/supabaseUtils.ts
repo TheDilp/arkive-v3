@@ -822,3 +822,36 @@ export const deleteManyEdges = async (ids: string[]) => {
     }
   }
 };
+
+// STORAGE
+
+export const getImages = async () => {
+  let user = auth.user();
+
+  if (user) {
+    const { data, error } = await supabase.storage.from("images").list();
+
+    console.log(data);
+    if (data) return data;
+    if (error) {
+      toastError("There was an error getting your images.");
+      throw new Error(error.message);
+    }
+  }
+};
+
+export const uploadImage = async (project_id: string, file: File) => {
+  let user = auth.user();
+
+  if (user) {
+    const { data, error } = await supabase.storage
+      .from("images")
+      .upload(`${project_id}/${file.name}`, file, { upsert: false });
+
+    if (data) return data;
+    if (error) {
+      toastError("There was an error uploading your image.");
+      throw new Error(error.message);
+    }
+  }
+};

@@ -31,6 +31,11 @@ export default function Navbar() {
               content="Project Boards"
               position="right"
             />
+            <Tooltip
+              target=".filebrowserIcon"
+              content="Project Files"
+              position="right"
+            />
             <i
               className="pi pi-home mr-3 cursor-pointer hover:text-primary"
               onClick={() => navigate("/")}
@@ -55,6 +60,12 @@ export default function Navbar() {
                 navigate("./boards");
               }}
             />
+            <i
+              className="pi pi-image ml-3 hover:text-primary cursor-pointer filebrowserIcon"
+              onClick={async () => {
+                navigate("./filebrowser");
+              }}
+            ></i>
           </div>
         )}
         {/* Use project title only if in project */}
