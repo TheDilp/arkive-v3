@@ -840,7 +840,6 @@ export const getImages = async (project_id: string) => {
     }
   }
 };
-
 export const uploadImage = async (project_id: string, file: File) => {
   let user = auth.user();
 
@@ -853,5 +852,14 @@ export const uploadImage = async (project_id: string, file: File) => {
       toastError("There was an error uploading your image.");
       throw new Error(error.message);
     }
+  }
+};
+export const deleteImages = async (images: string[]) => {
+  const { data, error } = await supabase.storage.from("images").remove(images);
+  console.log(data, error, images);
+  if (data) return data;
+  if (error) {
+    toastError("There was an error deleting your images.");
+    throw new Error(error.message);
   }
 };
