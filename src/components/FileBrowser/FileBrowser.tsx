@@ -1,5 +1,7 @@
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
+import { Dropdown } from "primereact/dropdown";
 import { FileUpload } from "primereact/fileupload";
+import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetImages } from "../../utils/customHooks";
@@ -11,10 +13,8 @@ type Props = {};
 export default function FileBrowser({}: Props) {
   const { project_id } = useParams();
   const [layout, setLayout] = useState("list");
-  const [sortKey, setSortKey] = useState(null);
-  const [sortOrder, setSortOrder] = useState(null);
-  const [sortField, setSortField] = useState(undefined);
-
+  const images = useGetImages(project_id as string);
+  const [filter, setFilter] = useState("");
   const renderListItem = (data: FileObject) => {
     return (
       <div className="col-12 flex p-2">
@@ -60,10 +60,10 @@ export default function FileBrowser({}: Props) {
     if (layout === "list") return renderListItem(image);
     else if (layout === "grid") return renderGridItem(image);
   };
-  const images = useGetImages(project_id as string);
+
   const header = (
     <div className="grid grid-nogutter">
-      <div className="col-6" style={{ textAlign: "left" }}>
+      <div className="col-6 flex " style={{ textAlign: "left" }}>
         <FileUpload
           mode="basic"
           name="demo[]"
@@ -80,13 +80,12 @@ export default function FileBrowser({}: Props) {
             uploadImage(project_id as string, file);
           }}
         />
-        {/* <Dropdown
-          options={sortOptions}
-          value={sortKey}
-          optionLabel="label"
-          placeholder="Sort By Price"
-          onChange={onSortChange}
-        /> */}
+        <InputText
+          placeholder="Search by title"
+          className="ml-2"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
       </div>
       <div className="col-6" style={{ textAlign: "right" }}>
         <DataViewLayoutOptions
@@ -102,16 +101,15 @@ export default function FileBrowser({}: Props) {
       <DataView
         value={images?.filter(
           (image: FileObject) =>
-            image.metadata.mimetype === "image/jpeg" ||
-            image.metadata.mimetype === "image/png"
+            (image.metadata.mimetype === "image/jpeg" ||
+              image.metadata.mimetype === "image/png") &&
+            image.name.includes(filter)
         )}
         layout={layout}
         header={header}
         itemTemplate={itemTemplate}
         paginator
         rows={9}
-        sortOrder={sortOrder}
-        sortField={sortField}
       />
     </div>
   );
