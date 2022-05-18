@@ -10,7 +10,6 @@ type Props = {
 
 export default function ListLayout({ images, filter }: Props) {
   const parentRef = useRef() as any;
-
   const rowVirtualizer = useVirtual({
     size: images.filter((image) => image.name.includes(filter)).length || 0,
     parentRef,
@@ -19,47 +18,54 @@ export default function ListLayout({ images, filter }: Props) {
   });
   return (
     <div
-      ref={parentRef}
-      className="w-10"
+      className=" flex align-items-start align-content-top w-full justify-content-center"
       style={{
-        minHeight: `50%`,
-        overflowY: "auto",
+        height: "90vh",
       }}
     >
       <div
+        ref={parentRef}
+        className="w-10"
         style={{
-          height: `${rowVirtualizer.totalSize}px`,
-          width: "100%",
-          position: "relative",
+          height: "100%",
+          overflowY: "auto",
         }}
       >
-        {rowVirtualizer.virtualItems.map((virtualRow) => (
-          <div
-            key={virtualRow.index}
-            className={`flex ${
-              virtualRow.index % 2
-                ? "FileBrowserListItemOdd"
-                : "FileBrowserListItemEven"
-            }`}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: `${virtualRow.size}px`,
-              transform: `translateY(${virtualRow.start}px)`,
-            }}
-          >
-            <ListItem
-              name={
-                images.filter((image) => image.name.includes(filter))[
-                  virtualRow.index
-                ].name || ""
-              }
-            />
-          </div>
-        ))}
-      </div>{" "}
+        <div
+          style={{
+            height: `${rowVirtualizer.totalSize}px`,
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          {rowVirtualizer.virtualItems.map((virtualRow) => (
+            <div
+              key={virtualRow.index}
+              className={`flex ${
+                virtualRow.index % 2
+                  ? "FileBrowserListItemOdd"
+                  : "FileBrowserListItemEven"
+              }`}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: `${virtualRow.size}px`,
+                transform: `translateY(${virtualRow.start}px)`,
+              }}
+            >
+              <ListItem
+                name={
+                  images.filter((image) => image.name.includes(filter))[
+                    virtualRow.index
+                  ].name || ""
+                }
+              />
+            </div>
+          ))}
+        </div>{" "}
+      </div>
     </div>
   );
 }

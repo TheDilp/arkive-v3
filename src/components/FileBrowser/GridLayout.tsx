@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useRef } from "react";
+import React, { MutableRefObject, useCallback, useMemo, useRef } from "react";
 import { useVirtual } from "react-virtual";
 import { FileObject } from "../../utils/utils";
 import GridItem from "./GridItem";
@@ -7,11 +7,12 @@ type Props = { images: FileObject[]; filter: string };
 
 export default function GridLayout({ images, filter }: Props) {
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
-
+  const imagesLength = useMemo(
+    () => images.filter((image) => image.name.includes(filter)).length,
+    [images]
+  );
   const rowVirtualizer = useVirtual({
-    size: Math.round(
-      images.filter((image) => image.name.includes(filter)).length / 5
-    ),
+    size: Math.round(imagesLength / 5),
     parentRef,
     estimateSize: useCallback(() => 200, []),
     overscan: 5,
@@ -26,28 +27,35 @@ export default function GridLayout({ images, filter }: Props) {
   });
   return (
     <div
-      ref={parentRef}
-      className="w-10 flex justify-content-evenly"
+      className="w-full flex justify-content-center align-items-start"
       style={{
-        height: `70%`,
-        width: `100%`,
-        overflow: "auto",
+        height: "90vh",
       }}
     >
       <div
-        className="w-full "
+        ref={parentRef}
+        className="w-10 flex justify-content-evenly"
         style={{
-          height: `${rowVirtualizer.totalSize}px`,
-          width: `${columnVirtualizer.totalSize}px`,
-          position: "relative",
+          height: `100%`,
+          width: `100%`,
+          overflow: "auto",
         }}
       >
-        {rowVirtualizer.virtualItems.map((virtualRow) => (
-          <div key={virtualRow.index}>
-            {columnVirtualizer.virtualItems.map((virtualColumn) => (
-              <div
-                key={virtualColumn.index}
-                className={` 
+        <div
+          className="w-full "
+          style={{
+            height: `${rowVirtualizer.totalSize}px`,
+            width: `${columnVirtualizer.totalSize}px`,
+            position: "relative",
+          }}
+        >
+          {rowVirtualizer.virtualItems.map((virtualRow) => (
+            <div key={virtualRow.index}>
+              {columnVirtualizer.virtualItems.map((virtualColumn) =>
+                virtualRow.index * 5 + virtualColumn.index < imagesLength ? (
+                  <div
+                    key={virtualColumn.index}
+                    className={` 
                 flex justify-content-center${
                   virtualColumn.index % 2
                     ? virtualRow.index % 2 === 0
@@ -57,22 +65,27 @@ export default function GridLayout({ images, filter }: Props) {
                     ? "ListItemOdd"
                     : "ListItemEven"
                 }`}
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: `${virtualColumn.size}px`,
-                  height: `${virtualRow.size}px`,
-                  transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
-                }}
-              >
-                <GridItem
-                  name={images[virtualRow.index * 5 + virtualColumn.index].name}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: `${virtualColumn.size}px`,
+                      height: `${virtualRow.size}px`,
+                      transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
+                    }}
+                  >
+                    <GridItem
+                      name={
+                        images[virtualRow.index * 5 + virtualColumn.index]
+                          ?.name || ""
+                      }
+                    />
+                  </div>
+                ) : null
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

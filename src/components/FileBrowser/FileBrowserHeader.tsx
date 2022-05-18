@@ -7,6 +7,7 @@ import { uploadImage } from "../../utils/supabaseUtils";
 import { ProgressBar } from "primereact/progressbar";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 type Props = {
   refetch: any;
   filter: string;
@@ -26,6 +27,7 @@ export default function FileBrowserHeader({
   const fileUploadRef = useRef<FileUpload>(null);
   const [totalSize, setTotalSize] = useState(0);
   const [uploadDialog, setUploadDialog] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const chooseOptions = {
     icon: "pi pi-fw pi-images",
     iconOnly: true,
@@ -115,6 +117,7 @@ export default function FileBrowserHeader({
             onSelect={onTemplateSelect}
             customUpload
             uploadHandler={async (e) => {
+              setUploading(true);
               let files = e.files;
               for (let i = 0; i < files.length; i++) {
                 try {
@@ -124,6 +127,8 @@ export default function FileBrowserHeader({
                 }
               }
               refetch();
+              setUploading(false);
+              setUploadDialog(false);
               e.options.clear();
             }}
           />
@@ -143,6 +148,11 @@ export default function FileBrowserHeader({
           value={filter || ""}
           onChange={(e) => setFilter(e.target.value)}
         />
+        {uploading && (
+          <div>
+            <ProgressSpinner className="h-2rem" />
+          </div>
+        )}
       </div>
       <div className="w-6 flex justify-content-end">
         <DataViewLayoutOptions
