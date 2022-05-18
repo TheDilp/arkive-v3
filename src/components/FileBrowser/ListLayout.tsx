@@ -14,7 +14,7 @@ export default function ListLayout({ images, filter }: Props) {
   const rowVirtualizer = useVirtual({
     size: images.filter((image) => image.name.includes(filter)).length || 0,
     parentRef,
-    estimateSize: useCallback(() => 75, []),
+    estimateSize: useCallback(() => 70, []),
     overscan: 5,
   });
   return (
@@ -22,8 +22,8 @@ export default function ListLayout({ images, filter }: Props) {
       ref={parentRef}
       className="w-10"
       style={{
-        height: `85%`,
-        overflow: "auto",
+        minHeight: `50%`,
+        overflowY: "auto",
       }}
     >
       <div

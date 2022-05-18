@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { uploadImage } from "../../utils/supabaseUtils";
 import { ProgressBar } from "primereact/progressbar";
+import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
 type Props = {
   refetch: any;
   filter: string;
@@ -23,6 +25,7 @@ export default function FileBrowserHeader({
   const { project_id } = useParams();
   const fileUploadRef = useRef<FileUpload>(null);
   const [totalSize, setTotalSize] = useState(0);
+  const [uploadDialog, setUploadDialog] = useState(false);
   const chooseOptions = {
     icon: "pi pi-fw pi-images",
     iconOnly: true,
@@ -74,10 +77,17 @@ export default function FileBrowserHeader({
         >
           {uploadButton}
         </span>
-        {cancelButton}
+        <span
+          onClick={() => {
+            fileUploadRef.current?.clear();
+            setTotalSize(0);
+          }}
+        >
+          {cancelButton}
+        </span>
         <ProgressBar
           value={value}
-          displayValueTemplate={() => `${formatedValue} / 1 MB`}
+          displayValueTemplate={() => `${formatedValue} / 10 MB`}
           style={{ width: "300px", height: "20px", marginLeft: "auto" }}
         ></ProgressBar>
       </div>
@@ -85,28 +95,47 @@ export default function FileBrowserHeader({
   };
 
   return (
-    <div className="w-10 mb-2 flex">
+    <div className="w-10 mb-2 flex flex-wrap">
+      <div className="w-full">
+        <Dialog visible={uploadDialog} onHide={() => setUploadDialog(false)}>
+          <FileUpload
+            style={{
+              maxHeight: "45rem",
+              overflowY: "auto",
+            }}
+            name="demo[]"
+            ref={fileUploadRef}
+            headerTemplate={headerTemplate}
+            accept="image/*"
+            maxFileSize={10000000}
+            multiple
+            chooseOptions={chooseOptions}
+            uploadOptions={uploadOptions}
+            cancelOptions={cancelOptions}
+            onSelect={onTemplateSelect}
+            customUpload
+            uploadHandler={async (e) => {
+              let files = e.files;
+              for (let i = 0; i < files.length; i++) {
+                try {
+                  await uploadImage(project_id as string, files[i]);
+                } catch (error) {
+                  //
+                }
+              }
+              refetch();
+              e.options.clear();
+            }}
+          />
+        </Dialog>
+      </div>
       <div className="w-6 flex flex-wrap align-content-top align-items-center">
-        <FileUpload
-          name="demo[]"
-          ref={fileUploadRef}
-          headerTemplate={headerTemplate}
-          accept="image/*"
-          maxFileSize={1000000}
-          multiple
-          chooseOptions={chooseOptions}
-          uploadOptions={uploadOptions}
-          cancelOptions={cancelOptions}
-          onSelect={onTemplateSelect}
-          customUpload
-          uploadHandler={async (e) => {
-            let files = e.files;
-            for (let i = 0; i < files.length; i++) {
-              await uploadImage(project_id as string, files[i]);
-            }
-            refetch();
-            e.options.clear();
-          }}
+        <Button
+          className="p-button-outlined"
+          label="Upload"
+          icon="pi pi-upload"
+          iconPos="right"
+          onClick={() => setUploadDialog(true)}
         />
         <InputText
           placeholder="Search by title"

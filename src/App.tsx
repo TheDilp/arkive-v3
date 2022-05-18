@@ -21,7 +21,6 @@ import Help from "./components/Help/Help";
 import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
-import dagre from "cytoscape-dagre";
 import FileBrowser from "./components/FileBrowser/FileBrowser";
 function App() {
   cytoscape.use(edgehandles);
