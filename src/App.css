@@ -60,6 +60,10 @@ body {
     background-color: cyan;
 }
 
+.FileBrowserListItemOdd {
+    background-color: var(--gray-800);
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */

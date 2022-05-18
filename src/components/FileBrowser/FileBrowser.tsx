@@ -10,6 +10,7 @@ import { useGetImages } from "../../utils/customHooks";
 import { uploadImage } from "../../utils/supabaseUtils";
 import { FileObject } from "../../utils/utils";
 import LoadingScreen from "../Util/LoadingScreen";
+import FileBrowserHeader from "./FileBrowserHeader";
 import ListItem from "./ListItem";
 
 type Props = {};
@@ -54,77 +55,56 @@ export default function FileBrowser({}: Props) {
     if (layout === "list") return renderListItem(image);
     else if (layout === "grid") return renderGridItem(image);
   };
-  const header = (
-    <div className="grid grid-nogutter">
-      <div className="col-6 flex " style={{ textAlign: "left" }}>
-        <FileUpload
-          mode="basic"
-          name="demo[]"
-          accept="image/*"
-          maxFileSize={1000000}
-          auto
-          customUpload
-          uploadHandler={async (e) => {
-            let file = e.files[0];
-            await uploadImage(project_id as string, file);
-            images?.refetch();
-            e.options.clear();
-          }}
-        />
-        <InputText
-          placeholder="Search by title"
-          className="ml-2"
-          value={filter || ""}
-          onChange={(e) => setFilter(e.target.value)}
-        />
-      </div>
-      <div className="col-6" style={{ textAlign: "right" }}>
-        <DataViewLayoutOptions
-          layout={layout}
-          onChange={(e) => setLayout(e.value)}
-        />
-      </div>
-    </div>
-  );
 
   return (
-    <div className="w-full px-8 mt-2 flex justify-content-center">
+    <div className="w-full px-8 mt-2">
       {images?.isLoading ? (
         <LoadingScreen />
       ) : (
-        <div
-          ref={parentRef}
-          className="List w-10"
-          style={{
-            height: `100%`,
-            overflow: "auto",
-          }}
-        >
+        <div className="w-full h-full flex flex-wrap justify-content-center">
+          <FileBrowserHeader
+            refetch={images?.refetch}
+            filter={filter}
+            setFilter={setFilter}
+            layout={layout}
+            setLayout={setLayout}
+          />
           <div
+            ref={parentRef}
+            className="List w-10"
             style={{
-              height: `${rowVirtualizer.totalSize}px`,
-              width: "100%",
-              position: "relative",
+              height: `100%`,
+              overflow: "auto",
             }}
           >
-            {rowVirtualizer.virtualItems.map((virtualRow) => (
-              <div
-                key={virtualRow.index}
-                className={
-                  virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"
-                }
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: `${virtualRow.size}px`,
-                  transform: `translateY(${virtualRow.start}px)`,
-                }}
-              >
-                <ListItem name={images?.data[virtualRow.index].name || ""} />
-              </div>
-            ))}
+            <div
+              style={{
+                height: `${rowVirtualizer.totalSize}px`,
+                width: "100%",
+                position: "relative",
+              }}
+            >
+              {rowVirtualizer.virtualItems.map((virtualRow) => (
+                <div
+                  key={virtualRow.index}
+                  className={`flex ${
+                    virtualRow.index % 2
+                      ? "FileBrowserListItemOdd"
+                      : "FileBrowserListItemEven"
+                  }`}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: `${virtualRow.size}px`,
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  <ListItem name={images?.data[virtualRow.index].name || ""} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
