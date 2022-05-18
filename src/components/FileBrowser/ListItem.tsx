@@ -1,6 +1,7 @@
 import { Button } from "primereact/button";
 import React from "react";
 import { useParams } from "react-router-dom";
+import { useDeleteImages } from "../../utils/customHooks";
 import { deleteImages } from "../../utils/supabaseUtils";
 
 type Props = {
@@ -9,6 +10,8 @@ type Props = {
 
 export default function ListItem({ name }: Props) {
   const { project_id } = useParams();
+  const deleteImageMutation = useDeleteImages();
+
   return (
     <div className="w-full flex p-2">
       <div className="product-list-item w-4rem">
@@ -32,7 +35,11 @@ export default function ListItem({ name }: Props) {
           icon="pi pi-trash"
           className="p-button-rounded p-button-outlined text-red-500"
           onClick={() => {
-            deleteImages([`${project_id}/${name}`]);
+            deleteImageMutation.mutate({
+              id: `${project_id}/${name}`,
+              name,
+              project_id: project_id as string,
+            });
           }}
         />
       </div>

@@ -23,6 +23,7 @@ import {
   deleteBoard,
   deleteDocument,
   deleteEdge,
+  deleteImages,
   deleteMap,
   deleteMapMarker,
   deleteNode,
@@ -1254,7 +1255,6 @@ export function useDeleteEdge(project_id: string) {
     }
   );
 }
-
 // Custom hook for getting images
 export function useGetImages(project_id: string) {
   const { data, error, refetch, isLoading } = useQuery(
@@ -1275,4 +1275,29 @@ export function useGetImages(project_id: string) {
       isLoading,
     };
   if (error) toastError("Error getting images (customHooks 1264)");
+}
+export function useDeleteImages() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; name: string; project_id: string }) => {
+      await deleteImages([vars.id]);
+    },
+    {
+      onMutate: async (deletedImage) => {
+        queryClient.setQueryData(
+          `${deletedImage.project_id}-images`,
+          (oldData: FileObject[] | undefined) => {
+            if (oldData) {
+              console.log(oldData);
+              return oldData.filter(
+                (image) => image.name !== deletedImage.name
+              );
+            } else {
+              return [];
+            }
+          }
+        );
+      },
+    }
+  );
 }
