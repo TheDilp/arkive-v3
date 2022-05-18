@@ -25,7 +25,6 @@ import dagre from "cytoscape-dagre";
 import FileBrowser from "./components/FileBrowser/FileBrowser";
 function App() {
   cytoscape.use(edgehandles);
-  cytoscape.use(dagre);
   cytoscape.use(gridguide);
   const queryClient = new QueryClient({
     defaultOptions: {

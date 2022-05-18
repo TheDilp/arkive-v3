@@ -186,7 +186,7 @@ export function useCreateDocument(project_id: string) {
                       ? { id: parent?.id, title: parent?.title }
                       : null,
                   title: newDocument.title ? newDocument.title : "New Document",
-                  icon: newDocument.icon || "akar-icons:file",
+                  icon: newDocument.icon || "mdi:file",
                   image: newDocument.image ? newDocument.image : "",
                   categories: newDocument.categories
                     ? newDocument.categories

@@ -1,18 +1,12 @@
-import { useCallback, useRef, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useVirtual } from "react-virtual";
 import { useGetImages } from "../../utils/customHooks";
-import { FileObject } from "../../utils/utils";
 import LoadingScreen from "../Util/LoadingScreen";
 import FileBrowserHeader from "./FileBrowserHeader";
-import GridItem from "./GridItem";
 import GridLayout from "./GridLayout";
-import ListItem from "./ListItem";
 import ListLayout from "./ListLayout";
 
-type Props = {};
-
-export default function FileBrowser({}: Props) {
+export default function FileBrowser() {
   const { project_id } = useParams();
   const [layout, setLayout] = useState("list");
   const images = useGetImages(project_id as string);

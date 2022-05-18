@@ -29,7 +29,7 @@ export default function GridLayout({ images, filter }: Props) {
       ref={parentRef}
       className="w-10 flex justify-content-evenly"
       style={{
-        height: `85%`,
+        height: `70%`,
         width: `100%`,
         overflow: "auto",
       }}

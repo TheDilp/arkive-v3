@@ -40,6 +40,9 @@ export const HoverTooltip = ({
   const { getReferenceProps, getFloatingProps } = useInteractions([
     useHover(context, {
       handleClose: safePolygon(),
+      delay: {
+        open: 750,
+      },
     }),
     useFocus(context),
     useRole(context, { role: "tooltip" }),
