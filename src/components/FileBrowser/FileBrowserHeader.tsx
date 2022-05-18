@@ -21,8 +21,11 @@ export default function FileBrowserHeader({
 }: Props) {
   const { project_id } = useParams();
   return (
-    <div className="w-10 flex">
-      <div className="col-6 flex " style={{ textAlign: "left" }}>
+    <div className="w-10 mb-2 flex">
+      <div
+        className="w-6 flex flex-wrap align-content-top align-items-center"
+        style={{ textAlign: "left" }}
+      >
         <FileUpload
           mode="basic"
           name="demo[]"
@@ -39,7 +42,7 @@ export default function FileBrowserHeader({
         />
         <InputText
           placeholder="Search by title"
-          className="ml-2"
+          className="ml-2 h-min"
           value={filter || ""}
           onChange={(e) => setFilter(e.target.value)}
         />

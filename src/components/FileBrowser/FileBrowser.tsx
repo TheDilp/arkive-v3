@@ -1,13 +1,7 @@
-import { DataView, DataViewLayoutOptions } from "primereact/dataview";
-import { Dropdown } from "primereact/dropdown";
-import { FileUpload } from "primereact/fileupload";
-import { InputText } from "primereact/inputtext";
 import { useCallback, useRef, useState } from "react";
-import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { useGetImages } from "../../utils/customHooks";
-import { uploadImage } from "../../utils/supabaseUtils";
 import { FileObject } from "../../utils/utils";
 import LoadingScreen from "../Util/LoadingScreen";
 import FileBrowserHeader from "./FileBrowserHeader";
@@ -17,14 +11,14 @@ type Props = {};
 
 export default function FileBrowser({}: Props) {
   const { project_id } = useParams();
-  const queryClient = useQueryClient();
   const [layout, setLayout] = useState("list");
   const images = useGetImages(project_id as string);
   const [filter, setFilter] = useState("");
   const parentRef = useRef() as any;
 
   const rowVirtualizer = useVirtual({
-    size: images?.data.length || 0,
+    size:
+      images?.data.filter((image) => image.name.includes(filter)).length || 0,
     parentRef,
     estimateSize: useCallback(() => 75, []),
     overscan: 5,
@@ -61,7 +55,7 @@ export default function FileBrowser({}: Props) {
       {images?.isLoading ? (
         <LoadingScreen />
       ) : (
-        <div className="w-full h-full flex flex-wrap justify-content-center">
+        <div className="w-full h-full flex flex-wrap justify-content-center align-content-start">
           <FileBrowserHeader
             refetch={images?.refetch}
             filter={filter}
@@ -73,7 +67,7 @@ export default function FileBrowser({}: Props) {
             ref={parentRef}
             className="List w-10"
             style={{
-              height: `100%`,
+              height: `85%`,
               overflow: "auto",
             }}
           >
@@ -101,7 +95,13 @@ export default function FileBrowser({}: Props) {
                     transform: `translateY(${virtualRow.start}px)`,
                   }}
                 >
-                  <ListItem name={images?.data[virtualRow.index].name || ""} />
+                  <ListItem
+                    name={
+                      images?.data.filter((image) =>
+                        image.name.includes(filter)
+                      )[virtualRow.index].name || ""
+                    }
+                  />
                 </div>
               ))}
             </div>

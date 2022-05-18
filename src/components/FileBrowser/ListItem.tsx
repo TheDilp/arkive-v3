@@ -22,7 +22,7 @@ export default function ListItem({ name }: Props) {
       </div>
       <div className="w-10rem ml-2 flex align-items-center ml-4">
         <div className="product-list-detail">
-          <div className="text-white">{name}</div>
+          <div className="text-white Lato">{name}</div>
         </div>
       </div>
     </div>
