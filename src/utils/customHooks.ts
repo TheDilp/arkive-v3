@@ -1264,6 +1264,15 @@ export function useGetImages(project_id: string) {
       return images;
     }
   );
-  if (data) return { data, refetch, isLoading };
+  if (data)
+    return {
+      data: data.filter(
+        (image: FileObject) =>
+          image.metadata.mimetype === "image/jpeg" ||
+          image.metadata.mimetype === "image/png"
+      ),
+      refetch,
+      isLoading,
+    };
   if (error) toastError("Error getting images (customHooks 1264)");
 }

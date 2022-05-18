@@ -2,13 +2,15 @@ import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import { Dropdown } from "primereact/dropdown";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import { useVirtual } from "react-virtual";
 import { useGetImages } from "../../utils/customHooks";
 import { uploadImage } from "../../utils/supabaseUtils";
 import { FileObject } from "../../utils/utils";
 import LoadingScreen from "../Util/LoadingScreen";
+import ListItem from "./ListItem";
 
 type Props = {};
 
@@ -18,28 +20,15 @@ export default function FileBrowser({}: Props) {
   const [layout, setLayout] = useState("list");
   const images = useGetImages(project_id as string);
   const [filter, setFilter] = useState("");
-  const renderListItem = (data: FileObject) => {
-    return (
-      <div className="col-12 flex p-2">
-        <div className="product-list-item w-4rem">
-          <img
-            loading="lazy"
-            className="relative w-full h-full"
-            style={{
-              objectFit: "contain",
-            }}
-            src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${data.name}`}
-            alt="TEST"
-          />
-        </div>
-        <div className="w-10rem ml-2 flex align-items-center ml-4">
-          <div className="product-list-detail">
-            <div className="product-name">{data.name}</div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  const parentRef = useRef() as any;
+
+  const rowVirtualizer = useVirtual({
+    size: images?.data.length || 0,
+    parentRef,
+    estimateSize: useCallback(() => 75, []),
+    overscan: 5,
+  });
+
   const renderGridItem = (data: FileObject) => {
     return (
       <div className="col-2">
@@ -65,7 +54,6 @@ export default function FileBrowser({}: Props) {
     if (layout === "list") return renderListItem(image);
     else if (layout === "grid") return renderGridItem(image);
   };
-
   const header = (
     <div className="grid grid-nogutter">
       <div className="col-6 flex " style={{ textAlign: "left" }}>
@@ -100,28 +88,45 @@ export default function FileBrowser({}: Props) {
   );
 
   return (
-    <div
-      className="w-full px-8 mt-2"
-      style={{
-        maxHeight: "70vh",
-      }}
-    >
+    <div className="w-full px-8 mt-2 flex justify-content-center">
       {images?.isLoading ? (
         <LoadingScreen />
       ) : (
-        <DataView
-          value={images?.data?.filter(
-            (image: FileObject) =>
-              (image.metadata.mimetype === "image/jpeg" ||
-                image.metadata.mimetype === "image/png") &&
-              image.name.includes(filter)
-          )}
-          layout={layout}
-          header={header}
-          itemTemplate={itemTemplate}
-          paginator
-          rows={9}
-        />
+        <div
+          ref={parentRef}
+          className="List w-10"
+          style={{
+            height: `100%`,
+            overflow: "auto",
+          }}
+        >
+          <div
+            style={{
+              height: `${rowVirtualizer.totalSize}px`,
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            {rowVirtualizer.virtualItems.map((virtualRow) => (
+              <div
+                key={virtualRow.index}
+                className={
+                  virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"
+                }
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <ListItem name={images?.data[virtualRow.index].name || ""} />
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

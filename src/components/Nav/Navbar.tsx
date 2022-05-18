@@ -20,21 +20,25 @@ export default function Navbar() {
               target=".wikiIcon"
               content="Project Wiki"
               position="right"
+              autoHide
             />{" "}
             <Tooltip
               target=".mapsIcon"
               content="Project Maps"
               position="right"
+              autoHide
             />{" "}
             <Tooltip
               target=".boardsIcon"
               content="Project Boards"
               position="right"
+              autoHide
             />
             <Tooltip
               target=".filebrowserIcon"
               content="Project Files"
               position="right"
+              autoHide
             />
             <i
               className="pi pi-home mr-3 cursor-pointer hover:text-primary"
@@ -52,14 +56,16 @@ export default function Navbar() {
                 navigate("./maps");
               }}
             ></i>
-            <Icon
-              className="hover:text-primary cursor-pointer boardsIcon"
-              icon="mdi:family-tree"
-              fontSize={18}
-              onClick={async () => {
-                navigate("./boards");
-              }}
-            />
+            <span className="boardsIcon">
+              <Icon
+                className="hover:text-primary cursor-pointer "
+                icon="mdi:family-tree"
+                fontSize={18}
+                onClick={async () => {
+                  navigate("./boards");
+                }}
+              />
+            </span>
             <i
               className="pi pi-image ml-3 hover:text-primary cursor-pointer filebrowserIcon"
               onClick={async () => {
