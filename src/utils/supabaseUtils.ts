@@ -833,7 +833,6 @@ export const getImages = async (project_id: string) => {
       .from("images")
       .list(project_id);
 
-    console.log(data);
     if (data) return data;
     if (error) {
       toastError("There was an error getting your images.");

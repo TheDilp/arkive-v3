@@ -5,6 +5,8 @@ import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { useParams } from "react-router-dom";
+import { FileObject } from "../../utils/utils";
+
 type Props = {};
 
 export default function FileBrowser({}: Props) {
@@ -14,7 +16,7 @@ export default function FileBrowser({}: Props) {
   const [sortOrder, setSortOrder] = useState(null);
   const [sortField, setSortField] = useState(undefined);
 
-  const renderListItem = (data) => {
+  const renderListItem = (data: FileObject) => {
     return (
       <div className="col-12">
         <div className="product-list-item">
@@ -43,32 +45,24 @@ export default function FileBrowser({}: Props) {
       </div>
     );
   };
-  const renderGridItem = (data) => {
+  const renderGridItem = (data: FileObject) => {
     return (
-      <div className="col-12 md:col-4">
+      <div className="col-2">
         <div className="product-grid-item card">
           <div className="product-grid-item-top">
             <div>
-              <i className="pi pi-tag product-category-icon"></i>
-              <span className="product-category">TEST</span>
+              <div className="product-category text-center text-xl mb-2">
+                {data.name}
+              </div>
             </div>
           </div>
-          <div className="product-grid-item-content">
+          <div className="product-grid-item-content flex justify-content-center">
             <img
               src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${data.name}`}
               alt="TEST"
             />
-            {/* <div className="product-name">{data.name}</div> */}
-            {/* <div className="product-description">{data.description}</div> */}
           </div>
-          <div className="product-grid-item-bottom">
-            {/* <span className="product-price">${data.price}</span> */}
-            {/* <Button
-              icon="pi pi-shopping-cart"
-              label="Add to Cart"
-              disabled={data.inventoryStatus === "OUTOFSTOCK"}
-            ></Button> */}
-          </div>
+          <div className="product-grid-item-bottom"></div>
         </div>
       </div>
     );
@@ -83,7 +77,7 @@ export default function FileBrowser({}: Props) {
   };
   const [data, setData] = useState<any[]>();
   async function fetchImages() {
-    let d = await getImages(project_id as string);
+    let d: FileObject[] | undefined = await getImages(project_id as string);
     // @ts-ignore
     if (d)
       setData(
@@ -117,19 +111,27 @@ export default function FileBrowser({}: Props) {
             uploadImage(project_id as string, file);
           }}
         />
-        <Button
-          label="Export"
-          icon="pi pi-upload"
-          className="p-button-success ml-2"
-          //   onClick={exportCSV}
-        />
       </>
     );
   };
-  if (data) console.log(data);
+  const rightToolbarTemplate = () => {
+    return (
+      <>
+        <Button
+          icon="pi pi-align-justify"
+          className="p-button-outlined p-button-success"
+        />
+        <Button icon="pi pi-th-large" className="p-button-outlined ml-2" />
+      </>
+    );
+  };
   return (
     <div className="w-full ">
-      <Toolbar className="mb-4" left={leftToolbarTemplate}></Toolbar>
+      <Toolbar
+        className="mb-4"
+        left={leftToolbarTemplate}
+        right={rightToolbarTemplate}
+      ></Toolbar>
       <DataView
         value={data}
         layout={layout}
