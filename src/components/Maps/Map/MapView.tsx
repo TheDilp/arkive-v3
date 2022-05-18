@@ -45,13 +45,6 @@ export default function MapView({
               [0, 0],
               [img.height, img.width],
             ]);
-            if (mapRef.current) {
-              mapRef.current.panTo([img.height / 2, img.width / 2]);
-              mapRef.current.fitBounds([
-                [0, 0],
-                [img.height, img.width],
-              ]);
-            }
           }, 250);
         }
         setLoading(false);
@@ -61,8 +54,13 @@ export default function MapView({
 
   useEffect(() => {
     if (map_id) setMapId(map_id);
+    //  Wait for map to finish loading
+    setTimeout(() => {
+      mapRef.current.flyToBounds(bounds);
+    }, 350);
+
     return () => setMapId("");
-  }, [map_id]);
+  }, [map_id, bounds]);
 
   if (loading)
     return (
@@ -77,6 +75,7 @@ export default function MapView({
     <div className="w-10 h-full">
       <MapContextMenu
         cm={cm}
+        mapRef={mapRef}
         lat={newTokenDialog.lat}
         lng={newTokenDialog.lng}
         setNewTokenDialog={setNewTokenDialog}

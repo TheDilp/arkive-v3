@@ -11,7 +11,6 @@ export default function FileBrowser() {
   const [layout, setLayout] = useState("list");
   const images = useGetImages(project_id as string);
   const [filter, setFilter] = useState("");
-
   return (
     <div className="w-full px-8 mt-2">
       {images?.isLoading ? (

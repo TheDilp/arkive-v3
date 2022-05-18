@@ -7,6 +7,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
+  useGetBoards,
   useGetDocumentData,
   useGetImages,
   useGetMaps,
@@ -17,6 +18,7 @@ export default function LinkedItems() {
   const { project_id, doc_id } = useParams();
   const document = useGetDocumentData(project_id as string, doc_id as string);
   const maps = useGetMaps(project_id as string);
+  const boards = useGetBoards(project_id as string);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const images = useGetImages(project_id as string);
   const [currentImage, setCurrentImage] = useState<string | undefined>(
@@ -67,15 +69,27 @@ export default function LinkedItems() {
         }
         contentClassName="overflow-y-auto h-10rem"
       >
-        <p>
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-          accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
-          ab illo inventore veritatis et quasi architecto beatae vitae dicta
-          sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-          aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
-          qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit,
-          sed quia non numquam eius modi.
-        </p>
+        {boards.isLoading ? (
+          <div className="w-full flex justify-content-center">
+            <ProgressSpinner />
+          </div>
+        ) : (
+          boards.data
+            ?.filter((board) =>
+              board.nodes.some((node) => node.document?.id === doc_id)
+            )
+            .map((board) => (
+              <Link
+                key={board.id}
+                to={`../../boards/${board.id}`}
+                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
+                style={{ fontWeight: 700 }}
+              >
+                <Icon icon="mdi:draw" />
+                {board.title}
+              </Link>
+            ))
+        )}
       </AccordionTab>
       <AccordionTab
         header={

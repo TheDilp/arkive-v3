@@ -171,7 +171,7 @@ export default function RemirrorContext({
 
   if (!currentDocument) return <Navigate to="../../wiki" />;
   return (
-    <div className="editorContainer w-8 flex flex-wrap align-content-start text-white px-2">
+    <div className="editorContainer w-8 h-full flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
         {currentDocument &&
           `${currentDocument.title} ${
@@ -184,7 +184,7 @@ export default function RemirrorContext({
             manager={manager}
             initialContent={state}
             hooks={hooks}
-            classNames={["text-white Lato Editor overflow-y-scroll"]}
+            classNames={["text-white Lato Editor overflow-y-auto"]}
             onChange={(props) => {
               const { tr, firstRender } = props;
               if (!firstRender && tr?.docChanged) {

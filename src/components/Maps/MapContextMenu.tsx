@@ -1,9 +1,11 @@
+import { LatLngBounds, LatLngBoundsExpression } from "leaflet";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useCreateMapMarker } from "../../utils/customHooks";
 type Props = {
   cm: any;
+  mapRef: any;
   lat: number;
   lng: number;
   bounds: number[][];
@@ -14,6 +16,7 @@ type Props = {
 
 export default function MapContextMenu({
   cm,
+  mapRef,
   setNewTokenDialog,
   lat,
   lng,
@@ -26,6 +29,10 @@ export default function MapContextMenu({
       label: "New Token",
       icon: "pi pi-fw pi-map-marker",
       command: () => setNewTokenDialog((prev) => ({ ...prev, show: true })),
+    },
+    {
+      label: "Fit Map",
+      command: () => mapRef.current.flyToBounds(bounds),
     },
   ];
   if (lat > bounds[1][0] || lng > bounds[1][1] || lat < 0 || lng < 0) {
