@@ -29,6 +29,7 @@ import {
   getBoards,
   getCurrentProject,
   getDocuments,
+  getImages,
   getMaps,
   getTags,
   updateBoard,
@@ -1251,4 +1252,14 @@ export function useDeleteEdge(project_id: string) {
       },
     }
   );
+}
+
+// Custom hook for getting images
+export function useGetImages(project_id: string) {
+  const { data, error } = useQuery(`${project_id}-images`, async () => {
+    const images = await getImages(project_id);
+    return images;
+  });
+  if (data) return data;
+  if (error) toastError("Error getting images (customHooks 1264)");
 }

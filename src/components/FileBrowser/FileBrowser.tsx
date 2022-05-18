@@ -1,45 +1,36 @@
-import React, { useEffect, useState } from "react";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
-import { getImages, uploadImage } from "../../utils/supabaseUtils";
-import { Toolbar } from "primereact/toolbar";
-import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useGetImages } from "../../utils/customHooks";
+import { uploadImage } from "../../utils/supabaseUtils";
 import { FileObject } from "../../utils/utils";
 
 type Props = {};
 
 export default function FileBrowser({}: Props) {
   const { project_id } = useParams();
-  const [layout, setLayout] = useState("grid");
+  const [layout, setLayout] = useState("list");
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
   const [sortField, setSortField] = useState(undefined);
 
   const renderListItem = (data: FileObject) => {
     return (
-      <div className="col-12">
-        <div className="product-list-item">
-          <img src={`images/product/${data.image}`} alt={data.name} />
+      <div className="col-12 flex p-2">
+        <div className="product-list-item w-5rem">
+          <img
+            className="relative w-full h-full"
+            style={{
+              objectFit: "contain",
+            }}
+            src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${data.name}`}
+            alt="TEST"
+          />
+        </div>
+        <div className="w-10rem ml-2 flex align-items-center ml-4">
           <div className="product-list-detail">
             <div className="product-name">{data.name}</div>
-            <div className="product-description">{data.description}</div>
-            {/* <Rating value={data.rating} readOnly cancel={false}></Rating> */}
-            <i className="pi pi-tag product-category-icon"></i>
-            <span className="product-category">{data.category}</span>
-          </div>
-          <div className="product-list-action">
-            {/* <span className="product-price">${data.price}</span>
-            <Button
-              icon="pi pi-shopping-cart"
-              label="Add to Cart"
-              disabled={data.inventoryStatus === "OUTOFSTOCK"}
-            ></Button> */}
-            <span
-              className={`product-badge status-${data.inventoryStatus.toLowerCase()}`}
-            >
-              {data.inventoryStatus}
-            </span>
           </div>
         </div>
       </div>
@@ -48,53 +39,31 @@ export default function FileBrowser({}: Props) {
   const renderGridItem = (data: FileObject) => {
     return (
       <div className="col-2">
-        <div className="product-grid-item card">
-          <div className="product-grid-item-top">
-            <div>
-              <div className="product-category text-center text-xl mb-2">
-                {data.name}
-              </div>
-            </div>
-          </div>
-          <div className="product-grid-item-content flex justify-content-center">
+        <div className="flex flex-wrap justify-content-center align-items-bottom">
+          <div className="w-full flex justify-content-center pt-2">
             <img
+              className="w-6"
               src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${data.name}`}
               alt="TEST"
             />
           </div>
-          <div className="product-grid-item-bottom"></div>
+          <div className="text-center text-2xl mb-2">{data.name}</div>
         </div>
       </div>
     );
   };
-  const itemTemplate = (product, layout) => {
-    if (!product) {
+  const itemTemplate = (image: FileObject, layout: string) => {
+    if (!image) {
       return;
     }
 
-    if (layout === "list") return renderListItem(product);
-    else if (layout === "grid") return renderGridItem(product);
+    if (layout === "list") return renderListItem(image);
+    else if (layout === "grid") return renderGridItem(image);
   };
-  const [data, setData] = useState<any[]>();
-  async function fetchImages() {
-    let d: FileObject[] | undefined = await getImages(project_id as string);
-    // @ts-ignore
-    if (d)
-      setData(
-        d.filter(
-          (file) =>
-            file.metadata?.mimetype === "image/jpeg" ||
-            file.metadata?.mimetype === "image/png"
-        )
-      );
-  }
-  useEffect(() => {
-    fetchImages();
-  }, []);
-
-  const leftToolbarTemplate = () => {
-    return (
-      <>
+  const images = useGetImages(project_id as string);
+  const header = (
+    <div className="grid grid-nogutter">
+      <div className="col-6" style={{ textAlign: "left" }}>
         <FileUpload
           mode="basic"
           name="demo[]"
@@ -111,30 +80,33 @@ export default function FileBrowser({}: Props) {
             uploadImage(project_id as string, file);
           }}
         />
-      </>
-    );
-  };
-  const rightToolbarTemplate = () => {
-    return (
-      <>
-        <Button
-          icon="pi pi-align-justify"
-          className="p-button-outlined p-button-success"
+        {/* <Dropdown
+          options={sortOptions}
+          value={sortKey}
+          optionLabel="label"
+          placeholder="Sort By Price"
+          onChange={onSortChange}
+        /> */}
+      </div>
+      <div className="col-6" style={{ textAlign: "right" }}>
+        <DataViewLayoutOptions
+          layout={layout}
+          onChange={(e) => setLayout(e.value)}
         />
-        <Button icon="pi pi-th-large" className="p-button-outlined ml-2" />
-      </>
-    );
-  };
+      </div>
+    </div>
+  );
+
   return (
-    <div className="w-full ">
-      <Toolbar
-        className="mb-4"
-        left={leftToolbarTemplate}
-        right={rightToolbarTemplate}
-      ></Toolbar>
+    <div className="w-full px-8 mt-2">
       <DataView
-        value={data}
+        value={images?.filter(
+          (image: FileObject) =>
+            image.metadata.mimetype === "image/jpeg" ||
+            image.metadata.mimetype === "image/png"
+        )}
         layout={layout}
+        header={header}
         itemTemplate={itemTemplate}
         paginator
         rows={9}
