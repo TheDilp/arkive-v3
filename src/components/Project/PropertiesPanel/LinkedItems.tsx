@@ -101,16 +101,18 @@ export default function LinkedItems() {
           <span className="text-xs">
             Note: Custom image will overwrite image from storage
           </span>
-          <div className="w-full my-3">
+          <div className="w-full my-3 flex justify-content-center">
             <Dropdown
-              className="w-full"
+              className="w-10"
+              filter
+              filterBy="name"
               options={images?.data || []}
               optionLabel="name"
               value={currentImage}
               onChange={(e) =>
                 updateDocumentMutation.mutate({
                   doc_id: doc_id as string,
-                image: `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${e.value.name}`,
+                  image: `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${e.value.name}`,
                 })
               }
               itemTemplate={(item) => (

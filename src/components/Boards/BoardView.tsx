@@ -136,7 +136,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             backgroundImage: node.customImage
               ? node.customImage
               : node.document?.image
-              ? node.document.image
+              ? node.document.image.replaceAll(" ", "%20")
               : [],
           },
           scratch: {

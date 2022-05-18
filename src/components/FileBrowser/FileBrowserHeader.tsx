@@ -22,20 +22,20 @@ export default function FileBrowserHeader({
   const { project_id } = useParams();
   return (
     <div className="w-10 mb-2 flex">
-      <div
-        className="w-6 flex flex-wrap align-content-top align-items-center"
-        style={{ textAlign: "left" }}
-      >
+      <div className="w-6 flex flex-wrap align-content-top align-items-center">
         <FileUpload
           mode="basic"
           name="demo[]"
           accept="image/*"
           maxFileSize={1000000}
+          multiple
           auto
           customUpload
           uploadHandler={async (e) => {
-            let file = e.files[0];
-            await uploadImage(project_id as string, file);
+            let files = e.files;
+            for (let i = 0; i < files.length; i++) {
+              await uploadImage(project_id as string, files[i]);
+            }
             refetch();
             e.options.clear();
           }}
@@ -47,7 +47,7 @@ export default function FileBrowserHeader({
           onChange={(e) => setFilter(e.target.value)}
         />
       </div>
-      <div className="col-6" style={{ textAlign: "right" }}>
+      <div className="w-6 flex justify-content-end">
         <DataViewLayoutOptions
           layout={layout}
           onChange={(e) => setLayout(e.value)}

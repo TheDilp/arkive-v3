@@ -1,11 +1,9 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { Tooltip } from "primereact/tooltip";
 import { useParams } from "react-router-dom";
 import {
-  DocumentProps,
-  iconSelectProps,
-  docItemDisplayDialogProps,
+  docItemDisplayDialogProps, DocumentProps,
+  iconSelectProps
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 type Props = {
@@ -52,7 +50,6 @@ export default function DocumentTreeItem({
         });
       }}
     >
-      <Tooltip target=".selectableIcon" content="Change Icon" showDelay={750} />
       {node.droppable && (
         <span
           onClick={(e) => {
