@@ -39,8 +39,9 @@ import {
   updateMapMarker,
   updateNode,
   updateProject,
+  uploadImage,
 } from "./supabaseUtils";
-import { toastError, toastSuccess } from "./utils";
+import { FileObject, toastError, toastSuccess } from "./utils";
 // CUSTOM HOOKS
 
 // Custom hook for detecting if user clicked outside of element (ref)
@@ -1256,10 +1257,13 @@ export function useDeleteEdge(project_id: string) {
 
 // Custom hook for getting images
 export function useGetImages(project_id: string) {
-  const { data, error } = useQuery(`${project_id}-images`, async () => {
-    const images = await getImages(project_id);
-    return images;
-  });
-  if (data) return data;
+  const { data, error, refetch, isLoading } = useQuery(
+    `${project_id}-images`,
+    async () => {
+      const images = await getImages(project_id);
+      return images;
+    }
+  );
+  if (data) return { data, refetch, isLoading };
   if (error) toastError("Error getting images (customHooks 1264)");
 }

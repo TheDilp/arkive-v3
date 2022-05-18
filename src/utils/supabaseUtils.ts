@@ -13,7 +13,7 @@ import {
   UpdateNodeProps,
   CreateNodeProps,
 } from "../custom-types";
-import { toastError } from "./utils";
+import { FileObject, toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -849,7 +849,6 @@ export const uploadImage = async (project_id: string, file: File) => {
       .from("images")
       .upload(`${project_id}/${file.name}`, file, { upsert: false });
 
-    if (data) return data;
     if (error) {
       toastError("There was an error uploading your image.");
       throw new Error(error.message);
