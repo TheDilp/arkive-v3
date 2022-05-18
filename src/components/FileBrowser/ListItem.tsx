@@ -1,8 +1,6 @@
 import { Button } from "primereact/button";
-import React from "react";
 import { useParams } from "react-router-dom";
 import { useDeleteImages } from "../../utils/customHooks";
-import { deleteImages } from "../../utils/supabaseUtils";
 
 type Props = {
   name: string;

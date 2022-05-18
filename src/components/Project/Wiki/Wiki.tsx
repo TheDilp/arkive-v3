@@ -10,8 +10,8 @@ import { useGetDocuments } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
-import DocumentsTree from "../DocumentTree";
-import PropertiesPanel from "../PropertiesPanel";
+import DocumentsTree from "../DocumentTree/DocumentTree";
+import PropertiesPanel from "../PropertiesPanel/PropertiesPanel";
 export default function Wiki() {
   const [docId, setDocId] = useState("");
   const { project_id } = useParams();

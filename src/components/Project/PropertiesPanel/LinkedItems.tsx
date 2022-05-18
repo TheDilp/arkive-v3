@@ -1,12 +1,14 @@
 import { Icon } from "@iconify/react";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   useGetDocumentData,
+  useGetImages,
   useGetMaps,
   useUpdateDocument,
 } from "../../../utils/customHooks";
@@ -16,6 +18,7 @@ export default function LinkedItems() {
   const document = useGetDocumentData(project_id as string, doc_id as string);
   const maps = useGetMaps(project_id as string);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
+  const images = useGetImages(project_id as string);
   const [currentImage, setCurrentImage] = useState<string | undefined>(
     document?.image || ""
   );
@@ -94,22 +97,52 @@ export default function LinkedItems() {
             />
           </div>
         )}
-        <div className="w-full flex flex-nowrap justify-content-evenly">
-          <InputText
-            value={currentImage}
-            placeholder="Document Image URL"
-            onChange={(e) => setCurrentImage(e.target.value)}
-          />
-          <Button
-            icon="pi pi-fw pi-save"
-            className="p-button-outlined p-button-success"
-            onClick={() =>
-              updateDocumentMutation.mutate({
-                doc_id: doc_id as string,
-                image: currentImage,
-              })
-            }
-          />
+        <div className="w-full flex flex-wrap justify-content-evenly">
+          <span className="text-xs">
+            Note: Custom image will overwrite image from storage
+          </span>
+          <div className="w-full my-3">
+            <Dropdown
+              className="w-full"
+              options={images?.data || []}
+              optionLabel="name"
+              value={currentImage}
+              onChange={(e) =>
+                updateDocumentMutation.mutate({
+                  doc_id: doc_id as string,
+                image: `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${e.value.name}`,
+                })
+              }
+              itemTemplate={(item) => (
+                <div className="w-full h-2rem flex align-items-center">
+                  <img
+                    className="h-full mr-2"
+                    src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${item.name}`}
+                    alt={item.name}
+                  />
+                  <span>{item.name}</span>
+                </div>
+              )}
+            />
+          </div>
+          <div className="w-full flex justify-content-evenly">
+            <InputText
+              className="w-10"
+              value={currentImage}
+              placeholder="Custom Image URL"
+              onChange={(e) => setCurrentImage(e.target.value)}
+            />
+            <Button
+              icon="pi pi-fw pi-save"
+              className="p-button-outlined p-button-success"
+              onClick={() =>
+                updateDocumentMutation.mutate({
+                  doc_id: doc_id as string,
+                  image: currentImage,
+                })
+              }
+            />
+          </div>
         </div>
       </AccordionTab>
     </Accordion>

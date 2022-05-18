@@ -102,7 +102,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
         setDisplayDialog={setDisplayDialog}
       />
       <TabView
-        className="w-full p-0"
+        className="w-full p-0 wikiTabs"
         panelContainerClassName="pr-0"
         renderActiveOnly={true}
       >

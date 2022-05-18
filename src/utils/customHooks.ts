@@ -1262,6 +1262,9 @@ export function useGetImages(project_id: string) {
     async () => {
       const images = await getImages(project_id);
       return images;
+    },
+    {
+      staleTime: 5 * 60 * 1000, // 5 minutes
     }
   );
   if (data)

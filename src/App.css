@@ -24,7 +24,7 @@ body {
     color: red !important;
 }
 
-.p-tabview-panels {
+.wikiTabs .p-tabview-panels {
     padding: 0 !important;
 }
 
@@ -37,15 +37,15 @@ body {
     display: none !important;
 }
 
-.p-tabview-nav li {
+.wikiTabs .p-tabview-nav li {
     width: 100%;
 }
 
-.p-tabview-nav li a {
+.wikiTabs .p-tabview-nav li a {
     border-radius: 0 !important;
 }
 
-.p-tabview-nav span {
+.wikiTabs .p-tabview-nav span {
     width: 100% !important;
     text-align: center !important;
 }

@@ -61,7 +61,7 @@ export default function NodeUpdateDialog({
     <Dialog
       header={`Update Node ${nodeUpdateDialog.label || ""}`}
       style={{
-        minWidth: "30vw",
+        width: "24.75vw",
       }}
       visible={nodeUpdateDialog.show}
       modal={false}
@@ -86,7 +86,7 @@ export default function NodeUpdateDialog({
       }
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TabView scrollable className="w-full">
+        <TabView className="w-full">
           <TabPanel header="Node Label">
             <div className="w-full flex flex-nowrap">
               <div className="w-full flex flex-wrap my-1">
@@ -280,7 +280,7 @@ export default function NodeUpdateDialog({
             </div>
             <div className="w-full flex flex-nowrap my-1">
               <div className="w-4">
-                <label className="w-full text-sm">Node Background Color</label>
+                <label className="w-full text-sm">Background Color</label>
                 <Controller
                   control={control}
                   rules={{
@@ -303,9 +303,7 @@ export default function NodeUpdateDialog({
                 />
               </div>
               <div className="w-8">
-                <label className="w-full text-sm">
-                  Node Background Opacity
-                </label>
+                <label className="w-full text-sm">Background Opacity</label>
                 <Controller
                   control={control}
                   rules={{
