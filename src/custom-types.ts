@@ -14,7 +14,7 @@ export type DocumentProps = {
   id: string;
   title: string;
   content: RemirrorJSON | null;
-  image: string;
+  image?: ImageProps;
   project_id: string;
   categories: string[];
   parent: { id: string; title: string } | null;
@@ -70,7 +70,12 @@ export type BoardNodeProps = {
   backgroundColor: string;
   backgroundOpacity: number;
   zIndex: number;
-  document?: Pick<DocumentProps, "id" | "image">;
+  document?: {
+    id: string;
+    image?: {
+      link?: string;
+    };
+  };
   board_id: string;
 };
 export type BoardEdgeProps = {
@@ -284,6 +289,29 @@ export type RegisterInputs = {
 };
 
 // DATA CREATION AND UPDATE TYPES
+
+export type DocumentUpdateProps = {
+  id: string;
+  title?: string;
+  content?: RemirrorJSON | null;
+  folder?: boolean;
+  parent?: string | null;
+  image?: string;
+  icon?: string;
+  expanded?: boolean;
+  categories?: string[];
+};
+export type DocumentCreateProps = {
+  id?: string;
+  title?: string;
+  icon?: string;
+  image?: string;
+  project_id: string;
+  parent?: string | null;
+  categories?: string[];
+  folder?: boolean;
+  content?: RemirrorJSON | null;
+};
 
 export type CreateNodeProps = {
   id: string;

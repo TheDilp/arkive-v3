@@ -13,6 +13,8 @@ import {
   UpdateNodeProps,
   CreateNodeProps,
   ImageProps,
+  DocumentUpdateProps,
+  DocumentCreateProps,
 } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -83,7 +85,7 @@ export const getDocuments = async (project_id: string) => {
   if (user) {
     const { data: documents, error } = await supabase
       .from<DocumentProps>("documents")
-      .select("*, parent(id, title)")
+      .select("*, parent(id, title), image(id, title, link)")
       .eq("project_id", project_id)
       .order("title", { ascending: true });
     if (documents) return documents;
@@ -115,7 +117,7 @@ export const getMaps = async (project_id: string) => {
 export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<BoardProps>("boards")
-    .select("*, nodes(*, document:documents(id, image)), edges(*)")
+    .select("*, nodes(*, document:documents(id, image(link))), edges(*)")
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {
@@ -149,21 +151,11 @@ export const createDocument = async ({
   image,
   categories,
   folder,
-}: {
-  id?: string;
-  title?: string;
-  icon?: string;
-  image?: string;
-  project_id: string;
-  parent?: string | null;
-  categories?: string[];
-  folder?: boolean;
-  content?: RemirrorJSON | null;
-}) => {
+}: DocumentCreateProps) => {
   let user = auth.user();
   if (user) {
     const { data: document, error } = await supabase
-      .from<DocumentProps>("documents")
+      .from<DocumentCreateProps>("documents")
       .insert({
         id,
         project_id,
@@ -406,7 +398,7 @@ export const createEdge = async ({
 
 // UPDATE
 export const updateDocument = async ({
-  doc_id,
+  id,
   title,
   content,
   folder,
@@ -415,22 +407,12 @@ export const updateDocument = async ({
   icon,
   categories,
   expanded,
-}: {
-  doc_id: string;
-  title?: string;
-  content?: RemirrorJSON;
-  folder?: boolean;
-  parent?: string | null;
-  image?: string;
-  icon?: string;
-  expanded?: boolean;
-  categories?: string[];
-}) => {
+}: DocumentUpdateProps) => {
   let user = auth.user();
 
   if (user) {
     const { data: document, error } = await supabase
-      .from<DocumentProps>("documents")
+      .from<DocumentUpdateProps>("documents")
       .update({
         title,
         content,
@@ -442,7 +424,7 @@ export const updateDocument = async ({
         categories,
         expanded,
       })
-      .eq("id", doc_id);
+      .eq("id", id);
 
     if (document) return document[0];
     if (error) {

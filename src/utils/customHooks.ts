@@ -150,7 +150,6 @@ export function useCreateDocument(project_id: string) {
       id: string;
       parent?: string | null;
       title?: string;
-      image?: string | undefined;
       categories?: string[] | undefined;
       folder?: boolean;
       template?: boolean;
@@ -188,7 +187,7 @@ export function useCreateDocument(project_id: string) {
                       : null,
                   title: newDocument.title ? newDocument.title : "New Document",
                   icon: newDocument.icon || "mdi:file",
-                  image: newDocument.image ? newDocument.image : "",
+                  image: undefined,
                   categories: newDocument.categories
                     ? newDocument.categories
                     : [],
@@ -213,10 +212,10 @@ export function useUpdateDocument(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: {
-      doc_id: string;
+      id: string;
       title?: string;
       content?: RemirrorJSON;
-      image?: string;
+      image?: ImageProps;
       folder?: boolean;
       parent?: string | null;
       icon?: string;
@@ -224,11 +223,11 @@ export function useUpdateDocument(project_id: string) {
       categories?: string[];
     }) =>
       await updateDocument({
-        doc_id: vars.doc_id,
+        id: vars.id,
         title: vars.title,
         folder: vars.folder,
         parent: vars.parent,
-        image: vars.image,
+        image: vars.image?.id,
         icon: vars.icon,
         content: vars.content,
         expanded: vars.expanded,
@@ -247,7 +246,7 @@ export function useUpdateDocument(project_id: string) {
                 (doc) => doc.id === updatedDocument.parent
               );
               let newData: DocumentProps[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.doc_id) {
+                if (doc.id === updatedDocument.id) {
                   return {
                     ...doc,
                     ...updatedDocument,
@@ -366,7 +365,7 @@ export function useCreateTemplate() {
                   parent: null,
                   template: true,
                   expanded: false,
-                  image: "",
+                  image: undefined,
                 },
               ];
               return newData;
@@ -1007,7 +1006,14 @@ export function useUpdateNode(project_id: string) {
           (oldData: BoardProps[] | undefined) => {
             if (oldData) {
               // Init document variable as undefined
-              let document: { id: string; image: string } | undefined;
+              let document:
+                | {
+                    id: string;
+                    image: {
+                      link?: string;
+                    };
+                  }
+                | undefined;
               // Then if there is a document that is linked, find it and map the data
               if (updatedNode.doc_id) {
                 const documents: DocumentProps[] | undefined =
@@ -1015,7 +1021,13 @@ export function useUpdateNode(project_id: string) {
                 const doc = documents?.find(
                   (doc) => doc.id === updatedNode.doc_id
                 );
-                if (doc) document = { id: doc.id, image: doc.image };
+                if (doc)
+                  document = {
+                    id: doc.id,
+                    image: {
+                      link: doc.image?.link,
+                    },
+                  };
               } else if (updatedNode.doc_id === null) {
                 document = undefined;
               }

@@ -136,7 +136,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             backgroundImage: node.customImage
               ? node.customImage
               : node.document?.image
-              ? node.document.image.replaceAll(" ", "%20")
+              ? `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${node.document.image.link}`
               : [],
           },
           scratch: {

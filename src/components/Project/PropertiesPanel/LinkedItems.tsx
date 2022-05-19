@@ -1,11 +1,11 @@
 import { Icon } from "@iconify/react";
 import { Accordion, AccordionTab } from "primereact/accordion";
-import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ImageProps } from "../../../custom-types";
 import {
   useGetBoards,
   useGetDocumentData,
@@ -13,7 +13,6 @@ import {
   useGetMaps,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { uuidRegex } from "../../../utils/utils";
 
 export default function LinkedItems() {
   const { project_id, doc_id } = useParams();
@@ -22,7 +21,6 @@ export default function LinkedItems() {
   const boards = useGetBoards(project_id as string);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const images = useGetImages(project_id as string);
-  const [currentImage, setCurrentImage] = useState<string | undefined>("");
 
   return (
     <Accordion activeIndex={0}>
@@ -96,7 +94,7 @@ export default function LinkedItems() {
         {document?.image && (
           <div className="flex flex-nowrap justify-content-center mb-2">
             <img
-              src={currentImage}
+              src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${document.image.link}`}
               alt="Document"
               loading="lazy"
               className="w-10rem h-10rem"
@@ -114,36 +112,39 @@ export default function LinkedItems() {
             <Dropdown
               className="w-10"
               filter
-              filterBy="name"
+              filterBy="title"
               options={images?.data || []}
-              optionLabel="name"
-              value={currentImage}
+              optionLabel="title"
+              value={document?.image || undefined}
               onChange={(e) =>
                 updateDocumentMutation.mutate({
-                  doc_id: doc_id as string,
-                  image: `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${e.value.name}`,
+                  id: doc_id as string,
+                  image: e.value,
                 })
               }
-              itemTemplate={(item) => (
-                <div className="w-full h-2rem flex align-items-center">
+              itemTemplate={(item: ImageProps) => (
+                <div className="w-2rem h-2rem flex align-items-center">
                   <img
-                    className="h-full mr-2"
-                    src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${item.name}`}
-                    alt={item.name}
+                    className="h-full mr-2 w-full h-full"
+                    style={{
+                      objectFit: "contain",
+                    }}
+                    src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${item.link}`}
+                    alt={""}
                   />
-                  <span>{item.name}</span>
+                  <span>{item.title}</span>
                 </div>
               )}
             />
           </div>
           <div className="w-full flex justify-content-evenly">
-            <InputText
+            {/* <InputText
               className="w-10"
               value={currentImage}
               placeholder="Custom Image URL"
               onChange={(e) => setCurrentImage(e.target.value)}
-            />
-            <Button
+            /> */}
+            {/* <Button
               icon="pi pi-fw pi-save"
               className="p-button-outlined p-button-success"
               onClick={() =>
@@ -152,7 +153,7 @@ export default function LinkedItems() {
                   image: currentImage,
                 })
               }
-            />
+            /> */}
           </div>
         </div>
       </AccordionTab>
