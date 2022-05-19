@@ -2,8 +2,9 @@ import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useParams } from "react-router-dom";
 import {
-  docItemDisplayDialogProps, DocumentProps,
-  iconSelectProps
+  docItemDisplayDialogProps,
+  DocumentProps,
+  iconSelectProps,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 type Props = {
@@ -56,7 +57,7 @@ export default function DocumentTreeItem({
             e.preventDefault();
             e.stopPropagation();
             updateDocumentMutation.mutate({
-              doc_id: node.id as string,
+              id: node.id as string,
               expanded: !isOpen,
             });
             onToggle();
@@ -81,7 +82,7 @@ export default function DocumentTreeItem({
             e.stopPropagation();
 
             setIconSelect({
-              doc_id: node.id as string,
+              id: node.id as string,
               icon: "bxs:folder",
               show: true,
               top: e.clientY,
@@ -97,7 +98,7 @@ export default function DocumentTreeItem({
             e.preventDefault();
             e.stopPropagation();
             updateDocumentMutation.mutate({
-              doc_id: node.id as string,
+              id: node.id as string,
               expanded: !isOpen,
             });
             onToggle();

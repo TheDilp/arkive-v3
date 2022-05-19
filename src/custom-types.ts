@@ -198,7 +198,7 @@ export type BoardExportProps = {
   show: boolean;
 };
 export type iconSelectProps = {
-  doc_id: string;
+  id: string;
   icon: string;
   top: number;
   left: number;

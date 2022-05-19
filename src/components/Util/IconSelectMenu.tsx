@@ -11,7 +11,7 @@ interface iconSelectMenu extends iconSelectProps {
   closeEdit?: () => void;
 }
 export default function IconSelectMenu({
-  doc_id,
+  id,
   top,
   left,
   show,
@@ -42,7 +42,7 @@ export default function IconSelectMenu({
   const iconMutation = useUpdateDocument(project_id as string);
   const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
   useOnClickOutside(ref, () =>
-    setIconSelect({ doc_id: "", icon: "", top: 0, left: 0, show: false })
+    setIconSelect({ id: "", icon: "", top: 0, left: 0, show: false })
   );
   useEffect(() => {
     setFilteredIconList(
@@ -95,7 +95,7 @@ export default function IconSelectMenu({
                     onClick={() => {
                       if (closeEdit) closeEdit();
                       iconMutation.mutate({
-                        doc_id,
+                        id,
                         icon: `mdi:${
                           filteredIconList[
                             virtualRow.index * 6 + virtualColumn.index
@@ -103,7 +103,7 @@ export default function IconSelectMenu({
                         }`,
                       });
                       setIconSelect({
-                        doc_id,
+                        id,
                         icon: "",
                         top: 0,
                         left: 0,

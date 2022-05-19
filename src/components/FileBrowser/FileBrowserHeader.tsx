@@ -1,7 +1,7 @@
 import { DataViewLayoutOptions } from "primereact/dataview";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { uploadImage } from "../../utils/supabaseUtils";
 import { ProgressBar } from "primereact/progressbar";

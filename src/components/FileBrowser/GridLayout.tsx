@@ -10,7 +10,7 @@ export default function GridLayout({ images, filter }: Props) {
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
   const imagesLength = useMemo(
     () =>
-      images.filter((image: ImageProps) => image.link.includes(filter)).length,
+      images.filter((image: ImageProps) => image.title.includes(filter)).length,
     [images]
   );
   const rowVirtualizer = useVirtual({
@@ -80,6 +80,10 @@ export default function GridLayout({ images, filter }: Props) {
                       name={
                         images[virtualRow.index * 5 + virtualColumn.index]
                           ?.title || ""
+                      }
+                      link={
+                        images[virtualRow.index * 5 + virtualColumn.index]
+                          ?.link || ""
                       }
                     />
                   </div>

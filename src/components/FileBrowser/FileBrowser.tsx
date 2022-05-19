@@ -12,7 +12,12 @@ export default function FileBrowser() {
   const images = useGetImages(project_id as string);
   const [filter, setFilter] = useState("");
   return (
-    <div className="w-full px-8 mt-2">
+    <div
+      className="w-full px-8 mt-2 overflow-y-auto"
+      style={{
+        height: "90vh",
+      }}
+    >
       {images?.isLoading ? (
         <LoadingScreen />
       ) : (

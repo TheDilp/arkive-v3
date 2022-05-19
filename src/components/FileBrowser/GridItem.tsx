@@ -1,12 +1,9 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-
 type Props = {
   name: string;
+  link: string;
 };
 
-export default function GridItem({ name }: Props) {
-  const { project_id } = useParams();
+export default function GridItem({ name, link }: Props) {
   return (
     <div className="w-full">
       <div className="w-11 bg-gray-800">
@@ -18,7 +15,7 @@ export default function GridItem({ name }: Props) {
               style={{
                 objectFit: "contain",
               }}
-              src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${name}`}
+              src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${link}`}
               alt="TEST"
             />
           </div>

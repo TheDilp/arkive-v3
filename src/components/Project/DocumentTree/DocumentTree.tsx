@@ -41,7 +41,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
   );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const [iconSelect, setIconSelect] = useState<iconSelectProps>({
-    doc_id: "",
+    id: "",
     icon: "",
     top: 0,
     left: 0,
@@ -60,7 +60,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
 
     // Update the document's parent
     updateDocumentMutation.mutate({
-      doc_id: dragSourceId,
+      id: dragSourceId,
       parent: dropTargetId === "0" ? null : dropTargetId,
     });
   };

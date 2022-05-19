@@ -28,12 +28,12 @@ export default function ListLayout({ images, filter }: Props) {
   };
   const imageBodyTemplate = (rowData: ImageProps) => {
     return (
-      <div className="w-full h-auto cursor-pointer flex justify-content-center">
+      <div className="w-full h-auto cursor-pointer w-full flex justify-content-center">
         {rowData.link && (
           <img
             src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${rowData.link}`}
             alt="document"
-            className="w-3rem h-full relative border-round"
+            className="w-2rem h-full relative border-round"
             style={{
               objectFit: "cover",
             }}
@@ -68,15 +68,15 @@ export default function ListLayout({ images, filter }: Props) {
         rows={9}
         sortField="title"
         sortOrder={1}
-        rowsPerPageOptions={[10, 20, 50]}
+        rowsPerPageOptions={[9, 15, 25, 50]}
         // paginatorLeft={paginatorLeft}
         // paginatorRight={paginatorRight}
       >
-        <Column selectionMode="multiple"></Column>
+        <Column selectionMode="multiple" className="w-1rem"></Column>
         <Column
           field="title"
           header="Title"
-          style={{ width: "" }}
+          style={{ width: "10rem" }}
           editor={titleEditor}
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
