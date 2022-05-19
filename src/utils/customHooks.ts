@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import {
   BoardProps,
   CreateNodeProps,
   DocumentProps,
+  ImageProps,
   MapProps,
   ProjectProps,
   UpdateEdgeProps,
@@ -43,7 +43,7 @@ import {
   updateProject,
   uploadImage,
 } from "./supabaseUtils";
-import { FileObject, toastError, toastSuccess } from "./utils";
+import { toastError, toastSuccess } from "./utils";
 // CUSTOM HOOKS
 
 // Custom hook for detecting if user clicked outside of element (ref)
@@ -1270,11 +1270,7 @@ export function useGetImages(project_id: string) {
   );
   if (data)
     return {
-      data: data.filter(
-        (image: FileObject) =>
-          image.metadata.mimetype === "image/jpeg" ||
-          image.metadata.mimetype === "image/png"
-      ),
+      data,
       refetch,
       isLoading,
     };
@@ -1291,11 +1287,11 @@ export function useDeleteImages() {
       onMutate: async (deletedImage) => {
         queryClient.setQueryData(
           `${deletedImage.project_id}-images`,
-          (oldData: FileObject[] | undefined) => {
+          (oldData: ImageProps[] | undefined) => {
             if (oldData) {
               console.log(oldData);
               return oldData.filter(
-                (image) => image.name !== deletedImage.name
+                (image) => image.title !== deletedImage.name
               );
             } else {
               return [];
@@ -1310,8 +1306,8 @@ export function useDeleteImages() {
 export function useRenameImage() {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: { oldName: string; newName: string; project_id: string }) => {
-      await renameImage(vars.oldName, vars.newName, vars.project_id);
+    async (vars: { id: string; newName: string; project_id: string }) => {
+      await renameImage(vars.id, vars.newName);
     },
     {
       onMutate: async (renamedImage) => {
@@ -1321,13 +1317,13 @@ export function useRenameImage() {
         setTimeout(() => {
           queryClient.setQueryData(
             `${renamedImage.project_id}-images`,
-            (oldData: FileObject[] | undefined) => {
+            (oldData: ImageProps[] | undefined) => {
               if (oldData) {
                 return oldData.map((image) => {
-                  if (image.name === renamedImage.oldName) {
+                  if (image.id === renamedImage.id) {
                     return {
                       ...image,
-                      name: renamedImage.newName,
+                      title: renamedImage.newName,
                     };
                   } else {
                     return image;
@@ -1338,7 +1334,7 @@ export function useRenameImage() {
               }
             }
           );
-        }, 250);
+        }, 500);
         return { previousImages };
       },
       onError: (err, newTodo, context) => {

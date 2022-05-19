@@ -54,6 +54,9 @@ export const emailRegex =
 export const passwordRegex =
   /"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"/g;
 
+export const uuidRegex =
+  /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+
 // Template Tree Utils
 export const defaultTemplate = {
   title: "New Template",
@@ -662,18 +665,4 @@ export interface Bucket {
   created_at: string;
   updated_at: string;
   public: boolean;
-}
-
-export interface FileObject {
-  name: string;
-  bucket_id: string;
-  owner: string;
-  id: string;
-  updated_at: string;
-  created_at: string;
-  last_accessed_at: string;
-  metadata: {
-    mimetype?: string;
-  };
-  buckets: Bucket;
 }

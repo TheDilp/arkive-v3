@@ -1,14 +1,16 @@
 import React, { MutableRefObject, useCallback, useMemo, useRef } from "react";
 import { useVirtual } from "react-virtual";
-import { FileObject } from "../../utils/utils";
+import { ImageProps } from "../../custom-types";
+
 import GridItem from "./GridItem";
 
-type Props = { images: FileObject[]; filter: string };
+type Props = { images: ImageProps[]; filter: string };
 
 export default function GridLayout({ images, filter }: Props) {
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
   const imagesLength = useMemo(
-    () => images.filter((image) => image.name.includes(filter)).length,
+    () =>
+      images.filter((image: ImageProps) => image.link.includes(filter)).length,
     [images]
   );
   const rowVirtualizer = useVirtual({
@@ -77,7 +79,7 @@ export default function GridLayout({ images, filter }: Props) {
                     <GridItem
                       name={
                         images[virtualRow.index * 5 + virtualColumn.index]
-                          ?.name || ""
+                          ?.title || ""
                       }
                     />
                   </div>

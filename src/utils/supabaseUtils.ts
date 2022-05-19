@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { RemirrorJSON } from "remirror";
-import { StringMappingType } from "typescript";
+
 import {
   BoardProps,
   DocumentProps,
@@ -12,8 +12,9 @@ import {
   BoardEdgeProps,
   UpdateNodeProps,
   CreateNodeProps,
+  ImageProps,
 } from "../custom-types";
-import { FileObject, toastError } from "./utils";
+import { toastError } from "./utils";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -829,9 +830,11 @@ export const getImages = async (project_id: string) => {
   let user = auth.user();
 
   if (user) {
-    const { data, error } = await supabase.storage
-      .from("images")
-      .list(project_id);
+    const { data, error } = await supabase
+      .from<ImageProps>("images")
+      .select("id,title,link")
+      // Matches links that start with the project_id
+      .like("link", `${project_id}%`);
 
     if (data) return data;
     if (error) {
@@ -863,14 +866,11 @@ export const deleteImages = async (images: string[]) => {
     throw new Error(error.message);
   }
 };
-export const renameImage = async (
-  oldName: string,
-  newName: string,
-  project_id: string
-) => {
-  const { data, error } = await supabase.storage
+export const renameImage = async (id: string, newName: string) => {
+  const { data, error } = await supabase
     .from("images")
-    .move(`${project_id}/${oldName}`, `${project_id}/${newName}`);
+    .update({ title: newName })
+    .eq("id", id);
   if (data) return data;
   if (error) {
     toastError("There was an error renaming your image.");

@@ -1,22 +1,19 @@
-import React, { useCallback, useRef } from "react";
-import { useVirtual } from "react-virtual";
-import { FileObject } from "../../utils/utils";
-import { DataTable } from "primereact/datatable";
-import { Column, ColumnEditorOptions } from "primereact/column";
 import { Button } from "primereact/button";
-import { useParams } from "react-router-dom";
-import { renameImage } from "../../utils/supabaseUtils";
+import { Column, ColumnEditorOptions } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
+import { useParams } from "react-router-dom";
+import { ImageProps } from "../../custom-types";
 import { useRenameImage } from "../../utils/customHooks";
 type Props = {
-  images: FileObject[];
+  images: ImageProps[];
   filter: string;
 };
 
 export default function ListLayout({ images, filter }: Props) {
   const { project_id } = useParams();
   const renameImageMutation = useRenameImage();
-  const actionsBodyTemplate = (rowData: FileObject) => {
+  const actionsBodyTemplate = (rowData: ImageProps) => {
     return (
       <div className="">
         <Button
@@ -29,14 +26,14 @@ export default function ListLayout({ images, filter }: Props) {
       </div>
     );
   };
-  const imageBodyTemplate = (rowData: FileObject) => {
+  const imageBodyTemplate = (rowData: ImageProps) => {
     return (
       <div className="w-full h-auto cursor-pointer flex justify-content-center">
-        {rowData.name && (
+        {rowData.link && (
           <img
-            src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${rowData.name}`}
+            src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${rowData.link}`}
             alt="document"
-            className="w-2rem h-full relative border-round"
+            className="w-3rem h-full relative border-round"
             style={{
               objectFit: "cover",
             }}
@@ -51,6 +48,7 @@ export default function ListLayout({ images, filter }: Props) {
       <InputText
         value={options.value}
         onChange={(e) => {
+          console.log(options.rowData, e.target.value);
           if (options.rowData.id && e.target.value)
             //@ts-ignore
             options.editorCallback(e.target.value);
@@ -62,26 +60,28 @@ export default function ListLayout({ images, filter }: Props) {
     <div className=" flex align-items-start align-content-top w-full  justify-content-center">
       <DataTable
         className="w-full h-full"
-        value={images.filter((image) => image.name.includes(filter))}
+        value={images.filter((image) => image.title.includes(filter))}
         paginator
         responsiveLayout="scroll"
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
         rows={9}
+        sortField="title"
+        sortOrder={1}
         rowsPerPageOptions={[10, 20, 50]}
         // paginatorLeft={paginatorLeft}
         // paginatorRight={paginatorRight}
       >
         <Column selectionMode="multiple"></Column>
         <Column
-          field="name"
-          header="Name"
+          field="title"
+          header="Title"
           style={{ width: "" }}
           editor={titleEditor}
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
               renameImageMutation.mutate({
-                oldName: e.rowData.name,
+                id: e.rowData.id,
                 newName: e.newValue,
                 project_id: project_id as string,
               });

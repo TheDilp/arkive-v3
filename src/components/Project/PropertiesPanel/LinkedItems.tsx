@@ -13,6 +13,7 @@ import {
   useGetMaps,
   useUpdateDocument,
 } from "../../../utils/customHooks";
+import { uuidRegex } from "../../../utils/utils";
 
 export default function LinkedItems() {
   const { project_id, doc_id } = useParams();
@@ -21,13 +22,7 @@ export default function LinkedItems() {
   const boards = useGetBoards(project_id as string);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const images = useGetImages(project_id as string);
-  const [currentImage, setCurrentImage] = useState<string | undefined>(
-    document?.image || ""
-  );
-
-  useEffect(() => {
-    if (document) setCurrentImage(document?.image || "");
-  }, [doc_id]);
+  const [currentImage, setCurrentImage] = useState<string | undefined>("");
 
   return (
     <Accordion activeIndex={0}>
@@ -101,7 +96,7 @@ export default function LinkedItems() {
         {document?.image && (
           <div className="flex flex-nowrap justify-content-center mb-2">
             <img
-              src={document.image}
+              src={currentImage}
               alt="Document"
               loading="lazy"
               className="w-10rem h-10rem"

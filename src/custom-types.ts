@@ -73,7 +73,6 @@ export type BoardNodeProps = {
   document?: Pick<DocumentProps, "id" | "image">;
   board_id: string;
 };
-
 export type BoardEdgeProps = {
   id: string;
   board_id: string;
@@ -89,6 +88,11 @@ export type BoardEdgeProps = {
   taxiTurn: number;
   targetArrowShape: string;
   zIndex: number;
+};
+export type ImageProps = {
+  id: string;
+  title: string;
+  link: string;
 };
 export type CytoscapeNodeProps = {
   data: Pick<
