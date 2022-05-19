@@ -74,6 +74,7 @@ export default function EdgeUpdateDialog({
       header={`Update Edge ${edgeUpdateDialog.label || ""}`}
       visible={edgeUpdateDialog.show}
       modal={false}
+      position="top-left"
       onHide={() =>
         setEdgeUpdateDialog({
           id: "",

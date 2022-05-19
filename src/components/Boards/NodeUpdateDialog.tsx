@@ -65,7 +65,7 @@ export default function NodeUpdateDialog({
       }}
       visible={nodeUpdateDialog.show}
       modal={false}
-      position="left"
+      position="bottom-left"
       onHide={() =>
         setNodeUpdateDialog({
           id: "",

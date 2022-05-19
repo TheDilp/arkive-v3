@@ -2,10 +2,11 @@ import { saveAs } from "file-saver";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { boardLayouts, changeLayout, toastWarn } from "../../utils/utils";
 import { SelectButton } from "primereact/selectbutton";
 import { BoardExportProps } from "../../custom-types";
+import { InputText } from "primereact/inputtext";
 type Props = {
   layout: string | null | undefined;
   setLayout: (layout: string) => void;
@@ -35,7 +36,7 @@ export default function BoardBar({
     type: "PNG",
     show: false,
   });
-
+  const [search, setSearch] = useState("");
   const exportBoardFunction = (
     view: "Graph" | "View",
     background: "Color" | "Transparent",
@@ -85,6 +86,24 @@ export default function BoardBar({
     }
   };
 
+  useEffect(() => {
+    if (cyRef.current) {
+      const timeout = setTimeout(() => {
+        let foundNodes = cyRef.current
+          ?.nodes()
+          .filter(`[label ^= '${search}']`);
+
+        if (foundNodes.length === 1) {
+          console.log(foundNodes[0].position());
+          cyRef.current.center(foundNodes[0]);
+        }
+      }, 250);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [search]);
+
+  // cy.nodes().filter('[weight > 50]');
   return (
     <div className="absolute flex flex-nowrap z-5">
       <Dialog
@@ -213,6 +232,7 @@ export default function BoardBar({
           setExportDialog({ ...exportDialog, show: true });
         }}
       />
+      <InputText value={search} onChange={(e) => setSearch(e.target.value)} />
     </div>
   );
 }

@@ -341,7 +341,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
       <CytoscapeComponent
         elements={elements}
-        zoom={1}
         className="Lato"
         wheelSensitivity={0.1}
         style={{ width: "100%", height: "100%" }}

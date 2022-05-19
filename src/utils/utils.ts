@@ -169,10 +169,6 @@ export const boardNodeShapes = [
     label: "Round Octagon",
     value: "round-octagon",
   },
-  {
-    label: "Round Diamond",
-    value: "round-diamond",
-  },
 ];
 export const boardEdgeCurveStyles = [
   {
