@@ -7,6 +7,9 @@ import { boardLayouts, changeLayout, toastWarn } from "../../utils/utils";
 import { SelectButton } from "primereact/selectbutton";
 import { BoardExportProps } from "../../custom-types";
 import { InputText } from "primereact/inputtext";
+import { useParams } from "react-router-dom";
+import { AutoComplete } from "primereact/autocomplete";
+import { useGetBoardData } from "../../utils/customHooks";
 type Props = {
   layout: string | null | undefined;
   setLayout: (layout: string) => void;
@@ -30,6 +33,7 @@ export default function BoardBar({
   ehRef,
   boardTitle,
 }: Props) {
+  const { project_id, board_id } = useParams();
   const [exportDialog, setExportDialog] = useState<BoardExportProps>({
     view: "Graph",
     background: "Color",
@@ -85,6 +89,10 @@ export default function BoardBar({
       );
     }
   };
+  const board = useGetBoardData(project_id as string, board_id as string);
+  useEffect(() => {
+    return () => setSearch("");
+  }, [board_id]);
 
   useEffect(() => {
     if (cyRef.current) {
@@ -92,18 +100,13 @@ export default function BoardBar({
         let foundNodes = cyRef.current
           ?.nodes()
           .filter(`[label ^= '${search}']`);
-
-        if (foundNodes.length === 1) {
-          console.log(foundNodes[0].position());
-          cyRef.current.center(foundNodes[0]);
-        }
+        console.log(search);
       }, 250);
 
       return () => clearTimeout(timeout);
     }
   }, [search]);
 
-  // cy.nodes().filter('[weight > 50]');
   return (
     <div className="absolute flex flex-nowrap z-5">
       <Dialog
@@ -232,7 +235,34 @@ export default function BoardBar({
           setExportDialog({ ...exportDialog, show: true });
         }}
       />
-      <InputText value={search} onChange={(e) => setSearch(e.target.value)} />
+      <Dropdown
+        className="ml-2"
+        placeholder="Search Nodes"
+        value={search}
+        options={board?.nodes || []}
+        optionLabel="label"
+        optionValue="id"
+        filter
+        filterBy="label"
+        itemTemplate={(item) => <div>{item.label}</div>}
+        onChange={(e: any) => {
+          console.log(e);
+          if (e.target.value) {
+            let foundNode = cyRef.current.getElementById(e.target.value);
+            cyRef.current.animate(
+              {
+                center: {
+                  eles: foundNode,
+                },
+                zoom: 1,
+              },
+              {
+                duration: 1250,
+              }
+            );
+          }
+        }}
+      />
     </div>
   );
 }
