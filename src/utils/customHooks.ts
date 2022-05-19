@@ -33,6 +33,7 @@ import {
   getImages,
   getMaps,
   getTags,
+  renameImage,
   updateBoard,
   updateDocument,
   updateEdge,
@@ -1279,6 +1280,7 @@ export function useGetImages(project_id: string) {
     };
   if (error) toastError("Error getting images (customHooks 1264)");
 }
+// Custom hook for deleting images
 export function useDeleteImages() {
   const queryClient = useQueryClient();
   return useMutation(
@@ -1300,6 +1302,51 @@ export function useDeleteImages() {
             }
           }
         );
+      },
+    }
+  );
+}
+// Custom hook for renaming an image
+export function useRenameImage() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { oldName: string; newName: string; project_id: string }) => {
+      await renameImage(vars.oldName, vars.newName, vars.project_id);
+    },
+    {
+      onMutate: async (renamedImage) => {
+        const previousImages = queryClient.getQueryData(
+          `${renamedImage.project_id}-images`
+        );
+        setTimeout(() => {
+          queryClient.setQueryData(
+            `${renamedImage.project_id}-images`,
+            (oldData: FileObject[] | undefined) => {
+              if (oldData) {
+                return oldData.map((image) => {
+                  if (image.name === renamedImage.oldName) {
+                    return {
+                      ...image,
+                      name: renamedImage.newName,
+                    };
+                  } else {
+                    return image;
+                  }
+                });
+              } else {
+                return [];
+              }
+            }
+          );
+        }, 250);
+        return { previousImages };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo?.project_id}-images`,
+          context?.previousImages
+        );
+        toastError("Could not rename your image. (customHooks 1347)");
       },
     }
   );

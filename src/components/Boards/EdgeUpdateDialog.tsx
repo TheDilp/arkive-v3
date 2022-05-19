@@ -167,43 +167,49 @@ export default function EdgeUpdateDialog({
             </div>
           )}
           {watch("curveStyle") === "taxi" && (
-            <div className="my-1">
-              <label className="w-full text-sm">Taxi Edge Direction</label>
-              <Controller
-                control={control}
-                name={"taxiDirection"}
-                render={({ field: { onChange, value } }) => (
-                  <div className="">
-                    <Dropdown
-                      value={value}
-                      options={boardEdgeTaxiDirections}
-                      min={-1000}
-                      max={1000}
-                      step={10}
-                      onChange={(e) => onChange(e.value)}
-                    />
-                  </div>
-                )}
-              />
-              <Controller
-                control={control}
-                name={"taxiTurn"}
-                render={({ field: { onChange, value } }) => (
-                  <div className="my-1">
-                    <label className="w-full text-sm">
-                      Edge Turn: {watch("taxiTurn")}
-                    </label>
+            <div className="my-1 flex flex-nowrap">
+              <div className="w-4">
+                <label className="w-full text-sm">Taxi Edge Direction</label>
+                <Controller
+                  control={control}
+                  name={"taxiDirection"}
+                  render={({ field: { onChange, value } }) => (
+                    <div className="w-4">
+                      <Dropdown
+                        value={value}
+                        options={boardEdgeTaxiDirections}
+                        min={-1000}
+                        max={1000}
+                        step={10}
+                        onChange={(e) => onChange(e.value)}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+              <div className="w-8">
+                <Controller
+                  control={control}
+                  name={"taxiTurn"}
+                  render={({ field: { onChange, value } }) => (
+                    <div className="">
+                      <label className="w-full text-sm">
+                        Edge Turn: {watch("taxiTurn")}
+                      </label>
 
-                    <Slider
-                      value={value}
-                      min={-1000}
-                      max={1000}
-                      step={5}
-                      onChange={(e) => onChange(e.value)}
-                    />
-                  </div>
-                )}
-              />
+                      <InputNumber
+                        className="w-full"
+                        showButtons
+                        value={value}
+                        min={-1000}
+                        max={1000}
+                        step={5}
+                        onChange={(e) => onChange(e.value)}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
             </div>
           )}
         </div>

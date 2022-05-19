@@ -27,10 +27,7 @@ export default function FileBrowserHeader({
   const fileUploadRef = useRef<FileUpload>(null);
   const [totalSize, setTotalSize] = useState(0);
   const [uploadDialog, setUploadDialog] = useState(false);
-  const [uploading, setUploading] = useState({
-    current: 0,
-    total: 0,
-  });
+  const [uploading, setUploading] = useState(false);
   const chooseOptions = {
     icon: "pi pi-fw pi-images",
     iconOnly: true,
@@ -121,24 +118,16 @@ export default function FileBrowserHeader({
             customUpload
             uploadHandler={async (e) => {
               let files = e.files;
-              setUploading({ current: 0, total: e.files.length });
+              setUploading(true);
               for (let i = 0; i < files.length; i++) {
-                setUploading({
-                  current: uploading.current + 1,
-                  total: uploading.total,
-                });
                 try {
                   await uploadImage(project_id as string, files[i]);
-                  console.log(e.files.length);
                 } catch (error) {
                   //
                 }
               }
               refetch();
-              setUploading({
-                current: 0,
-                total: 0,
-              });
+              setUploading(false);
               setUploadDialog(false);
               e.options.clear();
             }}
@@ -160,10 +149,7 @@ export default function FileBrowserHeader({
           onChange={(e) => setFilter(e.target.value)}
         />
         <div className="w-6 ml-2 text-white">
-          <ProgressBar
-            className="w-full h-2rem"
-            value={(uploading.current * 100) / uploading.total || 0}
-          />
+          {uploading && <ProgressSpinner className="w-2rem" />}
         </div>
       </div>
       <div className="w-6 flex justify-content-end">

@@ -863,3 +863,17 @@ export const deleteImages = async (images: string[]) => {
     throw new Error(error.message);
   }
 };
+export const renameImage = async (
+  oldName: string,
+  newName: string,
+  project_id: string
+) => {
+  const { data, error } = await supabase.storage
+    .from("images")
+    .move(`${project_id}/${oldName}`, `${project_id}/${newName}`);
+  if (data) return data;
+  if (error) {
+    toastError("There was an error renaming your image.");
+    throw new Error(error.message);
+  }
+};
