@@ -101,6 +101,7 @@ export default function ListLayout({ images, filter }: Props) {
           //     });
           // }}
         ></Column>
+        <Column field="type" header="Type" />
         <Column
           header="Actions"
           body={actionsBodyTemplate}

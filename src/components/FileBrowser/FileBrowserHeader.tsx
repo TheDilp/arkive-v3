@@ -1,13 +1,14 @@
+import { Button } from "primereact/button";
 import { DataViewLayoutOptions } from "primereact/dataview";
+import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useRef, useState } from "react";
+import { ProgressBar } from "primereact/progressbar";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { uploadImage } from "../../utils/supabaseUtils";
-import { ProgressBar } from "primereact/progressbar";
-import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
-import { ProgressSpinner } from "primereact/progressspinner";
+import { SelectButton } from "primereact/selectbutton";
 type Props = {
   refetch: any;
   filter: string;
@@ -28,6 +29,9 @@ export default function FileBrowserHeader({
   const [totalSize, setTotalSize] = useState(0);
   const [uploadDialog, setUploadDialog] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>(
+    []
+  );
   const chooseOptions = {
     icon: "pi pi-fw pi-images",
     iconOnly: true,
@@ -47,10 +51,13 @@ export default function FileBrowserHeader({
   };
   const onTemplateSelect = (e: any) => {
     let _totalSize = totalSize;
+    let _types = types;
     let files = e.files;
     for (let i = 0; i < files.length; i++) {
       _totalSize += files[i].size;
+      types.push({ name: files[i].name, type: "Image" });
     }
+    setTypes(_types);
     setTotalSize(_totalSize);
   };
   const headerTemplate = (options: any) => {
@@ -115,13 +122,37 @@ export default function FileBrowserHeader({
             uploadOptions={uploadOptions}
             cancelOptions={cancelOptions}
             onSelect={onTemplateSelect}
+            itemTemplate={(file: any) => {
+              return (
+                <div className="flex justify-content-between align-items-center">
+                  <img src={file.objectURL} className="w-3rem" alt="Error" />
+                  {file.name}
+                  <SelectButton
+                    value={types.find((t) => t.name === file.name)?.type}
+                    options={["Image", "Map"]}
+                    onChange={(e) => {
+                      let _types = [...types];
+                      let idx = _types.findIndex((t) => t.name === file.name);
+                      if (idx !== -1) {
+                        _types[idx].type = e.value;
+                        setTypes(_types);
+                      }
+                    }}
+                  />
+                </div>
+              );
+            }}
             customUpload
             uploadHandler={async (e) => {
               let files = e.files;
               setUploading(true);
               for (let i = 0; i < files.length; i++) {
                 try {
-                  await uploadImage(project_id as string, files[i]);
+                  await uploadImage(
+                    project_id as string,
+                    files[i],
+                    types[i].type
+                  );
                 } catch (error) {
                   //
                 }
@@ -129,6 +160,7 @@ export default function FileBrowserHeader({
               refetch();
               setUploading(false);
               setUploadDialog(false);
+              setTypes([]);
               e.options.clear();
             }}
           />

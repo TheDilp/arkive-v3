@@ -692,7 +692,6 @@ export const updateManyNodesPosition = async (
 };
 
 // DELETE
-
 export const deleteDocument = async (doc_id: string) => {
   let user = auth.user();
 
@@ -814,7 +813,7 @@ export const getImages = async (project_id: string) => {
   if (user) {
     const { data, error } = await supabase
       .from<ImageProps>("images")
-      .select("id,title,link")
+      .select("id,title,link,type")
       // Matches links that start with the project_id
       .like("link", `${project_id}%`);
 
@@ -825,13 +824,17 @@ export const getImages = async (project_id: string) => {
     }
   }
 };
-export const uploadImage = async (project_id: string, file: File) => {
+export const uploadImage = async (
+  project_id: string,
+  file: File,
+  type: "Image" | "Map"
+) => {
   let user = auth.user();
 
   if (user) {
     const { data, error } = await supabase.storage
       .from("images")
-      .upload(`${project_id}/${file.name}`, file, { upsert: false });
+      .upload(`${project_id}/${type}/${file.name}`, file, { upsert: false });
 
     if (error) {
       toastError("There was an error uploading your image.");

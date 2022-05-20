@@ -94,19 +94,6 @@ export default function BoardBar({
     return () => setSearch("");
   }, [board_id]);
 
-  useEffect(() => {
-    if (cyRef.current) {
-      const timeout = setTimeout(() => {
-        let foundNodes = cyRef.current
-          ?.nodes()
-          .filter(`[label ^= '${search}']`);
-        console.log(search);
-      }, 250);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [search]);
-
   return (
     <div className="absolute flex flex-nowrap z-5">
       <Dialog
@@ -244,9 +231,8 @@ export default function BoardBar({
         optionValue="id"
         filter
         filterBy="label"
-        itemTemplate={(item) => <div>{item.label}</div>}
+        itemTemplate={(item) => <div>{item.label || "*Unnamed node*"}</div>}
         onChange={(e: any) => {
-          console.log(e);
           if (e.target.value) {
             let foundNode = cyRef.current.getElementById(e.target.value);
             cyRef.current.animate(

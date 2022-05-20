@@ -7,6 +7,7 @@ import { ProjectProps } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 import { deleteProject } from "../../../utils/supabaseUtils";
 import { useUpdateProject } from "../../../utils/customHooks";
+import { toastSuccess } from "../../../utils/utils";
 type Props = {
   project: ProjectProps;
 };
@@ -24,6 +25,7 @@ export default function ProjectSettings({ project }: Props) {
       accept: () => {
         deleteProject(project.id).then(() => {
           navigate("/");
+          toastSuccess("Project deleted.");
         });
       },
     });

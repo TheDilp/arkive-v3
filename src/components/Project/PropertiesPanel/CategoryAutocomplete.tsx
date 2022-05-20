@@ -28,7 +28,7 @@ export default function CategoryAutocomplete({
   const updateCategoriesMutation = useMutation(
     async (vars: { doc_id: string; categories: string[] }) =>
       await updateDocument({
-        doc_id: vars.doc_id,
+        id: vars.doc_id,
         categories: vars.categories,
       }),
     {
