@@ -50,7 +50,7 @@ export default function RenameDialog({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 documentTitleMutation.mutate({
-                  doc_id: displayDialog.id,
+                  id: displayDialog.id,
                   title: displayDialog.title,
                 });
                 setDisplayDialog({
@@ -73,7 +73,7 @@ export default function RenameDialog({
             iconPos="right"
             onClick={() => {
               documentTitleMutation.mutate({
-                doc_id: displayDialog.id,
+                id: displayDialog.id,
                 title: displayDialog.title,
               });
               setDisplayDialog({

@@ -8,7 +8,7 @@ import { boardItemDisplayDialogProps } from "../../../custom-types";
 import {
   useCreateBoard,
   useDeleteBoard,
-  useUpdateBoard
+  useUpdateBoard,
 } from "../../../utils/customHooks";
 import { updateManyNodesPosition } from "../../../utils/supabaseUtils";
 import { boardLayouts, toastWarn } from "../../../utils/utils";
@@ -50,7 +50,7 @@ export default function BoardTreeItemContext({
       ),
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
-      acceptClassName: "p-button-danger",
+      acceptClassName: "p-button-outlined text-red-400",
       accept: async () => {
         if (displayDialog.id === boardId) {
           navigate("./");

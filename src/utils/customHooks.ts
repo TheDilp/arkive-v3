@@ -282,8 +282,8 @@ export function useUpdateDocument(project_id: string) {
 export function useDeleteDocument(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: { doc_id: string; folder: boolean }) => {
-      await deleteDocument(vars.doc_id);
+    async (vars: { id: string; folder: boolean }) => {
+      await deleteDocument(vars.id);
     },
     {
       onMutate: async (deletedDocument) => {
@@ -296,15 +296,14 @@ export function useDeleteDocument(project_id: string) {
             if (oldData) {
               if (deletedDocument.folder) {
                 let newData: DocumentProps[] = oldData
-                  .filter((doc) => doc.id !== deletedDocument.doc_id)
+                  .filter((doc) => doc.id !== deletedDocument.id)
                   .filter(
-                    (doc) =>
-                      !doc.parent || doc.parent.id !== deletedDocument.doc_id
+                    (doc) => !doc.parent || doc.parent.id !== deletedDocument.id
                   );
                 return newData;
               } else {
                 let newData: DocumentProps[] = oldData.filter(
-                  (doc) => doc.id !== deletedDocument.doc_id
+                  (doc) => doc.id !== deletedDocument.id
                 );
                 return newData;
               }

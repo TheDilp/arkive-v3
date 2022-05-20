@@ -39,7 +39,7 @@ export default function DocumentsSettingsTable() {
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const [iconSelect, setIconSelect] = useState<iconSelectProps>({
-    doc_id: "",
+    id: "",
     icon: "",
     top: 0,
     left: 0,
@@ -148,7 +148,7 @@ export default function DocumentsSettingsTable() {
       <div className="w-full h-auto cursor-pointer flex justify-content-center">
         {rowData.image && (
           <img
-            src={rowData.image}
+            src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${rowData.image.link}`}
             alt="document"
             className="w-2rem h-full relative border-round"
             style={{
@@ -167,7 +167,7 @@ export default function DocumentsSettingsTable() {
           checked={rowData.folder}
           onChange={(e) =>
             updateDocumentMutation.mutate({
-              doc_id: rowData.id,
+              id: rowData.id,
               folder: e.checked,
             })
           }
@@ -323,7 +323,7 @@ export default function DocumentsSettingsTable() {
         onChange={(e) => {
           if (options.rowData.id && e.value)
             updateDocumentMutation.mutate({
-              doc_id: options.rowData.id,
+              id: options.rowData.id,
               parent: e.value,
             });
         }}
@@ -377,7 +377,7 @@ export default function DocumentsSettingsTable() {
         onSelect={(e) => {
           if (!options.rowData.categories.includes(e.value)) {
             updateDocumentMutation.mutate({
-              doc_id: options.rowData.id,
+              id: options.rowData.id,
               categories: [...options.rowData.categories, e.value],
             });
           }
@@ -385,7 +385,7 @@ export default function DocumentsSettingsTable() {
         onUnselect={(e) => {
           if (options.rowData.categories.includes(e.value)) {
             updateDocumentMutation.mutate({
-              doc_id: options.rowData.id,
+              id: options.rowData.id,
               categories: options.rowData.categories.filter(
                 (category: string) => category !== e.value
               ),
@@ -399,7 +399,7 @@ export default function DocumentsSettingsTable() {
           if (e.key === "Enter" && e.currentTarget.value !== "") {
             if (!options.rowData.categories.includes(e.currentTarget.value)) {
               updateDocumentMutation.mutate({
-                doc_id: options.rowData.id,
+                id: options.rowData.id,
                 categories: [
                   ...options.rowData.categories,
                   e.currentTarget.value,
@@ -476,7 +476,7 @@ export default function DocumentsSettingsTable() {
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
               updateDocumentMutation.mutate({
-                doc_id: e.rowData.id,
+                id: e.rowData.id,
                 title: e.newValue,
               });
           }}
@@ -490,7 +490,7 @@ export default function DocumentsSettingsTable() {
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
               updateDocumentMutation.mutate({
-                doc_id: e.rowData.id,
+                id: e.rowData.id,
                 image: e.newValue,
               });
           }}
@@ -556,7 +556,7 @@ export default function DocumentsSettingsTable() {
           editor={iconEditor}
           onCellEditInit={(e: any) => {
             setIconSelect({
-              doc_id: e.rowData.id,
+              id: e.rowData.id,
               icon: e.rowData.icon,
               top: e.originalEvent.clientY,
               left: e.originalEvent.clientX,

@@ -49,12 +49,13 @@ export default function DocumentTreeItemContext({
       ),
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
+      acceptClassName: "text-red-500 p-button-outlined",
       accept: async () => {
         if (displayDialog.id === docId) {
           navigate("./");
         }
         deleteDocumentMutation.mutate({
-          doc_id: displayDialog.id,
+          id: displayDialog.id,
           folder: displayDialog.folder,
         });
         setDisplayDialog({ ...displayDialog, show: false });
@@ -78,7 +79,7 @@ export default function DocumentTreeItemContext({
       label: "Root",
       command: (item: any) => {
         updateDocumentMutation.mutate({
-          doc_id: displayDialog.id,
+          id: displayDialog.id,
           parent: null,
         });
       },
@@ -87,7 +88,7 @@ export default function DocumentTreeItemContext({
       label: folder.title,
       command: (item: any) => {
         updateDocumentMutation.mutate({
-          doc_id: displayDialog.id,
+          id: displayDialog.id,
           parent: folder.id,
         });
       },
@@ -148,7 +149,7 @@ export default function DocumentTreeItemContext({
           icon: "pi pi-fw pi-file",
           command: () =>
             updateDocumentMutation.mutate({
-              doc_id: displayDialog.id,
+              id: displayDialog.id,
               folder: false,
             }),
         },
@@ -157,7 +158,7 @@ export default function DocumentTreeItemContext({
           icon: "pi pi-fw pi-folder",
           command: () =>
             updateDocumentMutation.mutate({
-              doc_id: displayDialog.id,
+              id: displayDialog.id,
               folder: true,
             }),
         },
@@ -223,7 +224,7 @@ export default function DocumentTreeItemContext({
           icon: "pi pi-fw pi-file",
           command: () =>
             updateDocumentMutation.mutate({
-              doc_id: displayDialog.id,
+              id: displayDialog.id,
               folder: false,
             }),
         },
@@ -232,7 +233,7 @@ export default function DocumentTreeItemContext({
           icon: "pi pi-fw pi-folder",
           command: () =>
             updateDocumentMutation.mutate({
-              doc_id: displayDialog.id,
+              id: displayDialog.id,
               folder: true,
             }),
         },

@@ -48,7 +48,7 @@ const hooks = [
       ({ state }) => {
         toastSuccess("Document successfully saved!");
         saveContentMutation.mutate({
-          doc_id: doc_id as string,
+          id: doc_id as string,
           content: getJSON(state),
         });
         return true; // Prevents any further key handlers from being run.
@@ -158,7 +158,7 @@ export default function RemirrorContext({
     const timeout = setTimeout(async () => {
       if (!firstRender.current && saving && currentDocument) {
         await saveContentMutation.mutateAsync({
-          doc_id: currentDocument.id,
+          id: currentDocument.id,
           // @ts-ignore
           content: manager.view.state.doc.toJSON(),
         });
