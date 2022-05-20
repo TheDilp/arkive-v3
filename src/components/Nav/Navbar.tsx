@@ -1,16 +1,17 @@
 import { Icon } from "@iconify/react";
 import { Menubar } from "primereact/menubar";
 import { Tooltip } from "primereact/tooltip";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { logout } from "../../utils/supabaseUtils";
 import NavbarTitle from "./NavbarTitle";
 import NavSettingsButton from "./NavSettingsButton";
+import Quickupload from "./Quickupload";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { project_id } = useParams();
-
+  const [uploadDialog, setUploadDialog] = useState(false);
   const start = () => {
     return (
       <div className="flex flex-nowrap py-2 align-items-start pl-2">
@@ -19,25 +20,25 @@ export default function Navbar() {
             <Tooltip
               target=".wikiIcon"
               content="Project Wiki"
-              position="right"
+              position="bottom"
               autoHide
             />{" "}
             <Tooltip
               target=".mapsIcon"
               content="Project Maps"
-              position="right"
+              position="bottom"
               autoHide
             />{" "}
             <Tooltip
               target=".boardsIcon"
               content="Project Boards"
-              position="right"
+              position="bottom"
               autoHide
             />
             <Tooltip
               target=".filebrowserIcon"
               content="Project Files"
-              position="right"
+              position="bottom"
               autoHide
             />
             <i
@@ -87,8 +88,17 @@ export default function Navbar() {
           content="Project Settings"
           position="bottom"
         />
+        <Tooltip
+          target=".quickUpload"
+          content="Quick Upload"
+          position="bottom"
+        />
 
         {project_id && <NavSettingsButton />}
+        <i
+          className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
+          onClick={() => setUploadDialog(true)}
+        ></i>
         <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"
           onClick={async () => {
@@ -134,10 +144,16 @@ export default function Navbar() {
   }, []);
 
   return (
-    <Menubar
-      start={start}
-      end={end}
-      className="w-full border-noround border-x-none shadow-5 p-0"
-    />
+    <>
+      <Quickupload
+        uploadDialog={uploadDialog}
+        setUploadDialog={setUploadDialog}
+      />
+      <Menubar
+        start={start}
+        end={end}
+        className="w-full border-noround border-x-none shadow-5 p-0"
+      />
+    </>
   );
 }

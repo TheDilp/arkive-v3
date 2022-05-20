@@ -256,13 +256,15 @@ export default function NodeUpdateDialog({
             <div className="w-full my-1">
               <label className="w-full text-sm">Custom Image</label>
               <div className="text-xs">
-                Note: Custom images override linked documents.
+                Note: Custom images override images from linked documents.
               </div>
               <Controller
                 control={control}
                 name="customImage"
                 render={({ field: { onChange, value } }) => (
                   <Dropdown
+                    filter
+                    filterBy="title"
                     className="w-full"
                     placeholder="Custom Image"
                     optionLabel="title"
