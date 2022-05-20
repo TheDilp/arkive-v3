@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import { useRenameImage } from "../../utils/customHooks";
 import { Image } from "primereact/image";
-import LoadingScreen from "../Util/LoadingScreen";
 type Props = {
   images: ImageProps[];
   filter: string;

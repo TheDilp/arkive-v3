@@ -64,6 +64,10 @@ body {
     background-color: var(--gray-800);
 }
 
+.previewImage {
+    object-fit: contain;
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */
