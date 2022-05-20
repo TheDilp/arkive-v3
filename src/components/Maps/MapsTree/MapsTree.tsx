@@ -1,25 +1,23 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { Button } from "primereact/button";
 import { useLayoutEffect, useRef, useState } from "react";
-import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { MapProps, mapItemDisplayDialogProps } from "../../../custom-types";
+import { v4 as uuid } from "uuid";
+import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import {
   useCreateMap,
   useGetMaps,
   useUpdateMap,
 } from "../../../utils/customHooks";
+import { getDepth } from "../../../utils/utils";
+import DragPreview from "../../Project/DocumentTree/DragPreview";
 import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
-import { v4 as uuid } from "uuid";
-import DragPreview from "../../Project/DocumentTree/DragPreview";
-import { getDepth } from "../../../utils/utils";
 import MapTreeItemContext from "./MapTreeItemContext";
 import MapUpdateDialog from "./MapUpdateDialog";
 
 export default function MapsTree({ mapId }: { mapId: string }) {
   const { project_id } = useParams();
-  const queryClient = useQueryClient();
   const cm = useRef() as any;
   const { data: maps }: { data: MapProps[] | undefined } = useGetMaps(
     project_id as string

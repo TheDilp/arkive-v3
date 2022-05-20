@@ -5,6 +5,8 @@ import { InputText } from "primereact/inputtext";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import { useRenameImage } from "../../utils/customHooks";
+import { Image } from "primereact/image";
+import LoadingScreen from "../Util/LoadingScreen";
 type Props = {
   images: ImageProps[];
   filter: string;
@@ -30,14 +32,12 @@ export default function ListLayout({ images, filter }: Props) {
     return (
       <div className="w-full h-auto cursor-pointer w-full flex justify-content-center">
         {rowData.link && (
-          <img
+          <Image
             src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${rowData.link}`}
             alt="document"
             className="w-2rem h-full relative border-round"
-            style={{
-              objectFit: "cover",
-            }}
-            loading="lazy"
+            preview
+            imageClassName="w-full h-full"
           />
         )}
       </div>
