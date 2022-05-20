@@ -1044,7 +1044,9 @@ export function useUpdateNode(project_id: string) {
                         return {
                           ...node,
                           ...updatedNode,
-                          customImage: updatedNode.customImage,
+                          customImage: updatedNode.customImage
+                            ? updatedNode.customImage
+                            : node.customImage,
                           document: updatedNode.doc_id
                             ? document
                             : updatedNode.doc_id === null

@@ -234,6 +234,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       });
       cyRef.current.on("dbltap", "node", function (evt: any) {
         let target = evt.target._private;
+
         setNodeUpdateDialog({
           id: target.data.id,
           label: target.data.label,

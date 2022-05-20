@@ -23,7 +23,6 @@ export default function FileBrowser() {
       ) : (
         <div className="w-full h-full flex flex-wrap justify-content-center align-content-start">
           <FileBrowserHeader
-            refetch={images?.refetch}
             filter={filter}
             setFilter={setFilter}
             layout={layout}

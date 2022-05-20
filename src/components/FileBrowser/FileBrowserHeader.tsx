@@ -9,8 +9,9 @@ import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { uploadImage } from "../../utils/supabaseUtils";
 import { SelectButton } from "primereact/selectbutton";
+import { useGetImages } from "../../utils/customHooks";
+import { toastWarn } from "../../utils/utils";
 type Props = {
-  refetch: any;
   filter: string;
   layout: string;
   setFilter: (filter: string) => void;
@@ -18,17 +19,18 @@ type Props = {
 };
 
 export default function FileBrowserHeader({
-  refetch,
   filter,
   layout,
   setFilter,
   setLayout,
 }: Props) {
   const { project_id } = useParams();
+  const images = useGetImages(project_id as string);
   const fileUploadRef = useRef<FileUpload>(null);
   const [totalSize, setTotalSize] = useState(0);
   const [uploadDialog, setUploadDialog] = useState(false);
   const [uploading, setUploading] = useState(false);
+
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>(
     []
   );
@@ -147,17 +149,23 @@ export default function FileBrowserHeader({
               let files = e.files;
               setUploading(true);
               for (let i = 0; i < files.length; i++) {
-                try {
-                  await uploadImage(
-                    project_id as string,
-                    files[i],
-                    types[i].type
-                  );
-                } catch (error) {
-                  //
+                // Safeguard to not attempt uploading already existing image
+                if (images?.data.some((img) => img.title === files[i].name)) {
+                  toastWarn(`Image "${files[i].name}" already exists.`);
+                  continue;
+                } else {
+                  try {
+                    await uploadImage(
+                      project_id as string,
+                      files[i],
+                      types[i].type
+                    );
+                  } catch (error) {
+                    //
+                  }
                 }
               }
-              refetch();
+              images?.refetch();
               setUploading(false);
               setUploadDialog(false);
               setTypes([]);
