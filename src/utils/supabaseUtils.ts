@@ -15,6 +15,8 @@ import {
   ImageProps,
   DocumentUpdateProps,
   DocumentCreateProps,
+  MapUpdateProps,
+  MapCreateProps,
 } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -106,7 +108,9 @@ export const getTags = async (project_id: string) => {
 export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
-    .select("*, markers:markers!map_id(*)")
+    .select(
+      "id, title, parent, folder, project_id, markers:markers!map_id(*), map_image:images(id, title, link)"
+    )
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {
@@ -241,14 +245,7 @@ export const createMap = async ({
   map_image,
   parent,
   folder,
-}: {
-  id: string;
-  title: string;
-  map_image: string;
-  project_id: string;
-  parent?: string | null;
-  folder?: boolean;
-}) => {
+}: MapCreateProps) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase.from("maps").insert({
@@ -463,18 +460,12 @@ export const updateMap = async ({
   title,
   map_image,
   parent,
-}: {
-  id: string;
-  title?: string;
-  map_image?: string;
-  parent?: string | null;
-}) => {
-  console.log(parent);
+}: MapUpdateProps) => {
   let user = auth.user();
 
   if (user) {
     const { data: map, error } = await supabase
-      .from<MapProps>("maps")
+      .from("maps")
       .update({
         title,
         map_image,

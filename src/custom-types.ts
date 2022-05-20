@@ -27,7 +27,7 @@ export type DocumentProps = {
 export type MapProps = {
   id: string;
   title: string;
-  map_image: string;
+  map_image: ImageProps;
   parent: string | null;
   folder: boolean;
   user_id: string;
@@ -98,6 +98,7 @@ export type ImageProps = {
   id: string;
   title: string;
   link: string;
+  type: "Image" | "Map";
 };
 export type CytoscapeNodeProps = {
   data: Pick<
@@ -146,7 +147,7 @@ export type docItemDisplayDialogProps = {
 export type mapItemDisplayDialogProps = {
   id: string;
   title: string;
-  map_image: string;
+  map_image: ImageProps;
   parent: string;
   show: boolean;
   folder: boolean;
@@ -234,7 +235,7 @@ export type CreateDocumentInputs = {
 };
 export type CreateMapInputs = {
   title: string;
-  map_image: string;
+  map_image: ImageProps;
   parent: string;
   folder: boolean;
 };
@@ -313,6 +314,21 @@ export type DocumentCreateProps = {
   content?: RemirrorJSON | null;
 };
 
+export type MapCreateProps = {
+  id: string;
+  title: string;
+  map_image: string;
+  project_id: string;
+  parent?: string | null;
+  folder?: boolean;
+};
+
+export type MapUpdateProps = {
+  id: string;
+  title?: string;
+  map_image?: ImageProps;
+  parent?: string | null;
+};
 export type CreateNodeProps = {
   id: string;
   label?: string;

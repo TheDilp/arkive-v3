@@ -42,7 +42,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
     setVisible({
       id: "",
       title: "",
-      map_image: "",
+      map_image: { id: "", title: "", link: "", type: "Image" },
       parent: "",
       show: false,
       folder: false,
@@ -58,7 +58,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
         setVisible({
           id: "",
           title: "",
-          map_image: "",
+          map_image: { id: "", title: "", link: "", type: "Image" },
           parent: "",
           show: false,
           folder: false,
@@ -81,23 +81,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
               </span>
             )}
           </div>
-          {!visible.folder && (
-            <div className="w-8 py-1">
-              <InputText
-                placeholder="Map Image"
-                className="w-full"
-                {...register("map_image", {
-                  required: true,
-                })}
-              />
-              {errors.map_image?.type === "required" && (
-                <span className="py-1" style={{ color: "var(--red-500)" }}>
-                  <i className="pi pi-exclamation-triangle"></i>
-                  This field is required!
-                </span>
-              )}
-            </div>
-          )}
+          {!visible.folder && <div className="w-8 py-1"></div>}
           <div className="w-8 py-1">
             <Controller
               name="parent"

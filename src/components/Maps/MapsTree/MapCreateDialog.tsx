@@ -9,7 +9,7 @@ import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { CreateMapInputs, MapProps } from "../../../custom-types";
-import { useCreateMap } from "../../../utils/customHooks";
+import { useCreateMap, useGetImages } from "../../../utils/customHooks";
 
 type Props = {
   visible: boolean;
@@ -21,6 +21,7 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
+  const images = useGetImages(project_id as string);
   const createMapMutation = useCreateMap();
   const {
     control,
@@ -64,14 +65,23 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
             )}
           </div>
           <div className="w-8 py-2">
-            <InputText
-              placeholder="Map Image"
-              className="w-full"
-              {...register("map_image", {
-                required: true,
-              })}
+            <Controller
+              name="map_image"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Dropdown
+                  value={value}
+                  options={
+                    images?.data.filter((image) => image.type === "Map") || []
+                  }
+                  onChange={(e) => onChange(e.value)}
+                  placeholder="Map Image"
+                  optionLabel="title"
+                  className="w-full"
+                />
+              )}
             />
-            {errors.map_image?.type === "required" && (
+            {errors.map_image?.link?.type === "required" && (
               <span className="py-1" style={{ color: "var(--red-500)" }}>
                 <i className="pi pi-exclamation-triangle"></i>
                 This field is required!

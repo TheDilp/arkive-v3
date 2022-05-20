@@ -32,7 +32,7 @@ export default function MapView({
   useEffect(() => {
     if (mapData) {
       let img = new Image();
-      img.src = mapData.map_image;
+      img.src = `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`;
       img.onload = () => {
         setBounds([
           [0, 0],
@@ -109,7 +109,7 @@ export default function MapView({
               attributionControl={false}
             >
               <MapImage
-                src={mapData.map_image}
+                src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`}
                 bounds={bounds as LatLngBoundsExpression}
                 imgRef={imgRef}
                 markers={mapData.markers}

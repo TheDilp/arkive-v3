@@ -35,7 +35,12 @@ export default function MapTreeItem({
           id: node.id as string,
           title: node.text,
           folder: node.data?.folder || false,
-          map_image: node.data?.map_image || "",
+          map_image: node.data?.map_image || {
+            id: "",
+            title: "",
+            link: "",
+            type: "Image",
+          },
           parent: node.parent as string,
           depth,
           show: false,

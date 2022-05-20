@@ -4,7 +4,7 @@ import { useGetMaps } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
 import LoadingScreen from "../Util/LoadingScreen";
 import MapView from "./Map/MapView";
-import MapsTree from "./MapsTree";
+import MapsTree from "./MapsTree/MapsTree";
 
 export default function Maps() {
   const { project_id } = useParams();

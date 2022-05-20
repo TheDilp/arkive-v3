@@ -7,6 +7,7 @@ import {
   DocumentProps,
   ImageProps,
   MapProps,
+  MapUpdateProps,
   ProjectProps,
   UpdateEdgeProps,
   UpdateNodeProps,
@@ -419,11 +420,11 @@ export function useCreateMap() {
       id: string;
       project_id: string;
       title: string;
-      map_image: string;
+      map_image: ImageProps;
       folder?: boolean;
       parent?: string | null;
     }) => {
-      await createMap({ ...vars });
+      await createMap({ ...vars, map_image: vars.map_image.id });
     },
     {
       onMutate: async (newMap) => {
@@ -483,12 +484,7 @@ export function useGetMapData(project_id: string, map_id: string) {
 export function useUpdateMap(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: {
-      id: string;
-      title?: string;
-      map_image?: string;
-      parent?: string | null;
-    }) => {
+    async (vars: MapUpdateProps) => {
       await updateMap(vars);
     },
     {

@@ -4,7 +4,11 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { MapProps, mapItemDisplayDialogProps } from "../../../custom-types";
-import { useCreateMap, useUpdateMap } from "../../../utils/customHooks";
+import {
+  useCreateMap,
+  useGetMaps,
+  useUpdateMap,
+} from "../../../utils/customHooks";
 import MapCreateDialog from "./MapCreateDialog";
 import MapTreeItem from "./MapTreeItem";
 import { v4 as uuid } from "uuid";
@@ -17,8 +21,8 @@ export default function MapsTree({ mapId }: { mapId: string }) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const cm = useRef() as any;
-  const maps: MapProps[] | undefined = queryClient.getQueryData(
-    `${project_id}-maps`
+  const { data: maps }: { data: MapProps[] | undefined } = useGetMaps(
+    project_id as string
   );
   const [treeData, setTreeData] = useState<NodeModel<MapProps>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
@@ -26,7 +30,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
     useState<mapItemDisplayDialogProps>({
       id: "",
       title: "",
-      map_image: "",
+      map_image: { id: "", title: "", link: "", type: "Image" },
       parent: "",
       show: false,
       folder: false,
@@ -44,6 +48,8 @@ export default function MapsTree({ mapId }: { mapId: string }) {
         data: m,
       }));
       setTreeData(temp);
+    } else {
+      setTreeData([]);
     }
   }, [maps]);
   const handleDrop = (
@@ -85,7 +91,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
             setUpdateMapDialog({
               id: "",
               title: "",
-              map_image: "",
+              map_image: { id: "", title: "", link: "", type: "Image" },
               parent: "",
               show: false,
               folder: false,
@@ -106,7 +112,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
               id,
               project_id: project_id as string,
               title: "New Folder",
-              map_image: "",
+              map_image: { id: "", title: "", link: "", type: "Image" },
               folder: true,
             });
           }}
