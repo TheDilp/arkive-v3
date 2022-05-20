@@ -121,7 +121,9 @@ export const getMaps = async (project_id: string) => {
 export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<BoardProps>("boards")
-    .select("*, nodes(*, document:documents(id, image(link))), edges(*)")
+    .select(
+      "*, nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+    )
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {
@@ -848,7 +850,6 @@ export const downloadImage = async (id: string) => {
 };
 export const deleteImages = async (images: string[]) => {
   const { data, error } = await supabase.storage.from("images").remove(images);
-  console.log(data, error, images);
   if (data) return data;
   if (error) {
     toastError("There was an error deleting your images.");

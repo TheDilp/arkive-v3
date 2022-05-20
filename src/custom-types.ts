@@ -66,7 +66,7 @@ export type BoardNodeProps = {
   fontSize: number;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
-  customImage?: string | null;
+  customImage?: ImageProps;
   backgroundColor: string;
   backgroundOpacity: number;
   zIndex: number;
@@ -170,7 +170,7 @@ export type nodeUpdateDialogProps = {
   width: number;
   fontSize: number;
   doc_id?: string;
-  customImage?: string | null;
+  customImage?: ImageProps;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
   backgroundColor: string;
@@ -291,17 +291,6 @@ export type RegisterInputs = {
 
 // DATA CREATION AND UPDATE TYPES
 
-export type DocumentUpdateProps = {
-  id: string;
-  title?: string;
-  content?: RemirrorJSON | null;
-  folder?: boolean;
-  parent?: string | null;
-  image?: string;
-  icon?: string;
-  expanded?: boolean;
-  categories?: string[];
-};
 export type DocumentCreateProps = {
   id?: string;
   title?: string;
@@ -312,6 +301,17 @@ export type DocumentCreateProps = {
   categories?: string[];
   folder?: boolean;
   content?: RemirrorJSON | null;
+};
+export type DocumentUpdateProps = {
+  id: string;
+  title?: string;
+  content?: RemirrorJSON | null;
+  folder?: boolean;
+  parent?: string | null;
+  image?: string;
+  icon?: string;
+  expanded?: boolean;
+  categories?: string[];
 };
 
 export type MapCreateProps = {
@@ -353,7 +353,7 @@ export type UpdateNodeProps = {
   textVAlign?: "top" | "center" | "bottom";
   backgroundColor?: string;
   backgroundOpacity?: number;
-  customImage?: string | null;
+  customImage?: string;
   zIndex?: number;
   doc_id?: string;
 };

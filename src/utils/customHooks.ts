@@ -989,9 +989,17 @@ export function useUpdateNode(project_id: string) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (vars: UpdateNodeProps & { board_id: string }) => {
+    async (
+      vars: Omit<UpdateNodeProps, "customImage"> & {
+        board_id: string;
+        customImage?: ImageProps;
+      }
+    ) => {
       const { board_id, ...updateVars } = vars;
-      await updateNode({ ...updateVars });
+      await updateNode({
+        ...updateVars,
+        customImage: updateVars.customImage?.id,
+      });
     },
     {
       onMutate: async (updatedNode) => {
@@ -1036,6 +1044,7 @@ export function useUpdateNode(project_id: string) {
                         return {
                           ...node,
                           ...updatedNode,
+                          customImage: updatedNode.customImage,
                           document: updatedNode.doc_id
                             ? document
                             : updatedNode.doc_id === null
@@ -1284,21 +1293,23 @@ export function useGetImages(project_id: string) {
   if (error) toastError("Error getting images (customHooks 1264)");
 }
 // Custom hook for deleting images
-export function useDeleteImages() {
+export function useDeleteImages(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: { id: string; name: string; project_id: string }) => {
-      await deleteImages([vars.id]);
+    async (vars: string[]) => {
+      await deleteImages(vars);
     },
     {
-      onMutate: async (deletedImage) => {
+      onMutate: async (deletedImageLinks) => {
         queryClient.setQueryData(
-          `${deletedImage.project_id}-images`,
+          `${project_id}-images`,
           (oldData: ImageProps[] | undefined) => {
             if (oldData) {
-              console.log(oldData);
               return oldData.filter(
-                (image) => image.title !== deletedImage.name
+                (image) =>
+                  !deletedImageLinks.some(
+                    (delImgLink) => delImgLink === image.link
+                  )
               );
             } else {
               return [];

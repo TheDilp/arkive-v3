@@ -57,6 +57,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       zIndex: 1,
       backgroundColor: "",
       backgroundOpacity: 1,
+      customImage: { id: "", title: "", link: "", type: "Image" },
       show: false,
     });
   const [edgeUpdateDialog, setEdgeUpdateDialog] =
@@ -133,8 +134,11 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
-            backgroundImage: node.customImage
-              ? node.customImage
+            backgroundImage: node.customImage?.link
+              ? `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${node.customImage.link.replaceAll(
+                  " ",
+                  "%20"
+                )}`
               : node.document?.image
               ? `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${node.document.image.link?.replaceAll(
                   " ",

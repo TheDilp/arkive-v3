@@ -4,7 +4,11 @@ import { InputText } from "primereact/inputtext";
 import { nodeUpdateDialogProps, UpdateNodeInputs } from "../../custom-types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
-import { useGetDocuments, useUpdateNode } from "../../utils/customHooks";
+import {
+  useGetDocuments,
+  useGetImages,
+  useUpdateNode,
+} from "../../utils/customHooks";
 import { useParams } from "react-router-dom";
 import {
   boardNodeFontSizes,
@@ -33,7 +37,6 @@ export default function NodeUpdateDialog({
     setValue,
     formState: { errors },
   } = useForm<UpdateNodeInputs>({});
-
   // Submit handler to update the node
   const onSubmit: SubmitHandler<UpdateNodeInputs> = (data) => {
     updateNodeMutation.mutate({
@@ -44,6 +47,7 @@ export default function NodeUpdateDialog({
     });
   };
   const documents = useGetDocuments(project_id as string);
+  const images = useGetImages(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
 
   // Update the form data when a new node is opened
@@ -51,12 +55,21 @@ export default function NodeUpdateDialog({
     Object.entries(nodeUpdateDialog).forEach(([key, value]) => {
       if (key === "backgroundColor" && typeof value === "string") {
         setValue(key as any, value.replace("#", ""));
+      } else if (key === "customImage" && typeof value === "object" && value) {
+        setValue(key as any, {
+          ...value,
+          link: value.link
+            .replaceAll(
+              "https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/4dd68867-859b-4249-9e30-4eb2cf2662d5/",
+              ""
+            )
+            .replaceAll("%20", " "),
+        });
       } else {
         setValue(key as any, value);
       }
     });
   }, [nodeUpdateDialog]);
-
   return (
     <Dialog
       header={`Update Node ${nodeUpdateDialog.label || ""}`}
@@ -75,7 +88,7 @@ export default function NodeUpdateDialog({
           width: 0,
           height: 0,
           fontSize: 0,
-          customImage: "",
+          customImage: { id: "", title: "", link: "", type: "Image" },
           textHAlign: "center",
           textVAlign: "top",
           backgroundColor: "",
@@ -221,7 +234,9 @@ export default function NodeUpdateDialog({
                     value={value}
                     filter
                     emptyFilterMessage="No documents found"
-                    onChange={(e) => onChange(e.value)}
+                    onChange={(e) => {
+                      onChange(e.value);
+                    }}
                     options={
                       documents.data
                         ? [
@@ -247,11 +262,25 @@ export default function NodeUpdateDialog({
                 control={control}
                 name="customImage"
                 render={({ field: { onChange, value } }) => (
-                  <InputText
+                  <Dropdown
                     className="w-full"
                     placeholder="Custom Image"
-                    value={(value as string) || ""}
-                    onChange={(e) => onChange(e.target.value)}
+                    optionLabel="title"
+                    options={
+                      images?.data
+                        ? [
+                            { title: "No image", id: null },
+                            ...images?.data.filter(
+                              (image) => image.type === "Image"
+                            ),
+                          ]
+                        : []
+                    }
+                    value={value}
+                    onChange={(e) => {
+                      console.log(e);
+                      onChange(e.target.value);
+                    }}
                   />
                 )}
               />

@@ -4,7 +4,7 @@ import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
-import { useRenameImage } from "../../utils/customHooks";
+import { useDeleteImages, useRenameImage } from "../../utils/customHooks";
 import { Image } from "primereact/image";
 import { downloadImage } from "../../utils/supabaseUtils";
 import { saveAs } from "file-saver";
@@ -16,6 +16,7 @@ type Props = {
 export default function ListLayout({ images, filter }: Props) {
   const { project_id } = useParams();
   const renameImageMutation = useRenameImage();
+  const deleteImagesMutation = useDeleteImages(project_id as string);
   const actionsBodyTemplate = (rowData: ImageProps) => {
     return (
       <div className="">
@@ -39,7 +40,7 @@ export default function ListLayout({ images, filter }: Props) {
           className="p-button-outlined text-red-400"
           icon="pi pi-fw pi-trash"
           iconPos="right"
-          onClick={() => {}}
+          onClick={() => deleteImagesMutation.mutate([rowData.link])}
         />
       </div>
     );
