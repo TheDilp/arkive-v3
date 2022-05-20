@@ -23,7 +23,7 @@ export default function IconSelectMenu({
   const [filteredIconList, setFilteredIconList] = useState(iconList);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const rowVirtualizer = useVirtual({
-    size: Math.round(
+    size: Math.ceil(
       iconList.filter((icon) =>
         search ? icon.startsWith(search.toLowerCase()) : true
       ).length / 6

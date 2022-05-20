@@ -1,4 +1,10 @@
-import React, { MutableRefObject, useCallback, useMemo, useRef } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useVirtual } from "react-virtual";
 import { ImageProps } from "../../custom-types";
 
@@ -8,18 +14,13 @@ type Props = { images: ImageProps[]; filter: string };
 
 export default function GridLayout({ images, filter }: Props) {
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
-  const imagesLength = useMemo(
-    () =>
-      images.filter((image: ImageProps) => image.title.includes(filter)).length,
-    [images]
-  );
+  const [filteredImages, setFilteredImages] = useState(images);
   const rowVirtualizer = useVirtual({
-    size: Math.round(imagesLength / 5),
+    size: Math.ceil(filteredImages.length / 5),
     parentRef,
     estimateSize: useCallback(() => 200, []),
     overscan: 5,
   });
-
   const columnVirtualizer = useVirtual({
     horizontal: true,
     size: 5,
@@ -27,6 +28,13 @@ export default function GridLayout({ images, filter }: Props) {
     estimateSize: useCallback(() => 285, []),
     overscan: 5,
   });
+
+  useEffect(() => {
+    setFilteredImages(
+      images.filter((image: ImageProps) => image.title.includes(filter))
+    );
+  }, [filter]);
+
   return (
     <div
       className="w-full flex justify-content-center align-items-start"
@@ -53,11 +61,10 @@ export default function GridLayout({ images, filter }: Props) {
         >
           {rowVirtualizer.virtualItems.map((virtualRow) => (
             <div key={virtualRow.index}>
-              {columnVirtualizer.virtualItems.map((virtualColumn) =>
-                virtualRow.index * 5 + virtualColumn.index < imagesLength ? (
-                  <div
-                    key={virtualColumn.index}
-                    className={` 
+              {columnVirtualizer.virtualItems.map((virtualColumn) => (
+                <div
+                  key={virtualColumn.index}
+                  className={` 
                 flex justify-content-center${
                   virtualColumn.index % 2
                     ? virtualRow.index % 2 === 0
@@ -67,28 +74,33 @@ export default function GridLayout({ images, filter }: Props) {
                     ? "ListItemOdd"
                     : "ListItemEven"
                 }`}
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: `${virtualColumn.size}px`,
-                      height: `${virtualRow.size}px`,
-                      transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
-                    }}
-                  >
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: `${virtualColumn.size}px`,
+                    height: `${virtualRow.size}px`,
+                    transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  {filteredImages[
+                    virtualRow.index * 5 + virtualColumn.index
+                  ] && (
                     <GridItem
                       name={
-                        images[virtualRow.index * 5 + virtualColumn.index]
-                          ?.title || ""
+                        filteredImages[
+                          virtualRow.index * 5 + virtualColumn.index
+                        ]?.title || ""
                       }
                       link={
-                        images[virtualRow.index * 5 + virtualColumn.index]
-                          ?.link || ""
+                        filteredImages[
+                          virtualRow.index * 5 + virtualColumn.index
+                        ]?.link || ""
                       }
                     />
-                  </div>
-                ) : null
-              )}
+                  )}
+                </div>
+              ))}
             </div>
           ))}
         </div>
