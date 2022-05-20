@@ -833,6 +833,19 @@ export const uploadImage = async (
     }
   }
 };
+export const downloadImage = async (id: string) => {
+  let user = auth.user();
+  console.log(id);
+  if (user) {
+    const { data, error } = await supabase.storage.from("images").download(id);
+
+    if (data) return data;
+    if (error) {
+      toastError("There was an error downloading your image.");
+      throw new Error(error.message);
+    }
+  }
+};
 export const deleteImages = async (images: string[]) => {
   const { data, error } = await supabase.storage.from("images").remove(images);
   console.log(data, error, images);

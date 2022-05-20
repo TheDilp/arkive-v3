@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import { useRenameImage } from "../../utils/customHooks";
 import { Image } from "primereact/image";
+import { downloadImage } from "../../utils/supabaseUtils";
+import { saveAs } from "file-saver";
 type Props = {
   images: ImageProps[];
   filter: string;
@@ -18,8 +20,23 @@ export default function ListLayout({ images, filter }: Props) {
     return (
       <div className="">
         <Button
-          label="Delete"
-          className="p-button-danger p-button-outlined"
+          className="p-button-primary p-button-outlined mr-2"
+          icon="pi pi-fw pi-download"
+          iconPos="right"
+          onClick={async () => {
+            const d = await downloadImage(rowData.link);
+            if (d) {
+              saveAs(
+                new Blob([d], {
+                  type: d.type,
+                }),
+                `${rowData.title || rowData.id || project_id + "-image"}`
+              );
+            }
+          }}
+        />
+        <Button
+          className="p-button-outlined text-red-400"
           icon="pi pi-fw pi-trash"
           iconPos="right"
           onClick={() => {}}
@@ -68,8 +85,6 @@ export default function ListLayout({ images, filter }: Props) {
         sortField="title"
         sortOrder={1}
         rowsPerPageOptions={[9, 15, 25, 50]}
-        // paginatorLeft={paginatorLeft}
-        // paginatorRight={paginatorRight}
       >
         <Column selectionMode="multiple" className="w-1rem"></Column>
         <Column

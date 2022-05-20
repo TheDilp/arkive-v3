@@ -48,7 +48,6 @@ export default function BoardBar({
     boardTitle?: string
   ) => {
     if (type === "PNG") {
-      console.log(cyRef.current);
       saveAs(
         new Blob(
           [
