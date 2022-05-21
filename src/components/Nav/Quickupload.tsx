@@ -3,7 +3,7 @@ import { FileUpload } from "primereact/fileupload";
 import { ProgressBar } from "primereact/progressbar";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { SelectButton } from "primereact/selectbutton";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetImages } from "../../utils/customHooks";
 import { uploadImage } from "../../utils/supabaseUtils";
@@ -54,11 +54,6 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
   };
   const headerTemplate = (options: any) => {
     const { className, chooseButton, uploadButton, cancelButton } = options;
-    const value = totalSize / 10000;
-    const formatedValue =
-      fileUploadRef && fileUploadRef.current
-        ? fileUploadRef.current.formatSize(totalSize)
-        : "0 B";
 
     return (
       <div
@@ -86,21 +81,21 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         >
           {cancelButton}
         </span>
-        <ProgressBar
-          value={value}
-          displayValueTemplate={() => `${formatedValue} / 10 MB`}
-          style={{ width: "300px", height: "20px", marginLeft: "auto" }}
-        ></ProgressBar>
       </div>
     );
   };
 
   return (
     <Dialog
+      className="w-30rem"
       visible={uploadDialog}
       modal={false}
       position="top-right"
-      onHide={() => setUploadDialog(false)}
+      onHide={() => {
+        fileUploadRef.current?.clear();
+        setTotalSize(0);
+        setUploadDialog(false);
+      }}
       header={
         <div className="flex justify-content-start align-items-center">
           <div>Quick Upload</div>
@@ -127,6 +122,10 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         chooseOptions={chooseOptions}
         uploadOptions={uploadOptions}
         cancelOptions={cancelOptions}
+        onValidationFail={(e) => {
+          console.log(e);
+          setTotalSize(0);
+        }}
         emptyTemplate={
           <p className="text-center text-gray-400">
             Drag and Drop image files here!

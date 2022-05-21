@@ -64,11 +64,6 @@ export default function FileBrowserHeader({
   };
   const headerTemplate = (options: any) => {
     const { className, chooseButton, uploadButton, cancelButton } = options;
-    const value = totalSize / 10000;
-    const formatedValue =
-      fileUploadRef && fileUploadRef.current
-        ? fileUploadRef.current.formatSize(totalSize)
-        : "0 B";
 
     return (
       <div
@@ -96,11 +91,6 @@ export default function FileBrowserHeader({
         >
           {cancelButton}
         </span>
-        <ProgressBar
-          value={value}
-          displayValueTemplate={() => `${formatedValue} / 10 MB`}
-          style={{ width: "300px", height: "20px", marginLeft: "auto" }}
-        ></ProgressBar>
       </div>
     );
   };
