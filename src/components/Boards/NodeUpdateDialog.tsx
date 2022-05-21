@@ -1,7 +1,11 @@
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { nodeUpdateDialogProps, UpdateNodeInputs } from "../../custom-types";
+import {
+  ImageProps,
+  nodeUpdateDialogProps,
+  UpdateNodeInputs,
+} from "../../custom-types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Dropdown } from "primereact/dropdown";
 import {
@@ -20,6 +24,7 @@ import { ColorPicker } from "primereact/colorpicker";
 import { InputNumber } from "primereact/inputnumber";
 import { useEffect } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
+import ImgDropdownItem from "../Util/ImgDropdownItem";
 type Props = {
   nodeUpdateDialog: nodeUpdateDialogProps;
   setNodeUpdateDialog: (nodeUpdateDialog: nodeUpdateDialogProps) => void;
@@ -273,6 +278,9 @@ export default function NodeUpdateDialog({
                     className="w-full"
                     placeholder="Custom Image"
                     optionLabel="title"
+                    itemTemplate={(item: ImageProps) => (
+                      <ImgDropdownItem title={item.title} link={item.link} />
+                    )}
                     options={
                       images?.data
                         ? [

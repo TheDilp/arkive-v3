@@ -1,9 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Dropdown } from "primereact/dropdown";
-import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
 import {
@@ -11,7 +9,7 @@ import {
   useGetDocumentData,
   useGetImages,
   useGetMaps,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 
 export default function LinkedItems() {

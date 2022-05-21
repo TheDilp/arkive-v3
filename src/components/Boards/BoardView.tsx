@@ -396,6 +396,8 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         elements={elements}
         className="Lato"
         wheelSensitivity={0.1}
+        minZoom={0.1}
+        maxZoom={10}
         style={{ width: "100%", height: "100%" }}
         cy={(cy: any) => {
           if (!cyRef.current) {

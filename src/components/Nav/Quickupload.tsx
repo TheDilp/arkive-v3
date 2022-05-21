@@ -98,6 +98,8 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
   return (
     <Dialog
       visible={uploadDialog}
+      modal={false}
+      position="top-right"
       onHide={() => setUploadDialog(false)}
       header={
         <div className="flex justify-content-start align-items-center">
