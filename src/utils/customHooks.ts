@@ -347,6 +347,34 @@ export function useDeleteDocument(project_id: string) {
           }
         );
 
+        queryClient.setQueryData(
+          `${project_id}-maps`,
+          (oldData: MapProps[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((map) => {
+                let newMap = { ...map };
+                if (
+                  newMap.markers.some(
+                    (marker) => marker?.doc_id === deletedDocument.id
+                  )
+                ) {
+                  newMap.markers = newMap.markers.map((marker) => {
+                    if (marker?.doc_id === deletedDocument.id) {
+                      return { ...marker, doc_id: undefined };
+                    } else {
+                      return marker;
+                    }
+                  });
+                }
+                return newMap;
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
         return { previousDocuments };
       },
       onError: (err, newTodo, context) => {
