@@ -1,4 +1,10 @@
-import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import {
+  NodeModel,
+  Tree,
+  MultiBackend,
+  getBackendOptions,
+  DndProvider,
+} from "@minoru/react-dnd-treeview";
 import { Button } from "primereact/button";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -123,58 +129,58 @@ export default function MapsTree({ mapId }: { mapId: string }) {
           onClick={() => setCreateMapDialog(true)}
         />
       </div>
-      <Tree
-        classes={{
-          root: "w-full overflow-y-auto projectTreeRoot",
-          container: "list-none",
-          placeholder: "relative",
-        }}
-        tree={treeData}
-        rootId={"0"}
-        sort={false}
-        initialOpen={false}
-        render={(node: NodeModel<MapProps>, { depth, isOpen, onToggle }) => (
-          <MapTreeItem
-            node={node}
-            mapId={mapId}
-            depth={depth}
-            isOpen={isOpen}
-            onToggle={onToggle}
-            setDisplayDialog={setUpdateMapDialog}
-            cm={cm}
-          />
-        )}
-        dragPreviewRender={(monitorProps) => (
-          <DragPreview
-            text={monitorProps.item.text}
-            droppable={monitorProps.item.droppable}
-          />
-        )}
-        placeholderRender={(node, { depth }) => (
-          <div
-            style={{
-              top: 0,
-              right: 0,
-              left: depth * 24,
-              backgroundColor: "#1967d2",
-              height: "2px",
-              position: "absolute",
-              transform: "translateY(-50%)",
-            }}
-          ></div>
-        )}
-        dropTargetOffset={10}
-        canDrop={(tree, { dragSource, dropTargetId }) => {
-          const depth = getDepth(treeData, dropTargetId);
-          // Don't allow nesting documents beyond this depth
-          if (depth > 3) return false;
-          if (dragSource?.parent === dropTargetId) {
-            return true;
-          }
-        }}
-        //@ts-ignore
-        onDrop={handleDrop}
-      />
+        <Tree
+          classes={{
+            root: "w-full overflow-y-auto projectTreeRoot",
+            container: "list-none",
+            placeholder: "relative",
+          }}
+          tree={treeData}
+          rootId={"0"}
+          sort={false}
+          initialOpen={false}
+          render={(node: NodeModel<MapProps>, { depth, isOpen, onToggle }) => (
+            <MapTreeItem
+              node={node}
+              mapId={mapId}
+              depth={depth}
+              isOpen={isOpen}
+              onToggle={onToggle}
+              setDisplayDialog={setUpdateMapDialog}
+              cm={cm}
+            />
+          )}
+          dragPreviewRender={(monitorProps) => (
+            <DragPreview
+              text={monitorProps.item.text}
+              droppable={monitorProps.item.droppable}
+            />
+          )}
+          placeholderRender={(node, { depth }) => (
+            <div
+              style={{
+                top: 0,
+                right: 0,
+                left: depth * 24,
+                backgroundColor: "#1967d2",
+                height: "2px",
+                position: "absolute",
+                transform: "translateY(-50%)",
+              }}
+            ></div>
+          )}
+          dropTargetOffset={10}
+          canDrop={(tree, { dragSource, dropTargetId }) => {
+            const depth = getDepth(treeData, dropTargetId);
+            // Don't allow nesting documents beyond this depth
+            if (depth > 3) return false;
+            if (dragSource?.parent === dropTargetId) {
+              return true;
+            }
+          }}
+          //@ts-ignore
+          onDrop={handleDrop}
+        />
     </div>
   );
 }

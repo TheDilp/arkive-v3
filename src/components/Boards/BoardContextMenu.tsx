@@ -5,9 +5,10 @@ import { BoardContextMenuProps } from "../../custom-types";
 import {
   useCreateNode,
   useDeleteEdge,
+  useDeleteManyNodes,
   useDeleteNode,
 } from "../../utils/customHooks";
-import { deleteManyEdges } from "../../utils/supabaseUtils";
+import { deleteManyEdges, deleteManyNodes } from "../../utils/supabaseUtils";
 
 type Props = {
   ehRef: any;
@@ -27,7 +28,7 @@ export default function BoardContextMenu({
   const { project_id, board_id } = useParams();
   const createNodeMutation = useCreateNode(project_id as string);
   const deleteNodeMutation = useDeleteNode(project_id as string);
-
+  const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
   const deleteEdgeMutation = useDeleteEdge(project_id as string);
   const boardItems = [
     {
@@ -50,7 +51,17 @@ export default function BoardContextMenu({
     },
     {
       label: "Fit view to nodes",
-      command: () => cyRef.current.fit(),
+      command: () =>
+        cyRef.current.animate(
+          {
+            fit: {
+              eles: cyRef.current.nodes(),
+            },
+          },
+          {
+            duration: 1250,
+          }
+        ),
     },
     {
       label: "Draw Mode On",
@@ -76,6 +87,22 @@ export default function BoardContextMenu({
         setDrawMode(false);
       },
     },
+    {
+      separator: true,
+    },
+    {
+      label: "Delete Selected Nodes",
+      command: () => {
+        let ids: string[] = cyRef.current
+          .nodes(":selected")
+          .map((node: any) => node.data().id);
+
+        deleteManyNodesMutation.mutate({
+          ids,
+          board_id: board_id as string,
+        });
+      },
+    },
   ];
   const nodeItems = [
     {
@@ -97,6 +124,9 @@ export default function BoardContextMenu({
         outgoers.nodes().flashClass("outgoingNodeHighlight", 1500);
         outgoers.edges().flashClass("outgoingEdgeHighlight", 1500);
       },
+    },
+    {
+      separator: true,
     },
     {
       label: "Delete Node",

@@ -35,7 +35,7 @@ export default function DocumentTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2"
+      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
       onClick={() => {
         if (!node.droppable) setDocId(node.id as string);
       }}
@@ -70,29 +70,35 @@ export default function DocumentTreeItem({
           )}
         </span>
       )}
-      {node.droppable ? (
-        <Icon icon="bxs:folder" inline={true} className="mr-1" />
-      ) : (
-        <Icon
-          icon={node.data?.icon as string}
-          inline={true}
-          className="mr-1 hover:bg-blue-400 border-circle selectableIcon"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
 
-            setIconSelect({
-              id: node.id as string,
-              icon: "bxs:folder",
-              show: true,
-              top: e.clientY,
-              left: e.clientX,
-            });
-          }}
-        />
-      )}
-      <span
-        className={`text-lg Lato ${docId === node.id ? "text-primary" : ""}`}
+      <span>
+        {node.droppable ? (
+          <Icon icon="bxs:folder" inline={true} className="mr-1" />
+        ) : (
+          <Icon
+            icon={node.data?.icon as string}
+            inline={true}
+            className="mr-1 hover:bg-blue-400 border-circle selectableIcon"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              setIconSelect({
+                id: node.id as string,
+                icon: "bxs:folder",
+                show: true,
+                top: e.clientY,
+                left: e.clientX,
+              });
+            }}
+          />
+        )}
+      </span>
+
+      <div
+        className={`text-lg Lato w-10  ${
+          docId === node.id ? "text-primary" : ""
+        }`}
         onClick={(e) => {
           if (node.droppable) {
             e.preventDefault();
@@ -105,8 +111,10 @@ export default function DocumentTreeItem({
           }
         }}
       >
-        {node.text}
-      </span>
+        <div className="w-full  white-space-nowrap overflow-hidden text-overflow-ellipsis">
+          {node.text}
+        </div>
+      </div>
     </div>
   );
 }

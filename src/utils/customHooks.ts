@@ -25,6 +25,7 @@ import {
   deleteDocument,
   deleteEdge,
   deleteImages,
+  deleteManyNodes,
   deleteMap,
   deleteMapMarker,
   deleteNode,
@@ -931,10 +932,9 @@ export function useCreateNode(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: CreateNodeProps) => {
-      const newNode = await createNode({
+      await createNode({
         ...vars,
       });
-      return newNode;
     },
     {
       onMutate: async (newNode) => {
@@ -1100,6 +1100,49 @@ export function useDeleteNode(project_id: string) {
                     ...board,
                     nodes: board.nodes.filter(
                       (node) => node.id !== deletedNode.id
+                    ),
+                  };
+                } else {
+                  return board;
+                }
+              });
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousBoards };
+      },
+
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+      },
+    }
+  );
+}
+export function useDeleteManyNodes(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { ids: string[]; board_id: string }) => {
+      await deleteManyNodes(vars.ids);
+    },
+    {
+      onMutate: async (deletedNodes) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              return oldData.map((board) => {
+                if (board.id === deletedNodes.board_id) {
+                  return {
+                    ...board,
+                    nodes: board.nodes.filter(
+                      (node) => !deletedNodes.ids.includes(node.id)
                     ),
                   };
                 } else {

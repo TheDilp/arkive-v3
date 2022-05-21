@@ -56,15 +56,20 @@ export default function NodeUpdateDialog({
       if (key === "backgroundColor" && typeof value === "string") {
         setValue(key as any, value.replace("#", ""));
       } else if (key === "customImage" && typeof value === "object" && value) {
-        setValue(key as any, {
-          ...value,
-          link: value.link
-            .replaceAll(
-              "https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/4dd68867-859b-4249-9e30-4eb2cf2662d5/",
-              ""
-            )
-            .replaceAll("%20", " "),
-        });
+        setValue(
+          key as any,
+          value
+            ? {
+                ...value,
+                link: value.link
+                  .replaceAll(
+                    "https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/4dd68867-859b-4249-9e30-4eb2cf2662d5/",
+                    ""
+                  )
+                  .replaceAll("%20", " "),
+              }
+            : null
+        );
       } else {
         setValue(key as any, value);
       }

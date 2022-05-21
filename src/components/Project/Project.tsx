@@ -6,6 +6,8 @@ import {
 } from "../../utils/customHooks";
 import LoadingScreen from "../Util/LoadingScreen";
 import Navbar from "../Nav/Navbar";
+import { DndProvider } from "react-dnd";
+import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 
 export default function Project() {
   const { project_id } = useParams();
@@ -20,7 +22,9 @@ export default function Project() {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+        <Outlet />
+      </DndProvider>
     </>
   );
 }

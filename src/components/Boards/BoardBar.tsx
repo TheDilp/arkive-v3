@@ -234,17 +234,17 @@ export default function BoardBar({
         onChange={(e: any) => {
           if (e.target.value) {
             let foundNode = cyRef.current.getElementById(e.target.value);
-            cyRef.current.animate(
-              {
-                center: {
-                  eles: foundNode,
-                },
-                zoom: 1,
+          cyRef.current.animate(
+            {
+              center: {
+                eles: foundNode,
               },
-              {
-                duration: 1250,
-              }
-            );
+              zoom: 1,
+            },
+            {
+              duration: 1250,
+            }
+          );
           }
         }}
       />

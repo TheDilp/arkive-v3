@@ -337,6 +337,7 @@ export type CreateNodeProps = {
   board_id: string;
   type: string;
   backgroundColor?: string;
+  customImage?: ImageProps;
   doc_id?: string;
 };
 

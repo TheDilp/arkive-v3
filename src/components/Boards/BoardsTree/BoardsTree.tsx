@@ -1,15 +1,21 @@
 import { Icon } from "@iconify/react";
-import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import {
+  NodeModel,
+  Tree,
+  MultiBackend,
+  getBackendOptions,
+} from "@minoru/react-dnd-treeview";
+import { DndProvider } from "react-dnd";
 import { Button } from "primereact/button";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { BoardProps, boardItemDisplayDialogProps } from "../../../custom-types";
+import { v4 as uuid } from "uuid";
+import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
 import { useCreateBoard, useUpdateBoard } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
 import BoardTreeItem from "./BoardTreeItem";
-import { v4 as uuid } from "uuid";
 import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
 type Props = {

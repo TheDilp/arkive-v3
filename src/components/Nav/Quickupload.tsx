@@ -1,12 +1,14 @@
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { ProgressBar } from "primereact/progressbar";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { SelectButton } from "primereact/selectbutton";
 import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetImages } from "../../utils/customHooks";
 import { uploadImage } from "../../utils/supabaseUtils";
 import { toastWarn } from "../../utils/utils";
+import LoadingScreen from "../Util/LoadingScreen";
 
 type Props = {
   uploadDialog: boolean;
@@ -19,7 +21,6 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
   const fileUploadRef = useRef<FileUpload>(null);
   const [totalSize, setTotalSize] = useState(0);
   const [uploading, setUploading] = useState(false);
-
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>(
     []
   );
@@ -95,10 +96,24 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
   };
 
   return (
-    <Dialog visible={uploadDialog} onHide={() => setUploadDialog(false)}>
+    <Dialog
+      visible={uploadDialog}
+      onHide={() => setUploadDialog(false)}
+      header={
+        <div className="flex justify-content-start align-items-center">
+          <div>Quick Upload</div>
+          {uploading && (
+            <div className="ml-2 flex align-items-center w-4">
+              (Uploading...
+              <ProgressSpinner className="w-full h-1rem" />)
+            </div>
+          )}
+        </div>
+      }
+    >
       <FileUpload
         style={{
-          maxHeight: "45rem",
+          maxHeight: "40rem",
           overflowY: "auto",
         }}
         name="demo[]"
@@ -110,6 +125,11 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         chooseOptions={chooseOptions}
         uploadOptions={uploadOptions}
         cancelOptions={cancelOptions}
+        emptyTemplate={
+          <p className="text-center text-gray-400">
+            Drag and Drop image files here!
+          </p>
+        }
         onSelect={onTemplateSelect}
         itemTemplate={(file: any) => {
           return (
@@ -133,28 +153,20 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         }}
         customUpload
         uploadHandler={async (e) => {
-          let files = e.files;
           setUploading(true);
+          let files = e.files;
           for (let i = 0; i < files.length; i++) {
             // Safeguard to not attempt uploading already existing image
             if (images?.data.some((img) => img.title === files[i].name)) {
               toastWarn(`Image "${files[i].name}" already exists.`);
               continue;
             } else {
-              try {
-                await uploadImage(
-                  project_id as string,
-                  files[i],
-                  types[i].type
-                );
-              } catch (error) {
-                //
-              }
+              await uploadImage(project_id as string, files[i], types[i].type);
             }
           }
           images?.refetch();
+          // setUploadDialog(false);
           setUploading(false);
-          setUploadDialog(false);
           setTypes([]);
           e.options.clear();
         }}

@@ -347,6 +347,7 @@ export const createNode = async ({
   type,
   backgroundColor,
   doc_id,
+  customImage,
 }: CreateNodeProps) => {
   let user = auth.user();
   if (user) {
@@ -358,6 +359,7 @@ export const createNode = async ({
       board_id,
       type,
       backgroundColor,
+      customImage: customImage?.id,
       doc_id,
     });
     if (data) return data;
@@ -773,6 +775,19 @@ export const deleteNode = async (id: string) => {
     const { error } = await supabase.from("nodes").delete().eq("id", id);
   }
 };
+export const deleteManyNodes = async (ids: string[]) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase.rpc("delete_many_nodes", {
+      ids,
+    });
+    if (error) {
+      toastError("There was an error deleting your nodes.");
+      throw new Error(error.message);
+    }
+  }
+};
 export const deleteEdge = async (id: string) => {
   let user = auth.user();
 
@@ -808,7 +823,8 @@ export const getImages = async (project_id: string) => {
       .from<ImageProps>("images")
       .select("id,title,link,type")
       // Matches links that start with the project_id
-      .like("link", `${project_id}%`);
+      .like("link", `${project_id}%`)
+      .order("title", { ascending: true });
 
     if (data) return data;
     if (error) {
@@ -828,7 +844,7 @@ export const uploadImage = async (
     const { data, error } = await supabase.storage
       .from("images")
       .upload(`${project_id}/${type}/${file.name}`, file, { upsert: false });
-
+    if (data) return data;
     if (error) {
       toastError("There was an error uploading your image.");
       throw new Error(error.message);

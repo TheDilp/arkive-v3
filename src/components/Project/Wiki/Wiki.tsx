@@ -27,7 +27,7 @@ export default function Wiki() {
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (
-    <div className="w-full flex flex-wrap justify-content-start">
+    <div className="w-full flex flex-wrap justify-content-start mainScreen">
       <DocumentsTree docId={docId} setDocId={setDocId} />
 
       <Routes>

@@ -120,6 +120,11 @@ export default function FileBrowserHeader({
             accept="image/*"
             maxFileSize={10000000}
             multiple
+            emptyTemplate={
+              <p className="text-center text-gray-400">
+                Drag and Drop image files here!
+              </p>
+            }
             chooseOptions={chooseOptions}
             uploadOptions={uploadOptions}
             cancelOptions={cancelOptions}

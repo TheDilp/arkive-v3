@@ -11,15 +11,19 @@ import {
 } from "../../custom-types";
 import {
   useCreateEdge,
+  useCreateNode,
   useGetBoardData,
+  useGetImages,
   useUpdateNode,
 } from "../../utils/customHooks";
+import { uploadImage } from "../../utils/supabaseUtils";
 import {
   changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
   toastWarn,
+  toModelPosition,
 } from "../../utils/utils";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
@@ -34,6 +38,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const navigate = useNavigate();
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
+  const images = useGetImages(project_id as string);
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
@@ -84,7 +89,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const [snap, setSnap] = useState(true);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
-
+  const createNodeMutation = useCreateNode(project_id as string);
   useEffect(() => {
     if (elements.length > 0) {
       cyRef.current.on(
@@ -232,6 +237,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           }
         }
       });
+
       cyRef.current.on("dbltap", "node", function (evt: any) {
         let target = evt.target._private;
 
@@ -314,7 +320,46 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   }, [snap]);
 
   return (
-    <div className="w-full h-full">
+    <div
+      className="w-full h-full"
+      onDrop={async (e) => {
+        let files = e.dataTransfer.files;
+
+        for (let i = 0; i < files.length; i++) {
+          let newImage;
+          // If the image exists do not upload it but assign to variable
+          if (images?.data.some((img) => img.title === files[i].name)) {
+            toastWarn(`Image "${files[i].name}" already exists.`);
+            newImage = images?.data.find((img) => img.title === files[i].name);
+          }
+          // If there is no image upload, then set node
+          else {
+            await uploadImage(project_id as string, files[i], "Image");
+            newImage = images?.data.find((img) => img.title === files[i].name);
+          }
+
+          if (!newImage) return;
+
+          let id = uuid();
+          // @ts-ignore
+          const { top, left } = e.target.getBoundingClientRect();
+
+          // Convert mouse coordinates to canvas coordinates
+          const { x, y } = toModelPosition(cyRef, {
+            x: e.clientX - left,
+            y: e.clientY - top,
+          });
+          createNodeMutation.mutate({
+            id,
+            board_id: board_id as string,
+            x,
+            y,
+            type: "rectangle",
+            customImage: newImage,
+          });
+        }
+      }}
+    >
       <BoardBar
         drawMode={drawMode}
         setDrawMode={setDrawMode}

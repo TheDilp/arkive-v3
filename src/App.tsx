@@ -33,7 +33,7 @@ function App() {
     },
   });
   return (
-    <main className="App flex flex-wrap align-content-start justify-content-center h-screen surface-0 overflow-y-hidden">
+    <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
       <ToastContainer />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />

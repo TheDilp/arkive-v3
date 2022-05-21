@@ -1,4 +1,10 @@
-import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import { DndProvider } from "react-dnd";
+import {
+  NodeModel,
+  Tree,
+  MultiBackend,
+  getBackendOptions,
+} from "@minoru/react-dnd-treeview";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";

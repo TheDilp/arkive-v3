@@ -19,9 +19,9 @@ export default function Boards() {
 
   if (isLoading) return <LoadingScreen />;
   return (
-    <div className="w-full h-screen flex flex-nowrap">
+    <div className="w-full flex flex-nowrap mainScreen">
       <BoardsTree boardId={boardId} cyRef={cyRef} />
-      <div className="w-10 h-full relative">
+      <div className="w-10">
         <Routes>
           <Route
             path="/:board_id"

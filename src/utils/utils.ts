@@ -1,7 +1,5 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { saveAs } from "file-saver";
 import { toast, ToastOptions } from "react-toastify";
-import { CytoscapeNodeProps } from "../custom-types";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
@@ -653,7 +651,14 @@ export const cytoscapeStylesheet = [
     },
   },
 ];
-
+export const toModelPosition = (cyRef: any, pos: { x: number; y: number }) => {
+  const pan = cyRef.current.pan();
+  const zoom = cyRef.current.zoom();
+  return {
+    x: (pos.x - pan.x) / zoom,
+    y: (pos.y - pan.y) / zoom,
+  };
+};
 export interface Bucket {
   id: string;
   name: string;
