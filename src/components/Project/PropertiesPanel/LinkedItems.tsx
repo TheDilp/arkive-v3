@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Dropdown } from "primereact/dropdown";
+import { Image } from "primereact/image";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Link, useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
@@ -92,13 +93,16 @@ export default function LinkedItems() {
       >
         {document?.image && (
           <div className="flex flex-nowrap justify-content-center mb-2">
-            <img
+            <Image
               src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${document.image.link}`}
               alt="Document"
-              loading="lazy"
               className="w-10rem h-10rem"
-              style={{
-                objectFit: "cover",
+              imageClassName="w-full h-full"
+              preview
+              // @ts-ignore
+              // Wrong typing provided(string instead of object) so ignore the error
+              imageStyle={{
+                objectFit: "contain",
               }}
             />
           </div>

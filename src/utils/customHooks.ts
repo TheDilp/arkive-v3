@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
 import {
+  BoardNodeProps,
   BoardProps,
   CreateNodeProps,
   DocumentProps,
@@ -313,6 +314,39 @@ export function useDeleteDocument(project_id: string) {
             }
           }
         );
+
+        // Delete references to the document for any linked
+
+        // const maps = queryClient.getQueryData(`${project_id}-maps`);
+
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((board) => {
+                let newBoard = { ...board };
+                if (
+                  newBoard.nodes.some(
+                    (node) => node.document?.id === deletedDocument.id
+                  )
+                ) {
+                  newBoard.nodes = newBoard.nodes.map((node) => {
+                    if (node.document?.id === deletedDocument.id) {
+                      return { ...node, document: undefined };
+                    } else {
+                      return node;
+                    }
+                  });
+                }
+                return newBoard;
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+
         return { previousDocuments };
       },
       onError: (err, newTodo, context) => {
