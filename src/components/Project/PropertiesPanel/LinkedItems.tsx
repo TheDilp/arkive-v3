@@ -9,8 +9,9 @@ import {
   useGetDocumentData,
   useGetImages,
   useGetMaps,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
+import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
 export default function LinkedItems() {
   const { project_id, doc_id } = useParams();
@@ -111,7 +112,17 @@ export default function LinkedItems() {
               className="w-10"
               filter
               filterBy="title"
-              options={images?.data || []}
+              options={
+                images?.data
+                  ? [
+                      {
+                        title: "No Image",
+                        link: "",
+                      },
+                      ...images.data,
+                    ]
+                  : []
+              }
               optionLabel="title"
               value={document?.image || undefined}
               onChange={(e) =>
@@ -121,37 +132,9 @@ export default function LinkedItems() {
                 })
               }
               itemTemplate={(item: ImageProps) => (
-                <div className="w-2rem h-2rem flex align-items-center">
-                  <img
-                    className="h-full mr-2 w-full h-full"
-                    style={{
-                      objectFit: "contain",
-                    }}
-                    src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${item.link}`}
-                    alt={""}
-                  />
-                  <span>{item.title}</span>
-                </div>
+                <ImgDropdownItem title={item.title} link={item.link} />
               )}
             />
-          </div>
-          <div className="w-full flex justify-content-evenly">
-            {/* <InputText
-              className="w-10"
-              value={currentImage}
-              placeholder="Custom Image URL"
-              onChange={(e) => setCurrentImage(e.target.value)}
-            /> */}
-            {/* <Button
-              icon="pi pi-fw pi-save"
-              className="p-button-outlined p-button-success"
-              onClick={() =>
-                updateDocumentMutation.mutate({
-                  doc_id: doc_id as string,
-                  image: currentImage,
-                })
-              }
-            /> */}
           </div>
         </div>
       </AccordionTab>
