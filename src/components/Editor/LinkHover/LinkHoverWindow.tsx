@@ -97,9 +97,7 @@ export default function LinkHoverWindow({
             <LinkHoverEditor content={content} />
           </Remirror>
         </ThemeProvider>
-      ) : (
-        <LoadingScreen />
-      )}
+      ) : null}
     </div>
   );
 }

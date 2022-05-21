@@ -292,10 +292,7 @@ export default function NodeUpdateDialog({
                         : []
                     }
                     value={value}
-                    onChange={(e) => {
-                      console.log(e);
-                      onChange(e.target.value);
-                    }}
+                    onChange={(e) => onChange(e.target.value)}
                   />
                 )}
               />
