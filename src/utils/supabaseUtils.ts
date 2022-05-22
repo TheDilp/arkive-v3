@@ -324,13 +324,14 @@ export const createBoard = async ({
 }) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from("boards").insert({
+    const { data, error } = await supabase.from<BoardProps>("boards").insert({
       id,
       title,
       project_id,
       parent,
       folder,
       layout,
+      expanded: false,
     });
     if (data) return data;
     if (error) {
@@ -529,11 +530,13 @@ export const updateBoard = async ({
   title,
   parent,
   layout,
+  expanded,
 }: {
   id: string;
   title?: string;
   parent?: string | null;
   layout?: string;
+  expanded?: boolean;
 }) => {
   let user = auth.user();
 
@@ -544,6 +547,7 @@ export const updateBoard = async ({
         title,
         parent,
         layout,
+        expanded,
       })
       .eq("id", id);
 

@@ -866,6 +866,7 @@ export function useCreateBoard() {
       project_id: string;
       folder: boolean;
       parent?: string | null;
+      expanded: false;
       layout: string;
       nodes: [];
       edges: [];
@@ -920,6 +921,7 @@ export function useUpdateBoard(project_id: string) {
       title?: string;
       parent?: string | null;
       layout?: string;
+    expanded?: boolean;
     }) => {
       await updateBoard(vars);
     },

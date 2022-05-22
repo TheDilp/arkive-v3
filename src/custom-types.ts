@@ -50,6 +50,7 @@ export type BoardProps = {
   title: string;
   parent?: string | null;
   folder: boolean;
+  expanded: boolean;
   project_id: string;
   layout: string;
   nodes: BoardNodeProps[];
@@ -160,6 +161,7 @@ export type boardItemDisplayDialogProps = {
   folder: boolean;
   layout: string;
   depth: number;
+  expanded: boolean;
   show: boolean;
 };
 export type nodeUpdateDialogProps = {

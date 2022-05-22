@@ -40,6 +40,7 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
       parent: "",
       show: false,
       folder: false,
+      expanded: false,
       layout: "",
       depth: 0,
     });
@@ -79,6 +80,7 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
         title: "New Folder",
         folder: true,
         layout: "Preset",
+        expanded: false,
         nodes: [],
         edges: [],
       });
@@ -89,6 +91,7 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
         title: "New Board",
         folder: false,
         layout: "Preset",
+        expanded: false,
         nodes: [],
         edges: [],
       });
@@ -147,7 +150,11 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
             placeholder: "relative",
           }}
           sort={false}
-          initialOpen={false}
+          initialOpen={
+            boards
+              ?.filter((board) => board.expanded)
+              .map((board) => board.id) || false
+          }
           rootId="0"
           render={(
             node: NodeModel<BoardProps>,
