@@ -116,7 +116,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
               id,
               project_id: project_id as string,
               title: "New Folder",
-              map_image: { id: "", title: "", link: "", type: "Image" },
+              map_image: { id: undefined, title: "", link: "", type: "Image" },
               folder: true,
             });
           }}
