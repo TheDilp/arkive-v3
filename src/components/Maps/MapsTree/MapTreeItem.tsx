@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MapProps, mapItemDisplayDialogProps } from "../../../custom-types";
+import { useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   mapId: string;
   node: NodeModel<MapProps>;
@@ -21,11 +22,13 @@ export default function MapTreeItem({
   onToggle,
   cm,
 }: Props) {
+  const { project_id } = useParams();
+  const updateMapMutation = useUpdateMap(project_id as string);
   const navigate = useNavigate();
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer"
+      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
       onClick={() => {
         if (!node.droppable) navigate(node.id as string);
       }}
@@ -52,6 +55,10 @@ export default function MapTreeItem({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            updateMapMutation.mutate({
+              id: node.id as string,
+              expanded: !isOpen,
+            });
             onToggle();
           }}
         >
@@ -67,11 +74,26 @@ export default function MapTreeItem({
       ) : (
         <Icon icon={"mdi:map"} inline={true} className="mr-1" />
       )}
-      <span
-        className={`text-lg Lato ${mapId === node.id ? "text-primary" : ""}`}
+      <div
+        className={`text-lg Lato w-10 ${
+          mapId === node.id ? "text-primary" : ""
+        }`}
+        onClick={(e) => {
+          if (node.droppable) {
+            e.preventDefault();
+            e.stopPropagation();
+            updateMapMutation.mutate({
+              id: node.id as string,
+              expanded: !isOpen,
+            });
+            onToggle();
+          }
+        }}
       >
-        {node.text}
-      </span>
+        <div className="w-full  white-space-nowrap overflow-hidden text-overflow-ellipsis">
+          {node.text}
+        </div>
+      </div>
     </div>
   );
 }

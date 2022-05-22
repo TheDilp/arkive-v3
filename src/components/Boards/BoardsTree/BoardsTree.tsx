@@ -145,7 +145,7 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
         <Tree
           tree={treeData}
           classes={{
-            root: "w-full overflow-y-auto",
+            root: "w-full overflow-y-auto projectTreeRoot p-0",
             container: "list-none",
             placeholder: "relative",
           }}

@@ -482,11 +482,16 @@ export function useCreateMap() {
       id: string;
       project_id: string;
       title: string;
-      map_image: ImageProps;
+      map_image: ImageProps | undefined;
+      expanded: boolean;
       folder?: boolean;
       parent?: string | null;
     }) => {
-      await createMap({ ...vars, map_image: vars.map_image.id });
+      await createMap({
+        ...vars,
+        map_image: vars.map_image?.id,
+        expanded: false,
+      });
     },
     {
       onMutate: async (newMap) => {
@@ -921,7 +926,7 @@ export function useUpdateBoard(project_id: string) {
       title?: string;
       parent?: string | null;
       layout?: string;
-    expanded?: boolean;
+      expanded?: boolean;
     }) => {
       await updateBoard(vars);
     },

@@ -116,8 +116,9 @@ export default function MapsTree({ mapId }: { mapId: string }) {
               id,
               project_id: project_id as string,
               title: "New Folder",
-              map_image: { id: undefined, title: "", link: "", type: "Image" },
+              map_image: undefined,
               folder: true,
+              expanded: false,
             });
           }}
         />
@@ -132,14 +133,16 @@ export default function MapsTree({ mapId }: { mapId: string }) {
       <DndProvider backend={MultiBackend} options={getBackendOptions()}>
         <Tree
           classes={{
-            root: "w-full overflow-y-auto projectTreeRoot",
+          root: "w-full overflow-y-auto projectTreeRoot p-0",
             container: "list-none",
             placeholder: "relative",
           }}
           tree={treeData}
           rootId={"0"}
           sort={false}
-          initialOpen={false}
+          initialOpen={
+            maps?.filter((map) => map.expanded).map((map) => map.id) || false
+          }
           render={(node: NodeModel<MapProps>, { depth, isOpen, onToggle }) => (
             <MapTreeItem
               node={node}

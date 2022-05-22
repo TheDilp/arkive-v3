@@ -30,7 +30,7 @@ export default function MapView({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (mapData) {
+    if (mapData && mapData.map_image?.link) {
       let img = new Image();
       img.src = `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`;
       img.onload = () => {
@@ -108,14 +108,16 @@ export default function MapView({
               bounds={bounds as LatLngBoundsExpression}
               attributionControl={false}
             >
-              <MapImage
-                src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`}
-                bounds={bounds as LatLngBoundsExpression}
-                imgRef={imgRef}
-                markers={mapData.markers}
-                setNewTokenDialog={setNewTokenDialog}
-                cm={cm}
-              />
+              {mapData.map_image?.link && (
+                <MapImage
+                  src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`}
+                  bounds={bounds as LatLngBoundsExpression}
+                  imgRef={imgRef}
+                  markers={mapData.markers}
+                  setNewTokenDialog={setNewTokenDialog}
+                  cm={cm}
+                />
+              )}
             </MapContainer>
           </motion.div>
         )}

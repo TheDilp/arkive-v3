@@ -27,9 +27,10 @@ export type DocumentProps = {
 export type MapProps = {
   id: string;
   title: string;
-  map_image: ImageProps;
+  map_image?: ImageProps;
   parent: string | null;
   folder: boolean;
+  expanded: boolean;
   user_id: string;
   project_id: string;
   markers: MapMarkerProps[];
@@ -319,10 +320,11 @@ export type DocumentUpdateProps = {
 export type MapCreateProps = {
   id: string;
   title: string;
-  map_image: string;
+  map_image: string | undefined;
   project_id: string;
   parent?: string | null;
   folder?: boolean;
+  expanded: false;
 };
 
 export type MapUpdateProps = {
@@ -330,6 +332,7 @@ export type MapUpdateProps = {
   title?: string;
   map_image?: ImageProps;
   parent?: string | null;
+  expanded?: boolean;
 };
 export type CreateNodeProps = {
   id: string;

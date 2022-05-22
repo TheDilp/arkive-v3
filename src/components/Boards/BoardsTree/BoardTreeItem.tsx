@@ -29,7 +29,7 @@ export default function BoardTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer"
+      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
       onClick={() => {
         if (!node.droppable) navigate(node.id as string);
       }}
@@ -72,11 +72,24 @@ export default function BoardTreeItem({
       ) : (
         <Icon icon={"mdi:draw"} inline={true} className="mr-1" />
       )}
-      <span
-        className={`text-lg Lato ${boardId === node.id ? "text-primary" : ""}`}
+      <div
+        className={`text-lg w-10 Lato ${
+          boardId === node.id ? "text-primary" : ""
+        }`}
+        onClick={(e) => {
+          if (node.droppable) {
+            e.preventDefault();
+            e.stopPropagation();
+            updateBoardMutation.mutate({
+              id: node.id as string,
+              expanded: !isOpen,
+            });
+            onToggle();
+          }
+        }}
       >
         {node.text}
-      </span>
+      </div>
     </div>
   );
 }

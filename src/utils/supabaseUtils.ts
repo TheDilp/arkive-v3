@@ -110,7 +110,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent, folder, project_id, markers:markers!map_id(*), map_image:images(id, title, link)"
+      "id, title, parent, folder, expanded, project_id, markers:markers!map_id(*), map_image:images(id, title, link)"
     )
     .eq("project_id", project_id);
   if (data) return data;
@@ -400,34 +400,16 @@ export const createEdge = async ({
 };
 
 // UPDATE
-export const updateDocument = async ({
-  id,
-  title,
-  content,
-  folder,
-  parent,
-  image,
-  icon,
-  categories,
-  expanded,
-}: DocumentUpdateProps) => {
+export const updateDocument = async (
+  DocumentUpdateProps: DocumentUpdateProps
+) => {
   let user = auth.user();
 
   if (user) {
     const { data: document, error } = await supabase
       .from<DocumentUpdateProps>("documents")
-      .update({
-        title,
-        content,
-        folder,
-        // @ts-ignore
-        parent,
-        image,
-        icon,
-        categories,
-        expanded,
-      })
-      .eq("id", id);
+      .update(DocumentUpdateProps)
+      .eq("id", DocumentUpdateProps.id);
 
     if (document) return document[0];
     if (error) {
@@ -461,23 +443,14 @@ export const updateProject = async (
     }
   }
 };
-export const updateMap = async ({
-  id,
-  title,
-  map_image,
-  parent,
-}: MapUpdateProps) => {
+export const updateMap = async (MapUpdateProps: MapUpdateProps) => {
   let user = auth.user();
 
   if (user) {
     const { data: map, error } = await supabase
       .from("maps")
-      .update({
-        title,
-        map_image,
-        parent,
-      })
-      .eq("id", id);
+      .update(MapUpdateProps)
+      .eq("id", MapUpdateProps.id);
 
     if (map) return map[0];
     if (error) {
