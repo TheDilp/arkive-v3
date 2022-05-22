@@ -175,8 +175,10 @@ export default function MapsTree({
       )}
       {filter && (
         <MapsFilterList
-          filteredTree={treeData.filter((node) =>
-            node.text.toLowerCase().includes(filter.toLowerCase())
+          filteredTree={treeData.filter(
+            (node) =>
+              node.text.toLowerCase().includes(filter.toLowerCase()) &&
+              !node.droppable
           )}
           setMapId={setMapId}
         />
