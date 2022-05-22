@@ -316,6 +316,17 @@ export type DocumentUpdateProps = {
   expanded?: boolean;
   categories?: string[];
 };
+export type TemplateCreateProps = {
+  id: string;
+  title: string;
+  content: RemirrorJSON;
+  project_id: string;
+  icon?: string;
+  image?: string;
+  parent?: string | null;
+  categories?: string[];
+  folder?: boolean;
+};
 
 export type MapCreateProps = {
   id: string;
@@ -334,6 +345,48 @@ export type MapUpdateProps = {
   parent?: string | null;
   expanded?: boolean;
 };
+
+export type CreateMapMarkerProps = {
+  id: string;
+  map_id: string;
+  lat: number;
+  lng: number;
+  icon?: string;
+  color?: string;
+  text?: string;
+  doc_id?: string;
+  map_link?: string;
+};
+
+export type UpdateMapMarkerProps = {
+  id: string;
+  map_id: string;
+  text?: string;
+  icon?: string;
+  color?: string;
+  lat?: number;
+  lng?: number;
+  doc_id?: string;
+  map_link?: string;
+};
+
+export type CreateBoardProps = {
+  id: string;
+  title: string;
+  project_id: string;
+  parent?: string | null;
+  folder: boolean;
+  layout: string;
+};
+
+export type UpdateBoardProps = {
+  id: string;
+  title?: string;
+  parent?: string | null;
+  layout?: string;
+  expanded?: boolean;
+};
+
 export type CreateNodeProps = {
   id: string;
   label?: string;

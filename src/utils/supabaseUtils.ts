@@ -18,6 +18,11 @@ import {
   DocumentCreateProps,
   MapUpdateProps,
   MapCreateProps,
+  TemplateCreateProps,
+  CreateMapMarkerProps,
+  CreateBoardProps,
+  UpdateMapMarkerProps,
+  UpdateBoardProps,
 } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -148,33 +153,14 @@ export const getProfile = async () => {
 };
 // INSERT
 
-export const createDocument = async ({
-  id,
-  project_id,
-  title,
-  parent,
-  content,
-  icon,
-  image,
-  categories,
-  folder,
-}: DocumentCreateProps) => {
+export const createDocument = async (
+  DocumentCreateProps: DocumentCreateProps
+) => {
   let user = auth.user();
   if (user) {
     const { data: document, error } = await supabase
       .from<DocumentCreateProps>("documents")
-      .insert({
-        id,
-        project_id,
-        title,
-        content,
-        image,
-        icon,
-        folder,
-        categories,
-        // @ts-ignore
-        parent,
-      });
+      .insert(DocumentCreateProps);
     if (document) return document[0];
     if (error) {
       toastError("There was an error creating your document.");
@@ -199,41 +185,14 @@ export const createProject = async () => {
     }
   }
 };
-export const createTemplate = async ({
-  id,
-  project_id,
-  title,
-  content,
-  parent,
-  icon,
-  image,
-  categories,
-  folder,
-}: {
-  id: string;
-  title: string;
-  content: RemirrorJSON;
-  project_id: string;
-  icon?: string;
-  image?: string;
-  parent?: string | null;
-  categories?: string[];
-  folder?: boolean;
-}) => {
+export const createTemplate = async (
+  TemplateCreateProps: TemplateCreateProps
+) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from("documents").insert({
-      id,
-      project_id,
-      title,
-      content,
-      parent,
-      icon,
-      image,
-      categories,
-      folder,
-      template: true,
-    });
+    const { data, error } = await supabase
+      .from("documents")
+      .insert(TemplateCreateProps);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your template.");
@@ -241,24 +200,10 @@ export const createTemplate = async ({
     }
   }
 };
-export const createMap = async ({
-  id,
-  project_id,
-  title,
-  map_image,
-  parent,
-  folder,
-}: MapCreateProps) => {
+export const createMap = async (MapCreateProps: MapCreateProps) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from("maps").insert({
-      id,
-      project_id,
-      title,
-      map_image,
-      parent,
-      folder,
-    });
+    const { data, error } = await supabase.from("maps").insert(MapCreateProps);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your map.");
@@ -266,40 +211,14 @@ export const createMap = async ({
     }
   }
 };
-export const createMapMarker = async ({
-  id,
-  map_id,
-  text,
-  icon,
-  color,
-  lat,
-  lng,
-  doc_id,
-  map_link,
-}: {
-  id: string;
-  map_id: string;
-  lat: number;
-  lng: number;
-  icon?: string;
-  color?: string;
-  text?: string;
-  doc_id?: string;
-  map_link?: string;
-}) => {
+export const createMapMarker = async (
+  CreateMapMarkerProps: CreateMapMarkerProps
+) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from("markers").insert({
-      id,
-      map_id,
-      text,
-      icon,
-      color,
-      lat,
-      lng,
-      doc_id,
-      map_link,
-    });
+    const { data, error } = await supabase
+      .from("markers")
+      .insert(CreateMapMarkerProps);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your map marker.");
@@ -307,32 +226,12 @@ export const createMapMarker = async ({
     }
   }
 };
-export const createBoard = async ({
-  id,
-  title,
-  project_id,
-  parent,
-  folder,
-  layout,
-}: {
-  id: string;
-  title: string;
-  project_id: string;
-  parent?: string | null;
-  folder: boolean;
-  layout: string;
-}) => {
+export const createBoard = async (CreateBoardProps: CreateBoardProps) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from<BoardProps>("boards").insert({
-      id,
-      title,
-      project_id,
-      parent,
-      folder,
-      layout,
-      expanded: false,
-    });
+    const { data, error } = await supabase
+      .from<BoardProps>("boards")
+      .insert(CreateBoardProps);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your board.");
@@ -340,30 +239,12 @@ export const createBoard = async ({
     }
   }
 };
-export const createNode = async ({
-  id,
-  label,
-  x,
-  y,
-  board_id,
-  type,
-  backgroundColor,
-  doc_id,
-  customImage,
-}: CreateNodeProps) => {
+export const createNode = async (CreateNodeProps: CreateNodeProps) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from("nodes").insert({
-      id,
-      label,
-      x,
-      y,
-      board_id,
-      type,
-      backgroundColor,
-      customImage: customImage?.id,
-      doc_id,
-    });
+    const { data, error } = await supabase
+      .from("nodes")
+      .insert(CreateNodeProps);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your node.");
@@ -459,38 +340,13 @@ export const updateMap = async (MapUpdateProps: MapUpdateProps) => {
     }
   }
 };
-export const updateMapMarker = async ({
-  id,
-  icon,
-  color,
-  text,
-  lat,
-  lng,
-  doc_id,
-  map_link,
-}: {
-  id: string;
-  map_id: string;
-  text?: string;
-  icon?: string;
-  color?: string;
-  lat?: number;
-  lng?: number;
-  doc_id?: string;
-  map_link?: string;
-}) => {
+export const updateMapMarker = async (
+  UpdateMapMarkerProps: UpdateMapMarkerProps
+) => {
   const { data, error } = await supabase
     .from<MapMarkerProps>("markers")
-    .update({
-      icon,
-      color,
-      text,
-      lat,
-      lng,
-      doc_id,
-      map_link,
-    })
-    .eq("id", id);
+    .update(UpdateMapMarkerProps)
+    .eq("id", UpdateMapMarkerProps.id);
 
   if (data) return data;
   if (error) {
@@ -498,31 +354,14 @@ export const updateMapMarker = async ({
     throw new Error(error.message);
   }
 };
-export const updateBoard = async ({
-  id,
-  title,
-  parent,
-  layout,
-  expanded,
-}: {
-  id: string;
-  title?: string;
-  parent?: string | null;
-  layout?: string;
-  expanded?: boolean;
-}) => {
+export const updateBoard = async (UpdateBoardProps: UpdateBoardProps) => {
   let user = auth.user();
 
   if (user) {
     const { data, error } = await supabase
       .from("boards")
-      .update({
-        title,
-        parent,
-        layout,
-        expanded,
-      })
-      .eq("id", id);
+      .update(UpdateBoardProps)
+      .eq("id", UpdateBoardProps.id);
 
     if (data) return data;
     if (error) {
@@ -531,45 +370,14 @@ export const updateBoard = async ({
     }
   }
 };
-export const updateNode = async ({
-  id,
-  label,
-  x,
-  y,
-  type,
-  width,
-  height,
-  fontSize,
-  textVAlign,
-  textHAlign,
-  customImage,
-  backgroundColor,
-  backgroundOpacity,
-  zIndex,
-  doc_id,
-}: UpdateNodeProps) => {
+export const updateNode = async (UpdateNodeProps: UpdateNodeProps) => {
   let user = auth.user();
 
   if (user) {
     const { data, error } = await supabase
       .from("nodes")
-      .update({
-        label,
-        x,
-        y,
-        type,
-        width,
-        height,
-        fontSize,
-        textHAlign,
-        textVAlign,
-        customImage,
-        backgroundColor,
-        backgroundOpacity,
-        zIndex,
-        doc_id,
-      })
-      .eq("id", id);
+      .update(UpdateNodeProps)
+      .eq("id", UpdateNodeProps.id);
 
     if (data) return data;
     if (error) {
@@ -578,36 +386,13 @@ export const updateNode = async ({
     }
   }
 };
-export const updateEdge = async ({
-  id,
-  label,
-  curveStyle,
-  lineStyle,
-  lineColor,
-  controlPointDistances,
-  controlPointWeights,
-  taxiDirection,
-  taxiTurn,
-  targetArrowShape,
-  zIndex,
-}: UpdateEdgeProps) => {
+export const updateEdge = async (UpdateEdgeProps: UpdateEdgeProps) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase
       .from("edges")
-      .update({
-        label,
-        curveStyle,
-        lineStyle,
-        lineColor,
-        controlPointDistances,
-        controlPointWeights,
-        taxiDirection,
-        taxiTurn,
-        targetArrowShape,
-        zIndex,
-      })
-      .eq("id", id);
+      .update(UpdateEdgeProps)
+      .eq("id", UpdateEdgeProps.id);
 
     if (data) return data;
     if (error) {
