@@ -569,7 +569,6 @@ export function useUpdateMap(project_id: string) {
                   return {
                     ...map,
                     ...updatedMap,
-                    parent: updatedMap.parent ? updatedMap.parent : "0",
                   };
                 } else {
                   return map;
