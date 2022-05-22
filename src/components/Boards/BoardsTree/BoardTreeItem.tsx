@@ -1,11 +1,11 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useParamSelector } from "chonky";
-import { useNavigate, useParams } from "react-router-dom";
-import { BoardProps, boardItemDisplayDialogProps } from "../../../custom-types";
+import { useParams } from "react-router-dom";
+import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
 import { useUpdateBoard } from "../../../utils/customHooks";
 type Props = {
   boardId: string;
+  setBoardId: (boardId: string) => void;
   node: NodeModel<BoardProps>;
   depth: number;
   isOpen: boolean;
@@ -17,13 +17,13 @@ type Props = {
 export default function BoardTreeItem({
   node,
   boardId,
+  setBoardId,
   depth,
   isOpen,
   setDisplayDialog,
   onToggle,
   cm,
 }: Props) {
-  const navigate = useNavigate();
   const { project_id } = useParams();
   const updateBoardMutation = useUpdateBoard(project_id as string);
   return (
@@ -31,7 +31,7 @@ export default function BoardTreeItem({
       style={{ marginInlineStart: depth * 10 }}
       className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
       onClick={() => {
-        if (!node.droppable) navigate(node.id as string);
+        if (!node.droppable) setBoardId(node.id as string);
       }}
       onContextMenu={(e) => {
         setDisplayDialog({

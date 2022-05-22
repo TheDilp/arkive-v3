@@ -5,6 +5,7 @@ import { MapProps, mapItemDisplayDialogProps } from "../../../custom-types";
 import { useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   mapId: string;
+  setMapId: (mapId: string) => void;
   node: NodeModel<MapProps>;
   depth: number;
   isOpen: boolean;
@@ -16,6 +17,7 @@ type Props = {
 export default function MapTreeItem({
   node,
   mapId,
+  setMapId,
   depth,
   isOpen,
   setDisplayDialog,
@@ -30,7 +32,7 @@ export default function MapTreeItem({
       style={{ marginInlineStart: depth * 10 }}
       className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
       onClick={() => {
-        if (!node.droppable) navigate(node.id as string);
+        if (!node.droppable) setMapId(node.id as string);
       }}
       onContextMenu={(e) => {
         cm.current.show(e);

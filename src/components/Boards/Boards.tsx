@@ -20,15 +20,13 @@ export default function Boards() {
   if (isLoading) return <LoadingScreen />;
   return (
     <div className="w-full flex flex-nowrap mainScreen">
-      <BoardsTree boardId={boardId} cyRef={cyRef} />
-      <div className="w-10">
-        <Routes>
-          <Route
-            path="/:board_id"
-            element={<BoardView setBoardId={setBoardId} cyRef={cyRef} />}
-          />
-        </Routes>
-      </div>
+      <BoardsTree boardId={boardId} setBoardId={setBoardId} cyRef={cyRef} />
+      <Routes>
+        <Route
+          path="/:board_id"
+          element={<BoardView setBoardId={setBoardId} cyRef={cyRef} />}
+        />
+      </Routes>
     </div>
   );
 }

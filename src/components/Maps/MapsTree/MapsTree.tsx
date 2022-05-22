@@ -1,33 +1,36 @@
 import {
+  DndProvider,
+  getBackendOptions,
+  MultiBackend,
   NodeModel,
   Tree,
-  MultiBackend,
-  getBackendOptions,
-  DndProvider,
 } from "@minoru/react-dnd-treeview";
-import { Button } from "primereact/button";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
-import {
-  useCreateMap,
-  useGetMaps,
-  useUpdateMap,
-} from "../../../utils/customHooks";
+import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
 import MapCreateDialog from "./MapCreateDialog";
+import MapsFilter from "./MapsFilter";
 import MapTreeItem from "./MapTreeItem";
 import MapTreeItemContext from "./MapTreeItemContext";
 import MapUpdateDialog from "./MapUpdateDialog";
+import MapsFilterList from "./MapsFilterList";
 
-export default function MapsTree({ mapId }: { mapId: string }) {
+export default function MapsTree({
+  mapId,
+  setMapId,
+}: {
+  mapId: string;
+  setMapId: (mapId: string) => void;
+}) {
   const { project_id } = useParams();
   const cm = useRef() as any;
   const { data: maps }: { data: MapProps[] | undefined } = useGetMaps(
     project_id as string
   );
+  const [filter, setFilter] = useState("");
   const [treeData, setTreeData] = useState<NodeModel<MapProps>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
   const [updateMapDialog, setUpdateMapDialog] =
@@ -40,7 +43,6 @@ export default function MapsTree({ mapId }: { mapId: string }) {
       folder: false,
       depth: 0,
     });
-  const createMapMutation = useCreateMap();
   const updateMapMutation = useUpdateMap(project_id as string);
   useLayoutEffect(() => {
     if (maps && maps.length > 0) {
@@ -104,88 +106,81 @@ export default function MapsTree({ mapId }: { mapId: string }) {
           }
         />
       )}
-      <div className="w-full py-1 flex justify-content-between">
-        <Button
-          label="New Folder"
-          icon="pi pi-fw pi-folder"
-          iconPos="right"
-          className="p-button-outlined"
-          onClick={() => {
-            let id = uuid();
-            createMapMutation.mutate({
-              id,
-              project_id: project_id as string,
-              title: "New Folder",
-              map_image: undefined,
-              folder: true,
-              expanded: false,
-            });
-          }}
-        />
-        <Button
-          label="New Map"
-          icon="pi pi-fw pi-map"
-          iconPos="right"
-          className="p-button-outlined"
-          onClick={() => setCreateMapDialog(true)}
-        />
-      </div>
-      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-        <Tree
-          classes={{
-          root: "w-full overflow-y-auto projectTreeRoot p-0",
-            container: "list-none",
-            placeholder: "relative",
-          }}
-          tree={treeData}
-          rootId={"0"}
-          sort={false}
-          initialOpen={
-            maps?.filter((map) => map.expanded).map((map) => map.id) || false
-          }
-          render={(node: NodeModel<MapProps>, { depth, isOpen, onToggle }) => (
-            <MapTreeItem
-              node={node}
-              mapId={mapId}
-              depth={depth}
-              isOpen={isOpen}
-              onToggle={onToggle}
-              setDisplayDialog={setUpdateMapDialog}
-              cm={cm}
-            />
-          )}
-          dragPreviewRender={(monitorProps) => (
-            <DragPreview
-              text={monitorProps.item.text}
-              droppable={monitorProps.item.droppable}
-            />
-          )}
-          placeholderRender={(node, { depth }) => (
-            <div
-              style={{
-                top: 0,
-                right: 0,
-                left: depth * 24,
-                backgroundColor: "#1967d2",
-                height: "2px",
-                position: "absolute",
-                transform: "translateY(-50%)",
-              }}
-            ></div>
-          )}
-          dropTargetOffset={10}
-          canDrop={(tree, { dragSource, dropTargetId }) => {
-            const depth = getDepth(treeData, dropTargetId);
-            // Don't allow nesting documents beyond this depth
-            if (depth > 3) return false;
-            if (dragSource?.parent === dropTargetId) {
-              return true;
+      <MapsFilter
+        setCreateMapDialog={setCreateMapDialog}
+        filter={filter}
+        setFilter={setFilter}
+      />
+      {!filter && (
+        <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+          <Tree
+            classes={{
+              root: "w-full overflow-y-auto projectTreeRoot p-0",
+              container: "list-none",
+              placeholder: "relative",
+            }}
+            tree={treeData}
+            rootId={"0"}
+            sort={false}
+            initialOpen={
+              maps?.filter((map) => map.expanded).map((map) => map.id) || false
             }
-          }}
-          //@ts-ignore
-          onDrop={handleDrop}
+            render={(
+              node: NodeModel<MapProps>,
+              { depth, isOpen, onToggle }
+            ) => (
+              <MapTreeItem
+                node={node}
+                mapId={mapId}
+                depth={depth}
+                isOpen={isOpen}
+                onToggle={onToggle}
+                setDisplayDialog={setUpdateMapDialog}
+                setMapId={setMapId}
+                cm={cm}
+              />
+            )}
+            dragPreviewRender={(monitorProps) => (
+              <DragPreview
+                text={monitorProps.item.text}
+                droppable={monitorProps.item.droppable}
+              />
+            )}
+            placeholderRender={(node, { depth }) => (
+              <div
+                style={{
+                  top: 0,
+                  right: 0,
+                  left: depth * 24,
+                  backgroundColor: "#1967d2",
+                  height: "2px",
+                  position: "absolute",
+                  transform: "translateY(-50%)",
+                }}
+              ></div>
+            )}
+            dropTargetOffset={10}
+            canDrop={(tree, { dragSource, dropTargetId }) => {
+              const depth = getDepth(treeData, dropTargetId);
+              // Don't allow nesting documents beyond this depth
+              if (depth > 3) return false;
+              if (dragSource?.parent === dropTargetId) {
+                return true;
+              }
+            }}
+            //@ts-ignore
+            onDrop={handleDrop}
+          />
+        </DndProvider>
+      )}
+      {filter && (
+        <MapsFilterList
+          filteredTree={treeData.filter((node) =>
+            node.text.toLowerCase().includes(filter.toLowerCase())
+          )}
+          setMapId={setMapId}
         />
-      </DndProvider>
+      )}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import React, { useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { DocumentProps } from "../../../custom-types";
 
@@ -10,7 +9,7 @@ type Props = {
   setDocId: (docId: string) => void;
 };
 
-export default function FilterList({ filteredTree, setDocId }: Props) {
+export default function DocumentsFilterList({ filteredTree, setDocId }: Props) {
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const rowVirtualizer = useVirtual({
     size: filteredTree.length,
@@ -18,7 +17,6 @@ export default function FilterList({ filteredTree, setDocId }: Props) {
     estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
-  const navigate = useNavigate();
   return (
     <>
       <div
@@ -53,7 +51,6 @@ export default function FilterList({ filteredTree, setDocId }: Props) {
               }}
               onClick={() => {
                 setDocId(filteredTree[virtualRow.index].id as string);
-                navigate(`./${filteredTree[virtualRow.index].id}`);
               }}
             >
               {filteredTree[virtualRow.index].droppable ? (

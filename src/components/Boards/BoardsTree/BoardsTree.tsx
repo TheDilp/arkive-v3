@@ -20,10 +20,11 @@ import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
 type Props = {
   boardId: string;
+  setBoardId: (boardId: string) => void;
   cyRef: any;
 };
 
-export default function BoardsTree({ boardId, cyRef }: Props) {
+export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const cm = useRef() as any;
@@ -157,6 +158,7 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
             <BoardTreeItem
               node={node}
               boardId={boardId}
+              setBoardId={setBoardId}
               depth={depth}
               isOpen={isOpen}
               onToggle={onToggle}

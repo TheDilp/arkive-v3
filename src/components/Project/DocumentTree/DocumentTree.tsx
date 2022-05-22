@@ -16,7 +16,7 @@ import {
 import { useUpdateDocument } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "./DragPreview";
-import FilterList from "./FilterList";
+import DocumentsFilterList from "./DocumentFilterList";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import DocumentTreeItem from "./DocumentTreeItem";
 import DocumentTreeItemContext from "./DocumentTreeItemContext";
@@ -185,7 +185,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
             </DndProvider>
           )}
           {(filter || selectedTags.length > 0) && (
-            <FilterList
+            <DocumentsFilterList
               filteredTree={treeData
                 .filter((node) =>
                   node.text.toLowerCase().includes(filter.toLowerCase())

@@ -321,7 +321,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
   return (
     <div
-      className="w-full h-full"
+      className="w-10 h-full"
       onDrop={async (e) => {
         let files = e.dataTransfer.files;
 
