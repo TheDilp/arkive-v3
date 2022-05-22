@@ -662,3 +662,20 @@ export const renameImage = async (id: string, newName: string) => {
     throw new Error(error.message);
   }
 };
+
+// PUBLIC SELECT
+
+export const getSingleBoard = async (board_id: string) => {
+  const { data, error } = await supabase
+    .from("boards")
+    .select(
+      "*, nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+    )
+    .eq("id", board_id)
+    .maybeSingle();
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your board.");
+    throw new Error(error.message);
+  }
+};

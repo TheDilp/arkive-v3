@@ -22,6 +22,8 @@ import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
 import FileBrowser from "./components/FileBrowser/FileBrowser";
+import PublicProject from "./components/PublicView/PublicProject";
+import PublicBoardView from "./components/PublicView/PublicBoardView";
 
 function App() {
   cytoscape.use(edgehandles);
@@ -52,6 +54,9 @@ function App() {
               <Route path="boards/*" element={<Boards />} />
               <Route path="filebrowser" element={<FileBrowser />} />
               <Route path="settings/:setting" element={<ProjectSettings />} />
+            </Route>
+            <Route path="view/:project_id" element={<PublicProject />}>
+              <Route path="boards/:board_id" element={<PublicBoardView />} />
             </Route>
           </Routes>
         </BrowserRouter>
