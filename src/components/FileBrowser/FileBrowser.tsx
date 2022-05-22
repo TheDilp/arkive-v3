@@ -15,13 +15,13 @@ export default function FileBrowser() {
     <div
       className="w-full px-8 mt-2 overflow-y-auto"
       style={{
-        height: "90vh",
+        height: "94.9vh",
       }}
     >
       {images?.isLoading ? (
         <LoadingScreen />
       ) : (
-        <div className="w-full h-full flex flex-wrap justify-content-center align-content-start">
+        <div className="w-full flex flex-wrap justify-content-center align-content-start">
           <FileBrowserHeader
             filter={filter}
             setFilter={setFilter}

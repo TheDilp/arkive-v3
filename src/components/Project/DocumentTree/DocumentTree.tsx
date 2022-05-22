@@ -120,67 +120,69 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
             setSelectedTags={setSelectedTags}
           />
           {!filter && selectedTags.length === 0 && (
-            <Tree
-              classes={{
-                root: "w-full overflow-y-auto projectTreeRoot p-0",
-                container: "list-none",
-                placeholder: "relative",
-              }}
-              tree={treeData}
-              rootId={"0"}
-              sort={false}
-              initialOpen={
-                docs?.filter((doc) => doc.expanded).map((doc) => doc.id) ||
-                false
-              }
-              render={(
-                node: NodeModel<DocumentProps>,
-                { depth, isOpen, onToggle }
-              ) => (
-                <DocumentTreeItem
-                  // @ts-ignore
-                  node={node}
-                  depth={depth}
-                  isOpen={isOpen}
-                  onToggle={onToggle}
-                  docId={docId}
-                  setDocId={setDocId}
-                  setDisplayDialog={setDisplayDialog}
-                  setIconSelect={setIconSelect}
-                  cm={cm}
-                />
-              )}
-              dragPreviewRender={(monitorProps) => (
-                <DragPreview
-                  text={monitorProps.item.text}
-                  droppable={monitorProps.item.droppable}
-                />
-              )}
-              placeholderRender={(node, { depth }) => (
-                <div
-                  style={{
-                    top: 0,
-                    right: 0,
-                    left: depth * 24,
-                    backgroundColor: "#1967d2",
-                    height: "2px",
-                    position: "absolute",
-                    transform: "translateY(-50%)",
-                  }}
-                ></div>
-              )}
-              dropTargetOffset={10}
-              canDrop={(tree, { dragSource, dropTargetId }) => {
-                const depth = getDepth(treeData, dropTargetId);
-                // Don't allow nesting documents beyond this depth
-                if (depth > 3) return false;
-                if (dragSource?.parent === dropTargetId) {
-                  return true;
+            <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+              <Tree
+                classes={{
+                  root: "w-full overflow-y-auto projectTreeRoot p-0",
+                  container: "list-none",
+                  placeholder: "relative",
+                }}
+                tree={treeData}
+                rootId={"0"}
+                sort={false}
+                initialOpen={
+                  docs?.filter((doc) => doc.expanded).map((doc) => doc.id) ||
+                  false
                 }
-              }}
-              // @ts-ignore
-              onDrop={handleDrop}
-            />
+                render={(
+                  node: NodeModel<DocumentProps>,
+                  { depth, isOpen, onToggle }
+                ) => (
+                  <DocumentTreeItem
+                    // @ts-ignore
+                    node={node}
+                    depth={depth}
+                    isOpen={isOpen}
+                    onToggle={onToggle}
+                    docId={docId}
+                    setDocId={setDocId}
+                    setDisplayDialog={setDisplayDialog}
+                    setIconSelect={setIconSelect}
+                    cm={cm}
+                  />
+                )}
+                dragPreviewRender={(monitorProps) => (
+                  <DragPreview
+                    text={monitorProps.item.text}
+                    droppable={monitorProps.item.droppable}
+                  />
+                )}
+                placeholderRender={(node, { depth }) => (
+                  <div
+                    style={{
+                      top: 0,
+                      right: 0,
+                      left: depth * 24,
+                      backgroundColor: "#1967d2",
+                      height: "2px",
+                      position: "absolute",
+                      transform: "translateY(-50%)",
+                    }}
+                  ></div>
+                )}
+                dropTargetOffset={10}
+                canDrop={(tree, { dragSource, dropTargetId }) => {
+                  const depth = getDepth(treeData, dropTargetId);
+                  // Don't allow nesting documents beyond this depth
+                  if (depth > 3) return false;
+                  if (dragSource?.parent === dropTargetId) {
+                    return true;
+                  }
+                }}
+                // @ts-ignore
+                onDrop={handleDrop}
+              />
+            </DndProvider>
           )}
           {(filter || selectedTags.length > 0) && (
             <FilterList

@@ -96,7 +96,7 @@ export default function FileBrowserHeader({
   };
 
   return (
-    <div className="w-10 mb-2 flex flex-wrap">
+    <div className="w-10 h-2rem mb-2 flex flex-wrap">
       <div className="w-full">
         <Dialog visible={uploadDialog} onHide={() => setUploadDialog(false)}>
           <FileUpload

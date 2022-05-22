@@ -129,6 +129,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
           onClick={() => setCreateMapDialog(true)}
         />
       </div>
+      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
         <Tree
           classes={{
             root: "w-full overflow-y-auto projectTreeRoot",
@@ -181,6 +182,7 @@ export default function MapsTree({ mapId }: { mapId: string }) {
           //@ts-ignore
           onDrop={handleDrop}
         />
+      </DndProvider>
     </div>
   );
 }
