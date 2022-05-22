@@ -4,6 +4,7 @@ import { RemirrorJSON } from "remirror";
 import {
   BoardNodeProps,
   BoardProps,
+  CreateBoardProps,
   CreateNodeProps,
   DocumentProps,
   ImageProps,
@@ -860,17 +861,7 @@ export function useGetBoardData(project_id: string, board_id: string) {
 export function useCreateBoard() {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: {
-      id: string;
-      title: string;
-      project_id: string;
-      folder: boolean;
-      parent?: string | null;
-      expanded: false;
-      layout: string;
-      nodes: [];
-      edges: [];
-    }) => {
+    async (vars: CreateBoardProps) => {
       const newBoard = await createBoard({
         ...vars,
       });
@@ -892,10 +883,19 @@ export function useCreateBoard() {
                   parent: newBoard.parent ? newBoard.parent : "0",
                   nodes: [],
                   edges: [],
+                  expanded: false,
                 },
               ];
             } else {
-              return [newBoard];
+              return [
+                {
+                  ...newBoard,
+                  parent: newBoard.parent ? newBoard.parent : "0",
+                  nodes: [],
+                  edges: [],
+                  expanded: false,
+                },
+              ];
             }
           }
         );

@@ -80,9 +80,6 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
         title: "New Folder",
         folder: true,
         layout: "Preset",
-        expanded: false,
-        nodes: [],
-        edges: [],
       });
     } else {
       createBoardMutation.mutate({
@@ -91,9 +88,6 @@ export default function BoardsTree({ boardId, cyRef }: Props) {
         title: "New Board",
         folder: false,
         layout: "Preset",
-        expanded: false,
-        nodes: [],
-        edges: [],
       });
     }
   }
