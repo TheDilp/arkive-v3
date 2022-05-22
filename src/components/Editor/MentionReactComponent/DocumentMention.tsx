@@ -6,7 +6,7 @@ import LinkHoverWindow from "../LinkHover/LinkHoverWindow";
 type Props = {
   title: string;
   content: RemirrorJSON | null;
-  nodeId: string;
+  nodeId: string | undefined;
   nodeLabel: string;
 };
 export default function DocumentMention({
@@ -15,7 +15,7 @@ export default function DocumentMention({
   nodeId,
   nodeLabel,
 }: Props) {
-  return (
+  return nodeId ? (
     <HoverTooltip
       label={
         <Card
@@ -27,7 +27,7 @@ export default function DocumentMention({
       }
     >
       <Link
-        className={`Lato text-white test`}
+        className="Lato text-white"
         id={`link-${nodeId}`}
         style={{
           fontWeight: "700",
@@ -37,5 +37,7 @@ export default function DocumentMention({
         {title || nodeLabel}
       </Link>
     </HoverTooltip>
+  ) : (
+    <span className="Lato text-white">{title || nodeLabel}</span>
   );
 }

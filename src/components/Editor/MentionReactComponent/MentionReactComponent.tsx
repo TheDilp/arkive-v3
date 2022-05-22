@@ -42,27 +42,50 @@ export default function MentionReactComponent({ node }: Props) {
   }
   let { id: nodeId, name: nodeName, label: nodeLabel } = node.attrs;
 
-  if (nodeName === "at" && docItem) {
-    return (
-      <DocumentMention
-        title={docItem.title}
-        content={docItem.content}
-        nodeId={nodeId}
-        nodeLabel={nodeLabel}
-      />
-    );
-  } else if (nodeName === "hash" && mapItem) {
-    return (
-      <MapMention title={mapItem.title} nodeId={nodeId} nodeLabel={nodeLabel} />
-    );
-  } else if (nodeName === "dollah" && boardItem) {
-    return (
-      <BoardMention
-        title={boardItem.title}
-        nodeId={nodeId}
-        nodeLabel={nodeLabel}
-      />
-    );
+  if (nodeName === "at") {
+    if (docItem) {
+      return (
+        <DocumentMention
+          title={docItem.title}
+          content={docItem.content}
+          nodeId={nodeId}
+          nodeLabel={nodeLabel}
+        />
+      );
+    } else {
+      return (
+        <DocumentMention
+          title={nodeLabel}
+          content={null}
+          nodeId={undefined}
+          nodeLabel={nodeLabel}
+        />
+      );
+    }
+  } else if (nodeName === "hash") {
+    if (mapItem) {
+      return (
+        <MapMention
+          title={mapItem.title}
+          nodeId={nodeId}
+          nodeLabel={nodeLabel}
+        />
+      );
+    } else {
+      return <MapMention nodeId={undefined} nodeLabel={nodeLabel} />;
+    }
+  } else if (nodeName === "dollah") {
+    if (boardItem) {
+      return (
+        <BoardMention
+          title={boardItem.title}
+          nodeId={nodeId}
+          nodeLabel={nodeLabel}
+        />
+      );
+    } else {
+      <BoardMention nodeId={undefined} nodeLabel={nodeLabel} />;
+    }
   } else {
     return null;
   }

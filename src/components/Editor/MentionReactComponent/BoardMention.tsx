@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 type Props = {
-  title: string;
-  nodeId: string;
+  nodeId: string | undefined;
   nodeLabel: string;
+  title?: string;
 };
 export default function BoardMention({ title, nodeId, nodeLabel }: Props) {
-  return (
+  return nodeId ? (
     <Link
       className={`Lato text-white test`}
       id={`link-${nodeId}`}
@@ -16,5 +16,7 @@ export default function BoardMention({ title, nodeId, nodeLabel }: Props) {
     >
       {title || nodeLabel}
     </Link>
+  ) : (
+    <div className="Lato text-white">{nodeLabel}</div>
   );
 }
