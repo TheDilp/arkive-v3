@@ -22,6 +22,7 @@ import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
 import FileBrowser from "./components/FileBrowser/FileBrowser";
+
 function App() {
   cytoscape.use(edgehandles);
   cytoscape.use(gridguide);
@@ -32,6 +33,7 @@ function App() {
       },
     },
   });
+
   return (
     <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
       <ToastContainer />

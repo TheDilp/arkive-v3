@@ -1,14 +1,12 @@
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
-import { ProgressBar } from "primereact/progressbar";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { SelectButton } from "primereact/selectbutton";
-import React, { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetImages } from "../../utils/customHooks";
+import { useGetImages, useUploadImage } from "../../utils/customHooks";
 import { uploadImage } from "../../utils/supabaseUtils";
 import { toastWarn } from "../../utils/utils";
-import LoadingScreen from "../Util/LoadingScreen";
 
 type Props = {
   uploadDialog: boolean;
@@ -18,8 +16,8 @@ type Props = {
 export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
   const { project_id } = useParams();
   const images = useGetImages(project_id as string);
+  const uploadImageMutation = useUploadImage(project_id as string);
   const fileUploadRef = useRef<FileUpload>(null);
-  const [totalSize, setTotalSize] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>(
     []
@@ -42,15 +40,12 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
       "custom-cancel-btn p-button-danger p-button-rounded p-button-outlined",
   };
   const onTemplateSelect = (e: any) => {
-    let _totalSize = totalSize;
     let _types = types;
     let files = e.files;
     for (let i = 0; i < files.length; i++) {
-      _totalSize += files[i].size;
       types.push({ name: files[i].name, type: "Image" });
     }
     setTypes(_types);
-    setTotalSize(_totalSize);
   };
   const headerTemplate = (options: any) => {
     const { className, chooseButton, uploadButton, cancelButton } = options;
@@ -68,7 +63,6 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         <span
           onClick={() => {
             fileUploadRef.current?.upload();
-            setTotalSize(0);
           }}
         >
           {uploadButton}
@@ -76,7 +70,6 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         <span
           onClick={() => {
             fileUploadRef.current?.clear();
-            setTotalSize(0);
           }}
         >
           {cancelButton}
@@ -93,7 +86,6 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
       position="top-right"
       onHide={() => {
         fileUploadRef.current?.clear();
-        setTotalSize(0);
         setUploadDialog(false);
       }}
       header={
@@ -122,10 +114,6 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         chooseOptions={chooseOptions}
         uploadOptions={uploadOptions}
         cancelOptions={cancelOptions}
-        onValidationFail={(e) => {
-          console.log(e);
-          setTotalSize(0);
-        }}
         emptyTemplate={
           <p className="text-center text-gray-400">
             Drag and Drop image files here!
@@ -162,10 +150,13 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
               toastWarn(`Image "${files[i].name}" already exists.`);
               continue;
             } else {
-              await uploadImage(project_id as string, files[i], types[i].type);
+              await uploadImageMutation.mutateAsync({
+                file: files[i],
+                type: types[i].type,
+              });
             }
           }
-          images?.refetch();
+          // images?.refetch();
           // setUploadDialog(false);
           setUploading(false);
           setTypes([]);

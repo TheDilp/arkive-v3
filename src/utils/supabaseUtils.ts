@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { Image } from "primereact/image";
 import { RemirrorJSON } from "remirror";
 
 import {
@@ -844,7 +845,23 @@ export const uploadImage = async (
     const { data, error } = await supabase.storage
       .from("images")
       .upload(`${project_id}/${type}/${file.name}`, file, { upsert: false });
-    if (data) return data;
+
+    if (data) {
+      const { data: newImage, error: newImageError } = await supabase
+        .from<ImageProps>("images")
+        .select("id, title, link, type")
+        .eq("link", data.Key.replace("images/", ""))
+        .maybeSingle();
+      if (newImage) {
+        return newImage;
+      }
+      if (newImageError) {
+        toastError(
+          "There was an error uploading your image. (supabaseUtils 857)"
+        );
+        throw new Error(newImageError.message);
+      }
+    }
     if (error) {
       toastError("There was an error uploading your image.");
       throw new Error(error.message);

@@ -23,7 +23,7 @@ export default function Login() {
   return auth.user() ? (
     <Navigate to="/" />
   ) : (
-    <div className="w-full h-full flex align-items-center justify-content-center">
+    <div className="w-full h-screen flex align-items-center justify-content-center">
       <div className="surface-card shadow-4 w-full border-round w-6 flex">
         <div className="w-7 relative">
           <h1

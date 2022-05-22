@@ -1379,6 +1379,30 @@ export function useDeleteEdge(project_id: string) {
     }
   );
 }
+// Custom hook for uploading images
+export function useUploadImage(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(async (vars: { file: File; type: "Image" | "Map" }) => {
+    const newImage: ImageProps | undefined = await uploadImage(
+      project_id,
+      vars.file,
+      vars.type
+    );
+    if (newImage)
+      queryClient.setQueryData(
+        `${project_id}-images`,
+        (oldData: ImageProps[] | undefined) => {
+          if (oldData) {
+            return [...oldData, newImage];
+          } else {
+            return [newImage];
+          }
+        }
+      );
+
+    return newImage;
+  });
+}
 // Custom hook for getting images
 export function useGetImages(project_id: string) {
   const { data, error, refetch, isLoading } = useQuery(
