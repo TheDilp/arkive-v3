@@ -63,6 +63,8 @@ export default function EdgeUpdateDialog({
     Object.entries(edgeUpdateDialog).forEach(([key, value]) => {
       if (key === "backgroundColor" && typeof value === "string") {
         setValue(key as any, value.replace("#", ""));
+      } else if (key === "show") {
+        //
       } else {
         setValue(key as any, value);
       }

@@ -29,7 +29,7 @@ export default function CreateMarkerDialog({
   lng,
 }: Props) {
   const { project_id, map_id } = useParams();
-  const createMapMarkerMutation = useCreateMapMarker();
+  const createMapMarkerMutation = useCreateMapMarker(project_id as string);
   const [iconSelect, setIconSelect] = useState({
     show: false,
     top: 0,
@@ -49,7 +49,6 @@ export default function CreateMarkerDialog({
     let id = uuid();
     createMapMarkerMutation.mutate({
       id,
-      project_id: project_id as string,
       map_id: map_id as string,
       lat,
       lng,

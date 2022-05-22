@@ -10,6 +10,7 @@ import {
   MapProps,
   MapUpdateProps,
   ProjectProps,
+  UpdateEdgeInputs,
   UpdateEdgeProps,
   UpdateNodeProps,
 } from "../custom-types";
@@ -629,13 +630,12 @@ export function useDeleteMap() {
   );
 }
 // Custom hoom to create a map marker
-export function useCreateMapMarker() {
+export function useCreateMapMarker(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: {
       id: string;
       map_id: string;
-      project_id: string;
       text?: string;
       icon?: string;
       color?: string;
@@ -648,11 +648,9 @@ export function useCreateMapMarker() {
     },
     {
       onMutate: async (newMarker) => {
-        const previousMaps = queryClient.getQueryData(
-          `${newMarker.project_id}-maps`
-        );
+        const previousMaps = queryClient.getQueryData(`${project_id}-maps`);
         queryClient.setQueryData(
-          `${newMarker.project_id}-maps`,
+          `${project_id}-maps`,
           (oldData: MapProps[] | undefined) => {
             if (oldData) {
               // Template shouldn't have parent hence null
@@ -684,10 +682,7 @@ export function useCreateMapMarker() {
       },
 
       onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${newTodo.project_id}-documents`,
-          context?.previousMaps
-        );
+        queryClient.setQueryData(`${project_id}-maps`, context?.previousMaps);
         toastError("There was an error creating this map marker.");
       },
     }
@@ -1297,8 +1292,10 @@ export function useCreateEdge(project_id: string) {
 // Custom hook for updating an edge
 export function useUpdateEdge(project_id: string) {
   const queryClient = useQueryClient();
+
   return useMutation(
     async (vars: UpdateEdgeProps) => {
+      console.log(vars);
       await updateEdge(vars);
     },
     {

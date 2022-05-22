@@ -75,6 +75,8 @@ export default function NodeUpdateDialog({
               }
             : null
         );
+      } else if (key === "show") {
+        //
       } else {
         setValue(key as any, value);
       }
