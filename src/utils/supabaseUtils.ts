@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { Image } from "primereact/image";
+import { useMutation } from "react-query";
 import { RemirrorJSON } from "remirror";
 
 import {
@@ -36,9 +37,6 @@ export const supabase = createClient(
 export const auth = supabase.auth;
 
 // Auth functions
-export const register = async (email: string, password: string) => {
-  await supabase.auth.signUp({ email, password });
-};
 export const login = async (email: string, password: string) => {
   const { user, error } = await supabase.auth.signIn({ email, password });
   if (user) return user;
@@ -60,16 +58,9 @@ export const logout = async () => {
 export const getProjects = async () => {
   let user = auth.user();
   if (user) {
-    const { data: projects, error } = await supabase
-      .from<ProjectProps>("projects")
-      .select("id, title, cardImage, user_id")
-      .eq("user_id", user.id);
-
+    const data = await fetch("http://localhost:4000/projects");
+    const projects = await data.json();
     if (projects) return projects;
-    if (error) {
-      toastError("There was an error getting your projects.");
-      throw new Error(error.message);
-    }
   }
 };
 export const getCurrentProject = async (project_id: string) => {
