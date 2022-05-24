@@ -14,7 +14,6 @@ import {
   cytoscapeStylesheet,
   edgehandlesSettings,
 } from "../../utils/utils";
-import LoadingScreen from "../Util/LoadingScreen";
 
 export default function PublicBoardView() {
   const { project_id, board_id } = useParams();
