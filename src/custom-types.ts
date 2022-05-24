@@ -288,7 +288,7 @@ export type UpdateEdgeInputs = Pick<
   | "zIndex"
 >;
 export type RegisterInputs = {
-  username: string;
+  email: string;
   password: string;
 };
 

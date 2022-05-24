@@ -2,13 +2,12 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { auth, register as accountRegister } from "../../utils/supabaseUtils";
 import images from "./authImages";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { RegisterInputs } from "../../custom-types";
 import { emailRegex, passwordRegex } from "../../utils/utils";
-import { useRegister } from "../../utils/authHooks";
 export default function Register() {
-  const registerMutation = useRegister();
   const [index, set] = useState(0);
   useEffect(() => {
     let timeout = setTimeout(() => {
@@ -26,12 +25,12 @@ export default function Register() {
     formState: { errors },
   } = useForm<RegisterInputs>();
   const onSubmit: SubmitHandler<RegisterInputs> = (data) =>
-    registerMutation.mutate(data);
-  return false ? (
+    accountRegister(data.email, data.password);
+  return auth.user() ? (
     <Navigate to="/" />
   ) : (
     <form
-      className="w-full h-screen flex align-items-center justify-content-center Lato"
+      className="w-full h-full flex align-items-center justify-content-center Lato"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="surface-card shadow-4 w-full border-round w-6 flex">
@@ -72,27 +71,28 @@ export default function Register() {
 
           <div>
             <label
-              htmlFor="username"
+              htmlFor="email"
               className="block text-900 font-medium mb-2 Lato"
             >
-              Username
+              Email
             </label>
             <InputText
-              id="username"
+              id="email"
               type="text"
               className="w-full mb-3"
-              {...register("username", {
+              {...register("email", {
                 required: true,
+                pattern: emailRegex,
               })}
             />
-            {errors.username?.type === "required" && (
+            {errors.email?.type === "required" && (
               <span style={{ color: "var(--red-400)" }}>
                 This field is required
               </span>
             )}
-            {errors.username?.type === "pattern" && (
+            {errors.email?.type === "pattern" && (
               <span style={{ color: "var(--red-400)" }}>
-                Please enter a valid username
+                Please enter a valid email
               </span>
             )}
             <label
