@@ -1,14 +1,11 @@
-import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { DocumentProps } from "../../../custom-types";
 import {
   useCreateTemplate,
   useGetDocuments,
-  useGetMaps,
   useGetProjectData,
   useGetTags,
 } from "../../../utils/customHooks";

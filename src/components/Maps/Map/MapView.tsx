@@ -68,7 +68,6 @@ export default function MapView({
         <h1 className="text-white Merriweather align-self-start">
           Loading Map...
         </h1>
-        <LoadingScreen />;
       </div>
     );
   return (

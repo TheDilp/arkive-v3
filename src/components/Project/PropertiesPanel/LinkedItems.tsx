@@ -23,7 +23,7 @@ export default function LinkedItems() {
   const images = useGetImages(project_id as string);
 
   return (
-    <Accordion activeIndex={0}>
+    <Accordion activeIndex={null}>
       <AccordionTab
         header={
           <span className="flex align-items-center">

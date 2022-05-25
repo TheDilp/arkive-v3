@@ -5,7 +5,6 @@ import { SelectButton } from "primereact/selectbutton";
 import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetImages, useUploadImage } from "../../utils/customHooks";
-import { uploadImage } from "../../utils/supabaseUtils";
 import { toastWarn } from "../../utils/utils";
 
 type Props = {
@@ -60,11 +59,7 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         }}
       >
         {chooseButton}
-        <span
-          
-        >
-          {uploadButton}
-        </span>
+        <span>{uploadButton}</span>
         <span
           onClick={() => {
             fileUploadRef.current?.clear();

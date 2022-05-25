@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
 import {
-  BoardNodeProps,
   BoardProps,
   CreateBoardProps,
   CreateNodeProps,
@@ -10,10 +9,8 @@ import {
   ImageProps,
   MapProps,
   MapUpdateProps,
-  ProjectProps,
-  UpdateEdgeInputs,
-  UpdateEdgeProps,
-  UpdateNodeProps,
+  ProjectProps, UpdateEdgeProps,
+  UpdateNodeProps
 } from "../custom-types";
 import {
   auth,
@@ -46,7 +43,7 @@ import {
   updateMapMarker,
   updateNode,
   updateProject,
-  uploadImage,
+  uploadImage
 } from "./supabaseUtils";
 import { toastError, toastSuccess } from "./utils";
 // CUSTOM HOOKS
@@ -270,7 +267,6 @@ export function useUpdateDocument(project_id: string) {
             }
           }
         );
-
         return { previousDocuments };
       },
       onError: (err, newTodo, context) => {

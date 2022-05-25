@@ -308,6 +308,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       setTimeout(() => {
         changeLayout(board.layout, cyRef);
         setLayout(board.layout);
+        cyRef.current.center();
       }, 1);
     }
   }, [board?.layout, cyRef]);
@@ -404,7 +405,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             cyRef.current = cy;
           }
           if (!ehRef.current) {
-            cy.center();
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
             grRef.current = cyRef.current.gridGuide({
               ...cytoscapeGridOptions,

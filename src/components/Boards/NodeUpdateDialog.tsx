@@ -68,7 +68,7 @@ export default function NodeUpdateDialog({
                 ...value,
                 link: value.link
                   .replaceAll(
-                    "https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/4dd68867-859b-4249-9e30-4eb2cf2662d5/",
+                    `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}`,
                     ""
                   )
                   .replaceAll("%20", " "),
