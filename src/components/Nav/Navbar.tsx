@@ -82,7 +82,7 @@ export default function Navbar() {
   };
   const end = () => {
     return (
-      <div className="flex flex-nowrap pr-2">
+      <div className="flex flex-nowrap pr-2 py-2">
         <Tooltip
           target=".settingsIcon"
           content="Project Settings"
@@ -95,10 +95,10 @@ export default function Navbar() {
         />
 
         {project_id && <NavSettingsButton />}
-        <i
+        {project_id && <i
           className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
           onClick={() => setUploadDialog(true)}
-        ></i>
+        ></i>}
         <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"
           onClick={async () => {

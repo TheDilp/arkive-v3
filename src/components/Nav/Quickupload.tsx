@@ -61,9 +61,7 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
       >
         {chooseButton}
         <span
-          onClick={() => {
-            fileUploadRef.current?.upload();
-          }}
+          
         >
           {uploadButton}
         </span>
@@ -156,8 +154,6 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
               });
             }
           }
-          // images?.refetch();
-          // setUploadDialog(false);
           setUploading(false);
           setTypes([]);
           e.options.clear();
