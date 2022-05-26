@@ -31,7 +31,6 @@ export type MapProps = {
   parent: { id: string; title: string } | null;
   folder: boolean;
   expanded: boolean;
-  user_id: string;
   project_id: string;
   markers: MapMarkerProps[];
 };
@@ -49,7 +48,7 @@ export type MapMarkerProps = {
 export type BoardProps = {
   id: string;
   title: string;
-  parent?: string | null;
+  parent: { id: string; title: string } | null;
   folder: boolean;
   expanded: boolean;
   project_id: string;

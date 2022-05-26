@@ -510,7 +510,6 @@ export function useCreateMap() {
                   parent: newMap.parent
                     ? { id: newMap.parent, title: "" }
                     : null,
-                  user_id,
                   folder: newMap.folder ? newMap.folder : false,
                   markers: [],
                 },
@@ -886,7 +885,7 @@ export function useCreateBoard() {
                 ...oldData,
                 {
                   ...newBoard,
-                  parent: newBoard.parent ? newBoard.parent : "0",
+                  parent: { id: "", title: "" },
                   nodes: [],
                   edges: [],
                   expanded: false,
@@ -896,7 +895,7 @@ export function useCreateBoard() {
               return [
                 {
                   ...newBoard,
-                  parent: newBoard.parent ? newBoard.parent : "0",
+                  parent: { id: "", title: "" },
                   nodes: [],
                   edges: [],
                   expanded: false,
@@ -938,11 +937,20 @@ export function useUpdateBoard(project_id: string) {
           `${project_id}-boards`,
           (oldData: BoardProps[] | undefined) => {
             if (oldData) {
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedBoard.parent
+              );
+              console.log(newParent);
               let newData = oldData.map((board) => {
                 if (board.id === updatedBoard.id) {
                   return {
                     ...board,
                     ...updatedBoard,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedBoard.parent === null
+                      ? null
+                      : board.parent,
                   };
                 } else {
                   return board;

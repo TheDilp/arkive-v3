@@ -1,23 +1,22 @@
 import {
+  getBackendOptions,
+  MultiBackend,
   NodeModel,
   Tree,
-  MultiBackend,
-  getBackendOptions,
 } from "@minoru/react-dnd-treeview";
-import { DndProvider } from "react-dnd";
 import { useLayoutEffect, useRef, useState } from "react";
+import { DndProvider } from "react-dnd";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
-import { useCreateBoard, useUpdateBoard } from "../../../utils/customHooks";
+import { useUpdateBoard } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import DragPreview from "../../Project/DocumentTree/DragPreview";
+import BoardsFilter from "./BoardsFilter";
+import BoardsFilterList from "./BoardsFilterList";
 import BoardTreeItem from "./BoardTreeItem";
 import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
-import BoardsFilter from "./BoardsFilter";
-import BoardsFilterList from "./BoardsFilterList";
 type Props = {
   boardId: string;
   setBoardId: (boardId: string) => void;
@@ -63,7 +62,7 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
     if (boards && boards.length > 0) {
       let temp = boards.map((board) => ({
         id: board.id,
-        parent: board.parent || "0",
+        parent: board.parent?.id || "0",
         text: board.title,
         droppable: board.folder,
         data: board,
