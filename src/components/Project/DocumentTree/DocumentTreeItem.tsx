@@ -35,7 +35,7 @@ export default function DocumentTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-md hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center white-space-nowrap overflow-hidden text-overflow-ellipsis "
+      className="text-md hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center white-space-normal "
       onClick={() => {
         // Navigate if not a folder
         if (!node.droppable) setDocId(node.id as string);

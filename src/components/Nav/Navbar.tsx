@@ -4,6 +4,7 @@ import { Tooltip } from "primereact/tooltip";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { logout } from "../../utils/supabaseUtils";
+import { MediaQueryContext } from "../Context/MediaQueryContext";
 import { SidebarContext } from "../Context/SidebarContext";
 import NavbarTitle from "./NavbarTitle";
 import NavSettingsButton from "./NavSettingsButton";
@@ -14,6 +15,7 @@ export default function Navbar() {
   const { project_id } = useParams();
   const [uploadDialog, setUploadDialog] = useState(false);
   const { setSidebar } = useContext(SidebarContext);
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const start = () => {
     return (
       <div className="flex flex-nowrap py-2 align-items-start pl-2">
@@ -43,10 +45,12 @@ export default function Navbar() {
               position="bottom"
               autoHide
             />
-            <i
-              className="pi pi-bars mr-3 cursor-pointer hover:text-primary"
-              onClick={() => setSidebar(true)}
-            ></i>
+            {isTabletOrMobile && (
+              <i
+                className="pi pi-bars mr-3 cursor-pointer hover:text-primary sidebarBars"
+                onClick={() => setSidebar(true)}
+              ></i>
+            )}
             <i
               className="pi pi-home mr-3 cursor-pointer hover:text-primary"
               onClick={() => navigate("/")}
@@ -82,7 +86,7 @@ export default function Navbar() {
           </div>
         )}
         {/* Use project title only if in project */}
-        {project_id && <NavbarTitle />}
+        {project_id && !isTabletOrMobile && <NavbarTitle />}
       </div>
     );
   };
@@ -160,7 +164,7 @@ export default function Navbar() {
       <Menubar
         start={start}
         end={end}
-        className="w-full border-noround border-x-none shadow-5 p-0"
+        className="w-full border-noround border-x-none shadow-5 p-0 navbarMenu"
       />
     </>
   );

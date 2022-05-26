@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  overflow-y: hidden;
 }
 
 .projectTreeRoot {
@@ -71,6 +72,9 @@ body {
 }
 .listitem div {
   margin-inline-start: 0px !important;
+}
+.navbarMenu .pi-bars:not(.sidebarBars) {
+  display: none;
 }
 /* CUSTOM SCROLLBAR */
 

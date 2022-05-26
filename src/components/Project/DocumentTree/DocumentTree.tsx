@@ -37,7 +37,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
   const [treeData, setTreeData] = useState<NodeModel<DocumentProps>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const { isTabletOrMobile } = useContext(MediaQueryContext);
+  const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
     {
       id: "",
@@ -96,7 +96,11 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
   }, [docs]);
 
   return (
-    <div className="text-white w-2 flex flex-wrap surface-50 overflow-x-auto">
+    <div
+      className={`text-white ${isLaptop ? "w-3" : "w-2"} flex flex-wrap ${
+        isTabletOrMobile ? "surface-0" : "surface-50"
+      }`}
+    >
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}
@@ -225,7 +229,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
         </TreeSidebar>
       ) : (
         <TabView
-          className="w-full p-0 wikiTabs surface-50"
+          className="w-full p-0 wikiTabs surface-50 "
           panelContainerClassName="pr-0"
           renderActiveOnly={true}
         >
@@ -240,7 +244,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
               <DndProvider backend={MultiBackend} options={getBackendOptions()}>
                 <Tree
                   classes={{
-                    root: "w-full overflow-y-auto projectTreeRoot p-0",
+                    root: "w-full overflow-y-auto projectTreeRoot p-0 overflow-x-auto",
                     container: "list-none",
                     placeholder: "relative",
                     listItem: "listitem",

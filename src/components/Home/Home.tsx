@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMediaQuery } from "react-responsive";
 import { Navigate } from "react-router-dom";
 import { ProjectProps } from "../../custom-types";
 import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
@@ -14,6 +15,7 @@ export default function Home() {
     error,
     isLoading,
   } = useQuery("getAllProjects", async () => await getProjects());
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
   const createProjectMutation = useMutation(async () => await createProject(), {
     onSuccess: (data) => {
@@ -34,27 +36,47 @@ export default function Home() {
   if (error || isLoading) return <LoadingScreen />;
 
   return auth.user() ? (
-    <div className="Home w-full flex flex-wrap align-content-start h-screen">
-      <div className="w-full">
+    <div className="Home w-full flex flex-wrap align-content-start h-screen overflow-y-auto">
+      <div
+        className="w-full"
+        style={{
+          height: "3.5vh",
+        }}
+      >
         <Navbar />
       </div>
-      <div className="w-1 Lato h-full">
-        <div className="w-4 h-full bg-gray-800 text-white flex-wrap py-5">
-          <div className="w-full flex justify-content-center mb-2">
-            <Button
-              icon="pi pi-plus"
-              className="p-button-outlined p-button-rounded p-button-plain"
-              tooltip="New Project"
-              onClick={() => createProjectMutation.mutate()}
-            />
+      <div
+        className="flex flex-wrap"
+        style={{
+          height: "96.5vh",
+        }}
+      >
+        <div className={`Lato ${isTabletOrMobile ? "w-2" : "w-1"}`}>
+          <div
+            className={`${
+              isTabletOrMobile ? "w-8" : "w-4"
+            } h-full bg-gray-800 text-white flex-wrap py-5`}
+          >
+            <div className="w-full flex justify-content-center mb-2">
+              <Button
+                icon="pi pi-plus"
+                className="p-button-outlined p-button-rounded p-button-plain"
+                tooltip="New Project"
+                onClick={() => createProjectMutation.mutate()}
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="w-11 flex justify-content-start mt-5">
-        {projects &&
-          projects.map((project) => (
-            <ProjectCard key={project.id} {...project} />
-          ))}
+        <div
+          className={`${
+            isTabletOrMobile ? "w-8" : "w-10"
+          } flex flex-wrap justify-content-start mt-5`}
+        >
+          {projects &&
+            projects.map((project) => (
+              <ProjectCard key={project.id} {...project} />
+            ))}
+        </div>
       </div>
     </div>
   ) : (

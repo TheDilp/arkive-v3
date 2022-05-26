@@ -5,7 +5,14 @@ import {
   useKeymap,
   useRemirror,
 } from "@remirror/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode } from "remirror";
 import {
@@ -38,6 +45,7 @@ import { TableExtension } from "@remirror/extension-react-tables";
 import { saveAs } from "file-saver";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
+import { MediaQueryContext } from "../Context/MediaQueryContext";
 const hooks = [
   () => {
     const { getJSON, getText, getMarkdown } = useHelpers();
@@ -165,10 +173,15 @@ export default function RemirrorContext({
 
     return () => clearTimeout(timeout);
   }, [saving]);
-
+  const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   if (!currentDocument) return <Navigate to="../../wiki" />;
   return (
-    <div className="editorContainer w-full xl:w-8 h-full flex flex-wrap align-content-start text-white px-2">
+    <div
+      className={`editorContainer ${
+        // Check if latop, then if mobile/tablet and set width
+        isTabletOrMobile ? "w-12" : isLaptop ? "w-6" : "w-8"
+      } h-full flex flex-wrap align-content-start text-white px-2`}
+    >
       <h1 className="w-full text-center my-2 Merriweather">
         {currentDocument &&
           `${currentDocument.title} ${

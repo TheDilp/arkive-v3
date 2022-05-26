@@ -1,5 +1,5 @@
 import { Button } from "primereact/button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { DocumentProps } from "../../../custom-types";
@@ -11,6 +11,7 @@ import {
 } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 import LinkedItems from "./LinkedItems";
 export default function PropertiesPanel() {
@@ -34,10 +35,14 @@ export default function PropertiesPanel() {
     }
   }, [doc_id, allDocs]);
   const createTemplateMutation = useCreateTemplate();
-
+  const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   return (
     <div
-      className="w-2 surface-50 text-white flex flex-wrap align-items-start align-content-start Lato"
+      className={`${
+        isLaptop ? "w-3" : "w-2"
+      } surface-50 text-white flex flex-wrap align-items-start align-content-start Lato ${
+        isTabletOrMobile ? "hidden" : ""
+      }`}
       style={{
         height: "96.4vh",
       }}

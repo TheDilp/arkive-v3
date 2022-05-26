@@ -3,7 +3,10 @@ import { ProjectProps } from "../../custom-types";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import defaultImage from "../../styles/DefaultProjectImage.jpg";
+import { useMediaQuery } from "react-responsive";
 export default function ProjectCard({ ...Project }: ProjectProps) {
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+
   const header = (
     <Link
       to={`/project/${Project.id}/wiki`}
@@ -43,8 +46,14 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
   );
   return (
     <Card
-      title={<div className="">{Project.title}</div>}
-      className="text-center relative w-20rem mx-2 overflow-hidden h-25rem Merriweather flex flex-column justify-content-between"
+      title={
+        <div className="white-space-nowrap overflow-hidden text-overflow-ellipsis">
+          {Project.title}
+        </div>
+      }
+      className={`text-center relative mx-2 h-25rem Merriweather flex flex-column justify-content-between ${
+        isTabletOrMobile ? "w-15rem" : "w-20rem"
+      }`}
       header={header}
       footer={footer}
     ></Card>
