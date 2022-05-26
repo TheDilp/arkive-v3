@@ -46,7 +46,7 @@ export default function Home() {
         <Navbar />
       </div>
       <div
-        className="flex flex-wrap"
+        className={`flex w-full ${isTabletOrMobile ? "flex-wrap" : ""}`}
         style={{
           height: "96.5vh",
         }}
@@ -54,7 +54,7 @@ export default function Home() {
         <div className={`Lato ${isTabletOrMobile ? "w-2" : "w-1"}`}>
           <div
             className={`${
-              isTabletOrMobile ? "w-8" : "w-4"
+              isTabletOrMobile ? "w-8" : "w-3"
             } h-full bg-gray-800 text-white flex-wrap py-5`}
           >
             <div className="w-full flex justify-content-center mb-2">
@@ -69,8 +69,8 @@ export default function Home() {
         </div>
         <div
           className={`${
-            isTabletOrMobile ? "w-8" : "w-10"
-          } flex flex-wrap justify-content-start mt-5`}
+            isTabletOrMobile ? "w-10 flex-wrap" : "w-8"
+          } flex justify-content-start mt-5`}
         >
           {projects &&
             projects.map((project) => (

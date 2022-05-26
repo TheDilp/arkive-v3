@@ -13,7 +13,6 @@ export default function TreeSidebar({ children }: Props) {
       visible={sidebar}
       onHide={() => setSidebar(false)}
       className="treeSidebar"
-      modal={false}
     >
       {children}
     </Sidebar>

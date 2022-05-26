@@ -47,7 +47,13 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
   return (
     <Card
       title={
-        <div className="white-space-nowrap overflow-hidden text-overflow-ellipsis">
+        <div
+          className={`${
+            isTabletOrMobile
+              ? "white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              : ""
+          }`}
+        >
           {Project.title}
         </div>
       }
