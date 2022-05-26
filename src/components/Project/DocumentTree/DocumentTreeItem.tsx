@@ -35,7 +35,7 @@ export default function DocumentTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
+      className="text-xs hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center white-space-nowrap overflow-hidden text-overflow-ellipsis "
       onClick={() => {
         // Navigate if not a folder
         if (!node.droppable) setDocId(node.id as string);
@@ -97,7 +97,7 @@ export default function DocumentTreeItem({
       </span>
 
       <div
-        className={`text-lg Lato w-10  ${
+        className={`text-lg Lato w-full  ${
           docId === node.id ? "text-primary" : ""
         }`}
         onClick={(e) => {
@@ -112,7 +112,7 @@ export default function DocumentTreeItem({
           }
         }}
       >
-        <div className="w-full white-space-nowrap">{node.text}</div>
+        <div className="w-full text-sm">{node.text}</div>
       </div>
     </div>
   );

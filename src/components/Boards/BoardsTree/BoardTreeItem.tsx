@@ -29,7 +29,7 @@ export default function BoardTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
+      className="text-sm hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
       onClick={() => {
         if (!node.droppable) setBoardId(node.id as string);
       }}
@@ -37,7 +37,7 @@ export default function BoardTreeItem({
         setDisplayDialog({
           id: node.id as string,
           title: node.text,
-          parent: node.data?.parent || "0",
+          parent: node.data?.parent?.id || "0",
           folder: node.droppable || false,
           depth,
           expanded: false,

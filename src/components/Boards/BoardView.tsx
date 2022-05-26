@@ -308,6 +308,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       setTimeout(() => {
         changeLayout(board.layout, cyRef);
         setLayout(board.layout);
+        cyRef.current.zoom(1);
         cyRef.current.center();
       }, 1);
     }

@@ -38,6 +38,7 @@ body {
 
 .wikiTabs .p-tabview-nav li {
   width: 100%;
+  padding: 0 !important;
 }
 
 .wikiTabs .p-tabview-nav li a {
@@ -68,7 +69,9 @@ body {
 .p-sidebar-header {
   padding: 0 !important;
 }
-
+.listitem div {
+  margin-inline-start: 0px !important;
+}
 /* CUSTOM SCROLLBAR */
 
 /* width */

@@ -117,7 +117,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
             panelContainerClassName="pr-0"
             renderActiveOnly={true}
           >
-            <TabPanel header="Documents" className="p-0">
+            <TabPanel header="Documents" className="p-0 surface-50">
               <DocTreeFilter
                 filter={filter}
                 setFilter={setFilter}
@@ -131,7 +131,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
                 >
                   <Tree
                     classes={{
-                      root: "w-full overflow-y-auto  p-0",
+                      root: "w-full overflow-y-auto projectTreeRoot p-0",
                       container: "list-none",
                       placeholder: "relative",
                     }}
@@ -210,7 +210,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
                 />
               )}
             </TabPanel>
-            <TabPanel header="Templates">
+            <TabPanel header="Templates" className="surface-50">
               <div className="h-screen">
                 <TemplatesTree
                   docId={docId}
@@ -225,11 +225,11 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
         </TreeSidebar>
       ) : (
         <TabView
-          className="w-full p-0 wikiTabs"
+          className="w-full p-0 wikiTabs surface-50"
           panelContainerClassName="pr-0"
           renderActiveOnly={true}
         >
-          <TabPanel header="Documents" className="p-0">
+          <TabPanel header="Documents" className="p-0 pr-2 surface-50">
             <DocTreeFilter
               filter={filter}
               setFilter={setFilter}
@@ -240,9 +240,10 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
               <DndProvider backend={MultiBackend} options={getBackendOptions()}>
                 <Tree
                   classes={{
-                    root: "w-full overflow-y-auto  p-0",
+                    root: "w-full overflow-y-auto projectTreeRoot p-0",
                     container: "list-none",
                     placeholder: "relative",
+                    listItem: "listitem",
                   }}
                   tree={treeData}
                   rootId={"0"}
@@ -318,7 +319,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
               />
             )}
           </TabPanel>
-          <TabPanel header="Templates">
+          <TabPanel header="Templates" className="surface-50">
             <div className="h-screen">
               <TemplatesTree
                 docId={docId}
