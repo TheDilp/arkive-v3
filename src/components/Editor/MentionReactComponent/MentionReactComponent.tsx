@@ -87,6 +87,7 @@ export default function MentionReactComponent({ node }: Props) {
       <BoardMention nodeId={undefined} nodeLabel={nodeLabel} />;
     }
   } else {
-    return null;
+    return <span>{nodeLabel}</span>;
   }
+  return <span>{nodeLabel}</span>;
 }

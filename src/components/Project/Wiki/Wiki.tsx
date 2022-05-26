@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Navigate,
   Route,
@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useGetDocuments } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
+import { SidebarContext } from "../../Context/SidebarContext";
 import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import DocumentsTree from "../DocumentTree/DocumentTree";

@@ -112,9 +112,7 @@ export default function DocumentTreeItem({
           }
         }}
       >
-        <div className="w-full  white-space-nowrap overflow-hidden text-overflow-ellipsis">
-          {node.text}
-        </div>
+        <div className="w-full white-space-nowrap">{node.text}</div>
       </div>
     </div>
   );

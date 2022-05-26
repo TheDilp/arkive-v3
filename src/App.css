@@ -65,6 +65,9 @@ body {
 .previewImage {
   object-fit: contain;
 }
+.p-sidebar-header {
+  padding: 0 !important;
+}
 
 /* CUSTOM SCROLLBAR */
 

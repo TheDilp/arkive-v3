@@ -8,6 +8,8 @@ import {
 import LoadingScreen from "../Util/LoadingScreen";
 import Navbar from "../Nav/Navbar";
 import { auth } from "../../utils/supabaseUtils";
+import { useState } from "react";
+import SidebarProvider from "../Context/SidebarContext";
 
 export default function Project() {
   const { project_id } = useParams();
@@ -26,8 +28,10 @@ export default function Project() {
 
   return (
     <>
-      <Navbar />
-      <Outlet />
+      <SidebarProvider>
+        <Navbar />
+        <Outlet />
+      </SidebarProvider>
     </>
   );
 }

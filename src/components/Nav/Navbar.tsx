@@ -1,9 +1,10 @@
 import { Icon } from "@iconify/react";
 import { Menubar } from "primereact/menubar";
 import { Tooltip } from "primereact/tooltip";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { logout } from "../../utils/supabaseUtils";
+import { SidebarContext } from "../Context/SidebarContext";
 import NavbarTitle from "./NavbarTitle";
 import NavSettingsButton from "./NavSettingsButton";
 import Quickupload from "./Quickupload";
@@ -12,6 +13,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { project_id } = useParams();
   const [uploadDialog, setUploadDialog] = useState(false);
+  const { setSidebar } = useContext(SidebarContext);
   const start = () => {
     return (
       <div className="flex flex-nowrap py-2 align-items-start pl-2">
@@ -41,6 +43,10 @@ export default function Navbar() {
               position="bottom"
               autoHide
             />
+            <i
+              className="pi pi-bars mr-3 cursor-pointer hover:text-primary"
+              onClick={() => setSidebar(true)}
+            ></i>
             <i
               className="pi pi-home mr-3 cursor-pointer hover:text-primary"
               onClick={() => navigate("/")}
@@ -95,10 +101,12 @@ export default function Navbar() {
         />
 
         {project_id && <NavSettingsButton />}
-        {project_id && <i
-          className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
-          onClick={() => setUploadDialog(true)}
-        ></i>}
+        {project_id && (
+          <i
+            className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
+            onClick={() => setUploadDialog(true)}
+          ></i>
+        )}
         <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"
           onClick={async () => {

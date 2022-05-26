@@ -111,10 +111,7 @@ export default function RemirrorContext({
       },
     ],
   });
-  CustomMentionExtension.ReactComponent = useMemo(
-    () => MentionReactComponent,
-    []
-  );
+  CustomMentionExtension.ReactComponent = MentionReactComponent;
 
   const { manager, state } = useRemirror({
     extensions: () => [
@@ -171,7 +168,7 @@ export default function RemirrorContext({
 
   if (!currentDocument) return <Navigate to="../../wiki" />;
   return (
-    <div className="editorContainer w-8 h-full flex flex-wrap align-content-start text-white px-2">
+    <div className="editorContainer w-full xl:w-8 h-full flex flex-wrap align-content-start text-white px-2">
       <h1 className="w-full text-center my-2 Merriweather">
         {currentDocument &&
           `${currentDocument.title} ${
