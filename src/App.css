@@ -1,90 +1,89 @@
 body {
-    margin: 0;
+  margin: 0;
 }
 
 .projectTreeRoot {
-    height: 72vh;
+  height: 72vh;
 }
 
 .Lato {
-    font-family: 'Lato', 'Times New Roman', Times, serif;
+  font-family: "Lato", "Times New Roman", Times, serif;
 }
 
 .Merriweather {
-    font-family: "Merriweather", Georgia, 'Times New Roman', Times, serif;
+  font-family: "Merriweather", Georgia, "Times New Roman", Times, serif;
 }
 
 .mainScreen {
-    height: 95.78vh !important;
+  height: 95.78vh !important;
 }
 
 .deleteAllDocuments div .p-confirm-dialog-message,
 .deleteAllDocuments div .p-confirm-dialog-icon {
-    color: red !important;
+  color: red !important;
 }
 
 .wikiTabs .p-tabview-panels {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .remirror-table-controller-trigger-area {
-    pointer-events: none !important;
+  pointer-events: none !important;
 }
 
 .remirror-table-controller-mark-column-corner,
 .remirror-table-controller-mark-row-corner {
-    display: none !important;
+  display: none !important;
 }
 
 .wikiTabs .p-tabview-nav li {
-    width: 100%;
+  width: 100%;
 }
 
 .wikiTabs .p-tabview-nav li a {
-    border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
 .wikiTabs .p-tabview-nav span {
-    width: 100% !important;
-    text-align: center !important;
+  width: 100% !important;
+  text-align: center !important;
 }
 
 .p-autocomplete-token-label {
-    font-family: 'Lato', 'Times New Roman', Times, serif;
-
+  font-family: "Lato", "Times New Roman", Times, serif;
 }
 
 .highlight {
-    color: cyan;
-    background-color: cyan;
+  color: cyan;
+  background-color: cyan;
 }
 
 .FileBrowserListItemOdd {
-    background-color: var(--gray-800);
+  background-color: var(--gray-800);
 }
 
 .previewImage {
-    object-fit: contain;
+  object-fit: contain;
 }
 
 /* CUSTOM SCROLLBAR */
 
 /* width */
 ::-webkit-scrollbar {
-    width: 0.25rem;
+  width: 0.25rem;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: #888;
+  background: #888;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  background: #555;
 }
