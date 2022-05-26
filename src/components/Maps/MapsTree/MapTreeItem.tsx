@@ -30,7 +30,7 @@ export default function MapTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-sm hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
+      className="text-md hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
       onClick={() => {
         if (!node.droppable) setMapId(node.id as string);
       }}
@@ -77,9 +77,7 @@ export default function MapTreeItem({
         <Icon icon={"mdi:map"} inline={true} className="mr-1" />
       )}
       <div
-        className={`text-lg Lato w-10 ${
-          mapId === node.id ? "text-primary" : ""
-        }`}
+        className={`Lato w-10 ${mapId === node.id ? "text-primary" : ""}`}
         onClick={(e) => {
           if (node.droppable) {
             e.preventDefault();
@@ -92,7 +90,7 @@ export default function MapTreeItem({
           }
         }}
       >
-        <div className="w-full  white-space-nowrap overflow-hidden text-overflow-ellipsis">
+        <div className="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis">
           {node.text}
         </div>
       </div>
