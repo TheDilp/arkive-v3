@@ -5,11 +5,11 @@ import {
   useGetMaps,
   useGetProjectData,
 } from "../../utils/customHooks";
-import LoadingScreen from "../Util/LoadingScreen";
-import Navbar from "../Nav/Navbar";
 import { auth } from "../../utils/supabaseUtils";
-import { useState } from "react";
+import MediaQueryProvider from "../Context/MediaQueryContext";
 import SidebarProvider from "../Context/SidebarContext";
+import Navbar from "../Nav/Navbar";
+import LoadingScreen from "../Util/LoadingScreen";
 
 export default function Project() {
   const { project_id } = useParams();
@@ -28,10 +28,12 @@ export default function Project() {
 
   return (
     <>
-      <SidebarProvider>
-        <Navbar />
-        <Outlet />
-      </SidebarProvider>
+      <MediaQueryProvider>
+        <SidebarProvider>
+          <Navbar />
+          <Outlet />
+        </SidebarProvider>
+      </MediaQueryProvider>
     </>
   );
 }

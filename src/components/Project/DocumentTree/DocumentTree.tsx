@@ -5,7 +5,7 @@ import {
   Tree,
 } from "@minoru/react-dnd-treeview";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -25,19 +25,19 @@ import DragPreview from "./DragPreview";
 import RenameDialog from "./RenameDialog";
 import TemplatesTree from "./TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
-import { useMediaQuery } from "react-responsive";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 type Props = {
   docId: string;
   setDocId: (docId: string) => void;
 };
 
 export default function DocumentsTree({ docId, setDocId }: Props) {
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel<DocumentProps>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
     {
       id: "",
@@ -96,7 +96,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
   }, [docs]);
 
   return (
-    <div className="text-white w-min flex flex-wrap surface-50 overflow-x-auto">
+    <div className="text-white w-2 flex flex-wrap surface-50 overflow-x-auto">
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
       )}
@@ -110,7 +110,120 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
-      <TreeSidebar>
+      {isTabletOrMobile ? (
+        <TreeSidebar>
+          <TabView
+            className="w-full p-0 wikiTabs"
+            panelContainerClassName="pr-0"
+            renderActiveOnly={true}
+          >
+            <TabPanel header="Documents" className="p-0">
+              <DocTreeFilter
+                filter={filter}
+                setFilter={setFilter}
+                selectedTags={selectedTags}
+                setSelectedTags={setSelectedTags}
+              />
+              {!filter && selectedTags.length === 0 && (
+                <DndProvider
+                  backend={MultiBackend}
+                  options={getBackendOptions()}
+                >
+                  <Tree
+                    classes={{
+                      root: "w-full overflow-y-auto  p-0",
+                      container: "list-none",
+                      placeholder: "relative",
+                    }}
+                    tree={treeData}
+                    rootId={"0"}
+                    sort={false}
+                    initialOpen={
+                      docs
+                        ?.filter((doc) => doc.expanded)
+                        .map((doc) => doc.id) || false
+                    }
+                    render={(
+                      node: NodeModel<DocumentProps>,
+                      { depth, isOpen, onToggle }
+                    ) => (
+                      <DocumentTreeItem
+                        // @ts-ignore
+                        node={node}
+                        depth={depth}
+                        isOpen={isOpen}
+                        onToggle={onToggle}
+                        docId={docId}
+                        setDocId={setDocId}
+                        setDisplayDialog={setDisplayDialog}
+                        setIconSelect={setIconSelect}
+                        cm={cm}
+                      />
+                    )}
+                    dragPreviewRender={(monitorProps) => (
+                      <DragPreview
+                        text={monitorProps.item.text}
+                        droppable={monitorProps.item.droppable}
+                      />
+                    )}
+                    placeholderRender={(node, { depth }) => (
+                      <div
+                        style={{
+                          top: 0,
+                          right: 0,
+                          left: depth * 24,
+                          backgroundColor: "#1967d2",
+                          height: "2px",
+                          position: "absolute",
+                          transform: "translateY(-50%)",
+                        }}
+                      ></div>
+                    )}
+                    dropTargetOffset={10}
+                    canDrop={(tree, { dragSource, dropTargetId }) => {
+                      const depth = getDepth(treeData, dropTargetId);
+                      // Don't allow nesting documents beyond this depth
+                      if (depth > 3) return false;
+                      if (dragSource?.parent === dropTargetId) {
+                        return true;
+                      }
+                    }}
+                    // @ts-ignore
+                    onDrop={handleDrop}
+                  />
+                </DndProvider>
+              )}
+              {(filter || selectedTags.length > 0) && (
+                <DocumentsFilterList
+                  filteredTree={treeData
+                    .filter((node) =>
+                      node.text.toLowerCase().includes(filter.toLowerCase())
+                    )
+                    .filter((node) =>
+                      selectedTags.length > 0
+                        ? node.data?.categories.some((category) =>
+                            selectedTags.includes(category)
+                          )
+                        : true
+                    )}
+                  setDocId={setDocId}
+                />
+              )}
+            </TabPanel>
+            <TabPanel header="Templates">
+              <div className="h-screen">
+                <TemplatesTree
+                  docId={docId}
+                  setDocId={setDocId}
+                  setIconSelect={setIconSelect}
+                  setDisplayDialog={setDisplayDialog}
+                  cm={cm}
+                />
+              </div>
+            </TabPanel>
+          </TabView>
+        </TreeSidebar>
+      ) : (
         <TabView
           className="w-full p-0 wikiTabs"
           panelContainerClassName="pr-0"
@@ -217,7 +330,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
             </div>
           </TabPanel>
         </TabView>
-      </TreeSidebar>
+      )}
     </div>
   );
 }
