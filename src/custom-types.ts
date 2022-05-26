@@ -28,7 +28,7 @@ export type MapProps = {
   id: string;
   title: string;
   map_image?: ImageProps;
-  parent: string | null;
+  parent: { id: string; title: string } | null;
   folder: boolean;
   expanded: boolean;
   user_id: string;

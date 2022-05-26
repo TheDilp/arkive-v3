@@ -115,7 +115,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent, folder, expanded, project_id, markers:markers!map_id(*), map_image:images(id, title, link)"
+      "id, title, parent(id), folder, expanded, project_id, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
     )
     .eq("project_id", project_id);
   if (data) return data;
@@ -330,7 +330,10 @@ export const updateMap = async (MapUpdateProps: MapUpdateProps) => {
   if (user) {
     const { data: map, error } = await supabase
       .from("maps")
-      .update(MapUpdateProps)
+      .update({
+        ...MapUpdateProps,
+        map_image: MapUpdateProps.map_image?.id || undefined,
+      })
       .eq("id", MapUpdateProps.id);
 
     if (map) return map[0];

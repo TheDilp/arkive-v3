@@ -9,8 +9,9 @@ import {
   ImageProps,
   MapProps,
   MapUpdateProps,
-  ProjectProps, UpdateEdgeProps,
-  UpdateNodeProps
+  ProjectProps,
+  UpdateEdgeProps,
+  UpdateNodeProps,
 } from "../custom-types";
 import {
   auth,
@@ -43,7 +44,7 @@ import {
   updateMapMarker,
   updateNode,
   updateProject,
-  uploadImage
+  uploadImage,
 } from "./supabaseUtils";
 import { toastError, toastSuccess } from "./utils";
 // CUSTOM HOOKS
@@ -252,10 +253,11 @@ export function useUpdateDocument(project_id: string) {
                   return {
                     ...doc,
                     ...updatedDocument,
-                    parent:
-                      updatedDocument.parent && newParent
-                        ? { id: newParent.id, title: newParent.title }
-                        : doc.parent,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedDocument.parent === null
+                      ? null
+                      : doc.parent,
                   };
                 } else {
                   return doc;
@@ -505,7 +507,9 @@ export function useCreateMap() {
                 ...oldData,
                 {
                   ...newMap,
-                  parent: newMap.parent ? newMap.parent : "0",
+                  parent: newMap.parent
+                    ? { id: newMap.parent, title: "" }
+                    : null,
                   user_id,
                   folder: newMap.folder ? newMap.folder : false,
                   markers: [],
@@ -559,12 +563,19 @@ export function useUpdateMap(project_id: string) {
           `${project_id}-maps`,
           (oldData: MapProps[] | undefined) => {
             if (oldData) {
-              // Template shouldn't have parent hence null
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedMap.parent
+              );
               let newData: MapProps[] = oldData.map((map) => {
                 if (map.id === updatedMap.id) {
                   return {
                     ...map,
                     ...updatedMap,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedMap.parent === null
+                      ? null
+                      : map.parent,
                   };
                 } else {
                   return map;
