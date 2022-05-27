@@ -78,8 +78,8 @@ export default function MapsTree({
 
   return (
     <div
-      className={`w-2 text-white pt-2 px-2 ${
-        isTabletOrMobile ? "surface-0" : "surface-50"
+      className={` text-white pt-2 px-2 ${
+        isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
       }`}
       style={{
         height: "96vh",

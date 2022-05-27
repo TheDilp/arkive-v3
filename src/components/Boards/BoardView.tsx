@@ -1,5 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -26,6 +25,7 @@ import {
   toastWarn,
   toModelPosition,
 } from "../../utils/utils";
+import { MediaQueryContext } from "../Context/MediaQueryContext";
 import LoadingScreen from "../Util/LoadingScreen";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
@@ -49,7 +49,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const grRef = useRef() as any;
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
-
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [nodeUpdateDialog, setNodeUpdateDialog] =
     useState<nodeUpdateDialogProps>({
       id: "",
@@ -332,7 +332,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
   return (
     <div
-      className="w-10 h-full"
+      className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
       onDrop={async (e) => {
         let files = e.dataTransfer.files;
 

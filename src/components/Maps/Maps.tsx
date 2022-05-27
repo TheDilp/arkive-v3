@@ -28,7 +28,7 @@ export default function Maps() {
   return !auth.user() ? (
     <Navigate to="/login" />
   ) : (
-    <div className="w-full flex flex-wrap justify-content-start mainScreen">
+    <div className="w-full flex flex-nowrap justify-content-start mainScreen">
       <MapsTree mapId={mapId} setMapId={setMapId} />
       <Routes>
         <Route path="/:map_id" element={<MapView setMapId={setMapId} />} />

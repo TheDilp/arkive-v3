@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import L, { LatLngBoundsExpression, map } from "leaflet";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { useGetMapData } from "../../../utils/customHooks";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
@@ -18,6 +19,7 @@ export default function MapView({
   const imgRef = useRef() as any;
   const mapRef = useRef() as any;
   const mapData = useGetMapData(project_id as string, map_id as string);
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
@@ -64,14 +66,14 @@ export default function MapView({
 
   if (loading)
     return (
-      <div className="w-10 h-full flex align-items-center justify-content-center">
+      <div className="w-full h-full flex align-items-center justify-content-center">
         <h1 className="text-white Merriweather align-self-start">
           Loading Map...
         </h1>
       </div>
     );
   return (
-    <div className="w-10 h-full">
+    <div className={`${isTabletOrMobile ? "w-full" : "w-10"}   h-full`}>
       <MapContextMenu
         cm={cm}
         mapRef={mapRef}
