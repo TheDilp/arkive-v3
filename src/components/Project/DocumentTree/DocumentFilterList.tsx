@@ -21,7 +21,7 @@ export default function DocumentsFilterList({ filteredTree, setDocId }: Props) {
     <>
       <div
         ref={parentRef}
-        className="h-screen list-none text-lg"
+        className="h-screen list-none text-md"
         style={{
           height: `100%`,
           width: `100%`,
@@ -74,7 +74,9 @@ export default function DocumentsFilterList({ filteredTree, setDocId }: Props) {
                   }}
                 />
               )}
-              <span className={`text-lg hover:bg-blue-300 Lato`}>
+              <span
+                className={`text-md hover:bg-blue-300 Lato white-space-nowrap overflow-hidden text-overflow-ellipsis`}
+              >
                 {filteredTree[virtualRow.index].text}
               </span>
             </div>

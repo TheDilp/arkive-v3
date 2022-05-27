@@ -136,8 +136,6 @@ export default function BoardTreeItemContext({
               project_id: project_id as string,
               folder: false,
               layout: "Preset",
-              nodes: [],
-              edges: [],
             }),
         },
         {
@@ -152,8 +150,6 @@ export default function BoardTreeItemContext({
                 project_id: project_id as string,
                 folder: true,
                 layout: "Preset",
-                nodes: [],
-                edges: [],
               });
             } else {
               toastWarn("You cannot insert more than 4 levels deep.");

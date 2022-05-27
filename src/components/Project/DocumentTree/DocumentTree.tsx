@@ -309,8 +309,10 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
             {(filter || selectedTags.length > 0) && (
               <DocumentsFilterList
                 filteredTree={treeData
-                  .filter((node) =>
-                    node.text.toLowerCase().includes(filter.toLowerCase())
+                  .filter(
+                    (node) =>
+                      node.text.toLowerCase().includes(filter.toLowerCase()) &&
+                      !node.droppable
                   )
                   .filter((node) =>
                     selectedTags.length > 0

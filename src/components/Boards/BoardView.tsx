@@ -296,6 +296,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     grRef.current = null;
     if (board_id) {
       setBoardId(board_id);
+      setTimeout(() => {
+        cyRef.current.zoom(1);
+        cyRef.current.center();
+      }, 2);
     }
     return () => {
       cyRef.current.removeListener("click cxttap dbltap free");
@@ -308,8 +312,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       setTimeout(() => {
         changeLayout(board.layout, cyRef);
         setLayout(board.layout);
-        cyRef.current.zoom(1);
-        cyRef.current.center();
       }, 1);
     }
   }, [board?.layout, cyRef]);

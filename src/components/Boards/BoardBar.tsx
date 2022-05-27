@@ -225,26 +225,26 @@ export default function BoardBar({
         className="ml-2"
         placeholder="Search Nodes"
         value={search}
-        options={board?.nodes || []}
+        options={board?.nodes.filter((node) => node.label) || []}
         optionLabel="label"
         optionValue="id"
         filter
         filterBy="label"
-        itemTemplate={(item) => <div>{item.label || "*Unnamed node*"}</div>}
+        itemTemplate={(item) => <div>{item.label}</div>}
         onChange={(e: any) => {
           if (e.target.value) {
             let foundNode = cyRef.current.getElementById(e.target.value);
-          cyRef.current.animate(
-            {
-              center: {
-                eles: foundNode,
+            cyRef.current.animate(
+              {
+                center: {
+                  eles: foundNode,
+                },
+                zoom: 1,
               },
-              zoom: 1,
-            },
-            {
-              duration: 1250,
-            }
-          );
+              {
+                duration: 1250,
+              }
+            );
           }
         }}
       />
