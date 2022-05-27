@@ -62,11 +62,5 @@ export default function MentionComponent() {
   }, [mentionState]);
 
   //   @ts-ignore
-  return (
-    <MentionAtomPopupComponent
-      onChange={setMentionState}
-      items={items}
-      ignoreMatchesOnDismiss={true}
-    />
-  );
+  return <MentionAtomPopupComponent onChange={setMentionState} items={items} />;
 }

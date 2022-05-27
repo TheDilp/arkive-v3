@@ -1,20 +1,23 @@
 import {
   MutableRefObject,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 import { useVirtual } from "react-virtual";
 import { ImageProps } from "../../custom-types";
+import { FileBrowserContext } from "../Context/FileBrowserContext";
 
 import GridItem from "./GridItem";
 
-type Props = { images: ImageProps[]; filter: string };
+type Props = { images: ImageProps[] };
 
-export default function GridLayout({ images, filter }: Props) {
+export default function GridLayout({ images }: Props) {
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
   const [filteredImages, setFilteredImages] = useState(images);
+  const { filter } = useContext(FileBrowserContext);
   const rowVirtualizer = useVirtual({
     size: Math.ceil(filteredImages.length / 5),
     parentRef,

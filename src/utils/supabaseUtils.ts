@@ -646,12 +646,24 @@ export const downloadImage = async (id: string) => {
     }
   }
 };
-export const deleteImages = async (images: string[]) => {
+
+export const deleteImagesStorage = async (images: string[]) => {
   const { data, error } = await supabase.storage.from("images").remove(images);
   if (data) return data;
   if (error) {
     toastError("There was an error deleting your images.");
     throw new Error(error.message);
+  }
+};
+export const deleteImageRecords = async (ids: string[]) => {
+  let user = auth.user();
+  if (user) {
+    const { error } = await supabase.rpc("delete_many_images", {
+      ids,
+    });
+    if (error) {
+      toastError("There was an error deleting your images.");
+    }
   }
 };
 export const renameImage = async (id: string, newName: string) => {

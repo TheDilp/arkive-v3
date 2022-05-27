@@ -1,36 +1,34 @@
 import { Button } from "primereact/button";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { DataViewLayoutOptions } from "primereact/dataview";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
-import { ProgressBar } from "primereact/progressbar";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { uploadImage } from "../../utils/supabaseUtils";
 import { SelectButton } from "primereact/selectbutton";
+import { useContext, useRef, useState } from "react";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { ImageProps } from "../../custom-types";
 import { useGetImages } from "../../utils/customHooks";
+import {
+  deleteImageRecords,
+  deleteImagesStorage,
+  uploadImage,
+} from "../../utils/supabaseUtils";
 import { toastWarn } from "../../utils/utils";
-type Props = {
-  filter: string;
-  layout: string;
-  setFilter: (filter: string) => void;
-  setLayout: (layout: string) => void;
-};
+import { FileBrowserContext } from "../Context/FileBrowserContext";
 
-export default function FileBrowserHeader({
-  filter,
-  layout,
-  setFilter,
-  setLayout,
-}: Props) {
+export default function FileBrowserHeader() {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const images = useGetImages(project_id as string);
   const fileUploadRef = useRef<FileUpload>(null);
   const [totalSize, setTotalSize] = useState(0);
   const [uploadDialog, setUploadDialog] = useState(false);
   const [uploading, setUploading] = useState(false);
-
+  const { filter, setFilter, layout, setLayout, selected, setSelected } =
+    useContext(FileBrowserContext);
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>(
     []
   );
@@ -94,81 +92,79 @@ export default function FileBrowserHeader({
       </div>
     );
   };
-
   return (
     <div className="w-10 h-2rem mb-2 flex flex-wrap">
-      <div className="w-full">
-        <Dialog visible={uploadDialog} onHide={() => setUploadDialog(false)}>
-          <FileUpload
-            style={{
-              maxHeight: "45rem",
-              overflowY: "auto",
-            }}
-            name="demo[]"
-            ref={fileUploadRef}
-            headerTemplate={headerTemplate}
-            accept="image/*"
-            maxFileSize={10000000}
-            multiple
-            emptyTemplate={
-              <p className="text-center text-gray-400">
-                Drag and Drop image files here!
-              </p>
-            }
-            chooseOptions={chooseOptions}
-            uploadOptions={uploadOptions}
-            cancelOptions={cancelOptions}
-            onSelect={onTemplateSelect}
-            itemTemplate={(file: any) => {
-              return (
-                <div className="flex justify-content-between align-items-center">
-                  <img src={file.objectURL} className="w-3rem" alt="Error" />
-                  {file.name}
-                  <SelectButton
-                    value={types.find((t) => t.name === file.name)?.type}
-                    options={["Image", "Map"]}
-                    onChange={(e) => {
-                      let _types = [...types];
-                      let idx = _types.findIndex((t) => t.name === file.name);
-                      if (idx !== -1) {
-                        _types[idx].type = e.value;
-                        setTypes(_types);
-                      }
-                    }}
-                  />
-                </div>
-              );
-            }}
-            customUpload
-            uploadHandler={async (e) => {
-              let files = e.files;
-              setUploading(true);
-              for (let i = 0; i < files.length; i++) {
-                // Safeguard to not attempt uploading already existing image
-                if (images?.data.some((img) => img.title === files[i].name)) {
-                  toastWarn(`Image "${files[i].name}" already exists.`);
-                  continue;
-                } else {
-                  try {
-                    await uploadImage(
-                      project_id as string,
-                      files[i],
-                      types[i].type
-                    );
-                  } catch (error) {
-                    //
-                  }
+      <Dialog visible={uploadDialog} onHide={() => setUploadDialog(false)}>
+        <FileUpload
+          style={{
+            maxHeight: "45rem",
+            overflowY: "auto",
+          }}
+          name="demo[]"
+          ref={fileUploadRef}
+          headerTemplate={headerTemplate}
+          accept="image/*"
+          maxFileSize={10000000}
+          multiple
+          emptyTemplate={
+            <p className="text-center text-gray-400">
+              Drag and Drop image files here!
+            </p>
+          }
+          chooseOptions={chooseOptions}
+          uploadOptions={uploadOptions}
+          cancelOptions={cancelOptions}
+          onSelect={onTemplateSelect}
+          itemTemplate={(file: any) => {
+            return (
+              <div className="flex justify-content-between align-items-center">
+                <img src={file.objectURL} className="w-3rem" alt="Error" />
+                {file.name}
+                <SelectButton
+                  value={types.find((t) => t.name === file.name)?.type}
+                  options={["Image", "Map"]}
+                  onChange={(e) => {
+                    let _types = [...types];
+                    let idx = _types.findIndex((t) => t.name === file.name);
+                    if (idx !== -1) {
+                      _types[idx].type = e.value;
+                      setTypes(_types);
+                    }
+                  }}
+                />
+              </div>
+            );
+          }}
+          customUpload
+          uploadHandler={async (e) => {
+            let files = e.files;
+            setUploading(true);
+            for (let i = 0; i < files.length; i++) {
+              // Safeguard to not attempt uploading already existing image
+              if (images?.data.some((img) => img.title === files[i].name)) {
+                toastWarn(`Image "${files[i].name}" already exists.`);
+                continue;
+              } else {
+                try {
+                  await uploadImage(
+                    project_id as string,
+                    files[i],
+                    types[i].type
+                  );
+                } catch (error) {
+                  //
                 }
               }
-              images?.refetch();
-              setUploading(false);
-              setUploadDialog(false);
-              setTypes([]);
-              e.options.clear();
-            }}
-          />
-        </Dialog>
-      </div>
+            }
+            images?.refetch();
+            setUploading(false);
+            setUploadDialog(false);
+            setTypes([]);
+            e.options.clear();
+          }}
+        />
+      </Dialog>
+      <ConfirmDialog />
       <div className="w-6 flex flex-wrap align-content-top align-items-center">
         <Button
           className="p-button-outlined"
@@ -191,6 +187,42 @@ export default function FileBrowserHeader({
         <DataViewLayoutOptions
           layout={layout}
           onChange={(e) => setLayout(e.value)}
+        />
+        <Button
+          label="Delete Selected"
+          icon="pi pi-trash"
+          className="p-button-danger p-button-outlined"
+          disabled={selected.length === 0}
+          onClick={() =>
+            confirmDialog({
+              message: `Are you sure you want to delete ${selected.length} images?`,
+              header: `Deleting ${selected.length} images`,
+              icon: "pi pi-exclamation-triangle",
+              acceptClassName: "p-button-danger",
+              // className: selectAll ? "deleteAllDocuments" : "",
+              accept: () => {
+                deleteImagesStorage(selected.map((image) => image.link));
+                deleteImageRecords(selected.map((image) => image.id)).then(
+                  () => {
+                    queryClient.setQueryData(
+                      `${project_id}-images`,
+                      (oldData: ImageProps[] | undefined) => {
+                        if (oldData) {
+                          return oldData.filter(
+                            (img) =>
+                              !selected.some((image) => image.id === img.id)
+                          );
+                        } else {
+                          return [];
+                        }
+                      }
+                    );
+                    setSelected([]);
+                  }
+                );
+              },
+            })
+          }
         />
       </div>
     </div>

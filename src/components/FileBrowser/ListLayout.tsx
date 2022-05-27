@@ -8,15 +8,17 @@ import { useDeleteImages, useRenameImage } from "../../utils/customHooks";
 import { Image } from "primereact/image";
 import { downloadImage } from "../../utils/supabaseUtils";
 import { saveAs } from "file-saver";
+import { useContext } from "react";
+import { FileBrowserContext } from "../Context/FileBrowserContext";
 type Props = {
   images: ImageProps[];
-  filter: string;
 };
 
-export default function ListLayout({ images, filter }: Props) {
+export default function ListLayout({ images }: Props) {
   const { project_id } = useParams();
   const renameImageMutation = useRenameImage();
   const deleteImagesMutation = useDeleteImages(project_id as string);
+  const { filter, selected, setSelected } = useContext(FileBrowserContext);
   const actionsBodyTemplate = (rowData: ImageProps) => {
     return (
       <div className="">
@@ -65,7 +67,6 @@ export default function ListLayout({ images, filter }: Props) {
       <InputText
         value={options.value}
         onChange={(e) => {
-          console.log(options.rowData, e.target.value);
           if (options.rowData.id && e.target.value)
             //@ts-ignore
             options.editorCallback(e.target.value);
@@ -73,6 +74,7 @@ export default function ListLayout({ images, filter }: Props) {
       />
     );
   };
+
   return (
     <div className=" flex align-items-start align-content-top w-full  justify-content-center">
       <DataTable
@@ -86,6 +88,11 @@ export default function ListLayout({ images, filter }: Props) {
         sortField="title"
         sortOrder={1}
         rowsPerPageOptions={[9, 15, 25, 50]}
+        selection={selected}
+        onSelectionChange={(e) => {
+          setSelected(e.value);
+          // setSelectAll(value.length === documents.data?.length);
+        }}
       >
         <Column selectionMode="multiple" className="w-1rem"></Column>
         <Column

@@ -1,9 +1,9 @@
 import { Sidebar } from "primereact/sidebar";
-import React, { useContext } from "react";
+import React, { ReactNode, useContext } from "react";
 import { SidebarContext } from "../Context/SidebarContext";
 
 type Props = {
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 };
 
 export default function TreeSidebar({ children }: Props) {

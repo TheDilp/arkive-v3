@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
 
 export const MediaQueryContext = createContext({
@@ -9,7 +9,7 @@ export const MediaQueryContext = createContext({
 export default function MediaQueryProvider({
   children,
 }: {
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
   const isLaptop = useMediaQuery({ query: "(max-width: 1440px)" });

@@ -25,7 +25,7 @@ import {
   deleteBoard,
   deleteDocument,
   deleteEdge,
-  deleteImages,
+  deleteImagesStorage,
   deleteManyNodes,
   deleteMap,
   deleteMapMarker,
@@ -1446,7 +1446,7 @@ export function useDeleteImages(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: string[]) => {
-      await deleteImages(vars);
+      await deleteImagesStorage(vars);
     },
     {
       onMutate: async (deletedImageLinks) => {

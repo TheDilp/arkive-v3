@@ -1,15 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 
 export const SidebarContext = createContext({
   sidebar: false,
   setSidebar: (sidebar: boolean) => {},
 });
 
-export default function SidebarProvider({
-  children,
-}: {
-  children: JSX.Element | JSX.Element[];
-}) {
+export default function SidebarProvider({ children }: { children: ReactNode }) {
   const [sidebar, setSidebar] = useState(false);
 
   return (
