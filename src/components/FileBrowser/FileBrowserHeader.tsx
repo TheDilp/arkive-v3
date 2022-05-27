@@ -1,3 +1,4 @@
+import { saveAs } from "file-saver";
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { DataViewLayoutOptions } from "primereact/dataview";
@@ -14,6 +15,7 @@ import { useGetImages } from "../../utils/customHooks";
 import {
   deleteImageRecords,
   deleteImagesStorage,
+  downloadImage,
   uploadImage,
 } from "../../utils/supabaseUtils";
 import { toastWarn } from "../../utils/utils";
@@ -93,7 +95,7 @@ export default function FileBrowserHeader() {
     );
   };
   return (
-    <div className="w-10 h-2rem mb-2 flex flex-wrap">
+    <div className="w-full h-2rem mb-2 flex flex-wrap">
       <Dialog visible={uploadDialog} onHide={() => setUploadDialog(false)}>
         <FileUpload
           style={{
@@ -191,7 +193,7 @@ export default function FileBrowserHeader() {
         <Button
           label="Delete Selected"
           icon="pi pi-trash"
-          className="p-button-danger p-button-outlined"
+          className="p-button-danger p-button-outlined mx-2"
           disabled={selected.length === 0}
           onClick={() =>
             confirmDialog({
@@ -223,6 +225,26 @@ export default function FileBrowserHeader() {
               },
             })
           }
+        />
+        <Button
+          label="Download Selected"
+          icon="pi pi-download"
+          iconPos="right"
+          className="p-button-outlined p-button-success"
+          onClick={async () => {
+            for (const image of selected) {
+              const d = await downloadImage(image.link);
+              if (d) {
+                saveAs(
+                  new Blob([d], {
+                    type: d.type,
+                  }),
+                  `${image.title || image.id || project_id + "-image"}`
+                );
+              }
+            }
+            setSelected([]);
+          }}
         />
       </div>
     </div>

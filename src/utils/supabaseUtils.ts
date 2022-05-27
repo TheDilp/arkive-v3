@@ -635,7 +635,6 @@ export const uploadImage = async (
 };
 export const downloadImage = async (id: string) => {
   let user = auth.user();
-  console.log(id);
   if (user) {
     const { data, error } = await supabase.storage.from("images").download(id);
 
@@ -646,7 +645,6 @@ export const downloadImage = async (id: string) => {
     }
   }
 };
-
 export const deleteImagesStorage = async (images: string[]) => {
   const { data, error } = await supabase.storage.from("images").remove(images);
   if (data) return data;
