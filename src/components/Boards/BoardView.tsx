@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,6 +26,7 @@ import {
   toastWarn,
   toModelPosition,
 } from "../../utils/utils";
+import LoadingScreen from "../Util/LoadingScreen";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
@@ -87,6 +89,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   });
   const [drawMode, setDrawMode] = useState(false);
   const [snap, setSnap] = useState(true);
+  const [loading, setLoading] = useState(true);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
   const createNodeMutation = useCreateNode(project_id as string);
@@ -287,6 +290,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     }
   }, [cyRef, board_id]);
   useEffect(() => {
+    setLoading(true);
     if (firstRender.current) {
       firstRender.current = false;
     }
@@ -300,6 +304,9 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         cyRef.current.zoom(1);
         cyRef.current.center();
       }, 2);
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
     return () => {
       cyRef.current.removeListener("click cxttap dbltap free");
@@ -395,14 +402,13 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           setEdgeUpdateDialog={setEdgeUpdateDialog}
         />
       )}
-
       <CytoscapeComponent
         elements={elements}
         className="Lato"
         wheelSensitivity={0.1}
         minZoom={0.1}
         maxZoom={10}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", opacity: loading ? 0 : 1 }}
         cy={(cy: any) => {
           if (!cyRef.current) {
             cyRef.current = cy;

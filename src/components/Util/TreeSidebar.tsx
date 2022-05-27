@@ -12,7 +12,7 @@ export default function TreeSidebar({ children }: Props) {
     <Sidebar
       visible={sidebar}
       onHide={() => setSidebar(false)}
-      className="treeSidebar"
+      className="treeSidebar surface-50"
     >
       {children}
     </Sidebar>

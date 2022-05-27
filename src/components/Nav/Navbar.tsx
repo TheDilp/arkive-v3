@@ -20,6 +20,12 @@ export default function Navbar() {
     return (
       <div className="flex flex-nowrap py-2 align-items-start pl-2">
         <div className="flex align-items-center">
+          {isTabletOrMobile && (
+            <i
+              className="pi pi-bars mr-3 cursor-pointer hover:text-primary sidebarBars"
+              onClick={() => setSidebar(true)}
+            ></i>
+          )}
           <i
             className="pi pi-home mr-3 cursor-pointer hover:text-primary"
             onClick={() => navigate("/")}
@@ -50,12 +56,6 @@ export default function Navbar() {
                 position="bottom"
                 autoHide
               />
-              {isTabletOrMobile && (
-                <i
-                  className="pi pi-bars mr-3 cursor-pointer hover:text-primary sidebarBars"
-                  onClick={() => setSidebar(true)}
-                ></i>
-              )}
               <i
                 className="pi pi-book mr-3 hover:text-primary cursor-pointer wikiIcon"
                 onClick={async () => {

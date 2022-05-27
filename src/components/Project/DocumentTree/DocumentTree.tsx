@@ -135,7 +135,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
                 >
                   <Tree
                     classes={{
-                      root: "w-full overflow-y-auto projectTreeRoot p-0",
+                      root: "w-full projectTreeRoot p-0",
                       container: "list-none",
                       placeholder: "relative",
                     }}
