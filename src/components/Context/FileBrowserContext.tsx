@@ -1,4 +1,10 @@
-import { createContext, ReactNode, SetStateAction, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  SetStateAction,
+  useRef,
+  useState,
+} from "react";
 import { ImageProps } from "../../custom-types";
 
 export const FileBrowserContext = createContext<{
@@ -8,6 +14,7 @@ export const FileBrowserContext = createContext<{
   setFilter: (filter: string) => void;
   selected: ImageProps[];
   setSelected: (image: SetStateAction<ImageProps[]>) => void;
+  tableRef: any;
 }>({
   layout: "list",
   setLayout: () => {},
@@ -15,6 +22,7 @@ export const FileBrowserContext = createContext<{
   setFilter: () => {},
   selected: [],
   setSelected: () => {},
+  tableRef: null,
 });
 
 export default function FilebrowserProvider({
@@ -25,10 +33,18 @@ export default function FilebrowserProvider({
   const [layout, setLayout] = useState("list");
   const [filter, setFilter] = useState("");
   const [selected, setSelected] = useState<ImageProps[]>([]);
-
+  const tableRef = useRef() as any;
   return (
     <FileBrowserContext.Provider
-      value={{ layout, setLayout, filter, setFilter, selected, setSelected }}
+      value={{
+        layout,
+        setLayout,
+        filter,
+        setFilter,
+        selected,
+        setSelected,
+        tableRef,
+      }}
     >
       {children}
     </FileBrowserContext.Provider>

@@ -29,8 +29,15 @@ export default function FileBrowserHeader() {
   const [totalSize, setTotalSize] = useState(0);
   const [uploadDialog, setUploadDialog] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const { filter, setFilter, layout, setLayout, selected, setSelected } =
-    useContext(FileBrowserContext);
+  const {
+    filter,
+    setFilter,
+    layout,
+    setLayout,
+    selected,
+    setSelected,
+    tableRef,
+  } = useContext(FileBrowserContext);
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>(
     []
   );
@@ -176,7 +183,7 @@ export default function FileBrowserHeader() {
           onClick={() => setUploadDialog(true)}
         />
         <InputText
-          placeholder="Search by title"
+          placeholder="Quick search"
           className="ml-2 h-min"
           value={filter || ""}
           onChange={(e) => setFilter(e.target.value)}
@@ -189,6 +196,16 @@ export default function FileBrowserHeader() {
         <DataViewLayoutOptions
           layout={layout}
           onChange={(e) => setLayout(e.value)}
+        />
+        <Button
+          type="button"
+          icon="pi pi-filter-slash"
+          label="Reset"
+          tooltip="Resets Filters, Sorting and Pagination"
+          className="p-button-outlined mr-2"
+          onClick={() => {
+            tableRef.current?.reset();
+          }}
         />
         <Button
           label="Delete Selected"

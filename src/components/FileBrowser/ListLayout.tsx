@@ -10,6 +10,8 @@ import { downloadImage } from "../../utils/supabaseUtils";
 import { saveAs } from "file-saver";
 import { useContext } from "react";
 import { FileBrowserContext } from "../Context/FileBrowserContext";
+import { SplitButton } from "primereact/splitbutton";
+import { SelectButton } from "primereact/selectbutton";
 type Props = {
   images: ImageProps[];
 };
@@ -18,7 +20,8 @@ export default function ListLayout({ images }: Props) {
   const { project_id } = useParams();
   const renameImageMutation = useRenameImage();
   const deleteImagesMutation = useDeleteImages(project_id as string);
-  const { filter, selected, setSelected } = useContext(FileBrowserContext);
+  const { filter, selected, setSelected, tableRef } =
+    useContext(FileBrowserContext);
   const actionsBodyTemplate = (rowData: ImageProps) => {
     return (
       <div className="">
@@ -74,10 +77,22 @@ export default function ListLayout({ images }: Props) {
       />
     );
   };
-
+  const typeFilterTemplate = (options: any) => {
+    return (
+      <SelectButton
+        value={options.value}
+        options={["Image", "Map"]}
+        className="p-button-outlined mb-2 w-full"
+        onChange={(e) => {
+          options.filterCallback(e.value);
+        }}
+      />
+    );
+  };
   return (
     <div className=" flex align-items-start align-content-top w-full  justify-content-center">
       <DataTable
+        ref={tableRef}
         className="w-full h-full"
         value={images.filter((image) => image.title.includes(filter))}
         paginator
@@ -98,6 +113,7 @@ export default function ListLayout({ images }: Props) {
         <Column
           field="title"
           header="Title"
+          filter
           style={{ width: "10rem" }}
           editor={titleEditor}
           onCellEditComplete={(e: any) => {
@@ -123,7 +139,12 @@ export default function ListLayout({ images }: Props) {
           //     });
           // }}
         ></Column>
-        <Column field="type" header="Type" />
+        <Column
+          field="type"
+          header="Type"
+          filter
+          filterElement={typeFilterTemplate}
+        />
         <Column
           header="Actions"
           body={actionsBodyTemplate}
