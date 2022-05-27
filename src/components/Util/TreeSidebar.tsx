@@ -1,5 +1,6 @@
 import { Sidebar } from "primereact/sidebar";
 import React, { ReactNode, useContext } from "react";
+import { MediaQueryContext } from "../Context/MediaQueryContext";
 import { SidebarContext } from "../Context/SidebarContext";
 
 type Props = {
@@ -8,7 +9,8 @@ type Props = {
 
 export default function TreeSidebar({ children }: Props) {
   const { sidebar, setSidebar } = useContext(SidebarContext);
-  return (
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
+  return isTabletOrMobile ? (
     <Sidebar
       visible={sidebar}
       onHide={() => setSidebar(false)}
@@ -16,5 +18,7 @@ export default function TreeSidebar({ children }: Props) {
     >
       {children}
     </Sidebar>
+  ) : (
+    <>{children}</>
   );
 }

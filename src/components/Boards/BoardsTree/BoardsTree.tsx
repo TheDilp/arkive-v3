@@ -96,153 +96,83 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
           setVisible={setUpdateBoardDialog}
         />
       )}
-      {isTabletOrMobile ? (
-        <TreeSidebar>
-          <BoardsFilter filter={filter} setFilter={setFilter} />
-          {!filter && (
-            <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-              <Tree
-                tree={treeData}
-                classes={{
-                  root: "w-full overflow-y-auto projectTreeRoot p-0",
-                  container: "list-none",
-                  placeholder: "relative",
-                }}
-                sort={false}
-                initialOpen={
-                  boards
-                    ?.filter((board) => board.expanded)
-                    .map((board) => board.id) || false
+      <TreeSidebar>
+        <BoardsFilter filter={filter} setFilter={setFilter} />
+        {!filter && (
+          <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+            <Tree
+              tree={treeData}
+              classes={{
+                root: "w-full overflow-y-auto projectTreeRoot p-0",
+                container: "list-none",
+                placeholder: "relative",
+              }}
+              sort={false}
+              initialOpen={
+                boards
+                  ?.filter((board) => board.expanded)
+                  .map((board) => board.id) || false
+              }
+              rootId="0"
+              render={(
+                node: NodeModel<BoardProps>,
+                { depth, isOpen, onToggle }
+              ) => (
+                <BoardTreeItem
+                  node={node}
+                  boardId={boardId}
+                  setBoardId={setBoardId}
+                  depth={depth}
+                  isOpen={isOpen}
+                  onToggle={onToggle}
+                  setDisplayDialog={setUpdateBoardDialog}
+                  cm={cm}
+                />
+              )}
+              dragPreviewRender={(monitorProps) => (
+                <DragPreview
+                  text={monitorProps.item.text}
+                  droppable={monitorProps.item.droppable}
+                />
+              )}
+              placeholderRender={(node, { depth }) => (
+                <div
+                  style={{
+                    top: 0,
+                    right: 0,
+                    left: depth * 24,
+                    backgroundColor: "#1967d2",
+                    height: "2px",
+                    position: "absolute",
+                    transform: "translateY(-50%)",
+                  }}
+                ></div>
+              )}
+              dropTargetOffset={10}
+              canDrop={(tree, { dragSource, dropTargetId }) => {
+                const depth = getDepth(treeData, dropTargetId);
+                // Don't allow nesting documents beyond this depth
+                if (depth > 3) return false;
+                if (dragSource?.parent === dropTargetId) {
+                  return true;
                 }
-                rootId="0"
-                render={(
-                  node: NodeModel<BoardProps>,
-                  { depth, isOpen, onToggle }
-                ) => (
-                  <BoardTreeItem
-                    node={node}
-                    boardId={boardId}
-                    setBoardId={setBoardId}
-                    depth={depth}
-                    isOpen={isOpen}
-                    onToggle={onToggle}
-                    setDisplayDialog={setUpdateBoardDialog}
-                    cm={cm}
-                  />
-                )}
-                dragPreviewRender={(monitorProps) => (
-                  <DragPreview
-                    text={monitorProps.item.text}
-                    droppable={monitorProps.item.droppable}
-                  />
-                )}
-                placeholderRender={(node, { depth }) => (
-                  <div
-                    style={{
-                      top: 0,
-                      right: 0,
-                      left: depth * 24,
-                      backgroundColor: "#1967d2",
-                      height: "2px",
-                      position: "absolute",
-                      transform: "translateY(-50%)",
-                    }}
-                  ></div>
-                )}
-                dropTargetOffset={10}
-                canDrop={(tree, { dragSource, dropTargetId }) => {
-                  const depth = getDepth(treeData, dropTargetId);
-                  // Don't allow nesting documents beyond this depth
-                  if (depth > 3) return false;
-                  if (dragSource?.parent === dropTargetId) {
-                    return true;
-                  }
-                }}
-                //@ts-ignore
-                onDrop={handleDrop}
-              />
-            </DndProvider>
-          )}
-        </TreeSidebar>
-      ) : (
-        <div>
-          <BoardsFilter filter={filter} setFilter={setFilter} />
-          {!filter && (
-            <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-              <Tree
-                tree={treeData}
-                classes={{
-                  root: "w-full overflow-y-auto projectTreeRoot p-0",
-                  container: "list-none",
-                  placeholder: "relative",
-                }}
-                sort={false}
-                initialOpen={
-                  boards
-                    ?.filter((board) => board.expanded)
-                    .map((board) => board.id) || false
-                }
-                rootId="0"
-                render={(
-                  node: NodeModel<BoardProps>,
-                  { depth, isOpen, onToggle }
-                ) => (
-                  <BoardTreeItem
-                    node={node}
-                    boardId={boardId}
-                    setBoardId={setBoardId}
-                    depth={depth}
-                    isOpen={isOpen}
-                    onToggle={onToggle}
-                    setDisplayDialog={setUpdateBoardDialog}
-                    cm={cm}
-                  />
-                )}
-                dragPreviewRender={(monitorProps) => (
-                  <DragPreview
-                    text={monitorProps.item.text}
-                    droppable={monitorProps.item.droppable}
-                  />
-                )}
-                placeholderRender={(node, { depth }) => (
-                  <div
-                    style={{
-                      top: 0,
-                      right: 0,
-                      left: depth * 24,
-                      backgroundColor: "#1967d2",
-                      height: "2px",
-                      position: "absolute",
-                      transform: "translateY(-50%)",
-                    }}
-                  ></div>
-                )}
-                dropTargetOffset={10}
-                canDrop={(tree, { dragSource, dropTargetId }) => {
-                  const depth = getDepth(treeData, dropTargetId);
-                  // Don't allow nesting documents beyond this depth
-                  if (depth > 3) return false;
-                  if (dragSource?.parent === dropTargetId) {
-                    return true;
-                  }
-                }}
-                //@ts-ignore
-                onDrop={handleDrop}
-              />
-            </DndProvider>
-          )}
-        </div>
-      )}
-      {filter && (
-        <BoardsFilterList
-          filteredTree={treeData.filter(
-            (node) =>
-              node.text.toLowerCase().includes(filter.toLowerCase()) &&
-              !node.droppable
-          )}
-          setBoardId={setBoardId}
-        />
-      )}
+              }}
+              //@ts-ignore
+              onDrop={handleDrop}
+            />
+          </DndProvider>
+        )}
+        {filter && (
+          <BoardsFilterList
+            filteredTree={treeData.filter(
+              (node) =>
+                node.text.toLowerCase().includes(filter.toLowerCase()) &&
+                !node.droppable
+            )}
+            setBoardId={setBoardId}
+          />
+        )}
+      </TreeSidebar>
     </div>
   );
 }
