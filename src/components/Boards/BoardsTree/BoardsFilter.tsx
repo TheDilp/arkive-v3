@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Icon } from "@iconify/react";
 import { useCreateBoard } from "../../../utils/customHooks";
+import { useContext } from "react";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 
 type Props = {
   filter: string;
@@ -13,6 +15,7 @@ type Props = {
 export default function BoardsFilter({ filter, setFilter }: Props) {
   const { project_id } = useParams();
   const createBoardMutation = useCreateBoard();
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
 
   function createNewBoard(type: string) {
     let id = uuid();
@@ -35,7 +38,7 @@ export default function BoardsFilter({ filter, setFilter }: Props) {
     }
   }
   return (
-    <div className="w-full py-1 flex justify-content-between flex-wrap">
+    <div className="w-full py-1 flex justify-content-between flex-wrap px-2">
       <div className="w-full py-2">
         <InputText
           className="w-full"
@@ -48,7 +51,7 @@ export default function BoardsFilter({ filter, setFilter }: Props) {
         label="New Folder"
         icon="pi pi-fw pi-folder"
         iconPos="right"
-        className="p-button-outlined"
+        className={`p-button-outlined ${isTabletOrMobile ? "px-2" : ""}`}
         onClick={() => createNewBoard("folder")}
       />
       <Button
