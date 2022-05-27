@@ -5,7 +5,7 @@ import {
   NodeModel,
   Tree,
 } from "@minoru/react-dnd-treeview";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
@@ -18,6 +18,7 @@ import MapTreeItemContext from "./MapTreeItemContext";
 import MapUpdateDialog from "./MapUpdateDialog";
 import MapsFilterList from "./MapsFilterList";
 import TreeSidebar from "../../Util/TreeSidebar";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 
 export default function MapsTree({
   mapId,
@@ -31,6 +32,7 @@ export default function MapsTree({
   const { data: maps }: { data: MapProps[] | undefined } = useGetMaps(
     project_id as string
   );
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [filter, setFilter] = useState("");
   const [treeData, setTreeData] = useState<NodeModel<MapProps>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
@@ -76,7 +78,9 @@ export default function MapsTree({
 
   return (
     <div
-      className="w-2 bg-gray-800 text-white pt-2 px-2"
+      className={`w-2 text-white pt-2 px-2 ${
+        isTabletOrMobile ? "surface-0" : "surface-50"
+      }`}
       style={{
         height: "96vh",
       }}
