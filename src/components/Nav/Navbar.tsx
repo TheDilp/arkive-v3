@@ -19,72 +19,74 @@ export default function Navbar() {
   const start = () => {
     return (
       <div className="flex flex-nowrap py-2 align-items-start pl-2">
-        {project_id && (
-          <div className="flex align-items-center">
-            <Tooltip
-              target=".wikiIcon"
-              content="Project Wiki"
-              position="bottom"
-              autoHide
-            />{" "}
-            <Tooltip
-              target=".mapsIcon"
-              content="Project Maps"
-              position="bottom"
-              autoHide
-            />{" "}
-            <Tooltip
-              target=".boardsIcon"
-              content="Project Boards"
-              position="bottom"
-              autoHide
-            />
-            <Tooltip
-              target=".filebrowserIcon"
-              content="Project Files"
-              position="bottom"
-              autoHide
-            />
-            {isTabletOrMobile && (
-              <i
-                className="pi pi-bars mr-3 cursor-pointer hover:text-primary sidebarBars"
-                onClick={() => setSidebar(true)}
-              ></i>
-            )}
-            <i
-              className="pi pi-home mr-3 cursor-pointer hover:text-primary"
-              onClick={() => navigate("/")}
-            ></i>
-            <i
-              className="pi pi-book mr-3 hover:text-primary cursor-pointer wikiIcon"
-              onClick={async () => {
-                navigate("./wiki");
-              }}
-            ></i>
-            <i
-              className="pi pi-map mr-3 hover:text-primary cursor-pointer mapsIcon"
-              onClick={async () => {
-                navigate("./maps");
-              }}
-            ></i>
-            <span className="boardsIcon">
-              <Icon
-                className="hover:text-primary cursor-pointer "
-                icon="mdi:family-tree"
-                fontSize={18}
-                onClick={async () => {
-                  navigate("./boards");
-                }}
+        <div className="flex align-items-center">
+          <i
+            className="pi pi-home mr-3 cursor-pointer hover:text-primary"
+            onClick={() => navigate("/")}
+          ></i>
+          {project_id && (
+            <>
+              <Tooltip
+                target=".wikiIcon"
+                content="Project Wiki"
+                position="bottom"
+                autoHide
+              />{" "}
+              <Tooltip
+                target=".mapsIcon"
+                content="Project Maps"
+                position="bottom"
+                autoHide
+              />{" "}
+              <Tooltip
+                target=".boardsIcon"
+                content="Project Boards"
+                position="bottom"
+                autoHide
               />
-            </span>
-            <i
-              className="pi pi-image ml-3 hover:text-primary cursor-pointer filebrowserIcon"
-              onClick={async () => {
-                navigate("./filebrowser");
-              }}
-            ></i>
-          </div>
-        )}
+              <Tooltip
+                target=".filebrowserIcon"
+                content="Project Files"
+                position="bottom"
+                autoHide
+              />
+              {isTabletOrMobile && (
+                <i
+                  className="pi pi-bars mr-3 cursor-pointer hover:text-primary sidebarBars"
+                  onClick={() => setSidebar(true)}
+                ></i>
+              )}
+              <i
+                className="pi pi-book mr-3 hover:text-primary cursor-pointer wikiIcon"
+                onClick={async () => {
+                  navigate("./wiki");
+                }}
+              ></i>
+              <i
+                className="pi pi-map mr-3 hover:text-primary cursor-pointer mapsIcon"
+                onClick={async () => {
+                  navigate("./maps");
+                }}
+              ></i>
+              <span className="boardsIcon">
+                <Icon
+                  className="hover:text-primary cursor-pointer "
+                  icon="mdi:family-tree"
+                  fontSize={18}
+                  onClick={async () => {
+                    navigate("./boards");
+                  }}
+                />
+              </span>
+              <i
+                className="pi pi-image ml-3 hover:text-primary cursor-pointer filebrowserIcon"
+                onClick={async () => {
+                  navigate("./filebrowser");
+                }}
+              ></i>
+            </>
+          )}
+        </div>
         {/* Use project title only if in project */}
         {project_id && !isTabletOrMobile && <NavbarTitle />}
       </div>
