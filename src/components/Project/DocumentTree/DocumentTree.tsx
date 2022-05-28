@@ -132,9 +132,10 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
               <DndProvider backend={MultiBackend} options={getBackendOptions()}>
                 <Tree
                   classes={{
-                    root: "w-full projectTreeRoot p-0",
+                    root: "w-full projectTreeRoot pr-4 pl-0",
                     container: "list-none",
                     placeholder: "relative",
+                    listItem: "listitem",
                   }}
                   tree={treeData}
                   rootId={"0"}

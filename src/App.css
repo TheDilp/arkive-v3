@@ -67,15 +67,19 @@ body {
 .previewImage {
   object-fit: contain;
 }
+
 .p-sidebar-header {
   padding: 0 !important;
 }
+
 .listitem div {
   margin-inline-start: 0px !important;
 }
+
 .navbarMenu .pi-bars:not(.sidebarBars) {
   display: none;
 }
+
 /* CUSTOM SCROLLBAR */
 
 /* width */
