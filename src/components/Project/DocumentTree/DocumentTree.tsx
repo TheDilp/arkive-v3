@@ -22,7 +22,7 @@ import DocumentsFilterList from "./DocumentFilterList";
 import DocumentTreeItem from "./DocumentTreeItem";
 import DocumentTreeItemContext from "./DocumentTreeItemContext";
 import DragPreview from "./DragPreview";
-import RenameDialog from "./RenameDialog";
+import DocumentUpdateDialog from "./DocumentUpdateDialog";
 import TemplatesTree from "./TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
@@ -46,6 +46,7 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
       folder: false,
       depth: 0,
       template: false,
+      parent: "",
     }
   );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
@@ -110,10 +111,12 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
-      <RenameDialog
-        displayDialog={displayDialog}
-        setDisplayDialog={setDisplayDialog}
-      />
+      {displayDialog.show && (
+        <DocumentUpdateDialog
+          displayDialog={displayDialog}
+          setDisplayDialog={setDisplayDialog}
+        />
+      )}
 
       <TreeSidebar>
         <TabView

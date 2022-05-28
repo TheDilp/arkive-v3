@@ -98,7 +98,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
                   options={
                     maps
                       ? [
-                          { title: "No Folder", id: null },
+                          { title: "Root", id: null },
                           ...maps.filter((map) => map.folder),
                         ]
                       : []

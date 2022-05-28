@@ -96,7 +96,7 @@ export default function DocumentTreeItemContext({
   ];
   const templateItems = [
     {
-      label: "Rename Document",
+      label: "Edit Document",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
@@ -131,7 +131,7 @@ export default function DocumentTreeItemContext({
   ];
   const docItems = [
     {
-      label: "Rename Document",
+      label: "Edit Document",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
@@ -206,7 +206,7 @@ export default function DocumentTreeItemContext({
   ];
   const folderItems = [
     {
-      label: "Rename Document",
+      label: "Edit Folder",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },

@@ -142,6 +142,7 @@ export type docItemDisplayDialogProps = {
   title: string;
   show: boolean;
   folder: boolean;
+  parent: string;
   template: boolean;
   depth: number;
 };
