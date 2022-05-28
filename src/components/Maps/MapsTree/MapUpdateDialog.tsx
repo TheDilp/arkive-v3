@@ -49,6 +49,29 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
       depth: 0,
     });
   };
+
+  function recursiveDescendantRemove(
+    doc: MapProps,
+    index: number,
+    array: MapProps[],
+    selected_id: string
+  ): boolean {
+    if (doc.parent === null) {
+      return true;
+    } else {
+      const parent = array.find((d) => d.id === doc.parent?.id);
+      if (parent) {
+        if (parent.id === selected_id) {
+          return false;
+        } else {
+          return recursiveDescendantRemove(parent, index, array, selected_id);
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
   return (
     <Dialog
       className="w-3"
@@ -99,7 +122,16 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
                     maps
                       ? [
                           { title: "Root", id: null },
-                          ...maps.filter((map) => map.folder),
+                          ...maps.filter((map, idx, array) => {
+                            if (!map.folder || map.id === visible.id)
+                              return false;
+                            return recursiveDescendantRemove(
+                              map,
+                              idx,
+                              array,
+                              visible.id
+                            );
+                          }),
                         ]
                       : []
                   }

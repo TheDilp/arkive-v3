@@ -258,7 +258,9 @@ export type UpdateMarkerInputs = {
   doc_id?: string;
   map_link?: string;
 };
-export type UpdateBoardInputs = Pick<BoardProps, "title" | "layout" | "parent">;
+export type UpdateBoardInputs = Pick<BoardProps, "title" | "layout"> & {
+  parent: string;
+};
 export type UpdateNodeInputs = Pick<
   nodeUpdateDialogProps,
   | "label"

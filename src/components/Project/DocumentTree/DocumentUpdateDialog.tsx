@@ -5,7 +5,10 @@ import { InputText } from "primereact/inputtext";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { docItemDisplayDialogProps } from "../../../custom-types";
+import {
+  docItemDisplayDialogProps,
+  DocumentProps,
+} from "../../../custom-types";
 import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
 
 type Props = {
@@ -24,7 +27,6 @@ export default function DocumentUpdateDialog({
   const { data } = useGetDocuments(project_id as string);
   const {
     control,
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm<{ title: string; parent: string }>({
@@ -52,6 +54,29 @@ export default function DocumentUpdateDialog({
       show: false,
     });
   };
+
+  function recursiveDescendantRemove(
+    doc: DocumentProps,
+    index: number,
+    array: DocumentProps[],
+    selected_id: string
+  ): boolean {
+    if (doc.parent === null) {
+      return true;
+    } else {
+      const parent = array.find((d) => d.id === doc.parent?.id);
+      if (parent) {
+        if (parent.id === selected_id) {
+          return false;
+        } else {
+          return recursiveDescendantRemove(parent, index, array, selected_id);
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
   return (
     <Dialog
       header={`Edit ${displayDialog.title}`}
@@ -101,9 +126,16 @@ export default function DocumentUpdateDialog({
                   data
                     ? [
                         { title: "Root", id: null },
-                        ...data.filter(
-                          (doc) => doc.folder && doc.id !== displayDialog.id
-                        ),
+                        ...data.filter((doc, idx, array) => {
+                          if (!doc.folder || doc.id === displayDialog.id)
+                            return false;
+                          return recursiveDescendantRemove(
+                            doc,
+                            idx,
+                            array,
+                            displayDialog.id
+                          );
+                        }),
                       ]
                     : []
                 }
