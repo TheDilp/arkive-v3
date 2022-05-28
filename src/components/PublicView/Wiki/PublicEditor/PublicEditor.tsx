@@ -1,6 +1,6 @@
 import { TableExtension } from "@remirror/extension-react-tables";
 import { Remirror, ThemeProvider, useRemirror } from "@remirror/react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { htmlToProsemirrorNode, RemirrorJSON } from "remirror";
 import {
   BoldExtension,
@@ -18,17 +18,19 @@ import {
   UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
-import "../../../styles/Editor.css";
-import CustomLinkExtenstion from "../CustomLinkExtension";
-import MentionReactComponent from "../MentionReactComponent/MentionReactComponent";
-import LinkHoverEditor from "./LinkHoverEditor";
+import "../../../../styles/Editor.css";
+import CustomLinkExtenstion from "../../../Editor/CustomLinkExtension";
+import LoadingScreen from "../../../Util/LoadingScreen";
+import LinkHoverEditor from "./PublicEditorComponent";
+import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
+import PublicEditorComponent from "./PublicEditorComponent";
 
-export default function LinkHoverWindow({
+export default function PublicEditor({
   content,
   classes,
 }: {
-  classes?: string;
   content: RemirrorJSON | null;
+  classes?: string;
 }) {
   // ======================================================
   // REMIRROR SETUP
@@ -80,12 +82,14 @@ export default function LinkHoverWindow({
       new TableExtension(),
     ],
     selection: "all",
-    content: content || "",
+    content: content ?? "",
     stringHandler: htmlToProsemirrorNode,
   });
   // ======================================================
 
-  return (
+  return !content ? (
+    <LoadingScreen />
+  ) : (
     <div className={`editorContainer w-full ${classes || "h-20rem"} `}>
       {content ? (
         <ThemeProvider>
@@ -97,7 +101,7 @@ export default function LinkHoverWindow({
             ]}
             editable={false}
           >
-            <LinkHoverEditor content={content} />
+            <PublicEditorComponent content={content} />
           </Remirror>
         </ThemeProvider>
       ) : null}

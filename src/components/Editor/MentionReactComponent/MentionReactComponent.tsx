@@ -1,14 +1,9 @@
 import { useQueryClient } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { BoardProps, DocumentProps, MapProps } from "../../../custom-types";
-import { Tooltip } from "primereact/tooltip";
-import { Card } from "primereact/card";
-import RemirrorContext from "../RemirrorContext";
-import LinkHoverWindow from "../LinkHover/LinkHoverWindow";
-import { HoverTooltip } from "../LinkHover/HoverTooltip";
+import BoardMention from "./BoardMention";
 import DocumentMention from "./DocumentMention";
 import MapMention from "./MapMention";
-import BoardMention from "./BoardMention";
 type Props = {
   node: any;
 };
