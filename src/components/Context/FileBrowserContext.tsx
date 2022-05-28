@@ -6,8 +6,7 @@ import {
   useState,
 } from "react";
 import { ImageProps } from "../../custom-types";
-
-export const FileBrowserContext = createContext<{
+interface FileBrowserContextState {
   layout: string;
   setLayout: (layout: string) => void;
   filter: string;
@@ -15,7 +14,8 @@ export const FileBrowserContext = createContext<{
   selected: ImageProps[];
   setSelected: (image: SetStateAction<ImageProps[]>) => void;
   tableRef: any;
-}>({
+}
+export const FileBrowserContext = createContext<FileBrowserContextState>({
   layout: "list",
   setLayout: () => {},
   filter: "",

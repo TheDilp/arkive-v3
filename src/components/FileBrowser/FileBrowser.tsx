@@ -24,11 +24,9 @@ export default function FileBrowser() {
         <LoadingScreen />
       ) : (
         <div className="w-full flex flex-wrap justify-content-center align-content-start">
-          <FilebrowserProvider>
-            <FileBrowserHeader />
-            {layout === "list" && <ListLayout images={images?.data || []} />}
-            {layout === "grid" && <GridLayout images={images?.data || []} />}
-          </FilebrowserProvider>
+          <FileBrowserHeader />
+          {layout === "list" && <ListLayout images={images?.data || []} />}
+          {layout === "grid" && <GridLayout images={images?.data || []} />}
         </div>
       )}
     </div>

@@ -10,7 +10,6 @@ import { downloadImage } from "../../utils/supabaseUtils";
 import { saveAs } from "file-saver";
 import { useContext } from "react";
 import { FileBrowserContext } from "../Context/FileBrowserContext";
-import { SplitButton } from "primereact/splitbutton";
 import { SelectButton } from "primereact/selectbutton";
 type Props = {
   images: ImageProps[];

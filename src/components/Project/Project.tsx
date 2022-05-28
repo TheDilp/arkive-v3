@@ -6,6 +6,7 @@ import {
   useGetProjectData,
 } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
+import FilebrowserProvider from "../Context/FileBrowserContext";
 import MediaQueryProvider from "../Context/MediaQueryContext";
 import SidebarProvider from "../Context/SidebarContext";
 import Navbar from "../Nav/Navbar";
@@ -30,8 +31,10 @@ export default function Project() {
     <>
       <MediaQueryProvider>
         <SidebarProvider>
-          <Navbar />
-          <Outlet />
+          <FilebrowserProvider>
+            <Navbar />
+            <Outlet />
+          </FilebrowserProvider>
         </SidebarProvider>
       </MediaQueryProvider>
     </>

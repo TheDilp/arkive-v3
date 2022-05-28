@@ -111,7 +111,7 @@ export default function FileBrowserHeader() {
             maxHeight: "45rem",
             overflowY: "auto",
           }}
-          name="demo[]"
+          name="filebrowser[]"
           ref={fileUploadRef}
           headerTemplate={headerTemplate}
           accept="image/*"
@@ -197,7 +197,10 @@ export default function FileBrowserHeader() {
       <div className="w-6 flex flex-nowrap justify-content-end align-items-start">
         <DataViewLayoutOptions
           layout={layout}
-          onChange={(e) => setLayout(e.value)}
+          onChange={(e) => {
+            setLayout(e.value);
+            console.log(e.value);
+          }}
           className="mr-2"
         />
         <Button
