@@ -20,6 +20,7 @@ import {
 } from "../../utils/supabaseUtils";
 import { toastWarn } from "../../utils/utils";
 import { FileBrowserContext } from "../Context/FileBrowserContext";
+import { MediaQueryContext } from "../Context/MediaQueryContext";
 
 export default function FileBrowserHeader() {
   const { project_id } = useParams();
@@ -38,6 +39,7 @@ export default function FileBrowserHeader() {
     setSelected,
     tableRef,
   } = useContext(FileBrowserContext);
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>(
     []
   );
@@ -174,10 +176,10 @@ export default function FileBrowserHeader() {
         />
       </Dialog>
       <ConfirmDialog />
-      <div className="w-6 flex flex-wrap align-content-top align-items-center">
+      <div className="w-6 flex flex-nowrap align-content-start align-items-start">
         <Button
-          className="p-button-outlined"
-          label="Upload"
+          className="p-button-outlined px-3"
+          label={isTabletOrMobile ? "" : "Upload"}
           icon="pi pi-upload"
           iconPos="right"
           onClick={() => setUploadDialog(true)}
@@ -192,15 +194,16 @@ export default function FileBrowserHeader() {
           {uploading && <ProgressSpinner className="w-2rem" />}
         </div>
       </div>
-      <div className="w-6 flex justify-content-end">
+      <div className="w-6 flex flex-nowrap justify-content-end align-items-start">
         <DataViewLayoutOptions
           layout={layout}
           onChange={(e) => setLayout(e.value)}
+          className="mr-2"
         />
         <Button
           type="button"
           icon="pi pi-filter-slash"
-          label="Reset"
+          label={isTabletOrMobile ? "" : "Reset"}
           tooltip="Resets Filters, Sorting and Pagination"
           className="p-button-outlined mr-2"
           onClick={() => {
@@ -208,7 +211,7 @@ export default function FileBrowserHeader() {
           }}
         />
         <Button
-          label="Delete Selected"
+          label={isTabletOrMobile ? "" : "Delete Selected"}
           icon="pi pi-trash"
           className="p-button-danger p-button-outlined mx-2"
           disabled={selected.length === 0}
@@ -244,7 +247,7 @@ export default function FileBrowserHeader() {
           }
         />
         <Button
-          label="Download Selected"
+          label={isTabletOrMobile ? "" : "Download Selected"}
           icon="pi pi-download"
           iconPos="right"
           className="p-button-outlined p-button-success"
