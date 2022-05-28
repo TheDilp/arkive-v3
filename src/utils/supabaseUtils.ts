@@ -680,7 +680,7 @@ export const renameImage = async (id: string, newName: string) => {
 
 export const getSingleBoard = async (board_id: string) => {
   const { data, error } = await supabase
-    .from("boards")
+    .from<BoardProps>("boards")
     .select(
       "*, nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
@@ -689,6 +689,18 @@ export const getSingleBoard = async (board_id: string) => {
   if (data) return data;
   if (error) {
     toastError("There was an error getting your board.");
+    throw new Error(error.message);
+  }
+};
+export const getSingleDocument = async (document_id: string) => {
+  const { data, error } = await supabase
+    .from<DocumentProps>("documents")
+    .select("*, image(id, title, link)")
+    .eq("id", document_id)
+    .maybeSingle();
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your document.");
     throw new Error(error.message);
   }
 };

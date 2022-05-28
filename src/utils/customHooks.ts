@@ -35,6 +35,8 @@ import {
   getDocuments,
   getImages,
   getMaps,
+  getSingleBoard,
+  getSingleDocument,
   getTags,
   renameImage,
   updateBoard,
@@ -1516,3 +1518,4 @@ export function useRenameImage() {
     }
   );
 }
+
