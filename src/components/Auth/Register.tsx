@@ -1,12 +1,12 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { auth, register as accountRegister } from "../../utils/supabaseUtils";
-import images from "./authImages";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Link, Navigate } from "react-router-dom";
 import { RegisterInputs } from "../../custom-types";
-import { emailRegex, passwordRegex } from "../../utils/utils";
+import { auth, register as accountRegister } from "../../utils/supabaseUtils";
+import { emailRegex } from "../../utils/utils";
+import images from "./authImages";
 export default function Register() {
   const [index, set] = useState(0);
   useEffect(() => {
@@ -30,11 +30,11 @@ export default function Register() {
     <Navigate to="/" />
   ) : (
     <form
-      className="w-full h-screen flex align-items-center justify-content-center Lato"
+      className="w-full h-screen flex align-items-center justify-content-center"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="surface-card shadow-4 w-full border-round lg:w-6 flex flex-wrap sm:h-full lg:h-fit">
-        <div className="w-full lg:w-7 relative hidden md:inline">
+      <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-min flex-wrap">
+        <div className="w-full lg:w-7 relative">
           <h1
             className="text-center text-6xl text-white absolute w-full z-5 Merriweather"
             style={{
