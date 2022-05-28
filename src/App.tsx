@@ -6,30 +6,29 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/Auth/Login";
-import Home from "./components/Home/Home";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
-import Project from "./components/Project/Project";
-import ProjectSettings from "./components/Project/ProjectSettings";
-import Wiki from "./components/Project/Wiki/Wiki";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Register from "./components/Auth/Register";
 import Profile from "./components/Profile/Profile";
-import Maps from "./components/Maps/Maps";
-import Boards from "./components/Boards/Boards";
 import Help from "./components/Help/Help";
-import cytoscape from "cytoscape";
-import edgehandles from "cytoscape-edgehandles";
-import gridguide from "cytoscape-grid-guide";
+
 import FileBrowser from "./components/FileBrowser/FileBrowser";
 import PublicProject from "./components/PublicView/PublicProject";
 import PublicBoardView from "./components/PublicView/PublicBoardView";
 import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
 import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
-
+import { lazy, Suspense } from "react";
+import LoadingScreen from "./components/Util/LoadingScreen";
+const Project = lazy(() => import("./components/Project/Project"));
+const Wiki = lazy(() => import("./components/Project/Wiki/Wiki"));
+const Maps = lazy(() => import("./components/Maps/Maps"));
+const Boards = lazy(() => import("./components/Boards/Boards"));
+const ProjectSettings = lazy(
+  () => import("./components/Project/ProjectSettings")
+);
+const Home = lazy(() => import("./components/Home/Home"));
 function App() {
-  cytoscape.use(edgehandles);
-  cytoscape.use(gridguide);
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -50,10 +49,38 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="profile" element={<Profile />} />
             <Route path="help" element={<Help />} />
-            <Route path="project/:project_id" element={<Project />}>
-              <Route path="wiki/*" element={<Wiki />} />
-              <Route path="maps/*" element={<Maps />} />
-              <Route path="boards/*" element={<Boards />} />
+            <Route
+              path="project/:project_id"
+              element={
+                <Suspense fallback={<LoadingScreen />}>
+                  <Project />
+                </Suspense>
+              }
+            >
+              <Route
+                path="wiki/*"
+                element={
+                  <Suspense fallback={<LoadingScreen />}>
+                    <Wiki />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="maps/*"
+                element={
+                  <Suspense fallback={<LoadingScreen />}>
+                    <Maps />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="boards/*"
+                element={
+                  <Suspense fallback={<LoadingScreen />}>
+                    <Boards />
+                  </Suspense>
+                }
+              />
               <Route path="filebrowser" element={<FileBrowser />} />
               <Route path="settings/:setting" element={<ProjectSettings />} />
             </Route>

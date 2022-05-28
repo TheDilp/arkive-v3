@@ -18,6 +18,12 @@ export type DocumentProps = {
   project_id: string;
   categories: string[];
   parent: { id: string; title: string } | null;
+  nodes?: {
+    id: string;
+    label: string;
+    sources?: { id: string; target: { id: string; label: string } }[];
+    targets?: { id: string; source: { id: string; label: string } }[];
+  }[];
   folder: boolean;
   icon: string;
   template: boolean;

@@ -6,19 +6,11 @@ import { Link, Navigate } from "react-router-dom";
 import { RegisterInputs } from "../../custom-types";
 import { auth, register as accountRegister } from "../../utils/supabaseUtils";
 import { emailRegex } from "../../utils/utils";
-import images from "./authImages";
+import EarthIMG from "./earthimg.jpg";
+
 export default function Register() {
   const [index, set] = useState(0);
-  useEffect(() => {
-    let timeout = setTimeout(() => {
-      if (index < images.length - 1) {
-        set(index + 1);
-      } else {
-        set(0);
-      }
-    }, 5000);
-    return () => clearTimeout(timeout);
-  }, [index]);
+
   const {
     register,
     handleSubmit,
@@ -43,15 +35,11 @@ export default function Register() {
           >
             Discover your world
           </h1>
-          {images.map((image, imgIDX) => (
-            <img
-              key={imgIDX}
-              src={image.url}
-              className="w-full h-full absolute transition-all transition-duration-200"
-              alt="planet placeholder"
-              style={{ objectFit: "cover", opacity: index === imgIDX ? 1 : 0 }}
-            />
-          ))}
+          <img
+            src={EarthIMG}
+            className="w-full h-full absolute transition-all transition-duration-200"
+            alt="planet placeholder"
+          />
         </div>
         <div className="w-full lg:w-5 p-4">
           <div className="text-center mb-5">

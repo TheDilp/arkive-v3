@@ -93,7 +93,7 @@ export const getDocuments = async (project_id: string) => {
   if (user) {
     const { data: documents, error } = await supabase
       .from<DocumentProps>("documents")
-      .select("*, parent(id, title), image(id, title, link)")
+      .select("*, parent(id, title), image(id, title, link))")
       .eq("project_id", project_id)
       .order("title", { ascending: true });
     if (documents) return documents;
@@ -128,7 +128,7 @@ export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<BoardProps>("boards")
     .select(
-      "*, parent(id, title), nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+      "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
     .eq("project_id", project_id);
   if (data) return data;

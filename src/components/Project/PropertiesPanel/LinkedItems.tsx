@@ -21,7 +21,6 @@ export default function LinkedItems() {
   const boards = useGetBoards(project_id as string);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const images = useGetImages(project_id as string);
-
   return (
     <Accordion activeIndex={null}>
       <AccordionTab
@@ -74,7 +73,7 @@ export default function LinkedItems() {
             .map((board) => (
               <Link
                 key={board.id}
-                to={`../../boards/${board.id}`}
+                to={`../../boards/${board.id}/123`}
                 className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
                 style={{ fontWeight: 700 }}
               >
