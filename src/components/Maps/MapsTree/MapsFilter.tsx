@@ -20,7 +20,7 @@ export default function MapsFilter({
   const createMapMutation = useCreateMap();
 
   return (
-    <div className="w-full py-1 flex justify-content-between flex-wrap">
+    <div className="w-full py-1 flex justify-content-between align-items-start flex-wrap">
       <div className="w-full py-2">
         <InputText
           className="w-full"

@@ -76,9 +76,9 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
 
   return (
     <div
-      className={`text-white ${
-        isTabletOrMobile ? "hidden" : "w-2"
-      } flex flex-wrap ${isTabletOrMobile ? "surface-0" : "surface-50"}`}
+      className={` text-white pt-2 px-2 ${
+        isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
+      }`}
       style={{
         height: "96vh",
       }}

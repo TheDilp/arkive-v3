@@ -1,9 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { useGetImages } from "../../utils/customHooks";
-import FilebrowserProvider, {
-  FileBrowserContext,
-} from "../Context/FileBrowserContext";
+import { FileBrowserContext } from "../Context/FileBrowserContext";
 import LoadingScreen from "../Util/LoadingScreen";
 import FileBrowserHeader from "./FileBrowserHeader";
 import GridLayout from "./GridLayout";
