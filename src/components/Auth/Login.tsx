@@ -24,8 +24,8 @@ export default function Login() {
     <Navigate to="/" />
   ) : (
     <div className="w-full h-screen flex align-items-center justify-content-center">
-      <div className="surface-card shadow-4 w-full border-round w-6 flex">
-        <div className="w-7 relative">
+      <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-min flex-wrap">
+        <div className="w-full lg:w-7 relative">
           <h1
             className="text-center text-6xl text-white absolute w-full z-5 Merriweather"
             style={{
@@ -40,11 +40,14 @@ export default function Login() {
               src={image.url}
               className="w-full h-full absolute transition-all transition-duration-200"
               alt="planet placeholder"
-              style={{ objectFit: "cover", opacity: index === imgIDX ? 1 : 0 }}
+              style={{
+                objectFit: "cover",
+                opacity: index === imgIDX ? 1 : 0,
+              }}
             />
           ))}
         </div>
-        <div className="w-5 p-4">
+        <div className="w-full lg:w-5 p-4">
           <div className="text-center mb-5">
             <div className="text-900 text-3xl font-medium mb-3 Merriweather">
               Welcome Back
