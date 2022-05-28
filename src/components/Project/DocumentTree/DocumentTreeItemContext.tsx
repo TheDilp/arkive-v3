@@ -66,7 +66,6 @@ export default function DocumentTreeItemContext({
   const documents: DocumentProps[] | undefined =
     queryClient.getQueryData(`${project_id}-documents`) || [];
   const document = documents.find((doc) => doc.id === displayDialog.id);
-  let folders = documents.filter((doc) => doc.folder);
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const newDocumentMutation = useCreateDocument(project_id as string);
@@ -74,26 +73,7 @@ export default function DocumentTreeItemContext({
   const createTemplateMutation = useCreateTemplate();
 
   // Get all the folders a document can be moved to
-  const moveToOptions = [
-    {
-      label: "Root",
-      command: (item: any) => {
-        updateDocumentMutation.mutate({
-          id: displayDialog.id,
-          parent: null,
-        });
-      },
-    },
-    ...folders.map((folder) => ({
-      label: folder.title,
-      command: (item: any) => {
-        updateDocumentMutation.mutate({
-          id: displayDialog.id,
-          parent: folder.id,
-        });
-      },
-    })),
-  ];
+
   const templateItems = [
     {
       label: "Edit Document",
@@ -135,11 +115,7 @@ export default function DocumentTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-      items: moveToOptions,
-    },
+
     {
       label: "Change Type",
       icon: "pi pi-fw pi-sync",
@@ -210,11 +186,7 @@ export default function DocumentTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-      items: moveToOptions,
-    },
+
     {
       label: "Change Type",
       icon: "pi pi-fw, pi-sync",

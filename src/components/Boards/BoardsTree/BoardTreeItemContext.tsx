@@ -70,10 +70,6 @@ export default function BoardTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-    },
 
     {
       label: "Convert To Preset",
@@ -108,10 +104,7 @@ export default function BoardTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-    },
+
     {
       label: "Insert Into Folder",
       icon: "pi pi-fw pi-plus",
