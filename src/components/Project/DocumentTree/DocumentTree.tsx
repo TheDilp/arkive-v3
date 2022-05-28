@@ -26,12 +26,9 @@ import DocumentUpdateDialog from "./DocumentUpdateDialog";
 import TemplatesTree from "./TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
-type Props = {
-  docId: string;
-  setDocId: (docId: string) => void;
-};
+import { ProjectContext } from "../../Context/ProjectContext";
 
-export default function DocumentsTree({ docId, setDocId }: Props) {
+export default function DocumentsTree() {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel<DocumentProps>[]>([]);
@@ -107,7 +104,6 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
       )}
       <DocumentTreeItemContext
         cm={cm}
-        docId={docId}
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
@@ -157,8 +153,6 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
                       depth={depth}
                       isOpen={isOpen}
                       onToggle={onToggle}
-                      docId={docId}
-                      setDocId={setDocId}
                       setDisplayDialog={setDisplayDialog}
                       setIconSelect={setIconSelect}
                       cm={cm}
@@ -210,15 +204,12 @@ export default function DocumentsTree({ docId, setDocId }: Props) {
                         )
                       : true
                   )}
-                setDocId={setDocId}
               />
             )}
           </TabPanel>
           <TabPanel header="Templates" className="surface-50">
             <div className="h-screen">
               <TemplatesTree
-                docId={docId}
-                setDocId={setDocId}
                 setIconSelect={setIconSelect}
                 setDisplayDialog={setDisplayDialog}
                 cm={cm}

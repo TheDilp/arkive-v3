@@ -40,8 +40,8 @@ export default function PropertiesPanel() {
     <div
       className={`${
         isLaptop ? "w-3" : "w-2"
-      } surface-50 text-white flex flex-wrap align-items-start align-content-start Lato ${
-        isTabletOrMobile ? "hidden" : ""
+      } surface-50 text-white align-items-start align-content-start Lato ${
+        isTabletOrMobile ? "hidden" : "flex flex-wrap"
       }`}
       style={{
         height: "96.4vh",

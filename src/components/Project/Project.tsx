@@ -8,6 +8,7 @@ import {
 import { auth } from "../../utils/supabaseUtils";
 import FilebrowserProvider from "../Context/FileBrowserContext";
 import MediaQueryProvider from "../Context/MediaQueryContext";
+import ProjectContextProvider from "../Context/ProjectContext";
 import SidebarProvider from "../Context/SidebarContext";
 import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
@@ -30,12 +31,14 @@ export default function Project() {
   return (
     <>
       <MediaQueryProvider>
-        <SidebarProvider>
-          <FilebrowserProvider>
-            <Navbar />
-            <Outlet />
-          </FilebrowserProvider>
-        </SidebarProvider>
+        <ProjectContextProvider>
+          <SidebarProvider>
+            <FilebrowserProvider>
+              <Navbar />
+              <Outlet />
+            </FilebrowserProvider>
+          </SidebarProvider>
+        </ProjectContextProvider>
       </MediaQueryProvider>
     </>
   );

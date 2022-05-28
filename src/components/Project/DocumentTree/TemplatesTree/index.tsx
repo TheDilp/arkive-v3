@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import {
@@ -15,22 +15,20 @@ import {
 import { v4 as uuid } from "uuid";
 import { defaultTemplate } from "../../../../utils/utils";
 import { InputText } from "primereact/inputtext";
+import { ProjectContext } from "../../../Context/ProjectContext";
 type Props = {
-  docId: string;
-  setDocId: (docId: string) => void;
   setIconSelect: (iconSelect: iconSelectProps) => void;
   setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
   cm: any;
 };
 
 export default function TemplatesTree({
-  docId,
-  setDocId,
   setIconSelect,
   setDisplayDialog,
   cm,
 }: Props) {
   const { project_id } = useParams();
+  const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const templates = useGetTemplates(project_id as string);
   const createDocumentMutation = useCreateTemplate();
@@ -113,6 +111,7 @@ export default function TemplatesTree({
                   folder: templates[virtualRow.index].folder,
                   template: templates[virtualRow.index].template,
                   depth: 0,
+                  parent: "",
                 });
               }}
             >

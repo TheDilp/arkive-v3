@@ -1,6 +1,6 @@
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
-import React from "react";
+import React, { useContext } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -16,15 +16,14 @@ import {
 } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 import { saveAs } from "file-saver";
+import { ProjectContext } from "../../Context/ProjectContext";
 type Props = {
-  docId: string;
   cm: React.RefObject<ContextMenu>;
   displayDialog: docItemDisplayDialogProps;
   setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
 };
 
 export default function DocumentTreeItemContext({
-  docId,
   cm,
   displayDialog,
   setDisplayDialog,
@@ -32,6 +31,7 @@ export default function DocumentTreeItemContext({
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const navigate = useNavigate();
+  const { id: docId } = useContext(ProjectContext);
   const confirmdelete = () => {
     confirmDialog({
       message: (

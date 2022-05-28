@@ -1,19 +1,19 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   docItemDisplayDialogProps,
   DocumentProps,
   iconSelectProps,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
+import { ProjectContext } from "../../Context/ProjectContext";
 type Props = {
-  docId: string;
   node: NodeModel<DocumentProps>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDocId: (docId: string) => void;
   setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
   setIconSelect: (iconSelect: iconSelectProps) => void;
   cm: any;
@@ -21,16 +21,16 @@ type Props = {
 
 export default function DocumentTreeItem({
   node,
-  docId,
   depth,
   isOpen,
   onToggle,
-  setDocId,
   setDisplayDialog,
   setIconSelect,
   cm,
 }: Props) {
   const { project_id } = useParams();
+  const { id: docId, setId: setDocId } = useContext(ProjectContext);
+  const navigate = useNavigate();
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   return (
     <div
@@ -38,7 +38,10 @@ export default function DocumentTreeItem({
       className="text-md hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center white-space-normal "
       onClick={() => {
         // Navigate if not a folder
-        if (!node.droppable) setDocId(node.id as string);
+        if (!node.droppable) {
+          setDocId(node.id as string);
+          navigate(node.id as string);
+        }
       }}
       onContextMenu={(e) => {
         cm.current.show(e);

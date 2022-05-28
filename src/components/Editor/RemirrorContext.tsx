@@ -13,7 +13,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, To, useNavigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode } from "remirror";
 import {
   BoldExtension,
@@ -39,7 +39,7 @@ import {
   useGetDocuments,
   useUpdateDocument,
 } from "../../utils/customHooks";
-import { toastSuccess } from "../../utils/utils";
+import { toastSuccess, toastWarn } from "../../utils/utils";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import { TableExtension } from "@remirror/extension-react-tables";
 import { saveAs } from "file-saver";
@@ -82,13 +82,7 @@ const hooks = [
   },
 ];
 
-export default function RemirrorContext({
-  setDocId,
-  editable,
-}: {
-  setDocId: (id: string) => void;
-  editable?: boolean;
-}) {
+export default function RemirrorContext({ editable }: { editable?: boolean }) {
   const { project_id, doc_id } = useParams();
   const firstRender = useRef(true);
   const currentDocument = useGetDocumentData(
@@ -150,14 +144,9 @@ export default function RemirrorContext({
   });
   // ======================================================
 
-  const documents = useGetDocuments(project_id as string);
+  const { data: documents } = useGetDocuments(project_id as string);
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
-
-  useEffect(() => {
-    if (doc_id) setDocId(doc_id);
-    return () => setDocId("");
-  }, [doc_id]);
 
   useEffect(() => {
     const timeout = setTimeout(async () => {
@@ -174,12 +163,15 @@ export default function RemirrorContext({
     return () => clearTimeout(timeout);
   }, [saving]);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
-  if (!currentDocument) return <Navigate to="../../wiki" />;
+  if (!currentDocument) {
+    toastWarn("Document not found");
+    return <Navigate to={-1 as To} />;
+  }
   return (
     <div
       className={`editorContainer ${
         // Check if latop, then if mobile/tablet and set width
-        isTabletOrMobile ? "w-12" : isLaptop ? "w-6" : "w-8"
+        isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
       } h-full flex flex-wrap align-content-start text-white px-2`}
     >
       <h1 className="w-full text-center my-2 Merriweather">
