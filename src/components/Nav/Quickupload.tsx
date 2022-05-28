@@ -59,7 +59,13 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         }}
       >
         {chooseButton}
-        <span>{uploadButton}</span>
+        <span
+          onClick={() => {
+            fileUploadRef.current?.upload();
+          }}
+        >
+          {uploadButton}
+        </span>
         <span
           onClick={() => {
             fileUploadRef.current?.clear();

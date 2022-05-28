@@ -2,36 +2,31 @@ import { AnimatePresence, motion } from "framer-motion";
 import L, { LatLngBoundsExpression } from "leaflet";
 import { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { useGetMapData } from "../../../utils/customHooks";
+import { getSingleMap } from "../../../utils/supabaseUtils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import MapContextMenu from "../MapContextMenu";
-import MapImage from "./MapImage";
-import CreateMarkerDialog from "./MapMarker/CreateMarkerDialog";
-export default function MapView({
-  setMapId,
-}: {
-  setMapId: (id: string) => void;
-}) {
-  const { project_id, map_id } = useParams();
+
+import PublicMapImage from "./PublicMapImage";
+
+export default function PublicMapView() {
+  const { map_id } = useParams();
+  const { data: mapData, isLoading } = useQuery(
+    map_id as string,
+    async () => await getSingleMap(map_id as string)
+  );
   const cm = useRef(null);
   const imgRef = useRef() as any;
   const mapRef = useRef() as any;
-  const mapData = useGetMapData(project_id as string, map_id as string);
   const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
   ]);
-  const [newTokenDialog, setNewTokenDialog] = useState({
-    lat: 0,
-    lng: 0,
-    show: false,
-  });
-  const [loading, setLoading] = useState(true);
-  console.log(mapData, project_id, map_id);
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
+      console.log(mapData, isLoading);
+
       let img = new Image();
       img.src = `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`;
       img.onload = () => {
@@ -48,22 +43,18 @@ export default function MapView({
             ]);
           }, 250);
         }
-        setLoading(false);
       };
     }
   }, [mapData?.id, mapData?.map_image]);
 
   useEffect(() => {
-    if (map_id) setMapId(map_id);
     //  Wait for map to finish loading
     setTimeout(() => {
-      mapRef.current.flyToBounds(bounds);
+      if (mapRef.current) mapRef.current?.flyToBounds(bounds);
     }, 350);
+  }, [map_id, bounds, mapRef.current]);
 
-    return () => setMapId("");
-  }, [map_id, bounds]);
-
-  if (loading)
+  if (isLoading)
     return (
       <div className="w-full h-full flex align-items-center justify-content-center">
         <h1 className="text-white Merriweather align-self-start">
@@ -72,19 +63,7 @@ export default function MapView({
       </div>
     );
   return (
-    <div className={`${isTabletOrMobile ? "w-full" : "w-10"}   h-full`}>
-      <MapContextMenu
-        cm={cm}
-        mapRef={mapRef}
-        lat={newTokenDialog.lat}
-        lng={newTokenDialog.lng}
-        setNewTokenDialog={setNewTokenDialog}
-        bounds={bounds as number[][]}
-      />
-      <CreateMarkerDialog
-        {...newTokenDialog}
-        setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
-      />
+    <div className="w-full h-full">
       <AnimatePresence exitBeforeEnter={true}>
         {mapData && bounds && (
           <motion.div
@@ -109,12 +88,11 @@ export default function MapView({
               attributionControl={false}
             >
               {mapData.map_image?.link && (
-                <MapImage
+                <PublicMapImage
                   src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`}
                   bounds={bounds as LatLngBoundsExpression}
                   imgRef={imgRef}
                   markers={mapData.markers}
-                  setNewTokenDialog={setNewTokenDialog}
                   cm={cm}
                 />
               )}

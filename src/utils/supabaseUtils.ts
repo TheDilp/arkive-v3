@@ -704,3 +704,17 @@ export const getSingleDocument = async (document_id: string) => {
     throw new Error(error.message);
   }
 };
+export const getSingleMap = async (map_id: string) => {
+  const { data, error } = await supabase
+    .from<MapProps>("maps")
+    .select(
+      "id, title, parent(id, title), folder, expanded, project_id, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
+    )
+    .eq("id", map_id)
+    .maybeSingle();
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your map.");
+    throw new Error(error.message);
+  }
+};

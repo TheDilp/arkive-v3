@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { DocumentProps } from "../../../custom-types";
 import {
@@ -60,12 +60,13 @@ export default function PropertiesPanel() {
           />
         </div>
       )}
+
       <div className="w-full">
         <LinkedItems />
       </div>
       <div className="w-full">
         <hr className="border-gray-500" />
-        <div className="flex justify-content-center py-2">
+        <div className="flex justify-content-center">
           <Button
             label="Create Template"
             icon="pi pi-fw pi-copy"
@@ -91,6 +92,19 @@ export default function PropertiesPanel() {
               }
             }}
           />
+        </div>
+        <div className="w-full flex justify-content-center my-2">
+          <Link
+            to={`../../../../view/${project_id}/wiki/${doc_id}`}
+            className="no-underline"
+          >
+            <Button
+              className="p-button-outlined"
+              label="Public Page"
+              icon="pi pi-external-link"
+              iconPos="right"
+            />
+          </Link>
         </div>
       </div>
     </div>
