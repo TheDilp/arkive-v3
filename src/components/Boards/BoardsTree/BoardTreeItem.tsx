@@ -29,7 +29,7 @@ export default function BoardTreeItem({
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
-      className="text-lg hover:bg-blue-700 py-1 cursor-pointer pl-2 flex"
+      className="text-md hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
       onClick={() => {
         if (!node.droppable) setBoardId(node.id as string);
       }}
@@ -37,7 +37,7 @@ export default function BoardTreeItem({
         setDisplayDialog({
           id: node.id as string,
           title: node.text,
-          parent: node.data?.parent || "0",
+          parent: node.data?.parent?.id || "0",
           folder: node.droppable || false,
           depth,
           expanded: false,
@@ -73,9 +73,7 @@ export default function BoardTreeItem({
         <Icon icon={"mdi:draw"} inline={true} className="mr-1" />
       )}
       <div
-        className={`text-lg w-10 Lato ${
-          boardId === node.id ? "text-primary" : ""
-        }`}
+        className={`w-10 Lato ${boardId === node.id ? "text-primary" : ""}`}
         onClick={(e) => {
           if (node.droppable) {
             e.preventDefault();

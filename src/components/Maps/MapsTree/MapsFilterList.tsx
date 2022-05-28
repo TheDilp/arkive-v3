@@ -1,7 +1,6 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import React, { useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { MapProps } from "../../../custom-types";
 
@@ -22,7 +21,7 @@ export default function MapsFilterList({ filteredTree, setMapId }: Props) {
     <>
       <div
         ref={parentRef}
-        className="h-screen list-none text-lg"
+        className="h-screen list-none text-md"
         style={{
           height: `100%`,
           width: `100%`,
@@ -75,7 +74,9 @@ export default function MapsFilterList({ filteredTree, setMapId }: Props) {
                   }}
                 />
               )}
-              <span className={`text-lg hover:bg-blue-300 Lato`}>
+              <span
+                className={`text-lg hover:bg-blue-300 Lato white-space-nowrap overflow-hidden text-overflow-ellipsis`}
+              >
                 {filteredTree[virtualRow.index].text}
               </span>
             </div>

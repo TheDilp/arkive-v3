@@ -2,11 +2,16 @@ import { Navigate, Outlet, useParams } from "react-router-dom";
 import {
   useGetBoards,
   useGetDocuments,
+  useGetMaps,
   useGetProjectData,
 } from "../../utils/customHooks";
-import LoadingScreen from "../Util/LoadingScreen";
-import Navbar from "../Nav/Navbar";
 import { auth } from "../../utils/supabaseUtils";
+import FilebrowserProvider from "../Context/FileBrowserContext";
+import MediaQueryProvider from "../Context/MediaQueryContext";
+import ProjectContextProvider from "../Context/ProjectContext";
+import SidebarProvider from "../Context/SidebarContext";
+import Navbar from "../Nav/Navbar";
+import LoadingScreen from "../Util/LoadingScreen";
 
 export default function Project() {
   const { project_id } = useParams();
@@ -14,17 +19,27 @@ export default function Project() {
   const { isLoading: isLoadingDocuments } = useGetDocuments(
     project_id as string
   );
+  const { isLoading: isLoadingMaps } = useGetMaps(project_id as string);
   const { isLoading: isLoadingBoards } = useGetBoards(project_id as string);
   const user = auth.user();
 
   if (!user) return <Navigate to="/" />;
 
-  if (isLoadingDocuments || isLoadingBoards) return <LoadingScreen />;
+  if (isLoadingDocuments || isLoadingMaps || isLoadingBoards)
+    return <LoadingScreen />;
 
   return (
     <>
-      <Navbar />
-      <Outlet />
+      <MediaQueryProvider>
+        <ProjectContextProvider>
+          <SidebarProvider>
+            <FilebrowserProvider>
+              <Navbar />
+              <Outlet />
+            </FilebrowserProvider>
+          </SidebarProvider>
+        </ProjectContextProvider>
+      </MediaQueryProvider>
     </>
   );
 }

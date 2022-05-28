@@ -1,6 +1,6 @@
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
-import React from "react";
+import React, { useContext } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -16,15 +16,14 @@ import {
 } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 import { saveAs } from "file-saver";
+import { ProjectContext } from "../../Context/ProjectContext";
 type Props = {
-  docId: string;
   cm: React.RefObject<ContextMenu>;
   displayDialog: docItemDisplayDialogProps;
   setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
 };
 
 export default function DocumentTreeItemContext({
-  docId,
   cm,
   displayDialog,
   setDisplayDialog,
@@ -32,6 +31,7 @@ export default function DocumentTreeItemContext({
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const navigate = useNavigate();
+  const { id: docId } = useContext(ProjectContext);
   const confirmdelete = () => {
     confirmDialog({
       message: (
@@ -66,7 +66,6 @@ export default function DocumentTreeItemContext({
   const documents: DocumentProps[] | undefined =
     queryClient.getQueryData(`${project_id}-documents`) || [];
   const document = documents.find((doc) => doc.id === displayDialog.id);
-  let folders = documents.filter((doc) => doc.folder);
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const newDocumentMutation = useCreateDocument(project_id as string);
@@ -74,29 +73,10 @@ export default function DocumentTreeItemContext({
   const createTemplateMutation = useCreateTemplate();
 
   // Get all the folders a document can be moved to
-  const moveToOptions = [
-    {
-      label: "Root",
-      command: (item: any) => {
-        updateDocumentMutation.mutate({
-          id: displayDialog.id,
-          parent: null,
-        });
-      },
-    },
-    ...folders.map((folder) => ({
-      label: folder.title,
-      command: (item: any) => {
-        updateDocumentMutation.mutate({
-          id: displayDialog.id,
-          parent: folder.id,
-        });
-      },
-    })),
-  ];
+
   const templateItems = [
     {
-      label: "Rename Document",
+      label: "Edit Document",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
@@ -131,15 +111,11 @@ export default function DocumentTreeItemContext({
   ];
   const docItems = [
     {
-      label: "Rename Document",
+      label: "Edit Document",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-      items: moveToOptions,
-    },
+
     {
       label: "Change Type",
       icon: "pi pi-fw pi-sync",
@@ -206,15 +182,11 @@ export default function DocumentTreeItemContext({
   ];
   const folderItems = [
     {
-      label: "Rename Document",
+      label: "Edit Folder",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-      items: moveToOptions,
-    },
+
     {
       label: "Change Type",
       icon: "pi pi-fw, pi-sync",

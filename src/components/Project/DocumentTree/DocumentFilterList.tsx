@@ -1,27 +1,29 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { useVirtual } from "react-virtual";
 import { DocumentProps } from "../../../custom-types";
+import { ProjectContext } from "../../Context/ProjectContext";
 
 type Props = {
   filteredTree: NodeModel<DocumentProps>[];
-  setDocId: (docId: string) => void;
 };
 
-export default function DocumentsFilterList({ filteredTree, setDocId }: Props) {
+export default function DocumentsFilterList({ filteredTree }: Props) {
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const { setId: setDocId } = useContext(ProjectContext);
   const rowVirtualizer = useVirtual({
     size: filteredTree.length,
     parentRef,
     estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
+
   return (
     <>
       <div
         ref={parentRef}
-        className="h-screen list-none text-lg"
+        className="h-screen list-none text-md"
         style={{
           height: `100%`,
           width: `100%`,
@@ -74,7 +76,9 @@ export default function DocumentsFilterList({ filteredTree, setDocId }: Props) {
                   }}
                 />
               )}
-              <span className={`text-lg hover:bg-blue-300 Lato`}>
+              <span
+                className={`text-md hover:bg-blue-300 Lato white-space-nowrap overflow-hidden text-overflow-ellipsis`}
+              >
                 {filteredTree[virtualRow.index].text}
               </span>
             </div>

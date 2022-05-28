@@ -70,10 +70,6 @@ export default function BoardTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-    },
 
     {
       label: "Convert To Preset",
@@ -108,10 +104,7 @@ export default function BoardTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-    },
+
     {
       label: "Insert Into Folder",
       icon: "pi pi-fw pi-plus",
@@ -136,8 +129,6 @@ export default function BoardTreeItemContext({
               project_id: project_id as string,
               folder: false,
               layout: "Preset",
-              nodes: [],
-              edges: [],
             }),
         },
         {
@@ -152,8 +143,6 @@ export default function BoardTreeItemContext({
                 project_id: project_id as string,
                 folder: true,
                 layout: "Preset",
-                nodes: [],
-                edges: [],
               });
             } else {
               toastWarn("You cannot insert more than 4 levels deep.");

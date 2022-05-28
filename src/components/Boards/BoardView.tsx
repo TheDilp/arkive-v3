@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -25,6 +25,8 @@ import {
   toastWarn,
   toModelPosition,
 } from "../../utils/utils";
+import { MediaQueryContext } from "../Context/MediaQueryContext";
+import LoadingScreen from "../Util/LoadingScreen";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
@@ -47,7 +49,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const grRef = useRef() as any;
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
-
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [nodeUpdateDialog, setNodeUpdateDialog] =
     useState<nodeUpdateDialogProps>({
       id: "",
@@ -87,6 +89,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   });
   const [drawMode, setDrawMode] = useState(false);
   const [snap, setSnap] = useState(true);
+  const [loading, setLoading] = useState(true);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
   const createNodeMutation = useCreateNode(project_id as string);
@@ -287,6 +290,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     }
   }, [cyRef, board_id]);
   useEffect(() => {
+    setLoading(true);
     if (firstRender.current) {
       firstRender.current = false;
     }
@@ -296,6 +300,13 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     grRef.current = null;
     if (board_id) {
       setBoardId(board_id);
+      setTimeout(() => {
+        cyRef.current.zoom(1);
+        cyRef.current.center();
+      }, 2);
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
     }
     return () => {
       cyRef.current.removeListener("click cxttap dbltap free");
@@ -321,7 +332,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
   return (
     <div
-      className="w-10 h-full"
+      className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
       onDrop={async (e) => {
         let files = e.dataTransfer.files;
 
@@ -391,20 +402,18 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           setEdgeUpdateDialog={setEdgeUpdateDialog}
         />
       )}
-
       <CytoscapeComponent
         elements={elements}
         className="Lato"
         wheelSensitivity={0.1}
         minZoom={0.1}
         maxZoom={10}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", opacity: loading ? 0 : 1 }}
         cy={(cy: any) => {
           if (!cyRef.current) {
             cyRef.current = cy;
           }
           if (!ehRef.current) {
-            cy.center();
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
             grRef.current = cyRef.current.gridGuide({
               ...cytoscapeGridOptions,

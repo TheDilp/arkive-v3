@@ -115,7 +115,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent, folder, expanded, project_id, markers:markers!map_id(*), map_image:images(id, title, link)"
+      "id, title, parent(id, title), folder, expanded, project_id, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
     )
     .eq("project_id", project_id);
   if (data) return data;
@@ -128,7 +128,7 @@ export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<BoardProps>("boards")
     .select(
-      "*, nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+      "*, parent(id, title), nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
     .eq("project_id", project_id);
   if (data) return data;
@@ -230,7 +230,7 @@ export const createBoard = async (CreateBoardProps: CreateBoardProps) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase
-      .from<BoardProps>("boards")
+      .from("boards")
       .insert(CreateBoardProps);
     if (data) return data;
     if (error) {
@@ -330,7 +330,10 @@ export const updateMap = async (MapUpdateProps: MapUpdateProps) => {
   if (user) {
     const { data: map, error } = await supabase
       .from("maps")
-      .update(MapUpdateProps)
+      .update({
+        ...MapUpdateProps,
+        map_image: MapUpdateProps.map_image?.id || undefined,
+      })
       .eq("id", MapUpdateProps.id);
 
     if (map) return map[0];
@@ -632,7 +635,6 @@ export const uploadImage = async (
 };
 export const downloadImage = async (id: string) => {
   let user = auth.user();
-  console.log(id);
   if (user) {
     const { data, error } = await supabase.storage.from("images").download(id);
 
@@ -643,12 +645,23 @@ export const downloadImage = async (id: string) => {
     }
   }
 };
-export const deleteImages = async (images: string[]) => {
+export const deleteImagesStorage = async (images: string[]) => {
   const { data, error } = await supabase.storage.from("images").remove(images);
   if (data) return data;
   if (error) {
     toastError("There was an error deleting your images.");
     throw new Error(error.message);
+  }
+};
+export const deleteImageRecords = async (ids: string[]) => {
+  let user = auth.user();
+  if (user) {
+    const { error } = await supabase.rpc("delete_many_images", {
+      ids,
+    });
+    if (error) {
+      toastError("There was an error deleting your images.");
+    }
   }
 };
 export const renameImage = async (id: string, newName: string) => {
@@ -667,7 +680,7 @@ export const renameImage = async (id: string, newName: string) => {
 
 export const getSingleBoard = async (board_id: string) => {
   const { data, error } = await supabase
-    .from("boards")
+    .from<BoardProps>("boards")
     .select(
       "*, nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
@@ -676,6 +689,32 @@ export const getSingleBoard = async (board_id: string) => {
   if (data) return data;
   if (error) {
     toastError("There was an error getting your board.");
+    throw new Error(error.message);
+  }
+};
+export const getSingleDocument = async (document_id: string) => {
+  const { data, error } = await supabase
+    .from<DocumentProps>("documents")
+    .select("*, image(id, title, link)")
+    .eq("id", document_id)
+    .maybeSingle();
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your document.");
+    throw new Error(error.message);
+  }
+};
+export const getSingleMap = async (map_id: string) => {
+  const { data, error } = await supabase
+    .from<MapProps>("maps")
+    .select(
+      "id, title, parent(id, title), folder, expanded, project_id, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
+    )
+    .eq("id", map_id)
+    .maybeSingle();
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your map.");
     throw new Error(error.message);
   }
 };

@@ -7,6 +7,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
   boardItemDisplayDialogProps,
+  BoardProps,
   UpdateBoardInputs,
 } from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
@@ -20,7 +21,7 @@ type Props = {
 export default function BoardUpdateDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const updateBoardMutation = useUpdateBoard(project_id as string);
-  const boards = useGetBoards(project_id as string);
+  const { data: boards } = useGetBoards(project_id as string);
   const {
     control,
     register,
@@ -46,8 +47,30 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
       depth: 0,
       layout: "",
       show: false,
+      expanded: false,
     });
   };
+  function recursiveDescendantRemove(
+    doc: BoardProps,
+    index: number,
+    array: BoardProps[],
+    selected_id: string
+  ): boolean {
+    if (doc.parent === null) {
+      return true;
+    } else {
+      const parent = array.find((d) => d.id === doc.parent?.id);
+      if (parent) {
+        if (parent.id === selected_id) {
+          return false;
+        } else {
+          return recursiveDescendantRemove(parent, index, array, selected_id);
+        }
+      } else {
+        return false;
+      }
+    }
+  }
 
   return (
     <Dialog
@@ -62,6 +85,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
           depth: 0,
           layout: "",
           show: false,
+          expanded: false,
         })
       }
     >
@@ -94,9 +118,21 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
                   value={field.value}
                   onChange={(e) => field.onChange(e.value)}
                   options={
-                    boards.data?.filter(
-                      (board) => board.folder && board.id !== visible.id
-                    ) || []
+                    boards
+                      ? [
+                          { title: "Root", id: null },
+                          ...boards.filter((board, idx, array) => {
+                            if (!board.folder || board.id === visible.id)
+                              return false;
+                            return recursiveDescendantRemove(
+                              board,
+                              idx,
+                              array,
+                              visible.id
+                            );
+                          }),
+                        ]
+                      : []
                   }
                 />
               )}

@@ -15,7 +15,7 @@ export default function Profile() {
     isLoading,
   } = useQuery("getProfile", async () => await getProfile());
   const [localProfile, setLocalProfile] = useState(profile || null);
-
+  console.log(profile)
   useEffect(() => {
     if (profile) setLocalProfile(profile);
   }, [profile]);
@@ -63,7 +63,7 @@ export default function Profile() {
     </div>
   );
   return (
-    <div className="w-full h-full flex flex-wrap align-content-start justify-content-center align-items-center ">
+    <div className="w-full h-screen flex flex-wrap align-content-start justify-content-center align-items-start ">
       <Navbar />
       <div className="h-full flex align-items-center">
         {localProfile && (

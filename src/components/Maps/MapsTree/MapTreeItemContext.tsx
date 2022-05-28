@@ -62,10 +62,6 @@ export default function MapTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-    },
 
     { separator: true },
     {
@@ -80,10 +76,7 @@ export default function MapTreeItemContext({
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-    {
-      label: "Move To",
-      icon: "pi pi-fw pi-directions",
-    },
+
     {
       label: "Insert Into Folder",
       icon: "pi pi-fw pi-plus",
@@ -102,9 +95,10 @@ export default function MapTreeItemContext({
                 id: uuid(),
                 title: "New Folder",
                 parent: displayDialog.id,
-                map_image: "",
+                map_image: { id: "", title: "", link: "", type: "Image" },
                 project_id: project_id as string,
                 folder: true,
+                expanded: false,
               });
             } else {
               toastWarn("You cannot insert more than 4 levels deep.");

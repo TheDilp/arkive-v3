@@ -24,6 +24,8 @@ import gridguide from "cytoscape-grid-guide";
 import FileBrowser from "./components/FileBrowser/FileBrowser";
 import PublicProject from "./components/PublicView/PublicProject";
 import PublicBoardView from "./components/PublicView/PublicBoardView";
+import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
+import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
 
 function App() {
   cytoscape.use(edgehandles);
@@ -56,6 +58,8 @@ function App() {
               <Route path="settings/:setting" element={<ProjectSettings />} />
             </Route>
             <Route path="view/:project_id" element={<PublicProject />}>
+              <Route path="wiki/:doc_id" element={<PublicWiki />} />
+              <Route path="maps/:map_id" element={<PublicMaps />} />
               <Route path="boards/:board_id" element={<PublicBoardView />} />
             </Route>
           </Routes>

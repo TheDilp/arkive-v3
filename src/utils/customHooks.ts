@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import {
-  BoardNodeProps,
   BoardProps,
   CreateBoardProps,
   CreateNodeProps,
@@ -11,7 +11,6 @@ import {
   MapProps,
   MapUpdateProps,
   ProjectProps,
-  UpdateEdgeInputs,
   UpdateEdgeProps,
   UpdateNodeProps,
 } from "../custom-types";
@@ -27,7 +26,7 @@ import {
   deleteBoard,
   deleteDocument,
   deleteEdge,
-  deleteImages,
+  deleteImagesStorage,
   deleteManyNodes,
   deleteMap,
   deleteMapMarker,
@@ -37,6 +36,8 @@ import {
   getDocuments,
   getImages,
   getMaps,
+  getSingleBoard,
+  getSingleDocument,
   getTags,
   renameImage,
   updateBoard,
@@ -237,8 +238,10 @@ export function useUpdateDocument(project_id: string) {
         content: vars.content,
         expanded: vars.expanded,
       }),
+
     {
       onMutate: async (updatedDocument) => {
+        console.log(updatedDocument);
         await queryClient.cancelQueries(`${project_id}-documents`);
         const previousDocuments = queryClient.getQueryData(
           `${project_id}-documents`
@@ -255,10 +258,11 @@ export function useUpdateDocument(project_id: string) {
                   return {
                     ...doc,
                     ...updatedDocument,
-                    parent:
-                      updatedDocument.parent && newParent
-                        ? { id: newParent.id, title: newParent.title }
-                        : doc.parent,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedDocument.parent === null
+                      ? null
+                      : doc.parent,
                   };
                 } else {
                   return doc;
@@ -270,7 +274,6 @@ export function useUpdateDocument(project_id: string) {
             }
           }
         );
-
         return { previousDocuments };
       },
       onError: (err, newTodo, context) => {
@@ -509,8 +512,9 @@ export function useCreateMap() {
                 ...oldData,
                 {
                   ...newMap,
-                  parent: newMap.parent ? newMap.parent : "0",
-                  user_id,
+                  parent: newMap.parent
+                    ? { id: newMap.parent, title: "" }
+                    : null,
                   folder: newMap.folder ? newMap.folder : false,
                   markers: [],
                 },
@@ -563,12 +567,19 @@ export function useUpdateMap(project_id: string) {
           `${project_id}-maps`,
           (oldData: MapProps[] | undefined) => {
             if (oldData) {
-              // Template shouldn't have parent hence null
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedMap.parent
+              );
               let newData: MapProps[] = oldData.map((map) => {
                 if (map.id === updatedMap.id) {
                   return {
                     ...map,
                     ...updatedMap,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedMap.parent === null
+                      ? null
+                      : map.parent,
                   };
                 } else {
                   return map;
@@ -879,7 +890,7 @@ export function useCreateBoard() {
                 ...oldData,
                 {
                   ...newBoard,
-                  parent: newBoard.parent ? newBoard.parent : "0",
+                  parent: { id: "", title: "" },
                   nodes: [],
                   edges: [],
                   expanded: false,
@@ -889,7 +900,7 @@ export function useCreateBoard() {
               return [
                 {
                   ...newBoard,
-                  parent: newBoard.parent ? newBoard.parent : "0",
+                  parent: { id: "", title: "" },
                   nodes: [],
                   edges: [],
                   expanded: false,
@@ -931,11 +942,20 @@ export function useUpdateBoard(project_id: string) {
           `${project_id}-boards`,
           (oldData: BoardProps[] | undefined) => {
             if (oldData) {
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedBoard.parent
+              );
+              console.log(newParent);
               let newData = oldData.map((board) => {
                 if (board.id === updatedBoard.id) {
                   return {
                     ...board,
                     ...updatedBoard,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedBoard.parent === null
+                      ? null
+                      : board.parent,
                   };
                 } else {
                   return board;
@@ -1431,7 +1451,7 @@ export function useDeleteImages(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
     async (vars: string[]) => {
-      await deleteImages(vars);
+      await deleteImagesStorage(vars);
     },
     {
       onMutate: async (deletedImageLinks) => {

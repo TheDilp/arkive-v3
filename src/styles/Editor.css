@@ -21,8 +21,15 @@
 
 .remirror-editor {
     box-shadow: none !important;
-    max-height: 83.5vh;
     padding: 0 1rem !important;
+}
+
+.remirror-editor:not(.publicPage) {
+    max-height: 83.5vh;
+}
+
+.publicPage {
+    height: 100%;
 }
 
 .remirror-editor>h1,

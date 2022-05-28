@@ -17,7 +17,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     toggleOrderedList,
     toggleHeading,
     toggleCallout,
-    toggleStrike,
     updateCallout,
     insertHorizontalRule,
     updateLink,
@@ -27,7 +26,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     centerAlign,
     rightAlign,
     focus,
-    setTextColor,
     createTable,
     addTableRowBefore,
     addTableRowAfter,
@@ -449,35 +447,35 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               }
             },
           },
-          {
-            icon: "pi pi-fw pi-table",
-            items: [
-              {
-                label: "Create Table",
-                command: () =>
-                  setShowDialog({
-                    columns: 1,
-                    rows: 1,
-                    header: true,
-                    show: true,
-                  }),
-              },
+          // {
+          //   icon: "pi pi-fw pi-table",
+          //   items: [
+          //     {
+          //       label: "Create Table",
+          //       command: () =>
+          //         setShowDialog({
+          //           columns: 1,
+          //           rows: 1,
+          //           header: true,
+          //           show: true,
+          //         }),
+          //     },
 
-              { label: "Add Row Before", command: () => addTableRowBefore() },
-              { label: "Add Row After", command: () => addTableRowAfter() },
-              {
-                label: "Add Column Before",
-                command: () => addTableColumnBefore(),
-              },
-              {
-                label: "Add Column After",
-                command: () => addTableColumnAfter(),
-              },
-              { label: "Delete Column", command: () => deleteTableColumn() },
-              { label: "Delete Row", command: () => deleteTableRow() },
-              { label: "Delete Table", command: () => deleteTable() },
-            ],
-          },
+          //     { label: "Add Row Before", command: () => addTableRowBefore() },
+          //     { label: "Add Row After", command: () => addTableRowAfter() },
+          //     {
+          //       label: "Add Column Before",
+          //       command: () => addTableColumnBefore(),
+          //     },
+          //     {
+          //       label: "Add Column After",
+          //       command: () => addTableColumnAfter(),
+          //     },
+          //     { label: "Delete Column", command: () => deleteTableColumn() },
+          //     { label: "Delete Row", command: () => deleteTableRow() },
+          //     { label: "Delete Table", command: () => deleteTable() },
+          //   ],
+          // },
         ]}
         end={() =>
           saving ? <ProgressSpinner className="w-2rem h-2rem" /> : ""

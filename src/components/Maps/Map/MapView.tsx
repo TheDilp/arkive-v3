@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import L, { LatLngBoundsExpression, map } from "leaflet";
-import { useEffect, useRef, useState } from "react";
+import L, { LatLngBoundsExpression } from "leaflet";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { useGetMapData } from "../../../utils/customHooks";
-import LoadingScreen from "../../Util/LoadingScreen";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
 import CreateMarkerDialog from "./MapMarker/CreateMarkerDialog";
@@ -18,6 +18,7 @@ export default function MapView({
   const imgRef = useRef() as any;
   const mapRef = useRef() as any;
   const mapData = useGetMapData(project_id as string, map_id as string);
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
@@ -28,7 +29,7 @@ export default function MapView({
     show: false,
   });
   const [loading, setLoading] = useState(true);
-
+  console.log(mapData, project_id, map_id);
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
       let img = new Image();
@@ -64,15 +65,14 @@ export default function MapView({
 
   if (loading)
     return (
-      <div className="w-10 h-full flex align-items-center justify-content-center">
+      <div className="w-full h-full flex align-items-center justify-content-center">
         <h1 className="text-white Merriweather align-self-start">
           Loading Map...
         </h1>
-        <LoadingScreen />;
       </div>
     );
   return (
-    <div className="w-10 h-full">
+    <div className={`${isTabletOrMobile ? "w-full" : "w-10"}   h-full`}>
       <MapContextMenu
         cm={cm}
         mapRef={mapRef}

@@ -28,10 +28,9 @@ export type MapProps = {
   id: string;
   title: string;
   map_image?: ImageProps;
-  parent: string | null;
+  parent: { id: string; title: string } | null;
   folder: boolean;
   expanded: boolean;
-  user_id: string;
   project_id: string;
   markers: MapMarkerProps[];
 };
@@ -49,7 +48,7 @@ export type MapMarkerProps = {
 export type BoardProps = {
   id: string;
   title: string;
-  parent?: string | null;
+  parent: { id: string; title: string } | null;
   folder: boolean;
   expanded: boolean;
   project_id: string;
@@ -143,6 +142,7 @@ export type docItemDisplayDialogProps = {
   title: string;
   show: boolean;
   folder: boolean;
+  parent: string;
   template: boolean;
   depth: number;
 };
@@ -258,7 +258,9 @@ export type UpdateMarkerInputs = {
   doc_id?: string;
   map_link?: string;
 };
-export type UpdateBoardInputs = Pick<BoardProps, "title" | "layout" | "parent">;
+export type UpdateBoardInputs = Pick<BoardProps, "title" | "layout"> & {
+  parent: string;
+};
 export type UpdateNodeInputs = Pick<
   nodeUpdateDialogProps,
   | "label"

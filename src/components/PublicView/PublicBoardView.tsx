@@ -6,7 +6,6 @@ import {
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
 } from "../../custom-types";
-import { useGetBoardData } from "../../utils/customHooks";
 import { getSingleBoard } from "../../utils/supabaseUtils";
 import {
   changeLayout,
@@ -29,7 +28,6 @@ export default function PublicBoardView() {
 
   async function fetchBoard() {
     const b = await getSingleBoard(board_id as string);
-    console.log(b);
     if (b) setBoard(b);
   }
 

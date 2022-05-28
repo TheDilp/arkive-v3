@@ -2,19 +2,23 @@ import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ProjectProps } from "../../../custom-types";
+import { useNavigate, useParams } from "react-router-dom";
+import { ImageProps, ProjectProps } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 import { deleteProject } from "../../../utils/supabaseUtils";
-import { useUpdateProject } from "../../../utils/customHooks";
+import { useGetImages, useUpdateProject } from "../../../utils/customHooks";
 import { toastSuccess } from "../../../utils/utils";
+import { Dropdown } from "primereact/dropdown";
+import ImgDropdownItem from "../../Util/ImgDropdownItem";
 type Props = {
   project: ProjectProps;
 };
 
 export default function ProjectSettings({ project }: Props) {
+  const { project_id } = useParams();
   const [localProject, setLocalProject] = useState<ProjectProps>(project);
   const projectMutation = useUpdateProject();
+  const images = useGetImages(project_id as string);
   const navigate = useNavigate();
   const confirmDeleteDialog = () =>
     confirmDialog({
@@ -67,21 +71,26 @@ export default function ProjectSettings({ project }: Props) {
             }}
           />
         </div>
-        <div className="w-full flex flex-nowrap mt-2">
-          <InputText
-            value={localProject.cardImage}
-            placeholder="Image Link"
-            onChange={(e) =>
-              setLocalProject({ ...localProject, cardImage: e.target.value })
+        <div className="w-4 flex flex-nowrap mt-2">
+          <Dropdown
+            filter
+            filterBy="title"
+            className="w-full"
+            placeholder="Custom Image"
+            optionLabel="title"
+            itemTemplate={(item: ImageProps) => (
+              <ImgDropdownItem title={item.title} link={item.link} />
+            )}
+            options={
+              images?.data
+                ? [
+                    { title: "No image", id: null },
+                    ...images?.data.filter((image) => image.type === "Image"),
+                  ]
+                : []
             }
-            className="w-4"
-          />
-          <Button
-            label="Save"
-            icon="pi pi-fw pi-save"
-            iconPos="right"
-            className="p-button-outlined p-button-success ml-2"
-            onClick={() =>
+            value={localProject.cardImage}
+            onChange={(e) =>
               projectMutation.mutate({
                 project_id: localProject.id,
                 cardImage: localProject.cardImage,

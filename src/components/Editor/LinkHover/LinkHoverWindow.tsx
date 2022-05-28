@@ -19,14 +19,15 @@ import {
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
-import LoadingScreen from "../../Util/LoadingScreen";
 import CustomLinkExtenstion from "../CustomLinkExtension";
 import MentionReactComponent from "../MentionReactComponent/MentionReactComponent";
 import LinkHoverEditor from "./LinkHoverEditor";
 
 export default function LinkHoverWindow({
   content,
+  classes,
 }: {
+  classes?: string;
   content: RemirrorJSON | null;
 }) {
   // ======================================================
@@ -85,13 +86,15 @@ export default function LinkHoverWindow({
   // ======================================================
 
   return (
-    <div className="editorContainer w-full h-20rem ">
+    <div className={`editorContainer w-full ${classes || "h-20rem"} `}>
       {content ? (
         <ThemeProvider>
           <Remirror
             manager={manager}
             initialContent={state}
-            classNames={["text-white Lato viewOnlyEditor w-full h-20rem"]}
+            classNames={[
+              `text-white Lato viewOnlyEditor w-full ${classes || "h-20rem"}`,
+            ]}
             editable={false}
           >
             <LinkHoverEditor content={content} />
