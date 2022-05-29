@@ -318,13 +318,17 @@ export type DocumentUpdateProps = {
   id: string;
   title?: string;
   content?: RemirrorJSON | null;
-  folder?: boolean;
   parent?: string | null;
+  categories?: string[];
   image?: string;
   icon?: string;
+  folder?: boolean;
   expanded?: boolean;
-  categories?: string[];
+  public?: boolean;
 };
+
+// 
+
 export type TemplateCreateProps = {
   id: string;
   title: string;

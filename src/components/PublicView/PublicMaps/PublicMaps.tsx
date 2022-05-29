@@ -1,8 +1,6 @@
 import PublicMapView from "./PublicMapView";
 
-type Props = {};
-
-export default function PublicMaps({}: Props) {
+export default function PublicMaps() {
   return (
     <div className="w-full h-full">
       <PublicMapView />

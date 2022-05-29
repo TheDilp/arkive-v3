@@ -7,6 +7,7 @@ import {
   CreateBoardProps,
   CreateNodeProps,
   DocumentProps,
+  DocumentUpdateProps,
   ImageProps,
   MapProps,
   MapUpdateProps,
@@ -200,6 +201,7 @@ export function useCreateDocument(project_id: string) {
                   folder: newDocument.folder ? newDocument.folder : false,
                   template: false,
                   expanded: false,
+                  public: false,
                 },
               ];
               return newData;
@@ -217,31 +219,11 @@ export function useCreateDocument(project_id: string) {
 export function useUpdateDocument(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: {
-      id: string;
-      title?: string;
-      content?: RemirrorJSON;
-      image?: ImageProps;
-      folder?: boolean;
-      parent?: string | null;
-      icon?: string;
-      expanded?: boolean;
-      categories?: string[];
-    }) =>
-      await updateDocument({
-        id: vars.id,
-        title: vars.title,
-        folder: vars.folder,
-        parent: vars.parent,
-        image: vars.image?.id,
-        icon: vars.icon,
-        content: vars.content,
-        expanded: vars.expanded,
-      }),
+    async (vars: Omit<DocumentUpdateProps, "image"> & { image?: ImageProps }) =>
+      await updateDocument({ ...vars, image: vars.image?.id }),
 
     {
       onMutate: async (updatedDocument) => {
-        console.log(updatedDocument);
         await queryClient.cancelQueries(`${project_id}-documents`);
         const previousDocuments = queryClient.getQueryData(
           `${project_id}-documents`
@@ -434,6 +416,7 @@ export function useCreateTemplate() {
                   template: true,
                   expanded: false,
                   image: undefined,
+                  public: false,
                 },
               ];
               return newData;
@@ -481,7 +464,6 @@ export function useGetMaps(project_id: string) {
 // Custom hook to create a map
 export function useCreateMap() {
   const queryClient = useQueryClient();
-  const user_id = auth.user()?.id as string;
   return useMutation(
     async (vars: {
       id: string;
