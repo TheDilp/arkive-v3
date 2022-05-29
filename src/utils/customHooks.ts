@@ -499,7 +499,7 @@ export function useCreateMap() {
                     : null,
                   folder: newMap.folder ? newMap.folder : false,
                   markers: [],
-                  public: false
+                  public: false,
                 },
               ];
               return newData;
@@ -877,6 +877,7 @@ export function useCreateBoard() {
                   nodes: [],
                   edges: [],
                   expanded: false,
+                  public: false,
                 },
               ];
             } else {
@@ -887,6 +888,7 @@ export function useCreateBoard() {
                   nodes: [],
                   edges: [],
                   expanded: false,
+                  public: false,
                 },
               ];
             }

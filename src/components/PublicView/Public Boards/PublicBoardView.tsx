@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import {
   BoardProps,
   CytoscapeEdgeProps,
-  CytoscapeNodeProps,
+  CytoscapeNodeProps
 } from "../../../custom-types";
-import { getSingleBoard } from "../../../utils/supabaseUtils";
 import {
   changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
-  edgehandlesSettings,
+  edgehandlesSettings
 } from "../../../utils/utils";
 export default function PublicBoardView({ board }: { board: BoardProps }) {
   const { board_id } = useParams();

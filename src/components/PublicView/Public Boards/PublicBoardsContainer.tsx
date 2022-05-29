@@ -1,20 +1,23 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { Navigate, To, useParams } from "react-router-dom";
 import { BoardProps } from "../../../custom-types";
-import { getSingleBoard } from "../../../utils/supabaseUtils";
+import { auth, getSingleBoard } from "../../../utils/supabaseUtils";
 import PublicBoardView from "./PublicBoardView";
-
-type Props = {};
-
-export default function PublicBoardsContainer({}: Props) {
+import cytoscape from "cytoscape";
+import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
+export default function PublicBoardsContainer() {
+  cytoscape.use(edgehandles);
+  cytoscape.use(gridguide);
+  const user = auth.user();
   const { board_id } = useParams();
   const { data: board, isLoading } = useQuery(
     board_id as string,
     async () => await getSingleBoard(board_id as string)
   );
   if (isLoading)
-    return <h1 className="text-white w-full text-center">Loading Board...</h1>;
-
+    return <h1 className="text-white w-full text-centerp">Loading Board...</h1>;
+  if (!board || (!board.public && !user)) return <Navigate to={-1 as To} />;
   return <PublicBoardView board={board as BoardProps} />;
 }

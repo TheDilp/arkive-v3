@@ -57,12 +57,13 @@ export type BoardProps = {
   id: string;
   title: string;
   parent: { id: string; title: string } | null;
-  folder: boolean;
-  expanded: boolean;
   project_id: string;
   layout: string;
   nodes: BoardNodeProps[];
   edges: BoardEdgeProps[];
+  folder: boolean;
+  expanded: boolean;
+  public: boolean;
 };
 export type BoardNodeProps = {
   id: string;
