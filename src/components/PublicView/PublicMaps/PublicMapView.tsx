@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useQuery } from "react-query";
 import { Navigate, To, useParams } from "react-router-dom";
-import { getSingleMap } from "../../../utils/supabaseUtils";
+import { auth, getSingleMap } from "../../../utils/supabaseUtils";
 
 import PublicMapImage from "./PublicMapImage";
 
 export default function PublicMapView() {
   const { map_id } = useParams();
+  const user = auth.user();
   const { data: mapData, isLoading } = useQuery(
     map_id as string,
     async () => await getSingleMap(map_id as string)
@@ -58,7 +59,7 @@ export default function PublicMapView() {
         </h1>
       </div>
     );
-  if (!mapData) return <Navigate to={-1 as To} />;
+  if (!mapData || (!mapData.public && !user)) return <Navigate to={-1 as To} />;
   return (
     <div className="w-full h-full">
       <AnimatePresence exitBeforeEnter={true}>

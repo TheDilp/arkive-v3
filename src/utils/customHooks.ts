@@ -499,6 +499,7 @@ export function useCreateMap() {
                     : null,
                   folder: newMap.folder ? newMap.folder : false,
                   markers: [],
+                  public: false
                 },
               ];
               return newData;

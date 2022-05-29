@@ -26,7 +26,6 @@ import {
   toModelPosition,
 } from "../../utils/utils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
-import LoadingScreen from "../Util/LoadingScreen";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";

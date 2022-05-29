@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import {
   BoardProps,
@@ -13,10 +14,8 @@ import {
   cytoscapeStylesheet,
   edgehandlesSettings,
 } from "../../../utils/utils";
-
-export default function PublicBoardView() {
-  const { project_id, board_id } = useParams();
-  const [board, setBoard] = useState<BoardProps>();
+export default function PublicBoardView({ board }: { board: BoardProps }) {
+  const { board_id } = useParams();
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
@@ -25,15 +24,6 @@ export default function PublicBoardView() {
   const ehRef = useRef() as any;
   const grRef = useRef() as any;
   const firstRender = useRef(true) as any;
-
-  async function fetchBoard() {
-    const b = await getSingleBoard(board_id as string);
-    if (b) setBoard(b);
-  }
-
-  useEffect(() => {
-    fetchBoard();
-  }, []);
 
   useEffect(() => {
     if (board) {
@@ -121,11 +111,18 @@ export default function PublicBoardView() {
     ehRef.current = null;
     grRef.current = null;
 
+    if (board_id && cyRef.current) {
+      setTimeout(() => {
+        cyRef.current.zoom(1);
+        cyRef.current.center();
+      }, 200);
+    }
+
     return () => {
       //CRITICAL: Do not use removeAllListeners as that removes the grid listeners as well and breaks the grid
       cyRef.current.removeListener("click cxttap dbltap free");
     };
-  }, [board_id]);
+  }, [board_id, cyRef.current]);
   useEffect(() => {
     if (cyRef && board?.layout) {
       // Timeout necessary to wait for cytoscape to render and then apply layout
@@ -144,7 +141,10 @@ export default function PublicBoardView() {
   }, []);
 
   return (
-    <div className="w-10 h-full">
+    <div className="w-full h-full">
+      <h1 className="text-white absolute z-5 w-full text-center surface-50 Merriweather my-0">
+        {board?.title}
+      </h1>
       <CytoscapeComponent
         elements={elements}
         className="Lato"

@@ -45,6 +45,7 @@ export default function MapsTree({
       show: false,
       folder: false,
       depth: 0,
+      public: false,
     });
   const updateMapMutation = useUpdateMap(project_id as string);
   useLayoutEffect(() => {
@@ -90,7 +91,6 @@ export default function MapsTree({
         mapId={mapId}
         displayDialog={updateMapDialog}
         setDisplayDialog={setUpdateMapDialog}
-        setCreateMapDialog={setCreateMapDialog}
       />
       <MapCreateDialog
         visible={createMapDialog}
@@ -108,6 +108,7 @@ export default function MapsTree({
               show: false,
               folder: false,
               depth: 0,
+              public: false,
             })
           }
         />

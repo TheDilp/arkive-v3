@@ -2,16 +2,13 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import { mapItemDisplayDialogProps } from "../../../custom-types";
-import { useCreateMap, useDeleteMap } from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
+import { useDeleteMap, useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   mapId: string;
   displayDialog: mapItemDisplayDialogProps;
   setDisplayDialog: (displayDialog: mapItemDisplayDialogProps) => void;
-  setCreateMapDialog: (createMapDialog: boolean) => void;
 };
 
 export default function MapTreeItemContext({
@@ -19,11 +16,11 @@ export default function MapTreeItemContext({
   mapId,
   displayDialog,
   setDisplayDialog,
-  setCreateMapDialog,
 }: Props) {
   const { project_id } = useParams();
 
   const deleteMapMutation = useDeleteMap();
+  const updateMapMutation = useUpdateMap(project_id as string);
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -56,14 +53,22 @@ export default function MapTreeItemContext({
       reject: () => {},
     });
   };
-
+  console.log(displayDialog);
   const mapItems = [
     {
       label: "Update Map",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-
+    {
+      label: "Toggle Public",
+      icon: `pi pi-fw ${displayDialog.public ? "pi-eye" : "pi-eye-slash"}`,
+      command: () =>
+        updateMapMutation.mutate({
+          id: displayDialog.id,
+          public: !displayDialog.public,
+        }),
+    },
     { separator: true },
     {
       label: "Delete Map",

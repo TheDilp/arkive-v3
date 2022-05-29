@@ -36,10 +36,11 @@ export type MapProps = {
   title: string;
   map_image?: ImageProps;
   parent: { id: string; title: string } | null;
-  folder: boolean;
-  expanded: boolean;
   project_id: string;
   markers: MapMarkerProps[];
+  folder: boolean;
+  expanded: boolean;
+  public: boolean;
 };
 export type MapMarkerProps = {
   id: string;
@@ -161,6 +162,7 @@ export type mapItemDisplayDialogProps = {
   show: boolean;
   folder: boolean;
   depth: number;
+  public: boolean;
 };
 export type boardItemDisplayDialogProps = {
   id: string;
@@ -327,7 +329,7 @@ export type DocumentUpdateProps = {
   public?: boolean;
 };
 
-// 
+//
 
 export type TemplateCreateProps = {
   id: string;
@@ -357,6 +359,7 @@ export type MapUpdateProps = {
   map_image?: ImageProps;
   parent?: string | null;
   expanded?: boolean;
+  public?: boolean;
 };
 
 export type CreateMapMarkerProps = {
