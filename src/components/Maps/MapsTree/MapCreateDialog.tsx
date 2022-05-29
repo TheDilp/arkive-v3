@@ -27,6 +27,7 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<CreateMapInputs>({
     defaultValues: { title: "New Map", folder: false },
@@ -36,8 +37,10 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
     createMapMutation.mutate({
       id,
       project_id: project_id as string,
+      expanded: false,
       ...data,
     });
+    reset();
     if (closeOnDone) {
       setVisible(false);
     }

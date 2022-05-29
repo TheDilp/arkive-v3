@@ -11,6 +11,7 @@ type Props = {
   mapId: string;
   displayDialog: mapItemDisplayDialogProps;
   setDisplayDialog: (displayDialog: mapItemDisplayDialogProps) => void;
+  setCreateMapDialog: (createMapDialog: boolean) => void;
 };
 
 export default function MapTreeItemContext({
@@ -18,10 +19,10 @@ export default function MapTreeItemContext({
   mapId,
   displayDialog,
   setDisplayDialog,
+  setCreateMapDialog,
 }: Props) {
   const { project_id } = useParams();
 
-  const newMapMutation = useCreateMap();
   const deleteMapMutation = useDeleteMap();
   const navigate = useNavigate();
   const confirmdelete = () => {
@@ -41,7 +42,7 @@ export default function MapTreeItemContext({
       ),
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
-      acceptClassName: "p-button-danger",
+      acceptClassName: "p-button-outlined text-red-500",
       accept: async () => {
         if (displayDialog.id === mapId) {
           navigate("./");
@@ -77,36 +78,6 @@ export default function MapTreeItemContext({
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
 
-    {
-      label: "Insert Into Folder",
-      icon: "pi pi-fw pi-plus",
-      items: [
-        {
-          label: "Insert Map",
-          icon: "pi pi-fw pi-map",
-          command: () => setDisplayDialog({ ...displayDialog, show: true }),
-        },
-        {
-          label: "Insert Folder",
-          icon: "pi pi-fw pi-folder",
-          command: () => {
-            if (displayDialog.depth < 3) {
-              newMapMutation.mutate({
-                id: uuid(),
-                title: "New Folder",
-                parent: displayDialog.id,
-                map_image: { id: "", title: "", link: "", type: "Image" },
-                project_id: project_id as string,
-                folder: true,
-                expanded: false,
-              });
-            } else {
-              toastWarn("You cannot insert more than 4 levels deep.");
-            }
-          },
-        },
-      ],
-    },
     { separator: true },
     {
       label: "Delete Folder",

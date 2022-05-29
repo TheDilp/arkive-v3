@@ -90,6 +90,7 @@ export default function MapsTree({
         mapId={mapId}
         displayDialog={updateMapDialog}
         setDisplayDialog={setUpdateMapDialog}
+        setCreateMapDialog={setCreateMapDialog}
       />
       <MapCreateDialog
         visible={createMapDialog}
