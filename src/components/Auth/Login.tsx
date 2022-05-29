@@ -3,6 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { auth, login } from "../../utils/supabaseUtils";
+import { toastError } from "../../utils/utils";
 import EarthIMG from "./earthimg.jpg";
 
 export default function Login() {
@@ -76,8 +77,14 @@ export default function Login() {
                 setPassword(e.target.value);
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  login(email, password);
+                if (e.key === "Enter" && email && password) {
+                  login(email, password)
+                    .then((data) => {
+                      if (data) navigate("/");
+                    })
+                    .catch((err) => {
+                      toastError("There was an error logging you in");
+                    });
                 }
               }}
             />
@@ -86,13 +93,16 @@ export default function Login() {
               label="Sign In"
               icon="pi pi-user"
               className="w-full text-white Lato"
-              onClick={() =>
-                login(email, password)
-                  .then((data) => {
-                    if (data) navigate("/");
-                  })
-                  .catch((err) => {})
-              }
+              onClick={() => {
+                if (email && password)
+                  login(email, password)
+                    .then((data) => {
+                      if (data) navigate("/");
+                    })
+                    .catch((err) => {
+                      toastError("There was an error logging you in");
+                    });
+              }}
             />
           </div>
         </div>

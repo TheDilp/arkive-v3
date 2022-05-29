@@ -5,14 +5,14 @@ import {
   BoardProps,
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
-} from "../../custom-types";
-import { getSingleBoard } from "../../utils/supabaseUtils";
+} from "../../../custom-types";
+import { getSingleBoard } from "../../../utils/supabaseUtils";
 import {
   changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-} from "../../utils/utils";
+} from "../../../utils/utils";
 
 export default function PublicBoardView() {
   const { project_id, board_id } = useParams();

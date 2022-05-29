@@ -12,7 +12,7 @@ export default function PublicMapMention({ title, nodeId, nodeLabel }: Props) {
       style={{
         fontWeight: "700",
       }}
-      to={`../../maps/${nodeId}`}
+      to={`../maps/${nodeId}`}
     >
       <i className="pi pi-map-marker underline"></i>
       {title || nodeLabel}

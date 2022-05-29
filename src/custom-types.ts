@@ -24,10 +24,11 @@ export type DocumentProps = {
     sources?: { id: string; target: { id: string; label: string } }[];
     targets?: { id: string; source: { id: string; label: string } }[];
   }[];
-  folder: boolean;
   icon: string;
+  folder: boolean;
   template: boolean;
   expanded: boolean;
+  public: boolean;
 };
 
 export type MapProps = {

@@ -14,8 +14,8 @@ import Profile from "./components/Profile/Profile";
 import Help from "./components/Help/Help";
 
 import FileBrowser from "./components/FileBrowser/FileBrowser";
-import PublicProject from "./components/PublicView/PublicProject";
-import PublicBoardView from "./components/PublicView/PublicBoardView";
+import PublicProject from "./components/PublicView/Public Boards/PublicProject";
+import PublicBoardView from "./components/PublicView/Public Boards/PublicBoardView";
 import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
 import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
 import { lazy, Suspense } from "react";
