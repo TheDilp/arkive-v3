@@ -1,6 +1,6 @@
 import { TableExtension } from "@remirror/extension-react-tables";
 import { Remirror, ThemeProvider, useRemirror } from "@remirror/react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { htmlToProsemirrorNode, RemirrorJSON } from "remirror";
 import {
   BoldExtension,
@@ -15,13 +15,12 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
-  UnderlineExtension,
+  UnderlineExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
-import CustomLinkExtenstion from "../../../Editor/CustomLinkExtension";
 import LoadingScreen from "../../../Util/LoadingScreen";
-import LinkHoverEditor from "./PublicEditorComponent";
+import CustomLinkExtenstion from "../../../Wiki/Editor/CustomLinkExtension";
 import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
 import PublicEditorComponent from "./PublicEditorComponent";
 

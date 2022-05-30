@@ -105,17 +105,6 @@ export default function DocumentTreeItem({
 
       <div
         className={` Lato w-full  ${docId === node.id ? "text-primary" : ""}`}
-        onClick={(e) => {
-          if (node.droppable) {
-            e.preventDefault();
-            e.stopPropagation();
-            updateDocumentMutation.mutate({
-              id: node.id as string,
-              expanded: !isOpen,
-            });
-            onToggle();
-          }
-        }}
       >
         <div className="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis">
           {node.text}

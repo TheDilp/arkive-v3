@@ -4,7 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { Menubar } from "primereact/menubar";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useState } from "react";
-import "../../styles/MenuBar.css";
+import "../../../styles/MenuBar.css";
 import { Slider } from "primereact/slider";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";

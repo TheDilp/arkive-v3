@@ -1,25 +1,24 @@
+import { TableExtension } from "@remirror/extension-react-tables";
 import {
   Remirror,
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
+import { saveAs } from "file-saver";
 import {
   useCallback,
   useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+  useEffect, useRef,
+  useState
 } from "react";
-import { Navigate, To, useNavigate, useParams } from "react-router-dom";
+import { Navigate, To, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode } from "remirror";
 import {
   BoldExtension,
   BulletListExtension,
-  CalloutExtension,
-  HeadingExtension,
+  CalloutExtension, DropCursorExtension, GapCursorExtension, HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
@@ -28,24 +27,20 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
-  UnderlineExtension,
-  GapCursorExtension,
-  DropCursorExtension,
+  UnderlineExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
-import "../../styles/Editor.css";
+import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument,
-} from "../../utils/customHooks";
-import { toastSuccess, toastWarn } from "../../utils/utils";
+  useUpdateDocument
+} from "../../../utils/customHooks";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import CustomLinkExtenstion from "./CustomLinkExtension";
-import { TableExtension } from "@remirror/extension-react-tables";
-import { saveAs } from "file-saver";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
-import { MediaQueryContext } from "../Context/MediaQueryContext";
 const hooks = [
   () => {
     const { getJSON, getText, getMarkdown } = useHelpers();
