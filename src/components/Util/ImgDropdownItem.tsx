@@ -1,3 +1,5 @@
+import { supabaseStorageLink } from "../../utils/utils";
+
 type Props = {
   title: string;
   link: string;
@@ -13,7 +15,7 @@ export default function ImgDropdownItem({ title, link }: Props) {
           style={{
             objectFit: "contain",
           }}
-          src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${link}`}
+          src={`${supabaseStorageLink}${link}`}
           alt={title}
           loading="lazy"
         />

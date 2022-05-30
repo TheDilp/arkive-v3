@@ -1,20 +1,17 @@
-import { cloneElement, useState } from "react";
 import {
-  Placement,
-  offset,
-  flip,
-  shift,
-  autoUpdate,
-  useFloating,
-  useInteractions,
-  useHover,
-  useFocus,
-  useRole,
-  useDismiss,
   autoPlacement,
+  autoUpdate,
   inline,
+  Placement,
   safePolygon,
+  useDismiss,
+  useFloating,
+  useFocus,
+  useHover,
+  useInteractions,
+  useRole,
 } from "@floating-ui/react-dom-interactions";
+import { cloneElement, useState } from "react";
 
 interface Props {
   label: string | JSX.Element;

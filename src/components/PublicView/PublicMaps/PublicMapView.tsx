@@ -5,6 +5,7 @@ import { MapContainer } from "react-leaflet";
 import { useQuery } from "react-query";
 import { Navigate, To, useParams } from "react-router-dom";
 import { auth, getSingleMap } from "../../../utils/supabaseUtils";
+import { supabaseStorageLink } from "../../../utils/utils";
 
 import PublicMapImage from "./PublicMapImage";
 
@@ -25,7 +26,7 @@ export default function PublicMapView() {
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
       let img = new Image();
-      img.src = `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`;
+      img.src = `${supabaseStorageLink}${mapData.map_image.link}`;
       img.onload = () => {
         setBounds([
           [0, 0],
@@ -87,7 +88,7 @@ export default function PublicMapView() {
             >
               {mapData.map_image?.link && (
                 <PublicMapImage
-                  src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`}
+                  src={`${supabaseStorageLink}${mapData.map_image.link}`}
                   bounds={bounds as LatLngBoundsExpression}
                   imgRef={imgRef}
                   markers={mapData.markers}

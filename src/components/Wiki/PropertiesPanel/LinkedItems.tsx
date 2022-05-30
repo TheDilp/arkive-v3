@@ -13,6 +13,7 @@ import {
   useGetMaps,
   useUpdateDocument,
 } from "../../../utils/customHooks";
+import { supabaseStorageLink } from "../../../utils/utils";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
 export default function LinkedItems() {
@@ -30,7 +31,7 @@ export default function LinkedItems() {
             <Icon icon="mdi:map" fontSize={22} /> Maps
           </span>
         }
-        contentClassName="overflow-y-auto h-10rem bg-gray-900"
+        contentClassName="overflow-y-auto h-10rem"
       >
         {maps.isLoading ? (
           <div className="w-full flex justify-content-center">
@@ -94,7 +95,7 @@ export default function LinkedItems() {
         {document?.image && (
           <div className="flex flex-nowrap justify-content-center mb-2">
             <Image
-              src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${document.image.link}`}
+              src={`${supabaseStorageLink}${document.image.link}`}
               alt="Document"
               className="w-10rem h-10rem"
               imageClassName="w-full h-full"
@@ -145,7 +146,7 @@ export default function LinkedItems() {
       <AccordionTab
         header={
           <div>
-            <i className="pi pi-fw pi-cog"></i> Misc
+            <i className="pi pi-fw pi-cog"></i> Settings
           </div>
         }
       >

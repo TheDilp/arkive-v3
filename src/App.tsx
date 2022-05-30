@@ -15,14 +15,13 @@ import Help from "./components/Help/Help";
 
 import FileBrowser from "./components/FileBrowser/FileBrowser";
 import PublicProject from "./components/PublicView/Public Boards/PublicProject";
-import PublicBoardView from "./components/PublicView/Public Boards/PublicBoardView";
 import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
 import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
 import { lazy, Suspense } from "react";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import PublicBoardsContainer from "./components/PublicView/Public Boards/PublicBoardsContainer";
 const Project = lazy(() => import("./components/Project/Project"));
-const Wiki = lazy(() => import("./components/Project/Wiki/Wiki"));
+const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
 const Boards = lazy(() => import("./components/Boards/Boards"));
 const ProjectSettings = lazy(

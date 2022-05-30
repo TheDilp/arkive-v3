@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useActive, useAttrs, useCommands } from "@remirror/react";
 import { Menubar } from "primereact/menubar";
 import { ProgressSpinner } from "primereact/progressspinner";
-import "../../../styles/MenuBar.css";
+import "../../../../styles/MenuBar.css";
 export default function BubbleMenuBar({
   saving,
   setColorInput,

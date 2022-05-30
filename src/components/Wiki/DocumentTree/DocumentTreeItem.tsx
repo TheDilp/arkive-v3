@@ -40,7 +40,10 @@ export default function DocumentTreeItem({
         // Navigate if not a folder
         if (!node.droppable) {
           setDocId(node.id as string);
-          navigate(node.id as string);
+          navigate(`doc/${node.id}`);
+        } else {
+          setDocId(node.id as string);
+          navigate(`folder/${node.id}`);
         }
       }}
       onContextMenu={(e) => {
@@ -102,17 +105,6 @@ export default function DocumentTreeItem({
 
       <div
         className={` Lato w-full  ${docId === node.id ? "text-primary" : ""}`}
-        onClick={(e) => {
-          if (node.droppable) {
-            e.preventDefault();
-            e.stopPropagation();
-            updateDocumentMutation.mutate({
-              id: node.id as string,
-              expanded: !isOpen,
-            });
-            onToggle();
-          }
-        }}
       >
         <div className="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis">
           {node.text}

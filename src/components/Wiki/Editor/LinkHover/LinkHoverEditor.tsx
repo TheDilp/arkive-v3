@@ -2,7 +2,7 @@ import { EditorComponent, useRemirrorContext } from "@remirror/react";
 import { useEffect } from "react";
 import { RemirrorJSON } from "remirror";
 import "remirror/styles/all.css";
-import "../../../styles/Editor.css";
+import "../../../../styles/Editor.css";
 type Props = {
   content: RemirrorJSON | null;
 };

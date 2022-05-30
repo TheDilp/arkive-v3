@@ -11,16 +11,19 @@ import { saveAs } from "file-saver";
 import { useContext } from "react";
 import { FileBrowserContext } from "../Context/FileBrowserContext";
 import { SelectButton } from "primereact/selectbutton";
+import { supabaseStorageLink } from "../../utils/utils";
 type Props = {
   images: ImageProps[];
 };
 
 export default function ListLayout({ images }: Props) {
   const { project_id } = useParams();
+
   const renameImageMutation = useRenameImage();
   const deleteImagesMutation = useDeleteImages(project_id as string);
   const { filter, selected, setSelected, tableRef } =
     useContext(FileBrowserContext);
+
   const actionsBodyTemplate = (rowData: ImageProps) => {
     return (
       <div className="">
@@ -54,7 +57,7 @@ export default function ListLayout({ images }: Props) {
       <div className="w-full h-auto cursor-pointer w-full flex justify-content-center">
         {rowData.link && (
           <Image
-            src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${rowData.link}`}
+            src={`${supabaseStorageLink}${rowData.link}`}
             alt="document"
             className="w-2rem h-full relative border-round"
             preview

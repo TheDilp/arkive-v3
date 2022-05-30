@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useMediaQuery } from "react-responsive";

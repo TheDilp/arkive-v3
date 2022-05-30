@@ -4,13 +4,14 @@ import { useParams } from "react-router-dom";
 import {
   BoardProps,
   CytoscapeEdgeProps,
-  CytoscapeNodeProps
+  CytoscapeNodeProps,
 } from "../../../custom-types";
 import {
   changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
-  edgehandlesSettings
+  edgehandlesSettings,
+  supabaseStorageLink,
 } from "../../../utils/utils";
 export default function PublicBoardView({ board }: { board: BoardProps }) {
   const { board_id } = useParams();
@@ -49,12 +50,16 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage?.link
-              ? `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${node.customImage.link.replaceAll(
+              ? `${
+                  supabaseUrl.VITE_SUPABASE_URL
+                }${supabaseStorageLink}${node.customImage.link.replaceAll(
                   " ",
                   "%20"
                 )}`
               : node.document?.image
-              ? `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${node.document.image.link?.replaceAll(
+              ? `${
+                  supabaseUrl.VITE_SUPABASE_URL
+                }${supabaseStorageLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
                 )}`

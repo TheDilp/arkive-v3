@@ -1,4 +1,5 @@
 import { Image } from "primereact/image";
+import { supabaseStorageLink } from "../../utils/utils";
 
 type Props = {
   name: string;
@@ -13,7 +14,7 @@ export default function GridItem({ name, link }: Props) {
           <div className="w-6 h-8rem flex justify-content-center pt-2">
             <Image
               imageClassName="w-full h-full previewImage"
-              src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${link}`}
+              src={`${supabaseStorageLink}${link}`}
               alt="TEST"
               preview
             />
