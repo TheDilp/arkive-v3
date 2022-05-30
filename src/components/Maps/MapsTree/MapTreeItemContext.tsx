@@ -2,10 +2,8 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import { mapItemDisplayDialogProps } from "../../../custom-types";
-import { useCreateMap, useDeleteMap } from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
+import { useDeleteMap, useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   mapId: string;
@@ -21,8 +19,8 @@ export default function MapTreeItemContext({
 }: Props) {
   const { project_id } = useParams();
 
-  const newMapMutation = useCreateMap();
   const deleteMapMutation = useDeleteMap();
+  const updateMapMutation = useUpdateMap(project_id as string);
   const navigate = useNavigate();
   const confirmdelete = () => {
     confirmDialog({
@@ -41,7 +39,7 @@ export default function MapTreeItemContext({
       ),
       header: `Delete ${displayDialog.title}`,
       icon: "pi pi-exclamation-triangle",
-      acceptClassName: "p-button-danger",
+      acceptClassName: "p-button-outlined text-red-500",
       accept: async () => {
         if (displayDialog.id === mapId) {
           navigate("./");
@@ -55,14 +53,22 @@ export default function MapTreeItemContext({
       reject: () => {},
     });
   };
-
+  console.log(displayDialog);
   const mapItems = [
     {
       label: "Update Map",
       icon: "pi pi-fw pi-pencil",
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
-
+    {
+      label: "Toggle Public",
+      icon: `pi pi-fw ${displayDialog.public ? "pi-eye" : "pi-eye-slash"}`,
+      command: () =>
+        updateMapMutation.mutate({
+          id: displayDialog.id,
+          public: !displayDialog.public,
+        }),
+    },
     { separator: true },
     {
       label: "Delete Map",
@@ -77,36 +83,6 @@ export default function MapTreeItemContext({
       command: () => setDisplayDialog({ ...displayDialog, show: true }),
     },
 
-    {
-      label: "Insert Into Folder",
-      icon: "pi pi-fw pi-plus",
-      items: [
-        {
-          label: "Insert Map",
-          icon: "pi pi-fw pi-map",
-          command: () => setDisplayDialog({ ...displayDialog, show: true }),
-        },
-        {
-          label: "Insert Folder",
-          icon: "pi pi-fw pi-folder",
-          command: () => {
-            if (displayDialog.depth < 3) {
-              newMapMutation.mutate({
-                id: uuid(),
-                title: "New Folder",
-                parent: displayDialog.id,
-                map_image: { id: "", title: "", link: "", type: "Image" },
-                project_id: project_id as string,
-                folder: true,
-                expanded: false,
-              });
-            } else {
-              toastWarn("You cannot insert more than 4 levels deep.");
-            }
-          },
-        },
-      ],
-    },
     { separator: true },
     {
       label: "Delete Folder",

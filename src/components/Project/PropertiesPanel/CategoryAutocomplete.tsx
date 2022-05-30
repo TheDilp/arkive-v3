@@ -11,7 +11,6 @@ type Props = {
   refetchAllTags: any;
   filteredCategories: string[];
   currentProject: ProjectProps;
-  setCurrentDoc: (doc: DocumentProps | null) => void;
   setFilteredCategories: (categories: string[]) => void;
 };
 
@@ -20,7 +19,6 @@ export default function CategoryAutocomplete({
   categories,
   refetchAllTags,
   filteredCategories,
-  setCurrentDoc,
   setFilteredCategories,
 }: Props) {
   const queryClient = useQueryClient();
@@ -35,7 +33,6 @@ export default function CategoryAutocomplete({
       onMutate: (vars) => {
         let oldCategories = currentDoc.categories;
         let oldDocs = queryClient.getQueryData(`${project_id}-documents`);
-        setCurrentDoc({ ...currentDoc, categories: vars.categories });
         queryClient.setQueryData(
           `${project_id}-documents`,
           (oldData: DocumentProps[] | undefined) => {
@@ -60,7 +57,6 @@ export default function CategoryAutocomplete({
       },
       onError: (e, v, context) => {
         if (context) {
-          setCurrentDoc({ ...currentDoc, categories: context.oldCategories });
           queryClient.setQueryData(`${project_id}-documents`, context.oldDocs);
         }
       },

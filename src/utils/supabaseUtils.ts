@@ -93,7 +93,7 @@ export const getDocuments = async (project_id: string) => {
   if (user) {
     const { data: documents, error } = await supabase
       .from<DocumentProps>("documents")
-      .select("*, parent(id, title), image(id, title, link)")
+      .select("*, parent(id, title), image(id, title, link))")
       .eq("project_id", project_id)
       .order("title", { ascending: true });
     if (documents) return documents;
@@ -115,7 +115,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent(id, title), folder, expanded, project_id, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
+      "id, title, parent(id, title), folder, expanded, project_id, public, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
     )
     .eq("project_id", project_id);
   if (data) return data;
@@ -128,7 +128,7 @@ export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<BoardProps>("boards")
     .select(
-      "*, parent(id, title), nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+      "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
     .eq("project_id", project_id);
   if (data) return data;
@@ -682,7 +682,7 @@ export const getSingleBoard = async (board_id: string) => {
   const { data, error } = await supabase
     .from<BoardProps>("boards")
     .select(
-      "*, nodes(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+      "*, nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
     .eq("id", board_id)
     .maybeSingle();
@@ -708,7 +708,7 @@ export const getSingleMap = async (map_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent(id, title), folder, expanded, project_id, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
+      "id, title, parent(id, title), folder, expanded, project_id, public, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
     )
     .eq("id", map_id)
     .maybeSingle();

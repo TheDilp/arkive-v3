@@ -1,24 +1,15 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { auth, login } from "../../utils/supabaseUtils";
-import images from "./authImages";
+import { toastError } from "../../utils/utils";
+import EarthIMG from "./earthimg.jpg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [index, set] = useState(0);
-  useEffect(() => {
-    let timeout = setTimeout(() => {
-      if (index < images.length - 1) {
-        set(index + 1);
-      } else {
-        set(0);
-      }
-    }, 5000);
-    return () => clearTimeout(timeout);
-  }, [index]);
+
   const navigate = useNavigate();
   return auth.user() ? (
     <Navigate to="/" />
@@ -34,18 +25,11 @@ export default function Login() {
           >
             Discover your world
           </h1>
-          {images.map((image, imgIDX) => (
-            <img
-              key={imgIDX}
-              src={image.url}
-              className="w-full h-full absolute transition-all transition-duration-200"
-              alt="planet placeholder"
-              style={{
-                objectFit: "cover",
-                opacity: index === imgIDX ? 1 : 0,
-              }}
-            />
-          ))}
+          <img
+            src={EarthIMG}
+            className="w-full h-full absolute transition-all transition-duration-200"
+            alt="planet placeholder"
+          />
         </div>
         <div className="w-full lg:w-5 p-4">
           <div className="text-center mb-5">
@@ -93,8 +77,14 @@ export default function Login() {
                 setPassword(e.target.value);
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  login(email, password);
+                if (e.key === "Enter" && email && password) {
+                  login(email, password)
+                    .then((data) => {
+                      if (data) navigate("/");
+                    })
+                    .catch((err) => {
+                      toastError("There was an error logging you in");
+                    });
                 }
               }}
             />
@@ -103,13 +93,16 @@ export default function Login() {
               label="Sign In"
               icon="pi pi-user"
               className="w-full text-white Lato"
-              onClick={() =>
-                login(email, password)
-                  .then((data) => {
-                    if (data) navigate("/");
-                  })
-                  .catch((err) => {})
-              }
+              onClick={() => {
+                if (email && password)
+                  login(email, password)
+                    .then((data) => {
+                      if (data) navigate("/");
+                    })
+                    .catch((err) => {
+                      toastError("There was an error logging you in");
+                    });
+              }}
             />
           </div>
         </div>

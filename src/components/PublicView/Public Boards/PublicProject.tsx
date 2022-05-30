@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
 
-type Props = {};
 
-export default function PublicProject({}: Props) {
+export default function PublicProject() {
+ 
   return (
     <div className="w-screen h-screen">
       <Outlet />

@@ -26,7 +26,6 @@ export default function MapTreeItem({
 }: Props) {
   const { project_id } = useParams();
   const updateMapMutation = useUpdateMap(project_id as string);
-  const navigate = useNavigate();
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
@@ -49,6 +48,7 @@ export default function MapTreeItem({
           parent: node.parent as string,
           depth,
           show: false,
+          public: node.data?.public || false,
         });
       }}
     >

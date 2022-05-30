@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
 import { Image } from "primereact/image";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -21,7 +22,6 @@ export default function LinkedItems() {
   const boards = useGetBoards(project_id as string);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const images = useGetImages(project_id as string);
-
   return (
     <Accordion activeIndex={null}>
       <AccordionTab
@@ -74,7 +74,7 @@ export default function LinkedItems() {
             .map((board) => (
               <Link
                 key={board.id}
-                to={`../../boards/${board.id}`}
+                to={`../../boards/${board.id}/123`}
                 className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
                 style={{ fontWeight: 700 }}
               >
@@ -138,6 +138,30 @@ export default function LinkedItems() {
               itemTemplate={(item: ImageProps) => (
                 <ImgDropdownItem title={item.title} link={item.link} />
               )}
+            />
+          </div>
+        </div>
+      </AccordionTab>
+      <AccordionTab
+        header={
+          <div>
+            <i className="pi pi-fw pi-cog"></i> Misc
+          </div>
+        }
+      >
+        <div className="w-full flex flex-wrap justify-content-evenly">
+          <div className="w-full flex flex-nowrap justify-content-center">
+            <label className="mx-2">Public:</label>
+            <Checkbox
+              checked={document?.public}
+              tooltip="If checked, anyone can access the content via a public page"
+              tooltipOptions={{ showDelay: 500 }}
+              onChange={(e) =>
+                updateDocumentMutation.mutate({
+                  id: doc_id as string,
+                  public: e.checked,
+                })
+              }
             />
           </div>
         </div>

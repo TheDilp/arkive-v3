@@ -1,13 +1,9 @@
-import React from "react";
-import MapView from "../../Maps/Map/MapView";
 import PublicMapView from "./PublicMapView";
 
-type Props = {};
-
-export default function PublicMaps({}: Props) {
+export default function PublicMaps() {
   return (
     <div className="w-full h-full">
-      <PublicMapView />;
+      <PublicMapView />
     </div>
   );
 }

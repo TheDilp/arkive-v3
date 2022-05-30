@@ -4,8 +4,12 @@ import { useGetBoards } from "../../utils/customHooks";
 import LoadingScreen from "../Util/LoadingScreen";
 import BoardsTree from "./BoardsTree/BoardsTree";
 import BoardView from "./BoardView";
-
+import cytoscape from "cytoscape";
+import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
 export default function Boards() {
+  cytoscape.use(edgehandles);
+  cytoscape.use(gridguide);
   const { project_id } = useParams();
   const { isLoading } = useGetBoards(project_id as string);
   const [boardId, setBoardId] = useState("");

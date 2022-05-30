@@ -1,16 +1,16 @@
 import { AnimatePresence, motion } from "framer-motion";
 import L, { LatLngBoundsExpression } from "leaflet";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
-import { getSingleMap } from "../../../utils/supabaseUtils";
-import { MediaQueryContext } from "../../Context/MediaQueryContext";
+import { Navigate, To, useParams } from "react-router-dom";
+import { auth, getSingleMap } from "../../../utils/supabaseUtils";
 
 import PublicMapImage from "./PublicMapImage";
 
 export default function PublicMapView() {
   const { map_id } = useParams();
+  const user = auth.user();
   const { data: mapData, isLoading } = useQuery(
     map_id as string,
     async () => await getSingleMap(map_id as string)
@@ -18,15 +18,12 @@ export default function PublicMapView() {
   const cm = useRef(null);
   const imgRef = useRef() as any;
   const mapRef = useRef() as any;
-  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
   ]);
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
-      console.log(mapData, isLoading);
-
       let img = new Image();
       img.src = `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`;
       img.onload = () => {
@@ -62,6 +59,7 @@ export default function PublicMapView() {
         </h1>
       </div>
     );
+  if (!mapData || (!mapData.public && !user)) return <Navigate to={-1 as To} />;
   return (
     <div className="w-full h-full">
       <AnimatePresence exitBeforeEnter={true}>

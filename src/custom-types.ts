@@ -18,10 +18,17 @@ export type DocumentProps = {
   project_id: string;
   categories: string[];
   parent: { id: string; title: string } | null;
-  folder: boolean;
+  nodes?: {
+    id: string;
+    label: string;
+    sources?: { id: string; target: { id: string; label: string } }[];
+    targets?: { id: string; source: { id: string; label: string } }[];
+  }[];
   icon: string;
+  folder: boolean;
   template: boolean;
   expanded: boolean;
+  public: boolean;
 };
 
 export type MapProps = {
@@ -29,10 +36,11 @@ export type MapProps = {
   title: string;
   map_image?: ImageProps;
   parent: { id: string; title: string } | null;
-  folder: boolean;
-  expanded: boolean;
   project_id: string;
   markers: MapMarkerProps[];
+  folder: boolean;
+  expanded: boolean;
+  public: boolean;
 };
 export type MapMarkerProps = {
   id: string;
@@ -49,12 +57,13 @@ export type BoardProps = {
   id: string;
   title: string;
   parent: { id: string; title: string } | null;
-  folder: boolean;
-  expanded: boolean;
   project_id: string;
   layout: string;
   nodes: BoardNodeProps[];
   edges: BoardEdgeProps[];
+  folder: boolean;
+  expanded: boolean;
+  public: boolean;
 };
 export type BoardNodeProps = {
   id: string;
@@ -154,6 +163,7 @@ export type mapItemDisplayDialogProps = {
   show: boolean;
   folder: boolean;
   depth: number;
+  public: boolean;
 };
 export type boardItemDisplayDialogProps = {
   id: string;
@@ -311,13 +321,17 @@ export type DocumentUpdateProps = {
   id: string;
   title?: string;
   content?: RemirrorJSON | null;
-  folder?: boolean;
   parent?: string | null;
+  categories?: string[];
   image?: string;
   icon?: string;
+  folder?: boolean;
   expanded?: boolean;
-  categories?: string[];
+  public?: boolean;
 };
+
+//
+
 export type TemplateCreateProps = {
   id: string;
   title: string;
@@ -346,6 +360,7 @@ export type MapUpdateProps = {
   map_image?: ImageProps;
   parent?: string | null;
   expanded?: boolean;
+  public?: boolean;
 };
 
 export type CreateMapMarkerProps = {

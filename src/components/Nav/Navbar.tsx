@@ -71,8 +71,8 @@ export default function Navbar() {
               <span className="boardsIcon">
                 <Icon
                   className="hover:text-primary cursor-pointer "
-                  icon="mdi:family-tree"
-                  fontSize={18}
+                  icon="mdi:draw"
+                  fontSize={20}
                   onClick={async () => {
                     navigate("./boards");
                   }}

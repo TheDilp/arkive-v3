@@ -2,10 +2,9 @@ import { Button } from "primereact/button";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { DocumentProps } from "../../../custom-types";
 import {
   useCreateTemplate,
-  useGetDocuments,
+  useGetDocumentData,
   useGetProjectData,
   useGetTags,
 } from "../../../utils/customHooks";
@@ -16,24 +15,19 @@ import CategoryAutocomplete from "./CategoryAutocomplete";
 import LinkedItems from "./LinkedItems";
 export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
-  const [currentDoc, setCurrentDoc] = useState<DocumentProps | null>();
+  const currentDoc = useGetDocumentData(project_id as string, doc_id as string);
   const project = useGetProjectData(project_id as string);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const { data: categories, refetch: refetchAllTags } = useGetTags(
     project_id as string
   );
   const user = auth.user();
-  const allDocs = useGetDocuments(project_id as string);
   useEffect(() => {
     if (categories.length > 0) {
       setFilteredCategories(categories);
     }
   }, [categories]);
-  useEffect(() => {
-    if (allDocs) {
-      setCurrentDoc(allDocs.data?.filter((doc) => doc.id === doc_id)[0]);
-    }
-  }, [doc_id, allDocs]);
+
   const createTemplateMutation = useCreateTemplate();
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   return (
@@ -55,7 +49,6 @@ export default function PropertiesPanel() {
             categories={categories}
             refetchAllTags={refetchAllTags}
             filteredCategories={filteredCategories}
-            setCurrentDoc={setCurrentDoc}
             setFilteredCategories={setFilteredCategories}
           />
         </div>
@@ -93,7 +86,7 @@ export default function PropertiesPanel() {
             }}
           />
         </div>
-        <div className="w-full flex justify-content-center my-2">
+        <div className="w-full my-2 flex justify-content-center align-items-center">
           <Link
             to={`../../../../view/${project_id}/wiki/${doc_id}`}
             className="no-underline"
