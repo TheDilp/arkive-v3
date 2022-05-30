@@ -26,8 +26,8 @@ import {
 } from "../custom-types";
 import { toastError } from "./utils";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 export const supabase = createClient(
   supabaseUrl as string,
   supabaseKey as string

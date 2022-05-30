@@ -1,6 +1,7 @@
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 import { useDeleteImages } from "../../utils/customHooks";
+import { supabaseStorageLink } from "../../utils/utils";
 
 type Props = {
   name: string;
@@ -8,7 +9,7 @@ type Props = {
 
 export default function ListItem({ name }: Props) {
   const { project_id } = useParams();
-  const deleteImageMutation = useDeleteImages();
+  const deleteImageMutation = useDeleteImages(project_id as string);
 
   return (
     <div className="w-full flex p-2">
@@ -19,7 +20,7 @@ export default function ListItem({ name }: Props) {
           style={{
             objectFit: "contain",
           }}
-          src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}/${name}`}
+          src={`${supabaseStorageLink}${project_id}/${name}`}
           alt={name}
         />
       </div>
@@ -33,11 +34,7 @@ export default function ListItem({ name }: Props) {
           icon="pi pi-trash"
           className="p-button-rounded p-button-outlined text-red-500"
           onClick={() => {
-            deleteImageMutation.mutate({
-              id: `${project_id}/${name}`,
-              name,
-              project_id: project_id as string,
-            });
+            deleteImageMutation.mutate([`${project_id as string}/${name}`]);
           }}
         />
       </div>

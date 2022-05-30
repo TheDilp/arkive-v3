@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { useGetMapData } from "../../../utils/customHooks";
+import { supabaseStorageLink } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
@@ -14,6 +15,7 @@ export default function MapView({
   setMapId: (id: string) => void;
 }) {
   const { project_id, map_id } = useParams();
+
   const cm = useRef(null);
   const imgRef = useRef() as any;
   const mapRef = useRef() as any;
@@ -33,7 +35,7 @@ export default function MapView({
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
       let img = new Image();
-      img.src = `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`;
+      img.src = `${supabaseStorageLink}${mapData.map_image.link}`;
       img.onload = () => {
         setBounds([
           [0, 0],
@@ -110,7 +112,9 @@ export default function MapView({
             >
               {mapData.map_image?.link && (
                 <MapImage
-                  src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${mapData.map_image.link}`}
+                  src={`${
+                    import.meta.env.VITE_SUPABASE_URL
+                  }${supabaseStorageLink}${mapData.map_image.link}`}
                   bounds={bounds as LatLngBoundsExpression}
                   imgRef={imgRef}
                   markers={mapData.markers}

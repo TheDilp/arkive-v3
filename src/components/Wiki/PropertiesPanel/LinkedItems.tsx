@@ -13,6 +13,7 @@ import {
   useGetMaps,
   useUpdateDocument,
 } from "../../../utils/customHooks";
+import { supabaseStorageLink } from "../../../utils/utils";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
 export default function LinkedItems() {
@@ -94,7 +95,7 @@ export default function LinkedItems() {
         {document?.image && (
           <div className="flex flex-nowrap justify-content-center mb-2">
             <Image
-              src={`https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${document.image.link}`}
+              src={`${supabaseStorageLink}${document.image.link}`}
               alt="Document"
               className="w-10rem h-10rem"
               imageClassName="w-full h-full"

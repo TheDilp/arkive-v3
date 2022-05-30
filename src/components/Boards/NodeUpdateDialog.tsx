@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
+  supabaseStorageLink,
   textHAlignOptions,
   textVAlignOptions,
 } from "../../utils/utils";
@@ -35,6 +36,7 @@ export default function NodeUpdateDialog({
   setNodeUpdateDialog,
 }: Props) {
   const { project_id, board_id } = useParams();
+
   const {
     register,
     handleSubmit,
@@ -67,10 +69,7 @@ export default function NodeUpdateDialog({
             ? {
                 ...value,
                 link: value.link
-                  .replaceAll(
-                    `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${project_id}`,
-                    ""
-                  )
+                  .replaceAll(`${supabaseStorageLink}${project_id}`, "")
                   .replaceAll("%20", " "),
               }
             : null

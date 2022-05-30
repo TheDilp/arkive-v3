@@ -80,6 +80,21 @@ body {
   display: none;
 }
 
+.folderPageImage {
+  transition: transform 0.15s ease-in;
+}
+
+.folderPageImage:hover {
+  transition: transform 0.15s ease-in;
+  transform: scale(1.05);
+  background-color: var(--surface-200);
+}
+
+.folderPageImageContainer {
+  width: 80px;
+  height: 80px;
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */

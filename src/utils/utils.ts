@@ -667,3 +667,5 @@ export interface Bucket {
   updated_at: string;
   public: boolean;
 }
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+export const supabaseStorageLink = `${supabaseUrl}/storage/v1/object/public/images/`;

@@ -22,6 +22,7 @@ import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
+  supabaseStorageLink,
   toastWarn,
   toModelPosition,
 } from "../../utils/utils";
@@ -35,6 +36,7 @@ type Props = {
   setBoardId: (boardId: string) => void;
   cyRef: any;
 };
+
 export default function BoardView({ setBoardId, cyRef }: Props) {
   const navigate = useNavigate();
   const { project_id, board_id } = useParams();
@@ -142,12 +144,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage?.link
-              ? `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${node.customImage.link.replaceAll(
+              ? `${supabaseStorageLink}${node.customImage.link.replaceAll(
                   " ",
                   "%20"
                 )}`
               : node.document?.image
-              ? `https://oqzsfqonlctjkurrmwkj.supabase.co/storage/v1/object/public/images/${node.document.image.link?.replaceAll(
+              ? `${supabaseStorageLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
                 )}`
