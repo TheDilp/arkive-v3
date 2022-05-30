@@ -40,7 +40,10 @@ export default function DocumentTreeItem({
         // Navigate if not a folder
         if (!node.droppable) {
           setDocId(node.id as string);
-          navigate(node.id as string);
+          navigate(`doc/${node.id}`);
+        } else {
+          setDocId(node.id as string);
+          navigate(`folder/${node.id}`);
         }
       }}
       onContextMenu={(e) => {

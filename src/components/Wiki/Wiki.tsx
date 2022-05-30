@@ -1,17 +1,15 @@
-import { useContext, useEffect } from "react";
+import { lazy, useContext } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useGetDocuments } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import { ProjectContext } from "../../Context/ProjectContext";
-import RemirrorContext from "../../Editor/RemirrorContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import DocumentsTree from "../DocumentTree/DocumentTree";
 import PropertiesPanel from "../PropertiesPanel/PropertiesPanel";
+const RemirrorContext = lazy(() => import("../../Editor/RemirrorContext"));
 export default function Wiki() {
   const { project_id } = useParams();
-  const { data: documents, isLoading } = useGetDocuments(project_id as string);
-  const { id: docId, setId: setDocId } = useContext(ProjectContext);
+  const { isLoading } = useGetDocuments(project_id as string);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (
@@ -22,7 +20,7 @@ export default function Wiki() {
 
       <Routes>
         <Route
-          path="/:doc_id"
+          path="/doc/:doc_id"
           element={
             <div
               className={`flex flex-nowrap ${
@@ -35,6 +33,7 @@ export default function Wiki() {
             </div>
           }
         />
+        <Route path="/folder/:doc_id" element={}
       </Routes>
     </div>
   );
