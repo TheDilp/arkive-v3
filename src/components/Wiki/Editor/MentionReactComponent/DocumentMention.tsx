@@ -33,7 +33,7 @@ export default function DocumentMention({
         style={{
           fontWeight: "700",
         }}
-        to={`../${nodeId}`}
+        to={`../doc/${nodeId}`}
       >
         {title || nodeLabel}
       </Link>

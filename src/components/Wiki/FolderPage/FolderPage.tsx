@@ -1,13 +1,16 @@
 import { Icon } from "@iconify/react";
+import { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 import { useGetDocuments } from "../../../utils/customHooks";
 import { supabaseStorageLink } from "../../../utils/utils";
+import { ProjectContext } from "../../Context/ProjectContext";
 
 export default function FolderPage() {
   const { project_id, doc_id } = useParams();
 
   const { data: documents } = useGetDocuments(project_id as string);
+  const { setId: setDocId } = useContext(ProjectContext);
 
   return (
     <article className="text-white w-10 flex flex-wrap justify-content-start align-content-start">
@@ -27,6 +30,7 @@ export default function FolderPage() {
               <Link
                 className="w-1 text-white no-underline"
                 to={`../${doc.folder ? "folder" : "doc"}/${doc.id}`}
+                onClick={() => setDocId(doc.id)}
               >
                 <div
                   className="h-full p-surface-card folderPageImage "

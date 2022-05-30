@@ -31,7 +31,7 @@ export default function LinkedItems() {
             <Icon icon="mdi:map" fontSize={22} /> Maps
           </span>
         }
-        contentClassName="overflow-y-auto h-10rem bg-gray-900"
+        contentClassName="overflow-y-auto h-10rem"
       >
         {maps.isLoading ? (
           <div className="w-full flex justify-content-center">
@@ -146,7 +146,7 @@ export default function LinkedItems() {
       <AccordionTab
         header={
           <div>
-            <i className="pi pi-fw pi-cog"></i> Misc
+            <i className="pi pi-fw pi-cog"></i> Settings
           </div>
         }
       >

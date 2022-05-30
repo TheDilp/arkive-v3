@@ -12,6 +12,7 @@ export default function Wiki() {
   const { project_id } = useParams();
   const { isLoading } = useGetDocuments(project_id as string);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
+
   if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (
     <Navigate to="/login" />

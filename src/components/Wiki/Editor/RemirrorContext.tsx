@@ -4,21 +4,19 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { saveAs } from "file-saver";
-import {
-  useCallback,
-  useContext,
-  useEffect, useRef,
-  useState
-} from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Navigate, To, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode } from "remirror";
 import {
   BoldExtension,
   BulletListExtension,
-  CalloutExtension, DropCursorExtension, GapCursorExtension, HeadingExtension,
+  CalloutExtension,
+  DropCursorExtension,
+  GapCursorExtension,
+  HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
@@ -27,17 +25,18 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
-  UnderlineExtension
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
+import { ProjectContext } from "../../Context/ProjectContext";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
@@ -158,6 +157,14 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
     return () => clearTimeout(timeout);
   }, [saving]);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
+  const { id: docId, setId: setDocId } = useContext(ProjectContext);
+
+  useEffect(() => {
+    if (doc_id && doc_id !== docId) {
+      setDocId(doc_id);
+    }
+  }, [doc_id]);
+
   if (!currentDocument) {
     toastWarn("Document not found");
     return <Navigate to={-1 as To} />;
