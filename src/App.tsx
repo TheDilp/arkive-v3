@@ -20,6 +20,7 @@ import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
 import { lazy, Suspense } from "react";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import PublicBoardsContainer from "./components/PublicView/Public Boards/PublicBoardsContainer";
+import { auth } from "./utils/supabaseUtils";
 const Project = lazy(() => import("./components/Project/Project"));
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
@@ -35,6 +36,10 @@ function App() {
         refetchOnWindowFocus: false,
       },
     },
+  });
+
+  auth.onAuthStateChange((event, session) => {
+    console.log(event, session);
   });
 
   return (

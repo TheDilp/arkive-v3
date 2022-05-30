@@ -22,7 +22,7 @@ import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  supabaseStorageLink,
+  supabaseStorageImagesLink,
   toastWarn,
   toModelPosition,
 } from "../../utils/utils";
@@ -144,12 +144,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage?.link
-              ? `${supabaseStorageLink}${node.customImage.link.replaceAll(
+              ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
                   " ",
                   "%20"
                 )}`
               : node.document?.image
-              ? `${supabaseStorageLink}${node.document.image.link?.replaceAll(
+              ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
                 )}`
@@ -279,8 +279,9 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           show: true,
         });
       });
-      cyRef.current.on("free", "node", function (evt: any) {
+      cyRef.current.on("grabfree", "node", function (evt: any) {
         let target = evt.target._private;
+        console.log(target);
         updateNodeMutation.mutate({
           id: target.data.id,
           board_id: board_id as string,

@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
-import DragPreview from "../../Project/DocumentTree/DragPreview";
+import DragPreview from "../../Wiki/DocumentTree/DragPreview";
 import MapCreateDialog from "./MapCreateDialog";
 import MapsFilter from "./MapsFilter";
 import MapTreeItem from "./MapTreeItem";

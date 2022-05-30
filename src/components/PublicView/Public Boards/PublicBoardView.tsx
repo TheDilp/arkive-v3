@@ -11,7 +11,7 @@ import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  supabaseStorageLink,
+  supabaseStorageImagesLink,
 } from "../../../utils/utils";
 export default function PublicBoardView({ board }: { board: BoardProps }) {
   const { board_id } = useParams();
@@ -52,14 +52,14 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
             backgroundImage: node.customImage?.link
               ? `${
                   supabaseUrl.VITE_SUPABASE_URL
-                }${supabaseStorageLink}${node.customImage.link.replaceAll(
+                }${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
                   " ",
                   "%20"
                 )}`
               : node.document?.image
               ? `${
                   supabaseUrl.VITE_SUPABASE_URL
-                }${supabaseStorageLink}${node.document.image.link?.replaceAll(
+                }${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
                 )}`

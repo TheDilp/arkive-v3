@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 import { useDeleteImages } from "../../utils/customHooks";
-import { supabaseStorageLink } from "../../utils/utils";
+import { supabaseStorageImagesLink } from "../../utils/utils";
 
 type Props = {
   name: string;
@@ -20,7 +20,7 @@ export default function ListItem({ name }: Props) {
           style={{
             objectFit: "contain",
           }}
-          src={`${supabaseStorageLink}${project_id}/${name}`}
+          src={`${supabaseStorageImagesLink}${project_id}/${name}`}
           alt={name}
         />
       </div>

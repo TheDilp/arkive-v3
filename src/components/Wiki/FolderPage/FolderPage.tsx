@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 import { useGetDocuments } from "../../../utils/customHooks";
-import { supabaseStorageLink } from "../../../utils/utils";
+import { supabaseStorageImagesLink } from "../../../utils/utils";
 import { ProjectContext } from "../../Context/ProjectContext";
 
 export default function FolderPage() {
@@ -57,7 +57,7 @@ export default function FolderPage() {
                               alt={doc.title}
                               src={
                                 doc.image?.link
-                                  ? supabaseStorageLink + doc.image.link
+                                  ? supabaseStorageImagesLink + doc.image.link
                                   : defaultImage
                               }
                             />

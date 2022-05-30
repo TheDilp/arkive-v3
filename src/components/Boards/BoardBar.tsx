@@ -2,14 +2,12 @@ import { saveAs } from "file-saver";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
-import { useEffect, useState } from "react";
-import { boardLayouts, changeLayout, toastWarn } from "../../utils/utils";
 import { SelectButton } from "primereact/selectbutton";
-import { BoardExportProps } from "../../custom-types";
-import { InputText } from "primereact/inputtext";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AutoComplete } from "primereact/autocomplete";
+import { BoardExportProps } from "../../custom-types";
 import { useGetBoardData } from "../../utils/customHooks";
+import { boardLayouts, changeLayout, toastWarn } from "../../utils/utils";
 type Props = {
   layout: string | null | undefined;
   setLayout: (layout: string) => void;
@@ -216,6 +214,7 @@ export default function BoardBar({
         }}
       />
       <Button
+        className="p-button-rounded"
         icon="pi pi-save"
         onClick={() => {
           setExportDialog({ ...exportDialog, show: true });

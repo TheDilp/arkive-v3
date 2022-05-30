@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 import { useContext } from "react";
 import { FileBrowserContext } from "../Context/FileBrowserContext";
 import { SelectButton } from "primereact/selectbutton";
-import { supabaseStorageLink } from "../../utils/utils";
+import { supabaseStorageImagesLink } from "../../utils/utils";
 type Props = {
   images: ImageProps[];
 };
@@ -57,7 +57,7 @@ export default function ListLayout({ images }: Props) {
       <div className="w-full h-auto cursor-pointer w-full flex justify-content-center">
         {rowData.link && (
           <Image
-            src={`${supabaseStorageLink}${rowData.link}`}
+            src={`${supabaseStorageImagesLink}${rowData.link}`}
             alt="document"
             className="w-2rem h-full relative border-round"
             preview
