@@ -257,7 +257,6 @@ export default function DocumentTreeItemContext({
   ];
   return (
     <>
-      <ConfirmDialog />
       <ContextMenu
         model={
           displayDialog.template

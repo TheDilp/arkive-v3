@@ -26,7 +26,7 @@ import DocumentUpdateDialog from "./DocumentUpdateDialog";
 import TemplatesTree from "./TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import { ProjectContext } from "../../Context/ProjectContext";
+import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 
 export default function DocumentsTree() {
   const queryClient = useQueryClient();
@@ -36,15 +36,7 @@ export default function DocumentsTree() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
-    {
-      id: "",
-      title: "",
-      show: false,
-      folder: false,
-      depth: 0,
-      template: false,
-      parent: "",
-    }
+    docItemDisplayDialogDefault
   );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const [iconSelect, setIconSelect] = useState<iconSelectProps>({
