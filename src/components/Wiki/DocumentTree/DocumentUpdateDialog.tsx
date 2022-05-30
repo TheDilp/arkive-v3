@@ -30,7 +30,7 @@ export default function DocumentUpdateDialog({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ title: string; parent: string }>({
+  } = useForm<Pick<docItemDisplayDialogProps, "title" | "parent">>({
     defaultValues: {
       title: displayDialog.title,
       parent: displayDialog.parent,
@@ -38,9 +38,8 @@ export default function DocumentUpdateDialog({
   });
   const onSubmit: SubmitHandler<{
     title: string;
-    parent: string;
+    parent: string | null | undefined;
   }> = (data) => {
-    console.log(data);
     updateDocumentMutation.mutate({
       id: displayDialog.id,
       ...data,
