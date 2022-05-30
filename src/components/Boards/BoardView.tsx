@@ -279,15 +279,21 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           show: true,
         });
       });
-      cyRef.current.on("grabfree", "node", function (evt: any) {
+      cyRef.current.on("freeon", "node", function (evt: any) {
         let target = evt.target._private;
-        console.log(target);
-        updateNodeMutation.mutate({
-          id: target.data.id,
-          board_id: board_id as string,
-          x: target.position.x,
-          y: target.position.y,
-        });
+        // Grid extenstion messes with the "grab events"
+        // "Freeon" event triggers on double clicking
+        // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
+        if (
+          target.position.x !== target?.data.x ||
+          target.position.y !== target.data?.y
+        )
+          updateNodeMutation.mutate({
+            id: target.data.id,
+            board_id: board_id as string,
+            x: target.position.x,
+            y: target.position.y,
+          });
       });
     }
   }, [cyRef, board_id]);
