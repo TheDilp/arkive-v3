@@ -199,76 +199,83 @@ export default function FileBrowserHeader() {
           layout={layout}
           onChange={(e) => {
             setLayout(e.value);
-            console.log(e.value);
           }}
           className="mr-2"
         />
-        <Button
-          type="button"
-          icon="pi pi-filter-slash"
-          label={isTabletOrMobile ? "" : "Reset"}
-          tooltip="Resets Filters, Sorting and Pagination"
-          className="p-button-outlined mr-2"
-          onClick={() => {
-            tableRef.current?.reset();
+        <div
+          style={{
+            opacity: layout === "list" ? 1 : 0,
+            pointerEvents: layout === "list" ? "all" : "none",
           }}
-        />
-        <Button
-          label={isTabletOrMobile ? "" : "Delete Selected"}
-          icon="pi pi-trash"
-          className="p-button-danger p-button-outlined mx-2"
-          disabled={selected.length === 0}
-          onClick={() =>
-            confirmDialog({
-              message: `Are you sure you want to delete ${selected.length} images?`,
-              header: `Deleting ${selected.length} images`,
-              icon: "pi pi-exclamation-triangle",
-              acceptClassName: "p-button-danger",
-              // className: selectAll ? "deleteAllDocuments" : "",
-              accept: () => {
-                deleteImagesStorage(selected.map((image) => image.link));
-                deleteImageRecords(selected.map((image) => image.id)).then(
-                  () => {
-                    queryClient.setQueryData(
-                      `${project_id}-images`,
-                      (oldData: ImageProps[] | undefined) => {
-                        if (oldData) {
-                          return oldData.filter(
-                            (img) =>
-                              !selected.some((image) => image.id === img.id)
-                          );
-                        } else {
-                          return [];
+        >
+          <Button
+            type="button"
+            icon="pi pi-filter-slash"
+            label={isTabletOrMobile ? "" : "Reset"}
+            tooltip="Resets Filters, Sorting and Pagination"
+            className="p-button-outlined mr-2"
+            onClick={() => {
+              tableRef.current?.reset();
+            }}
+          />
+          <Button
+            label={isTabletOrMobile ? "" : "Delete Selected"}
+            icon="pi pi-trash"
+            className="p-button-danger p-button-outlined mx-2"
+            disabled={selected.length === 0}
+            onClick={() =>
+              confirmDialog({
+                message: `Are you sure you want to delete ${selected.length} images?`,
+                header: `Deleting ${selected.length} images`,
+                icon: "pi pi-exclamation-triangle",
+                acceptClassName: "p-button-danger",
+                // className: selectAll ? "deleteAllDocuments" : "",
+                accept: () => {
+                  deleteImagesStorage(selected.map((image) => image.link));
+                  deleteImageRecords(selected.map((image) => image.id)).then(
+                    () => {
+                      queryClient.setQueryData(
+                        `${project_id}-images`,
+                        (oldData: ImageProps[] | undefined) => {
+                          if (oldData) {
+                            return oldData.filter(
+                              (img) =>
+                                !selected.some((image) => image.id === img.id)
+                            );
+                          } else {
+                            return [];
+                          }
                         }
-                      }
-                    );
-                    setSelected([]);
-                  }
-                );
-              },
-            })
-          }
-        />
-        <Button
-          label={isTabletOrMobile ? "" : "Download Selected"}
-          icon="pi pi-download"
-          iconPos="right"
-          className="p-button-outlined p-button-success"
-          onClick={async () => {
-            for (const image of selected) {
-              const d = await downloadImage(image.link);
-              if (d) {
-                saveAs(
-                  new Blob([d], {
-                    type: d.type,
-                  }),
-                  `${image.title || image.id || project_id + "-image"}`
-                );
-              }
+                      );
+                      setSelected([]);
+                    }
+                  );
+                },
+              })
             }
-            setSelected([]);
-          }}
-        />
+          />
+          <Button
+            label={isTabletOrMobile ? "" : "Download Selected"}
+            icon="pi pi-download"
+            iconPos="right"
+            className="p-button-outlined p-button-success"
+            disabled={selected.length === 0}
+            onClick={async () => {
+              for (const image of selected) {
+                const d = await downloadImage(image.link);
+                if (d) {
+                  saveAs(
+                    new Blob([d], {
+                      type: d.type,
+                    }),
+                    `${image.title || image.id || project_id + "-image"}`
+                  );
+                }
+              }
+              setSelected([]);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
