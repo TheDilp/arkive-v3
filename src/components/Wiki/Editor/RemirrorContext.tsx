@@ -9,7 +9,7 @@ import {
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Navigate, To, useParams } from "react-router-dom";
-import { htmlToProsemirrorNode } from "remirror";
+import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
   BoldExtension,
   BulletListExtension,
@@ -42,7 +42,7 @@ import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
 const hooks = [
   () => {
-    const { getJSON, getText, getMarkdown } = useHelpers();
+    const { getJSON, getText } = useHelpers();
     const { project_id, doc_id } = useParams();
     const saveContentMutation = useUpdateDocument(project_id as string);
     const document = useGetDocumentData(project_id as string, doc_id as string);
@@ -59,11 +59,12 @@ const hooks = [
     );
     const handleExportShortcut = useCallback(
       ({ state }) => {
+        let htmlString = prosemirrorNodeToHtml(state.doc);
         saveAs(
-          new Blob([getMarkdown(state)], {
-            type: "text/plain;charset=utf-8",
+          new Blob([htmlString], {
+            type: "text/html;charset=utf-8",
           }),
-          `${document?.title || `Arkive Document - ${doc_id}`}.md`
+          `${document?.title || `Arkive Document - ${doc_id}`}.html`
         );
         return true; // Prevents any further key handlers from being run.
       },
@@ -126,8 +127,8 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),
-      new TextColorExtension(),
-      new MarkdownExtension(),
+      // new TextColorExtension(),
+      // new MarkdownExtension(),
       new TableExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),

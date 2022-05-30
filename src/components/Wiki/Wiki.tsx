@@ -1,4 +1,4 @@
-import { lazy, Suspense, useContext } from "react";
+import { lazy, Suspense, useContext, useEffect } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useGetDocuments } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
@@ -8,11 +8,16 @@ import DocumentsTree from "./DocumentTree/DocumentTree";
 import PropertiesPanel from "./PropertiesPanel/PropertiesPanel";
 import FolderPage from "./FolderPage/FolderPage";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { ProjectContext } from "../Context/ProjectContext";
 const RemirrorContext = lazy(() => import("./Editor/RemirrorContext"));
 export default function Wiki() {
   const { project_id } = useParams();
   const { isLoading } = useGetDocuments(project_id as string);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
+  const { setId: setDocId } = useContext(ProjectContext);
+  useEffect(() => {
+    return () => setDocId("");
+  }, []);
 
   if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (
