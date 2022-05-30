@@ -4,11 +4,11 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Navigate, To, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
   BoldExtension,
@@ -20,19 +20,17 @@ import {
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
-  MarkdownExtension,
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  TextColorExtension,
-  UnderlineExtension,
+  UnderlineExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
@@ -119,7 +117,6 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
       new ImageExtension({
         enableResizing: true,
       }),
-      // new CustomImageExtension(),
       new BulletListExtension(),
       new OrderedListExtension(),
       CustomMentionExtension,
@@ -127,8 +124,6 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),
-      // new TextColorExtension(),
-      // new MarkdownExtension(),
       new TableExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
@@ -168,7 +163,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
 
   if (!currentDocument) {
     toastWarn("Document not found");
-    return <Navigate to={-1 as To} />;
+    return <Navigate to={"../"} />;
   }
   return (
     <div

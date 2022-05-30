@@ -15,9 +15,10 @@ export default function Wiki() {
   const { isLoading } = useGetDocuments(project_id as string);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { setId: setDocId } = useContext(ProjectContext);
+
   useEffect(() => {
     return () => setDocId("");
-  }, []);
+  }, [setDocId]);
 
   if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (

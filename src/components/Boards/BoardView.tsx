@@ -31,7 +31,8 @@ import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
-
+import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
 type Props = {
   setBoardId: (boardId: string) => void;
   cyRef: any;
