@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import React, { useCallback, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { DocumentProps } from "../../../custom-types";
 import { ProjectContext } from "../../Context/ProjectContext";
@@ -11,13 +12,14 @@ type Props = {
 
 export default function DocumentsFilterList({ filteredTree }: Props) {
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
-  const { setId: setDocId } = useContext(ProjectContext);
+  const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const rowVirtualizer = useVirtual({
     size: filteredTree.length,
     parentRef,
     estimateSize: useCallback(() => 31, []),
     overscan: 5,
   });
+  const navigate = useNavigate();
 
   return (
     <>
@@ -53,6 +55,7 @@ export default function DocumentsFilterList({ filteredTree }: Props) {
               }}
               onClick={() => {
                 setDocId(filteredTree[virtualRow.index].id as string);
+                navigate(`doc/${filteredTree[virtualRow.index].id}`);
               }}
             >
               {filteredTree[virtualRow.index].droppable ? (
@@ -77,7 +80,11 @@ export default function DocumentsFilterList({ filteredTree }: Props) {
                 />
               )}
               <span
-                className={`text-md hover:bg-blue-300 Lato white-space-nowrap overflow-hidden text-overflow-ellipsis`}
+                className={`text-md hover:bg-blue-300 Lato white-space-nowrap overflow-hidden text-overflow-ellipsis ${
+                  filteredTree[virtualRow.index].id === docId
+                    ? "text-primary"
+                    : ""
+                }`}
               >
                 {filteredTree[virtualRow.index].text}
               </span>

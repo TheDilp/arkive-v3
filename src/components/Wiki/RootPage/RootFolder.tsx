@@ -6,7 +6,7 @@ import { useGetDocuments } from "../../../utils/customHooks";
 import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import RootPageItem from "./RootPageItem";
-
+import LoadingScreen from "../../Util/LoadingScreen";
 export default function RootFolder() {
   const { project_id } = useParams();
   const { data: documents, isLoading } = useGetDocuments(project_id as string);
@@ -15,6 +15,7 @@ export default function RootFolder() {
     docItemDisplayDialogDefault
   );
   const cm = useRef() as any;
+  if (isLoading) return <LoadingScreen />;
   return (
     <article
       className={`text-white h-screen ${
@@ -41,6 +42,7 @@ export default function RootFolder() {
           isTabletOrMobile ? "justify-content-between column-gap-2 " : ""
         } align-content-start align-items-center row-gap-4 px-5 overflow-y-auto`}
       >
+        <h1 className="Merriweather w-full">Root Folder</h1>
         {documents &&
           documents
             .filter((doc) => doc.parent === null && !doc.template)
