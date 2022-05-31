@@ -68,7 +68,7 @@ export default function CategoryAutocomplete({
 
   return (
     <AutoComplete
-      inputClassName="Lato"
+      inputClassName="Lato border-noround"
       value={currentDoc.categories}
       suggestions={filteredCategories}
       placeholder={

@@ -4,13 +4,14 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
+  BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
   CalloutExtension,
@@ -23,14 +24,14 @@ import {
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  UnderlineExtension
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
@@ -114,6 +115,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
+      new BlockquoteExtension(),
       new ImageExtension({
         enableResizing: true,
       }),

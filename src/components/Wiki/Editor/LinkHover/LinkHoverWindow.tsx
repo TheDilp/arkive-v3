@@ -3,6 +3,7 @@ import { Remirror, ThemeProvider, useRemirror } from "@remirror/react";
 import { useMemo } from "react";
 import { htmlToProsemirrorNode, RemirrorJSON } from "remirror";
 import {
+  BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
   CalloutExtension,
@@ -65,6 +66,7 @@ export default function LinkHoverWindow({
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
+      new BlockquoteExtension(),
       new ImageExtension({
         enableResizing: false,
       }),

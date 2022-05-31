@@ -8,6 +8,12 @@ import "../../../styles/MenuBar.css";
 import { Slider } from "primereact/slider";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
+import { Dropdown } from "primereact/dropdown";
+import ImgDropdownItem from "../../Util/ImgDropdownItem";
+import { useGetImages } from "../../../utils/customHooks";
+import { useParams } from "react-router-dom";
+import { ImageProps } from "../../../custom-types";
+import { supabaseStorageImagesLink } from "../../../utils/utils";
 export default function MenuBar({ saving }: { saving: number | boolean }) {
   const {
     toggleBold,
@@ -17,6 +23,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     toggleOrderedList,
     toggleHeading,
     toggleCallout,
+    toggleBlockquote,
     updateCallout,
     insertHorizontalRule,
     updateLink,
@@ -26,23 +33,12 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     centerAlign,
     rightAlign,
     focus,
-    createTable,
-    addTableRowBefore,
-    addTableRowAfter,
-    addTableColumnBefore,
-    addTableColumnAfter,
-    deleteTableColumn,
-    deleteTableRow,
-    deleteTable,
   } = useCommands();
+  const { project_id } = useParams();
   const active = useActive();
   const attrs = useAttrs();
-  const [showDialog, setShowDialog] = useState({
-    columns: 1,
-    rows: 1,
-    header: true,
-    show: false,
-  });
+  const images = useGetImages(project_id as string);
+  const [showDialog, setShowDialog] = useState(false);
   function calloutToggle(type: string) {
     if (active.callout()) {
       if (!active.callout({ type })) {
@@ -59,70 +55,37 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     // active.bold(), active.italic(), etc
     <>
       <Dialog
-        header="Create New Table"
-        visible={showDialog.show}
-        onHide={() =>
-          setShowDialog({ columns: 1, rows: 1, header: true, show: false })
-        }
+        header="Select Image"
+        visible={showDialog}
+        onHide={() => setShowDialog(false)}
       >
         <div className="flex flex-wrap">
-          <div className="w-full my-3">
-            <h5 className="mt-0">Number of Columns: {showDialog.columns}</h5>
-            <Slider
-              value={showDialog.columns}
-              onChange={(e) =>
-                setShowDialog({ ...showDialog, columns: e.value as number })
-              }
-              step={1}
-              min={1}
-              max={15}
-            />
-          </div>
-          <div className="w-full my-3">
-            <h5 className="mt-0">Number of Rows: {showDialog.rows}</h5>
-            <Slider
-              value={showDialog.rows}
-              onChange={(e) =>
-                setShowDialog({ ...showDialog, rows: e.value as number })
-              }
-              step={1}
-              min={1}
-              max={15}
-            />
-          </div>
-          <div className="w-full flex align-items-center">
-            <h5>Table Header:</h5>
-            <Checkbox
-              checked={showDialog.header}
-              onChange={(e) =>
-                setShowDialog({ ...showDialog, header: e.checked })
-              }
-              className="ml-2"
-            />
-          </div>
-          <div className="w-full flex justify-content-end">
-            <Button
-              label="Create Table"
-              icon="pi pi-table"
-              iconPos="right"
-              className="p-button-outlined p-button-success"
-              onClick={() => {
-                if (showDialog.rows > 0 && showDialog.columns > 0) {
-                  createTable({
-                    rowsCount: showDialog.rows,
-                    columnsCount: showDialog.columns,
-                    withHeaderRow: showDialog.header,
-                  });
-                  setShowDialog({
-                    rows: 1,
-                    columns: 1,
-                    header: true,
-                    show: false,
-                  });
-                }
-              }}
-            />
-          </div>
+          <Dropdown
+            filter
+            filterBy="title"
+            className="w-full"
+            placeholder="Custom Image"
+            optionLabel="title"
+            itemTemplate={(item: ImageProps) => (
+              <ImgDropdownItem title={item.title} link={item.link} />
+            )}
+            options={
+              images?.data
+                ? [
+                    { title: "No image", id: null },
+                    ...images?.data.filter((image) => image.type === "Image"),
+                  ]
+                : []
+            }
+            value={{ title: "No image", id: null }}
+            onChange={(e) => {
+              insertImage({
+                src:
+                  supabaseStorageImagesLink +
+                  e.value.link.replaceAll(" ", "%20"),
+              });
+            }}
+          />
         </div>
       </Dialog>
       <Menubar
@@ -287,6 +250,14 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             },
           },
           {
+            icon: "pi pi-fw pi-comments",
+            className: active.blockquote() ? "menuBarButtonActive" : "",
+            command: () => {
+              toggleBlockquote();
+              focus();
+            },
+          },
+          {
             icon: "pi pi-fw pi-info-circle",
             items: [
               {
@@ -397,11 +368,12 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             icon: "pi pi-fw pi-image",
             className: active.image() ? "menuBarButtonActive" : "",
             command: () => {
-              let src = window.prompt("Enter the URL of the image:", undefined);
-              if (src) {
-                insertImage({ src });
-                focus();
-              }
+              setShowDialog(true);
+              // let src = window.prompt("Enter the URL of the image:", undefined);
+              // if (src) {
+              //   insertImage({ src });
+              //   focus();
+              // }
             },
           },
           {
@@ -447,35 +419,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               }
             },
           },
-          // {
-          //   icon: "pi pi-fw pi-table",
-          //   items: [
-          //     {
-          //       label: "Create Table",
-          //       command: () =>
-          //         setShowDialog({
-          //           columns: 1,
-          //           rows: 1,
-          //           header: true,
-          //           show: true,
-          //         }),
-          //     },
-
-          //     { label: "Add Row Before", command: () => addTableRowBefore() },
-          //     { label: "Add Row After", command: () => addTableRowAfter() },
-          //     {
-          //       label: "Add Column Before",
-          //       command: () => addTableColumnBefore(),
-          //     },
-          //     {
-          //       label: "Add Column After",
-          //       command: () => addTableColumnAfter(),
-          //     },
-          //     { label: "Delete Column", command: () => deleteTableColumn() },
-          //     { label: "Delete Row", command: () => deleteTableRow() },
-          //     { label: "Delete Table", command: () => deleteTable() },
-          //   ],
-          // },
         ]}
         end={() =>
           saving ? <ProgressSpinner className="w-2rem h-2rem" /> : ""
