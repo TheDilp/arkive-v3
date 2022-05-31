@@ -130,6 +130,10 @@ export default function FolderPage() {
       className={`text-white h-screen ${
         isTabletOrMobile ? "w-full" : isLaptop ? "w-9" : "w-10"
       } flex flex-wrap justify-content-start align-content-start`}
+      onContextMenu={(e) => {
+        setDisplayDialog({ ...displayDialog, root: true });
+        cm.current.show(e);
+      }}
     >
       <BreadCrumb
         model={breadcrumbs}

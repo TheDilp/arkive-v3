@@ -7,6 +7,8 @@ import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import RootPageItem from "./RootPageItem";
 import LoadingScreen from "../../Util/LoadingScreen";
+import DocumentTreeItemContext from "../DocumentTree/DocumentTreeItemContext";
+import DocumentUpdateDialog from "../DocumentTree/DocumentUpdateDialog";
 export default function RootFolder() {
   const { project_id } = useParams();
   const { data: documents, isLoading } = useGetDocuments(project_id as string);
@@ -21,7 +23,22 @@ export default function RootFolder() {
       className={`text-white h-screen ${
         isTabletOrMobile ? "w-full" : isLaptop ? "w-9" : "w-10"
       } flex flex-wrap justify-content-start align-content-start`}
+      onContextMenu={(e) => {
+        setDisplayDialog({ ...displayDialog, root: true });
+        cm.current.show(e);
+      }}
     >
+      <DocumentTreeItemContext
+        cm={cm}
+        displayDialog={displayDialog}
+        setDisplayDialog={setDisplayDialog}
+      />
+      {displayDialog.show && (
+        <DocumentUpdateDialog
+          displayDialog={displayDialog}
+          setDisplayDialog={setDisplayDialog}
+        />
+      )}
       <BreadCrumb
         model={[]}
         home={{

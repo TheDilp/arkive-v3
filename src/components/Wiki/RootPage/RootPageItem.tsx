@@ -30,11 +30,13 @@ export default function RootPageItem({ doc, cm, setDisplayDialog }: Props) {
       key={doc.id}
       onClick={() => setDocId(doc.id)}
       onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
         setDisplayDialog({
           id: doc.id,
           title: doc.title,
           folder: doc.folder,
-          parent: doc.parent?.id || "",
+          parent: doc.parent?.id || null,
           template: false,
           show: false,
           depth: 0,

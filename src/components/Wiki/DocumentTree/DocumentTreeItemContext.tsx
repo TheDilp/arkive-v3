@@ -30,7 +30,7 @@ export default function DocumentTreeItemContext({
 }: Props) {
   const queryClient = useQueryClient();
   const [deleteToggle, setDeleteToggle] = useState(false);
-  const { project_id } = useParams();
+  const { project_id, doc_id } = useParams();
   const navigate = useNavigate();
   const { id: docId } = useContext(ProjectContext);
   const confirmdelete = () => setDeleteToggle(true);
@@ -226,6 +226,33 @@ export default function DocumentTreeItemContext({
       command: confirmdelete,
     },
   ];
+  const rootItems = [
+    {
+      label: "New Document",
+      icon: "pi pi-fw pi-file",
+      command: () => {
+        let id = uuid();
+        newDocumentMutation.mutate({
+          id,
+          title: "New Document",
+          parent: doc_id || null,
+        });
+      },
+    },
+    {
+      label: "New Folder",
+      icon: "pi pi-fw pi-folder",
+      command: () => {
+        let id = uuid();
+        newDocumentMutation.mutate({
+          id,
+          title: "New Folder",
+          parent: doc_id || null,
+          folder: true,
+        });
+      },
+    },
+  ];
   return (
     <>
       <ConfirmDialog
@@ -261,7 +288,9 @@ export default function DocumentTreeItemContext({
       />
       <ContextMenu
         model={
-          displayDialog.template
+          displayDialog.root
+            ? rootItems
+            : displayDialog.template
             ? templateItems
             : displayDialog.folder
             ? folderItems
