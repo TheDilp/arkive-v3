@@ -27,6 +27,7 @@ import TemplatesTree from "./TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 export default function DocumentsTree() {
   const queryClient = useQueryClient();

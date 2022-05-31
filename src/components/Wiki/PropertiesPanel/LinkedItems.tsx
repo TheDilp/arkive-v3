@@ -75,7 +75,7 @@ export default function LinkedItems() {
             .map((board) => (
               <Link
                 key={board.id}
-                to={`../../boards/${board.id}/123`}
+                to={`../../boards/${board.id}`}
                 className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
                 style={{ fontWeight: 700 }}
               >

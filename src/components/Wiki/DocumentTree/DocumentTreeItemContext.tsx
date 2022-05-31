@@ -257,6 +257,35 @@ export default function DocumentTreeItemContext({
   ];
   return (
     <>
+      <ConfirmDialog
+        message={
+          <div>
+            {`Are you sure you want to delete ${displayDialog.title}?`}
+            {displayDialog.folder ? (
+              <div style={{ color: "var(--red-400)" }}>
+                <i className="pi pi-exclamation-triangle"></i>
+                This will delete all the sub-documents in this folder!
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        }
+        header={`Delete ${displayDialog.title}`}
+        icon="pi pi-exclamation-triangle"
+        acceptClassName="text-red-500 p-button-outlined"
+        accept={async () => {
+          if (displayDialog.id === docId) {
+            navigate("./");
+          }
+          deleteDocumentMutation.mutate({
+            id: displayDialog.id,
+            folder: displayDialog.folder,
+          });
+          setDisplayDialog({ ...displayDialog, show: false });
+        }}
+        reject={() => {}}
+      />
       <ContextMenu
         model={
           displayDialog.template

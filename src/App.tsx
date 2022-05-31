@@ -54,7 +54,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
-          <Suspense fallback={<div>TEST</div>}>
+          <Suspense fallback={<LoadingScreen />}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="register" element={<Register />} />

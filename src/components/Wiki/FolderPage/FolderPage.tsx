@@ -25,7 +25,7 @@ export default function FolderPage() {
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
     docItemDisplayDialogDefault
   );
-  const jm = useRef() as any;
+  const cm = useRef() as any;
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const { data: documents, isLoading } = useGetDocuments(project_id as string);
   const parent = useGetDocumentData(project_id as string, doc_id as string);
@@ -53,10 +53,8 @@ export default function FolderPage() {
   }
   return (
     <article className="text-white w-10 flex flex-wrap justify-content-start align-content-start">
-      <ConfirmDialog />
-
       <DocumentTreeItemContext
-        cm={jm}
+        cm={cm}
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
@@ -86,10 +84,13 @@ export default function FolderPage() {
                     show: false,
                     depth: 0,
                   });
-                  jm.current.show(e);
+                  cm.current.show(e);
                 }}
                 onDragStart={(e) => {
                   e.dataTransfer.setData("doc_id", doc.id);
+                  let img = new Image();
+                  img.src = doc.image?.link || defaultImage;
+                  e.dataTransfer.setDragImage(img, 10, 10);
                 }}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => {
@@ -151,7 +152,7 @@ export default function FolderPage() {
             ))
           ) : (
             <div className="ml-5">
-              <h3 className="text-gray-500">No files found</h3>
+              <h3 className="text-gray-500">No files</h3>
             </div>
           ))}
       </section>
