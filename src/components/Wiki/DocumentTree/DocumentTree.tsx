@@ -15,19 +15,18 @@ import {
   iconSelectProps,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
+import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 import { getDepth } from "../../../utils/utils";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DocumentsFilterList from "./DocumentFilterList";
 import DocumentTreeItem from "./DocumentTreeItem";
 import DocumentTreeItemContext from "./DocumentTreeItemContext";
-import DragPreview from "./DragPreview";
 import DocumentUpdateDialog from "./DocumentUpdateDialog";
+import DragPreview from "./DragPreview";
 import TemplatesTree from "./TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
-import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
-import { ConfirmDialog } from "primereact/confirmdialog";
 
 export default function DocumentsTree() {
   const queryClient = useQueryClient();
@@ -88,9 +87,9 @@ export default function DocumentsTree() {
 
   return (
     <div
-      className={`text-white ${isLaptop ? "w-3" : "w-2"} flex flex-wrap ${
-        isTabletOrMobile ? "surface-0" : "surface-50"
-      }`}
+      className={`text-white ${
+        isTabletOrMobile ? "hidden" : isLaptop ? "w-3" : "w-2"
+      } flex flex-wrap ${isTabletOrMobile ? "surface-0" : "surface-50"}`}
     >
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />

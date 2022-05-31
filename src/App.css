@@ -99,6 +99,10 @@ body {
   height: 80px;
 }
 
+.p-breadcrumb-home a span {
+  color: white !important;
+}
+
 /* CUSTOM SCROLLBAR */
 
 /* width */

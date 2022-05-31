@@ -451,4 +451,4 @@ export type UpdateEdgeProps = {
 
 // OTHER
 
-export type breadcrumbsProps = { label: string; template: React.ReactNode }[];
+export type breadcrumbsProps = { template: React.ReactNode }[];

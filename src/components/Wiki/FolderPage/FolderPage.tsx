@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { BreadCrumb } from "primereact/breadcrumb";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import {
   breadcrumbsProps,
   docItemDisplayDialogProps,
@@ -15,6 +15,7 @@ import {
 } from "../../../utils/customHooks";
 import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 import { supabaseStorageImagesLink, toastWarn } from "../../../utils/utils";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import LoadingScreen from "../../Util/LoadingScreen";
 import DocumentTreeItemContext from "../DocumentTree/DocumentTreeItemContext";
@@ -22,6 +23,7 @@ import DocumentUpdateDialog from "../DocumentTree/DocumentUpdateDialog";
 
 export default function FolderPage() {
   const { project_id, doc_id } = useParams();
+  const navigate = useNavigate();
   const [children, setChildren] = useState<DocumentProps[]>([]);
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
     docItemDisplayDialogDefault
@@ -29,6 +31,7 @@ export default function FolderPage() {
   const [breadcrumbs, setBreadcrumbs] = useState<breadcrumbsProps>([]);
   const cm = useRef() as any;
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
+  const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { data: documents, isLoading } = useGetDocuments(project_id as string);
   const currentDocument = useGetDocumentData(
     project_id as string,
@@ -45,8 +48,6 @@ export default function FolderPage() {
     let parent = documents.find((doc) => doc.id === parent_id);
     if (parent) {
       tempBreadcrumbs.push({
-        label: parent.title,
-
         template: (
           <Link
             className="text-white fontWeight700"
@@ -66,6 +67,8 @@ export default function FolderPage() {
         setBreadcrumbs
       );
     } else {
+      let current = tempBreadcrumbs.shift();
+      if (current) tempBreadcrumbs.push(current);
       setBreadcrumbs(tempBreadcrumbs);
       return;
     }
@@ -81,18 +84,38 @@ export default function FolderPage() {
           return 0;
         });
 
-      let tempBreadcrumbs: {
-        label: string;
-        url: string;
-        template: React.ReactNode;
-      }[] = [];
+      if (currentDocument) {
+        let tempBreadcrumbs: {
+          label: string;
+          url: string;
+          template: React.ReactNode;
+        }[] = [
+          {
+            label: currentDocument.title,
+            url: `/project/${project_id}/wiki/${
+              currentDocument.folder ? "folder" : "doc"
+            }/${doc_id}`,
+            template: (
+              <Link
+                className="text-white fontWeight700"
+                to={`/project/${project_id}/wiki/${
+                  currentDocument.folder ? "folder" : "doc"
+                }/${currentDocument.id}`}
+              >
+                {currentDocument.title}
+              </Link>
+            ),
+          },
+        ];
 
-      recursiveFindParents(
-        currentDocument?.parent?.id || null,
-        documents,
-        tempBreadcrumbs,
-        setBreadcrumbs
-      );
+        recursiveFindParents(
+          currentDocument?.parent?.id || null,
+          documents,
+          tempBreadcrumbs,
+          setBreadcrumbs
+        );
+      }
+
       setChildren(tempChildren);
     }
 
@@ -105,24 +128,19 @@ export default function FolderPage() {
     return <Navigate to={"../"} />;
   }
 
-  const home = {
-    icon: "pi pi-home",
-    url: "../",
-    template: (
-      <Link
-        className="text-white fontWeight700"
-        to={`/project/${project_id}/wiki`}
-      >
-        <i className="pi pi-home"></i>
-      </Link>
-    ),
-  };
   return (
-    <article className="text-white w-10 flex flex-wrap justify-content-start align-content-start">
+    <article
+      className={`text-white h-screen ${
+        isTabletOrMobile ? "w-full" : isLaptop ? "w-9" : "w-10"
+      } flex flex-wrap justify-content-start align-content-start`}
+    >
       <BreadCrumb
         model={breadcrumbs || []}
-        home={home}
-        className="w-full border-none"
+        home={{
+          icon: "pi pi-home",
+          command: () => navigate("../folder"),
+        }}
+        className="w-full border-none border-bottom-2 border-noround"
         style={{
           height: "50px",
         }}
@@ -138,15 +156,21 @@ export default function FolderPage() {
           setDisplayDialog={setDisplayDialog}
         />
       )}
-      <h1 className="Merriweather w-full ml-7">
-        {currentDocument.title || "Folder"}
-      </h1>
-      <section className="Lato w-full h-full flex flex-wrap align-content-start row-gap-4 px-5 overflow-y-auto">
+      <section
+        className={`Lato w-full h-full flex flex-wrap ${
+          isTabletOrMobile ? "justify-content-between column-gap-2 " : ""
+        } align-content-start align-items-center row-gap-4 px-5 overflow-y-auto`}
+      >
+        <h1 className="Merriweather w-full">
+          {currentDocument.title || "Folder"}
+        </h1>
         {children &&
           (children.length > 0 ? (
             children.map((doc) => (
               <Link
-                className="w-1 text-white no-underline"
+                className={`${
+                  isLaptop ? "w-3" : isTabletOrMobile ? "w-4" : "w-1"
+                } text-white no-underline`}
                 to={`../${doc.folder ? "folder" : "doc"}/${doc.id}`}
                 key={doc.id}
                 onClick={() => setDocId(doc.id)}
