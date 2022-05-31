@@ -448,3 +448,7 @@ export type UpdateEdgeProps = {
   targetArrowShape?: string;
   zIndex: number;
 };
+
+// OTHER
+
+export type breadcrumbsProps = { label: string; template: React.ReactNode }[];

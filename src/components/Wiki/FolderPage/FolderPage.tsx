@@ -3,6 +3,7 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
+  breadcrumbsProps,
   docItemDisplayDialogProps,
   DocumentProps,
 } from "../../../custom-types";
@@ -25,9 +26,7 @@ export default function FolderPage() {
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
     docItemDisplayDialogDefault
   );
-  const [breadcrumbs, setBreadcrumbs] = useState<
-    { label: string; url: string; template: React.ReactNode }[]
-  >([]);
+  const [breadcrumbs, setBreadcrumbs] = useState<breadcrumbsProps>([]);
   const cm = useRef() as any;
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const { data: documents, isLoading } = useGetDocuments(project_id as string);
@@ -40,22 +39,14 @@ export default function FolderPage() {
   function recursiveFindParents(
     parent_id: string | null,
     documents: DocumentProps[],
-    tempBreadcrumbs: {
-      label: string;
-      url: string;
-      template: React.ReactNode;
-    }[],
-    setBreadcrumbs: (
-      breadcrumbs: { label: string; url: string; template: React.ReactNode }[]
-    ) => void
+    tempBreadcrumbs: breadcrumbsProps,
+    setBreadcrumbs: (breadcrumbs: breadcrumbsProps) => void
   ) {
     let parent = documents.find((doc) => doc.id === parent_id);
     if (parent) {
       tempBreadcrumbs.push({
         label: parent.title,
-        url: `/project/${project_id}/wiki/${parent.folder ? "folder" : "doc"}/${
-          parent.id
-        }`,
+
         template: (
           <Link
             className="text-white fontWeight700"
@@ -117,10 +108,25 @@ export default function FolderPage() {
   const home = {
     icon: "pi pi-home",
     url: "../",
+    template: (
+      <Link
+        className="text-white fontWeight700"
+        to={`/project/${project_id}/wiki`}
+      >
+        <i className="pi pi-home"></i>
+      </Link>
+    ),
   };
   return (
     <article className="text-white w-10 flex flex-wrap justify-content-start align-content-start">
-      <BreadCrumb model={breadcrumbs || []} home={home} className="w-full" />
+      <BreadCrumb
+        model={breadcrumbs || []}
+        home={home}
+        className="w-full border-none"
+        style={{
+          height: "50px",
+        }}
+      />
       <DocumentTreeItemContext
         cm={cm}
         displayDialog={displayDialog}
