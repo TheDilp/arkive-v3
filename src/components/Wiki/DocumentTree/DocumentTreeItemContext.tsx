@@ -1,6 +1,6 @@
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -29,40 +29,11 @@ export default function DocumentTreeItemContext({
   setDisplayDialog,
 }: Props) {
   const queryClient = useQueryClient();
+  const [deleteToggle, setDeleteToggle] = useState(false);
   const { project_id } = useParams();
   const navigate = useNavigate();
   const { id: docId } = useContext(ProjectContext);
-  const confirmdelete = () => {
-    confirmDialog({
-      message: (
-        <div>
-          {`Are you sure you want to delete ${displayDialog.title}?`}
-          {displayDialog.folder ? (
-            <div style={{ color: "var(--red-400)" }}>
-              <i className="pi pi-exclamation-triangle"></i>
-              This will delete all the sub-documents in this folder!
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
-      ),
-      header: `Delete ${displayDialog.title}`,
-      icon: "pi pi-exclamation-triangle",
-      acceptClassName: "text-red-500 p-button-outlined",
-      accept: async () => {
-        if (displayDialog.id === docId) {
-          navigate("./");
-        }
-        deleteDocumentMutation.mutate({
-          id: displayDialog.id,
-          folder: displayDialog.folder,
-        });
-        setDisplayDialog({ ...displayDialog, show: false });
-      },
-      reject: () => {},
-    });
-  };
+  const confirmdelete = () => setDeleteToggle(true);
   const documents: DocumentProps[] | undefined =
     queryClient.getQueryData(`${project_id}-documents`) || [];
   const document = documents.find((doc) => doc.id === displayDialog.id);
@@ -257,7 +228,37 @@ export default function DocumentTreeItemContext({
   ];
   return (
     <>
-      <ConfirmDialog />
+      <ConfirmDialog
+        message={
+          <div>
+            {`Are you sure you want to delete ${displayDialog.title}?`}
+            {displayDialog.folder ? (
+              <div style={{ color: "var(--red-400)" }}>
+                <i className="pi pi-exclamation-triangle"></i>
+                This will delete all the sub-documents in this folder!
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        }
+        header={`Delete ${displayDialog.title}`}
+        icon="pi pi-exclamation-triangle"
+        acceptClassName="text-red-500 p-button-outlined"
+        accept={async () => {
+          if (displayDialog.id === docId) {
+            navigate("./");
+          }
+          deleteDocumentMutation.mutate({
+            id: displayDialog.id,
+            folder: displayDialog.folder,
+          });
+          setDisplayDialog({ ...displayDialog, show: false });
+        }}
+        visible={deleteToggle}
+        onHide={() => setDeleteToggle(false)}
+        reject={() => setDeleteToggle(false)}
+      />
       <ContextMenu
         model={
           displayDialog.template

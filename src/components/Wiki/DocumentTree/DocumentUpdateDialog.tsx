@@ -10,6 +10,7 @@ import {
   DocumentProps,
 } from "../../../custom-types";
 import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
+import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 
 type Props = {
   displayDialog: docItemDisplayDialogProps;
@@ -29,7 +30,7 @@ export default function DocumentUpdateDialog({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ title: string; parent: string }>({
+  } = useForm<Pick<docItemDisplayDialogProps, "title" | "parent">>({
     defaultValues: {
       title: displayDialog.title,
       parent: displayDialog.parent,
@@ -37,25 +38,16 @@ export default function DocumentUpdateDialog({
   });
   const onSubmit: SubmitHandler<{
     title: string;
-    parent: string;
+    parent: string | null | undefined;
   }> = (data) => {
-    console.log(data);
     updateDocumentMutation.mutate({
       id: displayDialog.id,
       ...data,
     });
-    setDisplayDialog({
-      id: "",
-      title: "",
-      parent: "",
-      folder: false,
-      template: false,
-      depth: 0,
-      show: false,
-    });
+    setDisplayDialog(docItemDisplayDialogDefault);
   };
 
-  function recursiveDescendantRemove(
+  function recursiveDescendantFilter(
     doc: DocumentProps,
     index: number,
     array: DocumentProps[],
@@ -69,7 +61,7 @@ export default function DocumentUpdateDialog({
         if (parent.id === selected_id) {
           return false;
         } else {
-          return recursiveDescendantRemove(parent, index, array, selected_id);
+          return recursiveDescendantFilter(parent, index, array, selected_id);
         }
       } else {
         return false;
@@ -82,17 +74,7 @@ export default function DocumentUpdateDialog({
       header={`Edit ${displayDialog.title}`}
       visible={displayDialog.show}
       className="w-3"
-      onHide={() =>
-        setDisplayDialog({
-          id: "",
-          title: "",
-          show: false,
-          folder: false,
-          depth: 0,
-          parent: "",
-          template: false,
-        })
-      }
+      onHide={() => setDisplayDialog(docItemDisplayDialogDefault)}
       modal={false}
     >
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -129,7 +111,7 @@ export default function DocumentUpdateDialog({
                         ...data.filter((doc, idx, array) => {
                           if (!doc.folder || doc.id === displayDialog.id)
                             return false;
-                          return recursiveDescendantRemove(
+                          return recursiveDescendantFilter(
                             doc,
                             idx,
                             array,

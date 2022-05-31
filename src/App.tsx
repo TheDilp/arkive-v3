@@ -17,9 +17,13 @@ import FileBrowser from "./components/FileBrowser/FileBrowser";
 import PublicProject from "./components/PublicView/Public Boards/PublicProject";
 import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
 import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import PublicBoardsContainer from "./components/PublicView/Public Boards/PublicBoardsContainer";
+import { auth } from "./utils/supabaseUtils";
+import cytoscape from "cytoscape";
+import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
 const Project = lazy(() => import("./components/Project/Project"));
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
@@ -37,62 +41,71 @@ function App() {
     },
   });
 
+  auth.onAuthStateChange((event, session) => {
+    console.log(event, session);
+  });
+  useEffect(() => {
+    cytoscape.use(edgehandles);
+    cytoscape.use(gridguide);
+  }, []);
   return (
     <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
       <ToastContainer />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="register" element={<Register />} />
-            <Route path="login" element={<Login />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="help" element={<Help />} />
-            <Route
-              path="project/:project_id"
-              element={
-                <Suspense fallback={<LoadingScreen />}>
-                  <Project />
-                </Suspense>
-              }
-            >
+          <Suspense fallback={<LoadingScreen />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="register" element={<Register />} />
+              <Route path="login" element={<Login />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="help" element={<Help />} />
               <Route
-                path="wiki/*"
+                path="project/:project_id"
                 element={
                   <Suspense fallback={<LoadingScreen />}>
-                    <Wiki />
+                    <Project />
                   </Suspense>
                 }
-              />
-              <Route
-                path="maps/*"
-                element={
-                  <Suspense fallback={<LoadingScreen />}>
-                    <Maps />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="boards/*"
-                element={
-                  <Suspense fallback={<LoadingScreen />}>
-                    <Boards />
-                  </Suspense>
-                }
-              />
-              <Route path="filebrowser" element={<FileBrowser />} />
-              <Route path="settings/:setting" element={<ProjectSettings />} />
-            </Route>
-            <Route path="view/:project_id" element={<PublicProject />}>
-              <Route path="wiki/:doc_id" element={<PublicWiki />} />
-              <Route path="maps/:map_id" element={<PublicMaps />} />
-              <Route
-                path="boards/:board_id"
-                element={<PublicBoardsContainer />}
-              />
-            </Route>
-          </Routes>
+              >
+                <Route
+                  path="wiki/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Wiki />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="maps/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Maps />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="boards/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Boards />
+                    </Suspense>
+                  }
+                />
+                <Route path="filebrowser" element={<FileBrowser />} />
+                <Route path="settings/:setting" element={<ProjectSettings />} />
+              </Route>
+              <Route path="view/:project_id" element={<PublicProject />}>
+                <Route path="wiki/:doc_id" element={<PublicWiki />} />
+                <Route path="maps/:map_id" element={<PublicMaps />} />
+                <Route
+                  path="boards/:board_id"
+                  element={<PublicBoardsContainer />}
+                />
+              </Route>
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </QueryClientProvider>
     </main>

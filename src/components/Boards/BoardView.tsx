@@ -22,7 +22,7 @@ import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  supabaseStorageLink,
+  supabaseStorageImagesLink,
   toastWarn,
   toModelPosition,
 } from "../../utils/utils";
@@ -31,7 +31,8 @@ import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
-
+import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
 type Props = {
   setBoardId: (boardId: string) => void;
   cyRef: any;
@@ -144,12 +145,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage?.link
-              ? `${supabaseStorageLink}${node.customImage.link.replaceAll(
+              ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
                   " ",
                   "%20"
                 )}`
               : node.document?.image
-              ? `${supabaseStorageLink}${node.document.image.link?.replaceAll(
+              ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
                 )}`
@@ -279,14 +280,21 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           show: true,
         });
       });
-      cyRef.current.on("free", "node", function (evt: any) {
+      cyRef.current.on("freeon", "node", function (evt: any) {
         let target = evt.target._private;
-        updateNodeMutation.mutate({
-          id: target.data.id,
-          board_id: board_id as string,
-          x: target.position.x,
-          y: target.position.y,
-        });
+        // Grid extenstion messes with the "grab events"
+        // "Freeon" event triggers on double clicking
+        // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
+        if (
+          target.position.x !== target?.data.x ||
+          target.position.y !== target.data?.y
+        )
+          updateNodeMutation.mutate({
+            id: target.data.id,
+            board_id: board_id as string,
+            x: target.position.x,
+            y: target.position.y,
+          });
       });
     }
   }, [cyRef, board_id]);

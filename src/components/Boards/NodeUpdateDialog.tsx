@@ -17,7 +17,7 @@ import { useParams } from "react-router-dom";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
-  supabaseStorageLink,
+  supabaseStorageImagesLink,
   textHAlignOptions,
   textVAlignOptions,
 } from "../../utils/utils";
@@ -69,7 +69,7 @@ export default function NodeUpdateDialog({
             ? {
                 ...value,
                 link: value.link
-                  .replaceAll(`${supabaseStorageLink}${project_id}`, "")
+                  .replaceAll(`${supabaseStorageImagesLink}${project_id}`, "")
                   .replaceAll("%20", " "),
               }
             : null

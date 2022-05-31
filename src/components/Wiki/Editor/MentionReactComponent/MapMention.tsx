@@ -7,11 +7,8 @@ type Props = {
 export default function MapMention({ title, nodeId, nodeLabel }: Props) {
   return nodeId ? (
     <Link
-      className={`Lato text-white test`}
+      className={`Lato text-white fontWeight700`}
       id={`link-${nodeId}`}
-      style={{
-        fontWeight: "700",
-      }}
       to={`../../maps/${nodeId}`}
     >
       <i className="pi pi-map-marker underline"></i>

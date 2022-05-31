@@ -441,7 +441,7 @@ export const cytoscapeGridOptions = {
 
   // Draw Grid
   zoomDash: true, // Determines whether the size of the dashes should change when the drawing is zoomed in and out if grid is drawn.
-  panGrid: true, // Determines whether the grid should move then the user moves the graph if grid is drawn.
+  panGrid: false, // Determines whether the grid should move then the user moves the graph if grid is drawn.
   gridStackOrder: -1, // Namely z-index
   gridColor: "#fff", // Color of grid lines
   lineWidth: 1.0, // Width of grid lines
@@ -668,4 +668,4 @@ export interface Bucket {
   public: boolean;
 }
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-export const supabaseStorageLink = `${supabaseUrl}/storage/v1/object/public/images/`;
+export const supabaseStorageImagesLink = `${supabaseUrl}/storage/v1/object/public/images/`;

@@ -55,7 +55,7 @@ export default function DocumentTreeItem({
           folder: node.data?.folder || false,
           depth,
           template: node.data?.template || false,
-          parent: node.data?.parent?.id || "",
+          parent: node.data?.parent?.id || null,
         });
       }}
     >

@@ -24,7 +24,10 @@ import {
   deleteDocument,
   deleteManyDocuments,
 } from "../../../utils/supabaseUtils";
-import { searchCategory, supabaseStorageLink } from "../../../utils/utils";
+import {
+  searchCategory,
+  supabaseStorageImagesLink,
+} from "../../../utils/utils";
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import { v4 as uuid } from "uuid";
@@ -149,7 +152,7 @@ export default function DocumentsSettingsTable() {
       <div className="w-full h-auto cursor-pointer flex justify-content-center">
         {rowData.image && (
           <img
-            src={`${supabaseStorageLink}${rowData.image.link}`}
+            src={`${supabaseStorageImagesLink}${rowData.image.link}`}
             alt="document"
             className="w-2rem h-full relative border-round"
             style={{

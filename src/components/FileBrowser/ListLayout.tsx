@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 import { useContext } from "react";
 import { FileBrowserContext } from "../Context/FileBrowserContext";
 import { SelectButton } from "primereact/selectbutton";
-import { supabaseStorageLink } from "../../utils/utils";
+import { supabaseStorageImagesLink } from "../../utils/utils";
 type Props = {
   images: ImageProps[];
 };
@@ -26,7 +26,7 @@ export default function ListLayout({ images }: Props) {
 
   const actionsBodyTemplate = (rowData: ImageProps) => {
     return (
-      <div className="">
+      <div className="flex w-full justify-content-end">
         <Button
           className="p-button-primary p-button-outlined mr-2"
           icon="pi pi-fw pi-download"
@@ -57,7 +57,7 @@ export default function ListLayout({ images }: Props) {
       <div className="w-full h-auto cursor-pointer w-full flex justify-content-center">
         {rowData.link && (
           <Image
-            src={`${supabaseStorageLink}${rowData.link}`}
+            src={`${supabaseStorageImagesLink}${rowData.link}`}
             alt="document"
             className="w-2rem h-full relative border-round"
             preview
@@ -95,16 +95,17 @@ export default function ListLayout({ images }: Props) {
     <div className=" flex align-items-start align-content-top w-full  justify-content-center">
       <DataTable
         ref={tableRef}
-        className="w-full h-full"
+        className="w-full h-full mt-5"
+        size="small"
         value={images.filter((image) => image.title.includes(filter))}
         paginator
         responsiveLayout="scroll"
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-        rows={9}
+        rows={10}
         sortField="title"
         sortOrder={1}
-        rowsPerPageOptions={[9, 15, 25, 50]}
+        rowsPerPageOptions={[10, 25, 40, 70, 100]}
         selection={selected}
         onSelectionChange={(e) => {
           setSelected(e.value);
@@ -116,7 +117,6 @@ export default function ListLayout({ images }: Props) {
           field="title"
           header="Title"
           filter
-          style={{ width: "10rem" }}
           editor={titleEditor}
           onCellEditComplete={(e: any) => {
             if (e.rowData.id && e.newValue)
@@ -142,17 +142,19 @@ export default function ListLayout({ images }: Props) {
           // }}
         ></Column>
         <Column
+          style={{
+            width: "10%",
+          }}
           field="type"
           header="Type"
           filter
           filterElement={typeFilterTemplate}
         />
         <Column
+          headerClassName="pr-5"
           header="Actions"
+          alignHeader="right"
           body={actionsBodyTemplate}
-          style={{
-            width: "11rem",
-          }}
         />
       </DataTable>
     </div>

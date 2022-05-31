@@ -12,7 +12,7 @@ import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
 import { useUpdateBoard } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import DragPreview from "../../Project/DocumentTree/DragPreview";
+import DragPreview from "../../Wiki/DocumentTree/DragPreview";
 import TreeSidebar from "../../Util/TreeSidebar";
 import BoardsFilter from "./BoardsFilter";
 import BoardsFilterList from "./BoardsFilterList";

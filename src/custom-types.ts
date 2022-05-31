@@ -151,7 +151,7 @@ export type docItemDisplayDialogProps = {
   title: string;
   show: boolean;
   folder: boolean;
-  parent: string;
+  parent: string | null;
   template: boolean;
   depth: number;
 };
@@ -448,3 +448,7 @@ export type UpdateEdgeProps = {
   targetArrowShape?: string;
   zIndex: number;
 };
+
+// OTHER
+
+export type breadcrumbsProps = { template: React.ReactNode }[];

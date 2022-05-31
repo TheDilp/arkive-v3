@@ -4,12 +4,12 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Navigate, To, useParams } from "react-router-dom";
-import { htmlToProsemirrorNode } from "remirror";
+import { Navigate, useParams } from "react-router-dom";
+import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
   BoldExtension,
   BulletListExtension,
@@ -20,19 +20,17 @@ import {
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
-  MarkdownExtension,
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  TextColorExtension,
-  UnderlineExtension,
+  UnderlineExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
@@ -42,7 +40,7 @@ import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
 const hooks = [
   () => {
-    const { getJSON, getText, getMarkdown } = useHelpers();
+    const { getJSON, getText } = useHelpers();
     const { project_id, doc_id } = useParams();
     const saveContentMutation = useUpdateDocument(project_id as string);
     const document = useGetDocumentData(project_id as string, doc_id as string);
@@ -59,11 +57,12 @@ const hooks = [
     );
     const handleExportShortcut = useCallback(
       ({ state }) => {
+        let htmlString = prosemirrorNodeToHtml(state.doc);
         saveAs(
-          new Blob([getMarkdown(state)], {
-            type: "text/plain;charset=utf-8",
+          new Blob([htmlString], {
+            type: "text/html;charset=utf-8",
           }),
-          `${document?.title || `Arkive Document - ${doc_id}`}.md`
+          `${document?.title || `Arkive Document - ${doc_id}`}.html`
         );
         return true; // Prevents any further key handlers from being run.
       },
@@ -118,7 +117,6 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
       new ImageExtension({
         enableResizing: true,
       }),
-      // new CustomImageExtension(),
       new BulletListExtension(),
       new OrderedListExtension(),
       CustomMentionExtension,
@@ -126,8 +124,6 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),
-      new TextColorExtension(),
-      new MarkdownExtension(),
       new TableExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
@@ -167,7 +163,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
 
   if (!currentDocument) {
     toastWarn("Document not found");
-    return <Navigate to={-1 as To} />;
+    return <Navigate to={"../"} />;
   }
   return (
     <div

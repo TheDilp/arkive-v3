@@ -14,11 +14,8 @@ export default function PublicDocumentMention({
 }: Props) {
   return (
     <Link
-      className="Lato text-white"
+      className="Lato text-white fontWeight700"
       id={`link-${nodeId}`}
-      style={{
-        fontWeight: "700",
-      }}
       to={`../wiki/${nodeId}`}
     >
       {title || nodeLabel}

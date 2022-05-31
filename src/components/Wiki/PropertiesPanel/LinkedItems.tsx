@@ -13,7 +13,7 @@ import {
   useGetMaps,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { supabaseStorageLink } from "../../../utils/utils";
+import { supabaseStorageImagesLink } from "../../../utils/utils";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
 export default function LinkedItems() {
@@ -46,8 +46,7 @@ export default function LinkedItems() {
               <Link
                 key={map.id}
                 to={`../../maps/${map.id}`}
-                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
-                style={{ fontWeight: 700 }}
+                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
               >
                 <Icon icon="mdi:map-marker" />
                 {map.title}
@@ -75,9 +74,8 @@ export default function LinkedItems() {
             .map((board) => (
               <Link
                 key={board.id}
-                to={`../../boards/${board.id}/123`}
-                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
-                style={{ fontWeight: 700 }}
+                to={`../../boards/${board.id}`}
+                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
               >
                 <Icon icon="mdi:draw" />
                 {board.title}
@@ -95,7 +93,7 @@ export default function LinkedItems() {
         {document?.image && (
           <div className="flex flex-nowrap justify-content-center mb-2">
             <Image
-              src={`${supabaseStorageLink}${document.image.link}`}
+              src={`${supabaseStorageImagesLink}${document.image.link}`}
               alt="Document"
               className="w-10rem h-10rem"
               imageClassName="w-full h-full"

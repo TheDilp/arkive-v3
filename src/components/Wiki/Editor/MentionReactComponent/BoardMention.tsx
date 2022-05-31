@@ -7,11 +7,8 @@ type Props = {
 export default function BoardMention({ title, nodeId, nodeLabel }: Props) {
   return nodeId ? (
     <Link
-      className={`Lato text-white test`}
+      className={`Lato text-white fontWeight700`}
       id={`link-${nodeId}`}
-      style={{
-        fontWeight: "700",
-      }}
       to={`../../boards/${nodeId}`}
     >
       {title || nodeLabel}

@@ -60,29 +60,5 @@ export const TableMenu = () => {
       placement="bottom"
       enabled={true}
     />
-    // <FloatingWrapper positioner="cursor" placement="top">
-    //   <button
-    //     onMouseDown={(event) => event.preventDefault()}
-    //     onClick={() => commands.toggleBold()}
-    //     style={{ fontWeight: active.bold() ? "bold" : undefined }}
-    //     data-testid="bubble-menu-bold"
-    //   >
-    //     Bold
-    //   </button>
-    //   <button
-    //     onMouseDown={(event) => event.preventDefault()}
-    //     onClick={() => commands.toggleItalic()}
-    //     style={{ fontWeight: active.italic() ? "bold" : undefined }}
-    //   >
-    //     Italic
-    //   </button>
-    //   <button
-    //     onMouseDown={(event) => event.preventDefault()}
-    //     onClick={() => commands.toggleUnderline()}
-    //     style={{ fontWeight: active.underline() ? "bold" : undefined }}
-    //   >
-    //     Underline
-    //   </button>
-    // </FloatingWrapper>
   );
 };
