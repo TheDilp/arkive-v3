@@ -28,11 +28,8 @@ export default function DocumentMention({
       }
     >
       <Link
-        className="Lato text-white"
+        className="Lato text-white fontWeight700"
         id={`link-${nodeId}`}
-        style={{
-          fontWeight: "700",
-        }}
         to={`../doc/${nodeId}`}
       >
         {title || nodeLabel}

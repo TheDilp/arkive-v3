@@ -46,8 +46,7 @@ export default function LinkedItems() {
               <Link
                 key={map.id}
                 to={`../../maps/${map.id}`}
-                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
-                style={{ fontWeight: 700 }}
+                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
               >
                 <Icon icon="mdi:map-marker" />
                 {map.title}
@@ -76,8 +75,7 @@ export default function LinkedItems() {
               <Link
                 key={board.id}
                 to={`../../boards/${board.id}`}
-                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary"
-                style={{ fontWeight: 700 }}
+                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
               >
                 <Icon icon="mdi:draw" />
                 {board.title}

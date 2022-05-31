@@ -15,6 +15,10 @@ body {
   font-family: "Merriweather", Georgia, "Times New Roman", Times, serif;
 }
 
+.fontWeight700 {
+  font-weight: 700;
+}
+
 .mainScreen {
   height: 95.78vh !important;
 }

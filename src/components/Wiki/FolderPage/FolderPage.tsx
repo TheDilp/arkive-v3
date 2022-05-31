@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
-import { ConfirmDialog } from "primereact/confirmdialog";
-import { useContext, useEffect, useRef, useState } from "react";
+import { BreadCrumb } from "primereact/breadcrumb";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
   docItemDisplayDialogProps,
@@ -25,11 +25,60 @@ export default function FolderPage() {
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
     docItemDisplayDialogDefault
   );
+  const [breadcrumbs, setBreadcrumbs] = useState<
+    { label: string; url: string; template: React.ReactNode }[]
+  >([]);
   const cm = useRef() as any;
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const { data: documents, isLoading } = useGetDocuments(project_id as string);
-  const parent = useGetDocumentData(project_id as string, doc_id as string);
+  const currentDocument = useGetDocumentData(
+    project_id as string,
+    doc_id as string
+  );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
+
+  function recursiveFindParents(
+    parent_id: string | null,
+    documents: DocumentProps[],
+    tempBreadcrumbs: {
+      label: string;
+      url: string;
+      template: React.ReactNode;
+    }[],
+    setBreadcrumbs: (
+      breadcrumbs: { label: string; url: string; template: React.ReactNode }[]
+    ) => void
+  ) {
+    let parent = documents.find((doc) => doc.id === parent_id);
+    if (parent) {
+      tempBreadcrumbs.push({
+        label: parent.title,
+        url: `/project/${project_id}/wiki/${parent.folder ? "folder" : "doc"}/${
+          parent.id
+        }`,
+        template: (
+          <Link
+            className="text-white fontWeight700"
+            to={`/project/${project_id}/wiki/${
+              parent.folder ? "folder" : "doc"
+            }/${parent.id}`}
+          >
+            {parent.title}
+          </Link>
+        ),
+      });
+
+      recursiveFindParents(
+        parent.parent?.id || null,
+        documents,
+        tempBreadcrumbs,
+        setBreadcrumbs
+      );
+    } else {
+      setBreadcrumbs(tempBreadcrumbs);
+      return;
+    }
+  }
 
   useEffect(() => {
     if (documents && documents.length > 0) {
@@ -40,6 +89,19 @@ export default function FolderPage() {
           if (!a.folder && b.folder) return 1;
           return 0;
         });
+
+      let tempBreadcrumbs: {
+        label: string;
+        url: string;
+        template: React.ReactNode;
+      }[] = [];
+
+      recursiveFindParents(
+        currentDocument?.parent?.id || null,
+        documents,
+        tempBreadcrumbs,
+        setBreadcrumbs
+      );
       setChildren(tempChildren);
     }
 
@@ -47,12 +109,18 @@ export default function FolderPage() {
   }, [doc_id, documents]);
 
   if (isLoading) return <LoadingScreen />;
-  if (!parent) {
+  if (!currentDocument) {
     toastWarn("Document not found");
     return <Navigate to={"../"} />;
   }
+
+  const home = {
+    icon: "pi pi-home",
+    url: "../",
+  };
   return (
     <article className="text-white w-10 flex flex-wrap justify-content-start align-content-start">
+      <BreadCrumb model={breadcrumbs || []} home={home} className="w-full" />
       <DocumentTreeItemContext
         cm={cm}
         displayDialog={displayDialog}
@@ -64,7 +132,9 @@ export default function FolderPage() {
           setDisplayDialog={setDisplayDialog}
         />
       )}
-      <h1 className="Merriweather w-full ml-7">{parent.title || "Folder"}</h1>
+      <h1 className="Merriweather w-full ml-7">
+        {currentDocument.title || "Folder"}
+      </h1>
       <section className="Lato w-full h-full flex flex-wrap align-content-start row-gap-4 px-5 overflow-y-auto">
         {children &&
           (children.length > 0 ? (
