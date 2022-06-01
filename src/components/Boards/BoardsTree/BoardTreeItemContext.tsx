@@ -102,6 +102,11 @@ export default function BoardTreeItemContext({
     },
     { separator: true },
     {
+      label: "View Public Board",
+      icon: "pi pi-fw pi-link",
+      command: () => navigate(`/view/${project_id}/boards/${displayDialog.id}`),
+    },
+    {
       label: "Delete Board",
       icon: "pi pi-fw pi-trash",
       command: confirmDelete,

@@ -17,7 +17,7 @@ export default function PublicBoardsContainer() {
     async () => await getSingleBoard(board_id as string)
   );
   if (isLoading)
-    return <h1 className="text-white w-full text-centerp">Loading Board...</h1>;
+    return <h1 className="text-white w-full text-center">Loading Board...</h1>;
   if (!board || (!board.public && !user)) {
     toastWarn("This page is not public.");
     return <Navigate to={-1 as To} />;

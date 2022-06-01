@@ -36,7 +36,7 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
           id: doc.id,
           title: doc.title,
           folder: doc.folder,
-          parent: doc.parent?.id || "",
+          parent: doc.parent?.id || null,
           template: false,
           show: false,
           depth: 0,

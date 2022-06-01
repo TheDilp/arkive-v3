@@ -70,6 +70,11 @@ export default function MapTreeItemContext({
     },
     { separator: true },
     {
+      label: "View Public Map",
+      icon: "pi pi-fw pi-link",
+      command: () => navigate(`/view/${project_id}/maps/${displayDialog.id}`),
+    },
+    {
       label: "Delete Map",
       icon: "pi pi-fw pi-trash",
       command: confirmdelete,

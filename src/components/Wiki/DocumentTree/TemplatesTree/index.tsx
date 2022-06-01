@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { useCallback, useContext, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import {
   iconSelectProps,
@@ -28,6 +28,7 @@ export default function TemplatesTree({
   cm,
 }: Props) {
   const { project_id } = useParams();
+  const navigate = useNavigate();
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const templates = useGetTemplates(project_id as string);
@@ -96,6 +97,13 @@ export default function TemplatesTree({
                 transform: `translateY(${virtualRow.start}px)`,
               }}
               onClick={() => {
+                navigate(
+                  `doc/${
+                    templates.filter((template) =>
+                      filter ? template.title.includes(filter) : true
+                    )[virtualRow.index].id
+                  }`
+                );
                 setDocId(
                   templates.filter((template) =>
                     filter ? template.title.includes(filter) : true
@@ -127,7 +135,7 @@ export default function TemplatesTree({
                   e.preventDefault();
                   e.stopPropagation();
                   setIconSelect({
-                    doc_id: templates.filter((template) =>
+                    id: templates.filter((template) =>
                       filter ? template.title.includes(filter) : true
                     )[virtualRow.index].id,
                     icon: "bxs:folder",
