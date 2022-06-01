@@ -1,21 +1,14 @@
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
-import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { auth, login } from "../../utils/supabaseUtils";
-import { toastError } from "../../utils/utils";
+import { Link, Navigate } from "react-router-dom";
+import { auth, authFunction } from "../../utils/supabaseUtils";
 import EarthIMG from "./earthimg.jpg";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const navigate = useNavigate();
   return auth.user() ? (
     <Navigate to="/" />
   ) : (
     <div className="w-full h-screen flex align-items-center justify-content-center">
-      <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-min flex-wrap">
+      <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-20rem flex-wrap">
         <div className="w-full lg:w-7 relative">
           <h1
             className="text-center text-6xl text-white absolute w-full z-5 Merriweather"
@@ -48,62 +41,16 @@ export default function Login() {
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-900 font-medium mb-2 Lato"
-            >
-              Email
-            </label>
-            <InputText
-              id="email"
-              type="text"
-              className="w-full mb-3"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-            />
-
-            <label
-              htmlFor="password"
-              className="block text-900 font-medium mb-2 Lato"
-            >
-              Password
-            </label>
-            <InputText
-              id="password"
-              type="password"
-              className="w-full mb-3"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && email && password) {
-                  login(email, password)
-                    .then((data) => {
-                      if (data) navigate("/");
-                    })
-                    .catch((err) => {
-                      toastError("There was an error logging you in");
-                    });
-                }
-              }}
-            />
-
             <Button
-              label="Sign In"
-              icon="pi pi-user"
-              className="w-full text-white Lato"
-              onClick={() => {
-                if (email && password)
-                  login(email, password)
-                    .then((data) => {
-                      if (data) navigate("/");
-                    })
-                    .catch((err) => {
-                      toastError("There was an error logging you in");
-                    });
+              className="w-full my-2 text-white Lato border-none"
+              style={{
+                backgroundColor: "#7289DA",
               }}
-            />
+              onClick={authFunction}
+              label="Sign up with Discord"
+              icon="pi pi-discord"
+              iconPos="right"
+            ></Button>
           </div>
         </div>
       </div>

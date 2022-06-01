@@ -8,7 +8,7 @@ export default function Register() {
     <Navigate to="/" />
   ) : (
     <form className="w-full h-screen flex align-items-center justify-content-center">
-      <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-min flex-wrap">
+      <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-20rem flex-wrap">
         <div className="w-full lg:w-7 relative">
           <h1
             className="text-center text-6xl text-white absolute w-full z-5 Merriweather"
@@ -47,7 +47,7 @@ export default function Register() {
                 style={{
                   backgroundColor: "#7289DA",
                 }}
-                onClick={() => authFunction()}
+                onClick={authFunction}
                 label="Sign up with Discord"
                 icon="pi pi-discord"
                 iconPos="right"

@@ -54,7 +54,7 @@ export default function Home() {
           <div
             className={`${
               isTabletOrMobile ? "w-8" : "w-3"
-            } h-full bg-gray-800 text-white flex-wrap py-5`}
+            } h-full bg-gray-800 text-white flex-wrap py-5 px-5`}
           >
             <div className="w-full flex justify-content-center mb-2">
               <Button
