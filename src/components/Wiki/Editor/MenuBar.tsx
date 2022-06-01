@@ -423,7 +423,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
         end={() =>
           saving ? <ProgressSpinner className="w-2rem h-2rem" /> : ""
         }
-        className="p-0 Lato relative"
+        className="p-0 Lato relative border-0"
         style={{
           zIndex: 1000,
         }}

@@ -24,7 +24,7 @@ export default function Wiki() {
       <DocumentsTree />
 
       <Routes>
-        <Route path="/" element={<RootFolder />} />
+        <Route path="/" element={<FolderPage />} />
         <Route
           path="/doc/:doc_id"
           element={

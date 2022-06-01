@@ -36,6 +36,7 @@ import {
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
+import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
@@ -180,6 +181,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
             currentDocument.template ? "[TEMPLATE]" : ""
           }`}
       </h1>
+      <Breadcrumbs currentDocument={currentDocument} />
       {documents && (
         <ThemeProvider>
           <Remirror
