@@ -226,7 +226,9 @@ export default function DocumentsSettingsTable() {
           className="p-button-success p-button-outlined ml-2"
           icon="pi pi-fw pi-link"
           onClick={() => {
-            navigate(`../wiki/${rowData.id}`);
+            navigate(
+              `../wiki/${rowData.folder ? "folder" : "doc"}/${rowData.id}`
+            );
           }}
         />
       </div>
@@ -235,6 +237,22 @@ export default function DocumentsSettingsTable() {
   const iconBodyTemplate = (rowData: DocumentProps) => {
     return (
       <Icon icon={rowData.icon} fontSize={30} className="cursor-pointer" />
+    );
+  };
+  const publicBodyTemplate = (rowData: DocumentProps) => {
+    return (
+      <div className="relative flex justify-content-center">
+        <Checkbox
+          checked={rowData.public}
+          className="cursor-auto"
+          onChange={(e) =>
+            updateDocumentMutation.mutate({
+              id: rowData.id,
+              public: e.checked,
+            })
+          }
+        />
+      </div>
     );
   };
   const leftToolbarTemplate = () => {
@@ -570,6 +588,17 @@ export default function DocumentsSettingsTable() {
           alignHeader="center"
           bodyClassName="text-center"
           body={iconBodyTemplate}
+        />
+        <Column
+          header="Public"
+          field="public"
+          filter
+          filterElement={templateFilterTemplate}
+          filterMatchMode="equals"
+          body={publicBodyTemplate}
+          dataType="boolean"
+          sortable
+          style={{ width: "10rem" }}
         />
         <Column
           header="Actions"

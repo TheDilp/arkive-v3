@@ -5,7 +5,7 @@ import { MapContainer } from "react-leaflet";
 import { useQuery } from "react-query";
 import { Navigate, To, useParams } from "react-router-dom";
 import { auth, getSingleMap } from "../../../utils/supabaseUtils";
-import { supabaseStorageImagesLink } from "../../../utils/utils";
+import { supabaseStorageImagesLink, toastWarn } from "../../../utils/utils";
 
 import PublicMapImage from "./PublicMapImage";
 
@@ -60,7 +60,10 @@ export default function PublicMapView() {
         </h1>
       </div>
     );
-  if (!mapData || (!mapData.public && !user)) return <Navigate to={-1 as To} />;
+  if (!mapData || (!mapData.public && !user)) {
+    toastWarn("This page is not public.");
+    return <Navigate to={-1 as To} />;
+  }
   return (
     <div className="w-full h-full">
       <AnimatePresence exitBeforeEnter={true}>
