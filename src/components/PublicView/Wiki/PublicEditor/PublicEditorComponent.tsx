@@ -14,7 +14,7 @@ export default function PublicEditorComponent({ content }: Props) {
   useEffect(() => {
     //   The custom mention react component does not load unless a minimal timeout is set
     setTimeout(() => {
-      setContent(content ?? "");
+      if (content) setContent(content ?? undefined);
     }, 1);
   }, [doc_id]);
   return content ? (

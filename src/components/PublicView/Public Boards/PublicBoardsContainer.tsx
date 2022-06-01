@@ -20,7 +20,7 @@ export default function PublicBoardsContainer() {
     return <h1 className="text-white w-full text-centerp">Loading Board...</h1>;
   if (!board || (!board.public && !user)) {
     toastWarn("This page is not public.");
-  return <Navigate to={-1 as To} />;
+    return <Navigate to={-1 as To} />;
   }
   return <PublicBoardView board={board as BoardProps} />;
 }

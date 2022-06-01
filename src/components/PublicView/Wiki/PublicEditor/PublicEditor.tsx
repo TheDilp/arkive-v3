@@ -83,14 +83,12 @@ export default function PublicEditor({
       new TableExtension(),
     ],
     selection: "all",
-    content: content ?? "",
+    content: content || undefined,
     stringHandler: htmlToProsemirrorNode,
   });
   // ======================================================
 
-  return !content ? (
-    <LoadingScreen />
-  ) : (
+  return (
     <div className={`editorContainer w-full ${classes || "h-20rem"} `}>
       {content ? (
         <ThemeProvider>
