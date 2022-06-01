@@ -38,10 +38,11 @@ export const auth = supabase.auth;
 // Auth functions
 export const authFunction = async () => {
   const { user, error } = await supabase.auth.signIn({
-    // provider can be 'github', 'google', 'gitlab', and more
     provider: "discord",
   });
-  if (user) return user;
+  if (user) {
+    return user;
+  }
   if (error) {
     toastError(error.message);
     return null;

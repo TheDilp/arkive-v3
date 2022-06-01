@@ -1,9 +1,14 @@
 import { Button } from "primereact/button";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { auth, authFunction } from "../../utils/supabaseUtils";
 import EarthIMG from "./earthimg.jpg";
 
 export default function Login() {
+  const navigate = useNavigate();
+  auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_IN") navigate("/");
+  });
+
   return auth.user() ? (
     <Navigate to="/" />
   ) : (

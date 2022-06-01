@@ -4,7 +4,7 @@ import "primeicons/primeicons.css"; //icons
 import "/node_modules/primeflex/primeflex.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
@@ -40,10 +40,7 @@ function App() {
       },
     },
   });
-
-  auth.onAuthStateChange((event, session) => {
-    console.log(event, session);
-  });
+  
   useEffect(() => {
     cytoscape.use(edgehandles);
     cytoscape.use(gridguide);

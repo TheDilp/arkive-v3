@@ -50,13 +50,13 @@ export default function Home() {
           height: "96.5vh",
         }}
       >
-        <div className={`Lato ${isTabletOrMobile ? "w-2" : "w-1"}`}>
+        <div className={`Lato ${isTabletOrMobile ? "w-full" : "w-1"}`}>
           <div
             className={`${
-              isTabletOrMobile ? "w-8" : "w-3"
-            } h-full bg-gray-800 text-white flex-wrap py-5 px-5`}
+              isTabletOrMobile ? "w-full py-2" : "w-4 py-5"
+            } h-full bg-gray-800 text-white flex-wrap `}
           >
-            <div className="w-full flex justify-content-center mb-2">
+            <div className="w-full flex justify-content-center  my-auto">
               <Button
                 icon="pi pi-plus"
                 className="p-button-outlined p-button-rounded p-button-plain"
@@ -68,7 +68,7 @@ export default function Home() {
         </div>
         <div
           className={`${
-            isTabletOrMobile ? "w-10 flex-wrap" : "w-8"
+            isTabletOrMobile ? "w-full flex-wrap" : "w-8"
           } flex justify-content-start mt-5`}
         >
           {projects &&

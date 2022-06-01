@@ -50,7 +50,7 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
         <div
           className={`${
             isTabletOrMobile
-              ? "white-space-nowrap overflow-hidden text-overflow-ellipsis"
+              ? "white-space-nowrap overflow-hidden  text-overflow-ellipsis"
               : ""
           }`}
         >
@@ -58,7 +58,7 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
         </div>
       }
       className={`text-center relative mx-2 h-25rem Merriweather flex flex-column justify-content-between ${
-        isTabletOrMobile ? "w-15rem" : "w-20rem"
+        isTabletOrMobile ? "w-full" : "w-20rem"
       }`}
       header={header}
       footer={footer}

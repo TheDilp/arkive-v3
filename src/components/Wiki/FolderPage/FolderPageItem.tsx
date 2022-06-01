@@ -27,7 +27,7 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
     <Link
       className={`${
         isLaptop ? "w-3" : isTabletOrMobile ? "w-4" : "w-1"
-      } text-white no-underline`}
+      } text-white no-underline px-2`}
       to={`../${doc.folder ? "folder" : "doc"}/${doc.id}`}
       key={doc.id}
       onClick={() => setDocId(doc.id)}
