@@ -1,4 +1,5 @@
 import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -41,6 +42,15 @@ export default function PropertiesPanel() {
         height: "96.4vh",
       }}
     >
+      <div className="w-full">
+        {currentDoc && (
+          <InputText
+            className="w-full border-y-none border-noround"
+            value={currentDoc?.title}
+          />
+        )}
+      </div>
+
       {project && currentDoc && (
         <div className="p-fluid w-full">
           <CategoryAutocomplete

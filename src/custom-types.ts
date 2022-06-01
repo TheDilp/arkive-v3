@@ -154,6 +154,7 @@ export type docItemDisplayDialogProps = {
   parent: string | null;
   template: boolean;
   depth: number;
+  root?: boolean;
 };
 export type mapItemDisplayDialogProps = {
   id: string;

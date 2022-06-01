@@ -19,7 +19,6 @@ type Props = {
 
 export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
   const { project_id } = useParams();
-
   const { setId: setDocId } = useContext(ProjectContext);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const updateDocumentMutation = useUpdateDocument(project_id as string);

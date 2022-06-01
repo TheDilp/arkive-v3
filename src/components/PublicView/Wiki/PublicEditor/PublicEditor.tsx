@@ -3,6 +3,7 @@ import { Remirror, ThemeProvider, useRemirror } from "@remirror/react";
 import { useMemo } from "react";
 import { htmlToProsemirrorNode, RemirrorJSON } from "remirror";
 import {
+  BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
   CalloutExtension,
@@ -15,7 +16,7 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   TextColorExtension,
-  UnderlineExtension
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
@@ -65,6 +66,7 @@ export default function PublicEditor({
       new BoldExtension(),
       new ItalicExtension(),
       new HeadingExtension(),
+      new BlockquoteExtension(),
       new UnderlineExtension(),
       new ImageExtension({
         enableResizing: false,

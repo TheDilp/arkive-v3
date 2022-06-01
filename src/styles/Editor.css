@@ -4,7 +4,7 @@
 }
 
 .editorContext {
-    height: 80vh;
+    /* height: 80vh; */
     margin: 0 auto;
     min-width: 50vw;
 }
@@ -17,6 +17,7 @@
 
 .editorContainer>* {
     width: 100%;
+
 }
 
 .remirror-editor {
@@ -25,7 +26,24 @@
 }
 
 .remirror-editor:not(.publicPage) {
-    max-height: 83.5vh;
+    /* max-height: 83.5vh; */
+    overflow-y: auto;
+}
+
+.remirror-editor>[data-node-text-align="left"]:not(blockquote) {
+    float: left;
+    margin-right: 1rem;
+}
+
+.remirror-editor>[data-node-text-align="right"]:not(blockquote) {
+    float: right;
+    margin-left: 1rem;
+}
+
+.remirror-editor blockquote p {
+    color: var(--gray-200) !important;
+    font-size: x-large;
+    font-family: "Merriweather";
 }
 
 .publicPage {

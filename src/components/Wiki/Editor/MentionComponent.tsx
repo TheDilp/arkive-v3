@@ -1,6 +1,6 @@
 import { MentionAtomPopupComponent, MentionState } from "@remirror/react";
 import { useMemo, useState } from "react";
-import { DocumentProps, MapProps, BoardProps } from "../../custom-types";
+import { DocumentProps, MapProps, BoardProps } from "../../../custom-types";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 
@@ -61,5 +61,11 @@ export default function MentionComponent() {
           .sort();
   }, [mentionState]);
 
-  return <MentionAtomPopupComponent onChange={setMentionState} items={items} />;
+  return (
+    <MentionAtomPopupComponent
+      onChange={setMentionState}
+      items={items}
+      focusOnClick={false}
+    />
+  );
 }

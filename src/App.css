@@ -23,6 +23,10 @@ body {
   height: 95.78vh !important;
 }
 
+.pi-discord {
+  color: white;
+}
+
 .deleteAllDocuments div .p-confirm-dialog-message,
 .deleteAllDocuments div .p-confirm-dialog-icon {
   color: red !important;

@@ -36,17 +36,18 @@ export const supabase = createClient(
 export const auth = supabase.auth;
 
 // Auth functions
-export const register = async (email: string, password: string) => {
-  await supabase.auth.signUp({ email, password });
-};
-export const login = async (email: string, password: string) => {
-  const { user, error } = await supabase.auth.signIn({ email, password });
+export const authFunction = async () => {
+  const { user, error } = await supabase.auth.signIn({
+    // provider can be 'github', 'google', 'gitlab', and more
+    provider: "discord",
+  });
   if (user) return user;
   if (error) {
-    toastError("There was an error logging you in. Please try again.");
-    throw new Error(error.message);
+    toastError(error.message);
+    return null;
   }
 };
+
 export const logout = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) {

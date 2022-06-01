@@ -3,6 +3,7 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
 import { Image } from "primereact/image";
+import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Link, useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
@@ -149,12 +150,12 @@ export default function LinkedItems() {
         }
       >
         <div className="w-full flex flex-wrap justify-content-evenly">
-          <div className="w-full flex flex-nowrap justify-content-center">
+          <div className="w-full flex flex-nowrap justify-content-between my-2">
             <label className="mx-2">Public:</label>
             <Checkbox
               checked={document?.public}
               tooltip="If checked, anyone can access the content via a public page"
-              tooltipOptions={{ showDelay: 500 }}
+              tooltipOptions={{ showDelay: 500, position: "left" }}
               onChange={(e) =>
                 updateDocumentMutation.mutate({
                   id: doc_id as string,

@@ -4,13 +4,14 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
+  BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
   CalloutExtension,
@@ -23,18 +24,19 @@ import {
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  UnderlineExtension
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
+import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
@@ -75,7 +77,11 @@ const hooks = [
   },
 ];
 
-export default function RemirrorContext({ editable }: { editable?: boolean }) {
+export default function RemirrorContainer({
+  editable,
+}: {
+  editable?: boolean;
+}) {
   const { project_id, doc_id } = useParams();
   const firstRender = useRef(true);
   const currentDocument = useGetDocumentData(
@@ -114,6 +120,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
+      new BlockquoteExtension(),
       new ImageExtension({
         enableResizing: true,
       }),
@@ -167,7 +174,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
   }
   return (
     <div
-      className={`editorContainer ${
+      className={`editorContainer overflow-y-scroll ${
         // Check if latop, then if mobile/tablet and set width
         isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
       } h-full flex flex-wrap align-content-start text-white px-2`}
@@ -178,13 +185,14 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
             currentDocument.template ? "[TEMPLATE]" : ""
           }`}
       </h1>
+      <Breadcrumbs currentDocument={currentDocument} />
       {documents && (
         <ThemeProvider>
           <Remirror
             manager={manager}
             initialContent={state}
             hooks={hooks}
-            classNames={["text-white Lato Editor overflow-y-auto"]}
+            classNames={["text-white Lato"]}
             onChange={(props) => {
               const { tr, firstRender } = props;
               if (!firstRender && tr?.docChanged) {

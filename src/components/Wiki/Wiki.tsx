@@ -7,8 +7,7 @@ import { ProjectContext } from "../Context/ProjectContext";
 import DocumentsTree from "./DocumentTree/DocumentTree";
 import FolderPage from "./FolderPage/FolderPage";
 import PropertiesPanel from "./PropertiesPanel/PropertiesPanel";
-import RootFolder from "./RootPage/RootFolder";
-const RemirrorContext = lazy(() => import("./Editor/RemirrorContext"));
+const RemirrorContext = lazy(() => import("./Editor/RemirrorContainer"));
 export default function Wiki() {
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { setId: setDocId } = useContext(ProjectContext);
@@ -24,7 +23,7 @@ export default function Wiki() {
       <DocumentsTree />
 
       <Routes>
-        <Route path="/" element={<RootFolder />} />
+        <Route path="/" element={<FolderPage />} />
         <Route
           path="/doc/:doc_id"
           element={
