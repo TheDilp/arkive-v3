@@ -83,7 +83,7 @@ export default function DraggableMarker({
 
         html: ReactDOM.renderToString(
           <div className="relative">
-            <div className="absolute w-3rem h-3rem flex justify-content-center align-items-center">
+            <div className="absolute w-3rem h-3rem ">
               <div
                 style={{
                   zIndex: 999999,
@@ -91,6 +91,7 @@ export default function DraggableMarker({
                   backgroundSize: "2rem",
                   backgroundPosition: "center",
                   backgroundColor: "#000",
+                  border: "white solid 3px",
                 }}
                 className="w-full h-full border-circle fixed p-4"
                 onContextMenu={(e) => {

@@ -440,9 +440,9 @@ export const cytoscapeGridOptions = {
   snapToGridCenter: true, // Snaps nodes to center of gridlines. When false, snaps to gridlines themselves. Note that either snapToGridOnRelease or snapToGridDuringDrag must be true.
 
   // Draw Grid
-  zoomDash: true, // Determines whether the size of the dashes should change when the drawing is zoomed in and out if grid is drawn.
+  zoomDash: false, // Determines whether the size of the dashes should change when the drawing is zoomed in and out if grid is drawn.
   panGrid: false, // Determines whether the grid should move then the user moves the graph if grid is drawn.
-  gridStackOrder: -1, // Namely z-index
+  gridStackOrder: 1000000, // Namely z-index
   gridColor: "#fff", // Color of grid lines
   lineWidth: 1.0, // Width of grid lines
 

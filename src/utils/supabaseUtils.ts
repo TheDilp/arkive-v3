@@ -220,7 +220,7 @@ export const createMapMarker = async (
   if (user) {
     const { data, error } = await supabase
       .from("markers")
-      .insert(CreateMapMarkerProps);
+      .insert({ ...CreateMapMarkerProps, user_id: user.id });
     if (data) return data;
     if (error) {
       toastError("There was an error creating your map marker.");
@@ -246,7 +246,7 @@ export const createNode = async (CreateNodeProps: CreateNodeProps) => {
   if (user) {
     const { data, error } = await supabase
       .from("nodes")
-      .insert(CreateNodeProps);
+      .insert({ ...CreateNodeProps, user_id: user.id });
     if (data) return data;
     if (error) {
       toastError("There was an error creating your node.");
@@ -273,6 +273,7 @@ export const createEdge = async ({
       curveStyle,
       lineStyle,
       lineColor,
+      user_id: user.id,
     });
     if (data) return data;
     if (error) {
