@@ -42,6 +42,7 @@ export default function BoardTreeItem({
           depth,
           expanded: false,
           layout: node.data?.layout || "Preset",
+          public: node.data?.public || false,
           show: false,
         });
         cm.current.show(e);

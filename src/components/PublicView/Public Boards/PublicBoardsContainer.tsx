@@ -8,8 +8,8 @@ import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
 export default function PublicBoardsContainer() {
-  cytoscape.use(edgehandles);
-  cytoscape.use(gridguide);
+cytoscape.use(edgehandles);
+cytoscape.use(gridguide);
   const user = auth.user();
   const { board_id } = useParams();
   const { data: board, isLoading } = useQuery(

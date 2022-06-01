@@ -161,19 +161,20 @@ export type mapItemDisplayDialogProps = {
   title: string;
   map_image: ImageProps;
   parent: string;
-  show: boolean;
   folder: boolean;
   depth: number;
   public: boolean;
+  show: boolean;
 };
 export type boardItemDisplayDialogProps = {
   id: string;
   title: string;
   parent: string;
-  folder: boolean;
   layout: string;
   depth: number;
+  folder: boolean;
   expanded: boolean;
+  public: boolean;
   show: boolean;
 };
 export type nodeUpdateDialogProps = {
@@ -403,6 +404,7 @@ export type UpdateBoardProps = {
   parent?: string | null;
   layout?: string;
   expanded?: boolean;
+  public?: boolean;
 };
 
 export type CreateNodeProps = {

@@ -53,7 +53,6 @@ export default function MapTreeItemContext({
       reject: () => {},
     });
   };
-  console.log(displayDialog);
   const mapItems = [
     {
       label: "Update Map",

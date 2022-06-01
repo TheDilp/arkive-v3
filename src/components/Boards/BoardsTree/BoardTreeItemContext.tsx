@@ -91,6 +91,15 @@ export default function BoardTreeItemContext({
         }),
       ],
     },
+    {
+      label: "Toggle Public",
+      icon: `pi pi-fw ${displayDialog.public ? "pi-eye" : "pi-eye-slash"}`,
+      command: () =>
+        updateBoardMutation.mutate({
+          id: displayDialog.id,
+          public: !displayDialog.public,
+        }),
+    },
     { separator: true },
     {
       label: "Delete Board",

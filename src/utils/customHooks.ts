@@ -917,6 +917,7 @@ export function useUpdateBoard(project_id: string) {
       parent?: string | null;
       layout?: string;
       expanded?: boolean;
+      public?: boolean;
     }) => {
       await updateBoard(vars);
     },

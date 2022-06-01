@@ -50,16 +50,12 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage?.link
-              ? `${
-                  supabaseUrl.VITE_SUPABASE_URL
-                }${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
+              ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
                   " ",
                   "%20"
                 )}`
               : node.document?.image
-              ? `${
-                  supabaseUrl.VITE_SUPABASE_URL
-                }${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
+              ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
                 )}`
