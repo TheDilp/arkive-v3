@@ -77,7 +77,11 @@ const hooks = [
   },
 ];
 
-export default function RemirrorContext({ editable }: { editable?: boolean }) {
+export default function RemirrorContainer({
+  editable,
+}: {
+  editable?: boolean;
+}) {
   const { project_id, doc_id } = useParams();
   const firstRender = useRef(true);
   const currentDocument = useGetDocumentData(
@@ -170,7 +174,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
   }
   return (
     <div
-      className={`editorContainer ${
+      className={`editorContainer overflow-y-scroll ${
         // Check if latop, then if mobile/tablet and set width
         isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
       } h-full flex flex-wrap align-content-start text-white px-2`}
@@ -188,7 +192,7 @@ export default function RemirrorContext({ editable }: { editable?: boolean }) {
             manager={manager}
             initialContent={state}
             hooks={hooks}
-            classNames={["text-white Lato Editor overflow-y-auto"]}
+            classNames={["text-white Lato"]}
             onChange={(props) => {
               const { tr, firstRender } = props;
               if (!firstRender && tr?.docChanged) {

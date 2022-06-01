@@ -39,9 +39,7 @@ export default function EditorView({ saving, setSaving, firstRender }: Props) {
   }, [doc_id]);
   return doc_id ? (
     <>
-    
       <MenuBar saving={saving} />
-      {/* <UserTest /> */}
       <EditorComponent />
       <BubbleMenu />
       <MentionComponent />
