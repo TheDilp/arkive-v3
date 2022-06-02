@@ -1,8 +1,6 @@
-import { BreadCrumb } from "primereact/breadcrumb";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import {
-  breadcrumbsProps,
   docItemDisplayDialogProps,
   DocumentProps,
 } from "../../../custom-types";
@@ -44,15 +42,15 @@ export default function FolderPage() {
             !doc.template
         )
         .sort((a, b) => {
-          if (a.folder && !b.folder) return -1;
-          if (!a.folder && b.folder) return 1;
-          return 0;
+          return a.sort - b.sort;
         });
       setChildren(tempChildren);
     }
-
-    if (doc_id !== docId) setDocId(doc_id as string);
   }, [doc_id, documents]);
+
+  useEffect(() => {
+    if (doc_id && doc_id !== docId) setDocId(doc_id as string);
+  }, [doc_id]);
 
   if (isLoading) return <LoadingScreen />;
   if (!currentDocument && doc_id) {

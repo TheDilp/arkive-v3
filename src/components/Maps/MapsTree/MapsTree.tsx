@@ -63,12 +63,17 @@ export default function MapsTree({
       setTreeData([]);
     }
   }, [maps]);
-  const handleDrop = (
+  const handleDrop = async (
     newTree: NodeModel<MapProps>[],
     {
       dragSourceId,
+      dragSource,
       dropTargetId,
-    }: { dragSourceId: string; dropTargetId: string }
+    }: {
+      dragSourceId: string;
+      dragSource: NodeModel<MapProps>;
+      dropTargetId: string;
+    }
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
@@ -82,13 +87,13 @@ export default function MapsTree({
       .map((map, index) => {
         return { id: map.id as string, sort: index };
       });
-
+    // SAFEGUARD: If parent is the same, avoid unneccesary update
+    if (dragSource.data?.parent?.id !== dropTargetId)
+      await updateMapMutation.mutateAsync({
+        id: dragSourceId,
+        parent: dropTargetId === "0" ? null : dropTargetId,
+      });
     sortMapsChildren(indexes);
-
-    updateMapMutation.mutate({
-      id: dragSourceId,
-      parent: dropTargetId === "0" ? null : dropTargetId,
-    });
   };
 
   return (

@@ -58,7 +58,6 @@ export const logout = async () => {
 };
 
 // SELECT
-
 export const getProjects = async () => {
   let user = auth.user();
   if (user) {
@@ -117,7 +116,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent(id, title), folder, expanded, project_id, public, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
+      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
     )
     .eq("project_id", project_id)
     .order("sort", { ascending: true });
@@ -155,8 +154,8 @@ export const getProfile = async () => {
     }
   }
 };
-// INSERT
 
+// INSERT
 export const createDocument = async (
   DocumentCreateProps: DocumentCreateProps
 ) => {
@@ -286,13 +285,17 @@ export const createEdge = async ({
 };
 
 // UPDATE
-
 export const sortDocumentsChildren = async (
   indexes: ({ id: string; sort: number } | undefined)[]
 ) => {
-  await supabase.rpc("sort_documents_children", {
+  const { data, error } = await supabase.rpc("sort_documents_children", {
     payload: indexes,
   });
+  if (data) return data;
+  if (error) {
+    toastError("There was an error sorting your documents.");
+    throw new Error(error.message);
+  }
 };
 export const sortMapsChildren = async (
   indexes: ({ id: string; sort: number } | undefined)[]

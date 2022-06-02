@@ -41,6 +41,9 @@ import {
   getSingleDocument,
   getTags,
   renameImage,
+  sortBoardsChildren,
+  sortDocumentsChildren,
+  sortMapsChildren,
   updateBoard,
   updateDocument,
   updateEdge,
@@ -236,21 +239,21 @@ export function useUpdateDocument(project_id: string) {
               let newParent = oldData.find(
                 (doc) => doc.id === updatedDocument.parent
               );
-              let newData: DocumentProps[] = oldData.map((doc) => {
-                if (doc.id === updatedDocument.id) {
-                  return {
-                    ...doc,
-                    ...updatedDocument,
-                    parent: newParent
-                      ? { id: newParent.id, title: newParent.title }
-                      : updatedDocument.parent === null
-                      ? null
-                      : doc.parent,
-                  };
-                } else {
-                  return doc;
-                }
-              });
+              let newData: DocumentProps[] = [...oldData];
+
+              const idx = newData.findIndex(
+                (doc) => doc.id === updatedDocument.id
+              );
+              if (idx !== -1)
+                newData[idx] = {
+                  ...newData[idx],
+                  ...updatedDocument,
+                  parent: newParent
+                    ? { id: newParent.id, title: newParent.title }
+                    : updatedDocument.parent === null
+                    ? null
+                    : newData[idx].parent,
+                };
               return newData;
             } else {
               return [];
@@ -268,7 +271,53 @@ export function useUpdateDocument(project_id: string) {
     }
   );
 }
-export function useSortDocuments(project_id: string) {}
+export function useSortChildren() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      project_id: string;
+      type: "documents" | "maps" | "boards";
+      indexes: { id: string; sort: number }[];
+    }) => {
+      if (vars.type === "documents") await sortDocumentsChildren(vars.indexes);
+      if (vars.type === "maps") await sortMapsChildren(vars.indexes);
+      if (vars.type === "boards") await sortBoardsChildren(vars.indexes);
+    },
+    {
+      onMutate: async (newData) => {
+        const previousData = queryClient.getQueryData(
+          `${newData.project_id}-${newData.type}`
+        );
+        queryClient.setQueryData(
+          `${newData.project_id}-${newData.type}`,
+          (
+            oldData: (DocumentProps[] | MapProps[] | BoardProps[]) | undefined
+          ) => {
+            if (oldData) {
+              let sortedData: any[] = [...oldData];
+              for (const item of newData.indexes) {
+                const index = oldData.findIndex((doc) => doc.id === item.id);
+                if (index !== -1) {
+                  sortedData[index] = { ...sortedData[index], sort: item.sort };
+                }
+              }
+              return sortedData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousData };
+      },
+      onError: (err, newData, context) => {
+        queryClient.setQueryData(
+          `${newData.project_id}-${newData.type}`,
+          context?.previousData
+        );
+      },
+    }
+  );
+}
 // Custom hook for deleting a document
 export function useDeleteDocument(project_id: string) {
   const queryClient = useQueryClient();

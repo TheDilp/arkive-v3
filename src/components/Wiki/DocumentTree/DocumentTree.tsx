@@ -13,7 +13,11 @@ import {
   DocumentProps,
   iconSelectProps,
 } from "../../../custom-types";
-import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
+import {
+  useGetDocuments,
+  useSortChildren,
+  useUpdateDocument,
+} from "../../../utils/customHooks";
 import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 import { sortDocumentsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
@@ -40,6 +44,7 @@ export default function DocumentsTree() {
     docItemDisplayDialogDefault
   );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
+  const sortChildrenMutation = useSortChildren();
   const [iconSelect, setIconSelect] = useState<iconSelectProps>({
     id: "",
     icon: "",
@@ -48,33 +53,52 @@ export default function DocumentsTree() {
     show: false,
   });
   // Function to handle the drop functionality of the tree
-  const handleDrop = (
+  const handleDrop = async (
     newTree: NodeModel<DocumentProps>[],
     {
       dragSourceId,
+      dragSource,
       dropTargetId,
-    }: { dragSourceId: string; dropTargetId: string }
+    }: {
+      dragSourceId: string;
+      dragSource: NodeModel<DocumentProps>;
+      dropTargetId: string;
+    }
   ) => {
-    // Set the user's current view to the new tree
     setTreeData(newTree);
-    // Update the document's parent
-
+    if (dragSource.data?.parent?.id !== dropTargetId) {
+      // Update the document's parent
+      // setTreeData(newTree);
+      await updateDocumentMutation.mutateAsync({
+        id: dragSourceId,
+        parent: dropTargetId === "0" ? null : dropTargetId,
+      });
+      // return;
+    }
     let indexes = newTree
       .filter(
         (doc) =>
-          doc.data?.parent?.id === dropTargetId ||
-          (doc.data?.parent?.id === undefined && dropTargetId === "0")
+          (doc.data?.parent?.id === dropTargetId ||
+            (doc.data?.parent?.id === undefined && dropTargetId === "0")) &&
+          !doc.data?.template
       )
       .map((doc, index) => {
         return { id: doc.id as string, sort: index };
       });
-
-    sortDocumentsChildren(indexes);
-
-    updateDocumentMutation.mutate({
-      id: dragSourceId,
-      parent: dropTargetId === "0" ? null : dropTargetId,
+    sortChildrenMutation.mutate({
+      project_id: project_id as string,
+      type: "documents",
+      indexes: indexes || [],
     });
+
+    // SAFEGUARD: If parent is the same, avoid unneccesary update
+
+    // sortChildrenMutation.mutate({
+    //   project_id: project_id as string,
+    //   type: "documents",
+    //   indexes,
+    // });
+    // Set the user's current view to the new tree
   };
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
@@ -93,7 +117,7 @@ export default function DocumentsTree() {
         }));
       setTreeData(treeData);
     }
-  }, [documents]);
+  }, []);
 
   return (
     <div

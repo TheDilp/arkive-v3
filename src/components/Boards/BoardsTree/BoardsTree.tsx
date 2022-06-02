@@ -9,7 +9,7 @@ import { DndProvider } from "react-dnd";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
-import { useUpdateBoard } from "../../../utils/customHooks";
+import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
@@ -30,12 +30,10 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const cm = useRef() as any;
-  const { isLaptop, isTabletOrMobile } = useContext(MediaQueryContext);
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [filter, setFilter] = useState("");
   const [treeData, setTreeData] = useState<NodeModel<BoardProps>[]>([]);
-  const boards: BoardProps[] | undefined = queryClient.getQueryData<
-    BoardProps[]
-  >(`${project_id}-boards`);
+  const { data: boards } = useGetBoards(project_id as string);
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<boardItemDisplayDialogProps>({
@@ -53,8 +51,13 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
     newTree: NodeModel<BoardProps>[],
     {
       dragSourceId,
+      dragSource,
       dropTargetId,
-    }: { dragSourceId: string; dropTargetId: string }
+    }: {
+      dragSourceId: string;
+      dragSource: NodeModel<BoardProps>;
+      dropTargetId: string;
+    }
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
@@ -70,6 +73,9 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
       });
 
     sortBoardsChildren(indexes);
+
+    // SAFEGUARD: If parent is the same, avoid unneccesary update
+    if (dragSource.data?.parent?.id === dropTargetId) return;
 
     updateBoardMutation.mutate({
       id: dragSourceId,
