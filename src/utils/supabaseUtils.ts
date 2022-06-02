@@ -97,7 +97,7 @@ export const getDocuments = async (project_id: string) => {
       .from<DocumentProps>("documents")
       .select("*, parent(id, title), image(id, title, link))")
       .eq("project_id", project_id)
-      .order("title", { ascending: true });
+      .order("sort", { ascending: true });
     if (documents) return documents;
     if (error) {
       toastError("There was an error getting your documents.");
@@ -119,7 +119,8 @@ export const getMaps = async (project_id: string) => {
     .select(
       "id, title, parent(id, title), folder, expanded, project_id, public, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
     )
-    .eq("project_id", project_id);
+    .eq("project_id", project_id)
+    .order("sort", { ascending: true });
   if (data) return data;
   if (error) {
     toastError("There was an error getting your maps.");
@@ -132,7 +133,8 @@ export const getBoards = async (project_id: string) => {
     .select(
       "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
-    .eq("project_id", project_id);
+    .eq("project_id", project_id)
+    .order("sort", { ascending: true });
   if (data) return data;
   if (error) {
     toastError("There was an error getting your boards.");
@@ -284,6 +286,29 @@ export const createEdge = async ({
 };
 
 // UPDATE
+
+export const sortDocumentsChildren = async (
+  indexes: ({ id: string; sort: number } | undefined)[]
+) => {
+  await supabase.rpc("sort_documents_children", {
+    payload: indexes,
+  });
+};
+export const sortMapsChildren = async (
+  indexes: ({ id: string; sort: number } | undefined)[]
+) => {
+  await supabase.rpc("sort_maps_children", {
+    payload: indexes,
+  });
+};
+export const sortBoardsChildren = async (
+  indexes: ({ id: string; sort: number } | undefined)[]
+) => {
+  await supabase.rpc("sort_boards_children", {
+    payload: indexes,
+  });
+};
+
 export const updateDocument = async (
   DocumentUpdateProps: DocumentUpdateProps
 ) => {

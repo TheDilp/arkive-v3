@@ -19,6 +19,7 @@ import MapUpdateDialog from "./MapUpdateDialog";
 import MapsFilterList from "./MapsFilterList";
 import TreeSidebar from "../../Util/TreeSidebar";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
+import { sortMapsChildren } from "../../../utils/supabaseUtils";
 
 export default function MapsTree({
   mapId,
@@ -71,6 +72,19 @@ export default function MapsTree({
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
+
+    let indexes = newTree
+      .filter(
+        (map) =>
+          map.data?.parent?.id === dropTargetId ||
+          (map.data?.parent?.id === undefined && dropTargetId === "0")
+      )
+      .map((map, index) => {
+        return { id: map.id as string, sort: index };
+      });
+
+    sortMapsChildren(indexes);
+
     updateMapMutation.mutate({
       id: dragSourceId,
       parent: dropTargetId === "0" ? null : dropTargetId,
@@ -130,6 +144,7 @@ export default function MapsTree({
               tree={treeData}
               rootId={"0"}
               sort={false}
+              insertDroppableFirst={false}
               initialOpen={
                 maps?.filter((map) => map.expanded).map((map) => map.id) ||
                 false

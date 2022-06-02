@@ -19,6 +19,7 @@ import BoardsFilterList from "./BoardsFilterList";
 import BoardTreeItem from "./BoardTreeItem";
 import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
+import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 type Props = {
   boardId: string;
   setBoardId: (boardId: string) => void;
@@ -46,6 +47,7 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
       expanded: false,
       layout: "",
       depth: 0,
+      public: false,
     });
   const handleDrop = (
     newTree: NodeModel<BoardProps>[],
@@ -56,6 +58,19 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
+
+    let indexes = newTree
+      .filter(
+        (board) =>
+          board.data?.parent?.id === dropTargetId ||
+          (board.data?.parent?.id === undefined && dropTargetId === "0")
+      )
+      .map((board, index) => {
+        return { id: board.id as string, sort: index };
+      });
+
+    sortBoardsChildren(indexes);
+
     updateBoardMutation.mutate({
       id: dragSourceId,
       parent: dropTargetId === "0" ? null : dropTargetId,
@@ -108,6 +123,7 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
                 placeholder: "relative",
               }}
               sort={false}
+              insertDroppableFirst={false}
               initialOpen={
                 boards
                   ?.filter((board) => board.expanded)

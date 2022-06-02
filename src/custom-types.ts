@@ -29,6 +29,7 @@ export type DocumentProps = {
   template: boolean;
   expanded: boolean;
   public: boolean;
+  sort: number;
 };
 
 export type MapProps = {
@@ -41,6 +42,7 @@ export type MapProps = {
   folder: boolean;
   expanded: boolean;
   public: boolean;
+  sort: number;
 };
 export type MapMarkerProps = {
   id: string;
@@ -64,6 +66,7 @@ export type BoardProps = {
   folder: boolean;
   expanded: boolean;
   public: boolean;
+  sort: number;
 };
 export type BoardNodeProps = {
   id: string;
@@ -330,9 +333,8 @@ export type DocumentUpdateProps = {
   folder?: boolean;
   expanded?: boolean;
   public?: boolean;
+  sort?: number;
 };
-
-//
 
 export type TemplateCreateProps = {
   id: string;

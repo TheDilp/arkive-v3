@@ -7,15 +7,15 @@ import {
 import { TabPanel, TabView } from "primereact/tabview";
 import { useContext, useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
-import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import {
   docItemDisplayDialogProps,
   DocumentProps,
   iconSelectProps,
 } from "../../../custom-types";
-import { useUpdateDocument } from "../../../utils/customHooks";
+import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
 import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { sortDocumentsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import IconSelectMenu from "../../Util/IconSelectMenu";
@@ -29,12 +29,13 @@ import TemplatesTree from "./TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 
 export default function DocumentsTree() {
-  const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [treeData, setTreeData] = useState<NodeModel<DocumentProps>[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
+
+  const { data: documents } = useGetDocuments(project_id as string);
   const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
     docItemDisplayDialogDefault
   );
@@ -56,8 +57,20 @@ export default function DocumentsTree() {
   ) => {
     // Set the user's current view to the new tree
     setTreeData(newTree);
-
     // Update the document's parent
+
+    let indexes = newTree
+      .filter(
+        (doc) =>
+          doc.data?.parent?.id === dropTargetId ||
+          (doc.data?.parent?.id === undefined && dropTargetId === "0")
+      )
+      .map((doc, index) => {
+        return { id: doc.id as string, sort: index };
+      });
+
+    sortDocumentsChildren(indexes);
+
     updateDocumentMutation.mutate({
       id: dragSourceId,
       parent: dropTargetId === "0" ? null : dropTargetId,
@@ -67,12 +80,9 @@ export default function DocumentsTree() {
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
 
-  const docs: DocumentProps[] | undefined = queryClient.getQueryData(
-    `${project_id}-documents`
-  );
   useEffect(() => {
-    if (docs) {
-      const treeData = docs
+    if (documents) {
+      const treeData = documents
         .filter((doc) => !doc.template)
         .map((doc) => ({
           id: doc.id,
@@ -83,7 +93,7 @@ export default function DocumentsTree() {
         }));
       setTreeData(treeData);
     }
-  }, [docs]);
+  }, [documents]);
 
   return (
     <div
@@ -131,9 +141,11 @@ export default function DocumentsTree() {
                   tree={treeData}
                   rootId={"0"}
                   sort={false}
+                  insertDroppableFirst={false}
                   initialOpen={
-                    docs?.filter((doc) => doc.expanded).map((doc) => doc.id) ||
-                    false
+                    documents
+                      ?.filter((doc) => doc.expanded)
+                      .map((doc) => doc.id) || false
                   }
                   render={(
                     node: NodeModel<DocumentProps>,

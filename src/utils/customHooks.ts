@@ -202,6 +202,7 @@ export function useCreateDocument(project_id: string) {
                   template: false,
                   expanded: false,
                   public: false,
+                  sort: oldData.filter((doc) => !doc.template).length,
                 },
               ];
               return newData;
@@ -267,6 +268,7 @@ export function useUpdateDocument(project_id: string) {
     }
   );
 }
+export function useSortDocuments(project_id: string) {}
 // Custom hook for deleting a document
 export function useDeleteDocument(project_id: string) {
   const queryClient = useQueryClient();
@@ -417,6 +419,7 @@ export function useCreateTemplate() {
                   expanded: false,
                   image: undefined,
                   public: false,
+                  sort: oldData.filter((doc) => doc.template).length,
                 },
               ];
               return newData;
@@ -500,11 +503,23 @@ export function useCreateMap() {
                   folder: newMap.folder ? newMap.folder : false,
                   markers: [],
                   public: false,
+                  sort: oldData.length,
                 },
               ];
               return newData;
             } else {
-              return [];
+              return [
+                {
+                  ...newMap,
+                  parent: newMap.parent
+                    ? { id: newMap.parent, title: "" }
+                    : null,
+                  folder: newMap.folder ? newMap.folder : false,
+                  markers: [],
+                  public: false,
+                  sort: 0,
+                },
+              ];
             }
           }
         );
@@ -878,6 +893,7 @@ export function useCreateBoard() {
                   edges: [],
                   expanded: false,
                   public: false,
+                  sort: oldData.length,
                 },
               ];
             } else {
@@ -889,6 +905,7 @@ export function useCreateBoard() {
                   edges: [],
                   expanded: false,
                   public: false,
+                  sort: 0,
                 },
               ];
             }
