@@ -1,5 +1,5 @@
 import { ProgressSpinner } from "primereact/progressspinner";
-import { lazy, Suspense, useContext, useEffect } from "react";
+import { lazy, Suspense, useContext, useEffect, useMemo, useRef } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { auth } from "../../utils/supabaseUtils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
@@ -7,10 +7,17 @@ import { ProjectContext } from "../Context/ProjectContext";
 import DocumentsTree from "./DocumentTree/DocumentTree";
 import FolderPage from "./FolderPage/FolderPage";
 import PropertiesPanel from "./PropertiesPanel/PropertiesPanel";
+import { WebrtcProvider } from "y-webrtc";
+import * as Y from "yjs";
 const RemirrorContext = lazy(() => import("./Editor/RemirrorContainer"));
 export default function Wiki() {
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
-  const { setId: setDocId } = useContext(ProjectContext);
+  const { id: docId, setId: setDocId } = useContext(ProjectContext);
+  const yDoc = useRef(new Y.Doc());
+  const provider = useMemo(
+    () => new WebrtcProvider(docId as string, yDoc.current),
+    []
+  );
 
   useEffect(() => {
     return () => setDocId("");
@@ -34,7 +41,7 @@ export default function Wiki() {
               } h-full`}
             >
               <Suspense fallback={<ProgressSpinner />}>
-                <RemirrorContext />
+                <RemirrorContext yDoc={yDoc.current} provider={provider} />
               </Suspense>
 
               <PropertiesPanel />
