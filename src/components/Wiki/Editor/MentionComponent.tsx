@@ -65,7 +65,7 @@ export default function MentionComponent() {
     <MentionAtomPopupComponent
       onChange={setMentionState}
       items={items}
-      focusOnClick={false}
+      focusOnClick={true}
     />
   );
 }
