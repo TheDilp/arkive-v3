@@ -1,22 +1,27 @@
 import { ProgressSpinner } from "primereact/progressspinner";
-import { lazy, Suspense, useContext, useEffect } from "react";
+import { lazy, Suspense, useContext, useEffect, useMemo, useRef } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { auth } from "../../utils/supabaseUtils";
-import { useWebRtcProvider } from "../../utils/yjsHooks";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import { ProjectContext } from "../Context/ProjectContext";
 import DocumentsTree from "./DocumentTree/DocumentTree";
 import FolderPage from "./FolderPage/FolderPage";
 import PropertiesPanel from "./PropertiesPanel/PropertiesPanel";
+import { WebrtcProvider } from "y-webrtc";
+import * as Y from "yjs";
 const RemirrorContext = lazy(() => import("./Editor/RemirrorContainer"));
 export default function Wiki() {
-  const { id: docId, setId: setDocId } = useContext(ProjectContext);
-
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
-  const provider = useWebRtcProvider(
-    { name: "Bob Bobson" },
-    "THISISOREWAAAAA" as string
+  const { id: docId, setId: setDocId } = useContext(ProjectContext);
+  const yDoc = useRef(new Y.Doc());
+  const provider = useMemo(
+    () => new WebrtcProvider(docId as string, yDoc.current),
+    []
   );
+
+  useEffect(() => {
+    return () => setDocId("");
+  }, [setDocId]);
 
   return !auth.user() ? (
     <Navigate to="/login" />
@@ -36,7 +41,7 @@ export default function Wiki() {
               } h-full`}
             >
               <Suspense fallback={<ProgressSpinner />}>
-                <RemirrorContext provider={provider} />
+                <RemirrorContext yDoc={yDoc.current} provider={provider} />
               </Suspense>
 
               <PropertiesPanel />
