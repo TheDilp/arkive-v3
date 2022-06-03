@@ -14,14 +14,7 @@ import { useGetImages } from "../../../utils/customHooks";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
-import { RemirrorManager } from "remirror";
-export default function MenuBar({
-  saving,
-  active,
-}: {
-  saving: number | boolean;
-  active: any;
-}) {
+export default function MenuBar({ saving }: { saving: number | boolean }) {
   const {
     toggleBold,
     toggleItalic,
@@ -42,7 +35,7 @@ export default function MenuBar({
     focus,
   } = useCommands();
   const { project_id } = useParams();
-  // const active = useActive();
+  const active = useActive();
   const attrs = useAttrs();
   const images = useGetImages(project_id as string);
   const [showDialog, setShowDialog] = useState(false);

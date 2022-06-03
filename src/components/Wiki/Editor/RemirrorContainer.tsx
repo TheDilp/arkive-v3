@@ -11,7 +11,6 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
-  AnnotationExtension,
   BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
@@ -26,11 +25,8 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   UnderlineExtension,
-  YjsExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
-import { WebrtcProvider } from "y-webrtc";
-import * as Y from "yjs";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
@@ -80,17 +76,13 @@ const hooks = [
     useKeymap("Mod-e", handleExportShortcut);
   },
 ];
+
 export default function RemirrorContainer({
   editable,
-  yDoc,
-  provider,
 }: {
   editable?: boolean;
-  yDoc?: Y.Doc;
-  provider?: WebrtcProvider;
 }) {
   const { project_id, doc_id } = useParams();
-
   const firstRender = useRef(true);
   const currentDocument = useGetDocumentData(
     project_id as string,
@@ -121,11 +113,9 @@ export default function RemirrorContainer({
     ],
   });
   CustomMentionExtension.ReactComponent = MentionReactComponent;
-  const { data: documents } = useGetDocuments(project_id as string);
 
   const { manager, state } = useRemirror({
     extensions: () => [
-      new AnnotationExtension(),
       new BoldExtension(),
       new ItalicExtension(),
       new HeadingExtension(),
@@ -144,7 +134,6 @@ export default function RemirrorContainer({
       new TableExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
-      new YjsExtension({ getProvider: () => provider as WebrtcProvider }),
     ],
     selection: "all",
     content: currentDocument?.content || "",
@@ -152,6 +141,7 @@ export default function RemirrorContainer({
   });
   // ======================================================
 
+  const { data: documents } = useGetDocuments(project_id as string);
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
 
@@ -173,8 +163,8 @@ export default function RemirrorContainer({
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
   useEffect(() => {
-    if (doc_id) {
-      if (doc_id !== docId) setDocId(doc_id);
+    if (doc_id && doc_id !== docId) {
+      setDocId(doc_id);
     }
   }, [doc_id]);
 

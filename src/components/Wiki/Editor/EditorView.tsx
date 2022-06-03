@@ -16,7 +16,7 @@ type Props = {
 
 export default function EditorView({ saving, setSaving, firstRender }: Props) {
   const { project_id, doc_id } = useParams();
-  const { setContent, active } = useRemirrorContext();
+  const { setContent } = useRemirrorContext();
   const navigate = useNavigate();
 
   const currentDocument = useGetDocumentData(
@@ -39,7 +39,7 @@ export default function EditorView({ saving, setSaving, firstRender }: Props) {
   }, [doc_id]);
   return doc_id ? (
     <>
-      <MenuBar saving={saving} active={active} />
+      <MenuBar saving={saving} />
       <EditorComponent />
       <BubbleMenu />
       <MentionComponent />
