@@ -1,7 +1,5 @@
 import { getYjsValue, syncedStore } from "@syncedstore/core";
 import * as awarenessProtocol from "y-protocols/awareness.js";
-import { WebrtcProvider } from "y-webrtc";
-import { Doc } from "yjs";
 // Create your SyncedStore store
 export const store = syncedStore({ remirrorContent: {} });
 
