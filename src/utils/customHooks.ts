@@ -37,6 +37,7 @@ import {
   getDocuments,
   getImages,
   getMaps,
+  getProfile,
   getSingleBoard,
   getSingleDocument,
   getTags,
@@ -1570,4 +1571,16 @@ export function useRenameImage() {
       },
     }
   );
+}
+
+export function useGetProfile() {
+  const user = auth.user();
+  const { data } = useQuery(
+    `${user?.id}-profile`,
+    async () => await getProfile()
+  );
+  if (data) {
+    return data;
+  }
+  return null;
 }

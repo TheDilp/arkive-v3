@@ -3,7 +3,7 @@ import {
   useGetBoards,
   useGetDocuments,
   useGetMaps,
-  useGetProjectData
+  useGetProjectData,
 } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
 import FilebrowserProvider from "../Context/FileBrowserContext";
