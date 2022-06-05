@@ -1,12 +1,21 @@
 import {
-  EditorComponent, useActive
+  EditorComponent,
+  FloatingWrapper,
+  useActive,
+  useHelpers,
+  useMultiPositioner,
+  usePositioner,
+  useRemirrorContext,
 } from "@remirror/react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getPositioner, Positioner } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
 import MentionComponent from "./MentionComponent";
 import MenuBar from "./MenuBar";
+import { awareness } from "./SyncedStore";
 type Props = {
   saving: boolean | number;
   setSaving: (saving: boolean | number) => void;

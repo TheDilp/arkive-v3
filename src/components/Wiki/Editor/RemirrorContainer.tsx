@@ -10,15 +10,8 @@ import { observeDeep } from "@syncedstore/core";
 import { useSyncedStore } from "@syncedstore/react";
 import { saveAs } from "file-saver";
 import { Tooltip } from "primereact/tooltip";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   htmlToProsemirrorNode,
   prosemirrorNodeToHtml,
@@ -41,8 +34,7 @@ import {
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import { prosemirrorJSONToYDoc } from "y-prosemirror";
-import { WebrtcProvider } from "y-webrtc";
-import { applyUpdate, Doc, encodeStateAsUpdate, encodeStateVector } from "yjs";
+import { applyUpdate, encodeStateAsUpdate, encodeStateVector } from "yjs";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
@@ -50,7 +42,7 @@ import {
   useGetProfile,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { toastSuccess, toastWarn } from "../../../utils/utils";
+import { toastSuccess } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
@@ -58,7 +50,7 @@ import CustomLinkExtenstion from "./CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
 import useObservableListener from "./ObservableListener";
-import { awareness, store, yDoc } from "./SyncedStore";
+import { awareness, setRoom, store, webrtcProvider } from "./SyncedStore";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -102,13 +94,6 @@ export default function RemirrorContainer({
   editable?: boolean;
 }) {
   const { project_id, doc_id } = useParams();
-  const webrtcProvider = useMemo(
-    () =>
-      new WebrtcProvider(doc_id as string, yDoc as Doc, {
-        awareness,
-      }),
-    []
-  );
 
   const firstRender = useRef(true);
   const usedFallbackRef = useRef(false);
@@ -186,19 +171,14 @@ export default function RemirrorContainer({
       awareness.setLocalStateField("user", {
         nickname: profile.nickname,
         color: "#" + Math.floor(Math.random() * 16777215).toString(16),
-        doc_id,
       });
     }
   }, [profile]);
 
   useEffect(() => {
     awareness.on("change", () => {
-      let tempUsers: { nickname: string; color: string }[] = [];
-      awareness.states.forEach((state) =>
-        tempUsers.push(
-          state as { nickname: string; color: string; doc_id: string }
-        )
-      );
+      let tempUsers = [];
+      awareness.states.forEach((state) => tempUsers.push(state));
       setUsers(tempUsers);
     });
 
@@ -221,52 +201,38 @@ export default function RemirrorContainer({
 
     //   return () => clearTimeout(timeout);
   }, []);
-  console.log(users);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
   useEffect(() => {
-    if (currentDocument) {
-      storeState.remirrorContent.content = currentDocument?.content || [];
-    }
-  }, [currentDocument]);
-
-  useEffect(() => {
-    if (doc_id) {
-      awareness.setLocalStateField("user", {
-        nickname: profile?.nickname,
-        color: "#" + Math.floor(Math.random() * 16777215).toString(16),
-        doc_id,
-      });
-      if (doc_id !== docId) {
-        setDocId(doc_id);
-      }
+    if (doc_id && doc_id !== docId) {
+      setDocId(doc_id);
+      setRoom(doc_id);
+      storeState.remirrorContent.content = currentDocument.content;
     }
 
     return () => {
       // disconnect();
     };
   }, [doc_id]);
-  console.log(users);
+
   useEffect(() => {
     if (currentDocument && doc_id) {
       if (usedFallbackRef.current) return;
       const fetchFallback = async () => {
-        const doc = prosemirrorJSONToYDoc(
-          manager.schema,
-          currentDocument.content as RemirrorJSON
-        );
-        const stateVector1 = encodeStateVector(webrtcProvider.doc);
-        const diff = encodeStateAsUpdate(doc, stateVector1);
-        applyUpdate(webrtcProvider.doc, diff);
+        if (webrtcProvider.connected && clientCount === 0) {
+          const doc = prosemirrorJSONToYDoc(
+            manager.schema,
+            currentDocument.content as RemirrorJSON
+          );
+          const stateVector1 = encodeStateVector(webrtcProvider.doc);
+          const diff = encodeStateAsUpdate(doc, stateVector1);
+          applyUpdate(webrtcProvider.doc, diff);
+        }
         usedFallbackRef.current = true;
       };
-      const timeout = setTimeout(fetchFallback, 750);
-      return () => {
-        clearTimeout(timeout);
-        // webrtcProvider.disconnect();
-        // awareness.destroy();
-      };
+      const timeout = setTimeout(fetchFallback, 3000);
+      return () => clearTimeout(timeout);
     }
   }, [doc_id]);
   const handlePeersChange = useCallback(
@@ -278,10 +244,10 @@ export default function RemirrorContainer({
 
   useObservableListener("peers", handlePeersChange, webrtcProvider);
   useObservableListener("synced", (d) => setClientCount(1), webrtcProvider);
-  if (!currentDocument) {
-    toastWarn("Document not found");
-    return <Navigate to={"../"} />;
-  }
+  // if (!currentDocument) {
+  //   toastWarn("Document not found");
+  //   return <Navigate to={"../"} />;
+  // }
 
   return (
     <div
@@ -299,27 +265,24 @@ export default function RemirrorContainer({
       <Breadcrumbs currentDocument={currentDocument} />
       <div className="absolute flex mt-2 w-8 justify-content-end">
         <div className="relative pr-5">
-          {users &&
-            users.map((user, index) =>
-              user.user.doc_id === doc_id ? (
-                <span key={index}>
-                  <Tooltip
-                    target={`.${user.user?.nickname}`}
-                    content={user.user?.nickname}
-                    position="bottom"
-                  />
-                  <div
-                    id={user.user?.nickname}
-                    className={`border-circle cursor-pointer w-2rem h-2rem absolute ml-${
-                      index * 2
-                    } ${user.user?.nickname}`}
-                    style={{
-                      backgroundColor: user.user?.color || "#ff0000",
-                    }}
-                  ></div>
-                </span>
-              ) : null
-            )}
+          {users.map((user, index) => (
+            <>
+              <Tooltip
+                target={`.${user.user.nickname}`}
+                content={user.user.nickname}
+                position="bottom"
+              />
+              <div
+                id={user.user.nickname}
+                className={`border-circle cursor-pointer w-2rem h-2rem absolute ml-${
+                  index * 2
+                } ${user.user.nickname}`}
+                style={{
+                  backgroundColor: user.user.color,
+                }}
+              ></div>
+            </>
+          ))}
         </div>
       </div>
       {documents && users.length !== 0 && (
