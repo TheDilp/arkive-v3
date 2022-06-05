@@ -10,7 +10,6 @@ import { observeDeep } from "@syncedstore/core";
 import { useSyncedStore } from "@syncedstore/react";
 import { saveAs } from "file-saver";
 import { Tooltip } from "primereact/tooltip";
-import { disconnect } from "process";
 import {
   useCallback,
   useContext,
@@ -19,7 +18,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useQueryClient } from "react-query";
 import { Navigate, useParams } from "react-router-dom";
 import {
   htmlToProsemirrorNode,
@@ -45,7 +43,6 @@ import "remirror/styles/all.css";
 import { prosemirrorJSONToYDoc } from "y-prosemirror";
 import { WebrtcProvider } from "y-webrtc";
 import { applyUpdate, Doc, encodeStateAsUpdate, encodeStateVector } from "yjs";
-import { DocumentProps } from "../../../custom-types";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
@@ -53,7 +50,6 @@ import {
   useGetProfile,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { supabase } from "../../../utils/supabaseUtils";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
@@ -61,6 +57,7 @@ import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
+import useObservableListener from "./ObservableListener";
 import { awareness, store, yDoc } from "./SyncedStore";
 const hooks = [
   () => {
@@ -105,10 +102,9 @@ export default function RemirrorContainer({
   editable?: boolean;
 }) {
   const { project_id, doc_id } = useParams();
-  const queryClient = useQueryClient();
   const webrtcProvider = useMemo(
     () =>
-      new WebrtcProvider(project_id as string, yDoc as Doc, {
+      new WebrtcProvider(doc_id as string, yDoc as Doc, {
         awareness,
       }),
     []
@@ -148,6 +144,7 @@ export default function RemirrorContainer({
   // const Positioner = new PositionerExtension();
 
   const storeState = useSyncedStore(store);
+  const [clientCount, setClientCount] = useState<number>(0);
   const { manager, state, getContext } = useRemirror({
     extensions: () => [
       new AnnotationExtension(),
@@ -205,77 +202,52 @@ export default function RemirrorContainer({
       setUsers(tempUsers);
     });
 
-    // return () => {
-    //   if (!doc_id) {
-    //     awareness.setLocalStateField("user", {
-    //       nickname: profile.nickname,
-    //       color: "#" + Math.floor(Math.random() * 16777215).toString(16),
-    //       doc_id: null,
-    //     });
-    //     disconnect();
-    //   }
-    // };
-  }, []);
+    observeDeep(storeState, () => {
+      const test = JSON.parse(
+        JSON.stringify(storeState.remirrorContent.content)
+      );
+      getContext()?.setContent(test);
+    });
+    //   const timeout = setTimeout(async () => {
+    //     if (!firstRender.current && saving && currentDocument) {
+    //       store.remirrorContent.content = currentDocument.content;
+    //       await saveContentMutation.mutateAsync({
+    //         id: currentDocument.id,
+    //         content: store.remirrorContent.content,
+    //       });
+    //       setSaving(false);
+    //     }
+    //   }, 300);
 
-  useEffect(() => {
-    if (doc_id) {
-      let string = JSON.stringify(storeState.remirrorContent[doc_id]);
-      if (string) {
-        let yContent = JSON.parse(string);
-        getContext()?.setContent(yContent);
-      }
-    }
-  }, [storeState.remirrorContent[doc_id]]);
-  //   const timeout = setTimeout(async () => {
-  //     if (!firstRender.current && saving && currentDocument) {
-  //       store.remirrorContent.content = currentDocument.content;
-  //       await saveContentMutation.mutateAsync({
-  //         id: currentDocument.id,
-  //         content: store.remirrorContent.content,
-  //       });
-  //       setSaving(false);
-  //     }
-  //   }, 300);
+    //   return () => clearTimeout(timeout);
+  }, []);
+  console.log(users);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
   useEffect(() => {
-    if (currentDocument && doc_id) {
-      storeState.remirrorContent[doc_id] = currentDocument?.content || [];
+    if (currentDocument) {
+      storeState.remirrorContent.content = currentDocument?.content || [];
     }
-  }, [currentDocument, doc_id]);
+  }, [currentDocument]);
 
   useEffect(() => {
     if (doc_id) {
-      const docUpdateSubscription = supabase
-        .from<DocumentProps>(`documents:project_id=eq.${project_id}`)
-        .on("UPDATE", (payload) => {
-          queryClient.setQueryData(
-            `${project_id}-documents`,
-            (oldData: DocumentProps[] | undefined) => {
-              if (oldData) {
-                const newData = oldData.map((doc) => {
-                  if (doc.id === payload.new.id) {
-                    return {
-                      ...doc,
-                      content: payload.new.content,
-                    };
-                  }
-                  return doc;
-                });
-                return newData;
-              }
-              return [];
-            }
-          );
-        })
-        .subscribe();
-      return () => {
-        supabase.removeSubscription(docUpdateSubscription);
-      };
+      awareness.setLocalStateField("user", {
+        nickname: profile?.nickname,
+        color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        doc_id,
+      });
+      if (doc_id !== docId) {
+        setDocId(doc_id);
+      }
     }
-  }, [doc_id]);
 
+    return () => {
+      // disconnect();
+    };
+  }, [doc_id]);
+  console.log(users);
   useEffect(() => {
     if (currentDocument && doc_id) {
       if (usedFallbackRef.current) return;
@@ -297,30 +269,15 @@ export default function RemirrorContainer({
       };
     }
   }, [doc_id]);
+  const handlePeersChange = useCallback(
+    ({ webrtcPeers }) => {
+      setClientCount(webrtcPeers.length);
+    },
+    [setClientCount]
+  );
 
-  useEffect(() => {
-    if (doc_id) {
-      awareness.setLocalStateField("user", {
-        nickname: profile?.nickname,
-        color: "#" + Math.floor(Math.random() * 16777215).toString(16),
-        doc_id,
-      });
-      // const test = JSON.parse(
-      //   JSON.stringify(storeState.remirrorContent[doc_id])
-      // );
-      // setTimeout(() => {
-      //   getContext()?.setContent(test);
-      // }, 850);
-      if (doc_id !== docId) {
-        setDocId(doc_id);
-      }
-    }
-
-    return () => {
-      // disconnect();
-    };
-  }, [doc_id]);
-
+  useObservableListener("peers", handlePeersChange, webrtcProvider);
+  useObservableListener("synced", (d) => setClientCount(1), webrtcProvider);
   if (!currentDocument) {
     toastWarn("Document not found");
     return <Navigate to={"../"} />;
@@ -375,9 +332,8 @@ export default function RemirrorContainer({
             onChange={(props) => {
               const { tr, firstRender } = props;
               if (!firstRender && tr?.docChanged) {
-                storeState.remirrorContent[doc_id] =
+                storeState.remirrorContent.content =
                   manager.view.state.doc.toJSON();
-
                 // setSaving(tr.time);
               }
             }}
