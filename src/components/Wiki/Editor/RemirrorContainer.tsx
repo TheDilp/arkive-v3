@@ -6,10 +6,8 @@ import {
   useKeymap,
   useRemirror,
 } from "@remirror/react";
-import { observeDeep } from "@syncedstore/core";
 import { useSyncedStore } from "@syncedstore/react";
 import { saveAs } from "file-saver";
-import { Tooltip } from "primereact/tooltip";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -31,6 +29,7 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   UnderlineExtension,
+  YjsExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import { prosemirrorJSONToYDoc } from "y-prosemirror";
@@ -51,6 +50,7 @@ import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
 import useObservableListener from "./ObservableListener";
 import { awareness, setRoom, store, webrtcProvider } from "./SyncedStore";
+import { observeDeep } from "@syncedstore/core";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -125,8 +125,8 @@ export default function RemirrorContainer({
       },
     ],
   });
+
   CustomMentionExtension.ReactComponent = MentionReactComponent;
-  // const Positioner = new PositionerExtension();
 
   const storeState = useSyncedStore(store);
   const [clientCount, setClientCount] = useState<number>(0);
@@ -160,17 +160,27 @@ export default function RemirrorContainer({
     stringHandler: htmlToProsemirrorNode,
   });
   // ======================================================
+
   const { data: documents } = useGetDocuments(project_id as string);
   const profile = useGetProfile();
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
   const [users, setUsers] = useState<any[]>([]);
+  const handleChange = useCallback(({ state, tr }) => {
+    if (tr?.docChanged) {
+      setSaving(tr.time);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(users);
+  }, [users]);
 
   useEffect(() => {
     if (profile) {
       awareness.setLocalStateField("user", {
-        nickname: profile.nickname,
-        color: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        name: profile.nickname,
+        color: "#ff0fcc",
       });
     }
   }, [profile]);
@@ -238,6 +248,7 @@ export default function RemirrorContainer({
   const handlePeersChange = useCallback(
     ({ webrtcPeers }) => {
       setClientCount(webrtcPeers.length);
+      console.log(webrtcPeers.length);
     },
     [setClientCount]
   );
@@ -248,7 +259,6 @@ export default function RemirrorContainer({
   //   toastWarn("Document not found");
   //   return <Navigate to={"../"} />;
   // }
-
   return (
     <div
       className={`editorContainer overflow-y-scroll ${
@@ -263,29 +273,13 @@ export default function RemirrorContainer({
           }`}
       </h1>
       <Breadcrumbs currentDocument={currentDocument} />
-      <div className="absolute flex mt-2 w-8 justify-content-end">
-        <div className="relative pr-5">
-          {users.map((user, index) => (
-            <>
-              <Tooltip
-                target={`.${user.user.nickname}`}
-                content={user.user.nickname}
-                position="bottom"
-              />
-              <div
-                id={user.user.nickname}
-                className={`border-circle cursor-pointer w-2rem h-2rem absolute ml-${
-                  index * 2
-                } ${user.user.nickname}`}
-                style={{
-                  backgroundColor: user.user.color,
-                }}
-              ></div>
-            </>
-          ))}
-        </div>
+      <div className="bg-blue-500">
+        test{" "}
+        {users.map((user) => (
+          <span>{user.user.name}</span>
+        ))}
       </div>
-      {documents && users.length !== 0 && (
+      {documents && (
         <ThemeProvider>
           <Remirror
             manager={manager}
