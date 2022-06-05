@@ -111,11 +111,13 @@ export default function RemirrorContainer({
       new WebrtcProvider(project_id as string, yDoc as Doc, {
         awareness,
       }),
-    []
+    [project_id]
   );
 
   const firstRender = useRef(true);
   const usedFallbackRef = useRef(false);
+  const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
+  const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const currentDocument = useGetDocumentData(
     project_id as string,
     doc_id as string
@@ -236,12 +238,10 @@ export default function RemirrorContainer({
   //       setSaving(false);
   //     }
   //   }, 300);
-  const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
-  const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
   useEffect(() => {
     if (currentDocument && doc_id) {
-      storeState.remirrorContent[doc_id] = currentDocument?.content || [];
+      // storeState.remirrorContent[doc_id] = currentDocument?.content || [];
     }
   }, [currentDocument, doc_id]);
 
@@ -280,13 +280,15 @@ export default function RemirrorContainer({
     if (currentDocument && doc_id) {
       if (usedFallbackRef.current) return;
       const fetchFallback = async () => {
-        const doc = prosemirrorJSONToYDoc(
-          manager.schema,
-          currentDocument.content as RemirrorJSON
-        );
-        const stateVector1 = encodeStateVector(webrtcProvider.doc);
-        const diff = encodeStateAsUpdate(doc, stateVector1);
-        applyUpdate(webrtcProvider.doc, diff);
+        if (users.filter((user) => user.doc_id === doc_id).length <= 1) {
+          console.log("TEST");
+          storeState.remirrorContent[doc_id] = currentDocument?.content || [];
+          let string = JSON.stringify(storeState.remirrorContent[doc_id]);
+          if (string) {
+            let yContent = JSON.parse(string);
+            getContext()?.setContent(yContent);
+          }
+        }
         usedFallbackRef.current = true;
       };
       const timeout = setTimeout(fetchFallback, 750);
