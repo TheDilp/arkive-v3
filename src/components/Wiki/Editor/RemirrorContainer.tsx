@@ -6,10 +6,9 @@ import {
   useKeymap,
   useRemirror,
 } from "@remirror/react";
-import { useSyncedStore } from "@syncedstore/react";
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import {
   htmlToProsemirrorNode,
   prosemirrorNodeToHtml,
@@ -21,6 +20,8 @@ import {
   BoldExtension,
   BulletListExtension,
   CalloutExtension,
+  DropCursorExtension,
+  GapCursorExtension,
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
@@ -32,25 +33,32 @@ import {
   YjsExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
-import { prosemirrorJSONToYDoc } from "y-prosemirror";
-import { applyUpdate, encodeStateAsUpdate, encodeStateVector } from "yjs";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useGetProfile,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { toastSuccess } from "../../../utils/utils";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
-import useObservableListener from "./ObservableListener";
-import { awareness, setRoom, store, webrtcProvider } from "./SyncedStore";
+import { useSyncedStore } from "@syncedstore/react";
+import { prosemirrorJSONToYDoc, yDocToProsemirrorJSON } from "y-prosemirror";
+import {
+  awareness,
+  connect,
+  disconnect,
+  setRoom,
+  store,
+  webrtcProvider,
+} from "./SyncedStore";
 import { observeDeep } from "@syncedstore/core";
+import { applyUpdate, encodeStateAsUpdate, encodeStateVector } from "yjs";
+import useObservableListener from "./ObservableListener";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -94,7 +102,6 @@ export default function RemirrorContainer({
   editable?: boolean;
 }) {
   const { project_id, doc_id } = useParams();
-
   const firstRender = useRef(true);
   const usedFallbackRef = useRef(false);
   const currentDocument = useGetDocumentData(
@@ -127,10 +134,10 @@ export default function RemirrorContainer({
   });
 
   CustomMentionExtension.ReactComponent = MentionReactComponent;
-
+  
   const storeState = useSyncedStore(store);
   const [clientCount, setClientCount] = useState<number>(0);
-  const { manager, state, getContext } = useRemirror({
+  const { manager, state } = useRemirror({
     extensions: () => [
       new AnnotationExtension(),
       new BoldExtension(),
@@ -149,11 +156,9 @@ export default function RemirrorContainer({
       new CalloutExtension(),
       new NodeFormattingExtension(),
       new TableExtension(),
-      // new GapCursorExtension(),
-      // new DropCursorExtension(),
-      // new YjsExtension({
-      //   getProvider: () => webrtcProvider,
-      // }),
+      new GapCursorExtension(),
+      new DropCursorExtension(),
+      new YjsExtension({ getProvider: () => webrtcProvider }),
     ],
     selection: "all",
     // content: storeState.remirrorContent.content || "",
@@ -162,55 +167,27 @@ export default function RemirrorContainer({
   // ======================================================
 
   const { data: documents } = useGetDocuments(project_id as string);
-  const profile = useGetProfile();
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
-  const [users, setUsers] = useState<any[]>([]);
   const handleChange = useCallback(({ state, tr }) => {
     if (tr?.docChanged) {
-      setSaving(tr.time);
+      store.remirrorContent.content = manager.view.state.doc.toJSON();
     }
   }, []);
+  // useEffect(() => {
+  //   const timeout = setTimeout(async () => {
+  //     if (!firstRender.current && saving && currentDocument) {
+  //       store.remirrorContent.content = currentDocument.content;
+  //       await saveContentMutation.mutateAsync({
+  //         id: currentDocument.id,
+  //         content: store.remirrorContent.content,
+  //       });
+  //       setSaving(false);
+  //     }
+  //   }, 300);
 
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
-
-  useEffect(() => {
-    if (profile) {
-      awareness.setLocalStateField("user", {
-        name: profile.nickname,
-        color: "#ff0fcc",
-      });
-    }
-  }, [profile]);
-
-  useEffect(() => {
-    awareness.on("change", () => {
-      let tempUsers = [];
-      awareness.states.forEach((state) => tempUsers.push(state));
-      setUsers(tempUsers);
-    });
-
-    observeDeep(storeState, () => {
-      const test = JSON.parse(
-        JSON.stringify(storeState.remirrorContent.content)
-      );
-      getContext()?.setContent(test);
-    });
-    //   const timeout = setTimeout(async () => {
-    //     if (!firstRender.current && saving && currentDocument) {
-    //       store.remirrorContent.content = currentDocument.content;
-    //       await saveContentMutation.mutateAsync({
-    //         id: currentDocument.id,
-    //         content: store.remirrorContent.content,
-    //       });
-    //       setSaving(false);
-    //     }
-    //   }, 300);
-
-    //   return () => clearTimeout(timeout);
-  }, []);
+  //   return () => clearTimeout(timeout);
+  // }, [saving]);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
@@ -218,7 +195,6 @@ export default function RemirrorContainer({
     if (doc_id && doc_id !== docId) {
       setDocId(doc_id);
       setRoom(doc_id);
-      storeState.remirrorContent.content = currentDocument.content;
     }
 
     return () => {
@@ -227,10 +203,20 @@ export default function RemirrorContainer({
   }, [doc_id]);
 
   useEffect(() => {
+    awareness.getStates().forEach((state) => {
+      console.log(state);
+      if (state.user) {
+        console.log(state.user);
+        setClientCount(clientCount + 1);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (currentDocument && doc_id) {
       if (usedFallbackRef.current) return;
       const fetchFallback = async () => {
-        if (webrtcProvider.connected && clientCount === 0) {
+        if (webrtcProvider.connected && clientCount === undefined) {
           const doc = prosemirrorJSONToYDoc(
             manager.schema,
             currentDocument.content as RemirrorJSON
@@ -238,27 +224,28 @@ export default function RemirrorContainer({
           const stateVector1 = encodeStateVector(webrtcProvider.doc);
           const diff = encodeStateAsUpdate(doc, stateVector1);
           applyUpdate(webrtcProvider.doc, diff);
+          // const update = encodeStateAsUpdate(doc);
+          // applyUpdate(webrtcProvider.doc, update);
         }
         usedFallbackRef.current = true;
       };
-      const timeout = setTimeout(fetchFallback, 3000);
+      const timeout = setTimeout(fetchFallback, 1000);
       return () => clearTimeout(timeout);
     }
   }, [doc_id]);
   const handlePeersChange = useCallback(
     ({ webrtcPeers }) => {
       setClientCount(webrtcPeers.length);
-      console.log(webrtcPeers.length);
     },
     [setClientCount]
   );
 
   useObservableListener("peers", handlePeersChange, webrtcProvider);
   useObservableListener("synced", (d) => setClientCount(1), webrtcProvider);
-  // if (!currentDocument) {
-  //   toastWarn("Document not found");
-  //   return <Navigate to={"../"} />;
-  // }
+  if (!currentDocument) {
+    toastWarn("Document not found");
+    return <Navigate to={"../"} />;
+  }
   return (
     <div
       className={`editorContainer overflow-y-scroll ${
@@ -273,12 +260,6 @@ export default function RemirrorContainer({
           }`}
       </h1>
       <Breadcrumbs currentDocument={currentDocument} />
-      <div className="bg-blue-500">
-        test{" "}
-        {users.map((user) => (
-          <span>{user.user.name}</span>
-        ))}
-      </div>
       {documents && (
         <ThemeProvider>
           <Remirror
@@ -291,7 +272,6 @@ export default function RemirrorContainer({
               if (!firstRender && tr?.docChanged) {
                 storeState.remirrorContent.content =
                   manager.view.state.doc.toJSON();
-                // setSaving(tr.time);
               }
             }}
             editable={editable || true}
