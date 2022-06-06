@@ -22,6 +22,7 @@ import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
 import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import NotFound from "./components/Auth/NotFound";
+import { auth } from "./utils/supabaseUtils";
 const Project = lazy(() => import("./components/Project/Project"));
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
@@ -40,6 +41,12 @@ function App() {
   });
 
   useEffect(() => {
+    auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") {
+        console.log("Signed in");
+      }
+    });
+
     cytoscape.use(edgehandles);
     cytoscape.use(gridguide);
   }, []);
