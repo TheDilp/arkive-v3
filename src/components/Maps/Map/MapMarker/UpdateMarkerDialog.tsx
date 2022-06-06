@@ -86,6 +86,7 @@ export default function UpdateMarkerDialog({
     <Dialog
       header={`Update Marker - ${text}`}
       visible={show}
+      modal={false}
       style={{ width: "25vw" }}
       onHide={() =>
         setVisible({
@@ -107,6 +108,7 @@ export default function UpdateMarkerDialog({
             autoComplete={"false"}
             className="w-full"
             placeholder="Marker popup text"
+            autoFocus={true}
           />
         </div>
         <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">

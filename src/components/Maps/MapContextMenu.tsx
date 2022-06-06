@@ -1,8 +1,5 @@
-import { LatLngBounds, LatLngBoundsExpression } from "leaflet";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
-import { useParams } from "react-router-dom";
-import { useCreateMapMarker } from "../../utils/customHooks";
 type Props = {
   cm: any;
   mapRef: any;
@@ -22,8 +19,6 @@ export default function MapContextMenu({
   lng,
   bounds,
 }: Props) {
-  const createMapMarkerMutation = useCreateMapMarker();
-  const { project_id } = useParams();
   const items = [
     {
       label: "New Token",

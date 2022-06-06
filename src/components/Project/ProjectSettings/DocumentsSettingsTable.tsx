@@ -13,10 +13,15 @@ import { Toolbar } from "primereact/toolbar";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { DocumentProps, iconSelectProps } from "../../../custom-types";
+import {
+  DocumentProps,
+  iconSelectProps,
+  ImageProps,
+} from "../../../custom-types";
 import {
   useCreateDocument,
   useGetDocuments,
+  useGetImages,
   useGetTags,
   useUpdateDocument,
 } from "../../../utils/customHooks";
@@ -31,6 +36,7 @@ import {
 import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import { v4 as uuid } from "uuid";
+import ImgDropdownItem from "../../Util/ImgDropdownItem";
 export default function DocumentsSettingsTable() {
   const { project_id } = useParams();
 
@@ -53,6 +59,7 @@ export default function DocumentsSettingsTable() {
   const documents = useGetDocuments(project_id as string);
   const [localDocuments, setLocalDocuments] = useState(documents.data);
   const { data: categories } = useGetTags(project_id as string);
+  const images = useGetImages(project_id as string);
   // MUTATIONS
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
@@ -150,7 +157,7 @@ export default function DocumentsSettingsTable() {
   const imageBodyTemplate = (rowData: DocumentProps) => {
     return (
       <div className="w-full h-auto cursor-pointer flex justify-content-center">
-        {rowData.image && (
+        {rowData.image?.link && (
           <img
             src={`${supabaseStorageImagesLink}${rowData.image.link}`}
             alt="document"
@@ -370,15 +377,33 @@ export default function DocumentsSettingsTable() {
   };
   const imageEditor = (options: ColumnEditorOptions) => {
     return (
-      <InputText
-        className="w-full"
-        value={options.value}
-        onChange={(e) => {
-          if (options.rowData.id && e.target.value)
-            //@ts-ignore
-            options.editorCallback(e.target.value);
-        }}
-      />
+      <div className="h-2rem w-2rem">
+        <Dropdown
+          filter
+          filterBy="title"
+          className="w-full"
+          placeholder="Custom Image"
+          optionLabel="title"
+          itemTemplate={(item: ImageProps) => (
+            <ImgDropdownItem title={item.title} link={item.link} />
+          )}
+          options={
+            images?.data
+              ? [
+                  { title: "No image", id: null },
+                  ...images?.data.filter((image) => image.type === "Image"),
+                ]
+              : []
+          }
+          value={options.rowData.image}
+          onChange={(e) => {
+            updateDocumentMutation.mutate({
+              id: options.rowData.id,
+              image: e.target.value,
+            });
+          }}
+        />
+      </div>
     );
   };
   const categoryEditor = (options: ColumnEditorOptions) => {
@@ -509,13 +534,6 @@ export default function DocumentsSettingsTable() {
           body={imageBodyTemplate}
           editor={imageEditor}
           align="center"
-          onCellEditComplete={(e: any) => {
-            if (e.rowData.id && e.newValue)
-              updateDocumentMutation.mutate({
-                id: e.rowData.id,
-                image: e.newValue,
-              });
-          }}
         ></Column>
         <Column
           header="Is Folder"

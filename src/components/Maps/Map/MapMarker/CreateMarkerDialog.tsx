@@ -63,6 +63,7 @@ export default function CreateMarkerDialog({
       visible={show}
       style={{ width: "25vw" }}
       onHide={() => setVisible()}
+      modal={true}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap">
         <div className="w-full"></div>
@@ -72,6 +73,7 @@ export default function CreateMarkerDialog({
             autoComplete={"false"}
             className="w-full"
             placeholder="Marker popup text"
+            autoFocus={true}
           />
         </div>
         <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">

@@ -31,7 +31,6 @@ export default function MapView({
     show: false,
   });
   const [loading, setLoading] = useState(true);
-  console.log(mapData, project_id, map_id);
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
       let img = new Image();
