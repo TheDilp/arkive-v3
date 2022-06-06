@@ -87,6 +87,7 @@ export default function DocumentUpdateDialog({
                 className="w-full"
                 value={field.value}
                 onChange={(e) => field.onChange(e.target.value)}
+                autoFocus={true}
               />
             )}
           />

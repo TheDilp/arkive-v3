@@ -61,6 +61,7 @@ export const defaultTemplate = {
   icon: "mdi:file",
   categories: [],
   folder: false,
+  template: true,
   content: {
     type: "doc",
     content: [

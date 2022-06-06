@@ -1,4 +1,3 @@
-import { TableExtension } from "@remirror/extension-react-tables";
 import {
   Remirror,
   ThemeProvider,
@@ -131,7 +130,6 @@ export default function RemirrorContainer({
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),
-      new TableExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
     ],

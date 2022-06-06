@@ -119,7 +119,7 @@ export default function TemplatesTree({
                   folder: templates[virtualRow.index].folder,
                   template: templates[virtualRow.index].template,
                   depth: 0,
-                  parent: "",
+                  parent: templates[virtualRow.index].parent?.id || null,
                 });
               }}
             >

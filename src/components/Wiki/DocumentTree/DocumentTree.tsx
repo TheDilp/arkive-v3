@@ -29,7 +29,7 @@ import DocumentTreeItem from "./DocumentTreeItem";
 import DocumentTreeItemContext from "./DocumentTreeItemContext";
 import DocumentUpdateDialog from "./DocumentUpdateDialog";
 import DragPreview from "./DragPreview";
-import TemplatesTree from "./TemplatesTree";
+import TemplatesTree from "./TemplatesTree/TemplatesTree";
 import DocTreeFilter from "./TreeFilter/DocTreeFilter";
 
 export default function DocumentsTree() {
