@@ -251,6 +251,7 @@ export default function DocumentsSettingsTable() {
       <div className="relative flex justify-content-center">
         <Checkbox
           checked={rowData.public}
+          disabled={rowData.template}
           className="cursor-auto"
           onChange={(e) =>
             updateDocumentMutation.mutate({
