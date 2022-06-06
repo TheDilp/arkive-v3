@@ -246,10 +246,10 @@ export type BoardContextMenuProps = {
 export type CreateDocumentInputs = {
   title: string;
   image: string;
-  parent: string;
+  parent: string | null;
   icon: string;
   folder: boolean;
-  template: boolean;
+  template: string;
 };
 export type CreateMapInputs = {
   title: string;

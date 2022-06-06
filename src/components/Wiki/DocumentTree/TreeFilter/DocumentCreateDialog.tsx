@@ -4,14 +4,23 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { CreateDocumentInputs, DocumentProps } from "../../../../custom-types";
+import {
+  CreateDocumentInputs,
+  DocumentProps,
+  ImageProps,
+} from "../../../../custom-types";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import CreateDocIconSelect from "./CreateDocIconSelect";
-import { useCreateDocument } from "../../../../utils/customHooks";
+import {
+  useCreateDocument,
+  useGetDocuments,
+  useGetImages,
+} from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { Checkbox } from "primereact/checkbox";
+import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 
 type Props = {
   visible: boolean;
@@ -26,10 +35,8 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
   });
   const [closeOnDone, setCloseOnDone] = useState(true);
   const { project_id } = useParams();
-  const queryClient = useQueryClient();
-  const documents = queryClient.getQueryData<DocumentProps[]>(
-    `${project_id}-documents`
-  );
+  const { data: documents } = useGetDocuments(project_id as string);
+  const images = useGetImages(project_id as string);
   const createDocumentMutation = useCreateDocument(project_id as string);
   const {
     control,
@@ -39,14 +46,19 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
     watch,
     formState: { errors },
   } = useForm<CreateDocumentInputs>({
-    defaultValues: { icon: "mdi:file", folder: false },
+    defaultValues: { parent: null, icon: "mdi:file", folder: false },
   });
   const onSubmit: SubmitHandler<CreateDocumentInputs> = (data) => {
     let id = uuid();
     createDocumentMutation.mutate({
       id,
       ...data,
+      template: false,
+      content: data.template
+        ? documents?.find((doc) => doc.id === data.template)?.content
+        : null,
     });
+
     if (closeOnDone) {
       setVisible(false);
     }
@@ -62,6 +74,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
       header={"Create Document"}
       visible={visible}
       onHide={() => setVisible(false)}
+      modal={false}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
@@ -71,6 +84,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                 placeholder="Document Title"
                 className="w-full"
                 {...register("title", { required: true, maxLength: 100 })}
+                autoFocus={true}
               />
               {errors.title?.type === "required" && (
                 <span className="py-1" style={{ color: "var(--red-500)" }}>
@@ -86,10 +100,36 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
               )}
             </div>
             <div className="w-8 py-2">
-              <InputText
-                placeholder="Document Image"
-                className="w-full"
-                {...register("image")}
+              <Controller
+                name="image"
+                control={control}
+                render={({ field }) => (
+                  <Dropdown
+                    filter
+                    filterBy="title"
+                    className="w-full"
+                    placeholder="Custom Image"
+                    optionLabel="title"
+                    optionValue="id"
+                    itemTemplate={(item: ImageProps) => (
+                      <ImgDropdownItem title={item.title} link={item.link} />
+                    )}
+                    options={
+                      images?.data
+                        ? [
+                            { title: "No image", id: null },
+                            ...images?.data.filter(
+                              (image: ImageProps) => image.type === "Image"
+                            ),
+                          ]
+                        : []
+                    }
+                    value={field.value}
+                    onChange={(e) => {
+                      field.onChange(e.value);
+                    }}
+                  />
+                )}
               />
             </div>
             <div className="w-8">
@@ -99,7 +139,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                 render={({ field }) => (
                   <Dropdown
                     className="w-full"
-                    placeholder="Document Folder"
+                    placeholder="Folder"
                     optionLabel="title"
                     optionValue="id"
                     value={field.value}
@@ -108,7 +148,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                     options={
                       documents
                         ? [
-                            { title: "No Folder", id: null },
+                            { title: "Root Folder", id: null },
                             ...documents?.filter((doc) => doc.folder),
                           ]
                         : []
@@ -119,7 +159,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
             </div>
             <div className="w-8 mt-2">
               <Controller
-                name="folder"
+                name="template"
                 control={control}
                 render={({ field }) => (
                   <Dropdown

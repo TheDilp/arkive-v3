@@ -1,19 +1,16 @@
 import { Icon } from "@iconify/react";
 import { useActive, useAttrs, useCommands } from "@remirror/react";
 import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
 import { Menubar } from "primereact/menubar";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useState } from "react";
-import "../../../styles/MenuBar.css";
-import { Slider } from "primereact/slider";
-import { Button } from "primereact/button";
-import { Checkbox } from "primereact/checkbox";
-import { Dropdown } from "primereact/dropdown";
-import ImgDropdownItem from "../../Util/ImgDropdownItem";
-import { useGetImages } from "../../../utils/customHooks";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
+import "../../../styles/MenuBar.css";
+import { useGetImages } from "../../../utils/customHooks";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
+import ImgDropdownItem from "../../Util/ImgDropdownItem";
 export default function MenuBar({ saving }: { saving: number | boolean }) {
   const {
     toggleBold,
