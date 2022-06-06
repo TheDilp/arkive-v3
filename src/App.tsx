@@ -2,7 +2,6 @@ import "primeicons/primeicons.css"; //icons
 import "primereact/resources/primereact.min.css"; //core css
 import "primereact/resources/themes/arya-blue/theme.css"; //theme
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -48,7 +47,6 @@ function App() {
     <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
       <ToastContainer />
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
