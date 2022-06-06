@@ -92,40 +92,42 @@ export default function DocumentUpdateDialog({
             )}
           />
         </div>
-        <div className="my-2">
-          <Controller
-            name="parent"
-            control={control}
-            render={({ field }) => (
-              <Dropdown
-                className="w-full"
-                placeholder="Document Folder"
-                optionLabel="title"
-                optionValue="id"
-                value={field.value}
-                filter
-                onChange={(e) => field.onChange(e.value)}
-                options={
-                  data
-                    ? [
-                        { title: "Root", id: null },
-                        ...data.filter((doc, idx, array) => {
-                          if (!doc.folder || doc.id === displayDialog.id)
-                            return false;
-                          return recursiveDescendantFilter(
-                            doc,
-                            idx,
-                            array,
-                            displayDialog.id
-                          );
-                        }),
-                      ]
-                    : []
-                }
-              />
-            )}
-          />
-        </div>
+        {!displayDialog.template && (
+          <div className="my-2">
+            <Controller
+              name="parent"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  className="w-full"
+                  placeholder="Document Folder"
+                  optionLabel="title"
+                  optionValue="id"
+                  value={field.value}
+                  filter
+                  onChange={(e) => field.onChange(e.value)}
+                  options={
+                    data
+                      ? [
+                          { title: "Root", id: null },
+                          ...data.filter((doc, idx, array) => {
+                            if (!doc.folder || doc.id === displayDialog.id)
+                              return false;
+                            return recursiveDescendantFilter(
+                              doc,
+                              idx,
+                              array,
+                              displayDialog.id
+                            );
+                          }),
+                        ]
+                      : []
+                  }
+                />
+              )}
+            />
+          </div>
+        )}
         <div className="flex w-full">
           <Button
             className="ml-auto p-button-outlined p-button-success"

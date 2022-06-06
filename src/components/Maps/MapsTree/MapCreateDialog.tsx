@@ -51,6 +51,7 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
       header={"Create Map"}
       visible={visible}
       onHide={() => setVisible(false)}
+      modal={false}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap justify-content-center">
@@ -59,6 +60,7 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
               placeholder="Map Title"
               className="w-full"
               {...register("title", { required: true, maxLength: 100 })}
+              autoFocus={true}
             />
             {errors.title?.type === "required" && (
               <span className="py-1" style={{ color: "var(--red-500)" }}>

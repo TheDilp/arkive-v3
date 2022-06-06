@@ -44,6 +44,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<CreateDocumentInputs>({
     defaultValues: { parent: null, icon: "mdi:file", folder: false },
@@ -73,7 +74,10 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
       className="w-3"
       header={"Create Document"}
       visible={visible}
-      onHide={() => setVisible(false)}
+      onHide={() => {
+        setVisible(false);
+        reset();
+      }}
       modal={false}
     >
       <form onSubmit={handleSubmit(onSubmit)}>

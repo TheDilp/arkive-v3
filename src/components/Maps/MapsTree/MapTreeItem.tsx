@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useNavigate, useParams } from "react-router-dom";
-import { MapProps, mapItemDisplayDialogProps } from "../../../custom-types";
+import { useParams } from "react-router-dom";
+import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import { useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   mapId: string;

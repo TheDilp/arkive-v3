@@ -47,6 +47,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
       show: false,
       folder: false,
       depth: 0,
+      public: false,
     });
   };
 
@@ -76,6 +77,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
     <Dialog
       className="w-3"
       header={`Update Map - ${visible.title}`}
+      modal={false}
       visible={visible.show}
       onHide={() =>
         setVisible({
@@ -86,6 +88,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
           show: false,
           folder: false,
           depth: 0,
+          public: false,
         })
       }
     >
@@ -96,6 +99,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
               placeholder="Map Title"
               className="w-full"
               {...register("title", { required: true, maxLength: 100 })}
+              autoFocus={true}
             />
             {errors.title?.type === "required" && (
               <span className="py-1" style={{ color: "var(--red-500)" }}>

@@ -48,6 +48,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
       layout: "",
       show: false,
       expanded: false,
+      public: false,
     });
   };
   function recursiveDescendantRemove(
@@ -76,6 +77,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
     <Dialog
       header={`Update Board ${visible.title}`}
       visible={visible.show}
+      modal={false}
       onHide={() =>
         setVisible({
           id: "",
@@ -86,6 +88,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
           layout: "",
           show: false,
           expanded: false,
+          public: false,
         })
       }
     >
@@ -96,6 +99,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
               placeholder="Board Title"
               className="w-full"
               {...register("title", { required: true, maxLength: 100 })}
+              autoFocus={true}
             />
             {errors.title?.type === "required" && (
               <span className="py-1" style={{ color: "var(--red-500)" }}>
