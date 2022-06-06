@@ -38,10 +38,9 @@ export default function DocumentTreeItemContext({
     queryClient.getQueryData(`${project_id}-documents`) || [];
   const document = documents.find((doc) => doc.id === displayDialog.id);
 
+  const createDocumentMutation = useCreateDocument(project_id as string);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
-  const newDocumentMutation = useCreateDocument(project_id as string);
   const deleteDocumentMutation = useDeleteDocument(project_id as string);
-  const createTemplateMutation = useCreateTemplate();
 
   // Get all the folders a document can be moved to
 
@@ -123,8 +122,11 @@ export default function DocumentTreeItemContext({
               id,
               title: `${document.title}`,
             };
-            // @ts-ignore
-            createTemplateMutation.mutate(vars);
+            createDocumentMutation.mutate({
+              ...vars,
+              parent: null,
+              template: true,
+            });
           } else {
             toastWarn("Document is empty, cannot convert to template");
           }
@@ -191,7 +193,7 @@ export default function DocumentTreeItemContext({
           icon: "pi pi-fw pi-file",
           command: () => {
             if (displayDialog.depth < 3) {
-              newDocumentMutation.mutate({
+              createDocumentMutation.mutate({
                 id: uuid(),
                 parent: displayDialog.id,
                 folder: false,
@@ -206,7 +208,7 @@ export default function DocumentTreeItemContext({
           icon: "pi pi-fw pi-folder",
           command: () => {
             if (displayDialog.depth < 3) {
-              newDocumentMutation.mutate({
+              createDocumentMutation.mutate({
                 id: uuid(),
                 title: "New Folder",
                 parent: displayDialog.id,
@@ -232,7 +234,7 @@ export default function DocumentTreeItemContext({
       icon: "pi pi-fw pi-file",
       command: () => {
         let id = uuid();
-        newDocumentMutation.mutate({
+        createDocumentMutation.mutate({
           id,
           title: "New Document",
           parent: doc_id || null,
@@ -244,7 +246,7 @@ export default function DocumentTreeItemContext({
       icon: "pi pi-fw pi-folder",
       command: () => {
         let id = uuid();
-        newDocumentMutation.mutate({
+        createDocumentMutation.mutate({
           id,
           title: "New Folder",
           parent: doc_id || null,

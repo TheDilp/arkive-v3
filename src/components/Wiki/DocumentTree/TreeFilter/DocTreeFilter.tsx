@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
-import DocFromTempDialog from "./DocFromTempDialog";
+import DocumentFromTempDialog from "./DocumentFromTempDialog";
 import DocumentCreateDialog from "./DocumentCreateDialog";
 type Props = {
   filter: string;
@@ -44,7 +44,7 @@ export default function DocTreeFilter({
         visible={createDocumentDialog}
         setVisible={setCreateDocumentDialog}
       />
-      <DocFromTempDialog
+      <DocumentFromTempDialog
         visible={docFromTempDialog}
         setVisible={setDocFromTempDialog}
       />

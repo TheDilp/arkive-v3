@@ -202,7 +202,7 @@ export function useCreateDocument(project_id: string) {
                     ? newDocument.categories
                     : [],
                   folder: newDocument.folder ? newDocument.folder : false,
-                  template: false,
+                  template: newDocument.template ? newDocument.template : false,
                   expanded: false,
                   public: false,
                   sort: oldData.filter((doc) => !doc.template).length,

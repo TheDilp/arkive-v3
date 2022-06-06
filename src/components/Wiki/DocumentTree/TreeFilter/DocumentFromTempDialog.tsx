@@ -15,7 +15,7 @@ type Props = {
   setVisible: (visible: boolean) => void;
 };
 
-export default function DocFromTempDialog({ visible, setVisible }: Props) {
+export default function DocumentFromTempDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const [value, setValue] = useState();
   const [customName, setCustomName] = useState<string | undefined>();
@@ -29,6 +29,7 @@ export default function DocFromTempDialog({ visible, setVisible }: Props) {
     let id = uuid();
     createDocumentMutation.mutate({
       ...template,
+      template: false,
       id,
       parent: null,
       title: customName || template.title,
