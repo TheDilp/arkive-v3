@@ -1,29 +1,28 @@
+import "primeicons/primeicons.css"; //icons
 import "primereact/resources/primereact.min.css"; //core css
 import "primereact/resources/themes/arya-blue/theme.css"; //theme
-import "primeicons/primeicons.css"; //icons
-import "/node_modules/primeflex/primeflex.css";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Auth from "./components/Auth/Auth";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ToastContainer } from "react-toastify";
-import { ReactQueryDevtools } from "react-query/devtools";
-import Register from "./components/Auth/Register";
-import Profile from "./components/Profile/Profile";
 import Help from "./components/Help/Help";
+import Profile from "./components/Profile/Profile";
+import "/node_modules/primeflex/primeflex.css";
 
-import FileBrowser from "./components/FileBrowser/FileBrowser";
-import PublicProject from "./components/PublicView/Public Boards/PublicProject";
-import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
-import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
-import { lazy, Suspense, useEffect } from "react";
-import LoadingScreen from "./components/Util/LoadingScreen";
-import PublicBoardsContainer from "./components/PublicView/Public Boards/PublicBoardsContainer";
-import { auth } from "./utils/supabaseUtils";
 import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
+import { lazy, Suspense, useEffect } from "react";
+import FileBrowser from "./components/FileBrowser/FileBrowser";
+import PublicBoardsContainer from "./components/PublicView/Public Boards/PublicBoardsContainer";
+import PublicProject from "./components/PublicView/Public Boards/PublicProject";
+import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
+import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
+import LoadingScreen from "./components/Util/LoadingScreen";
+import NotFound from "./components/Auth/NotFound";
 const Project = lazy(() => import("./components/Project/Project"));
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
@@ -53,6 +52,7 @@ function App() {
         <BrowserRouter>
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
+              <Route path="*" element={<NotFound />} />
               <Route path="/" element={<Home />} />
               <Route path="login" element={<Auth />} />
               <Route path="profile" element={<Profile />} />
