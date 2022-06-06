@@ -117,7 +117,7 @@ export default function DocumentsTree() {
         }));
       setTreeData(treeData);
     }
-  }, []);
+  }, [documents]);
 
   return (
     <div
