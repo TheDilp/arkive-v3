@@ -5,7 +5,7 @@ import "/node_modules/primeflex/primeflex.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import Login from "./components/Auth/Login";
+import Auth from "./components/Auth/Auth";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ToastContainer } from "react-toastify";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -40,7 +40,7 @@ function App() {
       },
     },
   });
-  
+
   useEffect(() => {
     cytoscape.use(edgehandles);
     cytoscape.use(gridguide);
@@ -54,8 +54,7 @@ function App() {
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="register" element={<Register />} />
-              <Route path="login" element={<Login />} />
+              <Route path="login" element={<Auth />} />
               <Route path="profile" element={<Profile />} />
               <Route path="help" element={<Help />} />
               <Route
