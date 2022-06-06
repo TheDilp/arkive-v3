@@ -245,9 +245,11 @@ export const createBoard = async (CreateBoardProps: CreateBoardProps) => {
 export const createNode = async (CreateNodeProps: CreateNodeProps) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase
-      .from("nodes")
-      .insert({ ...CreateNodeProps, user_id: user.id });
+    const { data, error } = await supabase.from("nodes").insert({
+      ...CreateNodeProps,
+      user_id: user.id,
+      customImage: CreateNodeProps.customImage?.id,
+    });
     if (data) return data;
     if (error) {
       toastError("There was an error creating your node.");
@@ -638,30 +640,32 @@ export const uploadImage = async (
   let user = auth.user();
 
   if (user) {
-    const { data, error } = await supabase.storage
-      .from("images")
-      .upload(`${project_id}/${type}/${file.name}`, file, { upsert: false });
+    try {
+      const { data, error } = await supabase.storage
+        .from("images")
+        .upload(`${project_id}/${type}/${file.name}`, file, { upsert: false });
 
-    if (data) {
-      const { data: newImage, error: newImageError } = await supabase
-        .from<ImageProps>("images")
-        .select("id, title, link, type")
-        .eq("link", data.Key.replace("images/", ""))
-        .maybeSingle();
-      if (newImage) {
-        return newImage;
+      if (data) {
+        const { data: newImage, error: newImageError } = await supabase
+          .from<ImageProps>("images")
+          .select("id, title, link, type")
+          .eq("link", data.Key.replace("images/", ""))
+          .maybeSingle();
+        if (newImage) {
+          return newImage;
+        }
+        if (newImageError) {
+          toastError(
+            "There was an error uploading your image. (supabaseUtils 857)"
+          );
+          throw new Error(newImageError.message);
+        }
       }
-      if (newImageError) {
-        toastError(
-          "There was an error uploading your image. (supabaseUtils 857)"
-        );
-        throw new Error(newImageError.message);
+      if (error) {
+        toastError("There was an error uploading your image.");
+        throw new Error(error.message);
       }
-    }
-    if (error) {
-      toastError("There was an error uploading your image.");
-      throw new Error(error.message);
-    }
+    } catch (error) {}
   }
 };
 export const downloadImage = async (id: string) => {

@@ -109,6 +109,12 @@ export default function RemirrorContainer({
         appendText: "",
         supportedCharacters: /[^\s][\w\d_ ]+/,
       },
+      {
+        name: "slash",
+        char: "/",
+        appendTExt: "",
+        supportedCharacters: /[^\s][\w\d_ ]+/,
+      },
     ],
   });
   CustomMentionExtension.ReactComponent = MentionReactComponent;

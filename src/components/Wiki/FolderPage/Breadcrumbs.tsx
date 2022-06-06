@@ -87,7 +87,7 @@ export default function Breadcrumbs({ currentDocument }: Props) {
           height: "21px",
         },
       }}
-      className="w-full border-none border-bottom-2 border-noround sticky z-5 top-0"
+      className="w-full border-none border-bottom-2 border-noround z-5 bg-transparent"
       style={{
         height: "50px",
       }}

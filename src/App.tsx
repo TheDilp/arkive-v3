@@ -41,14 +41,13 @@ function App() {
   });
 
   useEffect(() => {
+    cytoscape.use(edgehandles);
+    cytoscape.use(gridguide);
     auth.onAuthStateChange((event) => {
       if (event === "SIGNED_IN") {
         console.log("Signed in");
       }
     });
-
-    cytoscape.use(edgehandles);
-    cytoscape.use(gridguide);
   }, []);
   return (
     <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
