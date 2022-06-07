@@ -280,7 +280,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           show: true,
         });
       });
-      cyRef.current.on("free ", "node", function (evt: any) {
+      cyRef.current.on("free", "node", function (evt: any) {
         let target = evt.target._private;
         // Grid extenstion messes with the "grab events"
         // "Freeon" event triggers on double clicking

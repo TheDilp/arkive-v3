@@ -63,7 +63,7 @@ export default function CreateMarkerDialog({
       visible={show}
       style={{ width: "25vw" }}
       onHide={() => setVisible()}
-      modal={true}
+      modal={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap">
         <div className="w-full"></div>
