@@ -126,6 +126,18 @@ export default function BoardContextMenu({
       },
     },
     {
+      label: contextMenu.selected?.locked() ? "Unlock" : "Lock",
+      icon: `pi pi-fw pi-lock${contextMenu.selected?.locked() ? "-open" : ""}`,
+      command: () => {
+        let lockState = contextMenu.selected.locked();
+        if (lockState) {
+          contextMenu.selected.unlock();
+        } else {
+          contextMenu.selected.lock();
+        }
+      },
+    },
+    {
       separator: true,
     },
     {
