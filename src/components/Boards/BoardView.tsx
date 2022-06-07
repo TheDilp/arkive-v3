@@ -226,8 +226,17 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         }
       });
       cyRef.current.on("mousedown", "node", function (evt: any) {
+        if (
+          cyRef.current.nodes(":selected").length <= 1 &&
+          !evt.originalEvent.shiftKey &&
+          !evt.originalEvent.ctrlKey &&
+          !evt.originalEvent.metaKey
+        ) {
+          cyRef.current.nodes(":selected").unselect();
+        }
         evt.target.select();
       });
+      // Right click
       cyRef.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
         if (evt.target === cyRef.current) {
@@ -294,6 +303,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       cyRef.current.on("free", "node", function (evt: any) {
         let target = evt.target._private;
         evt.target.select();
+
         // Grid extenstion messes with the "grab events"
         // "Freeon" event triggers on double clicking
         // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging

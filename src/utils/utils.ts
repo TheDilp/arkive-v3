@@ -607,6 +607,7 @@ export const cytoscapeStylesheet = [
       "target-arrow-color": "green",
     },
   },
+
   {
     selector: ":locked",
     style: {
@@ -618,7 +619,19 @@ export const cytoscapeStylesheet = [
       "border-opacity": 0.25,
     },
   },
-
+  {
+    selector: ":grabbed",
+    style: {
+      "border-width": 4,
+      "border-color": "green",
+      "border-opacity": 1,
+      "line-color": "green",
+      "target-arrow-color": "green",
+      "underlay-color": "transparent",
+      "underlay-padding": 0,
+      "underlay-opacity": 0,
+    },
+  },
   {
     selector: ".incomingEdgeHighlight",
     style: {
