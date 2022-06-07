@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -17,6 +18,7 @@ import {
   useGetBoardData,
   useGetDocuments,
   useGetImages,
+  useUpdateEdge,
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
@@ -31,12 +33,11 @@ import {
   toModelPosition,
 } from "../../utils/utils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
-import TreeSidebar from "../Util/TreeSidebar";
-import FolderPage from "../Wiki/FolderPage/FolderPage";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
+import { useDebouncedCallback } from "use-debounce";
 type Props = {
   setBoardId: (boardId: string) => void;
   cyRef: any;
@@ -47,6 +48,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
   const images = useGetImages(project_id as string);
+
   const { data: documents } = useGetDocuments(project_id as string);
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
@@ -94,14 +96,41 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     y: 0,
     type: "board",
   });
+
   const [drawMode, setDrawMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [quickCreate, setQuickCreate] = useState(false);
-  const updateNodeMutation = useUpdateNode(project_id as string);
-  const createEdgeMutation = useCreateEdge(project_id as string);
+
   const createNodeMutation = useCreateNode(project_id as string);
+  const createEdgeMutation = useCreateEdge(project_id as string);
+  const updateNodeMutation = useUpdateNode(project_id as string);
+  const updateEdgeMutation = useUpdateEdge(project_id as string);
   const uploadImageMutation = useUploadImage(project_id as string);
 
+  const debounced = useDebouncedCallback(
+    // function
+    (color, elements) => {
+      elements.forEach((node) => {
+        if (node.isNode()) {
+          updateNodeMutation.mutate({
+            id: node.data().id,
+            // Board_id is required for updating the state in react-query
+            board_id: board_id as string,
+            backgroundColor: `#${color}`,
+          });
+        } else {
+          updateEdgeMutation.mutate({
+            id: node.data().id,
+            // Board_id is required for updating the state in react-query
+            board_id: board_id as string,
+            lineColor: `#${color}`,
+          });
+        }
+      });
+    },
+    // delay in ms
+    400
+  );
   useEffect(() => {
     if (elements.length > 0) {
       cyRef.current.on(
@@ -523,6 +552,31 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             ))}
         </div>
       </Dialog>
+
+      <div
+        className="w-4 absolute border-round surface-50 text-white h-3rem flex align-items-center justify-content-center shadow-5"
+        style={{
+          top: "95.5vh",
+          left: "41.5%",
+          zIndex: 5,
+        }}
+      >
+        <i className="pi pi-fw pi-plus"></i>
+        <i className="pi pi-fw pi-lock"></i>
+        <i className="pi pi-fw pi-lock-open"></i>
+        <i className="pi pi-fw pi-trash"></i>
+        <ColorPicker
+          onChange={(e) => {
+            if (cyRef.current.elements(":selected")?.length > 0) {
+              debounced(e.target.value, cyRef.current.elements(":selected"));
+              // cyRef.current.elements(":selected").forEach((el: any) => {});
+            }
+          }}
+          className="w-2rem h-2rem"
+          defaultColor="595959"
+        ></ColorPicker>
+      </div>
+
       <CytoscapeComponent
         elements={elements}
         className="Lato"

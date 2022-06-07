@@ -3,12 +3,11 @@ import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { BoardContextMenuProps } from "../../custom-types";
 import {
-  useCreateNode,
-  useDeleteEdge,
+  useCreateNode, useDeleteEdge,
   useDeleteManyNodes,
-  useDeleteNode,
+  useDeleteNode
 } from "../../utils/customHooks";
-import { deleteManyEdges, deleteManyNodes } from "../../utils/supabaseUtils";
+import { deleteManyEdges } from "../../utils/supabaseUtils";
 
 type Props = {
   cyRef: any;

@@ -451,7 +451,7 @@ export type UpdateEdgeProps = {
   taxiDirection?: string;
   taxiTurn?: number;
   targetArrowShape?: string;
-  zIndex: number;
+  zIndex?: number;
 };
 
 // OTHER
