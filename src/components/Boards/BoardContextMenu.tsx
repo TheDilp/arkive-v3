@@ -23,7 +23,6 @@ export default function BoardContextMenu({
   cm,
   contextMenu,
   setQuickCreate,
-  setDrawMode,
 }: Props) {
   const { project_id, board_id } = useParams();
   const createNodeMutation = useCreateNode(project_id as string);
@@ -122,16 +121,42 @@ export default function BoardContextMenu({
       },
     },
     {
-      label: contextMenu.selected?.locked() ? "Unlock" : "Lock",
-      icon: `pi pi-fw pi-lock${contextMenu.selected?.locked() ? "-open" : ""}`,
-      command: () => {
-        let lockState = contextMenu.selected.locked();
-        if (lockState) {
-          contextMenu.selected.unlock();
-        } else {
-          contextMenu.selected.lock();
-        }
-      },
+      label:
+        cyRef.current?.nodes(":selected")?.length > 1
+          ? "Un/Lock Nodes"
+          : contextMenu.selected?.locked()
+          ? "Unlock"
+          : "Lock",
+      icon:
+        cyRef.current?.nodes(":selected")?.length > 1
+          ? ""
+          : `pi pi-fw pi-lock${contextMenu.selected?.locked() ? "-open" : ""}`,
+
+      ...(cyRef.current?.nodes(":selected")?.length > 1
+        ? {
+            items: [
+              {
+                label: "Unlock selected",
+                icon: "pi pi-fw pi-lock-open",
+                command: () => cyRef.current.nodes(":selected").unlock(),
+              },
+              {
+                label: "Lock selected",
+                icon: "pi pi-fw pi-lock",
+                command: () => cyRef.current.nodes(":selected").lock(),
+              },
+            ],
+          }
+        : {
+            command: () => {
+              let lockState = contextMenu.selected.locked();
+              if (lockState) {
+                contextMenu.selected.unlock();
+              } else {
+                contextMenu.selected.lock();
+              }
+            },
+          }),
     },
     {
       separator: true,
