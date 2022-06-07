@@ -46,6 +46,21 @@ export default function BoardContextMenu({
       },
     },
     {
+      label: "Un/Lock Nodes",
+      items: [
+        {
+          label: "Unlock selected",
+          icon: "pi pi-fw pi-lock-open",
+          command: () => cyRef.current.nodes(":selected").unlock(),
+        },
+        {
+          label: "Lock selected",
+          icon: "pi pi-fw pi-lock",
+          command: () => cyRef.current.nodes(":selected").lock(),
+        },
+      ],
+    },
+    {
       label: "View",
       items: [
         {
@@ -90,10 +105,6 @@ export default function BoardContextMenu({
     },
   ];
   const nodeItems = [
-    {
-      label: "Update Node",
-      command: () => {},
-    },
     {
       label: "Center Node",
       command: () => cyRef.current.center(contextMenu.selected),
@@ -147,14 +158,10 @@ export default function BoardContextMenu({
   ];
   const edgeItems = [
     {
-      label: "Update Edge",
-      command: () => {},
-    },
-    {
       label: "Highlight Connected Nodes",
       command: () => {
-        contextMenu.selected.sources().flashClass("nodeHighlight", 1500);
-        contextMenu.selected.targets().flashClass("nodeHighlight", 1500);
+        contextMenu.selected.sources().flashClass("nodeHighlight", 2000);
+        contextMenu.selected.targets().flashClass("nodeHighlight", 2000);
       },
     },
     {
