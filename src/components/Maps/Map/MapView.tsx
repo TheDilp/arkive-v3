@@ -33,6 +33,7 @@ export default function MapView({
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
+      setLoading(true);
       let img = new Image();
       img.src = `${supabaseStorageImagesLink}${mapData.map_image.link}`;
       img.onload = () => {
@@ -66,7 +67,7 @@ export default function MapView({
 
   if (loading)
     return (
-      <div className="w-full h-full flex align-items-center justify-content-center">
+      <div className="w-10 h-full flex align-items-center justify-content-center">
         <h1 className="text-white Merriweather align-self-start">
           Loading Map...
         </h1>
