@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { To, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { boardItemDisplayDialogProps } from "../../../custom-types";
 import {
@@ -52,13 +52,13 @@ export default function BoardTreeItemContext({
       icon: "pi pi-exclamation-triangle",
       acceptClassName: "p-button-outlined text-red-400",
       accept: async () => {
-        if (displayDialog.id === boardId) {
-          navigate("./");
-        }
-        deleteBoardMutation.mutate({
+        await deleteBoardMutation.mutateAsync({
           id: displayDialog.id,
         });
         setDisplayDialog({ ...displayDialog, show: false });
+        if (displayDialog.id === boardId) {
+          navigate(-1 as To);
+        }
       },
       reject: () => {},
     });

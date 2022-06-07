@@ -324,7 +324,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       setTimeout(() => {
         cyRef.current.zoom(1);
         cyRef.current.center();
-      }, 2);
+      }, 100);
       setTimeout(() => {
         setLoading(false);
       }, 200);
@@ -349,8 +349,8 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
       onDrop={async (e) => {
         let files = e.dataTransfer.files;
-
         let doc_id = e.dataTransfer.getData("doc_id");
+
         if (doc_id) {
           let document = documents?.find((doc) => doc.id === doc_id);
           if (document && !document.folder) {
@@ -373,59 +373,61 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
               doc_id: document.id,
             });
           }
-        }
-        return;
-        for (let i = 0; i < files.length; i++) {
-          let newImage;
-          // If the image exists do not upload it but assign to variable
-          if (images?.data.some((img) => img.title === files[i].name)) {
-            newImage = images?.data.find((img) => img.title === files[i].name);
+        } else if (files.length > 0) {
+          for (let i = 0; i < files.length; i++) {
+            let newImage;
+            // If the image exists do not upload it but assign to variable
+            if (images?.data.some((img) => img.title === files[i].name)) {
+              newImage = images?.data.find(
+                (img) => img.title === files[i].name
+              );
 
-            let id = uuid();
-            // @ts-ignore
-            const { top, left } = e.target.getBoundingClientRect();
+              let id = uuid();
+              // @ts-ignore
+              const { top, left } = e.target.getBoundingClientRect();
 
-            // Convert mouse coordinates to canvas coordinates
-            const { x, y } = toModelPosition(cyRef, {
-              x: e.clientX - left,
-              y: e.clientY - top,
-            });
-            createNodeMutation.mutate({
-              id,
-              board_id: board_id as string,
-              x,
-              y,
-              type: "rectangle",
-              customImage: newImage,
-            });
-          }
-          // If there is no image upload, then set node
-          else {
-            try {
-            } catch (error) {}
-            const newImage = await uploadImageMutation.mutateAsync({
-              file: files[i],
-              type: "Image",
-            });
-            // newImage = images?.data.find((img) => img.title === files[i].name);
+              // Convert mouse coordinates to canvas coordinates
+              const { x, y } = toModelPosition(cyRef, {
+                x: e.clientX - left,
+                y: e.clientY - top,
+              });
+              createNodeMutation.mutate({
+                id,
+                board_id: board_id as string,
+                x,
+                y,
+                type: "rectangle",
+                customImage: newImage,
+              });
+            }
+            // If there is no image upload, then set node
+            else {
+              try {
+              } catch (error) {}
+              const newImage = await uploadImageMutation.mutateAsync({
+                file: files[i],
+                type: "Image",
+              });
+              // newImage = images?.data.find((img) => img.title === files[i].name);
 
-            let id = uuid();
-            // @ts-ignore
-            const { top, left } = e.target.getBoundingClientRect();
+              let id = uuid();
+              // @ts-ignore
+              const { top, left } = e.target.getBoundingClientRect();
 
-            // Convert mouse coordinates to canvas coordinates
-            const { x, y } = toModelPosition(cyRef, {
-              x: e.clientX - left,
-              y: e.clientY - top,
-            });
-            createNodeMutation.mutate({
-              id,
-              board_id: board_id as string,
-              x,
-              y,
-              type: "rectangle",
-              customImage: newImage,
-            });
+              // Convert mouse coordinates to canvas coordinates
+              const { x, y } = toModelPosition(cyRef, {
+                x: e.clientX - left,
+                y: e.clientY - top,
+              });
+              createNodeMutation.mutate({
+                id,
+                board_id: board_id as string,
+                x,
+                y,
+                type: "rectangle",
+                customImage: newImage,
+              });
+            }
           }
         }
       }}
