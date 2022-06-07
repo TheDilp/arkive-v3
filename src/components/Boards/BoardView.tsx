@@ -575,6 +575,30 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           className="w-2rem h-2rem"
           defaultColor="595959"
         ></ColorPicker>
+        <i
+          className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300"
+          onClick={() => {
+            if (cyRef.current.elements(":selected")?.length > 0) {
+              cyRef.current.elements(":selected").forEach((el: any) => {
+                if (el.isNode()) {
+                  updateNodeMutation.mutate({
+                    id: el.data().id,
+                    board_id: board_id as string,
+                    backgroundColor: "#595959",
+                  });
+                } else {
+                  updateEdgeMutation.mutate({
+                    id: el.data().id,
+                    board_id: board_id as string,
+                    lineColor: "#595959",
+                  });
+                }
+              });
+            } else {
+              toastWarn("No elements are selected.");
+            }
+          }}
+        ></i>
       </div>
 
       <CytoscapeComponent
