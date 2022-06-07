@@ -89,7 +89,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     type: "board",
   });
   const [drawMode, setDrawMode] = useState(false);
-  const [snap, setSnap] = useState(true);
   const [loading, setLoading] = useState(true);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
@@ -336,13 +335,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       }, 1);
     }
   }, [board?.layout, cyRef]);
-  useEffect(() => {
-    grRef.current = null;
-    grRef.current = cyRef.current.gridGuide({
-      ...cytoscapeGridOptions,
-      snapToGridDuringDrag: snap,
-    });
-  }, [snap]);
 
   return (
     <div
@@ -410,8 +402,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         setDrawMode={setDrawMode}
         layout={layout}
         setLayout={setLayout}
-        snap={snap}
-        setSnap={setSnap}
         cyRef={cyRef}
         ehRef={ehRef}
         boardTitle={board?.title}
@@ -449,10 +439,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           }
           if (!ehRef.current) {
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
-            grRef.current = cyRef.current.gridGuide({
-              ...cytoscapeGridOptions,
-              snapToGridDuringDrag: snap,
-            });
+            grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
           }
         }}
         stylesheet={cytoscapeStylesheet}

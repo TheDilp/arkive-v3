@@ -13,8 +13,6 @@ type Props = {
   setLayout: (layout: string) => void;
   drawMode: boolean;
   setDrawMode: (drawMode: boolean | ((prev: boolean) => boolean)) => void;
-  snap: boolean;
-  setSnap: (snap: boolean | ((prev: boolean) => boolean)) => void;
   cyRef: any;
   ehRef: any;
   boardTitle: string | undefined;
@@ -25,8 +23,6 @@ export default function BoardBar({
   setLayout,
   drawMode,
   setDrawMode,
-  snap,
-  setSnap,
   cyRef,
   ehRef,
   boardTitle,
@@ -201,20 +197,9 @@ export default function BoardBar({
         }}
         tooltip="Draw Mode"
       />
+
       <Button
-        className={`p-button-rounded mx-2 ${
-          snap ? "p-button-success" : "p-button-secondary"
-        }`}
-        icon="pi pi-th-large"
-        tooltip="Snapping"
-        onClick={() => {
-          setSnap((prev) => {
-            return !prev;
-          });
-        }}
-      />
-      <Button
-        className="p-button-rounded"
+        className="p-button-rounded mx-2"
         icon="pi pi-save"
         onClick={() => {
           setExportDialog({ ...exportDialog, show: true });
