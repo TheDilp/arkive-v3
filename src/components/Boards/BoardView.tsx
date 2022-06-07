@@ -110,7 +110,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const debounced = useDebouncedCallback(
     // function
     (color, elements) => {
-      elements.forEach((node) => {
+      elements.forEach((node: any) => {
         if (node.isNode()) {
           updateNodeMutation.mutate({
             id: node.data().id,
@@ -132,34 +132,11 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     400
   );
   useEffect(() => {
-    if (elements.length > 0) {
-      cyRef.current.on(
-        "ehcomplete",
-        (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
-          let sourceData = sourceNode._private.data;
-          let targetData = targetNode._private.data;
-          // Check due to weird edgehandles behavior when toggling drawmode
-          // When drawmode is turned on and then off and then back on
-          // It can add an edges to a node that doesn't exist
-          try {
-            cyRef.current.remove(addedEdge);
-          } catch (error) {
-            toastWarn(
-              "Cytoedge couldn't be removed, there was an error (BoardView 102)"
-            );
-          }
-          makeEdgeCallback(sourceData.id, targetData.id);
-        }
-      );
-    }
-    return () => cyRef.current.removeListener("ehcomplete");
-  }, [elements]);
-
-  useEffect(() => {
     if (board) {
       let temp_nodes: CytoscapeNodeProps[] = [];
       let temp_edges: CytoscapeEdgeProps[] = [];
       if (board.nodes.length > 0) {
+        console.log(board.nodes);
         temp_nodes = board.nodes.map((node) => ({
           data: {
             id: node.id,
@@ -185,7 +162,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
                   " ",
                   "%20"
                 )}`
-              : node.document?.image
+              : node.document?.image?.link
               ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
@@ -222,6 +199,29 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       setElements(elements);
     }
   }, [board]);
+  useEffect(() => {
+    if (elements.length > 0) {
+      cyRef.current.on(
+        "ehcomplete",
+        (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
+          let sourceData = sourceNode._private.data;
+          let targetData = targetNode._private.data;
+          // Check due to weird edgehandles behavior when toggling drawmode
+          // When drawmode is turned on and then off and then back on
+          // It can add an edges to a node that doesn't exist
+          try {
+            cyRef.current.remove(addedEdge);
+          } catch (error) {
+            toastWarn(
+              "Cytoedge couldn't be removed, there was an error (BoardView 102)"
+            );
+          }
+          makeEdgeCallback(sourceData.id, targetData.id);
+        }
+      );
+    }
+    return () => cyRef.current.removeListener("ehcomplete");
+  }, [elements]);
 
   // Change function when the board_id changes
   const makeEdgeCallback = useCallback(
@@ -388,11 +388,11 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
       onDrop={async (e) => {
         let files = e.dataTransfer.files;
-        let doc_id = e.dataTransfer.getData("doc_id");
+        let doc_id = e.dataTransfer.getData("text");
 
         if (doc_id) {
           let document = documents?.find((doc) => doc.id === doc_id);
-          if (document && !document.folder) {
+          if (document) {
             // @ts-ignore
             const { top, left } = e.target.getBoundingClientRect();
 
@@ -408,7 +408,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
               x,
               y,
               type: "rectangle",
-              customImage: document.image || undefined,
               doc_id: document.id,
             });
           }
@@ -515,36 +514,35 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
               <div
                 key={doc.id}
                 className="w-4"
+                draggable="true"
                 onDragStart={(e) => {
-                  e.dataTransfer.setData("doc_id", doc.id);
+                  e.dataTransfer.setData("text", doc.id);
+                  console.log(e.dataTransfer.getData("text"));
                 }}
               >
-                {doc.folder ? (
-                  <div className="p-0">
-                    <Icon icon="mdi:folder" className="w-full" fontSize={80} />
-                  </div>
-                ) : (
-                  <div className="p-0 text-center flex flex-wrap justify-content-center">
-                    {doc.image?.link ? (
-                      <div className="folderPageImageContainer">
-                        <img
-                          className="w-4rem h-4rem"
-                          style={{
-                            objectFit: "contain",
-                          }}
-                          alt={doc.title}
-                          src={
-                            doc.image?.link
-                              ? supabaseStorageImagesLink + doc.image.link
-                              : ""
-                          }
-                        />
-                      </div>
-                    ) : (
+                <div className="p-0 text-center flex flex-wrap justify-content-center">
+                  {doc.image?.link ? (
+                    <div className="folderPageImageContainer">
+                      <img
+                        className="w-4rem h-4rem"
+                        style={{
+                          objectFit: "contain",
+                        }}
+                        alt={doc.title}
+                        src={
+                          doc.image?.link
+                            ? supabaseStorageImagesLink + doc.image.link
+                            : ""
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <div>
                       <Icon icon="mdi:file" className="w-full" fontSize={80} />
-                    )}
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
+
                 <h4 className="text-center my-0 white-space-nowrap overflow-hidden text-overflow-ellipsis">
                   {doc.title}
                 </h4>

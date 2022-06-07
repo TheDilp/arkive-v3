@@ -601,8 +601,9 @@ export const cytoscapeStylesheet = [
   {
     selector: ":selected",
     style: {
-      "border-width": 4,
-      "border-color": "green",
+      "overlay-color": "green",
+      "overlay-padding": 2,
+      "overlay-opacity": 0.25,
       "line-color": "green",
       "target-arrow-color": "green",
     },
