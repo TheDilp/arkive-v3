@@ -11,18 +11,18 @@ import {
 import { deleteManyEdges, deleteManyNodes } from "../../utils/supabaseUtils";
 
 type Props = {
-  ehRef: any;
   cyRef: any;
   cm: any;
   contextMenu: BoardContextMenuProps;
   setDrawMode: (drawMode: boolean) => void;
+  setQuickCreate: (quickCreate: boolean) => void;
 };
 
 export default function BoardContextMenu({
-  ehRef,
   cyRef,
   cm,
   contextMenu,
+  setQuickCreate,
   setDrawMode,
 }: Props) {
   const { project_id, board_id } = useParams();
@@ -46,46 +46,31 @@ export default function BoardContextMenu({
       },
     },
     {
-      label: "Go to center of nodes",
-      command: () => cyRef.current.center(),
+      label: "View",
+      items: [
+        {
+          label: "Go to center of nodes",
+          command: () => cyRef.current.center(),
+        },
+        {
+          label: "Fit view to nodes",
+          command: () =>
+            cyRef.current.animate(
+              {
+                fit: {
+                  eles: cyRef.current.nodes(),
+                },
+              },
+              {
+                duration: 1250,
+              }
+            ),
+        },
+      ],
     },
     {
-      label: "Fit view to nodes",
-      command: () =>
-        cyRef.current.animate(
-          {
-            fit: {
-              eles: cyRef.current.nodes(),
-            },
-          },
-          {
-            duration: 1250,
-          }
-        ),
-    },
-    {
-      label: "Draw Mode On",
-      icon: "pi pi-fw pi-pencil",
-      command: () => {
-        ehRef.current.enable();
-        ehRef.current.enableDrawMode();
-        setDrawMode(true);
-      },
-    },
-    {
-      label: "Draw Mode Off",
-      icon: "pi pi-fw pi-pencil",
-      command: () => {
-        ehRef.current.disable();
-        ehRef.current.disableDrawMode();
-        cyRef.current.autoungrabify(false);
-        cyRef.current.autounselectify(false);
-        cyRef.current.autolock(false);
-        cyRef.current.zoomingEnabled(true);
-        cyRef.current.userZoomingEnabled(true);
-        cyRef.current.panningEnabled(true);
-        setDrawMode(false);
-      },
+      label: "Quick Create",
+      items: [{ label: "From Document", command: () => setQuickCreate(true) }],
     },
     {
       separator: true,

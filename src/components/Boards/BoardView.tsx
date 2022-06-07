@@ -1,3 +1,5 @@
+import { Icon } from "@iconify/react";
+import { Dialog } from "primereact/dialog";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,6 +15,7 @@ import {
   useCreateEdge,
   useCreateNode,
   useGetBoardData,
+  useGetDocuments,
   useGetImages,
   useUpdateNode,
   useUploadImage,
@@ -28,6 +31,8 @@ import {
   toModelPosition,
 } from "../../utils/utils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
+import TreeSidebar from "../Util/TreeSidebar";
+import FolderPage from "../Wiki/FolderPage/FolderPage";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
@@ -42,6 +47,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(project_id as string, board_id as string);
   const images = useGetImages(project_id as string);
+  const { data: documents } = useGetDocuments(project_id as string);
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
@@ -90,10 +96,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   });
   const [drawMode, setDrawMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [quickCreate, setQuickCreate] = useState(false);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
   const createNodeMutation = useCreateNode(project_id as string);
   const uploadImageMutation = useUploadImage(project_id as string);
+
   useEffect(() => {
     if (elements.length > 0) {
       cyRef.current.on(
@@ -214,7 +222,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       cyRef.current.on("click", "node", function (evt: any) {
         const scratch = evt.target._private.scratch;
         if (scratch?.doc_id && evt.originalEvent.shiftKey) {
-          navigate(`../../wiki/${scratch?.doc_id}`);
+          navigate(`../../wiki/doc/${scratch?.doc_id}`);
         }
       });
       cyRef.current.on("mousedown", "node", function (evt: any) {
@@ -342,6 +350,31 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       onDrop={async (e) => {
         let files = e.dataTransfer.files;
 
+        let doc_id = e.dataTransfer.getData("doc_id");
+        if (doc_id) {
+          let document = documents?.find((doc) => doc.id === doc_id);
+          if (document && !document.folder) {
+            // @ts-ignore
+            const { top, left } = e.target.getBoundingClientRect();
+
+            // Convert mouse coordinates to canvas coordinates
+            const { x, y } = toModelPosition(cyRef, {
+              x: e.clientX - left,
+              y: e.clientY - top,
+            });
+            createNodeMutation.mutate({
+              id: uuid(),
+              label: document.title,
+              board_id: board_id as string,
+              x,
+              y,
+              type: "rectangle",
+              customImage: document.image || undefined,
+              doc_id: document.id,
+            });
+          }
+        }
+        return;
         for (let i = 0; i < files.length; i++) {
           let newImage;
           // If the image exists do not upload it but assign to variable
@@ -409,10 +442,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
       <BoardContextMenu
         cm={cm}
-        ehRef={ehRef}
         cyRef={cyRef}
         contextMenu={contextMenu}
         setDrawMode={setDrawMode}
+        setQuickCreate={setQuickCreate}
       />
       {nodeUpdateDialog.show && (
         <NodeUpdateDialog
@@ -426,6 +459,58 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           setEdgeUpdateDialog={setEdgeUpdateDialog}
         />
       )}
+      <Dialog
+        header="Quick Create Node"
+        className="w-30rem h-20rem overflow-y-auto"
+        visible={quickCreate}
+        onHide={() => setQuickCreate(false)}
+        modal={false}
+        position="left"
+      >
+        <div className="flex flex-wrap">
+          {documents
+            ?.filter((doc) => !doc.folder && !doc.template)
+            .map((doc) => (
+              <div
+                key={doc.id}
+                className="w-4"
+                onDragStart={(e) => {
+                  e.dataTransfer.setData("doc_id", doc.id);
+                }}
+              >
+                {doc.folder ? (
+                  <div className="p-0">
+                    <Icon icon="mdi:folder" className="w-full" fontSize={80} />
+                  </div>
+                ) : (
+                  <div className="p-0 text-center flex flex-wrap justify-content-center">
+                    {doc.image?.link ? (
+                      <div className="folderPageImageContainer">
+                        <img
+                          className="w-4rem h-4rem"
+                          style={{
+                            objectFit: "contain",
+                          }}
+                          alt={doc.title}
+                          src={
+                            doc.image?.link
+                              ? supabaseStorageImagesLink + doc.image.link
+                              : ""
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <Icon icon="mdi:file" className="w-full" fontSize={80} />
+                    )}
+                  </div>
+                )}
+                <h4 className="text-center my-0 white-space-nowrap overflow-hidden text-overflow-ellipsis">
+                  {doc.title}
+                </h4>
+              </div>
+            ))}
+        </div>
+      </Dialog>
       <CytoscapeComponent
         elements={elements}
         className="Lato"

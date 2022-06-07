@@ -46,7 +46,7 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
       onDragStart={(e) => {
         e.dataTransfer.setData("doc_id", doc.id);
         let img = new Image();
-        img.src = doc.image?.link || "";
+        img.src = supabaseStorageImagesLink + doc.image?.link || "";
         e.dataTransfer.setDragImage(img, 10, 10);
       }}
       onDragOver={(e) => e.preventDefault()}

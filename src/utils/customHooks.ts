@@ -1078,6 +1078,30 @@ export function useCreateNode(project_id: string) {
           `${project_id}-boards`,
           (oldData: BoardProps[] | undefined) => {
             if (oldData) {
+              let document:
+                | {
+                    id: string;
+                    image: {
+                      link?: string;
+                    };
+                  }
+                | undefined;
+              // Then if there is a document that is linked, find it and map the data
+              if (newNode.doc_id) {
+                const documents: DocumentProps[] | undefined =
+                  queryClient.getQueryData(`${project_id}-documents`);
+                const doc = documents?.find((doc) => doc.id === newNode.doc_id);
+                if (doc)
+                  document = {
+                    id: doc.id,
+                    image: {
+                      link: doc.image?.link,
+                    },
+                  };
+              } else if (newNode.doc_id === null) {
+                document = undefined;
+              }
+
               let newData = oldData.map((board) => {
                 if (board.id === newNode.board_id) {
                   return {
@@ -1093,6 +1117,7 @@ export function useCreateNode(project_id: string) {
                         textVAlign: "top" as const,
                         backgroundColor: "#595959",
                         backgroundOpacity: 1,
+                        document,
                         zIndex: 1,
                       },
                     ],
