@@ -218,6 +218,9 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           navigate(`../../wiki/${scratch?.doc_id}`);
         }
       });
+      cyRef.current.on("mousedown", "node", function (evt: any) {
+        evt.target.select();
+      });
       cyRef.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
         if (evt.target === cyRef.current) {
@@ -280,8 +283,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           show: true,
         });
       });
+
       cyRef.current.on("free", "node", function (evt: any) {
         let target = evt.target._private;
+        evt.target.select();
         // Grid extenstion messes with the "grab events"
         // "Freeon" event triggers on double clicking
         // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
