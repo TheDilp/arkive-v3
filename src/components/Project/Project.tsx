@@ -47,7 +47,7 @@ export default function Project() {
     }
   }, [images?.data]);
 
-  if (!user) return <Navigate to="/" />;
+  if (!user) return <Navigate to="/home" />;
 
   if (isLoadingDocuments || isLoadingMaps || isLoadingBoards)
     return <LoadingScreen />;

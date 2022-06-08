@@ -13,19 +13,28 @@ export default function Auth() {
   });
 
   return auth.user() ? (
-    <Navigate to="/" />
+    <Navigate to="/home" />
   ) : (
     <div className="w-full h-screen flex align-items-center justify-content-center">
       <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-20rem flex-wrap">
         <div className="w-full lg:w-7 relative">
           <h1
-            className="text-center text-6xl text-white absolute w-full z-5 Merriweather"
+            className="text-center text-7xl top-0 text-white absolute w-full z-5 Merriweather"
             style={{
               textShadow: "0 0 20px black",
             }}
           >
-            Discover your world
+            Arkive
           </h1>
+          <h2
+            className="text-center text-5xl text-white absolute w-full z-5 Merriweather"
+            style={{
+              top: "70%",
+              textShadow: "0 0 20px black",
+            }}
+          >
+            Discover your world
+          </h2>
           <img
             src={EarthIMG}
             className="w-full h-full absolute transition-all transition-duration-200"

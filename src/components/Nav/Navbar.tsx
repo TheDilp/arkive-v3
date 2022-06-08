@@ -1,9 +1,12 @@
 import { Icon } from "@iconify/react";
+import { AutoComplete } from "primereact/autocomplete";
+import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
 import { Menubar } from "primereact/menubar";
 import { Tooltip } from "primereact/tooltip";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { logout } from "../../utils/supabaseUtils";
+import { logout, supabase } from "../../utils/supabaseUtils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import { SidebarContext } from "../Context/SidebarContext";
 import NavbarTitle from "./NavbarTitle";
@@ -16,6 +19,25 @@ export default function Navbar() {
   const [uploadDialog, setUploadDialog] = useState(false);
   const { setSidebar } = useContext(SidebarContext);
   const { isTabletOrMobile } = useContext(MediaQueryContext);
+  const [search, setSearch] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState<any>("");
+  const [filteredDocs, setFilteredDocs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const timeout = setTimeout(async () => {
+      const { data, error } = await supabase
+        .from("documents")
+        .select("id, title,icon")
+        .textSearch("content->>content", `'${search}'`, {
+          type: "websearch",
+        });
+      if (data) setFilteredDocs(data);
+      else setFilteredDocs([]);
+      console.log(data);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [search]);
+
   const start = () => {
     return (
       <div className="flex flex-nowrap py-2 align-items-start pl-2">
@@ -124,10 +146,25 @@ export default function Navbar() {
 
         {project_id && <NavSettingsButton />}
         {project_id && (
-          <i
-            className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
-            onClick={() => setUploadDialog(true)}
-          ></i>
+          <>
+            <i
+              className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
+              onClick={() => setUploadDialog(true)}
+            ></i>
+            <AutoComplete
+              value={selectedCountry}
+              suggestions={filteredDocs}
+              field="title"
+              completeMethod={(e) => setSearch(e.query.toLowerCase())}
+              onChange={(e) => {
+                setSelectedCountry(e.value);
+              }}
+              onSelect={(e) => {
+                navigate(`./wiki/doc/${e.value.id}`);
+                setSelectedCountry("");
+              }}
+            />
+          </>
         )}
         <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"

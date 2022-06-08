@@ -23,6 +23,7 @@ import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import NotFound from "./components/Auth/NotFound";
 import Timelines from "./components/Timelines/TImelines";
+import LandingPage from "./components/Auth/LandingPage";
 const Project = lazy(() => import("./components/Project/Project"));
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
@@ -52,7 +53,8 @@ function App() {
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
               <Route path="*" element={<NotFound />} />
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/home" element={<Home />} />
               <Route path="login" element={<Auth />} />
               <Route path="profile" element={<Profile />} />
               <Route path="help" element={<Help />} />

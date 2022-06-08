@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import {
   Remirror,
   ThemeProvider,
@@ -183,11 +184,14 @@ export default function RemirrorContainer({
         isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
       } h-full flex flex-wrap align-content-start text-white px-2`}
     >
-      <h1 className="w-full text-center my-2 Merriweather">
-        {currentDocument &&
-          `${currentDocument.title} ${
-            currentDocument.template ? "[TEMPLATE]" : ""
-          }`}
+      <h1 className="w-full mt-2 mb-0 text-4xl flex justify-content-center Merriweather">
+        {currentDocument && (
+          <>
+            <Icon className="mr-2" fontSize={40} icon={currentDocument.icon} />
+            {currentDocument.title}
+            {currentDocument.template ? "[TEMPLATE]" : ""}
+          </>
+        )}
       </h1>
       <Breadcrumbs currentDocument={currentDocument} />
       {documents && (
