@@ -41,7 +41,6 @@ export default function BoardTreeItem({
           folder: node.droppable || false,
           depth,
           expanded: false,
-          layout: node.data?.layout || "Preset",
           public: node.data?.public || false,
           show: false,
         });

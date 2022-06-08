@@ -11,7 +11,7 @@ import {
   useUpdateBoard,
 } from "../../../utils/customHooks";
 import { updateManyNodesPosition } from "../../../utils/supabaseUtils";
-import { boardLayouts, toastWarn } from "../../../utils/utils";
+import { toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   boardId: string;
@@ -72,26 +72,6 @@ export default function BoardTreeItemContext({
     },
 
     {
-      label: "Convert To Preset",
-      command: () => setPresetDialog(true),
-    },
-    {
-      label: "Set Default Layout",
-      items: [
-        ...boardLayouts.map((layout) => {
-          return {
-            label: layout,
-            command: () => {
-              updateBoardMutation.mutate({
-                id: displayDialog.id,
-                layout,
-              });
-            },
-          };
-        }),
-      ],
-    },
-    {
       label: "Toggle Public",
       icon: `pi pi-fw ${displayDialog.public ? "pi-eye" : "pi-eye-slash"}`,
       command: () =>
@@ -142,7 +122,6 @@ export default function BoardTreeItemContext({
               parent: displayDialog.id,
               project_id: project_id as string,
               folder: false,
-              layout: "Preset",
             }),
         },
         {
@@ -156,7 +135,6 @@ export default function BoardTreeItemContext({
                 parent: displayDialog.id,
                 project_id: project_id as string,
                 folder: true,
-                layout: "Preset",
               });
             } else {
               toastWarn("You cannot insert more than 4 levels deep.");
@@ -175,34 +153,7 @@ export default function BoardTreeItemContext({
   return (
     <>
       <ConfirmDialog />
-      <ConfirmDialog
-        visible={presetDialog}
-        onHide={() => setPresetDialog(false)}
-        message={() => (
-          <div>
-            Are you sure you want to change the preset layout to the current
-            configuration?
-            <div style={{ color: "var(--red-400)" }}>
-              <i className="pi pi-exclamation-triangle"></i>
-              You will lose the current preset layout configuration!
-            </div>
-          </div>
-        )}
-        header="Change Preset Layout"
-        icon="pi pi-exclamation-triangle"
-        acceptClassName="p-button-danger"
-        accept={async () => {
-          if (boardId === displayDialog.id && cyRef.current) {
-            const nodes = cyRef.current.nodes();
-            let newNodePositions = [];
-            for (const node of nodes) {
-              const { x, y } = node.position();
-              newNodePositions.push({ id: node.id(), x, y });
-            }
-            updateManyNodesPosition(newNodePositions);
-          }
-        }}
-      />
+
       <ContextMenu
         model={displayDialog.folder ? folderItems : boardItems}
         ref={cm}

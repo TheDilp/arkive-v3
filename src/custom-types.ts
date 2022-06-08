@@ -60,7 +60,6 @@ export type BoardProps = {
   title: string;
   parent: { id: string; title: string } | null;
   project_id: string;
-  layout: string;
   nodes: BoardNodeProps[];
   edges: BoardEdgeProps[];
   folder: boolean;
@@ -175,7 +174,6 @@ export type boardItemDisplayDialogProps = {
   id: string;
   title: string;
   parent: string;
-  layout: string;
   depth: number;
   folder: boolean;
   expanded: boolean;
@@ -275,7 +273,7 @@ export type UpdateMarkerInputs = {
   doc_id?: string;
   map_link?: string;
 };
-export type UpdateBoardInputs = Pick<BoardProps, "title" | "layout"> & {
+export type UpdateBoardInputs = Pick<BoardProps, "title"> & {
   parent: string;
 };
 export type UpdateNodeInputs = Pick<
@@ -399,14 +397,12 @@ export type CreateBoardProps = {
   project_id: string;
   parent?: string | null;
   folder: boolean;
-  layout: string;
 };
 
 export type UpdateBoardProps = {
   id: string;
   title?: string;
   parent?: string | null;
-  layout?: string;
   expanded?: boolean;
   public?: boolean;
 };

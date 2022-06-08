@@ -2,7 +2,6 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
@@ -11,7 +10,6 @@ import {
   UpdateBoardInputs,
 } from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
-import { boardLayouts } from "../../../utils/utils";
 
 type Props = {
   visible: boardItemDisplayDialogProps;
@@ -31,7 +29,6 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
     defaultValues: {
       title: visible.title,
       parent: visible.parent === "0" ? undefined : visible.parent,
-      layout: visible.layout,
     },
   });
   const onSubmit: SubmitHandler<UpdateBoardInputs> = (data) => {
@@ -45,7 +42,6 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
       parent: "",
       folder: false,
       depth: 0,
-      layout: "",
       show: false,
       expanded: false,
       public: false,
@@ -85,7 +81,6 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
           parent: "",
           folder: false,
           depth: 0,
-          layout: "",
           show: false,
           expanded: false,
           public: false,
@@ -141,23 +136,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
                 />
               )}
             />
-          </div>
-          <div className="w-8">
-            <Controller
-              name="layout"
-              control={control}
-              render={({ field }) => (
-                <Dropdown
-                  className="w-full"
-                  placeholder="Board Layout"
-                  value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
-                  options={boardLayouts}
-                />
-              )}
-            />
-          </div>
-
+        </div>
           <div className="w-full flex justify-content-end">
             <Button
               label="Update Board"

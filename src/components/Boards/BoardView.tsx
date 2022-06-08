@@ -4,6 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 import { v4 as uuid } from "uuid";
 import {
   BoardContextMenuProps,
@@ -22,7 +23,6 @@ import {
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
-import { uploadImage } from "../../utils/supabaseUtils";
 import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
@@ -36,7 +36,6 @@ import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
-import { useDebouncedCallback } from "use-debounce";
 type Props = {
   setBoardId: (boardId: string) => void;
   cyRef: any;
@@ -565,16 +564,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           }}
         ></i>
         <i className="pi pi-fw pi-trash"></i>
-        <ColorPicker
-          onChange={(e) => {
-            if (cyRef.current.elements(":selected")?.length > 0) {
-              debounced(e.target.value, cyRef.current.elements(":selected"));
-              // cyRef.current.elements(":selected").forEach((el: any) => {});
-            }
-          }}
-          className="w-2rem h-2rem"
-          defaultColor="595959"
-        ></ColorPicker>
         <i
           className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300"
           onClick={() => {
@@ -599,6 +588,16 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
             }
           }}
         ></i>
+        <ColorPicker
+          onChange={(e) => {
+            if (cyRef.current.elements(":selected")?.length > 0) {
+              debounced(e.target.value, cyRef.current.elements(":selected"));
+              // cyRef.current.elements(":selected").forEach((el: any) => {});
+            }
+          }}
+          className="w-2rem h-2rem"
+          defaultColor="595959"
+        ></ColorPicker>
       </div>
 
       <CytoscapeComponent

@@ -7,7 +7,6 @@ import {
   CytoscapeNodeProps,
 } from "../../../custom-types";
 import {
-  changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
@@ -18,7 +17,6 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
-  const [layout, setLayout] = useState<string | null>();
   const cyRef = useRef() as any;
   const ehRef = useRef() as any;
   const grRef = useRef() as any;
@@ -61,6 +59,7 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
                 )}`
               : [],
           },
+          locked: true,
           scratch: {
             doc_id: node.document?.id,
           },
@@ -122,15 +121,7 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
       cyRef.current.removeListener("click cxttap dbltap free");
     };
   }, [board_id, cyRef.current]);
-  useEffect(() => {
-    if (cyRef && board?.layout) {
-      // Timeout necessary to wait for cytoscape to render and then apply layout
-      setTimeout(() => {
-        changeLayout(board.layout, cyRef);
-        setLayout(board.layout);
-      }, 1);
-    }
-  }, [board?.layout, cyRef]);
+
   useEffect(() => {
     grRef.current = null;
     grRef.current = cyRef.current.gridGuide({
