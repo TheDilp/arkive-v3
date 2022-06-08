@@ -1,15 +1,26 @@
 import { Icon } from "@iconify/react";
-import { useActive, useAttrs, useCommands } from "@remirror/react";
+import {
+  useActive,
+  useAttrs,
+  useCommands,
+  useRemirrorContext,
+} from "@remirror/react";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { Menubar } from "primereact/menubar";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
+import { RemirrorJSON } from "remirror";
 import { ImageProps } from "../../../custom-types";
 import "../../../styles/MenuBar.css";
-import { useGetImages } from "../../../utils/customHooks";
-import { supabaseStorageImagesLink } from "../../../utils/utils";
+import { useGetImages, useUpdateDocument } from "../../../utils/customHooks";
+import {
+  supabaseStorageImagesLink,
+  toastError,
+  toastSuccess,
+} from "../../../utils/utils";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 export default function MenuBar({ saving }: { saving: number | boolean }) {
   const {
@@ -31,11 +42,14 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     rightAlign,
     focus,
   } = useCommands();
-  const { project_id } = useParams();
+  const { project_id, doc_id } = useParams();
+  const { getState } = useRemirrorContext();
   const active = useActive();
   const attrs = useAttrs();
   const images = useGetImages(project_id as string);
   const [showDialog, setShowDialog] = useState(false);
+  const updateDocumentMutation = useUpdateDocument(project_id as string);
+  const { isTabletOrMobile } = useContext(MediaQueryContext);
   function calloutToggle(type: string) {
     if (active.callout()) {
       if (!active.callout({ type })) {
@@ -416,9 +430,29 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               }
             },
           },
+          {
+            icon: "pi pi-fw pi-save",
+            command: async () => {
+              try {
+                await updateDocumentMutation.mutateAsync({
+                  id: doc_id as string,
+                  content: getState().doc.toJSON() as RemirrorJSON,
+                });
+                toastSuccess("Document successfully saved!");
+              } catch (error) {
+                toastError("Error saving document!");
+              }
+            },
+          },
         ]}
         end={() =>
-          saving ? <ProgressSpinner className="w-2rem h-2rem" /> : ""
+          saving ? (
+            <ProgressSpinner
+              className={isTabletOrMobile ? "w-1rem h-1rem" : "w-2rem h-2rem"}
+            />
+          ) : (
+            ""
+          )
         }
         className="p-0 Lato w-full border-0 sticky "
         style={{

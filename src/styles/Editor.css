@@ -94,3 +94,7 @@ appeears when a mention link is hovered */
 .mention-tooltip .p-card-content {
     padding: 0 !important;
 }
+
+.normalLink {
+    color: var(--blue-300);
+}
