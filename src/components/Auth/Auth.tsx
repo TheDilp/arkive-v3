@@ -10,6 +10,11 @@ export default function Auth() {
   const user = auth.user();
 
   useEffect(() => {
+    console.log("TEST");
+  }, []);
+
+  useEffect(() => {
+    console.log(user);
     if (auth.user()) navigate("/");
   }, [user]);
 

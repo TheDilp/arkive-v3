@@ -37,9 +37,14 @@ export const auth = supabase.auth;
 
 // Auth functions
 export const authFunction = async () => {
-  const { user, error } = await supabase.auth.signIn({
-    provider: "discord",
-  });
+  const { user, error } = await supabase.auth.signIn(
+    {
+      provider: "discord",
+    },
+    {
+      redirectTo: "https://thearkive.app",
+    }
+  );
   if (user) {
     return user;
   }
