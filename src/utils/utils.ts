@@ -324,46 +324,6 @@ export const edgehandlesSettings = {
   noEdgeEventsInDraw: true, // set events:no to edges during draws, prevents mouseouts on compounds
   disableBrowserGestures: true, // during an edge drawing gesture, disable browser gestures such as two-finger trackpad swipe and pinch-to-zoom
 };
-export const boardLayouts = [
-  "Preset",
-  "Grid",
-  "Breadthfirst",
-  "Circle",
-  "Concentric",
-  "Random",
-];
-export const presetLayoutSettings = {
-  name: "preset",
-  fit: false,
-  positions: function (node: any) {
-    let { x, y } = node.data();
-    return { x, y };
-  },
-};
-export const breadthFirstLayoutSettings = {
-  name: "breadthfirst",
-  directed: true,
-  padding: 10,
-  fit: false,
-};
-export const concentricLayoutSettings = {
-  name: "concentric",
-  fit: false,
-  concentric: function (node: any) {
-    return node.degree();
-  },
-  levelWidth: function (nodes: any) {
-    return 2;
-  },
-};
-export const circleLayoutSettings = {
-  name: "circle",
-  fit: false,
-};
-export const randomLayoutSettings = {
-  name: "random",
-  fit: false,
-};
 export const textHAlignOptions = [
   {
     label: "Left",
@@ -392,48 +352,6 @@ export const textVAlignOptions = [
     value: "bottom",
   },
 ];
-export function changeLayout(layout: string, cyRef: any) {
-  if (layout === "Preset") {
-    // Enable movement only when in the default positions set by the user
-    cyRef.current.autoungrabify(false);
-    cyRef.current.layout(presetLayoutSettings).run();
-  } else {
-    // Disable movement when using layouts so the default positions don't get messed up
-    cyRef.current.autoungrabify(true);
-    if (layout === "Grid") {
-      cyRef.current.layout({ name: "grid" }).run();
-    } else if (layout === "Breadthfirst") {
-      cyRef.current.layout(breadthFirstLayoutSettings).run();
-    } else if (layout === "Concentric") {
-      cyRef.current.layout(concentricLayoutSettings).run();
-    } else if (layout === "Circle") {
-      cyRef.current.layout(circleLayoutSettings).run();
-    } else if (layout === "Random") {
-      cyRef.current.layout(randomLayoutSettings).run();
-    }
-  }
-}
-export function initialLayout(layout: string, cy: any) {
-  if (layout === "Preset") {
-    // Enable movement only when in the default positions set by the user
-    cy.autoungrabify(false);
-    cy.layout(presetLayoutSettings).run();
-  } else {
-    // Disable movement when using layouts so the default positions don't get messed up
-    cy.autoungrabify(true);
-    if (layout === "Grid") {
-      cy.layout({ name: "grid" }).run();
-    } else if (layout === "Breadthfirst") {
-      cy.layout(breadthFirstLayoutSettings).run();
-    } else if (layout === "Concentric") {
-      cy.layout(concentricLayoutSettings).run();
-    } else if (layout === "Circle") {
-      cy.layout(circleLayoutSettings).run();
-    } else if (layout === "Random") {
-      cy.layout(randomLayoutSettings).run();
-    }
-  }
-}
 export const cytoscapeGridOptions = {
   // On/Off Modules
   /* From the following four snap options, at most one should be true at a given time */

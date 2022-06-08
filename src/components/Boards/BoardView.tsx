@@ -24,7 +24,6 @@ import {
 } from "../../utils/customHooks";
 import { uploadImage } from "../../utils/supabaseUtils";
 import {
-  changeLayout,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
@@ -53,7 +52,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
-  const [layout, setLayout] = useState<string | null>();
   const ehRef = useRef() as any;
   const grRef = useRef() as any;
   const cm = useRef() as any;
@@ -376,15 +374,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       setBoardId("");
     };
   }, [board_id]);
-  useEffect(() => {
-    if (cyRef && board?.layout) {
-      // Timeout necessary to wait for cytoscape to render and then apply layout
-      setTimeout(() => {
-        changeLayout(board.layout, cyRef);
-        setLayout(board.layout);
-      }, 1);
-    }
-  }, [board?.layout, cyRef]);
 
   return (
     <div
@@ -476,8 +465,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       <BoardBar
         drawMode={drawMode}
         setDrawMode={setDrawMode}
-        layout={layout}
-        setLayout={setLayout}
         cyRef={cyRef}
         ehRef={ehRef}
         boardTitle={board?.title}

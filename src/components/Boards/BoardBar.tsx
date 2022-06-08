@@ -7,10 +7,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BoardExportProps } from "../../custom-types";
 import { useGetBoardData } from "../../utils/customHooks";
-import { boardLayouts, changeLayout, toastWarn } from "../../utils/utils";
+import { toastWarn } from "../../utils/utils";
 type Props = {
-  layout: string | null | undefined;
-  setLayout: (layout: string) => void;
   drawMode: boolean;
   setDrawMode: (drawMode: boolean | ((prev: boolean) => boolean)) => void;
   cyRef: any;
@@ -19,8 +17,6 @@ type Props = {
 };
 
 export default function BoardBar({
-  layout,
-  setLayout,
   drawMode,
   setDrawMode,
   cyRef,
@@ -88,7 +84,7 @@ export default function BoardBar({
   }, [board_id]);
 
   return (
-    <div className="absolute flex flex-nowrap z-5">
+    <div className="absolute flex flex-nowrap z-5 m-2">
       <Dialog
         header={`Export Board - ${boardTitle}`}
         modal={false}
@@ -159,17 +155,7 @@ export default function BoardBar({
           </div>
         </div>
       </Dialog>
-      <div className="relative mr-2">
-        <Dropdown
-          options={boardLayouts}
-          value={layout}
-          onChange={(e) => {
-            setLayout(e.value);
-            changeLayout(e.value as string, cyRef);
-            cyRef.current.fit();
-          }}
-        />
-      </div>
+
       <Button
         className={`p-button-rounded  ${
           drawMode ? "p-button-success" : "p-button-secondary"
