@@ -22,7 +22,7 @@ import PublicMaps from "./components/PublicView/PublicMaps/PublicMaps";
 import PublicWiki from "./components/PublicView/Wiki/PublicWiki";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import NotFound from "./components/Auth/NotFound";
-import { auth } from "./utils/supabaseUtils";
+import Timelines from "./components/Timelines/TImelines";
 const Project = lazy(() => import("./components/Project/Project"));
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
@@ -43,7 +43,6 @@ function App() {
   useEffect(() => {
     cytoscape.use(edgehandles);
     cytoscape.use(gridguide);
-    
   }, []);
   return (
     <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
@@ -86,6 +85,14 @@ function App() {
                   element={
                     <Suspense fallback={<LoadingScreen />}>
                       <Boards />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="timelines/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Timelines />
                     </Suspense>
                   }
                 />

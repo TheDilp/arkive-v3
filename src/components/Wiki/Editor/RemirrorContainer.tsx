@@ -37,7 +37,6 @@ import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomLinkExtension";
-import { CustomResizableImageView } from "./CustomImage";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
 const hooks = [
@@ -119,7 +118,6 @@ export default function RemirrorContainer({
     ],
   });
   CustomMentionExtension.ReactComponent = MentionReactComponent;
-  const imageExt = new ImageExtension();
 
   const { manager, state } = useRemirror({
     extensions: () => [

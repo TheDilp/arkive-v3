@@ -51,6 +51,12 @@ export default function Navbar() {
                 autoHide
               />
               <Tooltip
+                target=".timelineIcon"
+                content="Timelines"
+                position="bottom"
+                autoHide
+              />
+              <Tooltip
                 target=".filebrowserIcon"
                 content="Project Files"
                 position="bottom"
@@ -68,7 +74,7 @@ export default function Navbar() {
                   navigate("./maps");
                 }}
               ></i>
-              <span className="boardsIcon">
+              <span className="boardsIcon mr-1">
                 <Icon
                   className="hover:text-primary cursor-pointer "
                   icon="mdi:draw"
@@ -78,8 +84,18 @@ export default function Navbar() {
                   }}
                 />
               </span>
+              <span className="timelineIcon mr-2">
+                <Icon
+                  className="hover:text-primary cursor-pointer"
+                  icon="mdi:chart-timeline-variant"
+                  fontSize={22}
+                  onClick={async () => {
+                    navigate("./timelines");
+                  }}
+                />
+              </span>
               <i
-                className="pi pi-image ml-3 hover:text-primary cursor-pointer filebrowserIcon"
+                className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
                 onClick={async () => {
                   navigate("./filebrowser");
                 }}
