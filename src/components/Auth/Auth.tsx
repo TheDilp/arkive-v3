@@ -7,16 +7,11 @@ import EarthIMG from "./earthimg.jpg";
 export default function Auth() {
   const navigate = useNavigate();
 
-  const user = auth.user();
-
-  useEffect(() => {
-    console.log("TEST");
-  }, []);
-
-  useEffect(() => {
-    console.log(user);
-    if (auth.user()) navigate("/");
-  }, [user]);
+  auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_IN") {
+      navigate("/");
+    }
+  });
 
   return auth.user() ? (
     <Navigate to="/" />
