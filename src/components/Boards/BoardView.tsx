@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
+import { Tooltip } from "primereact/tooltip";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -540,15 +541,44 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       </Dialog>
 
       <div
-        className="w-4 absolute border-round surface-50 text-white h-3rem flex align-items-center justify-content-center shadow-5"
+        className="w-4 absolute border-round surface-50 text-white h-2rem flex align-items-center justify-content-around shadow-5"
         style={{
-          top: "95.5vh",
+          top: "96.6vh",
           left: "41.5%",
           zIndex: 5,
         }}
       >
+        <Tooltip
+          target={".lockSelected"}
+          content="Lock selected nodes"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".unlockSelected"}
+          content="Unlock selected nodes"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".deleteSelected"}
+          content="Delete selected elements"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".resetColors"}
+          content="Reset selected to default color"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".pickColor"}
+          content="Pick color for selected elements"
+          position="top"
+        />
         <i
-          className="pi pi-fw pi-lock"
+          className="pi pi-fw pi-lock  cursor-pointer hover:text-blue-300 lockSelected"
           onClick={() => {
             if (cyRef.current.elements(":selected")?.length > 0) {
               cyRef.current.elements(":selected").lock();
@@ -556,16 +586,16 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           }}
         ></i>
         <i
-          className="pi pi-fw pi-lock-open"
+          className="pi pi-fw pi-lock-open  cursor-pointer hover:text-blue-300 unlockSelected"
           onClick={() => {
             if (cyRef.current.elements(":selected")?.length > 0) {
               cyRef.current.elements(":selected").unlock();
             }
           }}
         ></i>
-        <i className="pi pi-fw pi-trash"></i>
+        <i className="pi pi-fw pi-trash  cursor-pointer hover:text-blue-300 deleteSelected"></i>
         <i
-          className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300"
+          className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 resetColors"
           onClick={() => {
             if (cyRef.current.elements(":selected")?.length > 0) {
               cyRef.current.elements(":selected").forEach((el: any) => {
