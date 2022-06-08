@@ -322,6 +322,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
       cyRef.current.on("free", "node", function (evt: any) {
         let target = evt.target._private;
+        cyRef.current.elements(":selected").select();
         evt.target.select();
 
         // Grid extenstion messes with the "grab events"
@@ -493,10 +494,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         setQuickCreate={setQuickCreate}
       />
       <div
-        className="w-4 absolute border-round surface-50 text-white h-2rem flex align-items-center justify-content-around shadow-5"
+        className="w-2 absolute border-round surface-50 text-white h-3rem flex align-items-center justify-content-around shadow-5"
         style={{
-          top: "96.6vh",
-          left: "41.5%",
+          top: "95.6vh",
+          left: "50%",
           zIndex: 5,
         }}
       >

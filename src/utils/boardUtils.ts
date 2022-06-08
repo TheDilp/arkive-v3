@@ -1,4 +1,3 @@
-import { useUpdateBoard, useUpdateNode } from "./customHooks";
 import { updateManyNodesLockState } from "./supabaseUtils";
 import { toastWarn } from "./utils";
 
@@ -444,14 +443,9 @@ export const cytoscapeStylesheet = [
   {
     selector: ":grabbed",
     style: {
-      "border-width": 4,
-      "border-color": "green",
-      "border-opacity": 1,
       "line-color": "green",
       "target-arrow-color": "green",
-      "underlay-color": "transparent",
-      "underlay-padding": 0,
-      "underlay-opacity": 0,
+      "overlay-color": "lightgreen",
     },
   },
   {

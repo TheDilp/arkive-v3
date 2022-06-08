@@ -117,7 +117,7 @@ export default function DraggableMarker({
       {text && (
         <Popup position={[51.505, -0]}>
           {doc_id ? (
-            <Link to={`../../wiki/${doc_id}`}>{text}</Link>
+            <Link to={`../../wiki/doc/${doc_id}`}>{text}</Link>
           ) : (
             <div className="Lato text-center">{text}</div>
           )}

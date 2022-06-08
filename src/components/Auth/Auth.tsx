@@ -1,5 +1,4 @@
 import { Button } from "primereact/button";
-import { useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { auth, authFunction } from "../../utils/supabaseUtils";
 import EarthIMG from "./earthimg.jpg";

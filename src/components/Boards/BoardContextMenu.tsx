@@ -142,12 +142,12 @@ export default function BoardContextMenu({
               {
                 label: "Unlock selected",
                 icon: "pi pi-fw pi-lock-open",
-                command: () => cyRef.current.nodes(":selected").unlock(),
+                command: () => changeLockState(cyRef, false),
               },
               {
                 label: "Lock selected",
                 icon: "pi pi-fw pi-lock",
-                command: () => cyRef.current.nodes(":selected").lock(),
+                command: () => changeLockState(cyRef, true),
               },
             ],
           }
@@ -156,8 +156,14 @@ export default function BoardContextMenu({
               let lockState = contextMenu.selected.locked();
               if (lockState) {
                 contextMenu.selected.unlock();
+                updateManyNodesLockState([
+                  { id: contextMenu?.selected.data().id, locked: false },
+                ]);
               } else {
                 contextMenu.selected.lock();
+                updateManyNodesLockState([
+                  { id: contextMenu?.selected.data().id, locked: true },
+                ]);
               }
             },
           }),

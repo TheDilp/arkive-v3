@@ -119,9 +119,7 @@ export default function RemirrorContainer({
     ],
   });
   CustomMentionExtension.ReactComponent = MentionReactComponent;
-  const imageExt = new ImageExtension({
-    enableResizing: true,
-  });
+  const imageExt = new ImageExtension();
 
   const { manager, state } = useRemirror({
     extensions: () => [
