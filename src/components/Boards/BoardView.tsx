@@ -24,14 +24,15 @@ import {
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
+import { updateManyNodesLockState } from "../../utils/supabaseUtils";
+import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import {
+  changeLockState,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  supabaseStorageImagesLink,
-  toastWarn,
   toModelPosition,
-} from "../../utils/utils";
+} from "../../utils/boardUtils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
@@ -578,22 +579,14 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           position="top"
         />
         <i
-          className="pi pi-fw pi-lock  cursor-pointer hover:text-blue-300 lockSelected"
-          onClick={() => {
-            if (cyRef.current.elements(":selected")?.length > 0) {
-              cyRef.current.elements(":selected").lock();
-            }
-          }}
+          className="pi pi-fw pi-lock cursor-pointer hover:text-blue-300 lockSelected"
+          onClick={() => changeLockState(cyRef, true)}
         ></i>
         <i
-          className="pi pi-fw pi-lock-open  cursor-pointer hover:text-blue-300 unlockSelected"
-          onClick={() => {
-            if (cyRef.current.elements(":selected")?.length > 0) {
-              cyRef.current.elements(":selected").unlock();
-            }
-          }}
+          className="pi pi-fw pi-lock-open cursor-pointer hover:text-blue-300 unlockSelected"
+          onClick={() => changeLockState(cyRef, false)}
         ></i>
-        <i className="pi pi-fw pi-trash  cursor-pointer hover:text-blue-300 deleteSelected"></i>
+        <i className="pi pi-fw pi-trash cursor-pointer hover:text-blue-300 deleteSelected"></i>
         <i
           className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 resetColors"
           onClick={() => {

@@ -14,13 +14,13 @@ import {
   useUpdateNode,
 } from "../../utils/customHooks";
 import { useParams } from "react-router-dom";
+import { supabaseStorageImagesLink } from "../../utils/utils";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
-  supabaseStorageImagesLink,
   textHAlignOptions,
   textVAlignOptions,
-} from "../../utils/utils";
+} from "../../utils/boardUtils";
 import { ColorPicker } from "primereact/colorpicker";
 import { InputNumber } from "primereact/inputnumber";
 import { useEffect } from "react";

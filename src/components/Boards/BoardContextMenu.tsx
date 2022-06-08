@@ -2,6 +2,7 @@ import { ContextMenu } from "primereact/contextmenu";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { BoardContextMenuProps } from "../../custom-types";
+import { changeLockState } from "../../utils/boardUtils";
 import {
   useCreateNode,
   useDeleteEdge,
@@ -53,28 +54,12 @@ export default function BoardContextMenu({
         {
           label: "Unlock selected",
           icon: "pi pi-fw pi-lock-open",
-          command: () => {
-            let selected = cyRef.current.nodes(":selected");
-            selected.unlock();
-            let updateSelected = selected.map((node: any) => ({
-              id: node.data().id,
-              locked: false,
-            }));
-            updateManyNodesLockState(updateSelected);
-          },
+          command: () => changeLockState(cyRef, false),
         },
         {
           label: "Lock selected",
           icon: "pi pi-fw pi-lock",
-          command: () => {
-            let selected = cyRef.current.nodes(":selected");
-            selected.lock();
-            let updateSelected = selected.map((node: any) => ({
-              id: node.data().id,
-              locked: true,
-            }));
-            updateManyNodesLockState(updateSelected);
-          },
+          command: () => changeLockState(cyRef, true),
         },
       ],
     },

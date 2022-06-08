@@ -14,7 +14,7 @@ import {
   boardEdgeLineStyles,
   boardEdgeTaxiDirections,
   edgeTargetArrowShapes,
-} from "../../utils/utils";
+} from "../../utils/boardUtils";
 import { useEffect } from "react";
 
 type Props = {

@@ -6,12 +6,12 @@ import {
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
 } from "../../../custom-types";
+import { supabaseStorageImagesLink } from "../../../utils/utils";
 import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  supabaseStorageImagesLink,
-} from "../../../utils/utils";
+} from "../../../utils/boardUtils";
 export default function PublicBoardView({ board }: { board: BoardProps }) {
   const { board_id } = useParams();
   const [elements, setElements] = useState<
