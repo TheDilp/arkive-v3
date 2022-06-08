@@ -17,7 +17,9 @@ import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
+  nodeColorPresets,
   toModelPosition,
+  updateColor,
 } from "../../utils/boardUtils";
 import {
   useCreateEdge,
@@ -106,24 +108,14 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
 
   const debounced = useDebouncedCallback(
     // function
-    (color, elements) => {
-      elements.forEach((node: any) => {
-        if (node.isNode()) {
-          updateNodeMutation.mutate({
-            id: node.data().id,
-            // Board_id is required for updating the state in react-query
-            board_id: board_id as string,
-            backgroundColor: `#${color}`,
-          });
-        } else {
-          updateEdgeMutation.mutate({
-            id: node.data().id,
-            // Board_id is required for updating the state in react-query
-            board_id: board_id as string,
-            lineColor: `#${color}`,
-          });
-        }
-      });
+    (color) => {
+      updateColor(
+        cyRef,
+        `#${color}`,
+        board_id as string,
+        updateNodeMutation,
+        updateEdgeMutation
+      );
     },
     // delay in ms
     400
@@ -519,6 +511,33 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           autoHide={true}
         />
         <Tooltip
+          target={".colorPresets"}
+          position="top"
+          autoHide={false}
+          hideEvent="focus"
+        >
+          <div className="flex flex-wrap w-10rem">
+            {nodeColorPresets.map((color) => (
+              <div
+                key={color}
+                className="w-1rem h-1rem border-rounded cursor-pointer"
+                style={{
+                  backgroundColor: `#${color}`,
+                }}
+                onClick={() => {
+                  updateColor(
+                    cyRef,
+                    `#${color}`,
+                    board_id as string,
+                    updateNodeMutation,
+                    updateEdgeMutation
+                  );
+                }}
+              ></div>
+            ))}
+          </div>
+        </Tooltip>
+        <Tooltip
           target={".resetColors"}
           content="Reset selected to default color"
           position="top"
@@ -539,35 +558,24 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         ></i>
         <i className="pi pi-fw pi-trash cursor-pointer hover:text-blue-300 deleteSelected"></i>
         <i
-          className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 resetColors"
-          onClick={() => {
-            if (cyRef.current.elements(":selected")?.length > 0) {
-              cyRef.current.elements(":selected").forEach((el: any) => {
-                if (el.isNode()) {
-                  updateNodeMutation.mutate({
-                    id: el.data().id,
-                    board_id: board_id as string,
-                    backgroundColor: "#595959",
-                  });
-                } else {
-                  updateEdgeMutation.mutate({
-                    id: el.data().id,
-                    board_id: board_id as string,
-                    lineColor: "#595959",
-                  });
-                }
-              });
-            } else {
-              toastWarn("No elements are selected.");
-            }
-          }}
+          className="pi pi-fw pi-refresh cursor-pointer hover:text-blue-300 resetColors"
+          onClick={() =>
+            updateColor(
+              cyRef,
+              "#595959",
+              board_id as string,
+              updateNodeMutation,
+              updateEdgeMutation
+            )
+          }
+        ></i>
+        <i
+          className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 colorPresets"
+          onClick={() => {}}
         ></i>
         <ColorPicker
           onChange={(e) => {
-            if (cyRef.current.elements(":selected")?.length > 0) {
-              debounced(e.target.value, cyRef.current.elements(":selected"));
-              // cyRef.current.elements(":selected").forEach((el: any) => {});
-            }
+            debounced(e.target.value);
           }}
           className="w-2rem h-2rem"
           defaultColor="595959"

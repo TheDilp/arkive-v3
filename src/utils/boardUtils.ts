@@ -1,4 +1,6 @@
+import { useUpdateBoard, useUpdateNode } from "./customHooks";
 import { updateManyNodesLockState } from "./supabaseUtils";
+import { toastWarn } from "./utils";
 
 // Board Utils
 export const boardNodeShapes = [
@@ -113,7 +115,6 @@ export const boardEdgeLineStyles = [
     value: "dotted",
   },
 ];
-
 export const boardEdgeTaxiDirections = [
   {
     label: "Auto",
@@ -304,19 +305,6 @@ export const cytoscapeGridOptions = {
   // Parent Padding
   parentSpacing: -1, // -1 to set paddings of parents to gridSpacing
 };
-// export const cytoscapeCompoundDnDOptions = {
-//   grabbedNode: (node: any) => true, // filter function to specify which nodes are valid to grab and drop into other nodes
-//   dropTarget: (dropTarget: any, grabbedNode: any) => true, // filter function to specify which parent nodes are valid drop targets
-//   dropSibling: (dropSibling: any, grabbedNode: any) => true, // filter function to specify which orphan nodes are valid drop siblings
-//   newParentNode: (grabbedNode: any, dropSibling: any) => ({}), // specifies element json for parent nodes added by dropping an orphan node on another orphan (a drop sibling). You can chose to return the dropSibling in which case it becomes the parent node and will be preserved after all its children are removed.
-//   boundingBoxOptions: {
-//     // same as https://js.cytoscape.org/#eles.boundingBox, used when calculating if one node is dragged over another
-//     includeOverlays: false,
-//     includeLabels: true,
-//   },
-//   overThreshold: 50, // make dragging over a drop target easier by expanding the hit area by this amount on all sides
-//   outThreshold: 50, // make dragging out of a drop target a bit harder by expanding the hit area by this amount on all sides
-// };
 export const cytoscapeStylesheet = [
   {
     selector: "node[classes]",
@@ -512,6 +500,28 @@ export const cytoscapeStylesheet = [
     },
   },
 ];
+export const nodeColorPresets = [
+  "000000",
+  "FFFFFF",
+  "595959",
+  "121212",
+  "D90429",
+  "FF595E",
+  "FFCA3A",
+  "8AC926",
+  "1982C4",
+  "6A4C93",
+  "F4D03F",
+  "F4A261",
+  "F45B69",
+  "FFBA08",
+  "9D0208",
+  "669BBC",
+  "FFD6FF",
+  "43AA8B",
+  "F5DFBB",
+  "2C6E49",
+];
 export const toModelPosition = (cyRef: any, pos: { x: number; y: number }) => {
   const pan = cyRef.current.pan();
   const zoom = cyRef.current.zoom();
@@ -520,7 +530,6 @@ export const toModelPosition = (cyRef: any, pos: { x: number; y: number }) => {
     y: (pos.y - pan.y) / zoom,
   };
 };
-
 export function changeLockState(cyRef: any, locked: boolean) {
   let selected = cyRef.current.nodes(":selected");
   if (locked) {
@@ -533,4 +542,31 @@ export function changeLockState(cyRef: any, locked: boolean) {
     locked,
   }));
   updateManyNodesLockState(updateSelected);
+}
+export function updateColor(
+  cyRef: any,
+  color: string,
+  board_id: string,
+  updateNodeMutation: any,
+  updateEdgeMutation: any
+) {
+  if (cyRef.current.elements(":selected")?.length > 0) {
+    cyRef.current.elements(":selected").forEach((el: any) => {
+      if (el.isNode()) {
+        updateNodeMutation.mutate({
+          id: el.data().id,
+          board_id: board_id as string,
+          backgroundColor: color,
+        });
+      } else {
+        updateEdgeMutation.mutate({
+          id: el.data().id,
+          board_id: board_id as string,
+          lineColor: color,
+        });
+      }
+    });
+  } else {
+    toastWarn("No elements are selected.");
+  }
 }
