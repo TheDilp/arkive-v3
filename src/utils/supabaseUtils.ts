@@ -480,7 +480,14 @@ export const updateProfile = async (
 export const updateManyNodesPosition = async (
   nodes: { id: string; x: number; y: number }[]
 ) => {
-  await supabase.rpc("update_many_nodes", {
+  await supabase.rpc("update_many_nodes_position", {
+    payload: nodes,
+  });
+};
+export const updateManyNodesLockState = async (
+  nodes: { id: string; locked: boolean }[]
+) => {
+  await supabase.rpc("update_many_nodes_lockstate", {
     payload: nodes,
   });
 };

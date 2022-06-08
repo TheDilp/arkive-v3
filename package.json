@@ -11,6 +11,7 @@
     "@remirror/react": "^1.0.33",
     "@supabase/supabase-js": "^1.33.3",
     "@tanstack/react-virtual": "^3.0.0-beta.2",
+    "@types/cytoscape": "^3.19.4",
     "@types/node": "^16.11.26",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",

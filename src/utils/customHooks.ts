@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import {
   BoardProps,
@@ -16,7 +15,6 @@ import {
   UpdateNodeProps,
 } from "../custom-types";
 import {
-  auth,
   createBoard,
   createDocument,
   createEdge,
@@ -37,8 +35,6 @@ import {
   getDocuments,
   getImages,
   getMaps,
-  getSingleBoard,
-  getSingleDocument,
   getTags,
   renameImage,
   sortBoardsChildren,
@@ -53,7 +49,7 @@ import {
   updateProject,
   uploadImage,
 } from "./supabaseUtils";
-import { toastError, toastSuccess } from "./utils";
+import { defaultNode, toastError, toastSuccess } from "./utils";
 // CUSTOM HOOKS
 
 // Custom hook for detecting if user clicked outside of element (ref)
@@ -1110,15 +1106,8 @@ export function useCreateNode(project_id: string) {
                       ...board.nodes,
                       {
                         ...newNode,
-                        width: 50,
-                        height: 50,
-                        fontSize: 16,
-                        textHAlign: "center" as const,
-                        textVAlign: "top" as const,
-                        backgroundColor: "#595959",
-                        backgroundOpacity: 1,
+                        ...defaultNode,
                         document,
-                        zIndex: 1,
                       },
                     ],
                   };

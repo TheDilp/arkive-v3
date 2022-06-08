@@ -83,6 +83,7 @@ export type BoardNodeProps = {
   backgroundColor: string;
   backgroundOpacity: number;
   zIndex: number;
+  locked: boolean;
   document?: {
     id: string;
     image?: {
@@ -130,6 +131,7 @@ export type CytoscapeNodeProps = {
     | "customImage"
   >;
   position: Pick<BoardNodeProps, "x" | "y">;
+  locked: boolean;
 };
 export type CytoscapeEdgeProps = {
   data: Pick<
@@ -437,6 +439,7 @@ export type UpdateNodeProps = {
   customImage?: string;
   zIndex?: number;
   doc_id?: string;
+  locked?: boolean;
 };
 
 export type UpdateEdgeProps = {

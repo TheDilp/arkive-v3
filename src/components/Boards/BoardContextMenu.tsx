@@ -3,11 +3,15 @@ import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { BoardContextMenuProps } from "../../custom-types";
 import {
-  useCreateNode, useDeleteEdge,
+  useCreateNode,
+  useDeleteEdge,
   useDeleteManyNodes,
-  useDeleteNode
+  useDeleteNode,
 } from "../../utils/customHooks";
-import { deleteManyEdges } from "../../utils/supabaseUtils";
+import {
+  deleteManyEdges,
+  updateManyNodesLockState,
+} from "../../utils/supabaseUtils";
 
 type Props = {
   cyRef: any;
@@ -49,12 +53,28 @@ export default function BoardContextMenu({
         {
           label: "Unlock selected",
           icon: "pi pi-fw pi-lock-open",
-          command: () => cyRef.current.nodes(":selected").unlock(),
+          command: () => {
+            let selected = cyRef.current.nodes(":selected");
+            selected.unlock();
+            let updateSelected = selected.map((node: any) => ({
+              id: node.data().id,
+              locked: false,
+            }));
+            updateManyNodesLockState(updateSelected);
+          },
         },
         {
           label: "Lock selected",
           icon: "pi pi-fw pi-lock",
-          command: () => cyRef.current.nodes(":selected").lock(),
+          command: () => {
+            let selected = cyRef.current.nodes(":selected");
+            selected.lock();
+            let updateSelected = selected.map((node: any) => ({
+              id: node.data().id,
+              locked: true,
+            }));
+            updateManyNodesLockState(updateSelected);
+          },
         },
       ],
     },

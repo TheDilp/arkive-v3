@@ -84,6 +84,18 @@ export const defaultTemplate = {
   },
 };
 
+export const defaultNode = {
+  width: 50,
+  height: 50,
+  fontSize: 16,
+  textHAlign: "center" as const,
+  textVAlign: "top" as const,
+  backgroundColor: "#595959",
+  backgroundOpacity: 1,
+  zIndex: 1,
+  locked: false,
+};
+
 // Board Utils
 export const boardNodeShapes = [
   {

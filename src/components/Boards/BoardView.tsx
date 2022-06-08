@@ -136,7 +136,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       let temp_nodes: CytoscapeNodeProps[] = [];
       let temp_edges: CytoscapeEdgeProps[] = [];
       if (board.nodes.length > 0) {
-        console.log(board.nodes);
         temp_nodes = board.nodes.map((node) => ({
           data: {
             id: node.id,
@@ -169,6 +168,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
                 )}`
               : [],
           },
+          locked: node.locked,
           scratch: {
             doc_id: node.document?.id,
           },
@@ -252,6 +252,8 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         const scratch = evt.target._private.scratch;
         if (scratch?.doc_id && evt.originalEvent.shiftKey) {
           navigate(`../../wiki/doc/${scratch?.doc_id}`);
+        } else {
+          evt.target.select();
         }
       });
       cyRef.current.on("mousedown", "node", function (evt: any) {
@@ -348,6 +350,8 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           });
       });
     }
+    return () =>
+      cyRef.current.removeListener("click mousedown cxttap dbltap free");
   }, [cyRef, board_id]);
   useEffect(() => {
     setLoading(true);
@@ -369,7 +373,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       }, 200);
     }
     return () => {
-      cyRef.current.removeListener("click cxttap dbltap free");
       setBoardId("");
     };
   }, [board_id]);
@@ -517,7 +520,6 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
                 draggable="true"
                 onDragStart={(e) => {
                   e.dataTransfer.setData("text", doc.id);
-                  console.log(e.dataTransfer.getData("text"));
                 }}
               >
                 <div className="p-0 text-center flex flex-wrap justify-content-center">
@@ -559,9 +561,22 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           zIndex: 5,
         }}
       >
-        <i className="pi pi-fw pi-plus"></i>
-        <i className="pi pi-fw pi-lock"></i>
-        <i className="pi pi-fw pi-lock-open"></i>
+        <i
+          className="pi pi-fw pi-lock"
+          onClick={() => {
+            if (cyRef.current.elements(":selected")?.length > 0) {
+              cyRef.current.elements(":selected").lock();
+            }
+          }}
+        ></i>
+        <i
+          className="pi pi-fw pi-lock-open"
+          onClick={() => {
+            if (cyRef.current.elements(":selected")?.length > 0) {
+              cyRef.current.elements(":selected").unlock();
+            }
+          }}
+        ></i>
         <i className="pi pi-fw pi-trash"></i>
         <ColorPicker
           onChange={(e) => {
