@@ -1,6 +1,4 @@
-import { Icon } from "@iconify/react";
 import { ColorPicker } from "primereact/colorpicker";
-import { Dialog } from "primereact/dialog";
 import { Tooltip } from "primereact/tooltip";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -15,6 +13,13 @@ import {
   nodeUpdateDialogProps,
 } from "../../custom-types";
 import {
+  changeLockState,
+  cytoscapeGridOptions,
+  cytoscapeStylesheet,
+  edgehandlesSettings,
+  toModelPosition,
+} from "../../utils/boardUtils";
+import {
   useCreateEdge,
   useCreateNode,
   useGetBoardData,
@@ -24,20 +29,13 @@ import {
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
-import { updateManyNodesLockState } from "../../utils/supabaseUtils";
 import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
-import {
-  changeLockState,
-  cytoscapeGridOptions,
-  cytoscapeStylesheet,
-  edgehandlesSettings,
-  toModelPosition,
-} from "../../utils/boardUtils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
+import QuickCreateNode from "./QuickCreateNode";
 type Props = {
   setBoardId: (boardId: string) => void;
   cyRef: any;
@@ -490,57 +488,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
           setEdgeUpdateDialog={setEdgeUpdateDialog}
         />
       )}
-      <Dialog
-        header="Quick Create Node"
-        className="w-30rem h-20rem overflow-y-auto"
-        visible={quickCreate}
-        onHide={() => setQuickCreate(false)}
-        modal={false}
-        position="left"
-      >
-        <div className="flex flex-wrap">
-          {documents
-            ?.filter((doc) => !doc.folder && !doc.template)
-            .map((doc) => (
-              <div
-                key={doc.id}
-                className="w-4"
-                draggable="true"
-                onDragStart={(e) => {
-                  e.dataTransfer.setData("text", doc.id);
-                }}
-              >
-                <div className="p-0 text-center flex flex-wrap justify-content-center">
-                  {doc.image?.link ? (
-                    <div className="folderPageImageContainer">
-                      <img
-                        className="w-4rem h-4rem"
-                        style={{
-                          objectFit: "contain",
-                        }}
-                        alt={doc.title}
-                        src={
-                          doc.image?.link
-                            ? supabaseStorageImagesLink + doc.image.link
-                            : ""
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <Icon icon="mdi:file" className="w-full" fontSize={80} />
-                    </div>
-                  )}
-                </div>
-
-                <h4 className="text-center my-0 white-space-nowrap overflow-hidden text-overflow-ellipsis">
-                  {doc.title}
-                </h4>
-              </div>
-            ))}
-        </div>
-      </Dialog>
-
+      <QuickCreateNode
+        quickCreate={quickCreate}
+        setQuickCreate={setQuickCreate}
+      />
       <div
         className="w-4 absolute border-round surface-50 text-white h-2rem flex align-items-center justify-content-around shadow-5"
         style={{
