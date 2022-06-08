@@ -993,7 +993,6 @@ export function useUpdateBoard(project_id: string) {
               let newParent = oldData.find(
                 (doc) => doc.id === updatedBoard.parent
               );
-              console.log(newParent);
               let newData = oldData.map((board) => {
                 if (board.id === updatedBoard.id) {
                   return {
@@ -1380,7 +1379,6 @@ export function useUpdateEdge(project_id: string) {
 
   return useMutation(
     async (vars: UpdateEdgeProps) => {
-      console.log(vars);
       await updateEdge(vars);
     },
     {

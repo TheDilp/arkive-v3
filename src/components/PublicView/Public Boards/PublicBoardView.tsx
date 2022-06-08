@@ -30,7 +30,7 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
         temp_nodes = board.nodes.map((node) => ({
           data: {
             id: node.id,
-            classes: "boardNode",
+            classes: "boardNode publicBoardNode",
             label: node.label || "",
             type: node.type,
             width: node.width,
@@ -59,7 +59,7 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
                 )}`
               : [],
           },
-          locked: true,
+          locked: false,
           scratch: {
             doc_id: node.document?.id,
           },
@@ -70,7 +70,7 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
         temp_edges = board.edges.map((edge) => ({
           data: {
             id: edge.id,
-            classes: "boardEdge",
+            classes: "boardEdge publicBoardEdge",
             label: edge.label || "",
             source: edge.source,
             target: edge.target,
