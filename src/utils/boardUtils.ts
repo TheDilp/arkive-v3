@@ -434,8 +434,6 @@ export const cytoscapeStylesheet = [
   {
     selector: ":locked",
     style: {
-      "border-width": 2,
-      "border-color": "red",
       "underlay-color": "red",
       "underlay-padding": 2,
       "underlay-opacity": 0.25,

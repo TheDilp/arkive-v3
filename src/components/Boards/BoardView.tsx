@@ -361,8 +361,16 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         setLoading(false);
       }, 200);
     }
+    window.addEventListener("keydown", function (e) {
+      if (e.ctrlKey && e.key === "a") {
+        e.preventDefault();
+
+        cyRef.current.elements().select();
+      }
+    });
     return () => {
       setBoardId("");
+      window.removeEventListener("keydown", () => {});
     };
   }, [board_id]);
 
