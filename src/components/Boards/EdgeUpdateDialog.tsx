@@ -296,7 +296,15 @@ export default function EdgeUpdateDialog({
             )}
           />
         </div>
-        <Button label="Save Edge" type="submit" />
+        <div className="w-full flex justify-content-center">
+          <Button
+            label="Save Edge"
+            icon="pi pi-save"
+            iconPos="right"
+            type="submit"
+            className="p-button-outlined p-button-success mt-2"
+          />
+        </div>
       </form>
     </Dialog>
   );

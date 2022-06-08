@@ -33,7 +33,7 @@ type Props = {
   }) => void;
 };
 
-export default function UpdateMarkerDialog({
+export default function MarkerUpdateDialog({
   id,
   show,
   setVisible,
@@ -214,9 +214,9 @@ export default function UpdateMarkerDialog({
         </div>
         <div className="w-full flex justify-content-end mt-2">
           <Button
-            className="p-button-outlined"
+            className="p-button-outlined p-button-success"
             label="Update Marker"
-            icon="pi pi-map-marker"
+            icon="pi pi-save"
             iconPos="right"
             type="submit"
           />

@@ -4,7 +4,7 @@ import { ImageOverlay, useMapEvents } from "react-leaflet";
 import { MapProps } from "../../../custom-types";
 import DraggableMarker from "./MapMarker/DraggableMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
-import UpdateMarkerDialog from "./MapMarker/UpdateMarkerDialog";
+import MarkerUpdateDialog from "./MapMarker/MarkerUpdateDialog";
 type Props = {
   src: string;
   bounds: LatLngBoundsExpression;
@@ -75,7 +75,7 @@ export default function MapImage({
         setUpdateTokenDialog={setUpdateMarkerDialog}
       />
       {updateMarkerDialog.show && (
-        <UpdateMarkerDialog
+        <MarkerUpdateDialog
           {...updateMarkerDialog}
           setVisible={() =>
             setUpdateMarkerDialog({

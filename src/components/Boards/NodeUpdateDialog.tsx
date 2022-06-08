@@ -371,14 +371,15 @@ export default function NodeUpdateDialog({
             </div>
           </TabPanel>
         </TabView>
-
-        <Button
-          label="Save Node"
-          type="submit"
-          className="p-button-outlined p-button-success"
-          icon="pi pi-save"
-          iconPos="right"
-        />
+        <div className="w-full flex justify-content-end">
+          <Button
+            label="Save Node"
+            type="submit"
+            className="p-button-outlined p-button-success"
+            icon="pi pi-save"
+            iconPos="right"
+          />
+        </div>
       </form>
     </Dialog>
   );

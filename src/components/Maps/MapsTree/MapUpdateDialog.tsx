@@ -146,9 +146,9 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
 
           <div className="w-full flex justify-content-end">
             <Button
-              label="Update Map"
+              label={`Update ${visible.folder ? "Folder" : "Map"}`}
               className="p-button-success p-button-outlined mt-2"
-              icon="pi pi-plus"
+              icon="pi pi-save"
               iconPos="right"
               type="submit"
             />
