@@ -75,7 +75,7 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
               {doc.image?.link ? (
                 <div className="folderPageImageContainer">
                   <img
-                    className="h-full"
+                    className="w-full h-full"
                     style={{
                       objectFit: "contain",
                     }}

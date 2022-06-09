@@ -41,7 +41,6 @@ export default function Project() {
   };
 
   useEffect(() => {
-    console.log(images);
     if (images?.data) {
       cacheImages(images.data);
     }
