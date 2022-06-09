@@ -32,7 +32,7 @@ export default function DocumentUpdateDialog({
     formState: { errors },
   } = useForm<Pick<docItemDisplayDialogProps, "title" | "parent">>({
     defaultValues: {
-    title: displayDialog.title,
+      title: displayDialog.title,
       parent: displayDialog.parent,
     },
   });

@@ -6,20 +6,20 @@ import {
 } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
-import { boardItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
-import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
+import TreeSidebar from "../../Util/TreeSidebar";
 import BoardsFilter from "./BoardsFilter";
 import BoardsFilterList from "./BoardsFilterList";
 import BoardTreeItem from "./BoardTreeItem";
 import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
+import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 type Props = {
   boardId: string;
   setBoardId: (boardId: string) => void;
@@ -27,6 +27,7 @@ type Props = {
 };
 
 export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
+  const queryClient = useQueryClient();
   const { project_id } = useParams();
   const cm = useRef() as any;
   const { isTabletOrMobile } = useContext(MediaQueryContext);
@@ -35,7 +36,17 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
   const { data: boards } = useGetBoards(project_id as string);
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const [updateBoardDialog, setUpdateBoardDialog] =
-    useState<boardItemDisplayDialogProps>(boardItemDisplayDialogDefault);
+    useState<boardItemDisplayDialogProps>({
+      id: "",
+      title: "",
+      parent: "",
+      show: false,
+      folder: false,
+      expanded: false,
+      layout: "",
+      depth: 0,
+      public: false,
+    });
   const handleDrop = (
     newTree: NodeModel<BoardProps>[],
     {

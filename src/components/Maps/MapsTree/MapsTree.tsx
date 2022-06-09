@@ -20,7 +20,6 @@ import MapsFilterList from "./MapsFilterList";
 import TreeSidebar from "../../Util/TreeSidebar";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { sortMapsChildren } from "../../../utils/supabaseUtils";
-import { mapItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 
 export default function MapsTree({
   mapId,
@@ -39,7 +38,16 @@ export default function MapsTree({
   const [treeData, setTreeData] = useState<NodeModel<MapProps>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
   const [updateMapDialog, setUpdateMapDialog] =
-    useState<mapItemDisplayDialogProps>(mapItemDisplayDialogDefault);
+    useState<mapItemDisplayDialogProps>({
+      id: "",
+      title: "",
+      map_image: { id: "", title: "", link: "", type: "Image" },
+      parent: "",
+      show: false,
+      folder: false,
+      depth: 0,
+      public: false,
+    });
   const updateMapMutation = useUpdateMap(project_id as string);
   useLayoutEffect(() => {
     if (maps && maps.length > 0) {

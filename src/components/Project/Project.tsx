@@ -21,7 +21,9 @@ export default function Project() {
   const { project_id } = useParams();
   const project = useGetProjectData(project_id as string);
   const images = useGetImages(project_id as string);
-
+  const { isLoading: isLoadingDocuments } = useGetDocuments(
+    project_id as string
+  );
   const { isLoading: isLoadingMaps } = useGetMaps(project_id as string);
   const { isLoading: isLoadingBoards } = useGetBoards(project_id as string);
   const user = auth.user();
@@ -39,6 +41,7 @@ export default function Project() {
   };
 
   useEffect(() => {
+    console.log(images);
     if (images?.data) {
       cacheImages(images.data);
     }
@@ -46,7 +49,8 @@ export default function Project() {
 
   if (!user) return <Navigate to="/home" />;
 
-  if (isLoadingMaps || isLoadingBoards) return <LoadingScreen />;
+  if (isLoadingDocuments || isLoadingMaps || isLoadingBoards)
+    return <LoadingScreen />;
 
   return (
     <>
