@@ -10,7 +10,7 @@ export default function LandingPage() {
           <div>
             <img
               className="w-3rem h-3rem"
-              src="/public/android-chrome-512x512.png"
+              src="/android-chrome-512x512.png"
               alt="Arkive Logo"
             />
           </div>
@@ -37,9 +37,7 @@ export default function LandingPage() {
           <h3 className="text-5xl text-center">Discover your world</h3>
         </div>
 
-        <div className="w-full flex justify-content-around">
-          
-        </div>
+        <div className="w-full flex justify-content-around"></div>
       </section>
     </article>
   );

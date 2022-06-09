@@ -1,42 +1,23 @@
 import { Icon } from "@iconify/react";
-import { AutoComplete } from "primereact/autocomplete";
-import { Dropdown } from "primereact/dropdown";
-import { InputText } from "primereact/inputtext";
 import { Menubar } from "primereact/menubar";
 import { Tooltip } from "primereact/tooltip";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { logout, supabase } from "../../utils/supabaseUtils";
+import { logout } from "../../utils/supabaseUtils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import { SidebarContext } from "../Context/SidebarContext";
 import NavbarTitle from "./NavbarTitle";
 import NavSettingsButton from "./NavSettingsButton";
 import Quickupload from "./Quickupload";
+import SearchDialog from "./SearchDialog";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { project_id } = useParams();
-  const [uploadDialog, setUploadDialog] = useState(false);
   const { setSidebar } = useContext(SidebarContext);
   const { isTabletOrMobile } = useContext(MediaQueryContext);
-  const [search, setSearch] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState<any>("");
-  const [filteredDocs, setFilteredDocs] = useState<any[]>([]);
-
-  useEffect(() => {
-    const timeout = setTimeout(async () => {
-      const { data, error } = await supabase
-        .from("documents")
-        .select("id, title,icon")
-        .textSearch("content->>content", `'${search}'`, {
-          type: "websearch",
-        });
-      if (data) setFilteredDocs(data);
-      else setFilteredDocs([]);
-      console.log(data);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [search]);
+  const [uploadDialog, setUploadDialog] = useState(false);
+  const [search, setSearch] = useState<string | null>(null);
 
   const start = () => {
     return (
@@ -50,7 +31,7 @@ export default function Navbar() {
           )}
           <i
             className="pi pi-home mr-3 cursor-pointer hover:text-primary"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           ></i>
           {project_id && (
             <>
@@ -132,7 +113,7 @@ export default function Navbar() {
   };
   const end = () => {
     return (
-      <div className="flex flex-nowrap pr-2 py-2">
+      <div className="flex flex-nowrap pr-2 py-2 align-items-center">
         <Tooltip
           target=".settingsIcon"
           content="Project Settings"
@@ -144,28 +125,19 @@ export default function Navbar() {
           position="bottom"
         />
 
-        {project_id && <NavSettingsButton />}
         {project_id && (
           <>
+            <i
+              className="pi pi-search z-2 mr-3"
+              onClick={() => setSearch("")}
+            ></i>
             <i
               className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
               onClick={() => setUploadDialog(true)}
             ></i>
-            <AutoComplete
-              value={selectedCountry}
-              suggestions={filteredDocs}
-              field="title"
-              completeMethod={(e) => setSearch(e.query.toLowerCase())}
-              onChange={(e) => {
-                setSelectedCountry(e.value);
-              }}
-              onSelect={(e) => {
-                navigate(`./wiki/doc/${e.value.id}`);
-                setSelectedCountry("");
-              }}
-            />
           </>
         )}
+        {project_id && <NavSettingsButton />}
         <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"
           onClick={async () => {
@@ -212,10 +184,15 @@ export default function Navbar() {
 
   return (
     <>
-      <Quickupload
-        uploadDialog={uploadDialog}
-        setUploadDialog={setUploadDialog}
-      />
+      {project_id && (
+        <>
+          <Quickupload
+            uploadDialog={uploadDialog}
+            setUploadDialog={setUploadDialog}
+          />
+          <SearchDialog search={search} setSearch={setSearch} />{" "}
+        </>
+      )}
       <Menubar
         start={start}
         end={end}
