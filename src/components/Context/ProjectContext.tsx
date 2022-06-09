@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 
 interface ProjectContextProps {
   id: string;
-  setId: (id: string) => void;
+  setId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const ProjectContext = createContext<ProjectContextProps>({

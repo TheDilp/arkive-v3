@@ -150,36 +150,27 @@ export type CytoscapeEdgeProps = {
     | "zIndex"
   >;
 };
-export type docItemDisplayDialogProps = {
+
+type itemDisplayProps = {
   id: string;
   title: string;
   show: boolean;
-  folder: boolean;
   parent: string | null;
-  template: boolean;
-  depth: number;
-  root?: boolean;
-};
-export type mapItemDisplayDialogProps = {
-  id: string;
-  title: string;
-  map_image: ImageProps;
-  parent: string;
   folder: boolean;
   depth: number;
   public: boolean;
-  show: boolean;
-};
-export type boardItemDisplayDialogProps = {
-  id: string;
-  title: string;
-  parent: string;
-  depth: number;
-  folder: boolean;
   expanded: boolean;
-  public: boolean;
-  show: boolean;
+  type: "Document" | "Map" | "Board";
 };
+
+export interface docItemDisplayDialogProps extends itemDisplayProps {
+  template: boolean;
+  root?: boolean;
+}
+export interface mapItemDisplayDialogProps extends itemDisplayProps {
+  map_image: ImageProps;
+}
+export interface boardItemDisplayDialogProps extends itemDisplayProps {}
 export type nodeUpdateDialogProps = {
   id: string;
   label: string;
@@ -456,3 +447,8 @@ export type UpdateEdgeProps = {
 // OTHER
 
 export type breadcrumbsProps = { template: React.ReactNode }[];
+export type dialogType =
+  | docItemDisplayDialogProps
+  | mapItemDisplayDialogProps
+  | boardItemDisplayDialogProps;
+export type itemProps = DocumentProps | MapProps | BoardProps;

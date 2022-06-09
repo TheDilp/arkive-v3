@@ -2,55 +2,72 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import React from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
 import {
-  docItemDisplayDialogProps,
+  BoardProps,
+  dialogType,
   DocumentProps,
-} from "../../../custom-types";
-import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
-import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+  ImageProps,
+  MapProps,
+} from "../custom-types";
 
 type Props = {
-  displayDialog: docItemDisplayDialogProps;
-  setDisplayDialog: React.Dispatch<
-    React.SetStateAction<docItemDisplayDialogProps>
-  >;
+  displayDialog: dialogType;
+  dialogDefault: dialogType;
+  setDisplayDialog: Dispatch<SetStateAction<dialogType>>;
+  data: (DocumentProps | MapProps | BoardProps)[] | null;
+  updateMutation: any;
 };
 
-export default function DocumentUpdateDialog({
+export default function ItemUpdateDialog({
   displayDialog,
   setDisplayDialog,
+  data,
+  dialogDefault,
+  updateMutation,
 }: Props) {
-  const { project_id } = useParams();
-  const updateDocumentMutation = useUpdateDocument(project_id as string);
-  const { data } = useGetDocuments(project_id as string);
   const {
+    setValue,
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<Pick<docItemDisplayDialogProps, "title" | "parent">>({
-    defaultValues: {
-    title: displayDialog.title,
-      parent: displayDialog.parent,
-    },
-  });
+  } = useForm<{ title: string; parent: string | null; map_image?: ImageProps }>(
+    {
+      defaultValues: {
+        title: displayDialog.title,
+        parent: displayDialog.parent || undefined,
+        ...("map_image" in displayDialog && {
+          map_image: displayDialog.map_image,
+        }),
+      },
+    }
+  );
   const onSubmit: SubmitHandler<{
     title: string;
     parent: string | null | undefined;
   }> = (data) => {
-    updateDocumentMutation.mutate({
+    updateMutation.mutate({
       id: displayDialog.id,
       ...data,
     });
-    setDisplayDialog(docItemDisplayDialogDefault);
+    setDisplayDialog(dialogDefault);
   };
 
+  useEffect(() => {
+    if (displayDialog) {
+      setValue("title", displayDialog.title);
+      setValue("parent", displayDialog.parent);
+      if ("map_image" in displayDialog) {
+        setValue("map_image", displayDialog.map_image);
+      }
+    }
+  }, [displayDialog]);
+
   function recursiveDescendantFilter(
-    doc: DocumentProps,
+    doc: DocumentProps | MapProps | BoardProps,
     index: number,
-    array: DocumentProps[],
+    array: (DocumentProps | MapProps | BoardProps)[],
     selected_id: string
   ): boolean {
     if (doc.parent === null) {
@@ -74,7 +91,7 @@ export default function DocumentUpdateDialog({
       header={`Edit ${displayDialog.title}`}
       visible={displayDialog.show}
       className="w-3"
-      onHide={() => setDisplayDialog(docItemDisplayDialogDefault)}
+      onHide={() => setDisplayDialog(dialogDefault)}
       modal={false}
     >
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -92,7 +109,8 @@ export default function DocumentUpdateDialog({
             )}
           />
         </div>
-        {!displayDialog.template && (
+        {/* Show folder dropdown for all except document templates */}
+        {"template" in displayDialog && !displayDialog.template && (
           <div className="my-2">
             <Controller
               name="parent"
@@ -100,7 +118,7 @@ export default function DocumentUpdateDialog({
               render={({ field }) => (
                 <Dropdown
                   className="w-full"
-                  placeholder="Document Folder"
+                  placeholder="Folder"
                   optionLabel="title"
                   optionValue="id"
                   value={field.value}
@@ -128,6 +146,7 @@ export default function DocumentUpdateDialog({
             />
           </div>
         )}
+        <div className="my-2"></div>
         <div className="flex w-full">
           <Button
             className="ml-auto p-button-outlined p-button-success"

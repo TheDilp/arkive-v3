@@ -190,7 +190,7 @@ export default function Navbar() {
             uploadDialog={uploadDialog}
             setUploadDialog={setUploadDialog}
           />
-          <SearchDialog search={search} setSearch={setSearch} />{" "}
+          <SearchDialog search={search} setSearch={setSearch} />
         </>
       )}
       <Menubar
