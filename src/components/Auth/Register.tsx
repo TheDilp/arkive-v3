@@ -1,14 +1,17 @@
 import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { auth, authFunction } from "../../utils/supabaseUtils";
+import { auth, register } from "../../utils/supabaseUtils";
 import EarthIMG from "./earthimg.jpg";
 
-export default function Auth() {
+export default function Register() {
   const navigate = useNavigate();
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   auth.onAuthStateChange((event) => {
     if (event === "SIGNED_IN") {
-      navigate("/");
+      navigate("/home");
     }
   });
 
@@ -47,25 +50,36 @@ export default function Auth() {
               Welcome Back
             </div>
             <span className="text-600 font-medium line-height-3 Lato">
-              Don't have an account?
+              Already have an account?
             </span>
             <Link
-              to="/register"
+              to="/login"
               className="font-medium no-underline ml-2 text-blue-500 cursor-pointer Lato"
             >
-              Register today!
+              Login
             </Link>
           </div>
 
           <div>
+            <InputText
+              className="mb-2 w-full"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+            />
+            <InputText
+              className="w-full"
+              value={password}
+              placeholder="Password"
+              type={"password"}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
             <Button
               className="w-full my-2 text-white Lato border-none"
-              style={{
-                backgroundColor: "#7289DA",
-              }}
-              onClick={authFunction}
-              label="Sign up with Discord"
-              icon="pi pi-discord"
+              onClick={() => register(email, password)}
+              label="Sign up"
+              icon="pi pi-user-plus"
               iconPos="right"
             ></Button>
           </div>

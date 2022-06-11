@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import Auth from "./components/Auth/Auth";
+import Login from "./components/Auth/Login";
 import Help from "./components/Help/Help";
 import Profile from "./components/Profile/Profile";
 import "/node_modules/primeflex/primeflex.css";
@@ -24,6 +24,7 @@ import LoadingScreen from "./components/Util/LoadingScreen";
 import NotFound from "./components/Auth/NotFound";
 import Timelines from "./components/Timelines/TImelines";
 import LandingPage from "./components/Auth/LandingPage";
+import Register from "./components/Auth/Register";
 const Project = lazy(() => import("./components/Project/Project"));
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
@@ -55,7 +56,8 @@ function App() {
               <Route path="*" element={<NotFound />} />
               <Route path="/" element={<LandingPage />} />
               <Route path="/home" element={<Home />} />
-              <Route path="login" element={<Auth />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
               <Route path="help" element={<Help />} />
               <Route
