@@ -9,11 +9,6 @@ export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  auth.onAuthStateChange((event) => {
-    if (event === "SIGNED_IN") {
-      navigate("/");
-    }
-  });
 
   return auth.user() ? (
     <Navigate to="/home" />
@@ -77,7 +72,7 @@ export default function Login() {
 
             <Button
               className="w-full my-2 text-white Lato border-none"
-              onClick={() => login(email, password)}
+              onClick={() => login(email, password).then(() => navigate("/"))}
               label="Sign in"
               icon="pi pi-user-plus"
               iconPos="right"
