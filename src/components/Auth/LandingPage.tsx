@@ -1,8 +1,11 @@
-import { Card } from "primereact/card";
-import React from "react";
-import { Link } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import { Link, Navigate } from "react-router-dom";
+import { auth } from "../../utils/supabaseUtils";
 
 export default function LandingPage() {
+  const user = auth.user();
+  if (user) return <Navigate to="/home" />;
+
   return (
     <article className="w-full h-screen px-8 Lato flex flex-wrap justify-content-center align-content-start">
       <div className="w-8 flex text-white justify-content-between align-items-start text-xl">
@@ -37,7 +40,45 @@ export default function LandingPage() {
           <h3 className="text-5xl text-center">Discover your world</h3>
         </div>
 
-        <div className="w-full flex justify-content-around"></div>
+        <div className="w-full flex flex-wrap row-gap-4 justify-content-around">
+          <h2 className="w-full text-center">Features</h2>
+          <div className="w-16rem h-16rem shadow-3 surface-100 border-rounded">
+            <h3 className="Lato text-center text-3xl">
+              Wiki
+              <Icon icon="mdi:files" />
+            </h3>
+          </div>
+          <div className="w-16rem h-16rem shadow-3 surface-100 border-rounded">
+            <h3 className="Lato text-center text-3xl">
+              Wiki
+              <Icon icon="mdi:files" />
+            </h3>
+          </div>
+          <div className="w-16rem h-16rem shadow-3 surface-100 border-rounded">
+            <h3 className="Lato text-center text-3xl">
+              Wiki
+              <Icon icon="mdi:files" />
+            </h3>
+          </div>
+          <div className="w-16rem h-16rem shadow-3 surface-100 border-rounded">
+            <h3 className="Lato text-center text-3xl">
+              Wiki
+              <Icon icon="mdi:files" />
+            </h3>
+          </div>
+          <div className="w-16rem h-16rem shadow-3 surface-100 border-rounded">
+            <h3 className="Lato text-center text-3xl">
+              Wiki
+              <Icon icon="mdi:files" />
+            </h3>
+          </div>
+          <div className="w-16rem h-16rem shadow-3 surface-100 border-rounded">
+            <h3 className="Lato text-center text-3xl">
+              Wiki
+              <Icon icon="mdi:files" />
+            </h3>
+          </div>
+        </div>
       </section>
     </article>
   );

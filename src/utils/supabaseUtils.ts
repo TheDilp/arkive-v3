@@ -36,15 +36,25 @@ export const supabase = createClient(
 export const auth = supabase.auth;
 
 // Auth functions
-export const authFunction = async () => {
-  const { user, error } = await supabase.auth.signIn(
-    {
-      provider: "discord",
-    },
-    {
-      redirectTo: "https://thearkive.app",
-    }
-  );
+
+export const register = async (email: string, password: string) => {
+  const { user, error } = await supabase.auth.signUp({ email, password });
+
+  if (user) return user;
+  if (error) {
+    toastError(error.message);
+    return error;
+  }
+};
+
+export const login = async (email: string, password: string) => {
+  const { user, error } = await supabase.auth.signIn({ email, password });
+  // {
+  //   provider: "discord",
+  // },
+  // {
+  //   redirectTo: "https://thearkive.app",
+  // }
   if (user) {
     return user;
   }

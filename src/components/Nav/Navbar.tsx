@@ -128,7 +128,7 @@ export default function Navbar() {
         {project_id && (
           <>
             <i
-              className="pi pi-search z-2 mr-3"
+              className="pi pi-search z-2 mr-3 cursor-pointer hover:text-primary"
               onClick={() => setSearch("")}
             ></i>
             <i
