@@ -96,25 +96,21 @@ export default function RemirrorContainer({
         name: "at",
         char: "@",
         appendText: "",
-        supportedCharacters: /[^\s][\w\d_ ]+/,
       },
       {
         name: "hash",
         char: "#",
         appendText: "",
-        supportedCharacters: /[^\s][\w\d_ ]+/,
       },
       {
         name: "dollah",
         char: "$",
         appendText: "",
-        supportedCharacters: /[^\s][\w\d_ ]+/,
       },
       {
         name: "slash",
         char: "/",
         appendTExt: "",
-        supportedCharacters: /[^\s][\w\d_ ]+/,
       },
     ],
   });

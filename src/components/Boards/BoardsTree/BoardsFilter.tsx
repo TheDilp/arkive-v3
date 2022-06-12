@@ -25,7 +25,6 @@ export default function BoardsFilter({ filter, setFilter }: Props) {
         project_id: project_id as string,
         title: "New Folder",
         folder: true,
-        layout: "Preset",
       });
     } else {
       createBoardMutation.mutate({
@@ -33,7 +32,6 @@ export default function BoardsFilter({ filter, setFilter }: Props) {
         project_id: project_id as string,
         title: "New Board",
         folder: false,
-        layout: "Preset",
       });
     }
   }

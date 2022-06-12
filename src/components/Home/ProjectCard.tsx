@@ -4,6 +4,7 @@ import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 import defaultImage from "../../styles/DefaultProjectImage.jpg";
 import { useMediaQuery } from "react-responsive";
+import { supabaseStorageImagesLink } from "../../utils/utils";
 export default function ProjectCard({ ...Project }: ProjectProps) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
@@ -14,7 +15,11 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
     >
       <img
         alt="Card"
-        src={Project.cardImage || defaultImage}
+        src={
+          Project.cardImage
+            ? supabaseStorageImagesLink + Project.cardImage
+            : defaultImage
+        }
         style={{ objectFit: "fill" }}
         className="w-full h-full cursor-pointer h-15rem"
       />

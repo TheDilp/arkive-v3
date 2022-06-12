@@ -27,7 +27,6 @@ type Props = {
 };
 
 export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
-  const queryClient = useQueryClient();
   const { project_id } = useParams();
   const cm = useRef() as any;
   const { isTabletOrMobile } = useContext(MediaQueryContext);
@@ -43,7 +42,6 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
       show: false,
       folder: false,
       expanded: false,
-      layout: "",
       depth: 0,
       public: false,
     });

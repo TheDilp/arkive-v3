@@ -152,6 +152,7 @@ export const iconList = [
   "flask-empty-outline",
   "flask-outline",
   "flask-round-bottom",
+  "flower-poppy",
   "food-apple",
   "food-apple-outline",
   "food-croissant",

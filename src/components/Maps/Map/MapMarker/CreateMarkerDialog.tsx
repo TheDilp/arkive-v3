@@ -66,7 +66,6 @@ export default function CreateMarkerDialog({
       modal={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap">
-        <div className="w-full"></div>
         <div className="w-full">
           <InputText
             {...register("text")}

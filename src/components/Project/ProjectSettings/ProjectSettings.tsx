@@ -7,7 +7,7 @@ import { ImageProps, ProjectProps } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 import { deleteProject } from "../../../utils/supabaseUtils";
 import { useGetImages, useUpdateProject } from "../../../utils/customHooks";
-import { toastSuccess } from "../../../utils/utils";
+import { supabaseStorageImagesLink, toastSuccess } from "../../../utils/utils";
 import { Dropdown } from "primereact/dropdown";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 type Props = {
@@ -63,7 +63,11 @@ export default function ProjectSettings({ project }: Props) {
         <h3>Update Project Card Image</h3>
         <div className="w-10rem">
           <img
-            src={project.cardImage || defaultImage}
+            src={
+              project.cardImage
+                ? supabaseStorageImagesLink + project.cardImage
+                : defaultImage
+            }
             alt="Card"
             className="w-full h-full border-round cursor-pointer relative"
             style={{
@@ -93,7 +97,7 @@ export default function ProjectSettings({ project }: Props) {
             onChange={(e) =>
               projectMutation.mutate({
                 project_id: localProject.id,
-                cardImage: localProject.cardImage,
+                cardImage: e.target.value.link,
               })
             }
           />
