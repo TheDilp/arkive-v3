@@ -76,7 +76,7 @@ export default function Login() {
               label="Sign in"
               icon="pi pi-user-plus"
               iconPos="right"
-            ></Button>
+            />
           </div>
         </div>
       </div>
