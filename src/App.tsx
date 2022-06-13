@@ -54,11 +54,11 @@ function App() {
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
               <Route path="*" element={<NotFound />} />
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/home" element={<Home />} />
+              {/* <Route path="/" element={<LandingPage />} /> */}
+              <Route path="/" element={<Home />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
-              <Route path="profile" element={<Profile />} />
+              {/* <Route path="profile" element={<Profile />} /> */}
               <Route path="help" element={<Help />} />
               <Route
                 path="project/:project_id"
