@@ -30,7 +30,7 @@ const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
 const Boards = lazy(() => import("./components/Boards/Boards"));
 const ProjectSettings = lazy(
-  () => import("./components/Project/ProjectSettings")
+  () => import("./components/Project/ProjectSettings/ProjectSettingsIndex")
 );
 const Home = lazy(() => import("./components/Home/Home"));
 function App() {

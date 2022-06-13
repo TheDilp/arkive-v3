@@ -17,6 +17,7 @@ export const iconList = [
   "alert-rhombus-outline",
   "arrow-projectile",
   "arrow-projectile-multiple",
+  "arrow-right-bold-outline",
   "atom",
   "atom-variant",
   "axe-battle",

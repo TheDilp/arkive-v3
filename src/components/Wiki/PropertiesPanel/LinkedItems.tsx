@@ -108,9 +108,6 @@ export default function LinkedItems() {
           </div>
         )}
         <div className="w-full flex flex-wrap justify-content-evenly">
-          <span className="text-xs">
-            Note: Custom image will overwrite image from storage
-          </span>
           <div className="w-full my-3 flex justify-content-center">
             <Dropdown
               className="w-10"
