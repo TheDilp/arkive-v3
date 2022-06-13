@@ -1,25 +1,21 @@
 import {
-  getBackendOptions,
-  MultiBackend,
   NodeModel,
-  Tree,
+  Tree
 } from "@minoru/react-dnd-treeview";
 import { TabPanel, TabView } from "primereact/tabview";
 import { useContext, useEffect, useRef, useState } from "react";
-import { DndProvider } from "react-dnd";
 import { useParams } from "react-router-dom";
 import {
   docItemDisplayDialogProps,
   DocumentProps,
-  iconSelectProps,
+  iconSelectProps
 } from "../../../custom-types";
 import {
   useGetDocuments,
   useSortChildren,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
-import { sortDocumentsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import IconSelectMenu from "../../Util/IconSelectMenu";
@@ -154,7 +150,7 @@ export default function DocumentsTree() {
               setSelectedTags={setSelectedTags}
             />
             {!filter && selectedTags.length === 0 && (
-              <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+              
                 <Tree
                   classes={{
                     root: "w-full projectTreeRoot pr-4 pl-0",
@@ -217,7 +213,7 @@ export default function DocumentsTree() {
                   // @ts-ignore
                   onDrop={handleDrop}
                 />
-              </DndProvider>
+         
             )}
             {(filter || selectedTags.length > 0) && (
               <DocumentsFilterList

@@ -1,25 +1,19 @@
-import {
-  DndProvider,
-  getBackendOptions,
-  MultiBackend,
-  NodeModel,
-  Tree,
-} from "@minoru/react-dnd-treeview";
+import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
+import { sortMapsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
+import { MediaQueryContext } from "../../Context/MediaQueryContext";
+import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
 import MapCreateDialog from "./MapCreateDialog";
 import MapsFilter from "./MapsFilter";
+import MapsFilterList from "./MapsFilterList";
 import MapTreeItem from "./MapTreeItem";
 import MapTreeItemContext from "./MapTreeItemContext";
 import MapUpdateDialog from "./MapUpdateDialog";
-import MapsFilterList from "./MapsFilterList";
-import TreeSidebar from "../../Util/TreeSidebar";
-import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import { sortMapsChildren } from "../../../utils/supabaseUtils";
 
 export default function MapsTree({
   mapId,
@@ -139,68 +133,65 @@ export default function MapsTree({
           setFilter={setFilter}
         />
         {!filter && (
-          <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-            <Tree
-              classes={{
-                root: "w-full overflow-y-auto projectTreeRoot p-0",
-                container: "list-none",
-                placeholder: "relative",
-              }}
-              tree={treeData}
-              rootId={"0"}
-              sort={false}
-              insertDroppableFirst={false}
-              initialOpen={
-                maps?.filter((map) => map.expanded).map((map) => map.id) ||
-                false
+          <Tree
+            classes={{
+              root: "w-full overflow-y-auto projectTreeRoot p-0",
+              container: "list-none",
+              placeholder: "relative",
+            }}
+            tree={treeData}
+            rootId={"0"}
+            sort={false}
+            insertDroppableFirst={false}
+            initialOpen={
+              maps?.filter((map) => map.expanded).map((map) => map.id) || false
+            }
+            render={(
+              node: NodeModel<MapProps>,
+              { depth, isOpen, onToggle }
+            ) => (
+              <MapTreeItem
+                node={node}
+                mapId={mapId}
+                depth={depth}
+                isOpen={isOpen}
+                onToggle={onToggle}
+                setDisplayDialog={setUpdateMapDialog}
+                setMapId={setMapId}
+                cm={cm}
+              />
+            )}
+            dragPreviewRender={(monitorProps) => (
+              <DragPreview
+                text={monitorProps.item.text}
+                droppable={monitorProps.item.droppable}
+              />
+            )}
+            placeholderRender={(node, { depth }) => (
+              <div
+                style={{
+                  top: 0,
+                  right: 0,
+                  left: depth * 24,
+                  backgroundColor: "#1967d2",
+                  height: "2px",
+                  position: "absolute",
+                  transform: "translateY(-50%)",
+                }}
+              ></div>
+            )}
+            dropTargetOffset={10}
+            canDrop={(tree, { dragSource, dropTargetId }) => {
+              const depth = getDepth(treeData, dropTargetId);
+              // Don't allow nesting documents beyond this depth
+              if (depth > 3) return false;
+              if (dragSource?.parent === dropTargetId) {
+                return true;
               }
-              render={(
-                node: NodeModel<MapProps>,
-                { depth, isOpen, onToggle }
-              ) => (
-                <MapTreeItem
-                  node={node}
-                  mapId={mapId}
-                  depth={depth}
-                  isOpen={isOpen}
-                  onToggle={onToggle}
-                  setDisplayDialog={setUpdateMapDialog}
-                  setMapId={setMapId}
-                  cm={cm}
-                />
-              )}
-              dragPreviewRender={(monitorProps) => (
-                <DragPreview
-                  text={monitorProps.item.text}
-                  droppable={monitorProps.item.droppable}
-                />
-              )}
-              placeholderRender={(node, { depth }) => (
-                <div
-                  style={{
-                    top: 0,
-                    right: 0,
-                    left: depth * 24,
-                    backgroundColor: "#1967d2",
-                    height: "2px",
-                    position: "absolute",
-                    transform: "translateY(-50%)",
-                  }}
-                ></div>
-              )}
-              dropTargetOffset={10}
-              canDrop={(tree, { dragSource, dropTargetId }) => {
-                const depth = getDepth(treeData, dropTargetId);
-                // Don't allow nesting documents beyond this depth
-                if (depth > 3) return false;
-                if (dragSource?.parent === dropTargetId) {
-                  return true;
-                }
-              }}
-              //@ts-ignore
-              onDrop={handleDrop}
-            />
-          </DndProvider>
+            }}
+            //@ts-ignore
+            onDrop={handleDrop}
+          />
         )}
         {filter && (
           <MapsFilterList

@@ -1,4 +1,6 @@
+import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { useEffect } from "react";
+import { DndProvider } from "react-dnd";
 import { Navigate, Outlet, useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import {
@@ -58,7 +60,9 @@ export default function Project() {
           <SidebarProvider>
             <FilebrowserProvider>
               <Navbar />
-              <Outlet />
+              <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+                <Outlet />
+              </DndProvider>
             </FilebrowserProvider>
           </SidebarProvider>
         </ProjectContextProvider>
