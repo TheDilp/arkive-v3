@@ -19,7 +19,7 @@ export default function SettingsNav() {
           }}
         >
           <i className="pi pi-fw pi-cog mr-2"></i>
-          ProjectSettings
+          Project Settings
         </li>
       </Link>
 
@@ -29,7 +29,7 @@ export default function SettingsNav() {
           setting === "project-theme" && "text-white"
         }`}
       >
-        <li
+        {/* <li
           className={`w-15rem cursor-pointer py-2 pl-1 my-1 hover:text-white ${
             setting === "project-theme" && "text-white bg-blue-700 "
           }`}
@@ -39,7 +39,7 @@ export default function SettingsNav() {
         >
           <i className="pi pi-fw pi-palette mr-2"></i>
           Project Theme
-        </li>
+        </li> */}
       </Link>
       <Link
         to="../settings/documents-settings"
