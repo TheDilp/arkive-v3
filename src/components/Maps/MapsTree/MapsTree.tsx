@@ -141,8 +141,8 @@ export default function MapsTree({
             }}
             tree={treeData}
             rootId={"0"}
-            sort={false}
-            insertDroppableFirst={false}
+            sort={true}
+            insertDroppableFirst={true}
             initialOpen={
               maps?.filter((map) => map.expanded).map((map) => map.id) || false
             }

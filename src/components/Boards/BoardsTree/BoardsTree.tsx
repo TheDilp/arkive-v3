@@ -1,7 +1,4 @@
-import {
-  NodeModel,
-  Tree
-} from "@minoru/react-dnd-treeview";
+import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
@@ -121,8 +118,8 @@ export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
               container: "list-none",
               placeholder: "relative",
             }}
-            sort={false}
-            insertDroppableFirst={false}
+            sort={true}
+            insertDroppableFirst={true}
             initialOpen={
               boards
                 ?.filter((board) => board.expanded)
