@@ -87,7 +87,7 @@ export default function Navbar() {
                   }}
                 />
               </span>
-              <span className="timelineIcon mr-2">
+              {/* <span className="timelineIcon mr-2">
                 <Icon
                   className="hover:text-primary cursor-pointer"
                   icon="mdi:chart-timeline-variant"
@@ -96,7 +96,7 @@ export default function Navbar() {
                     navigate("./timelines");
                   }}
                 />
-              </span>
+              </span> */}
               <i
                 className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
                 onClick={async () => {
