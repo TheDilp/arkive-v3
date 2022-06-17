@@ -101,7 +101,7 @@ export default function Navbar() {
                 className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
                 onClick={async () => {
                   navigate("./filebrowser");
-                }}
+              }}
               ></i>
             </>
           )}

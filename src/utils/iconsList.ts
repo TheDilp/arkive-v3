@@ -144,6 +144,7 @@ export const iconList = [
   "ellipse-outline",
   "expansion-card",
   "face-mask",
+  "feather",
   "fish",
   "fish",
   "flash-alert-outline",
