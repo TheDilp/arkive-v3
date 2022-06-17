@@ -25,7 +25,7 @@ import NotFound from "./components/Auth/NotFound";
 import Timelines from "./components/Timelines/TImelines";
 import LandingPage from "./components/Auth/LandingPage";
 import Register from "./components/Auth/Register";
-const Project = lazy(() => import("./components/Project/Project"));
+import Project from "./components/Project/Project";
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
 const Boards = lazy(() => import("./components/Boards/Boards"));
@@ -60,14 +60,7 @@ function App() {
               <Route path="register" element={<Register />} />
               {/* <Route path="profile" element={<Profile />} /> */}
               <Route path="help" element={<Help />} />
-              <Route
-                path="project/:project_id"
-                element={
-                  <Suspense fallback={<LoadingScreen />}>
-                    <Project />
-                  </Suspense>
-                }
-              >
+              <Route path="project/:project_id" element={<Project />}>
                 <Route
                   path="wiki/*"
                   element={
