@@ -1,28 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
-import { Image } from "primereact/image";
-import { RemirrorJSON } from "remirror";
 
 import {
-  BoardProps,
-  DocumentProps,
-  MapProps,
-  MapMarkerProps,
-  UpdateEdgeProps,
-  ProfileProps,
-  ProjectProps,
-  BoardEdgeProps,
-  UpdateNodeProps,
-  CreateNodeProps,
-  ImageProps,
-  DocumentUpdateProps,
-  DocumentCreateProps,
-  MapUpdateProps,
-  MapCreateProps,
-  TemplateCreateProps,
-  CreateMapMarkerProps,
-  CreateBoardProps,
-  UpdateMapMarkerProps,
-  UpdateBoardProps,
+  BoardEdgeProps, BoardProps, CreateBoardProps, CreateMapMarkerProps, CreateNodeProps, DocumentCreateProps, DocumentProps, DocumentUpdateProps, ImageProps, MapCreateProps, MapMarkerProps, MapProps, MapUpdateProps, ProfileProps,
+  ProjectProps, TemplateCreateProps, UpdateBoardProps, UpdateEdgeProps, UpdateMapMarkerProps, UpdateNodeProps
 } from "../custom-types";
 import { toastError } from "./utils";
 

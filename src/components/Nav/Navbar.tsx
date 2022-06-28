@@ -31,7 +31,7 @@ export default function Navbar() {
           )}
           <i
             className="pi pi-home mr-3 cursor-pointer hover:text-primary"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/")}
           ></i>
           {project_id && (
             <>
@@ -101,7 +101,7 @@ export default function Navbar() {
                 className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
                 onClick={async () => {
                   navigate("./filebrowser");
-              }}
+                }}
               ></i>
             </>
           )}
