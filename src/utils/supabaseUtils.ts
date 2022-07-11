@@ -1,8 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
 
 import {
-  BoardEdgeProps, BoardProps, CreateBoardProps, CreateMapMarkerProps, CreateNodeProps, DocumentCreateProps, DocumentProps, DocumentUpdateProps, ImageProps, MapCreateProps, MapMarkerProps, MapProps, MapUpdateProps, ProfileProps,
-  ProjectProps, TemplateCreateProps, UpdateBoardProps, UpdateEdgeProps, UpdateMapMarkerProps, UpdateNodeProps
+  BoardEdgeProps,
+  BoardNodeProps,
+  BoardProps,
+  CreateBoardProps,
+  CreateMapMarkerProps,
+  CreateNodeProps,
+  DocumentCreateProps,
+  DocumentProps,
+  DocumentUpdateProps,
+  ImageProps,
+  MapCreateProps,
+  MapMarkerProps,
+  MapProps,
+  MapUpdateProps,
+  ProfileProps,
+  ProjectProps,
+  TemplateCreateProps,
+  UpdateBoardProps,
+  UpdateEdgeProps,
+  UpdateMapMarkerProps,
+  UpdateNodeProps,
 } from "../custom-types";
 import { toastError } from "./utils";
 
@@ -473,11 +492,14 @@ export const updateProfile = async (
   }
 };
 export const updateManyNodesPosition = async (
-  nodes: { id: string; x: number; y: number }[]
+  payload: { id: string; x: number; y: number }[]
 ) => {
   await supabase.rpc("update_many_nodes_position", {
-    payload: nodes,
+    payload,
   });
+};
+export const updateManyNodesData = async (payload: BoardNodeProps[]) => {
+  await supabase.rpc("update_many_nodes_data", { payload });
 };
 export const updateManyNodesLockState = async (
   nodes: { id: string; locked: boolean }[]

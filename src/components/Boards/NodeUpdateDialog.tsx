@@ -20,7 +20,6 @@ import {
   useUpdateNode,
 } from "../../utils/customHooks";
 import { NodeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
-import { updateManyNodesData } from "../../utils/supabaseUtils";
 import ImgDropdownItem from "../Util/ImgDropdownItem";
 type Props = {
   nodeUpdateDialog: NodeUpdateDialogProps;
@@ -323,8 +322,9 @@ export default function NodeUpdateDialog({
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
+              const { show, ...rest } = nodeUpdateDialog;
               updateNodeMutation.mutate({
-                ...nodeUpdateDialog,
+                ...rest,
                 board_id: board_id as string,
               });
             }}
