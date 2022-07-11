@@ -6,10 +6,10 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { SelectButton } from "primereact/selectbutton";
 import { Tooltip } from "primereact/tooltip";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
-import { BoardExportProps } from "../../custom-types";
+import { BoardExportProps, BoardNodeProps } from "../../custom-types";
 import {
   changeLockState,
   nodeColorPresets,
@@ -22,26 +22,28 @@ import {
   useUpdateEdge,
   useUpdateNode,
 } from "../../utils/customHooks";
-import { toastWarn } from "../../utils/utils";
+import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
+import ImgDropdownItem from "../Util/ImgDropdownItem";
 
 export default function BoardQuickBar() {
   const { project_id, board_id } = useParams();
   const { cyRef, ehRef } = useContext(BoardRefsContext);
   const [drawMode, setDrawMode] = useState(false);
+  const [searchDialog, setSearchDialog] = useState(false);
   const [exportDialog, setExportDialog] = useState<BoardExportProps>({
     view: "Graph",
     background: "Color",
     type: "PNG",
     show: false,
   });
-  const [search, setSearch] = useState("");
   const board = useGetBoardData(project_id as string, board_id as string);
+
   const updateNodeMutation = useUpdateNode(project_id as string);
   const updateEdgeMutation = useUpdateEdge(project_id as string);
   const deleteNodeMutation = useDeleteNode(project_id as string);
   const deleteEdgeMutation = useDeleteEdge(project_id as string);
-  const debounced = useDebouncedCallback(
+  const debouncedColorPick = useDebouncedCallback(
     // function
     (color) => {
       updateColor(
@@ -55,6 +57,7 @@ export default function BoardQuickBar() {
     // delay in ms
     400
   );
+
   const exportBoardFunction = (
     view: "Graph" | "View",
     background: "Color" | "Transparent",
@@ -103,6 +106,7 @@ export default function BoardQuickBar() {
       );
     }
   };
+  console.log(board?.nodes);
   return (
     <div
       className="w-2 absolute border-round surface-50 text-white h-3rem flex align-items-center justify-content-around shadow-5"
@@ -112,80 +116,83 @@ export default function BoardQuickBar() {
         zIndex: 5,
       }}
     >
-      <Tooltip
-        target={".lockSelected"}
-        content="Lock selected nodes"
-        position="top"
-        autoHide={true}
-      />
-      <Tooltip
-        target={".unlockSelected"}
-        content="Unlock selected nodes"
-        position="top"
-        autoHide={true}
-      />
-      <Tooltip
-        target={".deleteSelected"}
-        content="Delete selected elements"
-        position="top"
-        autoHide={true}
-      />
-      <Tooltip
-        target={".drawMode"}
-        content="Toggle Draw Mode"
-        position="top"
-        autoHide={true}
-      />
-      <Tooltip
-        target={".saveButton"}
-        content="Save Board"
-        position="top"
-        autoHide={true}
-      />
-      <Tooltip
-        target={".searchButton"}
-        content="Search Board"
-        position="top"
-        autoHide={true}
-      />
-      <Tooltip
-        target={".colorPresets"}
-        position="top"
-        autoHide={false}
-        hideEvent="focus"
-      >
-        <div className="flex flex-wrap w-10rem">
-          {nodeColorPresets.map((color) => (
-            <div
-              key={color}
-              className="w-1rem h-1rem border-rounded cursor-pointer"
-              style={{
-                backgroundColor: `#${color}`,
-              }}
-              onClick={() => {
-                updateColor(
-                  cyRef,
-                  `#${color}`,
-                  board_id as string,
-                  updateNodeMutation,
-                  updateEdgeMutation
-                );
-              }}
-            ></div>
-          ))}
-        </div>
-      </Tooltip>
-      <Tooltip
-        target={".resetColors"}
-        content="Reset selected to default color"
-        position="top"
-        autoHide={true}
-      />
-      <Tooltip
-        target={".pickColor"}
-        content="Pick color for selected elements"
-        position="top"
-      />
+      <span>
+        <Tooltip
+          target={".lockSelected"}
+          content="Lock selected nodes"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".unlockSelected"}
+          content="Unlock selected nodes"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".deleteSelected"}
+          content="Delete selected elements"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".drawMode"}
+          content="Toggle Draw Mode"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".saveButton"}
+          content="Save Board"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".searchButton"}
+          content="Search Board"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".colorPresets"}
+          position="top"
+          autoHide={false}
+          hideEvent="focus"
+        >
+          <div className="flex flex-wrap w-10rem">
+            {nodeColorPresets.map((color) => (
+              <div
+                key={color}
+                className="w-1rem h-1rem border-rounded cursor-pointer"
+                style={{
+                  backgroundColor: `#${color}`,
+                }}
+                onClick={() => {
+                  updateColor(
+                    cyRef,
+                    `#${color}`,
+                    board_id as string,
+                    updateNodeMutation,
+                    updateEdgeMutation
+                  );
+                }}
+              ></div>
+            ))}
+          </div>
+        </Tooltip>
+        <Tooltip
+          target={".resetColors"}
+          content="Reset selected to default color"
+          position="top"
+          autoHide={true}
+        />
+        <Tooltip
+          target={".pickColor"}
+          content="Pick color for selected elements"
+          position="top"
+        />
+      </span>
+
       <i
         className="pi pi-fw pi-lock cursor-pointer hover:text-blue-300 lockSelected"
         onClick={() => changeLockState(cyRef, true)}
@@ -322,36 +329,61 @@ export default function BoardQuickBar() {
           setExportDialog({ ...exportDialog, show: true });
         }}
       ></i>
-      <i className="pi pi-search  cursor-pointer hover:text-blue-300 searchButton"></i>
-      {/* <Dropdown
-        className="ml-2"
-        placeholder="Search Nodes"
-        value={search}
-        options={board?.nodes.filter((node) => node.label) || []}
-        optionLabel="label"
-        optionValue="id"
-        filter
-        filterBy="label"
-        itemTemplate={(item) => <div>{item.label}</div>}
-        onChange={(e: any) => {
-          if (!cyRef) return;
-          if (e.target.value) {
-            let foundNode = cyRef.current.getElementById(e.target.value);
-            cyRef.current.animate(
-              {
-                center: {
-                  eles: foundNode,
+      <i
+        className="pi pi-search cursor-pointer hover:text-blue-300 searchButton"
+        onClick={() => setSearchDialog((prev) => !prev)}
+      ></i>
+      <Dialog
+        visible={searchDialog}
+        onHide={() => setSearchDialog(false)}
+        modal={false}
+        header="Search Nodes"
+        className="w-20rem"
+        position={"center"}
+      >
+        <Dropdown
+          autoFocus
+          className="ml-2 w-15rem"
+          placeholder="Search Nodes"
+          options={board?.nodes.filter((node) => node.label)}
+          optionLabel="label"
+          optionValue="id"
+          filter
+          filterBy="label"
+          itemTemplate={(item: BoardNodeProps) => (
+            <ImgDropdownItem
+              title={item.label || ""}
+              link={item.customImage?.link || ""}
+            />
+            // <div className="white-space-nowrap overflow-hidden text-overflow-ellipsis w-10rem">
+            //   {item.document?.image?.link && (
+            //     <img
+            //       src={supabaseStorageImagesLink + item.document.image.link}
+            //       alt={item.label}
+            //     />
+            //   )}
+            //   {item.label}
+            // </div>
+          )}
+          onChange={(e: any) => {
+            if (!cyRef) return;
+            if (e.target.value) {
+              let foundNode = cyRef.current.getElementById(e.target.value);
+              cyRef.current.animate(
+                {
+                  center: {
+                    eles: foundNode,
+                  },
+                  zoom: 1,
                 },
-                zoom: 1,
-              },
-              {
-                duration: 1250,
-              }
-            );
-          }
-        }}
-      /> */}
-
+                {
+                  duration: 1250,
+                }
+              );
+            }
+          }}
+        />
+      </Dialog>
       <span
         className="cursor-pointer flex hover:text-blue-300 resetColors"
         onClick={() =>
@@ -369,7 +401,7 @@ export default function BoardQuickBar() {
       <i className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 colorPresets"></i>
       <ColorPicker
         onChange={(e) => {
-          debounced(e.target.value);
+          debouncedColorPick(e.target.value);
         }}
         className="w-2rem h-2rem"
         defaultColor="595959"
