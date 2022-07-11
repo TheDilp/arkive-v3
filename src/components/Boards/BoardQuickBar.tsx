@@ -6,7 +6,7 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { SelectButton } from "primereact/selectbutton";
 import { Tooltip } from "primereact/tooltip";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import { BoardExportProps } from "../../custom-types";
@@ -23,12 +23,11 @@ import {
   useUpdateNode,
 } from "../../utils/customHooks";
 import { toastWarn } from "../../utils/utils";
-type Props = {
-  cyRef: any;
-};
+import { BoardRefsContext } from "../Context/BoardRefsContext";
 
-export default function BoardQuickBar({ cyRef }: Props) {
+export default function BoardQuickBar() {
   const { project_id, board_id } = useParams();
+  const { cyRef, ehRef } = useContext(BoardRefsContext);
   const [drawMode, setDrawMode] = useState(false);
   const [exportDialog, setExportDialog] = useState<BoardExportProps>({
     view: "Graph",
@@ -62,6 +61,7 @@ export default function BoardQuickBar({ cyRef }: Props) {
     type: "PNG" | "JPEG" | "JSON",
     boardTitle?: string
   ) => {
+    if (!cyRef) return;
     if (type === "PNG") {
       saveAs(
         new Blob(
@@ -179,6 +179,7 @@ export default function BoardQuickBar({ cyRef }: Props) {
       <i
         className="pi pi-fw pi-trash cursor-pointer hover:text-blue-300 deleteSelected"
         onClick={() => {
+          if (!cyRef) return;
           if (cyRef.current.elements(":selected")?.length > 0) {
             cyRef.current.elements(":selected").forEach((el: any) => {
               if (el.isNode()) {
@@ -254,7 +255,7 @@ export default function BoardQuickBar({ cyRef }: Props) {
               icon="pi pi-download"
               iconPos="right"
               onClick={() => {
-                if (cyRef.current) {
+                if (cyRef && cyRef.current) {
                   exportBoardFunction(
                     exportDialog.view,
                     exportDialog.background,
@@ -277,6 +278,7 @@ export default function BoardQuickBar({ cyRef }: Props) {
         icon="pi pi-pencil"
         onClick={() => {
           setDrawMode((prev: boolean) => {
+            if (!ehRef || !cyRef) return prev;
             if (prev) {
               ehRef.current.disable();
               ehRef.current.disableDrawMode();
@@ -316,6 +318,7 @@ export default function BoardQuickBar({ cyRef }: Props) {
         filterBy="label"
         itemTemplate={(item) => <div>{item.label}</div>}
         onChange={(e: any) => {
+          if (!cyRef) return;
           if (e.target.value) {
             let foundNode = cyRef.current.getElementById(e.target.value);
             cyRef.current.animate(

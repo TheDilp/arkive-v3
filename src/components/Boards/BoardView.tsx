@@ -25,8 +25,8 @@ import {
   useUploadImage,
 } from "../../utils/customHooks";
 import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
+import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
-import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
 import BoardQuickBar from "./BoardQuickBar";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
@@ -34,12 +34,12 @@ import NodeUpdateDialog from "./NodeUpdateDialog";
 import QuickCreateNode from "./QuickCreateNode";
 type Props = {
   setBoardId: (boardId: string) => void;
-  cyRef: any;
 };
 
-export default function BoardView({ setBoardId, cyRef }: Props) {
+export default function BoardView({ setBoardId }: Props) {
   const navigate = useNavigate();
   const { project_id, board_id } = useParams();
+  const { cyRef, ehRef, grRef } = useContext(BoardRefsContext);
   const board = useGetBoardData(project_id as string, board_id as string);
   const images = useGetImages(project_id as string);
 
@@ -47,8 +47,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
-  const ehRef = useRef() as any;
-  const grRef = useRef() as any;
+
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
   const { isTabletOrMobile } = useContext(MediaQueryContext);
@@ -168,6 +167,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
     }
   }, [board]);
   useEffect(() => {
+    if (!cyRef) return;
     if (elements.length > 0) {
       cyRef.current.on(
         "ehcomplete",
@@ -215,6 +215,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   );
 
   useEffect(() => {
+    if (!cyRef) return;
     if (cyRef.current) {
       cyRef.current.on("click", "node", function (evt: any) {
         const scratch = evt.target._private.scratch;
@@ -323,6 +324,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
       cyRef.current.removeListener("click mousedown cxttap dbltap free");
   }, [cyRef, board_id]);
   useEffect(() => {
+    if (!cyRef || !ehRef || !grRef) return;
     setLoading(true);
     if (firstRender.current) {
       firstRender.current = false;
@@ -441,19 +443,10 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         }
       }}
     >
-      {/* <BoardBar
-        drawMode={drawMode}
-        setDrawMode={setDrawMode}
-        cyRef={cyRef}
-        ehRef={ehRef}
-        boardTitle={board?.title}
-      /> */}
-
       <BoardContextMenu
         cm={cm}
         cyRef={cyRef}
         contextMenu={contextMenu}
-        setDrawMode={setDrawMode}
         setQuickCreate={setQuickCreate}
       />
       {nodeUpdateDialog.show && (
@@ -472,7 +465,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         quickCreate={quickCreate}
         setQuickCreate={setQuickCreate}
       />
-      <BoardQuickBar cyRef={cyRef} />
+      <BoardQuickBar />
       <CytoscapeComponent
         elements={elements}
         className="Lato"
@@ -481,12 +474,12 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         maxZoom={10}
         style={{ width: "100%", height: "100%", opacity: loading ? 0 : 1 }}
         cy={(cy: any) => {
-          if (!cyRef.current) {
+          if (cyRef && !cyRef.current) {
             cyRef.current = cy;
-          }
-          if (!ehRef.current) {
-            ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
-            grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
+            if (ehRef && grRef && !ehRef.current) {
+              ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
+              grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
+            }
           }
         }}
         stylesheet={cytoscapeStylesheet}

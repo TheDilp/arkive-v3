@@ -18,7 +18,6 @@ type Props = {
   cyRef: any;
   cm: any;
   contextMenu: BoardContextMenuProps;
-  setDrawMode: (drawMode: boolean) => void;
   setQuickCreate: (quickCreate: boolean) => void;
 };
 

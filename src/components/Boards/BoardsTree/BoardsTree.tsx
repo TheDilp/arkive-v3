@@ -5,6 +5,7 @@ import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
+import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
@@ -16,12 +17,12 @@ import BoardUpdateDialog from "./BoardUpdateDialog";
 type Props = {
   boardId: string;
   setBoardId: (boardId: string) => void;
-  cyRef: any;
 };
 
-export default function BoardsTree({ boardId, setBoardId, cyRef }: Props) {
+export default function BoardsTree({ boardId, setBoardId }: Props) {
   const { project_id } = useParams();
   const cm = useRef() as any;
+  const { cyRef } = useContext(BoardRefsContext);
   const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [filter, setFilter] = useState("");
   const [treeData, setTreeData] = useState<NodeModel<BoardProps>[]>([]);
