@@ -474,9 +474,9 @@ export default function BoardView({ setBoardId }: Props) {
         maxZoom={10}
         style={{ width: "100%", height: "100%", opacity: loading ? 0 : 1 }}
         cy={(cy: any) => {
-          if (cyRef && !cyRef.current) {
+          if (cyRef) {
             cyRef.current = cy;
-            if (ehRef && grRef && !ehRef.current) {
+            if (ehRef && grRef) {
               ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
               grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
             }

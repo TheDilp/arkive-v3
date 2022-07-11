@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useGetBoards } from "../../utils/customHooks";
 import BoardRefsProvider from "../Context/BoardRefsContext";
@@ -16,7 +16,7 @@ export default function Boards() {
     if (boardId) {
       navigate(boardId);
     }
-  }, [boardId]);
+  }, [boardId, navigate]);
 
   if (isLoading) return <LoadingScreen />;
   return (

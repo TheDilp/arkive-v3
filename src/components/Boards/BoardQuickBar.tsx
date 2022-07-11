@@ -131,6 +131,24 @@ export default function BoardQuickBar() {
         autoHide={true}
       />
       <Tooltip
+        target={".drawMode"}
+        content="Toggle Draw Mode"
+        position="top"
+        autoHide={true}
+      />
+      <Tooltip
+        target={".saveButton"}
+        content="Save Board"
+        position="top"
+        autoHide={true}
+      />
+      <Tooltip
+        target={".searchButton"}
+        content="Search Board"
+        position="top"
+        autoHide={true}
+      />
+      <Tooltip
         target={".colorPresets"}
         position="top"
         autoHide={false}
@@ -271,15 +289,14 @@ export default function BoardQuickBar() {
         </div>
       </Dialog>
 
-      <Button
-        className={`p-button-rounded  ${
-          drawMode ? "p-button-success" : "p-button-secondary"
-        }`}
-        icon="pi pi-pencil"
+      <i
+        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
+          drawMode ? "text-green-500" : ""
+        } drawMode`}
         onClick={() => {
           setDrawMode((prev: boolean) => {
             if (!ehRef || !cyRef) return prev;
-            if (prev) {
+            if (prev && ehRef.current) {
               ehRef.current.disable();
               ehRef.current.disableDrawMode();
               cyRef.current.autoungrabify(false);
@@ -297,17 +314,16 @@ export default function BoardQuickBar() {
             return !prev;
           });
         }}
-        tooltip="Draw Mode"
-      />
+      ></i>
 
-      <Button
-        className="p-button-rounded mx-2"
-        icon="pi pi-save"
+      <i
+        className="pi pi-save cursor-pointer hover:text-blue-300 saveButton"
         onClick={() => {
           setExportDialog({ ...exportDialog, show: true });
         }}
-      />
-      <Dropdown
+      ></i>
+      <i className="pi pi-search  cursor-pointer hover:text-blue-300 searchButton"></i>
+      {/* <Dropdown
         className="ml-2"
         placeholder="Search Nodes"
         value={search}
@@ -334,7 +350,7 @@ export default function BoardQuickBar() {
             );
           }
         }}
-      />
+      /> */}
 
       <span
         className="cursor-pointer flex hover:text-blue-300 resetColors"
