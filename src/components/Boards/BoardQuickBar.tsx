@@ -7,7 +7,13 @@ import {
   nodeColorPresets,
   updateColor,
 } from "../../utils/boardUtils";
-import { useUpdateEdge, useUpdateNode } from "../../utils/customHooks";
+import {
+  useDeleteEdge,
+  useDeleteNode,
+  useUpdateEdge,
+  useUpdateNode,
+} from "../../utils/customHooks";
+import { toastWarn } from "../../utils/utils";
 type Props = {
   cyRef: any;
 };
@@ -16,7 +22,8 @@ export default function BoardQuickBar({ cyRef }: Props) {
   const { project_id, board_id } = useParams();
   const updateNodeMutation = useUpdateNode(project_id as string);
   const updateEdgeMutation = useUpdateEdge(project_id as string);
-
+  const deleteNodeMutation = useDeleteNode(project_id as string);
+  const deleteEdgeMutation = useDeleteEdge(project_id as string);
   const debounced = useDebouncedCallback(
     // function
     (color) => {
@@ -105,7 +112,28 @@ export default function BoardQuickBar({ cyRef }: Props) {
         className="pi pi-fw pi-lock-open cursor-pointer hover:text-blue-300 unlockSelected"
         onClick={() => changeLockState(cyRef, false)}
       ></i>
-      <i className="pi pi-fw pi-trash cursor-pointer hover:text-blue-300 deleteSelected"></i>
+      <i
+        className="pi pi-fw pi-trash cursor-pointer hover:text-blue-300 deleteSelected"
+        onClick={() => {
+          if (cyRef.current.elements(":selected")?.length > 0) {
+            cyRef.current.elements(":selected").forEach((el: any) => {
+              if (el.isNode()) {
+                deleteNodeMutation.mutate({
+                  id: el.data().id,
+                  board_id: board_id as string,
+                });
+              } else {
+                deleteEdgeMutation.mutate({
+                  id: el.data().id,
+                  board_id: board_id as string,
+                });
+              }
+            });
+          } else {
+            toastWarn("No elements are selected.");
+          }
+        }}
+      ></i>
       <i
         className="pi pi-fw pi-refresh cursor-pointer hover:text-blue-300 resetColors"
         onClick={() =>
@@ -118,10 +146,7 @@ export default function BoardQuickBar({ cyRef }: Props) {
           )
         }
       ></i>
-      <i
-        className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 colorPresets"
-        onClick={() => {}}
-      ></i>
+      <i className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 colorPresets"></i>
       <ColorPicker
         onChange={(e) => {
           debounced(e.target.value);
