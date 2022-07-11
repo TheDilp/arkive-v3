@@ -72,12 +72,12 @@ export default function Navbar() {
                 }}
               ></i>
               <i
-                className="pi pi-map mr-3 hover:text-primary cursor-pointer mapsIcon"
+                className="pi pi-map hover:text-primary cursor-pointer mapsIcon"
                 onClick={async () => {
                   navigate("./maps");
                 }}
               ></i>
-              <span className="boardsIcon mr-1">
+              <span className="boardsIcon ml-2 pl-1 mr-2">
                 <Icon
                   className="hover:text-primary cursor-pointer "
                   icon="mdi:draw"
@@ -97,12 +97,14 @@ export default function Navbar() {
                   }}
                 />
               </span> */}
-              <i
-                className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
-                onClick={async () => {
-                  navigate("./filebrowser");
-                }}
-              ></i>
+              <span className="">
+                <i
+                  className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
+                  onClick={async () => {
+                    navigate("./filebrowser");
+                  }}
+                ></i>
+              </span>
             </>
           )}
         </div>

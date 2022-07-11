@@ -1,9 +1,6 @@
-import { ColorPicker } from "primereact/colorpicker";
-import { Tooltip } from "primereact/tooltip";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDebouncedCallback } from "use-debounce";
 import { v4 as uuid } from "uuid";
 import {
   BoardContextMenuProps,
@@ -13,13 +10,10 @@ import {
   nodeUpdateDialogProps,
 } from "../../custom-types";
 import {
-  changeLockState,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  nodeColorPresets,
   toModelPosition,
-  updateColor,
 } from "../../utils/boardUtils";
 import {
   useCreateEdge,
@@ -35,6 +29,7 @@ import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import BoardBar from "./BoardBar";
 import BoardContextMenu from "./BoardContextMenu";
+import BoardQuickBar from "./BoardQuickBar";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
 import QuickCreateNode from "./QuickCreateNode";
@@ -103,23 +98,8 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
   const createNodeMutation = useCreateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
-  const updateEdgeMutation = useUpdateEdge(project_id as string);
   const uploadImageMutation = useUploadImage(project_id as string);
 
-  const debounced = useDebouncedCallback(
-    // function
-    (color) => {
-      updateColor(
-        cyRef,
-        `#${color}`,
-        board_id as string,
-        updateNodeMutation,
-        updateEdgeMutation
-      );
-    },
-    // delay in ms
-    400
-  );
   useEffect(() => {
     if (board) {
       let temp_nodes: CytoscapeNodeProps[] = [];
@@ -493,104 +473,7 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         quickCreate={quickCreate}
         setQuickCreate={setQuickCreate}
       />
-      <div
-        className="w-2 absolute border-round surface-50 text-white h-3rem flex align-items-center justify-content-around shadow-5"
-        style={{
-          top: "95.6vh",
-          left: "50%",
-          zIndex: 5,
-        }}
-      >
-        <Tooltip
-          target={".lockSelected"}
-          content="Lock selected nodes"
-          position="top"
-          autoHide={true}
-        />
-        <Tooltip
-          target={".unlockSelected"}
-          content="Unlock selected nodes"
-          position="top"
-          autoHide={true}
-        />
-        <Tooltip
-          target={".deleteSelected"}
-          content="Delete selected elements"
-          position="top"
-          autoHide={true}
-        />
-        <Tooltip
-          target={".colorPresets"}
-          position="top"
-          autoHide={false}
-          hideEvent="focus"
-        >
-          <div className="flex flex-wrap w-10rem">
-            {nodeColorPresets.map((color) => (
-              <div
-                key={color}
-                className="w-1rem h-1rem border-rounded cursor-pointer"
-                style={{
-                  backgroundColor: `#${color}`,
-                }}
-                onClick={() => {
-                  updateColor(
-                    cyRef,
-                    `#${color}`,
-                    board_id as string,
-                    updateNodeMutation,
-                    updateEdgeMutation
-                  );
-                }}
-              ></div>
-            ))}
-          </div>
-        </Tooltip>
-        <Tooltip
-          target={".resetColors"}
-          content="Reset selected to default color"
-          position="top"
-          autoHide={true}
-        />
-        <Tooltip
-          target={".pickColor"}
-          content="Pick color for selected elements"
-          position="top"
-        />
-        <i
-          className="pi pi-fw pi-lock cursor-pointer hover:text-blue-300 lockSelected"
-          onClick={() => changeLockState(cyRef, true)}
-        ></i>
-        <i
-          className="pi pi-fw pi-lock-open cursor-pointer hover:text-blue-300 unlockSelected"
-          onClick={() => changeLockState(cyRef, false)}
-        ></i>
-        <i className="pi pi-fw pi-trash cursor-pointer hover:text-blue-300 deleteSelected"></i>
-        <i
-          className="pi pi-fw pi-refresh cursor-pointer hover:text-blue-300 resetColors"
-          onClick={() =>
-            updateColor(
-              cyRef,
-              "#595959",
-              board_id as string,
-              updateNodeMutation,
-              updateEdgeMutation
-            )
-          }
-        ></i>
-        <i
-          className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 colorPresets"
-          onClick={() => {}}
-        ></i>
-        <ColorPicker
-          onChange={(e) => {
-            debounced(e.target.value);
-          }}
-          className="w-2rem h-2rem"
-          defaultColor="595959"
-        ></ColorPicker>
-      </div>
-
+      <BoardQuickBar cyRef={cyRef} />
       <CytoscapeComponent
         elements={elements}
         className="Lato"

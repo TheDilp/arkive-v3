@@ -30,6 +30,7 @@ export default function Project() {
   const { isLoading: isLoadingBoards } = useGetBoards(project_id as string);
   const user = auth.user();
 
+  // Cache images on project load before they are seen by user
   const cacheImages = async (imgArray: ImageProps[]) => {
     const promises = await imgArray.map((image) => {
       return new Promise(function (resolve, reject) {

@@ -11,12 +11,12 @@ export default function Register() {
   const [password, setPassword] = useState("");
   auth.onAuthStateChange((event) => {
     if (event === "SIGNED_IN") {
-      navigate("/home");
+      navigate("/");
     }
   });
 
   return auth.user() ? (
-    <Navigate to="/home" />
+    <Navigate to="/" />
   ) : (
     <div className="w-full h-screen flex align-items-center justify-content-center">
       <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-20rem flex-wrap">

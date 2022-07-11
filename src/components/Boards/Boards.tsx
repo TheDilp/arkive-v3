@@ -4,13 +4,12 @@ import { useGetBoards } from "../../utils/customHooks";
 import LoadingScreen from "../Util/LoadingScreen";
 import BoardsTree from "./BoardsTree/BoardsTree";
 import BoardView from "./BoardView";
-import cytoscape from "cytoscape";
-import edgehandles from "cytoscape-edgehandles";
-import gridguide from "cytoscape-grid-guide";
 export default function Boards() {
   const { project_id } = useParams();
   const { isLoading } = useGetBoards(project_id as string);
   const [boardId, setBoardId] = useState("");
+
+  // Ref for accessing the cytoscape board
   const cyRef = useRef() as any;
   const navigate = useNavigate();
   useEffect(() => {
