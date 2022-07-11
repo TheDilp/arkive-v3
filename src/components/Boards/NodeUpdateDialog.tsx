@@ -285,7 +285,8 @@ export default function NodeUpdateDialog({
                     onChange={(e) =>
                       setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
                         ...prev,
-                        backgroundColor: e.value as string,
+                        backgroundColor: ("#" +
+                          e.value?.toString().replaceAll("#", "")) as string,
                       }))
                     }
                   />

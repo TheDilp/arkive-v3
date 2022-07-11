@@ -137,10 +137,15 @@ export default function BoardQuickBar({}: Props) {
     values: { [key: string]: any },
     cyRef: any
   ) => {
-    let ids = cyRef.current
+    let ids: string[] = cyRef.current
       .elements(":selected")
       .nodes()
       .map((node: any) => node.data().id);
+
+    if (ids.length === 0) {
+      toastWarn("No elements are selected!");
+      return;
+    }
     for (const id of ids) {
       updateNodeMutation.mutate({
         ...values,
