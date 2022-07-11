@@ -5,15 +5,15 @@ import { InputText } from "primereact/inputtext";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
-  boardItemDisplayDialogProps,
+  BoardItemDisplayDialogProps,
   BoardProps,
   UpdateBoardInputs,
 } from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 
 type Props = {
-  visible: boardItemDisplayDialogProps;
-  setVisible: (visible: boardItemDisplayDialogProps) => void;
+  visible: BoardItemDisplayDialogProps;
+  setVisible: (visible: BoardItemDisplayDialogProps) => void;
 };
 
 export default function BoardUpdateDialog({ visible, setVisible }: Props) {

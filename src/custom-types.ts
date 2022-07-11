@@ -150,7 +150,7 @@ export type CytoscapeEdgeProps = {
     | "zIndex"
   >;
 };
-export type docItemDisplayDialogProps = {
+export type DocItemDisplayDialogProps = {
   id: string;
   title: string;
   show: boolean;
@@ -160,7 +160,7 @@ export type docItemDisplayDialogProps = {
   depth: number;
   root?: boolean;
 };
-export type mapItemDisplayDialogProps = {
+export type MapItemDisplayDialogProps = {
   id: string;
   title: string;
   map_image: ImageProps;
@@ -170,7 +170,7 @@ export type mapItemDisplayDialogProps = {
   public: boolean;
   show: boolean;
 };
-export type boardItemDisplayDialogProps = {
+export type BoardItemDisplayDialogProps = {
   id: string;
   title: string;
   parent: string;
@@ -180,7 +180,7 @@ export type boardItemDisplayDialogProps = {
   public: boolean;
   show: boolean;
 };
-export type nodeUpdateDialogProps = {
+export type NodeUpdateDialogProps = {
   id: string;
   label: string;
   type: string;
@@ -196,7 +196,7 @@ export type nodeUpdateDialogProps = {
   zIndex: number;
   show: boolean;
 };
-export type edgeUpdateDialogProps = {
+export type EdgeUpdateDialogProps = {
   id: string;
   label: string;
   curveStyle: string;
@@ -216,7 +216,7 @@ export type BoardExportProps = {
   type: "PNG" | "JPEG" | "JSON";
   show: boolean;
 };
-export type iconSelectProps = {
+export type IconSelectProps = {
   id: string;
   icon: string;
   top: number;
@@ -277,7 +277,7 @@ export type UpdateBoardInputs = Pick<BoardProps, "title"> & {
   parent: string;
 };
 export type UpdateNodeInputs = Pick<
-  nodeUpdateDialogProps,
+  NodeUpdateDialogProps,
   | "label"
   | "type"
   | "doc_id"
@@ -292,7 +292,7 @@ export type UpdateNodeInputs = Pick<
   | "zIndex"
 >;
 export type UpdateEdgeInputs = Pick<
-  edgeUpdateDialogProps,
+  EdgeUpdateDialogProps,
   | "label"
   | "curveStyle"
   | "lineStyle"

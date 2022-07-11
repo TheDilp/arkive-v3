@@ -2,13 +2,13 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { mapItemDisplayDialogProps } from "../../../custom-types";
+import { MapItemDisplayDialogProps } from "../../../custom-types";
 import { useDeleteMap, useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   mapId: string;
-  displayDialog: mapItemDisplayDialogProps;
-  setDisplayDialog: (displayDialog: mapItemDisplayDialogProps) => void;
+  displayDialog: MapItemDisplayDialogProps;
+  setDisplayDialog: (displayDialog: MapItemDisplayDialogProps) => void;
 };
 
 export default function MapTreeItemContext({

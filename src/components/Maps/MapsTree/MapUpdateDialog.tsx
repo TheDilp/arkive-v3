@@ -8,13 +8,13 @@ import { useParams } from "react-router-dom";
 import {
   CreateMapInputs,
   MapProps,
-  mapItemDisplayDialogProps,
+  MapItemDisplayDialogProps,
 } from "../../../custom-types";
 import { useUpdateMap } from "../../../utils/customHooks";
 
 type Props = {
-  visible: mapItemDisplayDialogProps;
-  setVisible: (visible: mapItemDisplayDialogProps) => void;
+  visible: MapItemDisplayDialogProps;
+  setVisible: (visible: MapItemDisplayDialogProps) => void;
 };
 
 export default function MapUpdateDialog({ visible, setVisible }: Props) {

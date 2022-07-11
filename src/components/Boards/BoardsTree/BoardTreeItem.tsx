@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useParams } from "react-router-dom";
-import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
+import { BoardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
 import { useUpdateBoard } from "../../../utils/customHooks";
 type Props = {
   boardId: string;
@@ -10,7 +10,7 @@ type Props = {
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDisplayDialog: (displayDialog: boardItemDisplayDialogProps) => void;
+  setDisplayDialog: (displayDialog: BoardItemDisplayDialogProps) => void;
   cm: any;
 };
 

@@ -3,9 +3,9 @@ import { TabPanel, TabView } from "primereact/tabview";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  docItemDisplayDialogProps,
+  DocItemDisplayDialogProps,
   DocumentProps,
-  iconSelectProps,
+  IconSelectProps,
 } from "../../../custom-types";
 import {
   useGetDocuments,
@@ -33,12 +33,12 @@ export default function DocumentsTree() {
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
 
   const { data: documents } = useGetDocuments(project_id as string);
-  const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
+  const [displayDialog, setDisplayDialog] = useState<DocItemDisplayDialogProps>(
     docItemDisplayDialogDefault
   );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const sortChildrenMutation = useSortChildren();
-  const [iconSelect, setIconSelect] = useState<iconSelectProps>({
+  const [iconSelect, setIconSelect] = useState<IconSelectProps>({
     id: "",
     icon: "",
     top: 0,

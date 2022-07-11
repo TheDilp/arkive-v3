@@ -1,7 +1,7 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
+import { MapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
 import { sortMapsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
@@ -32,7 +32,7 @@ export default function MapsTree({
   const [treeData, setTreeData] = useState<NodeModel<MapProps>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
   const [updateMapDialog, setUpdateMapDialog] =
-    useState<mapItemDisplayDialogProps>({
+    useState<MapItemDisplayDialogProps>({
       id: "",
       title: "",
       map_image: { id: "", title: "", link: "", type: "Image" },

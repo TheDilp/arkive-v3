@@ -1,7 +1,7 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { boardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
+import { BoardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
@@ -29,7 +29,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const { data: boards } = useGetBoards(project_id as string);
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const [updateBoardDialog, setUpdateBoardDialog] =
-    useState<boardItemDisplayDialogProps>({
+    useState<BoardItemDisplayDialogProps>({
       id: "",
       title: "",
       parent: "",

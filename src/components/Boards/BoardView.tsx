@@ -6,8 +6,8 @@ import {
   BoardContextMenuProps,
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
-  edgeUpdateDialogProps,
-  nodeUpdateDialogProps,
+  EdgeUpdateDialogProps,
+  NodeUpdateDialogProps,
 } from "../../custom-types";
 import {
   cytoscapeGridOptions,
@@ -24,6 +24,7 @@ import {
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
+import { NodeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
 import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
@@ -52,24 +53,9 @@ export default function BoardView({ setBoardId }: Props) {
   const firstRender = useRef(true) as any;
   const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [nodeUpdateDialog, setNodeUpdateDialog] =
-    useState<nodeUpdateDialogProps>({
-      id: "",
-      label: "",
-      type: "",
-      doc_id: undefined,
-      width: 0,
-      height: 0,
-      fontSize: 0,
-      textHAlign: "center",
-      textVAlign: "top",
-      zIndex: 1,
-      backgroundColor: "",
-      backgroundOpacity: 1,
-      customImage: { id: "", title: "", link: "", type: "Image" },
-      show: false,
-    });
+    useState<NodeUpdateDialogProps>(NodeUpdateDialogDefault);
   const [edgeUpdateDialog, setEdgeUpdateDialog] =
-    useState<edgeUpdateDialogProps>({
+    useState<EdgeUpdateDialogProps>({
       id: "",
       label: "",
       curveStyle: "",
@@ -89,7 +75,6 @@ export default function BoardView({ setBoardId }: Props) {
     type: "board",
   });
 
-  const [drawMode, setDrawMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [quickCreate, setQuickCreate] = useState(false);
 
@@ -330,7 +315,6 @@ export default function BoardView({ setBoardId }: Props) {
       firstRender.current = false;
     }
     // Reset when changing board_id
-    setDrawMode(false);
     ehRef.current = null;
     grRef.current = null;
     if (board_id) {
@@ -442,12 +426,10 @@ export default function BoardView({ setBoardId }: Props) {
         contextMenu={contextMenu}
         setQuickCreate={setQuickCreate}
       />
-      {nodeUpdateDialog.show && (
-        <NodeUpdateDialog
-          nodeUpdateDialog={nodeUpdateDialog}
-          setNodeUpdateDialog={setNodeUpdateDialog}
-        />
-      )}
+      <NodeUpdateDialog
+        nodeUpdateDialog={nodeUpdateDialog}
+        setNodeUpdateDialog={setNodeUpdateDialog}
+      />
       {edgeUpdateDialog.show && (
         <EdgeUpdateDialog
           edgeUpdateDialog={edgeUpdateDialog}

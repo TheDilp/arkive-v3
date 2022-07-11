@@ -7,7 +7,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Slider } from "primereact/slider";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { edgeUpdateDialogProps, UpdateEdgeInputs } from "../../custom-types";
+import { EdgeUpdateDialogProps, UpdateEdgeInputs } from "../../custom-types";
 import { useUpdateEdge } from "../../utils/customHooks";
 import {
   boardEdgeCurveStyles,
@@ -18,8 +18,8 @@ import {
 import { useEffect } from "react";
 
 type Props = {
-  edgeUpdateDialog: edgeUpdateDialogProps;
-  setEdgeUpdateDialog: (edgeUpdateDialog: edgeUpdateDialogProps) => void;
+  edgeUpdateDialog: EdgeUpdateDialogProps;
+  setEdgeUpdateDialog: (edgeUpdateDialog: EdgeUpdateDialogProps) => void;
 };
 
 export default function EdgeUpdateDialog({

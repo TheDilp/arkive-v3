@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
   DocumentProps,
-  docItemDisplayDialogProps,
+  DocItemDisplayDialogProps,
 } from "../../../custom-types";
 import {
   useCreateDocument,
@@ -19,8 +19,8 @@ import { saveAs } from "file-saver";
 import { ProjectContext } from "../../Context/ProjectContext";
 type Props = {
   cm: React.RefObject<ContextMenu>;
-  displayDialog: docItemDisplayDialogProps;
-  setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
+  displayDialog: DocItemDisplayDialogProps;
+  setDisplayDialog: (displayDialog: DocItemDisplayDialogProps) => void;
 };
 
 export default function DocumentTreeItemContext({

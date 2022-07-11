@@ -15,7 +15,7 @@ import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   DocumentProps,
-  iconSelectProps,
+  IconSelectProps,
   ImageProps,
 } from "../../../custom-types";
 import {
@@ -48,7 +48,7 @@ export default function DocumentsSettingsTable() {
   );
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
-  const [iconSelect, setIconSelect] = useState<iconSelectProps>({
+  const [iconSelect, setIconSelect] = useState<IconSelectProps>({
     id: "",
     icon: "",
     top: 0,

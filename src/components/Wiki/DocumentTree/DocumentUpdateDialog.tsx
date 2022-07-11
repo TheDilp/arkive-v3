@@ -6,16 +6,16 @@ import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
-  docItemDisplayDialogProps,
+  DocItemDisplayDialogProps,
   DocumentProps,
 } from "../../../custom-types";
 import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
 import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 
 type Props = {
-  displayDialog: docItemDisplayDialogProps;
+  displayDialog: DocItemDisplayDialogProps;
   setDisplayDialog: React.Dispatch<
-    React.SetStateAction<docItemDisplayDialogProps>
+    React.SetStateAction<DocItemDisplayDialogProps>
   >;
 };
 
@@ -30,7 +30,7 @@ export default function DocumentUpdateDialog({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<Pick<docItemDisplayDialogProps, "title" | "parent">>({
+  } = useForm<Pick<DocItemDisplayDialogProps, "title" | "parent">>({
     defaultValues: {
       title: displayDialog.title,
       parent: displayDialog.parent,

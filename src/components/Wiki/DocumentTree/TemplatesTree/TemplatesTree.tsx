@@ -4,8 +4,8 @@ import { useCallback, useContext, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import {
-  iconSelectProps,
-  docItemDisplayDialogProps,
+  IconSelectProps,
+  DocItemDisplayDialogProps,
 } from "../../../../custom-types";
 import {
   useCreateDocument,
@@ -17,8 +17,8 @@ import { defaultTemplate } from "../../../../utils/utils";
 import { InputText } from "primereact/inputtext";
 import { ProjectContext } from "../../../Context/ProjectContext";
 type Props = {
-  setIconSelect: (iconSelect: iconSelectProps) => void;
-  setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
+  setIconSelect: (iconSelect: IconSelectProps) => void;
+  setDisplayDialog: (displayDialog: DocItemDisplayDialogProps) => void;
   cm: any;
 };
 

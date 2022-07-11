@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import {
-  docItemDisplayDialogProps,
+  DocItemDisplayDialogProps,
   DocumentProps,
 } from "../../../custom-types";
 import {
@@ -21,7 +21,7 @@ import FolderPageItem from "./FolderPageItem";
 export default function FolderPage() {
   const { project_id, doc_id } = useParams();
   const [children, setChildren] = useState<DocumentProps[]>([]);
-  const [displayDialog, setDisplayDialog] = useState<docItemDisplayDialogProps>(
+  const [displayDialog, setDisplayDialog] = useState<DocItemDisplayDialogProps>(
     docItemDisplayDialogDefault
   );
   const cm = useRef() as any;

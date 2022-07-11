@@ -3,9 +3,9 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  docItemDisplayDialogProps,
+  DocItemDisplayDialogProps,
   DocumentProps,
-  iconSelectProps,
+  IconSelectProps,
 } from "../../../custom-types";
 import { useUpdateDocument } from "../../../utils/customHooks";
 import { ProjectContext } from "../../Context/ProjectContext";
@@ -14,8 +14,8 @@ type Props = {
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
-  setIconSelect: (iconSelect: iconSelectProps) => void;
+  setDisplayDialog: (displayDialog: DocItemDisplayDialogProps) => void;
+  setIconSelect: (iconSelect: IconSelectProps) => void;
   cm: any;
 };
 

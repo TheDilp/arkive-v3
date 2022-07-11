@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useParams } from "react-router-dom";
-import { mapItemDisplayDialogProps, MapProps } from "../../../custom-types";
+import { MapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import { useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   mapId: string;
@@ -10,7 +10,7 @@ type Props = {
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDisplayDialog: (displayDialog: mapItemDisplayDialogProps) => void;
+  setDisplayDialog: (displayDialog: MapItemDisplayDialogProps) => void;
   cm: any;
 };
 

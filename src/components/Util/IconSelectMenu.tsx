@@ -3,11 +3,11 @@ import { InputText } from "primereact/inputtext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { iconSelectProps } from "../../custom-types";
+import { IconSelectProps } from "../../custom-types";
 import { useOnClickOutside, useUpdateDocument } from "../../utils/customHooks";
 import { iconList } from "../../utils/iconsList";
-interface iconSelectMenu extends iconSelectProps {
-  setIconSelect: (iconSelect: iconSelectProps) => void;
+interface iconSelectMenu extends IconSelectProps {
+  setIconSelect: (iconSelect: IconSelectProps) => void;
   closeEdit?: () => void;
 }
 export default function IconSelectMenu({

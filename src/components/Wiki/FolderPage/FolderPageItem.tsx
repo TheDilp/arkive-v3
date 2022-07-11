@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
-  docItemDisplayDialogProps,
+  DocItemDisplayDialogProps,
   DocumentProps,
 } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
@@ -14,7 +14,7 @@ import { ProjectContext } from "../../Context/ProjectContext";
 type Props = {
   doc: DocumentProps;
   cm: any;
-  setDisplayDialog: (displayDialog: docItemDisplayDialogProps) => void;
+  setDisplayDialog: (displayDialog: DocItemDisplayDialogProps) => void;
 };
 
 export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
