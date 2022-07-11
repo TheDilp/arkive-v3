@@ -1,7 +1,15 @@
+import { Icon } from "@iconify/react";
+import { saveAs } from "file-saver";
+import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
+import { SelectButton } from "primereact/selectbutton";
 import { Tooltip } from "primereact/tooltip";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
+import { BoardExportProps } from "../../custom-types";
 import {
   changeLockState,
   nodeColorPresets,
@@ -10,6 +18,7 @@ import {
 import {
   useDeleteEdge,
   useDeleteNode,
+  useGetBoardData,
   useUpdateEdge,
   useUpdateNode,
 } from "../../utils/customHooks";
@@ -20,6 +29,15 @@ type Props = {
 
 export default function BoardQuickBar({ cyRef }: Props) {
   const { project_id, board_id } = useParams();
+  const [drawMode, setDrawMode] = useState(false);
+  const [exportDialog, setExportDialog] = useState<BoardExportProps>({
+    view: "Graph",
+    background: "Color",
+    type: "PNG",
+    show: false,
+  });
+  const [search, setSearch] = useState("");
+  const board = useGetBoardData(project_id as string, board_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
   const updateEdgeMutation = useUpdateEdge(project_id as string);
   const deleteNodeMutation = useDeleteNode(project_id as string);
@@ -38,7 +56,53 @@ export default function BoardQuickBar({ cyRef }: Props) {
     // delay in ms
     400
   );
-
+  const exportBoardFunction = (
+    view: "Graph" | "View",
+    background: "Color" | "Transparent",
+    type: "PNG" | "JPEG" | "JSON",
+    boardTitle?: string
+  ) => {
+    if (type === "PNG") {
+      saveAs(
+        new Blob(
+          [
+            cyRef.current.png({
+              output: "blob",
+              bg: background === "Color" ? "#121212" : "transparent",
+              full: view === "Graph" ? true : false,
+            }),
+          ],
+          {
+            type: "image/png",
+          }
+        ),
+        `${boardTitle || "ArkiveBoard"}.png`
+      );
+    } else if (type === "JPEG") {
+      saveAs(
+        new Blob(
+          [
+            cyRef.current.jpg({
+              output: "blob",
+              bg: background === "Color" ? "#121212" : "transparent",
+              full: view === "Graph" ? true : false,
+            }),
+          ],
+          {
+            type: "image/jpg",
+          }
+        ),
+        `${boardTitle || "ArkiveBoard"}.jpg`
+      );
+    } else if (type === "JSON") {
+      saveAs(
+        new Blob([JSON.stringify(cyRef.current.json(true))], {
+          type: "application/json",
+        }),
+        `${boardTitle || "ArkiveBoard"}.json`
+      );
+    }
+  };
   return (
     <div
       className="w-2 absolute border-round surface-50 text-white h-3rem flex align-items-center justify-content-around shadow-5"
@@ -134,8 +198,143 @@ export default function BoardQuickBar({ cyRef }: Props) {
           }
         }}
       ></i>
-      <i
-        className="pi pi-fw pi-refresh cursor-pointer hover:text-blue-300 resetColors"
+
+      <Dialog
+        header={`Export Board - ${board?.title}`}
+        modal={false}
+        position="top-left"
+        style={{
+          maxWidth: "14vw",
+        }}
+        visible={exportDialog.show}
+        onHide={() =>
+          setExportDialog({
+            view: "Graph",
+            background: "Color",
+            type: "PNG",
+            show: false,
+          })
+        }
+      >
+        <div className="flex flex-wrap">
+          <div className="w-full flex flex-wrap justify-content-center">
+            <h3 className="w-full text-center mb-1 mt-0">View</h3>
+            <SelectButton
+              value={exportDialog.view}
+              options={["Graph", "Current"]}
+              onChange={(e) =>
+                setExportDialog({ ...exportDialog, view: e.value })
+              }
+            />
+          </div>
+          <div className="w-full flex flex-wrap justify-content-center">
+            <h3 className="my-2">Background</h3>
+            <SelectButton
+              value={exportDialog.background}
+              options={["Color", "Transparent"]}
+              onChange={(e) =>
+                setExportDialog({ ...exportDialog, background: e.value })
+              }
+            />
+          </div>
+          <div className="w-full flex flex-wrap justify-content-center">
+            <h3 className="my-2">File Type</h3>
+            <SelectButton
+              value={exportDialog.type}
+              options={["PNG", "JPEG", "JSON"]}
+              onChange={(e) =>
+                setExportDialog({ ...exportDialog, type: e.value })
+              }
+            />
+          </div>
+          <div className="w-full flex justify-content-center mt-2">
+            <Button
+              label="Export"
+              className="p-button-outlined p-button-success"
+              icon="pi pi-download"
+              iconPos="right"
+              onClick={() => {
+                if (cyRef.current) {
+                  exportBoardFunction(
+                    exportDialog.view,
+                    exportDialog.background,
+                    exportDialog.type,
+                    board?.title
+                  );
+                } else {
+                  toastWarn("Ooops");
+                }
+              }}
+            />
+          </div>
+        </div>
+      </Dialog>
+
+      <Button
+        className={`p-button-rounded  ${
+          drawMode ? "p-button-success" : "p-button-secondary"
+        }`}
+        icon="pi pi-pencil"
+        onClick={() => {
+          setDrawMode((prev: boolean) => {
+            if (prev) {
+              ehRef.current.disable();
+              ehRef.current.disableDrawMode();
+              cyRef.current.autoungrabify(false);
+              cyRef.current.autounselectify(false);
+              cyRef.current.autolock(false);
+              cyRef.current.zoomingEnabled(true);
+              cyRef.current.userZoomingEnabled(true);
+              cyRef.current.panningEnabled(true);
+              setDrawMode(false);
+            } else {
+              ehRef.current.enable();
+              ehRef.current.enableDrawMode();
+              setDrawMode(true);
+            }
+            return !prev;
+          });
+        }}
+        tooltip="Draw Mode"
+      />
+
+      <Button
+        className="p-button-rounded mx-2"
+        icon="pi pi-save"
+        onClick={() => {
+          setExportDialog({ ...exportDialog, show: true });
+        }}
+      />
+      <Dropdown
+        className="ml-2"
+        placeholder="Search Nodes"
+        value={search}
+        options={board?.nodes.filter((node) => node.label) || []}
+        optionLabel="label"
+        optionValue="id"
+        filter
+        filterBy="label"
+        itemTemplate={(item) => <div>{item.label}</div>}
+        onChange={(e: any) => {
+          if (e.target.value) {
+            let foundNode = cyRef.current.getElementById(e.target.value);
+            cyRef.current.animate(
+              {
+                center: {
+                  eles: foundNode,
+                },
+                zoom: 1,
+              },
+              {
+                duration: 1250,
+              }
+            );
+          }
+        }}
+      />
+
+      <span
+        className="cursor-pointer flex hover:text-blue-300 resetColors"
         onClick={() =>
           updateColor(
             cyRef,
@@ -145,7 +344,9 @@ export default function BoardQuickBar({ cyRef }: Props) {
             updateEdgeMutation
           )
         }
-      ></i>
+      >
+        <Icon icon="mdi:invert-colors-off" fontSize={20} />
+      </span>
       <i className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 colorPresets"></i>
       <ColorPicker
         onChange={(e) => {

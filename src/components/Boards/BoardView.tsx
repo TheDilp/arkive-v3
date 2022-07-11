@@ -21,7 +21,6 @@ import {
   useGetBoardData,
   useGetDocuments,
   useGetImages,
-  useUpdateEdge,
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
@@ -442,13 +441,13 @@ export default function BoardView({ setBoardId, cyRef }: Props) {
         }
       }}
     >
-      <BoardBar
+      {/* <BoardBar
         drawMode={drawMode}
         setDrawMode={setDrawMode}
         cyRef={cyRef}
         ehRef={ehRef}
         boardTitle={board?.title}
-      />
+      /> */}
 
       <BoardContextMenu
         cm={cm}
