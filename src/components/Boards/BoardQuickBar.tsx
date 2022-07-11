@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { saveAs } from "file-saver";
+import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
@@ -29,7 +30,13 @@ import ImgDropdownItem from "../Util/ImgDropdownItem";
 export default function BoardQuickBar() {
   const { project_id, board_id } = useParams();
   const { cyRef, ehRef } = useContext(BoardRefsContext);
+  const board = useGetBoardData(project_id as string, board_id as string);
+
   const [drawMode, setDrawMode] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filteredNodes, setFilteredNodes] = useState<BoardNodeProps[]>(
+    board?.nodes.filter((node) => node.label) || []
+  );
   const [searchDialog, setSearchDialog] = useState(false);
   const [exportDialog, setExportDialog] = useState<BoardExportProps>({
     view: "Graph",
@@ -37,7 +44,6 @@ export default function BoardQuickBar() {
     type: "PNG",
     show: false,
   });
-  const board = useGetBoardData(project_id as string, board_id as string);
 
   const updateNodeMutation = useUpdateNode(project_id as string);
   const updateEdgeMutation = useUpdateEdge(project_id as string);
@@ -106,7 +112,7 @@ export default function BoardQuickBar() {
       );
     }
   };
-  console.log(board?.nodes);
+
   return (
     <div
       className="w-2 absolute border-round surface-50 text-white h-3rem flex align-items-center justify-content-around shadow-5"
@@ -335,40 +341,27 @@ export default function BoardQuickBar() {
       ></i>
       <Dialog
         visible={searchDialog}
-        onHide={() => setSearchDialog(false)}
+        onHide={() => {
+          setSearchDialog(false);
+          setSearch("");
+          setFilteredNodes(board?.nodes || []);
+        }}
         modal={false}
         header="Search Nodes"
         className="w-20rem"
         position={"center"}
       >
-        <Dropdown
+        <AutoComplete
           autoFocus
           className="ml-2 w-15rem"
           placeholder="Search Nodes"
-          options={board?.nodes.filter((node) => node.label)}
-          optionLabel="label"
-          optionValue="id"
-          filter
-          filterBy="label"
-          itemTemplate={(item: BoardNodeProps) => (
-            <ImgDropdownItem
-              title={item.label || ""}
-              link={item.customImage?.link || ""}
-            />
-            // <div className="white-space-nowrap overflow-hidden text-overflow-ellipsis w-10rem">
-            //   {item.document?.image?.link && (
-            //     <img
-            //       src={supabaseStorageImagesLink + item.document.image.link}
-            //       alt={item.label}
-            //     />
-            //   )}
-            //   {item.label}
-            // </div>
-          )}
-          onChange={(e: any) => {
+          value={search}
+          field="label"
+          suggestions={filteredNodes}
+          onSelect={(e) => {
             if (!cyRef) return;
-            if (e.target.value) {
-              let foundNode = cyRef.current.getElementById(e.target.value);
+            if (e.value) {
+              let foundNode = cyRef.current.getElementById(e.value.id);
               cyRef.current.animate(
                 {
                   center: {
@@ -382,6 +375,38 @@ export default function BoardQuickBar() {
               );
             }
           }}
+          completeMethod={(e) =>
+            setFilteredNodes(
+              board?.nodes.filter((node) =>
+                node.label?.toLowerCase().includes(e.query.toLowerCase())
+              ) || []
+            )
+          }
+          itemTemplate={(item: BoardNodeProps) => (
+            <span
+              onClick={(e: any) => {
+                if (!cyRef) return;
+                let foundNode = cyRef.current.getElementById(item.id);
+                cyRef.current.animate(
+                  {
+                    center: {
+                      eles: foundNode,
+                    },
+                    zoom: 1,
+                  },
+                  {
+                    duration: 1250,
+                  }
+                );
+              }}
+            >
+              <ImgDropdownItem
+                title={item.label || ""}
+                link={item.customImage?.link || ""}
+              />
+            </span>
+          )}
+          onChange={(e) => setSearch(e.value)}
         />
       </Dialog>
       <span
