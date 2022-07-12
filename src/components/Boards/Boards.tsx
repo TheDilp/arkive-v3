@@ -14,7 +14,7 @@ export default function Boards() {
   const navigate = useNavigate();
   useEffect(() => {
     if (boardId) {
-      navigate(boardId);
+      // navigate(boardId);
     }
   }, [boardId, navigate]);
 
@@ -24,10 +24,13 @@ export default function Boards() {
       <BoardRefsProvider>
         <BoardsTree boardId={boardId} setBoardId={setBoardId} />
         <Routes>
-          <Route
-            path="/:board_id"
-            element={<BoardView setBoardId={setBoardId} />}
-          />
+          <Route path="/:board_id">
+            <Route index element={<BoardView setBoardId={setBoardId} />} />
+            <Route
+              path=":x/:y"
+              element={<BoardView setBoardId={setBoardId} />}
+            />
+          </Route>
         </Routes>
       </BoardRefsProvider>
     </div>

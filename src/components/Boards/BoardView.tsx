@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -39,7 +46,7 @@ type Props = {
 
 export default function BoardView({ setBoardId }: Props) {
   const navigate = useNavigate();
-  const { project_id, board_id } = useParams();
+  const { project_id, board_id, x, y } = useParams();
   const { cyRef, ehRef, grRef } = useContext(BoardRefsContext);
   const board = useGetBoardData(project_id as string, board_id as string);
   const images = useGetImages(project_id as string);
@@ -198,7 +205,6 @@ export default function BoardView({ setBoardId }: Props) {
     },
     [board_id]
   );
-
   useEffect(() => {
     if (!cyRef) return;
     if (cyRef.current) {
@@ -333,6 +339,13 @@ export default function BoardView({ setBoardId }: Props) {
     };
   }, [board_id]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (x && y && cyRef)
+        cyRef.current.pan({ x: parseInt(x), y: parseInt(y) });
+    }, 100);
+  }, [x, y, cyRef]);
+
   return (
     <div
       className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
@@ -451,6 +464,7 @@ export default function BoardView({ setBoardId }: Props) {
         cy={(cy: any) => {
           if (cyRef) {
             cyRef.current = cy;
+
             if (ehRef && grRef) {
               ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
               grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);

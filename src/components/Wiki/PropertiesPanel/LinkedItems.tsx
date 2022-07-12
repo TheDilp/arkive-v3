@@ -26,6 +26,7 @@ export default function LinkedItems() {
   const images = useGetImages(project_id as string);
   return (
     <Accordion activeIndex={null}>
+      {/* Linked Maps */}
       <AccordionTab
         header={
           <span className="flex align-items-center">
@@ -55,6 +56,7 @@ export default function LinkedItems() {
             ))
         )}
       </AccordionTab>
+      {/* Linked Boards */}
       <AccordionTab
         header={
           <span className="flex align-items-center">
