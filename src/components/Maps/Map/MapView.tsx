@@ -14,7 +14,7 @@ export default function MapView({
 }: {
   setMapId: (id: string) => void;
 }) {
-  const { project_id, map_id } = useParams();
+  const { project_id, map_id, marker_id } = useParams();
 
   const cm = useRef(null);
   const imgRef = useRef() as any;
@@ -59,7 +59,16 @@ export default function MapView({
     if (map_id) setMapId(map_id);
     //  Wait for map to finish loading
     setTimeout(() => {
-      mapRef.current.flyToBounds(bounds);
+      if (marker_id) {
+        let marker = mapData?.markers.find((marker) => marker.id === marker_id);
+        if (marker) {
+          mapRef.current.flyTo([marker.lat, marker.lng]);
+        } else {
+          mapRef.current.flyToBounds(bounds);
+        }
+      } else {
+        mapRef.current.flyToBounds(bounds);
+      }
     }, 350);
 
     return () => setMapId("");

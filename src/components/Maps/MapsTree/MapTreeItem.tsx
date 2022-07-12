@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MapItemDisplayDialogProps, MapProps } from "../../../custom-types";
 import { useUpdateMap } from "../../../utils/customHooks";
 type Props = {
@@ -27,9 +27,10 @@ export default function MapTreeItem({
   const { project_id } = useParams();
   const updateMapMutation = useUpdateMap(project_id as string);
   return (
-    <div
+    <Link
+      to={node.id as string}
       style={{ marginInlineStart: depth * 10 }}
-      className="text-md hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
+      className="text-white text-md no-underline hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
       onClick={() => {
         if (!node.droppable) setMapId(node.id as string);
       }}
@@ -94,6 +95,6 @@ export default function MapTreeItem({
           {node.text}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

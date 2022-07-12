@@ -14,15 +14,8 @@ import MapsTree from "./MapsTree/MapsTree";
 
 export default function Maps() {
   const { project_id } = useParams();
-  const navigate = useNavigate();
   const { data: maps, isLoading } = useGetMaps(project_id as string);
   const [mapId, setMapId] = useState("");
-
-  useEffect(() => {
-    if (mapId) {
-      navigate(mapId);
-    }
-  }, [mapId]);
 
   if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (
@@ -31,7 +24,10 @@ export default function Maps() {
     <div className="w-full flex flex-nowrap justify-content-start mainScreen">
       <MapsTree mapId={mapId} setMapId={setMapId} />
       <Routes>
-        <Route path="/:map_id" element={<MapView setMapId={setMapId} />} />
+        <Route path="/:map_id">
+          <Route index element={<MapView setMapId={setMapId} />} />
+          <Route path=":marker_id" element={<MapView setMapId={setMapId} />} />
+        </Route>
       </Routes>
     </div>
   );

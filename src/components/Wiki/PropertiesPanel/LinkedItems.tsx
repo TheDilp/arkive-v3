@@ -24,6 +24,13 @@ export default function LinkedItems() {
   const boards = useGetBoards(project_id as string);
   const images = useGetImages(project_id as string);
 
+  const linkedMaps =
+    maps.data?.filter((map) =>
+      map.markers.some((marker) => marker.doc_id === doc_id)
+    ) || [];
+  const linkedMarkers = linkedMaps
+    .map((map) => map.markers.filter((marker) => marker.doc_id === doc_id))
+    ?.flat();
   const linkedBoards =
     boards.data?.filter((board) =>
       board.nodes.some((node) => node.document?.id === doc_id)
@@ -33,7 +40,7 @@ export default function LinkedItems() {
     .flat();
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   return (
-    <Accordion activeIndex={null}>
+    <Accordion activeIndex={[0, 1, 2, 3]} multiple>
       {/* Linked Maps */}
       <AccordionTab
         header={
@@ -48,20 +55,16 @@ export default function LinkedItems() {
             <ProgressSpinner />
           </div>
         ) : (
-          maps.data
-            ?.filter((map) =>
-              map.markers.some((marker) => marker.doc_id === doc_id)
-            )
-            .map((map) => (
-              <Link
-                key={map.id}
-                to={`../../maps/${map.id}`}
-                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
-              >
-                <Icon icon="mdi:map-marker" />
-                {map.title}
-              </Link>
-            ))
+          linkedMarkers.map((marker) => (
+            <Link
+              key={marker.id}
+              to={`../../maps/${marker.map_id}/${marker.id}`}
+              className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
+            >
+              <Icon icon="mdi:map-marker" />
+              {linkedMaps.find((map) => map.id === marker.map_id)?.title}
+            </Link>
+          ))
         )}
       </AccordionTab>
       {/* Linked Boards */}
