@@ -10,7 +10,6 @@ import {
   useDeleteBoard,
   useUpdateBoard,
 } from "../../../utils/customHooks";
-import { updateManyNodesPosition } from "../../../utils/supabaseUtils";
 import { toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
