@@ -3,34 +3,30 @@ import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ImageProps, NodeUpdateDialogProps } from "../../../custom-types";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
   textHAlignOptions,
-  textVAlignOptions
+  textVAlignOptions,
 } from "../../../utils/boardUtils";
 import {
   useGetDocuments,
   useGetImages,
-  useUpdateNode
+  useUpdateNode,
 } from "../../../utils/customHooks";
+import { NodeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
-type Props = {
-  manyNodesDialog: Omit<NodeUpdateDialogProps, "id">;
-  setManyNodesDialog: Dispatch<
-    SetStateAction<Omit<NodeUpdateDialogProps, "id">>
-  >;
-};
+type Props = {};
 
-export default function UpdateManyNodes({
-  manyNodesDialog,
-  setManyNodesDialog,
-}: Props) {
+export default function UpdateManyNodes({}: Props) {
+  const [manyNodesData, setManyNodesData] = useState<
+    Omit<NodeUpdateDialogProps, "id">
+  >(NodeUpdateDialogDefault);
   const { cyRef } = useContext(BoardRefsContext);
   const { project_id, board_id } = useParams();
   const updateNodeMutation = useUpdateNode(project_id as string);
@@ -41,8 +37,7 @@ export default function UpdateManyNodes({
     cyRef: any
   ) => {
     let ids: string[] = cyRef.current
-      .elements(":selected")
-      .nodes()
+      .nodes(":selected")
       .map((node: any) => node.data().id);
 
     if (ids.length === 0) {
@@ -65,14 +60,12 @@ export default function UpdateManyNodes({
           <label className="w-full text-sm">Node Label</label>
           <div className="w-full flex flex-wrap justify-content-between">
             <InputText
-              value={manyNodesDialog.label}
+              value={manyNodesData.label}
               onChange={(e) =>
-                setManyNodesDialog(
-                  (prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                    ...prev,
-                    label: e.target.value,
-                  })
-                )
+                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                  ...prev,
+                  label: e.target.value,
+                }))
               }
               placeholder="Node Label"
               className="w-5"
@@ -82,14 +75,12 @@ export default function UpdateManyNodes({
               className="w-3"
               options={boardNodeFontSizes}
               placeholder="Label Font Size"
-              value={manyNodesDialog.fontSize}
+              value={manyNodesData.fontSize}
               onChange={(e) =>
-                setManyNodesDialog(
-                  (prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                    ...prev,
-                    fontSize: e.value,
-                  })
-                )
+                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                  ...prev,
+                  fontSize: e.value,
+                }))
               }
             />
             <Button
@@ -101,8 +92,8 @@ export default function UpdateManyNodes({
                 if (!cyRef) return;
                 updateManyNodesFunction(
                   {
-                    label: manyNodesDialog.label,
-                    fontSize: manyNodesDialog.fontSize,
+                    label: manyNodesData.label,
+                    fontSize: manyNodesData.fontSize,
                   },
                   cyRef
                 );
@@ -117,9 +108,9 @@ export default function UpdateManyNodes({
                 <Dropdown
                   className="w-full"
                   options={textHAlignOptions}
-                  value={manyNodesDialog.textHAlign}
+                  value={manyNodesData.textHAlign}
                   onChange={(e) =>
-                    setManyNodesDialog(
+                    setManyNodesData(
                       (prev: Omit<NodeUpdateDialogProps, "id">) => ({
                         ...prev,
                         textHAlign: e.value,
@@ -135,9 +126,9 @@ export default function UpdateManyNodes({
                 <Dropdown
                   className="w-full"
                   options={textVAlignOptions}
-                  value={manyNodesDialog.textVAlign}
+                  value={manyNodesData.textVAlign}
                   onChange={(e) =>
-                    setManyNodesDialog(
+                    setManyNodesData(
                       (prev: Omit<NodeUpdateDialogProps, "id">) => ({
                         ...prev,
                         textVAlign: e.value,
@@ -156,9 +147,9 @@ export default function UpdateManyNodes({
                     if (!cyRef) return;
                     updateManyNodesFunction(
                       {
-                        textVAlign: manyNodesDialog.textVAlign,
-                        textHAlign: manyNodesDialog.textHAlign,
-                        fontSize: manyNodesDialog.fontSize,
+                        textVAlign: manyNodesData.textVAlign,
+                        textHAlign: manyNodesData.textHAlign,
+                        fontSize: manyNodesData.fontSize,
                       },
                       cyRef
                     );
@@ -177,9 +168,9 @@ export default function UpdateManyNodes({
             className="w-9"
             placeholder="Node Shape"
             filter
-            value={manyNodesDialog.type}
+            value={manyNodesData.type}
             onChange={(e) =>
-              setManyNodesDialog((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
                 ...prev,
                 type: e.value,
               }))
@@ -194,8 +185,8 @@ export default function UpdateManyNodes({
               if (!cyRef) return;
               updateManyNodesFunction(
                 {
-                  type: manyNodesDialog.type,
-                  fontSize: manyNodesDialog.fontSize,
+                  type: manyNodesData.type,
+                  fontSize: manyNodesData.fontSize,
                 },
                 cyRef
               );
@@ -210,9 +201,9 @@ export default function UpdateManyNodes({
             min={10}
             max={5000}
             step={10}
-            value={manyNodesDialog.width}
+            value={manyNodesData.width}
             onChange={(e) =>
-              setManyNodesDialog((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
                 ...prev,
                 width: e.value as number,
               }))
@@ -227,9 +218,9 @@ export default function UpdateManyNodes({
             min={10}
             max={5000}
             step={10}
-            value={manyNodesDialog.height}
+            value={manyNodesData.height}
             onChange={(e) =>
-              setManyNodesDialog((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
                 ...prev,
                 height: e.value as number,
               }))
@@ -246,9 +237,9 @@ export default function UpdateManyNodes({
               if (!cyRef) return;
               updateManyNodesFunction(
                 {
-                  width: manyNodesDialog.width,
-                  height: manyNodesDialog.height,
-                  fontSize: manyNodesDialog.fontSize,
+                  width: manyNodesData.width,
+                  height: manyNodesData.height,
+                  fontSize: manyNodesData.fontSize,
                 },
                 cyRef
               );
@@ -261,11 +252,11 @@ export default function UpdateManyNodes({
         <Dropdown
           className="w-9"
           placeholder="Link Document"
-          value={manyNodesDialog.doc_id}
+          value={manyNodesData.doc_id}
           filter
           emptyFilterMessage="No documents found"
           onChange={(e) => {
-            setManyNodesDialog((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+            setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
               ...prev,
               doc_id: e.value,
             }));
@@ -292,8 +283,8 @@ export default function UpdateManyNodes({
             if (!cyRef) return;
             updateManyNodesFunction(
               {
-                doc_id: manyNodesDialog.doc_id,
-                fontSize: manyNodesDialog.fontSize,
+                doc_id: manyNodesData.doc_id,
+                fontSize: manyNodesData.fontSize,
               },
               cyRef
             );
@@ -323,9 +314,9 @@ export default function UpdateManyNodes({
                 ]
               : []
           }
-          value={manyNodesDialog.customImage}
+          value={manyNodesData.customImage}
           onChange={(e) =>
-            setManyNodesDialog((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+            setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
               ...prev,
               customImage: e.value,
             }))
@@ -340,8 +331,8 @@ export default function UpdateManyNodes({
             if (!cyRef) return;
             updateManyNodesFunction(
               {
-                doc_id: manyNodesDialog.doc_id,
-                fontSize: manyNodesDialog.fontSize,
+                doc_id: manyNodesData.doc_id,
+                fontSize: manyNodesData.fontSize,
               },
               cyRef
             );
@@ -357,9 +348,9 @@ export default function UpdateManyNodes({
         </div>
         <InputNumber
           className="w-9"
-          value={manyNodesDialog.zIndex}
+          value={manyNodesData.zIndex}
           onChange={(e) =>
-            setManyNodesDialog((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+            setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
               ...prev,
               zIndex: e.value as number,
             }))
@@ -375,8 +366,8 @@ export default function UpdateManyNodes({
             if (!cyRef) return;
             updateManyNodesFunction(
               {
-                zIndex: manyNodesDialog.zIndex,
-                fontSize: manyNodesDialog.fontSize,
+                zIndex: manyNodesData.zIndex,
+                fontSize: manyNodesData.fontSize,
               },
               cyRef
             );
@@ -388,26 +379,22 @@ export default function UpdateManyNodes({
           <label className="w-full text-sm">Background Color</label>
           <div className="flex align-items-center flex-row-reverse">
             <InputText
-              value={manyNodesDialog.backgroundColor}
+              value={manyNodesData.backgroundColor}
               className="w-full ml-2"
               onChange={(e) =>
-                setManyNodesDialog(
-                  (prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                    ...prev,
-                    backgroundColor: e.target.value,
-                  })
-                )
+                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                  ...prev,
+                  backgroundColor: e.target.value,
+                }))
               }
             />
             <ColorPicker
-              value={manyNodesDialog.backgroundColor}
+              value={manyNodesData.backgroundColor}
               onChange={(e) =>
-                setManyNodesDialog(
-                  (prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                    ...prev,
-                    backgroundColor: e.value as string,
-                  })
-                )
+                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                  ...prev,
+                  backgroundColor: e.value as string,
+                }))
               }
             />
           </div>
@@ -420,11 +407,11 @@ export default function UpdateManyNodes({
             min={0}
             step={0.01}
             max={1}
-            value={manyNodesDialog.backgroundOpacity}
+            value={manyNodesData.backgroundOpacity}
             className="ml-1"
             inputClassName="w-full"
             onChange={(e) =>
-              setManyNodesDialog((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
                 ...prev,
                 backgroundOpacity: e.value as number,
               }))
@@ -441,9 +428,9 @@ export default function UpdateManyNodes({
             updateManyNodesFunction(
               {
                 backgroundColor:
-                  "#" + manyNodesDialog.backgroundColor.replaceAll("#", ""),
-                backgroundOpacity: manyNodesDialog.backgroundOpacity,
-                fontSize: manyNodesDialog.fontSize,
+                  "#" + manyNodesData.backgroundColor.replaceAll("#", ""),
+                backgroundOpacity: manyNodesData.backgroundOpacity,
+                fontSize: manyNodesData.fontSize,
               },
               cyRef
             );

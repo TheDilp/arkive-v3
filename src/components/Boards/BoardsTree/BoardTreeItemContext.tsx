@@ -1,14 +1,14 @@
 import { Icon } from "@iconify/react";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
-import React, { useState } from "react";
+import React from "react";
 import { To, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { BoardItemDisplayDialogProps } from "../../../custom-types";
 import {
   useCreateBoard,
   useDeleteBoard,
-  useUpdateBoard,
+  useUpdateBoard
 } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 type Props = {
@@ -27,7 +27,6 @@ export default function BoardTreeItemContext({
   cyRef,
 }: Props) {
   const { project_id } = useParams();
-  const [presetDialog, setPresetDialog] = useState(false);
   const newBoardMutation = useCreateBoard();
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const deleteBoardMutation = useDeleteBoard(project_id as string);

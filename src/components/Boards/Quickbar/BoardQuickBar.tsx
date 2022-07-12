@@ -43,6 +43,7 @@ import { NodeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
+import UpdateManyEdges from "./UpdateManyEdges";
 import UpdateManyNodes from "./UpdateManyNodes";
 
 type Props = {};
@@ -52,9 +53,7 @@ export default function BoardQuickBar({}: Props) {
   const board = useGetBoardData(project_id as string, board_id as string);
   const [drawMode, setDrawMode] = useState(false);
   const [search, setSearch] = useState("");
-  const [manyNodesDialog, setManyNodesDialog] = useState<
-    Omit<NodeUpdateDialogProps, "id">
-  >(NodeUpdateDialogDefault);
+  const [updateManyDialog, setUpdateManyDialog] = useState(false);
   const [filteredNodes, setFilteredNodes] = useState<BoardNodeProps[]>(
     board?.nodes.filter((node) => node.label) || []
   );
@@ -286,7 +285,7 @@ export default function BoardQuickBar({}: Props) {
           </div>
         </Dialog>
         <Dialog
-          visible={manyNodesDialog.show}
+          visible={updateManyDialog}
           position="right"
           modal={false}
           header="Update Many"
@@ -294,20 +293,15 @@ export default function BoardQuickBar({}: Props) {
           style={{
             height: "45rem",
           }}
-          onHide={() => setManyNodesDialog(NodeUpdateDialogDefault)}
+          onHide={() => setUpdateManyDialog(false)}
         >
-          <TabView
-            activeIndex={
-              cyRef?.current?.elements(":selected").nodes().length !== 0 ? 0 : 1
-            }
-          >
+          <TabView>
             <TabPanel header="Nodes">
-              <UpdateManyNodes
-                manyNodesDialog={manyNodesDialog}
-                setManyNodesDialog={setManyNodesDialog}
-              />
+              <UpdateManyNodes />
             </TabPanel>
-            <TabPanel header="Edges"></TabPanel>
+            <TabPanel header="Edges">
+              <UpdateManyEdges />
+            </TabPanel>
           </TabView>
         </Dialog>
       </>
@@ -491,7 +485,7 @@ export default function BoardQuickBar({}: Props) {
         onClick={() => {
           if (!cyRef) return;
           if (cyRef.current.elements(":selected")?.length > 0) {
-            setManyNodesDialog({ ...NodeUpdateDialogDefault, show: true });
+            setUpdateManyDialog(true);
           } else {
             toastWarn("No elements are selected.");
           }

@@ -424,7 +424,7 @@ export const cytoscapeStylesheet = [
     style: {
       "overlay-color": "green",
       "overlay-padding": 2,
-      "overlay-opacity": 0.25,
+      "overlay-opacity": 0.85,
       "line-color": "green",
       "target-arrow-color": "green",
     },
