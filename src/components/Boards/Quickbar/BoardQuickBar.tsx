@@ -4,50 +4,32 @@ import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
-import { Dropdown } from "primereact/dropdown";
-import { InputNumber } from "primereact/inputnumber";
-import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Tooltip } from "primereact/tooltip";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
+import { BoardExportProps, BoardNodeProps } from "../../../custom-types";
 import {
-  BoardExportProps,
-  BoardNodeProps,
-  CytoscapeNodeProps,
-  ImageProps,
-  NodeUpdateDialogProps,
-  UpdateNodeProps,
-} from "../../../custom-types";
-import {
-  boardNodeFontSizes,
-  boardNodeShapes,
   changeLockState,
   nodeColorPresets,
-  textHAlignOptions,
-  textVAlignOptions,
   updateColor,
 } from "../../../utils/boardUtils";
 import {
   useDeleteEdge,
   useDeleteNode,
   useGetBoardData,
-  useGetDocuments,
-  useGetImages,
   useUpdateEdge,
   useUpdateNode,
 } from "../../../utils/customHooks";
-import { NodeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 import UpdateManyEdges from "./UpdateManyEdges";
 import UpdateManyNodes from "./UpdateManyNodes";
 
-type Props = {};
-export default function BoardQuickBar({}: Props) {
+export default function BoardQuickBar() {
   const { project_id, board_id } = useParams();
   const { cyRef, ehRef } = useContext(BoardRefsContext);
   const board = useGetBoardData(project_id as string, board_id as string);

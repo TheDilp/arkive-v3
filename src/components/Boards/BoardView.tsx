@@ -204,7 +204,7 @@ export default function BoardView({ setBoardId }: Props) {
     if (cyRef.current) {
       cyRef.current.on("click", "node", function (evt: any) {
         const scratch = evt.target._private.scratch;
-        if (scratch?.doc_id && evt.originalEvent.shiftKey) {
+        if (scratch?.doc_id && evt.originalEvent.altKey) {
           navigate(`../../wiki/doc/${scratch?.doc_id}`);
         } else {
           evt.target.select();

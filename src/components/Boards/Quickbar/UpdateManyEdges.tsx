@@ -1,11 +1,10 @@
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
-import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Slider } from "primereact/slider";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { EdgeUpdateDialogProps } from "../../../custom-types";
 import {
@@ -19,9 +18,7 @@ import { EdgeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 
-type Props = {};
-
-export default function UpdateManyEdges({}: Props) {
+export default function UpdateManyEdges() {
   const { project_id, board_id } = useParams();
   const { cyRef } = useContext(BoardRefsContext);
   const [manyEdgesData, setManyEdgesData] = useState<

@@ -3,7 +3,7 @@ import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ImageProps, NodeUpdateDialogProps } from "../../../custom-types";
 import {
@@ -21,9 +21,8 @@ import { NodeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
-type Props = {};
 
-export default function UpdateManyNodes({}: Props) {
+export default function UpdateManyNodes() {
   const [manyNodesData, setManyNodesData] = useState<
     Omit<NodeUpdateDialogProps, "id">
   >(NodeUpdateDialogDefault);
