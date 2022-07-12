@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -46,7 +39,7 @@ type Props = {
 
 export default function BoardView({ setBoardId }: Props) {
   const navigate = useNavigate();
-  const { project_id, board_id, x, y } = useParams();
+  const { project_id, board_id, node_id } = useParams();
   const { cyRef, ehRef, grRef } = useContext(BoardRefsContext);
   const board = useGetBoardData(project_id as string, board_id as string);
   const images = useGetImages(project_id as string);
@@ -340,11 +333,24 @@ export default function BoardView({ setBoardId }: Props) {
   }, [board_id]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (x && y && cyRef)
-        cyRef.current.pan({ x: parseInt(x), y: parseInt(y) });
+    const timeout = setTimeout(() => {
+      if (node_id && cyRef) {
+        let foundNode = cyRef.current.getElementById(node_id);
+        cyRef.current.animate(
+          {
+            center: {
+              eles: foundNode,
+            },
+            zoom: 1,
+          },
+          {
+            duration: 1,
+          }
+        );
+      }
     }, 100);
-  }, [x, y, cyRef]);
+    return () => clearTimeout(timeout);
+  }, [node_id, cyRef]);
 
   return (
     <div

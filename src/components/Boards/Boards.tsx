@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { Route, Routes, useParams } from "react-router-dom";
 import { useGetBoards } from "../../utils/customHooks";
 import BoardRefsProvider from "../Context/BoardRefsContext";
 import LoadingScreen from "../Util/LoadingScreen";
@@ -10,14 +10,6 @@ export default function Boards() {
   const { isLoading } = useGetBoards(project_id as string);
   const [boardId, setBoardId] = useState("");
 
-  // Ref for accessing the cytoscape board
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (boardId) {
-      // navigate(boardId);
-    }
-  }, [boardId, navigate]);
-
   if (isLoading) return <LoadingScreen />;
   return (
     <div className="w-full flex flex-nowrap mainScreen">
@@ -27,7 +19,7 @@ export default function Boards() {
           <Route path="/:board_id">
             <Route index element={<BoardView setBoardId={setBoardId} />} />
             <Route
-              path=":x/:y"
+              path=":node_id"
               element={<BoardView setBoardId={setBoardId} />}
             />
           </Route>

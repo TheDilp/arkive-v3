@@ -22,8 +22,16 @@ export default function LinkedItems() {
   const document = useGetDocumentData(project_id as string, doc_id as string);
   const maps = useGetMaps(project_id as string);
   const boards = useGetBoards(project_id as string);
-  const updateDocumentMutation = useUpdateDocument(project_id as string);
   const images = useGetImages(project_id as string);
+
+  const linkedBoards =
+    boards.data?.filter((board) =>
+      board.nodes.some((node) => node.document?.id === doc_id)
+    ) || [];
+  const linkedNodes = linkedBoards
+    .map((board) => board.nodes.filter((node) => node.document?.id === doc_id))
+    .flat();
+  const updateDocumentMutation = useUpdateDocument(project_id as string);
   return (
     <Accordion activeIndex={null}>
       {/* Linked Maps */}
@@ -70,20 +78,17 @@ export default function LinkedItems() {
             <ProgressSpinner />
           </div>
         ) : (
-          boards.data
-            ?.filter((board) =>
-              board.nodes.some((node) => node.document?.id === doc_id)
-            )
-            .map((board) => (
-              <Link
-                key={board.id}
-                to={`../../boards/${board.id}`}
-                className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
-              >
-                <Icon icon="mdi:draw" />
-                {board.title}
-              </Link>
-            ))
+          linkedNodes.map((node) => (
+            <Link
+              key={node.id}
+              to={`../../boards/${node.board_id}/${node.id}`}
+              className="no-underline text-white flex flex-nowrap align-items-center hover:text-primary fontWeight700"
+            >
+              <Icon icon="mdi:draw" />
+              {linkedBoards.find((board) => board.id === node.board_id)
+                ?.title || "Board"}
+            </Link>
+          ))
         )}
       </AccordionTab>
       <AccordionTab
