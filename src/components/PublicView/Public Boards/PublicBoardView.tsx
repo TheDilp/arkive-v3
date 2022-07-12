@@ -36,6 +36,7 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
             width: node.width,
             height: node.height,
             fontSize: node.fontSize,
+            fontColor: node.fontColor,
             textHAlign: node.textHAlign,
             textVAlign: node.textVAlign,
             customImage: node.customImage,

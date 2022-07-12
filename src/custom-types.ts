@@ -76,6 +76,7 @@ export type BoardNodeProps = {
   height: number;
   type: string;
   fontSize: number;
+  fontColor: string;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
   customImage?: ImageProps;
@@ -124,6 +125,7 @@ export type CytoscapeNodeProps = {
     | "x"
     | "y"
     | "fontSize"
+    | "fontColor"
     | "backgroundColor"
     | "textHAlign"
     | "textVAlign"
@@ -187,6 +189,7 @@ export type NodeUpdateDialogProps = {
   height: number;
   width: number;
   fontSize: number;
+  fontColor: string;
   doc_id?: string;
   customImage?: ImageProps;
   textHAlign: "left" | "center" | "right";
@@ -284,6 +287,7 @@ export type UpdateNodeInputs = Pick<
   | "width"
   | "height"
   | "fontSize"
+  | "fontColor"
   | "customImage"
   | "textHAlign"
   | "textVAlign"
@@ -428,6 +432,7 @@ export type UpdateNodeProps = {
   height?: number;
   type?: string;
   fontSize?: number;
+  fontColor?: string;
   textHAlign?: "left" | "center" | "right";
   textVAlign?: "top" | "center" | "bottom";
   backgroundColor?: string;

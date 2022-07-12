@@ -314,7 +314,7 @@ export const cytoscapeStylesheet = [
       "font-size": "data(fontSize)",
       "font-family": "Lato",
       label: "data(label)",
-      color: "white",
+      color: "data(fontColor)",
       "text-outline-color": "black",
       "text-outline-width": "2px",
       "background-image": "data(backgroundImage)",

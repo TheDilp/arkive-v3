@@ -18,6 +18,7 @@ export const NodeUpdateDialogDefault = {
   width: 50,
   height: 50,
   fontSize: 16,
+  fontColor: "#ffffff",
   customImage: { id: "", title: "", link: "", type: "Image" as const },
   textHAlign: "center" as const,
   textVAlign: "top" as const,
