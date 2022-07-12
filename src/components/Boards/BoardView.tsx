@@ -29,7 +29,7 @@ import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import BoardContextMenu from "./BoardContextMenu";
-import BoardQuickBar from "./BoardQuickBar";
+import BoardQuickBar from "./Quickbar/BoardQuickBar";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
 import QuickCreateNode from "./QuickCreateNode";

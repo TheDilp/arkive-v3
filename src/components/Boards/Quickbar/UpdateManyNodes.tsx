@@ -1,28 +1,24 @@
-import React, { Dispatch, SetStateAction, useContext } from "react";
-import { useParams } from "react-router-dom";
-import {
-  useGetDocuments,
-  useGetImages,
-  useUpdateNode,
-} from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
-import { Icon } from "@iconify/react";
-import { saveAs } from "file-saver";
-import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
-import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { Dispatch, SetStateAction, useContext } from "react";
+import { useParams } from "react-router-dom";
 import { ImageProps, NodeUpdateDialogProps } from "../../../custom-types";
-import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
   textHAlignOptions,
-  textVAlignOptions,
+  textVAlignOptions
 } from "../../../utils/boardUtils";
+import {
+  useGetDocuments,
+  useGetImages,
+  useUpdateNode
+} from "../../../utils/customHooks";
+import { toastWarn } from "../../../utils/utils";
+import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 type Props = {
   manyNodesDialog: Omit<NodeUpdateDialogProps, "id">;

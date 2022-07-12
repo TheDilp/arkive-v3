@@ -8,6 +8,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
+import { TabPanel, TabView } from "primereact/tabview";
 import { Tooltip } from "primereact/tooltip";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -19,7 +20,7 @@ import {
   ImageProps,
   NodeUpdateDialogProps,
   UpdateNodeProps,
-} from "../../custom-types";
+} from "../../../custom-types";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
@@ -28,7 +29,7 @@ import {
   textHAlignOptions,
   textVAlignOptions,
   updateColor,
-} from "../../utils/boardUtils";
+} from "../../../utils/boardUtils";
 import {
   useDeleteEdge,
   useDeleteNode,
@@ -37,12 +38,12 @@ import {
   useGetImages,
   useUpdateEdge,
   useUpdateNode,
-} from "../../utils/customHooks";
-import { NodeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
-import { toastWarn } from "../../utils/utils";
-import { BoardRefsContext } from "../Context/BoardRefsContext";
-import ImgDropdownItem from "../Util/ImgDropdownItem";
-import UpdateManyNodes from "./UpdateMany/UpdateManyNodes";
+} from "../../../utils/customHooks";
+import { NodeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
+import { toastWarn } from "../../../utils/utils";
+import { BoardRefsContext } from "../../Context/BoardRefsContext";
+import ImgDropdownItem from "../../Util/ImgDropdownItem";
+import UpdateManyNodes from "./UpdateManyNodes";
 
 type Props = {};
 export default function BoardQuickBar({}: Props) {
@@ -295,10 +296,29 @@ export default function BoardQuickBar({}: Props) {
           }}
           onHide={() => setManyNodesDialog(NodeUpdateDialogDefault)}
         >
-          <UpdateManyNodes
-            manyNodesDialog={manyNodesDialog}
-            setManyNodesDialog={setManyNodesDialog}
-          />
+          <TabView
+            activeIndex={
+              cyRef?.current?.elements(":selected").nodes().length !== 0 ? 0 : 1
+            }
+          >
+            <TabPanel
+              header="Nodes"
+              disabled={
+                cyRef?.current?.elements(":selected").nodes().length === 0
+              }
+            >
+              <UpdateManyNodes
+                manyNodesDialog={manyNodesDialog}
+                setManyNodesDialog={setManyNodesDialog}
+              />
+            </TabPanel>
+            <TabPanel
+              header="Edges"
+              disabled={
+                cyRef?.current?.elements(":selected").edges().length === 0
+              }
+            ></TabPanel>
+          </TabView>
         </Dialog>
       </>
 
