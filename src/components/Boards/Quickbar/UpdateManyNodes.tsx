@@ -57,7 +57,7 @@ export default function UpdateManyNodes({}: Props) {
     <>
       <div className="w-full flex flex-nowrap">
         <div className="w-full flex flex-wrap my-1">
-          <label className="w-full text-sm">Node Label</label>
+          <label className="w-full text-sm text-gray-400">Node Label</label>
           <div className="w-full flex flex-wrap justify-content-between">
             <InputText
               value={manyNodesData.label}
@@ -102,7 +102,7 @@ export default function UpdateManyNodes({}: Props) {
 
             <div className="flex flex-nowrap justify-content-between align-items-end align-content-center w-full mt-1">
               <div className="w-4">
-                <label htmlFor="" className="text-xs">
+                <label htmlFor="" className="text-xs text-gray-400">
                   Horizontal Align
                 </label>
                 <Dropdown
@@ -120,7 +120,7 @@ export default function UpdateManyNodes({}: Props) {
                 />
               </div>
               <div className="w-4">
-                <label htmlFor="" className="text-xs">
+                <label htmlFor="" className="text-xs text-gray-400">
                   Vertical Align
                 </label>
                 <Dropdown
@@ -149,7 +149,6 @@ export default function UpdateManyNodes({}: Props) {
                       {
                         textVAlign: manyNodesData.textVAlign,
                         textHAlign: manyNodesData.textHAlign,
-                        fontSize: manyNodesData.fontSize,
                       },
                       cyRef
                     );
@@ -162,7 +161,7 @@ export default function UpdateManyNodes({}: Props) {
       </div>
       <div className="w-full flex flex-wrap justify-content-between align-items-end">
         <div className="w-full flex flex-wrap justify-content-between my-1">
-          <label className="w-full text-sm">Node Shape</label>
+          <label className="w-full text-sm text-gray-400">Node Shape</label>
           <Dropdown
             options={boardNodeShapes}
             className="w-9"
@@ -186,7 +185,6 @@ export default function UpdateManyNodes({}: Props) {
               updateManyNodesFunction(
                 {
                   type: manyNodesData.type,
-                  fontSize: manyNodesData.fontSize,
                 },
                 cyRef
               );
@@ -194,7 +192,7 @@ export default function UpdateManyNodes({}: Props) {
           />
         </div>
         <div className="w-4">
-          <div className="">Width</div>
+          <label className="text-sm text-gray-400">Width</label>
           <InputNumber
             inputClassName="w-full"
             showButtons
@@ -211,7 +209,8 @@ export default function UpdateManyNodes({}: Props) {
           />
         </div>
         <div className="w-4">
-          <div className="">Height</div>
+          <label className="text-sm text-gray-400">Height</label>
+
           <InputNumber
             inputClassName="w-full"
             showButtons
@@ -239,7 +238,6 @@ export default function UpdateManyNodes({}: Props) {
                 {
                   width: manyNodesData.width,
                   height: manyNodesData.height,
-                  fontSize: manyNodesData.fontSize,
                 },
                 cyRef
               );
@@ -248,7 +246,7 @@ export default function UpdateManyNodes({}: Props) {
         </div>
       </div>
       <div className="w-full my-1 flex flex-wrap justify-content-between">
-        <label className="w-full text-sm">Linked Document</label>
+        <label className="w-full text-sm text-gray-400">Linked Document</label>
         <Dropdown
           className="w-9"
           placeholder="Link Document"
@@ -284,7 +282,6 @@ export default function UpdateManyNodes({}: Props) {
             updateManyNodesFunction(
               {
                 doc_id: manyNodesData.doc_id,
-                fontSize: manyNodesData.fontSize,
               },
               cyRef
             );
@@ -292,8 +289,8 @@ export default function UpdateManyNodes({}: Props) {
         />
       </div>
       <div className="w-full my-1 flex flex-wrap justify-content-between">
-        <label className="w-full text-sm">Custom Image</label>
-        <div className="text-xs">
+        <label className="w-full text-sm text-gray-400">Custom Image</label>
+        <div className="text-xs text-gray-400">
           Note: Custom images override images from linked documents.
         </div>
         <Dropdown
@@ -332,7 +329,6 @@ export default function UpdateManyNodes({}: Props) {
             updateManyNodesFunction(
               {
                 doc_id: manyNodesData.doc_id,
-                fontSize: manyNodesData.fontSize,
               },
               cyRef
             );
@@ -341,8 +337,8 @@ export default function UpdateManyNodes({}: Props) {
       </div>
       <div className="w-full my-2 flex flex-wrap justify-content-between">
         <div className="w-full flex flex-wrap">
-          <label className="w-full text-sm">Node Level</label>
-          <span className="w-full text-xs">
+          <label className="w-full text-sm text-gray-400">Node Level</label>
+          <span className="w-full text-xs text-gray-400">
             Changes if node is above or below others
           </span>
         </div>
@@ -367,28 +363,20 @@ export default function UpdateManyNodes({}: Props) {
             updateManyNodesFunction(
               {
                 zIndex: manyNodesData.zIndex,
-                fontSize: manyNodesData.fontSize,
               },
               cyRef
             );
           }}
         />
       </div>
-      <div className="w-full flex flex-nowrap justify-content-between align-items-end my-1">
-        <div className="w-4">
-          <label className="w-full text-sm">Background Color</label>
-          <div className="flex align-items-center flex-row-reverse">
-            <InputText
-              value={manyNodesData.backgroundColor}
-              className="w-full ml-2"
-              onChange={(e) =>
-                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                  ...prev,
-                  backgroundColor: e.target.value,
-                }))
-              }
-            />
+      <div className="w-full flex flex-wrap justify-content-between align-items-end my-1">
+        <div className="w-full">
+          <label className="w-full text-sm text-gray-400">
+            Background Color
+          </label>
+          <div className="flex justify-content-between align-items-center">
             <ColorPicker
+              className="w-1"
               value={manyNodesData.backgroundColor}
               onChange={(e) =>
                 setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
@@ -397,45 +385,74 @@ export default function UpdateManyNodes({}: Props) {
                 }))
               }
             />
+            <InputText
+              value={manyNodesData.backgroundColor}
+              className="w-8 ml-2"
+              onChange={(e) =>
+                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                  ...prev,
+                  backgroundColor: e.target.value,
+                }))
+              }
+            />
+
+            <Button
+              type="submit"
+              className="p-button-square p-button-success p-button-outlined w-2"
+              icon="pi pi-save"
+              iconPos="right"
+              onClick={() => {
+                if (!cyRef) return;
+                updateManyNodesFunction(
+                  {
+                    backgroundColor:
+                      "#" + manyNodesData.backgroundColor.replaceAll("#", ""),
+                  },
+                  cyRef
+                );
+              }}
+            />
           </div>
         </div>
-        <div className="w-5 flex flex-wrap">
-          <label className="w-full text-sm">Background Opacity</label>
-          <InputNumber
-            showButtons
-            mode="decimal"
-            min={0}
-            step={0.01}
-            max={1}
-            value={manyNodesData.backgroundOpacity}
-            className="ml-1"
-            inputClassName="w-full"
-            onChange={(e) =>
-              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                ...prev,
-                backgroundOpacity: e.value as number,
-              }))
-            }
-          />
+        <div className="w-full">
+          <label className="w-full text-sm text-gray-400">
+            Background Opacity
+          </label>
+          <div className="w-full flex flex-wrap justify-content-between">
+            <InputNumber
+              showButtons
+              mode="decimal"
+              min={0}
+              step={0.01}
+              max={1}
+              value={manyNodesData.backgroundOpacity}
+              inputClassName="w-full"
+              onChange={(e) =>
+                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                  ...prev,
+                  backgroundOpacity: e.value as number,
+                }))
+              }
+            />
+            <Button
+              type="submit"
+              className="p-button-square p-button-success p-button-outlined w-2"
+              icon="pi pi-save"
+              iconPos="right"
+              onClick={() => {
+                if (!cyRef) return;
+                updateManyNodesFunction(
+                  {
+                    backgroundColor:
+                      "#" + manyNodesData.backgroundColor.replaceAll("#", ""),
+                    backgroundOpacity: manyNodesData.backgroundOpacity,
+                  },
+                  cyRef
+                );
+              }}
+            />
+          </div>
         </div>
-        <Button
-          type="submit"
-          className="p-button-square p-button-success p-button-outlined w-2"
-          icon="pi pi-save"
-          iconPos="right"
-          onClick={() => {
-            if (!cyRef) return;
-            updateManyNodesFunction(
-              {
-                backgroundColor:
-                  "#" + manyNodesData.backgroundColor.replaceAll("#", ""),
-                backgroundOpacity: manyNodesData.backgroundOpacity,
-                fontSize: manyNodesData.fontSize,
-              },
-              cyRef
-            );
-          }}
-        />
       </div>
     </>
   );
