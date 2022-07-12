@@ -26,6 +26,7 @@ import Timelines from "./components/Timelines/TImelines";
 import LandingPage from "./components/Auth/LandingPage";
 import Register from "./components/Auth/Register";
 import Project from "./components/Project/Project";
+import { Helmet } from "react-helmet";
 const Wiki = lazy(() => import("./components/Wiki/Wiki"));
 const Maps = lazy(() => import("./components/Maps/Maps"));
 const Boards = lazy(() => import("./components/Boards/Boards"));
@@ -48,6 +49,13 @@ function App() {
   }, []);
   return (
     <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
+      <Helmet>
+        <title>The Arkive</title>
+        <meta
+          name="description"
+          content="Discover your world with custom wikis, maps, graphs and more."
+        />
+      </Helmet>
       <ToastContainer />
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
