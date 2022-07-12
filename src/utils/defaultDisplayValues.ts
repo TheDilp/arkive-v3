@@ -26,3 +26,18 @@ export const NodeUpdateDialogDefault = {
   zIndex: 1,
   show: false,
 };
+
+export const EdgeUpdateDialogDefault = {
+  id: "",
+  label: "",
+  curveStyle: "straight",
+  lineStyle: "solid",
+  lineColor: "#595959",
+  controlPointDistances: 0,
+  controlPointWeights: 0,
+  taxiDirection: "auto",
+  taxiTurn: 0,
+  targetArrowShape: "triangle",
+  zIndex: 1,
+  show: false,
+};

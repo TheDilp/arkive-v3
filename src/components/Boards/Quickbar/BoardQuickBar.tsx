@@ -301,23 +301,13 @@ export default function BoardQuickBar({}: Props) {
               cyRef?.current?.elements(":selected").nodes().length !== 0 ? 0 : 1
             }
           >
-            <TabPanel
-              header="Nodes"
-              disabled={
-                cyRef?.current?.elements(":selected").nodes().length === 0
-              }
-            >
+            <TabPanel header="Nodes">
               <UpdateManyNodes
                 manyNodesDialog={manyNodesDialog}
                 setManyNodesDialog={setManyNodesDialog}
               />
             </TabPanel>
-            <TabPanel
-              header="Edges"
-              disabled={
-                cyRef?.current?.elements(":selected").edges().length === 0
-              }
-            ></TabPanel>
+            <TabPanel header="Edges"></TabPanel>
           </TabView>
         </Dialog>
       </>
