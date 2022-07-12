@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
@@ -25,7 +26,11 @@ export default function SearchDialog({ search, setSearch }: Props) {
   const { data: documents } = useGetDocuments(project_id as string);
   const { data: maps } = useGetMaps(project_id as string);
   const { data: boards } = useGetBoards(project_id as string);
-  const [filteredItems, setFilteredItems] = useState<any[]>([]);
+  const [filteredItems, setFilteredItems] = useState<
+    Array<
+      DocumentProps | MapProps | BoardProps | BoardNodeProps | MapMarkerProps
+    >
+  >([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (search && search.length >= 3) setLoading(true);
@@ -66,7 +71,7 @@ export default function SearchDialog({ search, setSearch }: Props) {
         });
         if (data) setFilteredItems(data);
         else setFilteredItems([]);
-        setLoading(false);
+        // setLoading(false);
       }
     }, 1000);
     return () => clearTimeout(timeout);
@@ -91,7 +96,7 @@ export default function SearchDialog({ search, setSearch }: Props) {
       }
     >
       <div className="w-full">
-        <span className="p-input-icon-right w-full mb-2">
+        {/* <span className="p-input-icon-right w-full mb-2">
           {loading && <i className="pi pi-spin pi-spinner text-white" />}
           <InputText
             placeholder="Enter at least 3 characters"
@@ -102,8 +107,54 @@ export default function SearchDialog({ search, setSearch }: Props) {
             }}
             autoFocus={true}
           />
-        </span>
+        </span> */}
+        <AutoComplete
+          className="w-full"
+          inputClassName="w-full"
+          placeholder="Enter at least 3 characters"
+          suggestions={filteredItems}
+          value={search}
+          onChange={(e) => setSearch(e.value)}
+          itemTemplate={(item) => (
+            <Link
+              className="text-white no-underline text-lg"
+              to={`./${
+                item.content
+                  ? "wiki/doc/"
+                  : item.map_image
+                  ? `maps/`
+                  : item.map_id
+                  ? `maps/${item.map_id}/`
+                  : item.board_id
+                  ? `boards/${item.board_id}/`
+                  : "boards/"
+              }${item.id}`}
+              onClick={() => {
+                setFilteredItems([]);
+                setSearch(null);
+              }}
+            >
+              {item.content ? (
+                <Icon icon={item.icon} />
+              ) : item.map_image ? (
+                <Icon icon={"mdi:map"} />
+              ) : item.map_id ? (
+                <Icon icon="mdi:map-marker" />
+              ) : item.board_id ? (
+                <Icon icon={"mdi:vector-polyline"} />
+              ) : (
+                <Icon icon={"mdi:draw"} />
+              )}
 
+              {item.title || item.label || item.text}
+            </Link>
+          )}
+          completeMethod={(e) => {
+            setSearch(e.query);
+          }}
+        />
+
+        {/* 
         {filteredItems.map((item) => (
           <div className="my-1">
             <Link
@@ -140,7 +191,7 @@ export default function SearchDialog({ search, setSearch }: Props) {
               </div>
             </Link>
           </div>
-        ))}
+        ))} */}
       </div>
     </Dialog>
   );
