@@ -1,8 +1,8 @@
 import L, { LatLngExpression } from "leaflet";
 import { useState } from "react";
 import ReactDOM from "react-dom/server";
-import { Marker, Popup } from "react-leaflet";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Marker, Tooltip } from "react-leaflet";
+import { useNavigate, useParams } from "react-router-dom";
 import { MapMarkerProps } from "../../../../custom-types";
 import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
@@ -45,6 +45,8 @@ export default function DraggableMarker({
     click: (e: any) => {
       if (e.originalEvent.shiftKey && map_link) {
         navigate(`../../${map_link}`);
+      } else if (e.originalEvent.altKey && doc_id) {
+        navigate(`../../wiki/doc/${doc_id}`);
       }
     },
     contextmenu: (e: any) => {
@@ -115,13 +117,13 @@ export default function DraggableMarker({
       })}
     >
       {text && (
-        <Popup position={[51.505, -0]}>
-          {doc_id ? (
-            <Link to={`../../wiki/doc/${doc_id}`}>{text}</Link>
-          ) : (
-            <div className="Lato text-center">{text}</div>
-          )}
-        </Popup>
+        <Tooltip
+          offset={[0, -50]}
+          direction="top"
+          className="bg-gray-800 border-rounded-sm border-gray-800 border-solid text-white text-lg"
+        >
+          <div className="Lato text-center">{text}</div>
+        </Tooltip>
       )}
     </Marker>
   );

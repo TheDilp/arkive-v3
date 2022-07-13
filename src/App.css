@@ -137,6 +137,14 @@ body {
 }
 
 
+.leaflet-tooltip,
+.leaflet-tooltip-top {
+  opacity: 1 !important;
+}
+
+.leaflet-tooltip-top::before {
+  border-top-color: var(--gray-800) !important;
+}
 
 
 /* CUSTOM SCROLLBAR */
