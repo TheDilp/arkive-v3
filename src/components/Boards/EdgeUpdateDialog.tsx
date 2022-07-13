@@ -51,7 +51,11 @@ export default function EdgeUpdateDialog({
         }}
       >
         {/* Edge Label */}
-        <div className="w-full flex flex-nowrap">
+        <div className="w-full flex flex-wrap">
+          <label className="w-full text-sm text-gray-400">
+            Edge Curve Type
+          </label>
+
           <InputText
             value={edgeUpdateDialog.label}
             onChange={(e) =>
@@ -73,7 +77,9 @@ export default function EdgeUpdateDialog({
 
         {/* Curve Type */}
         <div className="w-full my-2">
-          <label className="w-full text-sm">Edge Curve Type</label>
+          <label className="w-full text-sm text-gray-400">
+            Edge Curve Type
+          </label>
 
           <Dropdown
             options={boardEdgeCurveStyles}
@@ -90,7 +96,7 @@ export default function EdgeUpdateDialog({
           {edgeUpdateDialog.curveStyle === "unbundled-bezier" && (
             <div className="w-full flex flex-wrap">
               <div className="w-full my-2">
-                <label className="w-full ">
+                <label className="w-full text-sm text-gray-400">
                   Curve Strength: {edgeUpdateDialog.controlPointDistances}
                 </label>
                 <Slider
@@ -108,7 +114,7 @@ export default function EdgeUpdateDialog({
                 />
               </div>
               <div className="w-full">
-                <label className="w-full">
+                <label className="w-full text-sm text-gray-400">
                   Curve Center: {edgeUpdateDialog.controlPointWeights}
                 </label>
                 <Slider
@@ -130,7 +136,10 @@ export default function EdgeUpdateDialog({
           {edgeUpdateDialog.curveStyle === "taxi" && (
             <div className="my-1 flex w-full flex-nowrap justify-content-between">
               <div className="w-6">
-                <label className="w-full text-sm"> Edge Direction</label>
+                <label className="w-full text-sm text-gray-400">
+                  {" "}
+                  Edge Direction
+                </label>
                 <div className="w-full">
                   <Dropdown
                     className="w-full"
@@ -146,7 +155,7 @@ export default function EdgeUpdateDialog({
                 </div>
               </div>
               <div className="w-5 flex flex-wrap justify-content-end">
-                <label className="w-full text-sm text-right">
+                <label className="w-full text-sm text-gray-400 text-right">
                   Break Distance
                 </label>
                 <InputNumber
@@ -170,7 +179,7 @@ export default function EdgeUpdateDialog({
 
         {/* Line style */}
         <div className="w-full my-1">
-          <label className="w-full text-sm">Line Style</label>
+          <label className="w-full text-sm text-gray-400">Line Style</label>
           <Dropdown
             className="w-full"
             placeholder="Edge Line style"
@@ -187,7 +196,7 @@ export default function EdgeUpdateDialog({
 
         {/* Arrow Shape */}
         <div className="w-full my-1">
-          <label className="w-full text-sm">Arrow Shape</label>
+          <label className="w-full text-sm text-gray-400">Arrow Shape</label>
           <Dropdown
             className="w-full"
             placeholder="Arrow Shape"
@@ -207,8 +216,8 @@ export default function EdgeUpdateDialog({
         {/* Edge Level */}
         <div className="w-full my-2">
           <div className="w-full flex flex-wrap">
-            <label className="w-full text-sm">Edge Level</label>
-            <span className="w-full text-xs">
+            <label className="w-full text-sm text-gray-400">Edge Level</label>
+            <span className="w-full text-xs text-gray-400">
               Changes if edge is above or below others
             </span>
           </div>
@@ -227,7 +236,7 @@ export default function EdgeUpdateDialog({
 
         {/* Edge Color */}
         <div className="my-1">
-          <label className="w-full text-sm">Edge Color</label>
+          <label className="w-full text-sm text-gray-400">Edge Color</label>
           <div className="flex align-items-center flex-row-reverse">
             <InputText
               value={edgeUpdateDialog.lineColor}
