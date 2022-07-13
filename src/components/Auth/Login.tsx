@@ -10,6 +10,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_IN" && !auth.user()) {
+      navigate("/");
+    }
+  });
+
   return auth.user() ? (
     <Navigate to="/" />
   ) : (

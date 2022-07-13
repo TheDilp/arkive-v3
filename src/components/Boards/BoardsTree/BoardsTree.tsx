@@ -1,7 +1,10 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { BoardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
+import {
+  BoardItemDisplayDialogProps,
+  BoardProps,
+} from "../../../types/BoardTypes";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";

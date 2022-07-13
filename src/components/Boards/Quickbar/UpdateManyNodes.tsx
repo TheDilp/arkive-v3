@@ -5,7 +5,8 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ImageProps, NodeUpdateDialogProps } from "../../../custom-types";
+import { ImageProps } from "../../../custom-types";
+import { NodeUpdateDialogProps } from "../../../types/BoardTypes";
 import {
   boardNodeFontSizes,
   boardNodeShapes,

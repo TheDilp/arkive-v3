@@ -83,16 +83,6 @@ export type MapItemDisplayDialogProps = {
   public: boolean;
   show: boolean;
 };
-export type BoardItemDisplayDialogProps = {
-  id: string;
-  title: string;
-  parent: string;
-  depth: number;
-  folder: boolean;
-  expanded: boolean;
-  public: boolean;
-  show: boolean;
-};
 
 
 export type IconSelectProps = {

@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { Slider } from "primereact/slider";
 import { Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
-import { EdgeUpdateDialogProps } from "../../custom-types";
+import { EdgeUpdateDialogProps } from "../../types/BoardTypes";
 import {
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
@@ -55,7 +55,7 @@ export default function EdgeUpdateDialog({
           <InputText
             value={edgeUpdateDialog.label}
             onChange={(e) =>
-              setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+              setEdgeUpdateDialog((prev) => ({
                 ...prev,
                 label: e.target.value,
               }))
@@ -81,7 +81,7 @@ export default function EdgeUpdateDialog({
             placeholder="Curve Type"
             value={edgeUpdateDialog.curveStyle}
             onChange={(e) =>
-              setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+              setEdgeUpdateDialog((prev) => ({
                 ...prev,
                 curveStyle: e.value,
               }))
@@ -100,7 +100,7 @@ export default function EdgeUpdateDialog({
                   max={1000}
                   step={10}
                   onChange={(e) =>
-                    setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+                    setEdgeUpdateDialog((prev) => ({
                       ...prev,
                       controlPointDistances: e.value as number,
                     }))
@@ -118,7 +118,7 @@ export default function EdgeUpdateDialog({
                   max={1}
                   step={0.1}
                   onChange={(e) =>
-                    setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+                    setEdgeUpdateDialog((prev) => ({
                       ...prev,
                       controlPointWeights: e.value as number,
                     }))
@@ -137,7 +137,7 @@ export default function EdgeUpdateDialog({
                     value={edgeUpdateDialog.taxiDirection}
                     options={boardEdgeTaxiDirections}
                     onChange={(e) =>
-                      setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+                      setEdgeUpdateDialog((prev) => ({
                         ...prev,
                         taxiDirection: e.value,
                       }))
@@ -157,7 +157,7 @@ export default function EdgeUpdateDialog({
                   max={1000}
                   step={5}
                   onChange={(e) =>
-                    setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+                    setEdgeUpdateDialog((prev) => ({
                       ...prev,
                       taxiTurn: e.value as number,
                     }))
@@ -176,7 +176,7 @@ export default function EdgeUpdateDialog({
             placeholder="Edge Line style"
             value={edgeUpdateDialog.lineStyle}
             onChange={(e) =>
-              setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+              setEdgeUpdateDialog((prev) => ({
                 ...prev,
                 lineStyle: e.value,
               }))
@@ -195,7 +195,7 @@ export default function EdgeUpdateDialog({
             optionLabel="label"
             optionValue="value"
             onChange={(e) =>
-              setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+              setEdgeUpdateDialog((prev) => ({
                 ...prev,
                 targetArrowShape: e.value,
               }))
@@ -216,7 +216,7 @@ export default function EdgeUpdateDialog({
             className="w-8"
             value={edgeUpdateDialog.zIndex}
             onChange={(e) =>
-              setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+              setEdgeUpdateDialog((prev) => ({
                 ...prev,
                 zIndex: e.value as number,
               }))
@@ -233,7 +233,7 @@ export default function EdgeUpdateDialog({
               value={edgeUpdateDialog.lineColor}
               className="w-full ml-2"
               onChange={(e) =>
-                setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+                setEdgeUpdateDialog((prev) => ({
                   ...prev,
                   lineColor: "#" + e.target.value.replaceAll("#", ""),
                 }))
@@ -242,7 +242,7 @@ export default function EdgeUpdateDialog({
             <ColorPicker
               value={edgeUpdateDialog.lineColor}
               onChange={(e) =>
-                setEdgeUpdateDialog((prev: EdgeUpdateDialogProps) => ({
+                setEdgeUpdateDialog((prev) => ({
                   ...prev,
                   lineColor: ("#" +
                     e.value?.toString().replaceAll("#", "")) as string,

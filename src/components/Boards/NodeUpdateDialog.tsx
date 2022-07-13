@@ -7,10 +7,12 @@ import { InputText } from "primereact/inputtext";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
-import { ImageProps, NodeUpdateDialogProps } from "../../custom-types";
+import { ImageProps } from "../../custom-types";
+import { NodeUpdateDialogProps } from "../../types/BoardTypes";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
+  nodeFontFamilies,
   textHAlignOptions,
   textVAlignOptions,
 } from "../../utils/boardUtils";
@@ -36,8 +38,6 @@ export default function NodeUpdateDialog({
   const images = useGetImages(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
 
-  // Update the form data when a new node is opened
-
   return (
     <Dialog
       header={`Update ${
@@ -59,33 +59,95 @@ export default function NodeUpdateDialog({
         <TabView className="w-full">
           <TabPanel header="Node Label">
             <div className="w-full flex flex-nowrap">
-              <div className="w-full flex flex-wrap my-1">
-                <label className="w-full text-sm">Node Label</label>
-                <div className="w-full flex flex-wrap">
-                  <InputText
-                    value={nodeUpdateDialog.label}
-                    onChange={(e) =>
-                      setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
-                        ...prev,
-                        label: e.target.value,
-                      }))
-                    }
-                    placeholder="Node Label"
-                    className="w-9"
-                    autoComplete="false"
-                  />
-                  <Dropdown
-                    className="w-3"
-                    options={boardNodeFontSizes}
-                    placeholder="Label Font Size"
-                    value={nodeUpdateDialog.fontSize}
-                    onChange={(e) =>
-                      setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
-                        ...prev,
-                        fontSize: e.value,
-                      }))
-                    }
-                  />
+              <div className="w-full flex flex-wrap  my-1">
+                <div className="w-full flex flex-wrap justify-content-between align-items-center">
+                  {/* Label text */}
+
+                  <div className="w-full flex flex-wrap">
+                    <label className="w-full text-sm text-gray-400">
+                      Node Label
+                    </label>
+
+                    <InputText
+                      value={nodeUpdateDialog.label}
+                      onChange={(e) =>
+                        setNodeUpdateDialog((prev) => ({
+                          ...prev,
+                          label: e.target.value,
+                        }))
+                      }
+                      placeholder="Node Label"
+                      className="w-full"
+                      autoComplete="false"
+                    />
+                  </div>
+                  {/* Label size */}
+
+                  <div className="w-3 flex flex-wrap">
+                    <label className="w-full text-sm text-gray-400">
+                      Label Size
+                    </label>
+                    <Dropdown
+                      className="w-full"
+                      options={boardNodeFontSizes}
+                      placeholder="Label Font Size"
+                      value={nodeUpdateDialog.fontSize}
+                      onChange={(e) =>
+                        setNodeUpdateDialog((prev) => ({
+                          ...prev,
+                          fontSize: e.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {/* Font Family */}
+
+                  <div className="w-4 flex flex-wrap">
+                    <label htmlFor="" className="w-full text-sm text-gray-400">
+                      Font Family
+                    </label>
+                    <Dropdown
+                      className="w-full"
+                      options={nodeFontFamilies}
+                      value={nodeUpdateDialog.fontFamily}
+                      onChange={(e) =>
+                        setNodeUpdateDialog((prev) => ({
+                          ...prev,
+                          fontFamily: e.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {/* Label color */}
+                  <div className="w-4 flex flex-wrap justify-content-between align-items-center">
+                    <label className="w-full text-sm text-gray-400">
+                      Label Color
+                    </label>
+                    <InputText
+                      className="w-8"
+                      value={nodeUpdateDialog.fontColor}
+                      onChange={(e) =>
+                        setNodeUpdateDialog((prev) => ({
+                          ...prev,
+                          fontColor: e.target.value,
+                        }))
+                      }
+                    />
+                    <ColorPicker
+                      className="w-min"
+                      value={nodeUpdateDialog.fontColor}
+                      onChange={(e) =>
+                        setNodeUpdateDialog((prev) => ({
+                          ...prev,
+                          fontColor: ("#" +
+                            e.value?.toString().replaceAll("#", "")) as string,
+                        }))
+                      }
+                    />
+                  </div>
+
                   <div className="flex flex-nowrap w-full mt-1">
                     <div className="w-6">
                       <label htmlFor="" className="text-xs">
@@ -96,12 +158,10 @@ export default function NodeUpdateDialog({
                         options={textHAlignOptions}
                         value={nodeUpdateDialog.textHAlign}
                         onChange={(e) =>
-                          setNodeUpdateDialog(
-                            (prev: NodeUpdateDialogProps) => ({
-                              ...prev,
-                              textHAlign: e.value,
-                            })
-                          )
+                          setNodeUpdateDialog((prev) => ({
+                            ...prev,
+                            textHAlign: e.value,
+                          }))
                         }
                       />
                     </div>
@@ -114,12 +174,10 @@ export default function NodeUpdateDialog({
                         options={textVAlignOptions}
                         value={nodeUpdateDialog.textVAlign}
                         onChange={(e) =>
-                          setNodeUpdateDialog(
-                            (prev: NodeUpdateDialogProps) => ({
-                              ...prev,
-                              textVAlign: e.value,
-                            })
-                          )
+                          setNodeUpdateDialog((prev) => ({
+                            ...prev,
+                            textVAlign: e.value,
+                          }))
                         }
                       />
                     </div>
@@ -139,7 +197,7 @@ export default function NodeUpdateDialog({
                   filter
                   value={nodeUpdateDialog.type}
                   onChange={(e) =>
-                    setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                    setNodeUpdateDialog((prev) => ({
                       ...prev,
                       type: e.value,
                     }))
@@ -156,7 +214,7 @@ export default function NodeUpdateDialog({
                   step={10}
                   value={nodeUpdateDialog.width}
                   onChange={(e) =>
-                    setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                    setNodeUpdateDialog((prev) => ({
                       ...prev,
                       width: e.value as number,
                     }))
@@ -173,7 +231,7 @@ export default function NodeUpdateDialog({
                   step={10}
                   value={nodeUpdateDialog.height}
                   onChange={(e) =>
-                    setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                    setNodeUpdateDialog((prev) => ({
                       ...prev,
                       height: e.value as number,
                     }))
@@ -192,7 +250,7 @@ export default function NodeUpdateDialog({
                 filter
                 emptyFilterMessage="No documents found"
                 onChange={(e) => {
-                  setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                  setNodeUpdateDialog((prev) => ({
                     ...prev,
                     doc_id: e.value,
                   }));
@@ -238,7 +296,7 @@ export default function NodeUpdateDialog({
                 }
                 value={nodeUpdateDialog.customImage}
                 onChange={(e) =>
-                  setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                  setNodeUpdateDialog((prev) => ({
                     ...prev,
                     customImage: e.value,
                   }))
@@ -258,7 +316,7 @@ export default function NodeUpdateDialog({
                 className="w-full"
                 value={nodeUpdateDialog.zIndex}
                 onChange={(e) =>
-                  setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                  setNodeUpdateDialog((prev) => ({
                     ...prev,
                     zIndex: e.value as number,
                   }))
@@ -274,7 +332,7 @@ export default function NodeUpdateDialog({
                     value={nodeUpdateDialog.backgroundColor}
                     className="w-full ml-2"
                     onChange={(e) =>
-                      setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                      setNodeUpdateDialog((prev) => ({
                         ...prev,
                         backgroundColor: e.target.value,
                       }))
@@ -283,7 +341,7 @@ export default function NodeUpdateDialog({
                   <ColorPicker
                     value={nodeUpdateDialog.backgroundColor}
                     onChange={(e) =>
-                      setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                      setNodeUpdateDialog((prev) => ({
                         ...prev,
                         backgroundColor: ("#" +
                           e.value?.toString().replaceAll("#", "")) as string,
@@ -304,7 +362,7 @@ export default function NodeUpdateDialog({
                     value={nodeUpdateDialog.backgroundOpacity}
                     className="w-full ml-1"
                     onChange={(e) =>
-                      setNodeUpdateDialog((prev: NodeUpdateDialogProps) => ({
+                      setNodeUpdateDialog((prev) => ({
                         ...prev,
                         backgroundOpacity: e.value as number,
                       }))

@@ -46,6 +46,17 @@ export type BoardContextMenuProps = {
   type: "board" | "node" | "edge";
   selected?: any;
 };
+export type BoardItemDisplayDialogProps = {
+  id: string;
+  title: string;
+  parent: string;
+  depth: number;
+  folder: boolean;
+  expanded: boolean;
+  public: boolean;
+  show: boolean;
+};
+
 // Node Props
 
 export type BoardNodeProps = {
@@ -58,6 +69,7 @@ export type BoardNodeProps = {
   type: string;
   fontSize: number;
   fontColor: string;
+  fontFamily: string;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
   customImage?: ImageProps;
@@ -85,6 +97,7 @@ export type CytoscapeNodeProps = {
     | "y"
     | "fontSize"
     | "fontColor"
+    | "fontFamily"
     | "backgroundColor"
     | "textHAlign"
     | "textVAlign"
@@ -114,6 +127,7 @@ export type UpdateNodeProps = {
   type?: string;
   fontSize?: number;
   fontColor?: string;
+  fontFamily?: string;
   textHAlign?: "left" | "center" | "right";
   textVAlign?: "top" | "center" | "bottom";
   backgroundColor?: string;
@@ -147,6 +161,7 @@ export type NodeUpdateDialogProps = {
   width: number;
   fontSize: number;
   fontColor: string;
+  fontFamily: string;
   doc_id?: string;
   customImage?: ImageProps;
   textHAlign: "left" | "center" | "right";

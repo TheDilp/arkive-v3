@@ -1,12 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 import {
-  BoardEdgeProps,
-  BoardNodeProps,
-  BoardProps,
-  CreateBoardProps,
   CreateMapMarkerProps,
-  CreateNodeProps,
   DocumentCreateProps,
   DocumentProps,
   DocumentUpdateProps,
@@ -18,11 +13,18 @@ import {
   ProfileProps,
   ProjectProps,
   TemplateCreateProps,
+  UpdateMapMarkerProps,
+} from "../custom-types";
+import {
+  BoardEdgeProps,
+  BoardNodeProps,
+  BoardProps,
+  CreateBoardProps,
+  CreateNodeProps,
   UpdateBoardProps,
   UpdateEdgeProps,
-  UpdateMapMarkerProps,
   UpdateNodeProps,
-} from "../custom-types";
+} from "../types/BoardTypes";
 import { toastError } from "./utils";
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;

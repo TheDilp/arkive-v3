@@ -4,11 +4,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
   BoardContextMenuProps,
+  BoardEdgeProps,
+  BoardNodeProps,
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
   EdgeUpdateDialogProps,
   NodeUpdateDialogProps,
-} from "../../custom-types";
+} from "../../types/BoardTypes";
 import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
@@ -88,24 +90,11 @@ export default function BoardView({ setBoardId }: Props) {
       let temp_nodes: CytoscapeNodeProps[] = [];
       let temp_edges: CytoscapeEdgeProps[] = [];
       if (board.nodes.length > 0) {
-        temp_nodes = board.nodes.map((node) => ({
+        temp_nodes = board.nodes.map((node: BoardNodeProps) => ({
           data: {
-            id: node.id,
+            ...node,
             classes: "boardNode",
             label: node.label || "",
-            type: node.type,
-            width: node.width,
-            height: node.height,
-            fontSize: node.fontSize,
-            fontColor: node.fontColor,
-            textHAlign: node.textHAlign,
-            textVAlign: node.textVAlign,
-            customImage: node.customImage,
-            x: node.x,
-            y: node.y,
-            backgroundColor: node.backgroundColor,
-            backgroundOpacity: node.backgroundOpacity,
-            zIndex: node.zIndex,
             zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
@@ -121,7 +110,6 @@ export default function BoardView({ setBoardId }: Props) {
                 )}`
               : [],
           },
-          locked: node.locked,
           scratch: {
             doc_id: node.document?.id,
           },
@@ -129,22 +117,11 @@ export default function BoardView({ setBoardId }: Props) {
         }));
       }
       if (board.edges.length > 0) {
-        temp_edges = board.edges.map((edge) => ({
+        temp_edges = board.edges.map((edge: BoardEdgeProps) => ({
           data: {
-            id: edge.id,
+            ...edge,
             classes: "boardEdge",
             label: edge.label || "",
-            source: edge.source,
-            target: edge.target,
-            curveStyle: edge.curveStyle,
-            lineStyle: edge.lineStyle,
-            lineColor: edge.lineColor,
-            controlPointDistances: edge.controlPointDistances,
-            controlPointWeights: edge.controlPointWeights,
-            taxiDirection: edge.taxiDirection,
-            taxiTurn: edge.taxiTurn,
-            targetArrowShape: edge.targetArrowShape,
-            zIndex: edge.zIndex,
           },
         }));
       }
@@ -249,7 +226,6 @@ export default function BoardView({ setBoardId }: Props) {
 
       cyRef.current.on("dbltap", "node", function (evt: any) {
         let target = evt.target._private;
-
         setNodeUpdateDialog({
           id: target.data.id,
           label: target.data.label,
@@ -258,6 +234,7 @@ export default function BoardView({ setBoardId }: Props) {
           height: target.data.height,
           fontSize: target.data.fontSize,
           fontColor: target.data.fontColor,
+          fontFamily: target.data.fontFamily,
           customImage: target.data.customImage,
           doc_id: target.scratch.doc_id,
           textHAlign: target.data.textHAlign,

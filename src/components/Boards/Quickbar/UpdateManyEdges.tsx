@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { Slider } from "primereact/slider";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { EdgeUpdateDialogProps } from "../../../custom-types";
+import { EdgeUpdateDialogProps } from "../../../types/BoardTypes";
 import {
   boardEdgeCurveStyles,
   boardEdgeLineStyles,

@@ -305,6 +305,7 @@ export const cytoscapeGridOptions = {
   parentSpacing: -1, // -1 to set paddings of parents to gridSpacing
 };
 export const cytoscapeStylesheet = [
+  // Nodes in general
   {
     selector: "node[classes]",
     style: {
@@ -312,7 +313,7 @@ export const cytoscapeStylesheet = [
       width: "data(width)",
       height: "data(height)",
       "font-size": "data(fontSize)",
-      "font-family": "Lato",
+      "font-family": "data(fontFamily)",
       label: "data(label)",
       color: "data(fontColor)",
       "text-outline-color": "black",
@@ -514,6 +515,56 @@ export const nodeColorPresets = [
   "43AA8B",
   "F5DFBB",
   "2C6E49",
+];
+export const nodeFontFamilies = [
+  {
+    label: "Arial",
+    value: "Arial",
+  },
+  {
+    label: "Brush Script MT",
+    value: "Brush Script MT",
+  },
+  {
+    label: "Courier New",
+    value: "Courier New",
+  },
+  {
+    label: "Garamond",
+    value: "Garamond",
+  },
+  {
+    label: "Georgia",
+    value: "Georgia",
+  },
+  {
+    label: "Helvetica",
+    value: "Helvetica",
+  },
+  {
+    label: "Lato",
+    value: "Lato",
+  },
+  {
+    label: "Merriweather",
+    value: "Merriweather",
+  },
+  {
+    label: "Tahoma",
+    value: "Tahoma",
+  },
+  {
+    label: "Times New Roman",
+    value: "Times New Roman",
+  },
+  {
+    label: "Trebuchet MS",
+    value: "Trebuchet MS",
+  },
+  {
+    label: "Verdana",
+    value: "Verdana",
+  },
 ];
 export const toModelPosition = (cyRef: any, pos: { x: number; y: number }) => {
   const pan = cyRef.current.pan();
