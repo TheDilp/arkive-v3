@@ -1,7 +1,8 @@
 import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { ImageOverlay, useMapEvents } from "react-leaflet";
-import { MapProps } from "../../../custom-types";
+import { MapProps, UpdateMarkerInputs } from "../../../custom-types";
+import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
 import MapMarker from "./MapMarker/MapMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
 import MarkerUpdateDialog from "./MapMarker/MarkerUpdateDialog";
@@ -27,25 +28,8 @@ export default function MapImage({
   setNewTokenDialog,
 }: Props) {
   const mcm = useRef() as any;
-  const [updateMarkerDialog, setUpdateMarkerDialog] = useState<{
-    id: string;
-    text: string;
-    icon: string;
-    color: string;
-    backgroundColor: string;
-    doc_id?: string;
-    map_link?: string;
-    show: boolean;
-  }>({
-    id: "",
-    text: "",
-    icon: "",
-    color: "",
-    backgroundColor: "",
-    doc_id: "",
-    map_link: "",
-    show: false,
-  });
+  const [updateMarkerDialog, setUpdateMarkerDialog] =
+    useState<UpdateMarkerInputs>(MapMarkerDialogDefault);
   const map = useMapEvents({
     contextmenu(e: any) {
       setNewTokenDialog({ ...e.latlng, show: false });
@@ -85,22 +69,10 @@ export default function MapImage({
         marker_id={updateMarkerDialog.id}
         setUpdateTokenDialog={setUpdateMarkerDialog}
       />
-      {updateMarkerDialog.show && (
-        <MarkerUpdateDialog
-          {...updateMarkerDialog}
-          setVisible={() =>
-            setUpdateMarkerDialog({
-              id: "",
-              text: "",
-              icon: "",
-              color: "",
-              backgroundColor: "",
-              doc_id: "",
-              show: false,
-            })
-          }
-        />
-      )}
+      <MarkerUpdateDialog
+        {...updateMarkerDialog}
+        setVisible={setUpdateMarkerDialog}
+      />
       <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
       {markers
         .filter((marker) =>

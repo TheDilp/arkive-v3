@@ -16,6 +16,7 @@ import {
   useGetMaps,
   useUpdateMapMarker,
 } from "../../../../utils/customHooks";
+import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
 import CreateMarkerIconSelect from "./MarkerIconSelect";
 type Props = {
   id: string;
@@ -31,13 +32,14 @@ type Props = {
 
 export default function MarkerUpdateDialog({
   id,
-  show,
-  setVisible,
   text,
   color,
+  backgroundColor,
   icon,
   doc_id,
   map_link,
+  show,
+  setVisible,
 }: Props) {
   const { project_id, map_id } = useParams();
   const [iconSelect, setIconSelect] = useState({
@@ -55,29 +57,20 @@ export default function MarkerUpdateDialog({
       visible={show}
       modal={false}
       style={{ width: "25vw" }}
-      onHide={() =>
-        setVisible({
-          id: "",
-          text: "",
-          icon: "",
-          color: "",
-          backgroundColor: "",
-          doc_id: "",
-          show: false,
-          map_link: "",
-        })
-      }
+      onHide={() => setVisible(MapMarkerDialogDefault)}
     >
       <div className="flex flex-wrap">
         <div className="w-full">
           <InputText
             value={text}
-            onChange={(e) =>
-              setVisible((prev) => ({
-                ...prev,
-                text: e.target.value,
-              }))
-            }
+            onChange={(e) => {
+              setVisible((prev) => {
+                return {
+                  ...prev,
+                  text: e.target.value,
+                };
+              });
+            }}
             autoComplete={"false"}
             className="w-full"
             placeholder="Marker popup text"
@@ -127,6 +120,31 @@ export default function MarkerUpdateDialog({
                 setVisible((prev) => ({
                   ...prev,
                   color: e.value as string,
+                }))
+              }
+            />
+          </div>
+        </div>
+        <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">
+          <span>Marker Background:</span>
+
+          <div className="flex align-items-center flex-row-reverse">
+            <InputText
+              value={backgroundColor}
+              className="w-full ml-2"
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  color: e.target.value,
+                }))
+              }
+            />
+            <ColorPicker
+              value={backgroundColor}
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  backgroundColor: "#" + e.value?.toString().replace("#", ""),
                 }))
               }
             />
@@ -187,16 +205,17 @@ export default function MarkerUpdateDialog({
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
-              setVisible({
-                id: "",
-                text: "",
-                icon: "",
-                color: "",
-                backgroundColor: "",
-                doc_id: "",
-                show: false,
-                map_link: "",
+              updateMarkerMutation.mutate({
+                id,
+                text,
+                color,
+                backgroundColor,
+                doc_id,
+                map_link,
+                map_id: map_id as string,
+                project_id: project_id as string,
               });
+              setVisible(MapMarkerDialogDefault);
             }}
           />
         </div>

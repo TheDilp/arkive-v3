@@ -752,6 +752,7 @@ export function useUpdateMapMarker() {
       project_id: string;
       icon?: string;
       color?: string;
+      backgroundColor?: string;
       text?: string;
       lat?: number;
       lng?: number;
@@ -763,6 +764,7 @@ export function useUpdateMapMarker() {
         map_id: vars.map_id,
         icon: vars.icon,
         color: vars.color,
+        backgroundColor: vars.backgroundColor,
         text: vars.text,
         lat: vars.lat,
         lng: vars.lng,
@@ -794,6 +796,9 @@ export function useUpdateMapMarker() {
                           color: updatedMarker.color
                             ? updatedMarker.color
                             : marker.color,
+                          backgroundColor: updatedMarker.backgroundColor
+                            ? updatedMarker.backgroundColor
+                            : marker.backgroundColor,
                           text: updatedMarker.text
                             ? updatedMarker.text
                             : marker.text,

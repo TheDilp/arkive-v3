@@ -43,3 +43,13 @@ export const EdgeUpdateDialogDefault = {
   zIndex: 1,
   show: false,
 };
+
+export const MapMarkerDialogDefault = {
+  id: "",
+  text: "",
+  icon: "",
+  color: "",
+  backgroundColor: "",
+  doc_id: "",
+  show: false,
+};
