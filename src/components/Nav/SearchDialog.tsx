@@ -1,19 +1,11 @@
 import { Icon } from "@iconify/react";
 import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
-import { SplitButton } from "primereact/splitbutton";
 import { useEffect, useState } from "react";
-import { MarkerProps } from "react-leaflet";
-import { Link, useParams } from "react-router-dom";
-import {
-  BoardNodeProps,
-  BoardProps,
-  DocumentProps,
-  MapMarkerProps,
-  MapProps,
-} from "../../custom-types";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { DocumentProps, MapMarkerProps, MapProps } from "../../custom-types";
+import { BoardNodeProps, BoardProps } from "../../types/BoardTypes";
 import {
   useGetBoards,
   useGetDocuments,
@@ -40,10 +32,10 @@ export default function SearchDialog({ search, setSearch }: Props) {
     "Boards",
     "Nodes",
   ]);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    const timeout = setTimeout(async () => {
-      if (documents && maps && boards && search && search.length >= 3) {
+    if (documents && maps && boards && search && search.length >= 3) {
+      const timeout = setTimeout(async () => {
         const initialData: Array<
           | DocumentProps
           | MapProps
@@ -88,9 +80,9 @@ export default function SearchDialog({ search, setSearch }: Props) {
         });
         if (data) setFilteredItems(data);
         else setFilteredItems([]);
-      }
-    }, 1000);
-    return () => clearTimeout(timeout);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
   }, [search]);
   return (
     <Dialog
@@ -125,12 +117,14 @@ export default function SearchDialog({ search, setSearch }: Props) {
           placeholder="Enter at least 3 characters"
           suggestions={filteredItems}
           value={search}
-          selectedItemTemplate={(item) => item.title || item.label || item.text}
-          onChange={(e) => setSearch(e.value)}
-          itemTemplate={(item) => (
-            <Link
-              className="text-white no-underline text-lg"
-              to={`./${
+          selectedItemTemplate={(item) => {
+            console.log(item);
+            return <div>{item.title || item.label || item.text} </div>;
+          }}
+          onSelect={(e) => {
+            const item = e.value;
+            navigate(
+              `./${
                 item.content || item.content === null
                   ? "wiki/doc/"
                   : item.map_image
@@ -140,8 +134,13 @@ export default function SearchDialog({ search, setSearch }: Props) {
                   : item.board_id
                   ? `boards/${item.board_id}/`
                   : "boards/"
-              }${item.id}`}
-              onClick={() => {
+              }${item.id}`
+            );
+          }}
+          itemTemplate={(item) => (
+            <div
+              className="text-white text-lg"
+              onClick={(e) => {
                 setFilteredItems([]);
                 setSearch(null);
               }}
@@ -159,7 +158,7 @@ export default function SearchDialog({ search, setSearch }: Props) {
               )}
 
               {item.title || item.label || item.text}
-            </Link>
+            </div>
           )}
           completeMethod={(e) => {
             setSearch(e.query);
