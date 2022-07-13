@@ -44,7 +44,7 @@ export default function DraggableMarker({
   const eventHandlers = {
     click: (e: any) => {
       if (e.originalEvent.shiftKey && map_link) {
-        navigate(`../${map_link}`);
+        navigate(`../../${map_link}`);
       }
     },
     contextmenu: (e: any) => {
