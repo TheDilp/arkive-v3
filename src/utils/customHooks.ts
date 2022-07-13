@@ -2,18 +2,21 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
 import {
-  BoardProps,
-  CreateBoardProps,
-  CreateNodeProps,
   DocumentProps,
   DocumentUpdateProps,
   ImageProps,
   MapProps,
   MapUpdateProps,
   ProjectProps,
+} from "../custom-types";
+import {
+  BoardNodeProps,
+  BoardProps,
+  CreateBoardProps,
+  CreateNodeProps,
   UpdateEdgeProps,
   UpdateNodeProps,
-} from "../custom-types";
+} from "../types/BoardTypes";
 import {
   createBoard,
   createDocument,
@@ -361,16 +364,19 @@ export function useDeleteDocument(project_id: string) {
                 let newBoard = { ...board };
                 if (
                   newBoard.nodes.some(
-                    (node) => node.document?.id === deletedDocument.id
+                    (node: BoardNodeProps) =>
+                      node.document?.id === deletedDocument.id
                   )
                 ) {
-                  newBoard.nodes = newBoard.nodes.map((node) => {
-                    if (node.document?.id === deletedDocument.id) {
-                      return { ...node, document: undefined };
-                    } else {
-                      return node;
+                  newBoard.nodes = newBoard.nodes.map(
+                    (node: BoardNodeProps) => {
+                      if (node.document?.id === deletedDocument.id) {
+                        return { ...node, document: undefined };
+                      } else {
+                        return node;
+                      }
                     }
-                  });
+                  );
                 }
                 return newBoard;
               });
@@ -693,6 +699,7 @@ export function useCreateMapMarker(project_id: string) {
       text?: string;
       icon?: string;
       color?: string;
+      backgroundColor?: string;
       doc_id?: string;
       map_link?: string;
       lat: number;
@@ -718,6 +725,7 @@ export function useCreateMapMarker(project_id: string) {
                         ...newMarker,
                         icon: newMarker.icon || "wizard-hat",
                         color: newMarker.color || "ffffff",
+                        backgroundColor: newMarker.backgroundColor || "000000",
                         text: newMarker.text || "",
                       },
                     ],

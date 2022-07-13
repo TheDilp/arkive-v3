@@ -88,6 +88,8 @@ export const defaultNode = {
   width: 50,
   height: 50,
   fontSize: 16,
+  fontColor: "#ffffff",
+  fontFamily: "Lato",
   textHAlign: "center" as const,
   textVAlign: "top" as const,
   backgroundColor: "#595959",
