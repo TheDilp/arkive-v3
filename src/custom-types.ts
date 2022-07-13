@@ -55,103 +55,14 @@ export type MapMarkerProps = {
   doc_id?: string;
   map_link?: string;
 };
-export type BoardProps = {
-  id: string;
-  title: string;
-  parent: { id: string; title: string } | null;
-  project_id: string;
-  nodes: BoardNodeProps[];
-  edges: BoardEdgeProps[];
-  folder: boolean;
-  expanded: boolean;
-  public: boolean;
-  sort: number;
-};
-export type BoardNodeProps = {
-  id: string;
-  label?: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  type: string;
-  fontSize: number;
-  fontColor: string;
-  textHAlign: "left" | "center" | "right";
-  textVAlign: "top" | "center" | "bottom";
-  customImage?: ImageProps;
-  backgroundColor: string;
-  backgroundOpacity: number;
-  zIndex: number;
-  locked: boolean;
-  document?: {
-    id: string;
-    image?: {
-      link?: string;
-    };
-  };
-  board_id: string;
-};
-export type BoardEdgeProps = {
-  id: string;
-  board_id: string;
-  label?: string;
-  source: string;
-  target: string;
-  curveStyle: string;
-  lineStyle: string;
-  lineColor: string;
-  controlPointDistances: number;
-  controlPointWeights: number;
-  taxiDirection: string;
-  taxiTurn: number;
-  targetArrowShape: string;
-  zIndex: number;
-};
+
 export type ImageProps = {
   id: string;
   title: string;
   link: string;
   type: "Image" | "Map";
 };
-export type CytoscapeNodeProps = {
-  data: Pick<
-    BoardNodeProps,
-    | "id"
-    | "label"
-    | "width"
-    | "height"
-    | "type"
-    | "x"
-    | "y"
-    | "fontSize"
-    | "fontColor"
-    | "backgroundColor"
-    | "textHAlign"
-    | "textVAlign"
-    | "customImage"
-  >;
-  position: Pick<BoardNodeProps, "x" | "y">;
-  locked: boolean;
-};
-export type CytoscapeEdgeProps = {
-  data: Pick<
-    BoardEdgeProps,
-    | "id"
-    | "label"
-    | "source"
-    | "target"
-    | "curveStyle"
-    | "lineStyle"
-    | "lineColor"
-    | "controlPointDistances"
-    | "controlPointWeights"
-    | "taxiDirection"
-    | "taxiTurn"
-    | "targetArrowShape"
-    | "zIndex"
-  >;
-};
+
 export type DocItemDisplayDialogProps = {
   id: string;
   title: string;
@@ -182,43 +93,8 @@ export type BoardItemDisplayDialogProps = {
   public: boolean;
   show: boolean;
 };
-export type NodeUpdateDialogProps = {
-  id: string;
-  label: string;
-  type: string;
-  height: number;
-  width: number;
-  fontSize: number;
-  fontColor: string;
-  doc_id?: string;
-  customImage?: ImageProps;
-  textHAlign: "left" | "center" | "right";
-  textVAlign: "top" | "center" | "bottom";
-  backgroundColor: string;
-  backgroundOpacity: number;
-  zIndex: number;
-  show: boolean;
-};
-export type EdgeUpdateDialogProps = {
-  id: string;
-  label: string;
-  curveStyle: string;
-  lineStyle: string;
-  lineColor: string;
-  controlPointDistances: number;
-  controlPointWeights: number;
-  taxiDirection: string;
-  taxiTurn: number;
-  targetArrowShape: string;
-  zIndex: number;
-  show: boolean;
-};
-export type BoardExportProps = {
-  view: "Graph" | "View";
-  background: "Color" | "Transparent";
-  type: "PNG" | "JPEG" | "JSON";
-  show: boolean;
-};
+
+
 export type IconSelectProps = {
   id: string;
   icon: string;
@@ -239,12 +115,6 @@ export type UserProfileProps = {
   nickname: string;
 };
 
-export type BoardContextMenuProps = {
-  x: number;
-  y: number;
-  type: "board" | "node" | "edge";
-  selected?: any;
-};
 // Inputs for creating
 export type CreateDocumentInputs = {
   title: string;
@@ -276,38 +146,7 @@ export type UpdateMarkerInputs = {
   doc_id?: string;
   map_link?: string;
 };
-export type UpdateBoardInputs = Pick<BoardProps, "title"> & {
-  parent: string;
-};
-export type UpdateNodeInputs = Pick<
-  NodeUpdateDialogProps,
-  | "label"
-  | "type"
-  | "doc_id"
-  | "width"
-  | "height"
-  | "fontSize"
-  | "fontColor"
-  | "customImage"
-  | "textHAlign"
-  | "textVAlign"
-  | "backgroundColor"
-  | "backgroundOpacity"
-  | "zIndex"
->;
-export type UpdateEdgeInputs = Pick<
-  EdgeUpdateDialogProps,
-  | "label"
-  | "curveStyle"
-  | "lineStyle"
-  | "lineColor"
-  | "controlPointDistances"
-  | "controlPointWeights"
-  | "taxiDirection"
-  | "taxiTurn"
-  | "targetArrowShape"
-  | "zIndex"
->;
+
 export type RegisterInputs = {
   email: string;
   password: string;
@@ -395,68 +234,6 @@ export type UpdateMapMarkerProps = {
   map_link?: string;
 };
 
-export type CreateBoardProps = {
-  id: string;
-  title: string;
-  project_id: string;
-  parent?: string | null;
-  folder: boolean;
-};
-
-export type UpdateBoardProps = {
-  id: string;
-  title?: string;
-  parent?: string | null;
-  expanded?: boolean;
-  public?: boolean;
-};
-
-export type CreateNodeProps = {
-  id: string;
-  label?: string;
-  x: number;
-  y: number;
-  board_id: string;
-  type: string;
-  backgroundColor?: string;
-  customImage?: ImageProps;
-  doc_id?: string;
-};
-
-export type UpdateNodeProps = {
-  id: string;
-  label?: string;
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-  type?: string;
-  fontSize?: number;
-  fontColor?: string;
-  textHAlign?: "left" | "center" | "right";
-  textVAlign?: "top" | "center" | "bottom";
-  backgroundColor?: string;
-  backgroundOpacity?: number;
-  customImage?: string;
-  zIndex?: number;
-  doc_id?: string;
-  locked?: boolean;
-};
-
-export type UpdateEdgeProps = {
-  id: string;
-  board_id: string;
-  label?: string;
-  curveStyle?: string;
-  lineStyle?: string;
-  lineColor?: string;
-  controlPointDistances?: number;
-  controlPointWeights?: number;
-  taxiDirection?: string;
-  taxiTurn?: number;
-  targetArrowShape?: string;
-  zIndex?: number;
-};
 
 // OTHER
 
