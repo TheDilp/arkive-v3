@@ -4,10 +4,13 @@ import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Controller } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { UpdateMarkerInputs } from "../../../../custom-types";
+import {
+  UpdateMapMarkerProps,
+  UpdateMarkerInputs,
+} from "../../../../custom-types";
 import {
   useGetDocuments,
   useGetMaps,
@@ -23,16 +26,7 @@ type Props = {
   icon: string;
   doc_id?: string;
   map_link?: string;
-  setVisible: (visible: {
-    id: string;
-    text: string;
-    icon: string;
-    color: string;
-    backgroundColor: string;
-    doc_id: string;
-    map_link: string;
-    show: false;
-  }) => void;
+  setVisible: Dispatch<SetStateAction<UpdateMarkerInputs>>;
 };
 
 export default function MarkerUpdateDialog({
@@ -52,37 +46,7 @@ export default function MarkerUpdateDialog({
     left: 0,
   });
   const updateMarkerMutation = useUpdateMapMarker();
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm<UpdateMarkerInputs>({
-    defaultValues: { icon, color, text, doc_id, map_link },
-  });
 
-  const onSubmit: SubmitHandler<UpdateMarkerInputs> = (data) => {
-    // Project_id is required to set data with queryclient since the
-    // query name is `${project_id}-maps`
-    updateMarkerMutation.mutate({
-      id,
-      map_id: map_id as string,
-      project_id: project_id as string,
-      ...data,
-    });
-    setVisible({
-      id: "",
-      text: "",
-      icon: "",
-      color: "",
-      backgroundColor: "",
-      doc_id: "",
-      show: false,
-      map_link: "",
-    });
-  };
   const documents = useGetDocuments(project_id as string);
   const maps = useGetMaps(project_id as string);
   return (
@@ -104,11 +68,16 @@ export default function MarkerUpdateDialog({
         })
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap">
-        <div className="w-full"></div>
+      <div className="flex flex-wrap">
         <div className="w-full">
           <InputText
-            {...register("text")}
+            value={text}
+            onChange={(e) =>
+              setVisible((prev) => ({
+                ...prev,
+                text: e.target.value,
+              }))
+            }
             autoComplete={"false"}
             className="w-full"
             placeholder="Marker popup text"
@@ -120,8 +89,8 @@ export default function MarkerUpdateDialog({
           <Icon
             className="cursor-pointer"
             fontSize={40}
-            icon={`mdi:${watch("icon")}`}
-            color={watch("color")}
+            icon={icon}
+            color={color}
             onClick={(e) =>
               setIconSelect({
                 ...iconSelect,
@@ -133,87 +102,82 @@ export default function MarkerUpdateDialog({
           />
           <CreateMarkerIconSelect
             {...iconSelect}
-            setValue={setValue}
+            setValue={(icon: string) =>
+              setVisible((prev) => ({
+                ...prev,
+                icon,
+              }))
+            }
             setIconSelect={setIconSelect}
           />
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            name="color"
-            render={({ field: { onChange, value } }) => (
-              <div className="flex align-items-center flex-row-reverse">
-                <InputText
-                  value={value}
-                  className="w-full ml-2"
-                  onChange={onChange}
-                />
-                <ColorPicker value={value} onChange={onChange} />
-              </div>
-            )}
-          />
-          {errors.color?.type === "required" && (
-            <div
-              className="w-full text-center my-2"
-              style={{
-                color: "var(--red-600)",
-              }}
-            >
-              The color property is required!
-            </div>
-          )}
+          <div className="flex align-items-center flex-row-reverse">
+            <InputText
+              value={color}
+              className="w-full ml-2"
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  color: e.target.value,
+                }))
+              }
+            />
+            <ColorPicker
+              value={color}
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  color: e.value as string,
+                }))
+              }
+            />
+          </div>
         </div>
         <div className="w-full">
-          <Controller
-            control={control}
-            name="doc_id"
-            render={({ field: { onChange, value } }) => (
-              <Dropdown
-                className="w-full"
-                placeholder="Link Document"
-                value={value}
-                onChange={(e) => onChange(e.value)}
-                options={
-                  documents.data
-                    ? [
-                        { title: "No document", id: null },
-                        ...documents.data.filter(
-                          (doc) => !doc.template && !doc.folder
-                        ),
-                      ]
-                    : []
-                }
-                optionLabel={"title"}
-                optionValue={"id"}
-              />
-            )}
+          <Dropdown
+            className="w-full"
+            placeholder="Link Document"
+            value={doc_id}
+            onChange={(e) =>
+              setVisible((prev) => ({
+                ...prev,
+                doc_id: e.target.value,
+              }))
+            }
+            options={
+              documents.data
+                ? [
+                    { title: "No document", id: null },
+                    ...documents.data.filter(
+                      (doc) => !doc.template && !doc.folder
+                    ),
+                  ]
+                : []
+            }
+            optionLabel={"title"}
+            optionValue={"id"}
           />
         </div>
         <div className="w-full">
-          <Controller
-            control={control}
-            name="map_link"
-            render={({ field: { onChange, value } }) => {
-              return (
-                <Dropdown
-                  className="w-full mt-2"
-                  placeholder="Map Link"
-                  value={value}
-                  onChange={(e) => onChange(e.value)}
-                  options={
-                    maps.data
-                      ? [
-                          { title: "No map", id: null },
-                          ...maps.data.filter((map) => !map.folder),
-                        ]
-                      : []
-                  }
-                  optionLabel={"title"}
-                  optionValue={"id"}
-                />
-              );
-            }}
+          <Dropdown
+            className="w-full mt-2"
+            placeholder="Map Link"
+            value={map_link}
+            onChange={(e) =>
+              setVisible((prev) => ({
+                ...prev,
+                map_link: e.target.value,
+              }))
+            }
+            options={
+              maps.data
+                ? [
+                    { title: "No map", id: null },
+                    ...maps.data.filter((map) => !map.folder),
+                  ]
+                : []
+            }
+            optionLabel={"title"}
+            optionValue={"id"}
           />
         </div>
         <div className="w-full flex justify-content-end mt-2">
@@ -222,10 +186,21 @@ export default function MarkerUpdateDialog({
             label="Update Marker"
             icon="pi pi-save"
             iconPos="right"
-            type="submit"
+            onClick={() => {
+              setVisible({
+                id: "",
+                text: "",
+                icon: "",
+                color: "",
+                backgroundColor: "",
+                doc_id: "",
+                show: false,
+                map_link: "",
+              });
+            }}
           />
         </div>
-      </form>
+      </div>
     </Dialog>
   );
 }

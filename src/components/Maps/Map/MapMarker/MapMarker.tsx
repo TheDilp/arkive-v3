@@ -94,7 +94,10 @@ export default function MapMarker({
               <div
                 style={{
                   zIndex: 999999,
-                  background: `url('https://api.iconify.design/mdi/${icon}.svg?color=%23${color}') no-repeat`,
+                  background: `url('https://api.iconify.design/mdi/${icon.replace(
+                    /.*:/g,
+                    ""
+                  )}.svg?color=%23${color}') no-repeat`,
                   backgroundSize: "2rem",
                   backgroundPosition: "center",
                   backgroundColor,

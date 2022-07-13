@@ -130,12 +130,14 @@ export type CreateMarkerInputs = {
 
 // Inputs for updating
 export type UpdateMarkerInputs = {
-  icon: string;
+  id: string;
   text: string;
+  icon: string;
   color: string;
   backgroundColor: string;
   doc_id?: string;
   map_link?: string;
+  show: boolean;
 };
 
 export type RegisterInputs = {
