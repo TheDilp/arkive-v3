@@ -2,7 +2,7 @@ import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { ImageOverlay, useMapEvents } from "react-leaflet";
 import { MapProps } from "../../../custom-types";
-import DraggableMarker from "./MapMarker/DraggableMarker";
+import MapMarker from "./MapMarker/MapMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
 import MarkerUpdateDialog from "./MapMarker/MarkerUpdateDialog";
 type Props = {
@@ -32,6 +32,7 @@ export default function MapImage({
     text: string;
     icon: string;
     color: string;
+    backgroundColor: string;
     doc_id?: string;
     map_link?: string;
     show: boolean;
@@ -40,6 +41,7 @@ export default function MapImage({
     text: "",
     icon: "",
     color: "",
+    backgroundColor: "",
     doc_id: "",
     map_link: "",
     show: false,
@@ -92,6 +94,7 @@ export default function MapImage({
               text: "",
               icon: "",
               color: "",
+              backgroundColor: "",
               doc_id: "",
               show: false,
             })
@@ -108,7 +111,7 @@ export default function MapImage({
             : true
         )
         .map((marker) => (
-          <DraggableMarker
+          <MapMarker
             key={marker.id}
             {...marker}
             mcm={mcm}

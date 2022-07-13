@@ -48,6 +48,7 @@ export type MapMarkerProps = {
   id: string;
   icon: string;
   color: string;
+  backgroundColor: string;
   lat: number;
   lng: number;
   text: string;
@@ -83,7 +84,6 @@ export type MapItemDisplayDialogProps = {
   public: boolean;
   show: boolean;
 };
-
 
 export type IconSelectProps = {
   id: string;
@@ -133,6 +133,7 @@ export type UpdateMarkerInputs = {
   icon: string;
   text: string;
   color: string;
+  backgroundColor: string;
   doc_id?: string;
   map_link?: string;
 };
@@ -207,6 +208,7 @@ export type CreateMapMarkerProps = {
   lng: number;
   icon?: string;
   color?: string;
+  backgroundColor?: string;
   text?: string;
   doc_id?: string;
   map_link?: string;
@@ -218,12 +220,12 @@ export type UpdateMapMarkerProps = {
   text?: string;
   icon?: string;
   color?: string;
+  backgroundColor?: string;
   lat?: number;
   lng?: number;
   doc_id?: string;
   map_link?: string;
 };
-
 
 // OTHER
 

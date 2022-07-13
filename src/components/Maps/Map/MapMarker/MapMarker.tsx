@@ -6,11 +6,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MapMarkerProps } from "../../../../custom-types";
 import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
-export default function DraggableMarker({
+export default function MapMarker({
   id,
   map_id,
   icon,
   color,
+  backgroundColor,
   text,
   lat,
   lng,
@@ -25,6 +26,7 @@ export default function DraggableMarker({
     icon,
     text,
     color,
+    backgroundColor,
     doc_id,
     show,
   }: {
@@ -32,6 +34,7 @@ export default function DraggableMarker({
     icon: string;
     text: string;
     color: string;
+    backgroundColor: string;
     doc_id?: string;
     map_link?: string;
     show: boolean;
@@ -57,6 +60,7 @@ export default function DraggableMarker({
         icon,
         text,
         color,
+        backgroundColor,
         doc_id,
         map_link,
         show: false,
@@ -93,7 +97,7 @@ export default function DraggableMarker({
                   background: `url('https://api.iconify.design/mdi/${icon}.svg?color=%23${color}') no-repeat`,
                   backgroundSize: "2rem",
                   backgroundPosition: "center",
-                  backgroundColor: "#000",
+                  backgroundColor,
                   border: "white solid 3px",
                 }}
                 className="w-full h-full border-circle fixed p-4"
@@ -105,6 +109,7 @@ export default function DraggableMarker({
                     icon,
                     text,
                     color,
+                    backgroundColor,
                     doc_id,
                     show: true,
                   });
@@ -121,7 +126,7 @@ export default function DraggableMarker({
         <Tooltip
           offset={[0, -50]}
           direction="top"
-          className="bg-gray-800 border-rounded-sm border-gray-800 border-solid text-white text-lg"
+          className="p-2 bg-gray-800 border-rounded-sm border-gray-800 border-solid text-white text-lg"
         >
           <div className="Lato text-center">{text}</div>
         </Tooltip>

@@ -19,6 +19,7 @@ type Props = {
   show: boolean;
   text: string;
   color: string;
+  backgroundColor: string;
   icon: string;
   doc_id?: string;
   map_link?: string;
@@ -27,6 +28,7 @@ type Props = {
     text: string;
     icon: string;
     color: string;
+    backgroundColor: string;
     doc_id: string;
     map_link: string;
     show: false;
@@ -75,6 +77,7 @@ export default function MarkerUpdateDialog({
       text: "",
       icon: "",
       color: "",
+      backgroundColor: "",
       doc_id: "",
       show: false,
       map_link: "",
@@ -94,6 +97,7 @@ export default function MarkerUpdateDialog({
           text: "",
           icon: "",
           color: "",
+          backgroundColor: "",
           doc_id: "",
           show: false,
           map_link: "",

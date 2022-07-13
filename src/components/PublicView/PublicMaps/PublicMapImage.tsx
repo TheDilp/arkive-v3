@@ -2,7 +2,7 @@ import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { ImageOverlay, useMapEvents } from "react-leaflet";
 import { MapProps } from "../../../custom-types";
-import DraggableMarker from "../../Maps/Map/MapMarker/DraggableMarker";
+import MapMarker from "../../Maps/Map/MapMarker/MapMarker";
 import PublicDraggableMarker from "./PublicDraggableMarker";
 type Props = {
   src: string;
