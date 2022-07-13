@@ -118,7 +118,6 @@ export default function SearchDialog({ search, setSearch }: Props) {
           suggestions={filteredItems}
           value={search}
           selectedItemTemplate={(item) => {
-            console.log(item);
             return <div>{item.title || item.label || item.text} </div>;
           }}
           onSelect={(e) => {

@@ -113,6 +113,7 @@ export default function BoardView({ setBoardId }: Props) {
           scratch: {
             doc_id: node.document?.id,
           },
+          locked: node.locked,
           position: { x: node.x, y: node.y },
         }));
       }
