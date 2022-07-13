@@ -50,15 +50,24 @@ export default function MapImage({
       cm.current.show(e.originalEvent);
     },
   });
-  const [markerFilter, setMarkerFilter] = useState(false);
+  const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(
+    false
+  );
+
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
+      if (e.shiftKey && e.altKey) {
+        setMarkerFilter(false);
+        return;
+      }
       if (e.shiftKey) {
-        setMarkerFilter(true);
+        setMarkerFilter("map");
+      } else if (e.altKey) {
+        setMarkerFilter("doc");
       }
     });
     document.addEventListener("keyup", (e) => {
-      if (!e.shiftKey) {
+      if (!e.shiftKey && !e.altKey) {
         setMarkerFilter(false);
       }
     });
@@ -91,7 +100,13 @@ export default function MapImage({
       )}
       <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
       {markers
-        .filter((marker) => (markerFilter ? marker.map_link : true))
+        .filter((marker) =>
+          markerFilter === "map"
+            ? marker.map_link
+            : markerFilter === "doc"
+            ? marker.doc_id
+            : true
+        )
         .map((marker) => (
           <DraggableMarker
             key={marker.id}

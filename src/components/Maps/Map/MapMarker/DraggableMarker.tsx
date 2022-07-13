@@ -43,10 +43,11 @@ export default function DraggableMarker({
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const eventHandlers = {
     click: (e: any) => {
+      if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
       if (e.originalEvent.shiftKey && map_link) {
         navigate(`../../${map_link}`);
       } else if (e.originalEvent.altKey && doc_id) {
-        navigate(`../../wiki/doc/${doc_id}`);
+        navigate(`../../../wiki/doc/${doc_id}`);
       }
     },
     contextmenu: (e: any) => {
