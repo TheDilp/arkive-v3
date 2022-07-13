@@ -23,7 +23,7 @@ type Props = {
       left: number;
     }>
   >;
-  setValue: (name: "icon", value: string, config?: Object) => void;
+  setValue: (value: string) => void;
 };
 
 export default function CreateMarkerIconSelect({
@@ -111,7 +111,6 @@ export default function CreateMarkerIconSelect({
                     className="mx-auto hover:text-blue-300 cursor-pointer"
                     onClick={() => {
                       setValue(
-                        "icon",
                         `${
                           filteredIconList[
                             virtualRow.index * 6 + virtualColumn.index
@@ -125,7 +124,7 @@ export default function CreateMarkerIconSelect({
                       });
                     }}
                     fontSize={30}
-                    icon={`mdi:${
+                    icon={`${
                       filteredIconList[
                         virtualRow.index * 6 + virtualColumn.index
                       ]

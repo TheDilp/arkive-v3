@@ -135,7 +135,7 @@ export default function MarkerUpdateDialog({
               onChange={(e) =>
                 setVisible((prev) => ({
                   ...prev,
-                  color: e.target.value,
+                  backgroundColor: e.target.value,
                 }))
               }
             />
@@ -208,6 +208,7 @@ export default function MarkerUpdateDialog({
               updateMarkerMutation.mutate({
                 id,
                 text,
+                icon,
                 color,
                 backgroundColor,
                 doc_id,

@@ -96,7 +96,7 @@ export default function IconSelectMenu({
                       if (closeEdit) closeEdit();
                       iconMutation.mutate({
                         id,
-                        icon: `mdi:${
+                        icon: `${
                           filteredIconList[
                             virtualRow.index * 6 + virtualColumn.index
                           ]
@@ -111,7 +111,7 @@ export default function IconSelectMenu({
                       });
                     }}
                     fontSize={30}
-                    icon={`mdi:${
+                    icon={`${
                       filteredIconList[
                         virtualRow.index * 6 + virtualColumn.index
                       ]
