@@ -150,7 +150,7 @@ export default function NodeUpdateDialog({
 
                   <div className="flex flex-nowrap w-full mt-1">
                     <div className="w-6">
-                      <label htmlFor="" className="text-xs">
+                      <label htmlFor="" className="text-sm text-gray-400">
                         Horizontal Align
                       </label>
                       <Dropdown
@@ -166,7 +166,7 @@ export default function NodeUpdateDialog({
                       />
                     </div>
                     <div className="w-6">
-                      <label htmlFor="" className="text-xs">
+                      <label htmlFor="" className="text-sm text-gray-400">
                         Vertical Align
                       </label>
                       <Dropdown
@@ -187,9 +187,11 @@ export default function NodeUpdateDialog({
             </div>
           </TabPanel>
           <TabPanel header="Node Shape">
-            <div className="w-full flex flex-wrap">
+            <div className="w-full flex flex-wrap justify-content-between">
               <div className="w-full my-1">
-                <label className="w-full text-sm">Node Shape</label>
+                <label className="w-full text-sm text-gray-400">
+                  Node Shape
+                </label>
                 <Dropdown
                   options={boardNodeShapes}
                   className="w-full"
@@ -204,8 +206,8 @@ export default function NodeUpdateDialog({
                   }
                 />
               </div>
-              <div className="w-6">
-                <div className="">Width</div>
+              <div className="w-5">
+                <label className="text-sm text-gray-400">Width</label>
                 <InputNumber
                   inputClassName="w-full"
                   showButtons
@@ -221,8 +223,8 @@ export default function NodeUpdateDialog({
                   }
                 />
               </div>
-              <div className="w-6">
-                <div className="">Height</div>
+              <div className="w-5">
+                <label className="text-sm text-gray-400">Height</label>
                 <InputNumber
                   inputClassName="w-full"
                   showButtons
@@ -242,7 +244,9 @@ export default function NodeUpdateDialog({
           </TabPanel>
           <TabPanel header="Node Image">
             <div className="w-full my-1">
-              <label className="w-full text-sm">Linked Document</label>
+              <label className="w-full text-sm text-gray-400">
+                Linked Document
+              </label>
               <Dropdown
                 className="w-full"
                 placeholder="Link Document"
@@ -270,8 +274,10 @@ export default function NodeUpdateDialog({
               />
             </div>
             <div className="w-full my-1">
-              <label className="w-full text-sm">Custom Image</label>
-              <div className="text-xs">
+              <label className="w-full text-sm text-gray-400">
+                Custom Image
+              </label>
+              <div className="text-xs text-gray-400">
                 Note: Custom images override images from linked documents.
               </div>
               <Dropdown
@@ -307,8 +313,10 @@ export default function NodeUpdateDialog({
           <TabPanel header="Misc">
             <div className="w-full my-2">
               <div className="w-full flex flex-wrap">
-                <label className="w-full text-sm">Node Level</label>
-                <span className="w-full text-xs">
+                <label className="w-full text-sm text-gray-400">
+                  Node Level
+                </label>
+                <span className="w-full text-xs text-gray-400">
                   Changes if node is above or below others
                 </span>
               </div>
@@ -326,7 +334,9 @@ export default function NodeUpdateDialog({
             </div>
             <div className="w-full flex flex-nowrap my-1">
               <div className="w-4">
-                <label className="w-full text-sm">Background Color</label>
+                <label className="w-full text-sm text-gray-400">
+                  Background Color
+                </label>
                 <div className="flex align-items-center flex-row-reverse">
                   <InputText
                     value={nodeUpdateDialog.backgroundColor}
@@ -351,7 +361,9 @@ export default function NodeUpdateDialog({
                 </div>
               </div>
               <div className="w-8">
-                <label className="w-full text-sm">Background Opacity</label>
+                <label className="w-full text-sm text-gray-400 pl-1">
+                  Background Opacity
+                </label>
                 <div className="flex align-items-center flex-row-reverse">
                   <InputNumber
                     showButtons
