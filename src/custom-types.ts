@@ -135,8 +135,8 @@ export type UpdateMarkerInputs = {
   icon: string;
   color: string;
   backgroundColor: string;
-  doc_id?: string;
-  map_link?: string;
+  doc_id?: string | undefined;
+  map_link?: string | undefined;
   show: boolean;
 };
 

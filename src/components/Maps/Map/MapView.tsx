@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { useGetMapData } from "../../../utils/customHooks";
+import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import MapContextMenu from "../MapContextMenu";
@@ -92,10 +93,7 @@ export default function MapView({
         setNewTokenDialog={setNewTokenDialog}
         bounds={bounds as number[][]}
       />
-      <CreateMarkerDialog
-        {...newTokenDialog}
-        setVisible={() => setNewTokenDialog({ lat: 0, lng: 0, show: false })}
-      />
+      <CreateMarkerDialog {...newTokenDialog} setVisible={setNewTokenDialog} />
       <AnimatePresence exitBeforeEnter={true}>
         {mapData && bounds && (
           <motion.div

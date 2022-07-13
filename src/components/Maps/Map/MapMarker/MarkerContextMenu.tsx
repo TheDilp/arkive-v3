@@ -27,7 +27,7 @@ export default function MarkerContextMenu({
         }),
     },
     {
-      label: "Delete Token",
+      label: "Delete Marker",
       icon: "pi pi-fw pi-trash",
       command: () =>
         deleteMarkerMutation.mutate({

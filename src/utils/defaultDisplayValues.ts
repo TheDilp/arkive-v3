@@ -47,9 +47,9 @@ export const EdgeUpdateDialogDefault = {
 export const MapMarkerDialogDefault = {
   id: "",
   text: "",
-  icon: "",
-  color: "",
-  backgroundColor: "",
-  doc_id: "",
-  show: false,
+  icon: "mdi:user",
+  color: "#ffffff",
+  backgroundColor: "#000000",
+  doc_id: undefined,
+  map_link: undefined,
 };

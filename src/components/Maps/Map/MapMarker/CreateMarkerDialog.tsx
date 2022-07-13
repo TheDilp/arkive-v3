@@ -4,29 +4,31 @@ import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { CreateMarkerInputs } from "../../../../custom-types";
 import {
   useCreateMapMarker,
   useGetDocuments,
   useGetMaps,
 } from "../../../../utils/customHooks";
+import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
 import CreateMarkerIconSelect from "./MarkerIconSelect";
+
 type Props = {
   lat: number;
   lng: number;
   show: boolean;
-  setVisible: () => void;
+  setVisible: Dispatch<
+    SetStateAction<{ lat: number; lng: number; show: boolean }>
+  >;
 };
 
 export default function CreateMarkerDialog({
-  show,
-  setVisible,
   lat,
   lng,
+  show,
+  setVisible,
 }: Props) {
   const { project_id, map_id } = useParams();
   const createMapMarkerMutation = useCreateMapMarker(project_id as string);
@@ -35,26 +37,7 @@ export default function CreateMarkerDialog({
     top: 0,
     left: 0,
   });
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm<CreateMarkerInputs>({
-    defaultValues: { icon: "wizard-hat", color: "ffffff" },
-  });
-  const onSubmit: SubmitHandler<CreateMarkerInputs> = (data) => {
-    let id = uuid();
-    createMapMarkerMutation.mutate({
-      id,
-      map_id: map_id as string,
-      lat,
-      lng,
-      ...data,
-    });
-  };
+  const [newMarkerData, setNewMarkerData] = useState(MapMarkerDialogDefault);
   const documents = useGetDocuments(project_id as string);
   const maps = useGetMaps(project_id as string);
   return (
@@ -62,13 +45,21 @@ export default function CreateMarkerDialog({
       header="New Map Marker"
       visible={show}
       style={{ width: "25vw" }}
-      onHide={() => setVisible()}
+      onHide={() =>
+        setVisible({ ...MapMarkerDialogDefault, lat: 0, lng: 0, show: false })
+      }
       modal={false}
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-wrap">
+      <div className="flex flex-wrap">
         <div className="w-full">
           <InputText
-            {...register("text")}
+            value={newMarkerData.text}
+            onChange={(e) =>
+              setNewMarkerData((prev) => ({
+                ...prev,
+                text: e.target.value,
+              }))
+            }
             autoComplete={"false"}
             className="w-full"
             placeholder="Marker popup text"
@@ -80,8 +71,8 @@ export default function CreateMarkerDialog({
           <Icon
             className="cursor-pointer"
             fontSize={40}
-            icon={`mdi:${watch("icon")}`}
-            color={watch("color")}
+            icon={newMarkerData.icon}
+            color={newMarkerData.color}
             onClick={(e) =>
               setIconSelect({
                 ...iconSelect,
@@ -93,71 +84,68 @@ export default function CreateMarkerDialog({
           />
           <CreateMarkerIconSelect
             {...iconSelect}
-            setValue={setValue}
+            setValue={(icon: string) =>
+              setNewMarkerData((prev) => ({
+                ...prev,
+                icon,
+              }))
+            }
             setIconSelect={setIconSelect}
           />
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            name="color"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
-              <div className="flex align-items-center flex-row-reverse">
-                <InputText
-                  value={value}
-                  className="w-full ml-2"
-                  onChange={onChange}
-                />
-                <ColorPicker value={value} onChange={onChange} />
-              </div>
-            )}
-          />
-          {errors.color?.type === "required" && (
-            <div
-              className="w-full text-center my-2"
-              style={{
-                color: "var(--red-600)",
-              }}
-            >
-              The color property is required!
-            </div>
-          )}
+          <div className="flex align-items-center flex-row-reverse">
+            <InputText
+              value={newMarkerData.color}
+              className="w-full ml-2"
+              onChange={(e) =>
+                setNewMarkerData((prev) => ({
+                  ...prev,
+                  color: e.target.value,
+                }))
+              }
+            />
+            <ColorPicker
+              value={newMarkerData.color}
+              onChange={(e) =>
+                setNewMarkerData((prev) => ({
+                  ...prev,
+                  color: e.value as string,
+                }))
+              }
+            />
+          </div>
         </div>
         <div className="w-full">
-          <Controller
-            control={control}
-            name="doc_id"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
-              <Dropdown
-                className="w-full"
-                placeholder="Link Document"
-                value={value}
-                onChange={(e) => onChange(e.value)}
-                options={documents.data?.filter((doc) => !doc.template)}
-                optionLabel={"title"}
-                optionValue={"id"}
-              />
-            )}
+          <Dropdown
+            className="w-full"
+            placeholder="Link Document"
+            value={newMarkerData.doc_id}
+            onChange={(e) =>
+              setNewMarkerData((prev) => ({
+                ...prev,
+                doc_id: e.value,
+              }))
+            }
+            options={documents.data?.filter((doc) => !doc.template)}
+            optionLabel={"title"}
+            optionValue={"id"}
           />
         </div>
         <div className="w-full">
-          <Controller
-            control={control}
-            name="map_link"
-            render={({ field: { onChange, onBlur, value, name, ref } }) => (
-              <Dropdown
-                className="w-full mt-2"
-                placeholder="Link Map"
-                value={value}
-                onChange={(e) => onChange(e.value)}
-                options={maps.data?.filter(
-                  (map) => !map.folder && map.id !== map_id
-                )}
-                optionLabel={"title"}
-                optionValue={"id"}
-              />
+          <Dropdown
+            className="w-full mt-2"
+            placeholder="Link Map"
+            value={newMarkerData.map_link}
+            onChange={(e) =>
+              setNewMarkerData((prev) => ({
+                ...prev,
+                map_link: e.value,
+              }))
+            }
+            options={maps.data?.filter(
+              (map) => !map.folder && map.id !== map_id
             )}
+            optionLabel={"title"}
+            optionValue={"id"}
           />
         </div>
         <div className="w-full flex justify-content-end mt-2">
@@ -166,10 +154,21 @@ export default function CreateMarkerDialog({
             label="Create Marker"
             icon="pi pi-map-marker"
             iconPos="right"
-            type="submit"
+            onClick={() => {
+              createMapMarkerMutation.mutate({
+                ...newMarkerData,
+                id: uuid(),
+                color: newMarkerData.color.replace("#", ""),
+                lat,
+                lng,
+                map_id: map_id as string,
+              });
+              setNewMarkerData(MapMarkerDialogDefault);
+              setVisible({ lat: 0, lng: 0, show: false });
+            }}
           />
         </div>
-      </form>
+      </div>
     </Dialog>
   );
 }

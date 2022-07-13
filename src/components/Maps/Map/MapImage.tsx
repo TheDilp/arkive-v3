@@ -29,7 +29,7 @@ export default function MapImage({
 }: Props) {
   const mcm = useRef() as any;
   const [updateMarkerDialog, setUpdateMarkerDialog] =
-    useState<UpdateMarkerInputs>(MapMarkerDialogDefault);
+    useState<UpdateMarkerInputs>({ ...MapMarkerDialogDefault, show: false });
   const map = useMapEvents({
     contextmenu(e: any) {
       setNewTokenDialog({ ...e.latlng, show: false });
