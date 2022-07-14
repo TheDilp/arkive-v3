@@ -130,34 +130,10 @@ export default function BoardView({ setBoardId }: Props) {
       setElements(elements);
     }
   }, [board]);
-  useEffect(() => {
-    if (!cyRef) return;
-    if (elements.length > 0) {
-      cyRef.current.on(
-        "ehcomplete",
-        (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
-          let sourceData = sourceNode._private.data;
-          let targetData = targetNode._private.data;
-          // Check due to weird edgehandles behavior when toggling drawmode
-          // When drawmode is turned on and then off and then back on
-          // It can add an edges to a node that doesn't exist
-          try {
-            cyRef.current.remove(addedEdge);
-          } catch (error) {
-            toastWarn(
-              "Cytoedge couldn't be removed, there was an error (BoardView 102)"
-            );
-          }
-          makeEdgeCallback(sourceData.id, targetData.id);
-        }
-      );
-    }
-    return () => cyRef.current.removeListener("ehcomplete");
-  }, [elements]);
 
   // Change function when the board_id changes
   const makeEdgeCallback = useCallback(
-    (source, target) => {
+    (source, target, color: string) => {
       let boardId = board_id;
       createEdgeMutation.mutate({
         id: uuid(),
@@ -166,7 +142,7 @@ export default function BoardView({ setBoardId }: Props) {
         target,
         curveStyle: "straight",
         lineStyle: "solid",
-        lineColor: "#595959",
+        lineColor: color || "#595959",
         controlPointDistances: -100,
         controlPointWeights: 0.5,
         taxiDirection: "auto",
@@ -180,6 +156,29 @@ export default function BoardView({ setBoardId }: Props) {
   useEffect(() => {
     if (!cyRef) return;
     if (cyRef.current) {
+      cyRef.current.on(
+        "ehcomplete",
+        (event: any, sourceNode: any, targetNode: any, addedEdge: any) => {
+          let sourceData = sourceNode._private.data;
+          let targetData = targetNode._private.data;
+
+          // Check due to weird edgehandles behavior when toggling drawmode
+          // When drawmode is turned on and then off and then back on
+          // It can add an edges to a node that doesn't exist
+          try {
+            cyRef.current.remove(addedEdge);
+          } catch (error) {
+            toastWarn(
+              "Cytoedge couldn't be removed, there was an error (BoardView 172)"
+            );
+          }
+          makeEdgeCallback(
+            sourceData.id,
+            targetData.id,
+            board?.defaultEdgeColor
+          );
+        }
+      );
       cyRef.current.on("click", "node", function (evt: any) {
         const scratch = evt.target._private.scratch;
         if (scratch?.doc_id && evt.originalEvent.altKey) {
@@ -285,7 +284,9 @@ export default function BoardView({ setBoardId }: Props) {
       });
     }
     return () =>
-      cyRef.current.removeListener("click mousedown cxttap dbltap free");
+      cyRef.current.removeListener(
+        "click mousedown cxttap dbltap free ehcomplete"
+      );
   }, [cyRef, board_id]);
   useEffect(() => {
     if (!cyRef || !ehRef || !grRef) return;

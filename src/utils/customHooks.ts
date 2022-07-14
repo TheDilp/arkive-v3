@@ -1122,8 +1122,8 @@ export function useCreateNode(project_id: string) {
                     nodes: [
                       ...board.nodes,
                       {
-                        ...newNode,
                         ...defaultNode,
+                        ...newNode,
                         document,
                       },
                     ],

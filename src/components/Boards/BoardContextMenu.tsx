@@ -8,6 +8,7 @@ import {
   useDeleteEdge,
   useDeleteManyNodes,
   useDeleteNode,
+  useGetBoardData,
 } from "../../utils/customHooks";
 import {
   deleteManyEdges,
@@ -28,10 +29,12 @@ export default function BoardContextMenu({
   setQuickCreate,
 }: Props) {
   const { project_id, board_id } = useParams();
+  const board = useGetBoardData(project_id as string, board_id as string);
   const createNodeMutation = useCreateNode(project_id as string);
   const deleteNodeMutation = useDeleteNode(project_id as string);
   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
   const deleteEdgeMutation = useDeleteEdge(project_id as string);
+  console.log(board);
   const boardItems = [
     {
       label: "New Node",
@@ -41,6 +44,7 @@ export default function BoardContextMenu({
           id,
           label: undefined,
           board_id: board_id as string,
+          backgroundColor: board?.defaultNodeColor || "#595959",
           type: "rectangle",
           x: contextMenu.x,
           y: contextMenu.y,
