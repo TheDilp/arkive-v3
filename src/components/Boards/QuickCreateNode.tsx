@@ -18,28 +18,38 @@ export default function QuickCreateNode({
   const { data: documents } = useGetDocuments(project_id as string);
   return (
     <Dialog
-      header="Quick Create Node"
-      className="w-30rem h-20rem overflow-y-auto"
+      header={() => (
+        <div className="flex flex-wrap">
+          Node from Document
+          <span className="w-full text-sm font-medium text-gray-400">
+            Drag onto the board to quickly create nodes
+          </span>
+        </div>
+      )}
+      className="w-30rem overflow-y-auto"
       visible={quickCreate}
       onHide={() => setQuickCreate(false)}
       modal={false}
       position="left"
+      style={{
+        height: "40rem",
+      }}
     >
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap row-gap-5 column-gap-6">
         {documents
           ?.filter((doc) => !doc.folder && !doc.template)
           .map((doc) => (
             <div
               key={doc.id}
-              className="w-4"
+              className="w-3"
               draggable="true"
               onDragStart={(e) => {
                 e.dataTransfer.setData("text", doc.id);
               }}
             >
-              <div className="p-0 text-center flex flex-wrap justify-content-center">
+              <div className="p-0  text-center flex flex-wrap justify-content-center">
                 {doc.image?.link ? (
-                  <div className="folderPageImageContainer">
+                  <div className="folderPageImageContainer cursor-pointer w-5rem h-5rem">
                     <img
                       className="w-4rem h-4rem"
                       style={{
@@ -54,7 +64,7 @@ export default function QuickCreateNode({
                     />
                   </div>
                 ) : (
-                  <div>
+                  <div className="cursor-pointer w-5rem h-5rem">
                     <Icon icon="mdi:file" className="w-full" fontSize={80} />
                   </div>
                 )}
