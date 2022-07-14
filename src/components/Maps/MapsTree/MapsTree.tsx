@@ -1,7 +1,7 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { MapItemDisplayDialogProps, MapProps } from "../../../custom-types";
+import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
 import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
 import { sortMapsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
@@ -109,23 +109,11 @@ export default function MapsTree({
         visible={createMapDialog}
         setVisible={() => setCreateMapDialog(false)}
       />
-      {updateMapDialog.show && (
-        <MapUpdateDialog
-          visible={updateMapDialog}
-          setVisible={() =>
-            setUpdateMapDialog({
-              id: "",
-              title: "",
-              map_image: { id: "", title: "", link: "", type: "Image" },
-              parent: "",
-              show: false,
-              folder: false,
-              depth: 0,
-              public: false,
-            })
-          }
-        />
-      )}
+
+      <MapUpdateDialog
+        visible={updateMapDialog}
+        setVisible={setUpdateMapDialog}
+      />
       <TreeSidebar>
         <MapsFilter
           setCreateMapDialog={setCreateMapDialog}

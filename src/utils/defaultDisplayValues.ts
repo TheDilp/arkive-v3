@@ -60,6 +60,17 @@ export const EdgeUpdateDialogDefault = {
   show: false,
 };
 
+export const MapDialogDefault = {
+  id: "",
+  title: "",
+  map_image: { id: "", title: "", link: "", type: "Image" as const },
+  parent: "",
+  show: false,
+  folder: false,
+  depth: 0,
+  public: false,
+};
+
 export const MapMarkerDialogDefault = {
   id: "",
   text: "",

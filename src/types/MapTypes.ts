@@ -7,6 +7,7 @@ export type MapProps = {
   parent: { id: string; title: string } | null;
   project_id: string;
   markers: MapMarkerProps[];
+  layers: MapLayerProps[];
   folder: boolean;
   expanded: boolean;
   public: boolean;

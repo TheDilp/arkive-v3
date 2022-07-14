@@ -3,7 +3,7 @@ import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
 import { useQuery } from "react-query";
 import { Navigate, To, useParams } from "react-router-dom";
-import { BoardProps } from "../../../custom-types";
+import { BoardProps } from "../../../types/BoardTypes";
 import { auth, getSingleBoard } from "../../../utils/supabaseUtils";
 import { toastWarn } from "../../../utils/utils";
 import PublicBoardView from "./PublicBoardView";

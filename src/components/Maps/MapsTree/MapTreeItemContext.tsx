@@ -68,6 +68,15 @@ export default function MapTreeItemContext({
           public: !displayDialog.public,
         }),
     },
+    {
+      label: "Manage Layers",
+      icon: "pi pi-clone",
+      command: () =>
+        updateMapMutation.mutate({
+          id: displayDialog.id,
+          public: !displayDialog.public,
+        }),
+    },
     { separator: true },
     {
       label: "View Public Map",

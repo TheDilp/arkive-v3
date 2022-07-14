@@ -1,20 +1,22 @@
+import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Dispatch, SetStateAction } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import {
   CreateMapInputs,
   MapProps,
   MapItemDisplayDialogProps,
-} from "../../../custom-types";
+} from "../../../types/MapTypes";
 import { useUpdateMap } from "../../../utils/customHooks";
+import { MapDialogDefault } from "../../../utils/defaultDisplayValues";
 
 type Props = {
   visible: MapItemDisplayDialogProps;
-  setVisible: (visible: MapItemDisplayDialogProps) => void;
+  setVisible: Dispatch<SetStateAction<MapItemDisplayDialogProps>>;
 };
 
 export default function MapUpdateDialog({ visible, setVisible }: Props) {
@@ -22,34 +24,6 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
   const queryClient = useQueryClient();
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   const updateMapMutation = useUpdateMap(project_id as string);
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Omit<CreateMapInputs, "folder">>({
-    defaultValues: {
-      title: visible.title,
-      map_image: visible.map_image,
-      parent: visible.parent === "0" ? undefined : visible.parent,
-    },
-  });
-  const onSubmit: SubmitHandler<Omit<CreateMapInputs, "folder">> = (data) => {
-    updateMapMutation.mutate({
-      id: visible.id,
-      ...data,
-    });
-    setVisible({
-      id: "",
-      title: "",
-      map_image: { id: "", title: "", link: "", type: "Image" },
-      parent: "",
-      show: false,
-      folder: false,
-      depth: 0,
-      public: false,
-    });
-  };
 
   function recursiveDescendantRemove(
     doc: MapProps,
@@ -79,68 +53,54 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
       header={`Update Map - ${visible.title}`}
       modal={false}
       visible={visible.show}
-      onHide={() =>
-        setVisible({
-          id: "",
-          title: "",
-          map_image: { id: "", title: "", link: "", type: "Image" },
-          parent: "",
-          show: false,
-          folder: false,
-          depth: 0,
-          public: false,
-        })
-      }
+      onHide={() => setVisible(MapDialogDefault)}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
         <div className="flex flex-wrap justify-content-center">
           <div className="w-8 py-1">
             <InputText
               placeholder="Map Title"
               className="w-full"
-              {...register("title", { required: true, maxLength: 100 })}
+              value={visible.title}
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  title: e.target.value,
+                }))
+              }
               autoFocus={true}
             />
-            {errors.title?.type === "required" && (
-              <span className="py-1" style={{ color: "var(--red-500)" }}>
-                <i className="pi pi-exclamation-triangle"></i>
-                This field is required!
-              </span>
-            )}
           </div>
-          {!visible.folder && <div className="w-8 py-1"></div>}
           <div className="w-8 py-1">
-            <Controller
-              name="parent"
-              control={control}
-              render={({ field }) => (
-                <Dropdown
-                  className="w-full"
-                  placeholder="Map Folder"
-                  optionLabel="title"
-                  optionValue="id"
-                  value={field.value}
-                  filter
-                  onChange={(e) => field.onChange(e.value)}
-                  options={
-                    maps
-                      ? [
-                          { title: "Root", id: null },
-                          ...maps.filter((map, idx, array) => {
-                            if (!map.folder || map.id === visible.id)
-                              return false;
-                            return recursiveDescendantRemove(
-                              map,
-                              idx,
-                              array,
-                              visible.id
-                            );
-                          }),
-                        ]
-                      : []
-                  }
-                />
-              )}
+            <Dropdown
+              className="w-full"
+              placeholder="Map Folder"
+              optionLabel="title"
+              optionValue="id"
+              value={visible.parent}
+              filter
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  parent: e.value,
+                }))
+              }
+              options={
+                maps
+                  ? [
+                      { title: "Root", id: null },
+                      ...maps.filter((map, idx, array) => {
+                        if (!map.folder || map.id === visible.id) return false;
+                        return recursiveDescendantRemove(
+                          map,
+                          idx,
+                          array,
+                          visible.id
+                        );
+                      }),
+                    ]
+                  : []
+              }
             />
           </div>
 
@@ -154,7 +114,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
             />
           </div>
         </div>
-      </form>
+      </div>
     </Dialog>
   );
 }

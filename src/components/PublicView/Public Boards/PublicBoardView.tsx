@@ -12,6 +12,7 @@ import {
   cytoscapeStylesheet,
   edgehandlesSettings,
 } from "../../../utils/boardUtils";
+import { BoardEdgeProps, BoardNodeProps } from "../../../types/BoardTypes";
 export default function PublicBoardView({ board }: { board: BoardProps }) {
   const { board_id } = useParams();
   const [elements, setElements] = useState<
@@ -21,30 +22,18 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
   const ehRef = useRef() as any;
   const grRef = useRef() as any;
   const firstRender = useRef(true) as any;
+  console.log(board);
 
   useEffect(() => {
     if (board) {
       let temp_nodes: CytoscapeNodeProps[] = [];
       let temp_edges: CytoscapeEdgeProps[] = [];
       if (board.nodes.length > 0) {
-        temp_nodes = board.nodes.map((node) => ({
+        temp_nodes = board.nodes.map((node: BoardNodeProps) => ({
           data: {
-            id: node.id,
+            ...node,
             classes: "boardNode publicBoardNode",
             label: node.label || "",
-            type: node.type,
-            width: node.width,
-            height: node.height,
-            fontSize: node.fontSize,
-            fontColor: node.fontColor,
-            textHAlign: node.textHAlign,
-            textVAlign: node.textVAlign,
-            customImage: node.customImage,
-            x: node.x,
-            y: node.y,
-            backgroundColor: node.backgroundColor,
-            backgroundOpacity: node.backgroundOpacity,
-            zIndex: node.zIndex,
             zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
             // Custom image has priority, if not set use document image, if neither - empty array
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
@@ -68,22 +57,11 @@ export default function PublicBoardView({ board }: { board: BoardProps }) {
         }));
       }
       if (board.edges.length > 0) {
-        temp_edges = board.edges.map((edge) => ({
+        temp_edges = board.edges.map((edge: BoardEdgeProps) => ({
           data: {
-            id: edge.id,
-            classes: "boardEdge publicBoardEdge",
+            ...edge,
             label: edge.label || "",
-            source: edge.source,
-            target: edge.target,
-            curveStyle: edge.curveStyle,
-            lineStyle: edge.lineStyle,
-            lineColor: edge.lineColor,
-            controlPointDistances: edge.controlPointDistances,
-            controlPointWeights: edge.controlPointWeights,
-            taxiDirection: edge.taxiDirection,
-            taxiTurn: edge.taxiTurn,
-            targetArrowShape: edge.targetArrowShape,
-            zIndex: edge.zIndex,
+            classes: "boardEdge publicBoardEdge",
           },
         }));
       }
