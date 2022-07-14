@@ -13,7 +13,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { BoardExportProps, BoardNodeProps } from "../../../custom-types";
 import {
   changeLockState,
-  nodeColorPresets,
+  BoardColorPresets,
   updateColor,
 } from "../../../utils/boardUtils";
 import {
@@ -345,7 +345,7 @@ export default function BoardQuickBar() {
           hideEvent="focus"
         >
           <div className="flex flex-wrap w-10rem">
-            {nodeColorPresets.map((color) => (
+            {BoardColorPresets.map((color) => (
               <div
                 key={color}
                 className="w-1rem h-1rem border-rounded cursor-pointer"

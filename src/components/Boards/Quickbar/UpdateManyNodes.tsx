@@ -8,9 +8,9 @@ import { useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
 import { NodeUpdateDialogProps } from "../../../types/BoardTypes";
 import {
-  boardNodeFontSizes,
+  BoardFontSizes,
   boardNodeShapes,
-  nodeFontFamilies,
+  BoardFontFamilies,
   textHAlignOptions,
   textVAlignOptions,
 } from "../../../utils/boardUtils";
@@ -76,7 +76,7 @@ export default function UpdateManyNodes() {
             />
             <Dropdown
               className="w-3"
-              options={boardNodeFontSizes}
+              options={BoardFontSizes}
               placeholder="Label Font Size"
               value={manyNodesData.fontSize}
               onChange={(e) =>
@@ -110,7 +110,7 @@ export default function UpdateManyNodes() {
                 </label>
                 <Dropdown
                   className="w-full"
-                  options={nodeFontFamilies}
+                  options={BoardFontFamilies}
                   value={manyNodesData.fontFamily}
                   onChange={(e) =>
                     setManyNodesData((prev: ManyNodesProps) => ({

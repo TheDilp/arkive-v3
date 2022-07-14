@@ -48,6 +48,8 @@ export const EdgeUpdateDialogDefault = {
   curveStyle: "straight",
   lineStyle: "solid",
   lineColor: "#595959",
+  fontFamily: "Lato",
+  fontSize: 16,
   controlPointDistances: 0,
   controlPointWeights: 0,
   taxiDirection: "auto",

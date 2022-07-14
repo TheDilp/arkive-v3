@@ -26,7 +26,7 @@ import {
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
-import { NodeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
+import { EdgeUpdateDialogDefault, NodeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
 import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
@@ -57,20 +57,7 @@ export default function BoardView({ setBoardId }: Props) {
   const [nodeUpdateDialog, setNodeUpdateDialog] =
     useState<NodeUpdateDialogProps>(NodeUpdateDialogDefault);
   const [edgeUpdateDialog, setEdgeUpdateDialog] =
-    useState<EdgeUpdateDialogProps>({
-      id: "",
-      label: "",
-      curveStyle: "",
-      lineStyle: "",
-      lineColor: "",
-      controlPointDistances: 0,
-      controlPointWeights: 0,
-      taxiDirection: "",
-      taxiTurn: 0,
-      targetArrowShape: "",
-      zIndex: 1,
-      show: false,
-    });
+    useState<EdgeUpdateDialogProps>(EdgeUpdateDialogDefault);
   const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
     x: 0,
     y: 0,
@@ -226,39 +213,29 @@ export default function BoardView({ setBoardId }: Props) {
 
       cyRef.current.on("dbltap", "node", function (evt: any) {
         let target = evt.target._private;
+        const {
+          backgroundImage,
+          board_id,
+          classes,
+          document,
+          locked,
+          parent,
+          user_id,
+          x,
+          y,
+          zIndexCompare,
+          ...rest
+        } = target.data;
         setNodeUpdateDialog({
-          id: target.data.id,
-          label: target.data.label,
-          type: target.data.type,
-          width: target.data.width,
-          height: target.data.height,
-          fontSize: target.data.fontSize,
-          fontColor: target.data.fontColor,
-          fontFamily: target.data.fontFamily,
-          customImage: target.data.customImage,
-          doc_id: target.scratch.doc_id,
-          textHAlign: target.data.textHAlign,
-          textVAlign: target.data.textVAlign,
-          backgroundColor: target.data.backgroundColor,
-          backgroundOpacity: target.data.backgroundOpacity,
-          zIndex: target.data.zIndex,
+          ...rest,
           show: true,
         });
       });
       cyRef.current.on("dbltap", "edge", function (evt: any) {
-        let target = evt.target._private;
+        let targetEdge = evt.target._private;
+        const { user_id, target, source, board_id, ...rest } = targetEdge.data;
         setEdgeUpdateDialog({
-          id: target.data.id,
-          label: target.data.label,
-          curveStyle: target.data.curveStyle,
-          lineStyle: target.data.lineStyle,
-          lineColor: target.data.lineColor,
-          controlPointDistances: target.data.controlPointDistances,
-          controlPointWeights: target.data.controlPointWeights,
-          taxiDirection: target.data.taxiDirection,
-          taxiTurn: target.data.taxiTurn,
-          targetArrowShape: target.data.targetArrowShape,
-          zIndex: target.data.zIndex,
+          ...rest,
           show: true,
         });
       });

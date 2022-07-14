@@ -10,9 +10,9 @@ import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import { NodeUpdateDialogProps } from "../../types/BoardTypes";
 import {
-  boardNodeFontSizes,
+  BoardFontSizes,
   boardNodeShapes,
-  nodeFontFamilies,
+  BoardFontFamilies,
   textHAlignOptions,
   textVAlignOptions,
 } from "../../utils/boardUtils";
@@ -83,13 +83,31 @@ export default function NodeUpdateDialog({
                   </div>
                   {/* Label size */}
 
+                  {/* Font Family */}
+
+                  <div className="w-4 flex flex-wrap">
+                    <label htmlFor="" className="w-full text-sm text-gray-400">
+                      Font Family
+                    </label>
+                    <Dropdown
+                      className="w-full"
+                      options={BoardFontFamilies}
+                      value={nodeUpdateDialog.fontFamily}
+                      onChange={(e) =>
+                        setNodeUpdateDialog((prev) => ({
+                          ...prev,
+                          fontFamily: e.value,
+                        }))
+                      }
+                    />
+                  </div>
                   <div className="w-3 flex flex-wrap">
                     <label className="w-full text-sm text-gray-400">
                       Label Size
                     </label>
                     <Dropdown
                       className="w-full"
-                      options={boardNodeFontSizes}
+                      options={BoardFontSizes}
                       placeholder="Label Font Size"
                       value={nodeUpdateDialog.fontSize}
                       onChange={(e) =>
@@ -100,26 +118,6 @@ export default function NodeUpdateDialog({
                       }
                     />
                   </div>
-
-                  {/* Font Family */}
-
-                  <div className="w-4 flex flex-wrap">
-                    <label htmlFor="" className="w-full text-sm text-gray-400">
-                      Font Family
-                    </label>
-                    <Dropdown
-                      className="w-full"
-                      options={nodeFontFamilies}
-                      value={nodeUpdateDialog.fontFamily}
-                      onChange={(e) =>
-                        setNodeUpdateDialog((prev) => ({
-                          ...prev,
-                          fontFamily: e.value,
-                        }))
-                      }
-                    />
-                  </div>
-
                   {/* Label color */}
                   <div className="w-4 flex flex-wrap justify-content-between align-items-center">
                     <label className="w-full text-sm text-gray-400">

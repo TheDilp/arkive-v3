@@ -12,7 +12,9 @@ import {
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
   boardEdgeTaxiDirections,
+  BoardFontSizes,
   edgeTargetArrowShapes,
+  BoardFontFamilies,
 } from "../../utils/boardUtils";
 import { useUpdateEdge } from "../../utils/customHooks";
 import { EdgeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
@@ -67,12 +69,66 @@ export default function EdgeUpdateDialog({
             placeholder="Edge Label"
             className="w-full"
           />
-          {/* <Dropdown
-              options={boardNodeFontSizes}
-              placeholder="Label Font Size"
-              value={value}
-              onChange={(e) => onChange(e.value)}
-            /> */}
+          <div className="w-full mt-2 flex justify-content-between">
+            <div className="w-4">
+              <label className="w-full text-sm text-gray-400">
+                Font Family
+              </label>
+              <Dropdown
+                className="w-full"
+                options={BoardFontFamilies}
+                placeholder="Label Fonts"
+                value={edgeUpdateDialog.fontFamily}
+                onChange={(e) =>
+                  setEdgeUpdateDialog((prev) => ({
+                    ...prev,
+                    fontFamily: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="w-3">
+              <label className="w-full text-sm text-gray-400">Label Size</label>
+              <Dropdown
+                className="w-full"
+                options={BoardFontSizes}
+                placeholder="Label Font Size"
+                value={edgeUpdateDialog.fontSize}
+                onChange={(e) =>
+                  setEdgeUpdateDialog((prev) => ({
+                    ...prev,
+                    fontSize: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            {/* <div className="w-4 flex flex-wrap justify-content-between align-items-center">
+              <label className="w-full text-sm text-gray-400">
+                Label Color
+              </label>
+              <InputText
+                className="w-8"
+                value={edgeUpdateDialog.fontColor}
+                onChange={(e) =>
+                  setNodeUpdateDialog((prev) => ({
+                    ...prev,
+                    fontColor: e.target.value,
+                  }))
+                }
+              />
+              <ColorPicker
+                className="w-min"
+                value={nodeUpdateDialog.fontColor}
+                onChange={(e) =>
+                  setNodeUpdateDialog((prev) => ({
+                    ...prev,
+                    fontColor: ("#" +
+                      e.value?.toString().replaceAll("#", "")) as string,
+                  }))
+                }
+              />
+            </div> */}
+          </div>
         </div>
 
         {/* Curve Type */}
