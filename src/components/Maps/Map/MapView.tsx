@@ -4,7 +4,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { useGetMapData } from "../../../utils/customHooks";
-import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import MapContextMenu from "../MapContextMenu";

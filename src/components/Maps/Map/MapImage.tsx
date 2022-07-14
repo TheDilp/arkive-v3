@@ -1,6 +1,11 @@
 import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
-import { ImageOverlay, useMapEvents } from "react-leaflet";
+import {
+  ImageOverlay,
+  LayerGroup,
+  LayersControl,
+  useMapEvents,
+} from "react-leaflet";
 import { MapProps, UpdateMarkerInputs } from "../../../custom-types";
 import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
 import MapMarker from "./MapMarker/MapMarker";
@@ -62,6 +67,7 @@ export default function MapImage({
       document.removeEventListener("keyup", () => {});
     };
   }, []);
+
   return (
     <>
       <MarkerContextMenu
@@ -73,23 +79,31 @@ export default function MapImage({
         {...updateMarkerDialog}
         setVisible={setUpdateMarkerDialog}
       />
-      <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
-      {markers
-        .filter((marker) =>
-          markerFilter === "map"
-            ? marker.map_link
-            : markerFilter === "doc"
-            ? marker.doc_id
-            : true
-        )
-        .map((marker) => (
-          <MapMarker
-            key={marker.id}
-            {...marker}
-            mcm={mcm}
-            setUpdateMarkerDialog={setUpdateMarkerDialog}
-          />
-        ))}
+      <LayersControl position="topright">
+        <LayersControl.BaseLayer name="Map" checked={true}>
+          <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
+        </LayersControl.BaseLayer>
+        <LayersControl.Overlay name="Markers" checked={true}>
+          <LayerGroup>
+            {markers
+              .filter((marker) =>
+                markerFilter === "map"
+                  ? marker.map_link
+                  : markerFilter === "doc"
+                  ? marker.doc_id
+                  : true
+              )
+              .map((marker) => (
+                <MapMarker
+                  key={marker.id}
+                  {...marker}
+                  mcm={mcm}
+                  setUpdateMarkerDialog={setUpdateMarkerDialog}
+                />
+              ))}
+          </LayerGroup>
+        </LayersControl.Overlay>
+      </LayersControl>
     </>
   );
 }
