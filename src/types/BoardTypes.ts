@@ -57,6 +57,8 @@ export type BoardItemDisplayDialogProps = {
   depth: number;
   folder: boolean;
   expanded: boolean;
+  defaultNodeColor: string;
+  defaultEdgeColor: string;
   public: boolean;
   show: boolean;
 };

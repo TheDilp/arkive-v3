@@ -4,11 +4,11 @@ import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { To, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { BoardItemDisplayDialogProps } from "../../../custom-types";
+import { BoardItemDisplayDialogProps } from "../../../types/BoardTypes";
 import {
   useCreateBoard,
   useDeleteBoard,
-  useUpdateBoard
+  useUpdateBoard,
 } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 type Props = {
@@ -16,7 +16,6 @@ type Props = {
   boardId: string;
   displayDialog: BoardItemDisplayDialogProps;
   setDisplayDialog: (displayDialog: BoardItemDisplayDialogProps) => void;
-  cyRef: any;
 };
 
 export default function BoardTreeItemContext({
@@ -24,7 +23,6 @@ export default function BoardTreeItemContext({
   boardId,
   displayDialog,
   setDisplayDialog,
-  cyRef,
 }: Props) {
   const { project_id } = useParams();
   const newBoardMutation = useCreateBoard();

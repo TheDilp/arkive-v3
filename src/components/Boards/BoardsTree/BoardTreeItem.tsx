@@ -1,7 +1,10 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Link, useParams } from "react-router-dom";
-import { BoardItemDisplayDialogProps, BoardProps } from "../../../custom-types";
+import {
+  BoardItemDisplayDialogProps,
+  BoardProps,
+} from "../../../types/BoardTypes";
 import { useUpdateBoard } from "../../../utils/customHooks";
 type Props = {
   boardId: string;
@@ -38,6 +41,8 @@ export default function BoardTreeItem({
         setDisplayDialog({
           id: node.id as string,
           title: node.text,
+          defaultNodeColor: node.data?.defaultNodeColor || "#595959",
+          defaultEdgeColor: node.data?.defaultEdgeColor || "#595959",
           parent: node.data?.parent?.id || "0",
           folder: node.droppable || false,
           depth,

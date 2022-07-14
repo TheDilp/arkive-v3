@@ -6,6 +6,7 @@ import {
   BoardProps,
 } from "../../../types/BoardTypes";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
+import { BoardUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
 import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
@@ -32,16 +33,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const { data: boards } = useGetBoards(project_id as string);
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const [updateBoardDialog, setUpdateBoardDialog] =
-    useState<BoardItemDisplayDialogProps>({
-      id: "",
-      title: "",
-      parent: "",
-      show: false,
-      folder: false,
-      expanded: false,
-      depth: 0,
-      public: false,
-    });
+    useState<BoardItemDisplayDialogProps>(BoardUpdateDialogDefault);
   const handleDrop = (
     newTree: NodeModel<BoardProps>[],
     {
@@ -104,7 +96,6 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
         boardId={boardId}
         displayDialog={updateBoardDialog}
         setDisplayDialog={setUpdateBoardDialog}
-        cyRef={cyRef}
       />
       {updateBoardDialog.show && (
         <BoardUpdateDialog

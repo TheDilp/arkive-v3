@@ -947,6 +947,8 @@ export function useCreateBoard() {
                 {
                   ...newBoard,
                   parent: { id: "", title: "" },
+                  defaultNodeColor: "#595959",
+                  defaultEdgeColor: "#595959",
                   nodes: [],
                   edges: [],
                   expanded: false,
@@ -959,6 +961,8 @@ export function useCreateBoard() {
                 {
                   ...newBoard,
                   parent: { id: "", title: "" },
+                  defaultNodeColor: "#595959",
+                  defaultEdgeColor: "#595959",
                   nodes: [],
                   edges: [],
                   expanded: false,
@@ -990,7 +994,8 @@ export function useUpdateBoard(project_id: string) {
       id: string;
       title?: string;
       parent?: string | null;
-      layout?: string;
+      defaultNodeColor?: string;
+      defaultEdgeColor?: string;
       expanded?: boolean;
       public?: boolean;
     }) => {
