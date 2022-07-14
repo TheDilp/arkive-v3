@@ -2,7 +2,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { MapItemDisplayDialogProps } from "../../../custom-types";
+import { MapItemDisplayDialogProps } from "../../../types/MapTypes";
 import { useDeleteMap, useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   cm: React.RefObject<ContextMenu>;

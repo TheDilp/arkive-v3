@@ -1,16 +1,16 @@
 import L from "leaflet";
 import ReactDOM from "react-dom/server";
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup, Tooltip } from "react-leaflet";
 import { Link, useNavigate } from "react-router-dom";
-import { MapMarkerProps } from "../../../custom-types";
+import { MapMarkerProps } from "../../../types/MapTypes";
 
 export default function PublicDraggableMarker({
   icon,
   color,
+  backgroundColor,
   text,
   lat,
   lng,
-  doc_id,
   map_link,
 }: MapMarkerProps & {
   mcm: any;
@@ -40,10 +40,13 @@ export default function PublicDraggableMarker({
               <div
                 style={{
                   zIndex: 999999,
-                  background: `url('https://api.iconify.design/mdi/${icon}.svg?color=%23${color}') no-repeat`,
+                  background: `url('https://api.iconify.design/mdi/${icon.replace(
+                    /.*:/g,
+                    ""
+                  )}.svg?color=%23${color.replace("#", "")}') no-repeat`,
                   backgroundSize: "2rem",
                   backgroundPosition: "center",
-                  backgroundColor: "#000",
+                  backgroundColor,
                 }}
                 className="w-full h-full border-circle fixed p-4"
                 onContextMenu={(e) => {
@@ -57,13 +60,13 @@ export default function PublicDraggableMarker({
       })}
     >
       {text && (
-        <Popup position={[51.505, -0]}>
-          {doc_id ? (
-            <Link to={`../../wiki/${doc_id}`}>{text}</Link>
-          ) : (
-            <div className="Lato text-center">{text}</div>
-          )}
-        </Popup>
+        <Tooltip
+          offset={[0, -50]}
+          direction="top"
+          className="p-2 bg-gray-800 border-rounded-sm border-gray-800 border-solid text-white text-lg"
+        >
+          <div className="Lato text-center">{text}</div>
+        </Tooltip>
       )}
     </Marker>
   );

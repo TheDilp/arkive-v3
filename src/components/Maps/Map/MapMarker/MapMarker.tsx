@@ -3,7 +3,7 @@ import { useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
-import { MapMarkerProps } from "../../../../custom-types";
+import { MapMarkerProps } from "../../../../types/MapTypes";
 import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
 export default function MapMarker({
