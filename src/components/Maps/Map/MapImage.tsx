@@ -6,7 +6,7 @@ import {
   LayersControl,
   useMapEvents,
 } from "react-leaflet";
-import { MapProps, UpdateMarkerInputs } from "../../../custom-types";
+import { MapProps, UpdateMarkerInputs } from "../../../types/MapTypes";
 import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
 import MapMarker from "./MapMarker/MapMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";

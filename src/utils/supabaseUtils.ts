@@ -1,19 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 
 import {
-  CreateMapMarkerProps,
   DocumentCreateProps,
   DocumentProps,
   DocumentUpdateProps,
   ImageProps,
-  MapCreateProps,
-  MapMarkerProps,
-  MapProps,
-  MapUpdateProps,
   ProfileProps,
   ProjectProps,
   TemplateCreateProps,
-  UpdateMapMarkerProps,
 } from "../custom-types";
 import {
   BoardEdgeProps,
@@ -25,6 +19,14 @@ import {
   UpdateEdgeProps,
   UpdateNodeProps,
 } from "../types/BoardTypes";
+import {
+  CreateMapMarkerProps,
+  MapCreateProps,
+  MapMarkerProps,
+  MapProps,
+  MapUpdateProps,
+  UpdateMapMarkerProps,
+} from "../types/MapTypes";
 import { toastError } from "./utils";
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -132,7 +134,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
+      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link), map_layers(*)"
     )
     .eq("project_id", project_id)
     .order("sort", { ascending: true });

@@ -3,6 +3,7 @@ import L, { LatLngBoundsExpression } from "leaflet";
 import { useContext, useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
+import { MapMarkerProps } from "../../../types/MapTypes";
 import { useGetMapData } from "../../../utils/customHooks";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
@@ -60,7 +61,9 @@ export default function MapView({
     //  Wait for map to finish loading
     setTimeout(() => {
       if (marker_id) {
-        let marker = mapData?.markers.find((marker) => marker.id === marker_id);
+        let marker = mapData?.markers.find(
+          (marker: MapMarkerProps) => marker.id === marker_id
+        );
         if (marker) {
           mapRef.current.flyTo([marker.lat, marker.lng]);
         } else {
