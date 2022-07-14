@@ -8,7 +8,7 @@ import {
   useGetDocumentData,
   useGetDocuments,
 } from "../../../utils/customHooks";
-import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { DocItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 import { toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
@@ -22,7 +22,7 @@ export default function FolderPage() {
   const { project_id, doc_id } = useParams();
   const [children, setChildren] = useState<DocumentProps[]>([]);
   const [displayDialog, setDisplayDialog] = useState<DocItemDisplayDialogProps>(
-    docItemDisplayDialogDefault
+    DocItemDisplayDialogDefault
   );
   const cm = useRef() as any;
   const { id: docId, setId: setDocId } = useContext(ProjectContext);

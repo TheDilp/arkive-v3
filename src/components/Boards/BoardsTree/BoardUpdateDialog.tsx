@@ -2,51 +2,27 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { Dispatch, SetStateAction } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
   BoardItemDisplayDialogProps,
   BoardProps,
   UpdateBoardInputs,
-} from "../../../custom-types";
+} from "../../../types/BoardTypes";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
+import { BoardUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
 
 type Props = {
   visible: BoardItemDisplayDialogProps;
-  setVisible: (visible: BoardItemDisplayDialogProps) => void;
+  setVisible: Dispatch<SetStateAction<BoardItemDisplayDialogProps>>;
 };
 
 export default function BoardUpdateDialog({ visible, setVisible }: Props) {
   const { project_id } = useParams();
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const { data: boards } = useGetBoards(project_id as string);
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UpdateBoardInputs>({
-    defaultValues: {
-      title: visible.title,
-      parent: visible.parent === "0" ? undefined : visible.parent,
-    },
-  });
-  const onSubmit: SubmitHandler<UpdateBoardInputs> = (data) => {
-    updateBoardMutation.mutate({
-      id: visible.id,
-      ...data,
-    });
-    setVisible({
-      id: "",
-      title: "",
-      parent: "",
-      folder: false,
-      depth: 0,
-      show: false,
-      expanded: false,
-      public: false,
-    });
-  };
+
   function recursiveDescendantRemove(
     doc: BoardProps,
     index: number,
@@ -74,67 +50,59 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
       header={`Update Board ${visible.title}`}
       visible={visible.show}
       modal={false}
-      onHide={() =>
-        setVisible({
-          id: "",
-          title: "",
-          parent: "",
-          folder: false,
-          depth: 0,
-          show: false,
-          expanded: false,
-          public: false,
-        })
-      }
+      className="w-2"
+      onHide={() => setVisible(BoardUpdateDialogDefault)}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-wrap justify-content-center">
-          <div className="w-8">
+      <div>
+        <div className="flex flex-wrap justify-content-center row-gap-2">
+          <div className="w-full">
+            <label className="w-full text-sm text-gray-400">Board Title</label>
             <InputText
               placeholder="Board Title"
               className="w-full"
-              {...register("title", { required: true, maxLength: 100 })}
+              value={visible.title}
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  title: e.target.value,
+                }))
+              }
               autoFocus={true}
             />
-            {errors.title?.type === "required" && (
-              <span className="py-1" style={{ color: "var(--red-500)" }}>
-                <i className="pi pi-exclamation-triangle"></i>
-                This field is required!
-              </span>
-            )}
           </div>
 
-          <div className="w-8">
-            <Controller
-              name="parent"
-              control={control}
-              render={({ field }) => (
-                <Dropdown
-                  className="w-full"
-                  placeholder="Board Folder"
-                  optionLabel="title"
-                  optionValue="id"
-                  value={field.value}
-                  onChange={(e) => field.onChange(e.value)}
-                  options={
-                    boards
-                      ? [
-                          { title: "Root", id: null },
-                          ...boards.filter((board, idx, array) => {
-                            if (!board.folder || board.id === visible.id)
-                              return false;
-                            return recursiveDescendantRemove(
-                              board,
-                              idx,
-                              array,
-                              visible.id
-                            );
-                          }),
-                        ]
-                      : []
-                  }
-                />
-              )}
+          <div className="w-full">
+            <label className="w-full text-sm text-gray-400">Board Folder</label>
+
+            <Dropdown
+              className="w-full"
+              placeholder="Board Folder"
+              optionLabel="title"
+              optionValue="id"
+              value={visible.parent}
+              onChange={(e) =>
+                setVisible((prev) => ({
+                  ...prev,
+                  parent: e.value,
+                }))
+              }
+              options={
+                boards
+                  ? [
+                      { title: "Root", id: null },
+                      ...boards.filter((board, idx, array) => {
+                        if (!board.folder || board.id === visible.id)
+                          return false;
+                        return recursiveDescendantRemove(
+                          board,
+                          idx,
+                          array,
+                          visible.id
+                        );
+                      }),
+                    ]
+                  : []
+              }
             />
           </div>
           <div className="w-full flex justify-content-end">
@@ -147,7 +115,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
             />
           </div>
         </div>
-      </form>
+      </div>
     </Dialog>
   );
 }

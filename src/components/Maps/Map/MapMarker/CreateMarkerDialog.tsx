@@ -141,7 +141,7 @@ export default function CreateMarkerDialog({
                   backgroundColor: e.value as string,
                 }))
               }
-            />
+          />
           </div>
         </div>
         <div className="w-full">

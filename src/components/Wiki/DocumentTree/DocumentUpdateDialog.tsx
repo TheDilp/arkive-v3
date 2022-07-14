@@ -10,7 +10,7 @@ import {
   DocumentProps,
 } from "../../../custom-types";
 import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
-import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { DocItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 
 type Props = {
   displayDialog: DocItemDisplayDialogProps;
@@ -44,7 +44,7 @@ export default function DocumentUpdateDialog({
       id: displayDialog.id,
       ...data,
     });
-    setDisplayDialog(docItemDisplayDialogDefault);
+    setDisplayDialog(DocItemDisplayDialogDefault);
   };
 
   function recursiveDescendantFilter(
@@ -74,7 +74,7 @@ export default function DocumentUpdateDialog({
       header={`Edit ${displayDialog.title}`}
       visible={displayDialog.show}
       className="w-3"
-      onHide={() => setDisplayDialog(docItemDisplayDialogDefault)}
+      onHide={() => setDisplayDialog(DocItemDisplayDialogDefault)}
       modal={false}
     >
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>

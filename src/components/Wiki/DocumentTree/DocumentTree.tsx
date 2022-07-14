@@ -12,7 +12,7 @@ import {
   useSortChildren,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { docItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { DocItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import IconSelectMenu from "../../Util/IconSelectMenu";
@@ -34,7 +34,7 @@ export default function DocumentsTree() {
 
   const { data: documents } = useGetDocuments(project_id as string);
   const [displayDialog, setDisplayDialog] = useState<DocItemDisplayDialogProps>(
-    docItemDisplayDialogDefault
+    DocItemDisplayDialogDefault
   );
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const sortChildrenMutation = useSortChildren();

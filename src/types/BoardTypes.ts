@@ -8,6 +8,8 @@ export type BoardProps = {
   project_id: string;
   nodes: BoardNodeProps[];
   edges: BoardEdgeProps[];
+  defaultNodeColor: string;
+  defaultEdgeColor: string;
   folder: boolean;
   expanded: boolean;
   public: boolean;
@@ -27,6 +29,8 @@ export type UpdateBoardProps = {
   title?: string;
   parent?: string | null;
   expanded?: boolean;
+  defaultNodeColor?: string;
+  defaultEdgeColor?: string;
   public?: boolean;
 };
 export type UpdateBoardInputs = Pick<BoardProps, "title"> & {

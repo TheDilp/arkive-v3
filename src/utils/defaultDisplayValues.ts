@@ -1,6 +1,6 @@
 // Default empty props for dialogs
 
-export const docItemDisplayDialogDefault = {
+export const DocItemDisplayDialogDefault = {
   id: "",
   title: "",
   show: false,
@@ -8,6 +8,19 @@ export const docItemDisplayDialogDefault = {
   depth: 0,
   template: false,
   parent: "",
+};
+
+export const BoardUpdateDialogDefault = {
+  id: "",
+  title: "",
+  defaultNodeColor: "#595959",
+  defaultEdgeColor: "#595959",
+  parent: "",
+  folder: false,
+  depth: 0,
+  show: false,
+  expanded: false,
+  public: false,
 };
 
 export const NodeUpdateDialogDefault = {
