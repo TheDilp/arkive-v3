@@ -1345,6 +1345,9 @@ export function useCreateEdge(project_id: string) {
       curveStyle: string;
       lineStyle: string;
       lineColor: string;
+      fontColor: string;
+      fontFamily: string;
+      fontSize: number;
       controlPointDistances: number;
       controlPointWeights: number;
       taxiDirection: string;

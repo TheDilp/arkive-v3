@@ -188,6 +188,7 @@ export type BoardEdgeProps = {
   curveStyle: string;
   lineStyle: string;
   lineColor: string;
+  fontColor: string;
   fontFamily: string;
   fontSize: number;
   controlPointDistances: number;
@@ -208,6 +209,7 @@ export type CytoscapeEdgeProps = {
     | "curveStyle"
     | "lineStyle"
     | "lineColor"
+    | "fontColor"
     | "fontFamily"
     | "fontSize"
     | "controlPointDistances"
@@ -225,6 +227,7 @@ export type UpdateEdgeInputs = Pick<
   | "curveStyle"
   | "lineStyle"
   | "lineColor"
+  | "fontColor"
   | "fontFamily"
   | "fontSize"
   | "controlPointDistances"
@@ -242,6 +245,7 @@ export type UpdateEdgeProps = {
   curveStyle?: string;
   lineStyle?: string;
   lineColor?: string;
+  fontColor?: string;
   fontFamily?: string;
   fontSize?: number;
   controlPointDistances?: number;
@@ -257,6 +261,7 @@ export type EdgeUpdateDialogProps = {
   curveStyle: string;
   lineStyle: string;
   lineColor: string;
+  fontColor: string;
   fontFamily: string;
   fontSize: number;
   controlPointDistances: number;

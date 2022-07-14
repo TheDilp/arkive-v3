@@ -102,7 +102,7 @@ export default function EdgeUpdateDialog({
                 }
               />
             </div>
-            {/* <div className="w-4 flex flex-wrap justify-content-between align-items-center">
+            <div className="w-4 flex flex-wrap justify-content-between align-items-center">
               <label className="w-full text-sm text-gray-400">
                 Label Color
               </label>
@@ -110,7 +110,7 @@ export default function EdgeUpdateDialog({
                 className="w-8"
                 value={edgeUpdateDialog.fontColor}
                 onChange={(e) =>
-                  setNodeUpdateDialog((prev) => ({
+                  setEdgeUpdateDialog((prev) => ({
                     ...prev,
                     fontColor: e.target.value,
                   }))
@@ -118,16 +118,16 @@ export default function EdgeUpdateDialog({
               />
               <ColorPicker
                 className="w-min"
-                value={nodeUpdateDialog.fontColor}
+                value={edgeUpdateDialog.fontColor}
                 onChange={(e) =>
-                  setNodeUpdateDialog((prev) => ({
+                  setEdgeUpdateDialog((prev) => ({
                     ...prev,
                     fontColor: ("#" +
                       e.value?.toString().replaceAll("#", "")) as string,
                   }))
                 }
               />
-            </div> */}
+            </div>
           </div>
         </div>
 

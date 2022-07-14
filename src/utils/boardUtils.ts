@@ -367,7 +367,9 @@ export const cytoscapeStylesheet = [
     selector: "edge[classes]",
     style: {
       label: "data(label)",
-      color: "white",
+      color: "data(fontColor)",
+      "font-family": "data(fontFamily)",
+      "font-size": "data(fontSize)",
       "text-outline-color": "black",
       "text-outline-width": "2px",
       "target-arrow-shape": "data(targetArrowShape)",

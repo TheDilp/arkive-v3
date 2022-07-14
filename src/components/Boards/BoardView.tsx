@@ -26,7 +26,10 @@ import {
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
-import { EdgeUpdateDialogDefault, NodeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
+import {
+  EdgeUpdateDialogDefault,
+  NodeUpdateDialogDefault,
+} from "../../utils/defaultDisplayValues";
 import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
@@ -130,6 +133,9 @@ export default function BoardView({ setBoardId }: Props) {
         curveStyle: "straight",
         lineStyle: "solid",
         lineColor: color || "#595959",
+        fontColor: "#ffffff",
+        fontFamily: "Lato",
+        fontSize: 16,
         controlPointDistances: -100,
         controlPointWeights: 0.5,
         taxiDirection: "auto",
@@ -233,7 +239,8 @@ export default function BoardView({ setBoardId }: Props) {
       });
       cyRef.current.on("dbltap", "edge", function (evt: any) {
         let targetEdge = evt.target._private;
-        const { user_id, target, source, board_id, ...rest } = targetEdge.data;
+        const { user_id, target, source, board_id, classes, ...rest } =
+          targetEdge.data;
         setEdgeUpdateDialog({
           ...rest,
           show: true,
