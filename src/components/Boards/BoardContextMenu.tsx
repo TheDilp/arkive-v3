@@ -34,7 +34,6 @@ export default function BoardContextMenu({
   const deleteNodeMutation = useDeleteNode(project_id as string);
   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
   const deleteEdgeMutation = useDeleteEdge(project_id as string);
-  console.log(board);
   const boardItems = [
     {
       label: "New Node",

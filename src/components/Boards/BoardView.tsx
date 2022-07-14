@@ -133,7 +133,7 @@ export default function BoardView({ setBoardId }: Props) {
 
   // Change function when the board_id changes
   const makeEdgeCallback = useCallback(
-    (source, target, color: string) => {
+    (source, target, color?: string) => {
       let boardId = board_id;
       createEdgeMutation.mutate({
         id: uuid(),

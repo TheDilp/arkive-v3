@@ -10,6 +10,7 @@ import { NodeUpdateDialogProps } from "../../../types/BoardTypes";
 import {
   boardNodeFontSizes,
   boardNodeShapes,
+  nodeFontFamilies,
   textHAlignOptions,
   textVAlignOptions,
 } from "../../../utils/boardUtils";
@@ -23,10 +24,12 @@ import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
+type ManyNodesProps = Omit<NodeUpdateDialogProps, "id">;
+
 export default function UpdateManyNodes() {
-  const [manyNodesData, setManyNodesData] = useState<
-    Omit<NodeUpdateDialogProps, "id">
-  >(NodeUpdateDialogDefault);
+  const [manyNodesData, setManyNodesData] = useState<ManyNodesProps>(
+    NodeUpdateDialogDefault
+  );
   const { cyRef } = useContext(BoardRefsContext);
   const { project_id, board_id } = useParams();
   const updateNodeMutation = useUpdateNode(project_id as string);
@@ -62,7 +65,7 @@ export default function UpdateManyNodes() {
             <InputText
               value={manyNodesData.label}
               onChange={(e) =>
-                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                setManyNodesData((prev: ManyNodesProps) => ({
                   ...prev,
                   label: e.target.value,
                 }))
@@ -77,7 +80,7 @@ export default function UpdateManyNodes() {
               placeholder="Label Font Size"
               value={manyNodesData.fontSize}
               onChange={(e) =>
-                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                setManyNodesData((prev: ManyNodesProps) => ({
                   ...prev,
                   fontSize: e.value,
                 }))
@@ -100,9 +103,71 @@ export default function UpdateManyNodes() {
               }}
             />
 
+            <div className="flex flex-nowrap justify-content-start align-items-end align-content-center w-full mt-1">
+              <div className="w-4">
+                <label htmlFor="" className="text-sm text-gray-400">
+                  Font Family
+                </label>
+                <Dropdown
+                  className="w-full"
+                  options={nodeFontFamilies}
+                  value={manyNodesData.fontFamily}
+                  onChange={(e) =>
+                    setManyNodesData((prev: ManyNodesProps) => ({
+                      ...prev,
+                      fontFamily: e.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="w-6 flex flex-wrap mr-5">
+                <label className="w-full text-sm text-gray-400 text-center">
+                  Label Color
+                </label>
+                <div className="flex justify-content-between align-items-center">
+                  <InputText
+                    value={manyNodesData.fontColor}
+                    className="w-8 ml-2"
+                    onChange={(e) =>
+                      setManyNodesData((prev: ManyNodesProps) => ({
+                        ...prev,
+                        fontColor: e.target.value,
+                      }))
+                    }
+                  />
+                  <ColorPicker
+                    className="w-3"
+                    value={manyNodesData.fontColor}
+                    onChange={(e) =>
+                      setManyNodesData((prev: ManyNodesProps) => ({
+                        ...prev,
+                        fontColor: e.value as string,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+              <Button
+                type="submit"
+                className="p-button-square p-button-success p-button-outlined w-2"
+                icon="pi pi-save"
+                iconPos="right"
+                onClick={() => {
+                  if (!cyRef) return;
+                  updateManyNodesFunction(
+                    {
+                      fontFamily: manyNodesData.fontFamily,
+                      fontColor:
+                        "#" + manyNodesData.fontColor.replaceAll("#", ""),
+                    },
+                    cyRef
+                  );
+                }}
+              />
+            </div>
             <div className="flex flex-nowrap justify-content-between align-items-end align-content-center w-full mt-1">
               <div className="w-4">
-                <label htmlFor="" className="text-xs text-gray-400">
+                <label htmlFor="" className="text-sm text-gray-400">
                   Horizontal Align
                 </label>
                 <Dropdown
@@ -110,17 +175,15 @@ export default function UpdateManyNodes() {
                   options={textHAlignOptions}
                   value={manyNodesData.textHAlign}
                   onChange={(e) =>
-                    setManyNodesData(
-                      (prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                        ...prev,
-                        textHAlign: e.value,
-                      })
-                    )
+                    setManyNodesData((prev: ManyNodesProps) => ({
+                      ...prev,
+                      textHAlign: e.value,
+                    }))
                   }
                 />
               </div>
               <div className="w-4">
-                <label htmlFor="" className="text-xs text-gray-400">
+                <label htmlFor="" className="text-sm text-gray-400">
                   Vertical Align
                 </label>
                 <Dropdown
@@ -128,12 +191,10 @@ export default function UpdateManyNodes() {
                   options={textVAlignOptions}
                   value={manyNodesData.textVAlign}
                   onChange={(e) =>
-                    setManyNodesData(
-                      (prev: Omit<NodeUpdateDialogProps, "id">) => ({
-                        ...prev,
-                        textVAlign: e.value,
-                      })
-                    )
+                    setManyNodesData((prev: ManyNodesProps) => ({
+                      ...prev,
+                      textVAlign: e.value,
+                    }))
                   }
                 />
               </div>
@@ -169,7 +230,7 @@ export default function UpdateManyNodes() {
             filter
             value={manyNodesData.type}
             onChange={(e) =>
-              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+              setManyNodesData((prev: ManyNodesProps) => ({
                 ...prev,
                 type: e.value,
               }))
@@ -201,7 +262,7 @@ export default function UpdateManyNodes() {
             step={10}
             value={manyNodesData.width}
             onChange={(e) =>
-              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+              setManyNodesData((prev: ManyNodesProps) => ({
                 ...prev,
                 width: e.value as number,
               }))
@@ -219,7 +280,7 @@ export default function UpdateManyNodes() {
             step={10}
             value={manyNodesData.height}
             onChange={(e) =>
-              setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+              setManyNodesData((prev: ManyNodesProps) => ({
                 ...prev,
                 height: e.value as number,
               }))
@@ -254,7 +315,7 @@ export default function UpdateManyNodes() {
           filter
           emptyFilterMessage="No documents found"
           onChange={(e) => {
-            setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+            setManyNodesData((prev: ManyNodesProps) => ({
               ...prev,
               doc_id: e.value,
             }));
@@ -313,7 +374,7 @@ export default function UpdateManyNodes() {
           }
           value={manyNodesData.customImage}
           onChange={(e) =>
-            setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+            setManyNodesData((prev: ManyNodesProps) => ({
               ...prev,
               customImage: e.value,
             }))
@@ -346,7 +407,7 @@ export default function UpdateManyNodes() {
           className="w-9"
           value={manyNodesData.zIndex}
           onChange={(e) =>
-            setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+            setManyNodesData((prev: ManyNodesProps) => ({
               ...prev,
               zIndex: e.value as number,
             }))
@@ -379,7 +440,7 @@ export default function UpdateManyNodes() {
               className="w-1"
               value={manyNodesData.backgroundColor}
               onChange={(e) =>
-                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                setManyNodesData((prev: ManyNodesProps) => ({
                   ...prev,
                   backgroundColor: e.value as string,
                 }))
@@ -389,7 +450,7 @@ export default function UpdateManyNodes() {
               value={manyNodesData.backgroundColor}
               className="w-8 ml-2"
               onChange={(e) =>
-                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                setManyNodesData((prev: ManyNodesProps) => ({
                   ...prev,
                   backgroundColor: e.target.value,
                 }))
@@ -428,7 +489,7 @@ export default function UpdateManyNodes() {
               value={manyNodesData.backgroundOpacity}
               inputClassName="w-full"
               onChange={(e) =>
-                setManyNodesData((prev: Omit<NodeUpdateDialogProps, "id">) => ({
+                setManyNodesData((prev: ManyNodesProps) => ({
                   ...prev,
                   backgroundOpacity: e.value as number,
                 }))
