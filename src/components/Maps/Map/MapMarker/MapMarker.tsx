@@ -97,7 +97,7 @@ export default function MapMarker({
                   background: `url('https://api.iconify.design/mdi/${icon.replace(
                     /.*:/g,
                     ""
-                  )}.svg?color=%23${color}') no-repeat`,
+                  )}.svg?color=%23${color.replace("#", "")}') no-repeat`,
                   backgroundSize: "2rem",
                   backgroundPosition: "center",
                   backgroundColor,

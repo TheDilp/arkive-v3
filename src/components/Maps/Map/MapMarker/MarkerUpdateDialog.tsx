@@ -17,7 +17,7 @@ import {
   useUpdateMapMarker,
 } from "../../../../utils/customHooks";
 import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
-import CreateMarkerIconSelect from "./MarkerIconSelect";
+import MarkerIconSelect from "./MarkerIconSelect";
 type Props = {
   id: string;
   show: boolean;
@@ -93,7 +93,7 @@ export default function MarkerUpdateDialog({
               })
             }
           />
-          <CreateMarkerIconSelect
+          <MarkerIconSelect
             {...iconSelect}
             setValue={(icon: string) =>
               setVisible((prev) => ({

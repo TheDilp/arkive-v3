@@ -26,7 +26,7 @@ type Props = {
   setValue: (value: string) => void;
 };
 
-export default function CreateMarkerIconSelect({
+export default function MarkerIconSelect({
   top,
   left,
   show,
@@ -40,7 +40,7 @@ export default function CreateMarkerIconSelect({
   const rowVirtualizer = useVirtual({
     size: Math.ceil(
       iconList.filter((icon) =>
-        search ? icon.startsWith(search.toLowerCase()) : true
+        search ? icon.includes(search.toLowerCase()) : true
       ).length / 6
     ),
     parentRef,
@@ -61,7 +61,7 @@ export default function CreateMarkerIconSelect({
   useEffect(() => {
     setFilteredIconList(
       iconList.filter((icon) =>
-        search ? icon.startsWith(search.toLowerCase()) : true
+        search ? icon.includes(search.toLowerCase()) : true
       )
     );
   }, [search]);

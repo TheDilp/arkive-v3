@@ -13,7 +13,7 @@ import {
   useGetMaps,
 } from "../../../../utils/customHooks";
 import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
-import CreateMarkerIconSelect from "./MarkerIconSelect";
+import MarkerIconSelect from "./MarkerIconSelect";
 
 type Props = {
   lat: number;
@@ -45,9 +45,10 @@ export default function CreateMarkerDialog({
       header="New Map Marker"
       visible={show}
       style={{ width: "25vw" }}
-      onHide={() =>
-        setVisible({ ...MapMarkerDialogDefault, lat: 0, lng: 0, show: false })
-      }
+      onHide={() => {
+        setNewMarkerData(MapMarkerDialogDefault);
+        setVisible({ lat: 0, lng: 0, show: false });
+      }}
       modal={false}
     >
       <div className="flex flex-wrap">
@@ -66,6 +67,8 @@ export default function CreateMarkerDialog({
             autoFocus={true}
           />
         </div>
+
+        {/* Icon */}
         <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">
           <span>Marker Icon:</span>
           <Icon
@@ -82,7 +85,7 @@ export default function CreateMarkerDialog({
               })
             }
           />
-          <CreateMarkerIconSelect
+          <MarkerIconSelect
             {...iconSelect}
             setValue={(icon: string) =>
               setNewMarkerData((prev) => ({
@@ -109,6 +112,33 @@ export default function CreateMarkerDialog({
                 setNewMarkerData((prev) => ({
                   ...prev,
                   color: e.value as string,
+                }))
+              }
+            />
+          </div>
+        </div>
+
+        {/* Background color */}
+        <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">
+          <span>Marker Background:</span>
+
+          <div className="flex align-items-center flex-row-reverse">
+            <InputText
+              value={newMarkerData.backgroundColor}
+              className="w-full ml-2"
+              onChange={(e) =>
+                setNewMarkerData((prev) => ({
+                  ...prev,
+                  backgroundColor: e.target.value,
+                }))
+              }
+            />
+            <ColorPicker
+              value={newMarkerData.backgroundColor}
+              onChange={(e) =>
+                setNewMarkerData((prev) => ({
+                  ...prev,
+                  backgroundColor: e.value as string,
                 }))
               }
             />
@@ -158,7 +188,9 @@ export default function CreateMarkerDialog({
               createMapMarkerMutation.mutate({
                 ...newMarkerData,
                 id: uuid(),
-                color: newMarkerData.color.replace("#", ""),
+                color: newMarkerData.color,
+                backgroundColor:
+                  "#" + newMarkerData.backgroundColor.replace("#", ""),
                 lat,
                 lng,
                 map_id: map_id as string,

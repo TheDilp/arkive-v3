@@ -47,7 +47,7 @@ export default function IconSelectMenu({
   useEffect(() => {
     setFilteredIconList(
       iconList.filter((icon) =>
-        search ? icon.startsWith(search.toLowerCase()) : true
+        search ? icon.includes(search.toLowerCase()) : true
       )
     );
   }, [search]);
