@@ -38,6 +38,7 @@ export default function MapCreateDialog({ mapData, setMapData }: Props) {
       id,
       project_id: project_id as string,
       expanded: false,
+      layers: [],
       ...data,
     });
     reset();

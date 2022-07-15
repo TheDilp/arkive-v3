@@ -1,5 +1,5 @@
 import L, { LatLngExpression } from "leaflet";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,26 +19,28 @@ export default function MapMarker({
   map_link,
   mcm,
   setUpdateMarkerDialog,
+  setMarkerSidebar,
 }: MapMarkerProps & {
   mcm: any;
-  setUpdateMarkerDialog: ({
-    id,
-    icon,
-    text,
-    color,
-    backgroundColor,
-    doc_id,
-    show,
-  }: {
-    id: string;
-    icon: string;
-    text: string;
-    color: string;
-    backgroundColor: string;
-    doc_id?: string;
-    map_link?: string;
-    show: boolean;
-  }) => void;
+  setMarkerSidebar: Dispatch<
+    SetStateAction<{
+      map_id: string | undefined;
+      doc_id: string | undefined;
+      show: boolean;
+    }>
+  >;
+  setUpdateMarkerDialog: Dispatch<
+    SetStateAction<{
+      id: string;
+      icon: string;
+      text: string;
+      color: string;
+      backgroundColor: string;
+      doc_id?: string;
+      map_link?: string;
+      show: boolean;
+    }>
+  >;
 }) {
   const { project_id } = useParams();
   const navigate = useNavigate();
@@ -46,6 +48,9 @@ export default function MapMarker({
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const eventHandlers = {
     click: (e: any) => {
+      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey) {
+        setMarkerSidebar({ map_id: map_link, doc_id, show: true });
+      }
       if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
       if (e.originalEvent.shiftKey && map_link) {
         navigate(`../../${map_link}`);
