@@ -23,6 +23,7 @@ import {
   CreateMapLayerProps,
   CreateMapMarkerProps,
   CreateMapProps,
+  MapLayerProps,
   MapMarkerProps,
   MapProps,
   MapUpdateProps as UpdateMapProps,
@@ -136,7 +137,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link), map_layers(*, images(id, title, link))"
+      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link), map_layers(*, image(id, title, link, type))"
     )
     .eq("project_id", project_id)
     .order("sort", { ascending: true });
@@ -436,7 +437,8 @@ export const updateMapLayer = async (
       .update({
         ...UpdateMapLayerProps,
         image: UpdateMapLayerProps.image?.id || undefined,
-      });
+      })
+      .eq("id", UpdateMapLayerProps.id);
 
     if (layer) return layer;
     if (error) {

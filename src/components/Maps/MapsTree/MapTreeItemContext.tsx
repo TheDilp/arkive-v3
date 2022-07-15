@@ -75,7 +75,8 @@ export default function MapTreeItemContext({
     {
       label: "Manage Layers",
       icon: "pi pi-clone",
-      command: () => setUpdateMapLayers({ map_id: mapId, show: true }),
+      command: () =>
+        setUpdateMapLayers({ map_id: displayDialog.id, show: true }),
     },
     { separator: true },
     {

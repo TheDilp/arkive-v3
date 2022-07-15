@@ -1,4 +1,5 @@
 import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import { useGetImages } from "../../utils/customHooks";
@@ -17,9 +18,10 @@ export default function ImageSelectDropdown({
 }: Props) {
   const { project_id } = useParams();
   const images = useGetImages(project_id as string);
+  if (images?.isLoading) return <></>;
   return (
     <Dropdown
-      className="w-10"
+      className="w-full"
       filter
       filterBy="title"
       options={
@@ -36,6 +38,7 @@ export default function ImageSelectDropdown({
       optionLabel="title"
       value={value}
       onChange={onChange}
+      placeholder="Select Image"
       itemTemplate={(item: ImageProps) => (
         <ImgDropdownItem title={item.title} link={item.link} />
       )}

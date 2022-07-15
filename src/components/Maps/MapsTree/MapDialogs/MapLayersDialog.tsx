@@ -1,15 +1,19 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   useCreateMapLayer,
   useGetMapData,
+  useUpdateMapLayer,
 } from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
-import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import ImageSelectDropdown from "../../../Util/ImageSelectDropdown";
+import { ImageProps } from "../../../../custom-types";
+import { InputText } from "primereact/inputtext";
+import { useQueryClient } from "react-query";
+import { MapProps } from "../../../../types/MapTypes";
 
 type Props = {
   visible: { map_id: string; show: boolean };
@@ -17,16 +21,32 @@ type Props = {
 };
 
 export default function MapLayersDialog({ visible, setVisible }: Props) {
+  const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const map = useGetMapData(project_id as string, visible.map_id);
+  const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
+  const map = maps?.filter((map) => map.id === visible.map_id)[0];
   const createMapLayerMutation = useCreateMapLayer(project_id as string);
+  const updateMapLayerMutation = useUpdateMapLayer(project_id as string);
+  const [layers, setLayers] = useState(map?.map_layers);
+
+  useEffect(() => {
+    if (map) {
+      setLayers(map.map_layers);
+    }
+  }, [map, visible.map_id]);
+
   return (
     <Dialog
+      header={`Update ${map?.title} Layers`}
       visible={visible.show}
-      onHide={() => setVisible({ map_id: "", show: false })}
+      className="w-3"
+      onHide={() => {
+        setVisible({ map_id: "", show: false });
+        setLayers([]);
+      }}
       modal={false}
     >
-      <div className="w-full flex justify-content-between align-items-center">
+      <div className="w-full mb-2 flex justify-content-between align-items-center">
         <span className="text-blue-300 font-medium">New Layer</span>
         <Button
           className="p-button-outlined"
@@ -42,16 +62,58 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
         </Button>
       </div>
       <div className="w-full flex flex-wrap">
-        {map?.map_layers.map((layer) => (
-          <div key={layer.id} className="w-full">
-            {layer.title}
-            <ImageSelectDropdown
-              value={layer.image}
-              onChange={() => {}}
-              filter="Map"
-            />
-          </div>
-        ))}
+        {layers &&
+          layers.map((layer) => (
+            <div
+              key={layer.id}
+              className="w-full flex justify-content-between align-items-center"
+            >
+              <InputText
+                value={layer.title}
+                onChange={(e) =>
+                  setLayers((prev) =>
+                    prev?.map((prevLayer) => {
+                      if (prevLayer.id === layer.id) {
+                        layer = { ...layer, title: e.target.value };
+                        return layer;
+                      } else {
+                        return prevLayer;
+                      }
+                    })
+                  )
+                }
+              />
+              <div className="w-5">
+                <ImageSelectDropdown
+                  value={layer.image}
+                  onChange={(e) =>
+                    updateMapLayerMutation.mutate({
+                      id: layer.id,
+                      image: e.value as ImageProps,
+                      map_id: visible.map_id,
+                    })
+                  }
+                  filter="Map"
+                />
+              </div>
+              <Button
+                className="w-1 p-button-outlined p-button-success"
+                icon="pi pi-save"
+                onClick={() => {
+                  let newTitle = layers.find(
+                    (map_layer) => map_layer.id === layer.id
+                  )?.title;
+
+                  if (newTitle)
+                    updateMapLayerMutation.mutate({
+                      id: layer.id,
+                      title: newTitle,
+                      map_id: visible.map_id,
+                    });
+                }}
+              />
+            </div>
+          ))}
       </div>
     </Dialog>
   );
