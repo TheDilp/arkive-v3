@@ -2,26 +2,17 @@ import { Sidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
 import React, { Dispatch, SetStateAction } from "react";
 import { Link, useParams } from "react-router-dom";
+import { MarkerSidebarProps } from "../../../types/MapTypes";
 import { useGetDocuments, useGetMaps } from "../../../utils/customHooks";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
 
 type Props = {
-  map_id: string | undefined;
-  doc_id: string | undefined;
-  show: boolean;
-  setMarkerSidebar: Dispatch<
-    SetStateAction<{
-      map_id: string | undefined;
-      doc_id: string | undefined;
-      show: boolean;
-    }>
-  >;
+  markerSidebar: MarkerSidebarProps;
+  setMarkerSidebar: Dispatch<SetStateAction<MarkerSidebarProps>>;
 };
 
 export default function MarkerSidebar({
-  map_id,
-  doc_id,
-  show,
+  markerSidebar,
   setMarkerSidebar,
 }: Props) {
   const { project_id } = useParams();
@@ -35,17 +26,28 @@ export default function MarkerSidebar({
   const documents = useGetDocuments(project_id as string);
   const maps = useGetMaps(project_id as string);
 
-  const document = doc_id
-    ? documents.data?.find((docs) => docs.id === doc_id)
+  const document = markerSidebar.doc_id
+    ? documents.data?.find((docs) => docs.id === markerSidebar.doc_id)
     : undefined;
-  const map = map_id ? maps.data?.find((map) => map.id === map_id) : undefined;
+  const map = markerSidebar.map_id
+    ? maps.data?.find((map) => map.id === markerSidebar.map_id)
+    : undefined;
   return (
     <Sidebar
-      visible={show}
+      visible={markerSidebar.show}
       onHide={() =>
-        setMarkerSidebar({ map_id: undefined, doc_id: undefined, show: false })
+        setMarkerSidebar({
+          marker_title: "",
+          map_id: undefined,
+          doc_id: undefined,
+          show: false,
+        })
       }
     >
+      <h1 className="Lato text-center my-0">
+        {markerSidebar.marker_title}{" "}
+        <span className="pi pi-map-marker text-2xl"></span>
+      </h1>
       <TabView
         activeIndex={setActiveIndex(
           typeof document !== "undefined",

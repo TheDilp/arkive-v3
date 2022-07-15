@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
-import { MapMarkerProps } from "../../../../types/MapTypes";
+import { MapMarkerProps, MarkerSidebarProps } from "../../../../types/MapTypes";
 import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
 export default function MapMarker({
@@ -22,13 +22,7 @@ export default function MapMarker({
   setMarkerSidebar,
 }: MapMarkerProps & {
   mcm: any;
-  setMarkerSidebar: Dispatch<
-    SetStateAction<{
-      map_id: string | undefined;
-      doc_id: string | undefined;
-      show: boolean;
-    }>
-  >;
+  setMarkerSidebar: Dispatch<SetStateAction<MarkerSidebarProps>>;
   setUpdateMarkerDialog: Dispatch<
     SetStateAction<{
       id: string;
@@ -49,7 +43,12 @@ export default function MapMarker({
   const eventHandlers = {
     click: (e: any) => {
       if (!e.originalEvent.shiftKey && !e.originalEvent.altKey) {
-        setMarkerSidebar({ map_id: map_link, doc_id, show: true });
+        setMarkerSidebar({
+          marker_title: text,
+          map_id: map_link,
+          doc_id,
+          show: true,
+        });
       }
       if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
       if (e.originalEvent.shiftKey && map_link) {

@@ -9,6 +9,7 @@ import {
 import {
   MapLayerProps,
   MapProps,
+  MarkerSidebarProps,
   UpdateMarkerInputs,
 } from "../../../types/MapTypes";
 import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
@@ -56,11 +57,12 @@ export default function MapImage({
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(
     false
   );
-  const [markerSidebar, setMarkerSidebar] = useState<{
-    map_id: string | undefined;
-    doc_id: string | undefined;
-    show: boolean;
-  }>({ map_id: undefined, doc_id: undefined, show: false });
+  const [markerSidebar, setMarkerSidebar] = useState<MarkerSidebarProps>({
+    marker_title: "",
+    map_id: undefined,
+    doc_id: undefined,
+    show: false,
+  });
   const map = useMapEvents({
     contextmenu(e: any) {
       setNewTokenDialog({ ...e.latlng, show: false });
@@ -101,7 +103,10 @@ export default function MapImage({
         {...updateMarkerDialog}
         setVisible={setUpdateMarkerDialog}
       />
-      <MarkerSidebar {...markerSidebar} setMarkerSidebar={setMarkerSidebar} />
+      <MarkerSidebar
+        markerSidebar={markerSidebar}
+        setMarkerSidebar={setMarkerSidebar}
+      />
       <LayersControl position="topright">
         <LayersControl.BaseLayer name="Map" checked={true}>
           <ImageOverlay url={src} bounds={bounds} ref={imgRef} />

@@ -128,3 +128,12 @@ export type UpdateMapLayerProps = {
   title?: string;
   image?: ImageProps;
 };
+
+// MISC
+
+export type MarkerSidebarProps = {
+  marker_title: string;
+  map_id: string | undefined;
+  doc_id: string | undefined;
+  show: boolean;
+};
