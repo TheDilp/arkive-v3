@@ -45,7 +45,11 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
         {map?.map_layers.map((layer) => (
           <div key={layer.id} className="w-full">
             {layer.title}
-            <ImageSelectDropdown value={layer.image} onChange={() => {}} />
+            <ImageSelectDropdown
+              value={layer.image}
+              onChange={() => {}}
+              filter="Map"
+            />
           </div>
         ))}
       </div>

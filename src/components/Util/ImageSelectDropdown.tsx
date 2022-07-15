@@ -7,9 +7,14 @@ import ImgDropdownItem from "./ImgDropdownItem";
 type Props = {
   value: ImageProps | undefined;
   onChange: (e: DropdownChangeParams) => void;
+  filter?: "Image" | "Map";
 };
 
-export default function ImageSelectDropdown({ value, onChange }: Props) {
+export default function ImageSelectDropdown({
+  value,
+  onChange,
+  filter,
+}: Props) {
   const { project_id } = useParams();
   const images = useGetImages(project_id as string);
   return (
@@ -24,7 +29,7 @@ export default function ImageSelectDropdown({ value, onChange }: Props) {
                 title: "No Image",
                 link: "",
               },
-              ...images.data,
+              ...images.data.filter((image) => image.type === filter),
             ]
           : []
       }
