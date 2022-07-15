@@ -10,7 +10,7 @@ import { Tooltip } from "primereact/tooltip";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
-import { BoardExportProps, BoardNodeProps } from "../../../custom-types";
+import { BoardExportProps, BoardNodeProps } from "../../../types/BoardTypes";
 import {
   changeLockState,
   BoardColorPresets,

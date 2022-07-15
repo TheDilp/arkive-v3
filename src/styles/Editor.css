@@ -67,12 +67,22 @@ div[data-callout-type="info"] {
     color: black
 }
 
+.remirror-mention-atom-popup-wrapper {
+    background-color: var(--gray-700);
+
+}
+
+.remirror-mention-atom-popup-item {
+    background-color: var(--gray-700);
+    color: white !important;
+}
+
 .remirror-mention-atom-popup-highlight {
-    background-color: lightblue !important;
+    background-color: var(--gray-500) !important;
 }
 
 .remirror-mention-atom-popup-name {
-    color: black !important;
+    color: white !important;
 }
 
 .remirror-suggest-atom {

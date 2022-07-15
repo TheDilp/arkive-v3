@@ -1,6 +1,8 @@
 import { MentionAtomPopupComponent, MentionState } from "@remirror/react";
 import { useMemo, useState } from "react";
-import { DocumentProps, MapProps, BoardProps } from "../../../custom-types";
+import { DocumentProps } from "../../../custom-types";
+import { BoardProps } from "../../../types/BoardTypes";
+import { MapProps } from "../../../types/MapTypes";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 
@@ -51,13 +53,16 @@ export default function MentionComponent() {
     return mentionState.name === "at"
       ? documentItems
           .filter((item) => item.label.toLowerCase().includes(query))
+          .slice(0, 5)
           .sort()
       : mentionState.name === "hash"
       ? mapItems
           .filter((item) => item.label.toLowerCase().includes(query))
+          .slice(0, 5)
           .sort()
       : boardItems
           .filter((item) => item.label.toLowerCase().includes(query))
+          .slice(0, 5)
           .sort();
   }, [mentionState]);
 
