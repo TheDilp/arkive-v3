@@ -5,8 +5,6 @@ import {
   DocumentProps,
   DocumentUpdateProps,
   ImageProps,
-  MapProps,
-  MapUpdateProps,
   ProjectProps,
 } from "../custom-types";
 import {
@@ -18,10 +16,16 @@ import {
   UpdateNodeProps,
 } from "../types/BoardTypes";
 import {
+  CreateMapLayerProps,
+  MapProps,
+  MapUpdateProps,
+} from "../types/MapTypes";
+import {
   createBoard,
   createDocument,
   createEdge,
   createMap,
+  createMapLayer,
   createMapMarker,
   createNode,
   createTemplate,
@@ -525,6 +529,7 @@ export function useCreateMap() {
       title: string;
       map_image: ImageProps | undefined;
       expanded: boolean;
+      layers: [];
       folder?: boolean;
       parent?: string | null;
     }) => {
@@ -900,6 +905,50 @@ export function useDeleteMapMarker() {
     }
   );
 }
+
+// Custom hook for creating a map layer
+export function useCreateMapLayer(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: CreateMapLayerProps) => {
+      await createMapLayer({ ...vars });
+    },
+    {
+      onMutate: async (newLayer) => {
+        const previousMaps = queryClient.getQueryData(`${project_id}-maps`);
+        queryClient.setQueryData(
+          `${project_id}-maps`,
+          (oldData: MapProps[] | undefined) => {
+            if (oldData) {
+              // Template shouldn't have parent hence null
+              let newData: MapProps[] = oldData.map((map) => {
+                if (map.id === newLayer.map_id) {
+                  return {
+                    ...map,
+                    // Check if map layers is iterable
+                    layers: map.layers ? [...map.layers, newLayer] : [newLayer],
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(`${project_id}-maps`, context?.previousMaps);
+        toastError("There was an error creating this map layer.");
+      },
+    }
+  );
+}
+
 // Custom hook for getting boards
 export function useGetBoards(project_id: string) {
   const { data, isLoading } = useQuery(

@@ -29,14 +29,15 @@ export type MapMarkerProps = {
 export type MapLayerProps = {
   id: string;
   title: string;
-  image: string;
-  map_link: string;
+  image?: string;
+  map_id: string;
 };
 
 export type MapItemDisplayDialogProps = {
   id: string;
   title: string;
   map_image: ImageProps;
+  layers: MapLayerProps[];
   parent: string;
   folder: boolean;
   depth: number;
@@ -58,7 +59,7 @@ export type CreateMarkerInputs = {
   map_link: string;
 };
 
-export type MapCreateProps = {
+export type CreateMapProps = {
   id: string;
   title: string;
   map_image: string | undefined;
@@ -112,4 +113,11 @@ export type UpdateMarkerInputs = {
   doc_id?: string | undefined;
   map_link?: string | undefined;
   show: boolean;
+};
+
+export type CreateMapLayerProps = {
+  id: string;
+  title: string;
+  image?: string;
+  map_id: string;
 };

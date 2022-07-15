@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Link, useParams } from "react-router-dom";
-import { MapItemDisplayDialogProps, MapProps } from "../../../custom-types";
+import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
 import { useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   mapId: string;
@@ -36,6 +36,7 @@ export default function MapTreeItem({
       }}
       onContextMenu={(e) => {
         cm.current.show(e);
+        console.log(node.data);
         setDisplayDialog({
           id: node.id as string,
           title: node.text,
@@ -46,6 +47,7 @@ export default function MapTreeItem({
             link: "",
             type: "Image",
           },
+          layers: node.data?.layers || [],
           parent: node.parent as string,
           depth,
           show: false,

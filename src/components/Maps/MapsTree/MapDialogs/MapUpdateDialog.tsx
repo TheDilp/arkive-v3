@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
@@ -7,19 +6,18 @@ import { Dispatch, SetStateAction } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import {
-  CreateMapInputs,
-  MapProps,
   MapItemDisplayDialogProps,
-} from "../../../types/MapTypes";
-import { useUpdateMap } from "../../../utils/customHooks";
-import { MapDialogDefault } from "../../../utils/defaultDisplayValues";
+  MapProps,
+} from "../../../../types/MapTypes";
+import { useUpdateMap } from "../../../../utils/customHooks";
+import { MapDialogDefault } from "../../../../utils/defaultDisplayValues";
 
 type Props = {
-  visible: MapItemDisplayDialogProps;
-  setVisible: Dispatch<SetStateAction<MapItemDisplayDialogProps>>;
+  mapData: MapItemDisplayDialogProps;
+  setMapData: Dispatch<SetStateAction<MapItemDisplayDialogProps>>;
 };
 
-export default function MapUpdateDialog({ visible, setVisible }: Props) {
+export default function MapUpdateDialog({ mapData, setMapData }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
@@ -50,10 +48,10 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
   return (
     <Dialog
       className="w-3"
-      header={`Update Map - ${visible.title}`}
+      header={`Update Map - ${mapData.title}`}
       modal={false}
-      visible={visible.show}
-      onHide={() => setVisible(MapDialogDefault)}
+      visible={mapData.show}
+      onHide={() => setMapData(MapDialogDefault)}
     >
       <div>
         <div className="flex flex-wrap justify-content-center">
@@ -61,9 +59,9 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
             <InputText
               placeholder="Map Title"
               className="w-full"
-              value={visible.title}
+              value={mapData.title}
               onChange={(e) =>
-                setVisible((prev) => ({
+                setMapData((prev) => ({
                   ...prev,
                   title: e.target.value,
                 }))
@@ -77,10 +75,10 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
               placeholder="Map Folder"
               optionLabel="title"
               optionValue="id"
-              value={visible.parent}
+              value={mapData.parent}
               filter
               onChange={(e) =>
-                setVisible((prev) => ({
+                setMapData((prev) => ({
                   ...prev,
                   parent: e.value,
                 }))
@@ -90,12 +88,12 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
                   ? [
                       { title: "Root", id: null },
                       ...maps.filter((map, idx, array) => {
-                        if (!map.folder || map.id === visible.id) return false;
+                        if (!map.folder || map.id === mapData.id) return false;
                         return recursiveDescendantRemove(
                           map,
                           idx,
                           array,
-                          visible.id
+                          mapData.id
                         );
                       }),
                     ]
@@ -106,7 +104,7 @@ export default function MapUpdateDialog({ visible, setVisible }: Props) {
 
           <div className="w-full flex justify-content-end">
             <Button
-              label={`Update ${visible.folder ? "Folder" : "Map"}`}
+              label={`Update ${mapData.folder ? "Folder" : "Map"}`}
               className="p-button-success p-button-outlined mt-2"
               icon="pi pi-save"
               iconPos="right"

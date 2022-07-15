@@ -20,8 +20,9 @@ import {
   UpdateNodeProps,
 } from "../types/BoardTypes";
 import {
+  CreateMapLayerProps,
   CreateMapMarkerProps,
-  MapCreateProps,
+  CreateMapProps,
   MapMarkerProps,
   MapProps,
   MapUpdateProps,
@@ -221,7 +222,7 @@ export const createTemplate = async (
     }
   }
 };
-export const createMap = async (MapCreateProps: MapCreateProps) => {
+export const createMap = async (MapCreateProps: CreateMapProps) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase.from("maps").insert(MapCreateProps);
@@ -243,6 +244,22 @@ export const createMapMarker = async (
     if (data) return data;
     if (error) {
       toastError("There was an error creating your map marker.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const createMapLayer = async (
+  MapLayerCreateProps: CreateMapLayerProps
+) => {
+  let user = auth.user();
+  if (user) {
+    const { data: layer, error } = await supabase
+      .from("map_layers")
+      .insert({ ...MapLayerCreateProps, user_id: user.id });
+
+    if (layer) return layer;
+    if (error) {
+      toastError("There was an error creating your map layer.");
       throw new Error(error.message);
     }
   }

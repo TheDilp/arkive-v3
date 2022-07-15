@@ -3,17 +3,19 @@ import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
 import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
+import { MapDialogDefault } from "../../../utils/defaultDisplayValues";
 import { sortMapsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
-import MapCreateDialog from "./MapCreateDialog";
+import MapCreateDialog from "./MapDialogs/MapCreateDialog";
 import MapsFilter from "./MapsFilter";
 import MapsFilterList from "./MapsFilterList";
 import MapTreeItem from "./MapTreeItem";
 import MapTreeItemContext from "./MapTreeItemContext";
-import MapUpdateDialog from "./MapUpdateDialog";
+import MapUpdateDialog from "./MapDialogs/MapUpdateDialog";
+import MapLayersDialog from "./MapDialogs/MapLayersDialog";
 
 export default function MapsTree({
   mapId,
@@ -32,17 +34,13 @@ export default function MapsTree({
   const [treeData, setTreeData] = useState<NodeModel<MapProps>[]>([]);
   const [createMapDialog, setCreateMapDialog] = useState(false);
   const [updateMapDialog, setUpdateMapDialog] =
-    useState<MapItemDisplayDialogProps>({
-      id: "",
-      title: "",
-      map_image: { id: "", title: "", link: "", type: "Image" },
-      parent: "",
-      show: false,
-      folder: false,
-      depth: 0,
-      public: false,
-    });
+    useState<MapItemDisplayDialogProps>(MapDialogDefault);
+  const [updateMapLayers, setUpdateMapLayers] = useState({
+    map_id: "",
+    show: false,
+  });
   const updateMapMutation = useUpdateMap(project_id as string);
+
   useLayoutEffect(() => {
     if (maps && maps.length > 0) {
       let temp = maps.map((m) => ({
@@ -57,6 +55,7 @@ export default function MapsTree({
       setTreeData([]);
     }
   }, [maps]);
+
   const handleDrop = async (
     newTree: NodeModel<MapProps>[],
     {
@@ -104,15 +103,20 @@ export default function MapsTree({
         mapId={mapId}
         displayDialog={updateMapDialog}
         setDisplayDialog={setUpdateMapDialog}
+        setUpdateMapLayers={setUpdateMapLayers}
       />
       <MapCreateDialog
-        visible={createMapDialog}
-        setVisible={() => setCreateMapDialog(false)}
+        mapData={createMapDialog}
+        setMapData={() => setCreateMapDialog(false)}
       />
 
       <MapUpdateDialog
-        visible={updateMapDialog}
-        setVisible={setUpdateMapDialog}
+        mapData={updateMapDialog}
+        setMapData={setUpdateMapDialog}
+      />
+      <MapLayersDialog
+        visible={updateMapLayers.show}
+        setVisible={setUpdateMapLayers}
       />
       <TreeSidebar>
         <MapsFilter

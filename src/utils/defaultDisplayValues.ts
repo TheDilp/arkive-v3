@@ -64,6 +64,7 @@ export const MapDialogDefault = {
   id: "",
   title: "",
   map_image: { id: "", title: "", link: "", type: "Image" as const },
+  layers: [],
   parent: "",
   show: false,
   folder: false,

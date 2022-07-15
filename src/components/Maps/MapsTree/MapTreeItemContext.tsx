@@ -1,6 +1,6 @@
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { ContextMenu } from "primereact/contextmenu";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MapItemDisplayDialogProps } from "../../../types/MapTypes";
 import { useDeleteMap, useUpdateMap } from "../../../utils/customHooks";
@@ -8,7 +8,10 @@ type Props = {
   cm: React.RefObject<ContextMenu>;
   mapId: string;
   displayDialog: MapItemDisplayDialogProps;
-  setDisplayDialog: (displayDialog: MapItemDisplayDialogProps) => void;
+  setDisplayDialog: Dispatch<SetStateAction<MapItemDisplayDialogProps>>;
+  setUpdateMapLayers: Dispatch<
+    SetStateAction<{ map_id: string; show: boolean }>
+  >;
 };
 
 export default function MapTreeItemContext({
@@ -16,6 +19,7 @@ export default function MapTreeItemContext({
   mapId,
   displayDialog,
   setDisplayDialog,
+  setUpdateMapLayers,
 }: Props) {
   const { project_id } = useParams();
 
@@ -71,11 +75,7 @@ export default function MapTreeItemContext({
     {
       label: "Manage Layers",
       icon: "pi pi-clone",
-      command: () =>
-        updateMapMutation.mutate({
-          id: displayDialog.id,
-          public: !displayDialog.public,
-        }),
+      command: () => setUpdateMapLayers({ map_id: mapId, show: true }),
     },
     { separator: true },
     {

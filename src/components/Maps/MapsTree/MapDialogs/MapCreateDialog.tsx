@@ -5,18 +5,18 @@ import { InputText } from "primereact/inputtext";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { Checkbox } from "primereact/checkbox";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
-import { CreateMapInputs, MapProps } from "../../../custom-types";
-import { useCreateMap, useGetImages } from "../../../utils/customHooks";
+import { CreateMapInputs, MapProps } from "../../../../types/MapTypes";
+import { useCreateMap, useGetImages } from "../../../../utils/customHooks";
 
 type Props = {
-  visible: boolean;
-  setVisible: (visible: boolean) => void;
+  mapData: boolean;
+  setMapData: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function MapCreateDialog({ visible, setVisible }: Props) {
+export default function MapCreateDialog({ mapData, setMapData }: Props) {
   const [closeOnDone, setCloseOnDone] = useState(true);
   const { project_id } = useParams();
   const queryClient = useQueryClient();
@@ -42,15 +42,15 @@ export default function MapCreateDialog({ visible, setVisible }: Props) {
     });
     reset();
     if (closeOnDone) {
-      setVisible(false);
+      setMapData(false);
     }
   };
   return (
     <Dialog
       className="w-3"
       header={"Create Map"}
-      visible={visible}
-      onHide={() => setVisible(false)}
+      visible={mapData}
+      onHide={() => setMapData(false)}
       modal={false}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
