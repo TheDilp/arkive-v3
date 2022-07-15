@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { MarkerSidebarProps } from "../../../types/MapTypes";
 import { useGetDocuments, useGetMaps } from "../../../utils/customHooks";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
+import PublicEditor from "../../PublicView/Wiki/PublicEditor/PublicEditor";
 import LinkHoverWindow from "../../Wiki/Editor/LinkHover/LinkHoverWindow";
 
 type Props = {
@@ -35,6 +36,7 @@ export default function MarkerSidebar({
     : undefined;
   return (
     <Sidebar
+      className="w-3"
       visible={markerSidebar.show}
       onHide={() =>
         setMarkerSidebar({
@@ -63,7 +65,7 @@ export default function MarkerSidebar({
               </div>
             }
           >
-            <LinkHoverWindow content={document.content} />
+            <PublicEditor content={document.content} classes="h-full" />
           </TabPanel>
         )}
         {map && (
@@ -78,7 +80,7 @@ export default function MarkerSidebar({
               <Link to={`../../${map.id}`}>
                 <img
                   src={supabaseStorageImagesLink + map.map_image?.link}
-                  className="w-full cursor-pointer markerSidebarMapPreview"
+                  className="w-full cursor-pointer markerSidebarMapPreview border-round-lg"
                 />
               </Link>
             </div>

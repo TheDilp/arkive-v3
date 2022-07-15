@@ -49,7 +49,7 @@ export default function Project() {
     }
   }, [images?.data]);
 
-  if (!user) return <Navigate to="/home" />;
+  if (!user) return <Navigate to="/" />;
 
   if (isLoadingDocuments || isLoadingMaps || isLoadingBoards)
     return <LoadingScreen />;
