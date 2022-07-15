@@ -49,11 +49,12 @@ export default function MapMarker({
           doc_id,
           show: true,
         });
-      }
-      if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
-      if (e.originalEvent.shiftKey && map_link) {
+      } else if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
+      else if (e.originalEvent.shiftKey && map_link) {
+        e.originalEvent.preventDefault();
         navigate(`../../${map_link}`);
       } else if (e.originalEvent.altKey && doc_id) {
+        e.originalEvent.preventDefault();
         navigate(`../../../wiki/doc/${doc_id}`);
       }
     },

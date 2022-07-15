@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { MarkerSidebarProps } from "../../../types/MapTypes";
 import { useGetDocuments, useGetMaps } from "../../../utils/customHooks";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
+import LinkHoverWindow from "../../Wiki/Editor/LinkHover/LinkHoverWindow";
 
 type Props = {
   markerSidebar: MarkerSidebarProps;
@@ -46,7 +47,7 @@ export default function MarkerSidebar({
     >
       <h1 className="Lato text-center my-0">
         {markerSidebar.marker_title}{" "}
-        <span className="pi pi-map-marker text-2xl"></span>
+        <i className="pi pi-map-marker text-2xl"></i>
       </h1>
       <TabView
         activeIndex={setActiveIndex(
@@ -62,7 +63,7 @@ export default function MarkerSidebar({
               </div>
             }
           >
-            <h1>Ayyyyy</h1>
+            <LinkHoverWindow content={document.content} />
           </TabPanel>
         )}
         {map && (

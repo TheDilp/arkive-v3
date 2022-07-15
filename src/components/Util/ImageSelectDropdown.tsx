@@ -1,5 +1,4 @@
 import { Dropdown, DropdownChangeParams } from "primereact/dropdown";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import { useGetImages } from "../../utils/customHooks";

@@ -1,6 +1,8 @@
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { BoardProps, DocumentProps, MapProps } from "../../../../custom-types";
+import { DocumentProps } from "../../../../custom-types";
+import { BoardProps } from "../../../../types/BoardTypes";
+import { MapProps } from "../../../../types/MapTypes";
 import BoardMention from "./BoardMention";
 import DocumentMention from "./DocumentMention";
 import MapMention from "./MapMention";
