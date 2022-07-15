@@ -108,7 +108,6 @@ export default function GlobalSearch({ search, setSearch }: Props) {
   }
 
   // Display Icon based on the item
-
   function displayIcon(item: any) {
     // Document
     if (item.content || item.content === null) {
@@ -129,6 +128,19 @@ export default function GlobalSearch({ search, setSearch }: Props) {
     // Board
     else {
       return <Icon icon={"mdi:draw"} />;
+    }
+  }
+
+  // Display map or board in parenthesese if it's a marker or node
+  function displayMapOrBoard(item: any) {
+    if (item.map_id) {
+      const map = maps?.find((map) => map.id === item.map_id);
+      if (map) return map.title;
+    } else if (item.board_id) {
+      const board = boards?.find((board) => board.id === item.board_id);
+      if (board) return board.title;
+    } else {
+      return "";
     }
   }
 
@@ -181,8 +193,8 @@ export default function GlobalSearch({ search, setSearch }: Props) {
               }}
             >
               {displayIcon(item)}
-
-              {item.title || item.label || item.text}
+              {item.title || item.label || item.text}{" "}
+              {(item.map_id || item.board_id) && `(${displayMapOrBoard(item)})`}
             </div>
           )}
           completeMethod={(e) => {
