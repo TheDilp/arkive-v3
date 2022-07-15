@@ -5,7 +5,7 @@ import {
   BoardProps,
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
-} from "../../../custom-types";
+} from "../../../types/BoardTypes";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
 import {
   cytoscapeGridOptions,
