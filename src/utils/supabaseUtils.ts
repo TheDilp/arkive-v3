@@ -623,6 +623,12 @@ export const deleteMapMarker = async (id: string) => {
     throw new Error(error.message);
   }
 };
+export const deleteMapLayer = async (id: string) => {
+  const { data: layer, error } = await supabase
+    .from("map_layers")
+    .delete()
+    .eq("id", id);
+};
 export const deleteBoard = async (id: string) => {
   let user = auth.user();
 

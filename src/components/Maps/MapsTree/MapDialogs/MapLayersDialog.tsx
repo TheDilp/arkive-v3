@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   useCreateMapLayer,
+  useDeleteMapLayer,
   useGetMapData,
   useUpdateMapLayer,
 } from "../../../../utils/customHooks";
@@ -27,6 +28,7 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
   const map = maps?.filter((map) => map.id === visible.map_id)[0];
   const createMapLayerMutation = useCreateMapLayer(project_id as string);
   const updateMapLayerMutation = useUpdateMapLayer(project_id as string);
+  const deleteMapLayerMutation = useDeleteMapLayer();
   const [layers, setLayers] = useState(map?.map_layers);
 
   useEffect(() => {
@@ -61,59 +63,77 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
           <Icon icon="mdi:layers-plus" />
         </Button>
       </div>
-      <div className="w-full flex flex-wrap">
+      <div className="w-full flex flex-wrap row-gap-1">
         {layers &&
-          layers.map((layer) => (
-            <div
-              key={layer.id}
-              className="w-full flex justify-content-between align-items-center"
-            >
-              <InputText
-                value={layer.title}
-                onChange={(e) =>
-                  setLayers((prev) =>
-                    prev?.map((prevLayer) => {
-                      if (prevLayer.id === layer.id) {
-                        layer = { ...layer, title: e.target.value };
-                        return layer;
-                      } else {
-                        return prevLayer;
-                      }
-                    })
-                  )
-                }
-              />
-              <div className="w-5">
-                <ImageSelectDropdown
-                  value={layer.image}
+          layers
+            .sort((a, b) => {
+              if (a.title > b.title) return 1;
+              if (a.title < b.title) return -1;
+              return 0;
+            })
+            .map((layer) => (
+              <div
+                key={layer.id}
+                className="w-full flex justify-content-between align-items-center "
+              >
+                <InputText
+                  className="w-4"
+                  value={layer.title}
                   onChange={(e) =>
-                    updateMapLayerMutation.mutate({
+                    setLayers((prev) =>
+                      prev?.map((prevLayer) => {
+                        if (prevLayer.id === layer.id) {
+                          layer = { ...layer, title: e.target.value };
+                          return layer;
+                        } else {
+                          return prevLayer;
+                        }
+                      })
+                    )
+                  }
+                />
+                <div className="w-5">
+                  <ImageSelectDropdown
+                    value={layer.image}
+                    onChange={(e) =>
+                      updateMapLayerMutation.mutate({
+                        id: layer.id,
+                        image: e.value as ImageProps,
+                        map_id: visible.map_id,
+                      })
+                    }
+                    filter="Map"
+                  />
+                </div>
+                <Button
+                  className="w-1 p-button-outlined p-button-success"
+                  icon="pi pi-save"
+                  onClick={() => {
+                    let newTitle = layers.find(
+                      (map_layer) => map_layer.id === layer.id
+                    )?.title;
+
+                    if (newTitle)
+                      updateMapLayerMutation.mutate({
+                        id: layer.id,
+                        title: newTitle,
+                        map_id: visible.map_id,
+                      });
+                  }}
+                />
+                <Button
+                  className="w-1 p-button-outlined p-button-danger"
+                  icon="pi pi-trash"
+                  onClick={() =>
+                    deleteMapLayerMutation.mutate({
                       id: layer.id,
-                      image: e.value as ImageProps,
+                      project_id: project_id as string,
                       map_id: visible.map_id,
                     })
                   }
-                  filter="Map"
                 />
               </div>
-              <Button
-                className="w-1 p-button-outlined p-button-success"
-                icon="pi pi-save"
-                onClick={() => {
-                  let newTitle = layers.find(
-                    (map_layer) => map_layer.id === layer.id
-                  )?.title;
-
-                  if (newTitle)
-                    updateMapLayerMutation.mutate({
-                      id: layer.id,
-                      title: newTitle,
-                      map_id: visible.map_id,
-                    });
-                }}
-              />
-            </div>
-          ))}
+            ))}
       </div>
     </Dialog>
   );

@@ -56,6 +56,7 @@ export default function MapView({
     }
   }, [mapData?.id, mapData?.map_image]);
 
+
   useEffect(() => {
     if (map_id) setMapId(map_id);
     //  Wait for map to finish loading
@@ -125,6 +126,7 @@ export default function MapView({
                   bounds={bounds as LatLngBoundsExpression}
                   imgRef={imgRef}
                   markers={mapData.markers}
+                  map_layers={mapData.map_layers}
                   setNewTokenDialog={setNewTokenDialog}
                   cm={cm}
                 />

@@ -1,13 +1,18 @@
 import { LatLngBoundsExpression } from "leaflet";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
   ImageOverlay,
   LayerGroup,
   LayersControl,
   useMapEvents,
 } from "react-leaflet";
-import { MapProps, UpdateMarkerInputs } from "../../../types/MapTypes";
+import {
+  MapLayerProps,
+  MapProps,
+  UpdateMarkerInputs,
+} from "../../../types/MapTypes";
 import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
+import { supabaseStorageImagesLink } from "../../../utils/utils";
 import MapMarker from "./MapMarker/MapMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
 import MarkerUpdateDialog from "./MapMarker/MarkerUpdateDialog";
@@ -17,11 +22,14 @@ type Props = {
   imgRef: any;
   cm: any;
   markers: MapProps["markers"];
-  setNewTokenDialog: (newTokenDialog: {
-    lat: number;
-    lng: number;
-    show: boolean;
-  }) => void;
+  map_layers: MapLayerProps[];
+  setNewTokenDialog: Dispatch<
+    SetStateAction<{
+      lat: number;
+      lng: number;
+      show: boolean;
+    }>
+  >;
 };
 
 export default function MapImage({
@@ -30,20 +38,22 @@ export default function MapImage({
   imgRef,
   cm,
   markers,
+  map_layers,
   setNewTokenDialog,
 }: Props) {
   const mcm = useRef() as any;
   const [updateMarkerDialog, setUpdateMarkerDialog] =
     useState<UpdateMarkerInputs>({ ...MapMarkerDialogDefault, show: false });
+  const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(
+    false
+  );
+
   const map = useMapEvents({
     contextmenu(e: any) {
       setNewTokenDialog({ ...e.latlng, show: false });
       cm.current.show(e.originalEvent);
     },
   });
-  const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(
-    false
-  );
 
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
@@ -69,7 +79,7 @@ export default function MapImage({
   }, []);
 
   return (
-    <>
+    <div>
       <MarkerContextMenu
         mcm={mcm}
         marker_id={updateMarkerDialog.id}
@@ -83,6 +93,7 @@ export default function MapImage({
         <LayersControl.BaseLayer name="Map" checked={true}>
           <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
         </LayersControl.BaseLayer>
+
         <LayersControl.Overlay name="Markers" checked={true}>
           <LayerGroup>
             {markers
@@ -103,7 +114,31 @@ export default function MapImage({
               ))}
           </LayerGroup>
         </LayersControl.Overlay>
+
+        <LayerGroup>
+          {map_layers
+            .sort((a, b) => {
+              if (a.title > b.title) return 1;
+              if (a.title < b.title) return -1;
+              return 0;
+            })
+            .filter((layer) => layer.image?.link)
+            .map((layer) => {
+              return (
+                <LayersControl.Overlay
+                  key={layer.id + layer.title}
+                  name={layer.title}
+                >
+                  <ImageOverlay
+                    url={supabaseStorageImagesLink + layer.image?.link}
+                    bounds={bounds}
+                    ref={imgRef}
+                  />
+                </LayersControl.Overlay>
+              );
+            })}
+        </LayerGroup>
       </LayersControl>
-    </>
+    </div>
   );
 }

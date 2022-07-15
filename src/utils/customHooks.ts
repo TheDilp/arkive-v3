@@ -36,6 +36,7 @@ import {
   deleteImagesStorage,
   deleteManyNodes,
   deleteMap,
+  deleteMapLayer,
   deleteMapMarker,
   deleteNode,
   getBoards,
@@ -1003,6 +1004,52 @@ export function useUpdateMapLayer(project_id: string) {
       onError: (err, newTodo, context) => {
         queryClient.setQueryData(`${project_id}-maps`, context?.previousMaps);
         toastError("There was an error updating this map marker.");
+      },
+    }
+  );
+}
+// Custom hook to delete map layers
+export function useDeleteMapLayer() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; map_id: string; project_id: string }) => {
+      await deleteMapLayer(vars.id);
+    },
+    {
+      onMutate: async (deletedLayer) => {
+        const previousMaps = queryClient.getQueryData(
+          `${deletedLayer.project_id}-maps`
+        );
+        queryClient.setQueryData(
+          `${deletedLayer.project_id}-maps`,
+          (oldData: MapProps[] | undefined) => {
+            if (oldData) {
+              let newData: MapProps[] = oldData.map((map) => {
+                if (map.id === deletedLayer.map_id) {
+                  return {
+                    ...map,
+                    map_layers: map.map_layers.filter(
+                      (layer) => layer.id !== deletedLayer.id
+                    ),
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-maps`,
+          context?.previousMaps
+        );
+        toastError("There was an error deleting this map marker.");
       },
     }
   );
