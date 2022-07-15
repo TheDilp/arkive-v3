@@ -141,13 +141,15 @@ export default function CreateMarkerDialog({
                   backgroundColor: e.value as string,
                 }))
               }
-          />
+            />
           </div>
         </div>
         <div className="w-full">
           <Dropdown
             className="w-full"
             placeholder="Link Document"
+            filter
+            filterBy="title"
             value={newMarkerData.doc_id}
             onChange={(e) =>
               setNewMarkerData((prev) => ({
@@ -155,7 +157,9 @@ export default function CreateMarkerDialog({
                 doc_id: e.value,
               }))
             }
-            options={documents.data?.filter((doc) => !doc.template)}
+            options={documents.data?.filter(
+              (doc) => !doc.template && !doc.folder
+            )}
             optionLabel={"title"}
             optionValue={"id"}
           />
@@ -164,6 +168,8 @@ export default function CreateMarkerDialog({
           <Dropdown
             className="w-full mt-2"
             placeholder="Link Map"
+            filter
+            filterBy="title"
             value={newMarkerData.map_link}
             onChange={(e) =>
               setNewMarkerData((prev) => ({
