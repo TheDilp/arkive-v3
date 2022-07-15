@@ -1,11 +1,13 @@
 import { Icon } from "@iconify/react";
 import { AutoComplete } from "primereact/autocomplete";
+import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { SelectButton } from "primereact/selectbutton";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { DocumentProps, MapMarkerProps, MapProps } from "../../custom-types";
+import { useNavigate, useParams } from "react-router-dom";
+import { DocumentProps } from "../../custom-types";
 import { BoardNodeProps, BoardProps } from "../../types/BoardTypes";
+import { MapMarkerProps, MapProps } from "../../types/MapTypes";
 import {
   useGetBoards,
   useGetDocuments,
@@ -15,7 +17,7 @@ type Props = {
   search: string | null;
   setSearch: (visible: string | null) => void;
 };
-export default function SearchDialog({ search, setSearch }: Props) {
+export default function GlobalSearch({ search, setSearch }: Props) {
   const { project_id } = useParams();
   const { data: documents } = useGetDocuments(project_id as string);
   const { data: maps } = useGetMaps(project_id as string);
@@ -84,6 +86,64 @@ export default function SearchDialog({ search, setSearch }: Props) {
       return () => clearTimeout(timeout);
     }
   }, [search]);
+
+  // Determine where to navigate based on the type of item
+  function navigateTo(item: any) {
+    // Document
+    if (item.content || item.content === null) {
+      navigate(`./wiki/doc/${item.id}`);
+    }
+    // Map
+    else if (item.map_image) {
+      navigate(`./maps/${item.id}`);
+    }
+    // Map marker -> goes to map that's linked to it
+    else if (item.map_id) {
+      navigate(`./maps/${item.map_id}/${item.id}`);
+    } else if (item.board_id) {
+      navigate(`./boards/${item.board_id}/${item.id}`);
+    } else {
+      navigate(`./boards/${item.id}`);
+    }
+  }
+
+  // Display Icon based on the item
+  function displayIcon(item: any) {
+    // Document
+    if (item.content || item.content === null) {
+      return <Icon icon={item.icon} />;
+    }
+    // Map
+    else if (item.map_image) {
+      return <Icon icon={"mdi:map"} />;
+    }
+    // Map marker
+    else if (item.map_id) {
+      return <Icon icon="mdi:map-marker" />;
+    }
+    // Board node
+    else if (item.board_id) {
+      return <Icon icon={"mdi:vector-polyline"} />;
+    }
+    // Board
+    else {
+      return <Icon icon={"mdi:draw"} />;
+    }
+  }
+
+  // Display map or board in parenthesese if it's a marker or node
+  function displayMapOrBoard(item: any) {
+    if (item.map_id) {
+      const map = maps?.find((map) => map.id === item.map_id);
+      if (map) return map.title;
+    } else if (item.board_id) {
+      const board = boards?.find((board) => board.id === item.board_id);
+      if (board) return board.title;
+    } else {
+      return "";
+    }
+  }
+
   return (
     <Dialog
       visible={typeof search === "string"}
@@ -122,19 +182,7 @@ export default function SearchDialog({ search, setSearch }: Props) {
           }}
           onSelect={(e) => {
             const item = e.value;
-            navigate(
-              `./${
-                item.content || item.content === null
-                  ? "wiki/doc/"
-                  : item.map_image
-                  ? `maps/`
-                  : item.map_id
-                  ? `maps/${item.map_id}/`
-                  : item.board_id
-                  ? `boards/${item.board_id}/`
-                  : "boards/"
-              }${item.id}`
-            );
+            navigateTo(item);
           }}
           itemTemplate={(item) => (
             <div
@@ -144,19 +192,9 @@ export default function SearchDialog({ search, setSearch }: Props) {
                 setSearch(null);
               }}
             >
-              {item.content || item.content === null ? (
-                <Icon icon={item.icon} />
-              ) : item.map_image ? (
-                <Icon icon={"mdi:map"} />
-              ) : item.map_id ? (
-                <Icon icon="mdi:map-marker" />
-              ) : item.board_id ? (
-                <Icon icon={"mdi:vector-polyline"} />
-              ) : (
-                <Icon icon={"mdi:draw"} />
-              )}
-
-              {item.title || item.label || item.text}
+              {displayIcon(item)}
+              {item.title || item.label || item.text}{" "}
+              {(item.map_id || item.board_id) && `(${displayMapOrBoard(item)})`}
             </div>
           )}
           completeMethod={(e) => {

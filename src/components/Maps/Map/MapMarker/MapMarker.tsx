@@ -1,9 +1,9 @@
 import L, { LatLngExpression } from "leaflet";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
-import { MapMarkerProps } from "../../../../types/MapTypes";
+import { MapMarkerProps, MarkerSidebarProps } from "../../../../types/MapTypes";
 import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
 export default function MapMarker({
@@ -19,26 +19,22 @@ export default function MapMarker({
   map_link,
   mcm,
   setUpdateMarkerDialog,
+  setMarkerSidebar,
 }: MapMarkerProps & {
   mcm: any;
-  setUpdateMarkerDialog: ({
-    id,
-    icon,
-    text,
-    color,
-    backgroundColor,
-    doc_id,
-    show,
-  }: {
-    id: string;
-    icon: string;
-    text: string;
-    color: string;
-    backgroundColor: string;
-    doc_id?: string;
-    map_link?: string;
-    show: boolean;
-  }) => void;
+  setMarkerSidebar: Dispatch<SetStateAction<MarkerSidebarProps>>;
+  setUpdateMarkerDialog: Dispatch<
+    SetStateAction<{
+      id: string;
+      icon: string;
+      text: string;
+      color: string;
+      backgroundColor: string;
+      doc_id?: string;
+      map_link?: string;
+      show: boolean;
+    }>
+  >;
 }) {
   const { project_id } = useParams();
   const navigate = useNavigate();
@@ -46,10 +42,19 @@ export default function MapMarker({
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const eventHandlers = {
     click: (e: any) => {
-      if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
-      if (e.originalEvent.shiftKey && map_link) {
+      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey) {
+        setMarkerSidebar({
+          marker_title: text,
+          map_id: map_link,
+          doc_id,
+          show: true,
+        });
+      } else if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
+      else if (e.originalEvent.shiftKey && map_link) {
+        e.originalEvent.preventDefault();
         navigate(`../../${map_link}`);
       } else if (e.originalEvent.altKey && doc_id) {
+        e.originalEvent.preventDefault();
         navigate(`../../../wiki/doc/${doc_id}`);
       }
     },
@@ -117,9 +122,7 @@ export default function MapMarker({
                     show: true,
                   });
                 }}
-              >
-                {" "}
-              </div>
+              ></div>
             </div>
           </div>
         ),

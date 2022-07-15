@@ -32,6 +32,7 @@ export default function MapView({
     show: false,
   });
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (mapData && mapData.map_image?.link) {
       setLoading(true);
@@ -55,8 +56,6 @@ export default function MapView({
       };
     }
   }, [mapData?.id, mapData?.map_image]);
-
-
   useEffect(() => {
     if (map_id) setMapId(map_id);
     //  Wait for map to finish loading

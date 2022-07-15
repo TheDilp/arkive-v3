@@ -7,12 +7,14 @@ import { InputText } from "primereact/inputtext";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+import { MapProps } from "../../../../types/MapTypes";
 import {
   useCreateMapMarker,
   useGetDocuments,
   useGetMaps,
 } from "../../../../utils/customHooks";
 import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
+import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import MarkerIconSelect from "./MarkerIconSelect";
 
 type Props = {
@@ -170,6 +172,12 @@ export default function CreateMarkerDialog({
             placeholder="Link Map"
             filter
             filterBy="title"
+            itemTemplate={(item: MapProps) => (
+              <ImgDropdownItem
+                title={item.title}
+                link={item.map_image?.link || ""}
+              />
+            )}
             value={newMarkerData.map_link}
             onChange={(e) =>
               setNewMarkerData((prev) => ({
@@ -191,10 +199,10 @@ export default function CreateMarkerDialog({
             icon="pi pi-map-marker"
             iconPos="right"
             onClick={() => {
+              const { show, ...rest } = newMarkerData;
               createMapMarkerMutation.mutate({
-                ...newMarkerData,
+                ...rest,
                 id: uuid(),
-                color: newMarkerData.color,
                 backgroundColor:
                   "#" + newMarkerData.backgroundColor.replace("#", ""),
                 lat,

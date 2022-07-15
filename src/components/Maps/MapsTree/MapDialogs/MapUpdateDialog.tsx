@@ -108,7 +108,13 @@ export default function MapUpdateDialog({ mapData, setMapData }: Props) {
               className="p-button-success p-button-outlined mt-2"
               icon="pi pi-save"
               iconPos="right"
-              type="submit"
+              onClick={() =>
+                updateMapMutation.mutate({
+                  id: mapData.id,
+                  title: mapData.title,
+                  parent: mapData.parent === "0" ? null : mapData.parent,
+                })
+              }
             />
           </div>
         </div>

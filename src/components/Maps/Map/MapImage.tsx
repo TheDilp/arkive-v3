@@ -9,6 +9,7 @@ import {
 import {
   MapLayerProps,
   MapProps,
+  MarkerSidebarProps,
   UpdateMarkerInputs,
 } from "../../../types/MapTypes";
 import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
@@ -16,6 +17,14 @@ import { supabaseStorageImagesLink } from "../../../utils/utils";
 import MapMarker from "./MapMarker/MapMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
 import MarkerUpdateDialog from "./MapMarker/MarkerUpdateDialog";
+import { Sidebar } from "primereact/sidebar";
+import {
+  useGetDocumentData,
+  useGetDocuments,
+} from "../../../utils/customHooks";
+import { useParams } from "react-router-dom";
+import MarkerSidebar from "./MarkerSidebar";
+
 type Props = {
   src: string;
   bounds: LatLngBoundsExpression;
@@ -42,19 +51,24 @@ export default function MapImage({
   setNewTokenDialog,
 }: Props) {
   const mcm = useRef() as any;
+  const { project_id } = useParams();
   const [updateMarkerDialog, setUpdateMarkerDialog] =
     useState<UpdateMarkerInputs>({ ...MapMarkerDialogDefault, show: false });
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(
     false
   );
-
+  const [markerSidebar, setMarkerSidebar] = useState<MarkerSidebarProps>({
+    marker_title: "",
+    map_id: undefined,
+    doc_id: undefined,
+    show: false,
+  });
   const map = useMapEvents({
     contextmenu(e: any) {
       setNewTokenDialog({ ...e.latlng, show: false });
       cm.current.show(e.originalEvent);
     },
   });
-
   useEffect(() => {
     document.addEventListener("keydown", (e) => {
       if (e.shiftKey && e.altKey) {
@@ -89,6 +103,10 @@ export default function MapImage({
         {...updateMarkerDialog}
         setVisible={setUpdateMarkerDialog}
       />
+      <MarkerSidebar
+        markerSidebar={markerSidebar}
+        setMarkerSidebar={setMarkerSidebar}
+      />
       <LayersControl position="topright">
         <LayersControl.BaseLayer name="Map" checked={true}>
           <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
@@ -110,6 +128,7 @@ export default function MapImage({
                   {...marker}
                   mcm={mcm}
                   setUpdateMarkerDialog={setUpdateMarkerDialog}
+                  setMarkerSidebar={setMarkerSidebar}
                 />
               ))}
           </LayerGroup>

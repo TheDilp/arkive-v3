@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { saveAs } from "file-saver";
 
 import {
   DocumentCreateProps,
@@ -224,10 +225,10 @@ export const createTemplate = async (
     }
   }
 };
-export const createMap = async (MapCreateProps: CreateMapProps) => {
+export const createMap = async (CreateMapProps: CreateMapProps) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from("maps").insert(MapCreateProps);
+    const { data, error } = await supabase.from("maps").insert(CreateMapProps);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your map.");
@@ -781,6 +782,49 @@ export const renameImage = async (id: string, newName: string) => {
   if (error) {
     toastError("There was an error renaming your image.");
     throw new Error(error.message);
+  }
+};
+
+// MISC
+
+export const exportProject = async (project_id: string) => {
+  const user = auth.user();
+  if (user) {
+    const { data: documents } = await supabase
+      .from("documents")
+      .select("*")
+      .eq("project_id", project_id);
+    saveAs(
+      new Blob([JSON.stringify(documents)], {
+        type: "text/plain;charset=utf-8",
+      }),
+      "DOCUMENTS.json"
+    );
+
+    const { data: maps } = await supabase
+      .from("maps")
+      .select("*, markers(*), map_layers(*)")
+      .eq("project_id", project_id);
+    saveAs(
+      new Blob([JSON.stringify(maps)], {
+        type: "text/plain;charset=utf-8",
+      }),
+      "MAPS.json"
+    );
+
+    const { data: boards, error } = await supabase
+      .from<BoardProps>("boards")
+      .select(
+        "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+      )
+      .eq("project_id", project_id);
+    console.log(boards);
+    saveAs(
+      new Blob([JSON.stringify(boards)], {
+        type: "text/plain;charset=utf-8",
+      }),
+      "BOARDS.json"
+    );
   }
 };
 

@@ -4,7 +4,7 @@ import { Marker, Popup, Tooltip } from "react-leaflet";
 import { Link, useNavigate } from "react-router-dom";
 import { MapMarkerProps } from "../../../types/MapTypes";
 
-export default function PublicDraggableMarker({
+export default function PublicMapMarker({
   icon,
   color,
   backgroundColor,
@@ -47,6 +47,7 @@ export default function PublicDraggableMarker({
                   backgroundSize: "2rem",
                   backgroundPosition: "center",
                   backgroundColor,
+                  border: "white solid 3px",
                 }}
                 className="w-full h-full border-circle fixed p-4"
                 onContextMenu={(e) => {

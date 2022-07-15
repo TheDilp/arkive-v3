@@ -4,7 +4,7 @@ import { auth } from "../../utils/supabaseUtils";
 
 export default function LandingPage() {
   const user = auth.user();
-  if (user) return <Navigate to="/home" />;
+  if (user) return <Navigate to="/" />;
 
   return (
     <article className="w-full h-screen px-8 Lato flex flex-wrap justify-content-center align-content-start">

@@ -10,7 +10,7 @@ import { Tooltip } from "primereact/tooltip";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
-import { BoardExportProps, BoardNodeProps } from "../../../custom-types";
+import { BoardExportProps, BoardNodeProps } from "../../../types/BoardTypes";
 import {
   changeLockState,
   BoardColorPresets,
@@ -126,6 +126,7 @@ export default function BoardQuickBar() {
     >
       {/* Dialogs */}
       <>
+        {/* Search nodes dialog */}
         <Dialog
           visible={searchDialog}
           onHide={() => {
@@ -147,6 +148,7 @@ export default function BoardQuickBar() {
             suggestions={filteredNodes}
             onSelect={(e) => {
               if (!cyRef) return;
+              console.log(e.value);
               if (e.value) {
                 let foundNode = cyRef.current.getElementById(e.value.id);
                 cyRef.current.animate(
@@ -170,23 +172,7 @@ export default function BoardQuickBar() {
               )
             }
             itemTemplate={(item: BoardNodeProps) => (
-              <span
-                onClick={(e: any) => {
-                  if (!cyRef) return;
-                  let foundNode = cyRef.current.getElementById(item.id);
-                  cyRef.current.animate(
-                    {
-                      center: {
-                        eles: foundNode,
-                      },
-                      zoom: 1,
-                    },
-                    {
-                      duration: 1250,
-                    }
-                  );
-                }}
-              >
+              <span>
                 <ImgDropdownItem
                   title={item.label || ""}
                   link={item.customImage?.link || ""}
@@ -196,6 +182,7 @@ export default function BoardQuickBar() {
             onChange={(e) => setSearch(e.value)}
           />
         </Dialog>
+        {/* Export board dialog */}
         <Dialog
           header={`Export Board - ${board?.title}`}
           modal={false}
