@@ -2,7 +2,7 @@ import { LatLngBoundsExpression } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 import { ImageOverlay } from "react-leaflet";
 import { MapProps } from "../../../types/MapTypes";
-import PublicDraggableMarker from "./PublicDraggableMarker";
+import PublicMapMarker from "./PublicMapMarker";
 type Props = {
   src: string;
   bounds: LatLngBoundsExpression;
@@ -43,7 +43,7 @@ export default function PublicMapImage({
       {markers
         .filter((marker) => (markerFilter ? marker.map_link : true))
         .map((marker) => (
-          <PublicDraggableMarker key={marker.id} {...marker} mcm={mcm} />
+          <PublicMapMarker key={marker.id} {...marker} mcm={mcm} />
         ))}
     </>
   );

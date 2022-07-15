@@ -53,7 +53,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite --force",
+    "preinstall": "npx only-allow pnpm",
+    "start": "vite",
     "build": "vite build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

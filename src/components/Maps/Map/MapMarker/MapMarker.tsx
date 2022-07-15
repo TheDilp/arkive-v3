@@ -117,9 +117,7 @@ export default function MapMarker({
                     show: true,
                   });
                 }}
-              >
-                {" "}
-              </div>
+              ></div>
             </div>
           </div>
         ),
