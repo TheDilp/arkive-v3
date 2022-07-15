@@ -25,7 +25,8 @@ import {
   CreateMapProps,
   MapMarkerProps,
   MapProps,
-  MapUpdateProps,
+  MapUpdateProps as UpdateMapProps,
+  UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
 import { toastError } from "./utils";
@@ -392,17 +393,17 @@ export const updateProject = async (
     }
   }
 };
-export const updateMap = async (MapUpdateProps: MapUpdateProps) => {
+export const updateMap = async (UpdateMapProps: UpdateMapProps) => {
   let user = auth.user();
 
   if (user) {
     const { data: map, error } = await supabase
       .from("maps")
       .update({
-        ...MapUpdateProps,
-        map_image: MapUpdateProps.map_image?.id || undefined,
+        ...UpdateMapProps,
+        map_image: UpdateMapProps.map_image?.id || undefined,
       })
-      .eq("id", MapUpdateProps.id);
+      .eq("id", UpdateMapProps.id);
 
     if (map) return map[0];
     if (error) {
@@ -423,6 +424,25 @@ export const updateMapMarker = async (
   if (error) {
     toastError("There was an error updating your map marker.");
     throw new Error(error.message);
+  }
+};
+export const updateMapLayer = async (
+  UpdateMapLayerProps: UpdateMapLayerProps
+) => {
+  const user = auth.user();
+  if (user) {
+    const { data: layer, error } = await supabase
+      .from("map_layers")
+      .update({
+        ...UpdateMapLayerProps,
+        image: UpdateMapLayerProps.image?.id || undefined,
+      });
+
+    if (layer) return layer;
+    if (error) {
+      toastError("There was an error updating your map layer.");
+      throw new Error(error.message);
+    }
   }
 };
 export const updateBoard = async (UpdateBoardProps: UpdateBoardProps) => {

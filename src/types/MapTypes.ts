@@ -118,6 +118,13 @@ export type UpdateMarkerInputs = {
 export type CreateMapLayerProps = {
   id: string;
   title: string;
-  image?: string;
+  image?: ImageProps;
   map_id: string;
+};
+
+export type UpdateMapLayerProps = {
+  id: string;
+  map_id: string;
+  title?: string;
+  image?: ImageProps;
 };

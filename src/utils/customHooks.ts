@@ -19,6 +19,7 @@ import {
   CreateMapLayerProps,
   MapProps,
   MapUpdateProps,
+  UpdateMapLayerProps,
 } from "../types/MapTypes";
 import {
   createBoard,
@@ -51,6 +52,7 @@ import {
   updateDocument,
   updateEdge,
   updateMap,
+  updateMapLayer,
   updateMapMarker,
   updateNode,
   updateProject,
@@ -560,6 +562,7 @@ export function useCreateMap() {
                   markers: [],
                   public: false,
                   sort: oldData.length,
+                  map_layers: [],
                 },
               ];
               return newData;
@@ -572,6 +575,7 @@ export function useCreateMap() {
                     : null,
                   folder: newMap.folder ? newMap.folder : false,
                   markers: [],
+                  map_layers: [],
                   public: false,
                   sort: 0,
                 },
@@ -927,8 +931,8 @@ export function useCreateMapLayer(project_id: string) {
                     ...map,
                     // Check if map layers is iterable
                     map_layers: map.map_layers
-                      ? [...map.map_layers, newLayer]
-                      : [newLayer],
+                      ? [...map.map_layers, { ...newLayer, image: undefined }]
+                      : [{ ...newLayer, image: undefined }],
                   };
                 } else {
                   return map;
@@ -950,7 +954,59 @@ export function useCreateMapLayer(project_id: string) {
     }
   );
 }
+// Custom hook to update map layer
+export function useUpdateMapLayer(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: UpdateMapLayerProps) => {
+      await updateMapLayer(vars);
+    },
+    {
+      onMutate: async (updatedLayer) => {
+        const previousMaps = queryClient.getQueryData(`${project_id}-maps`);
+        queryClient.setQueryData(
+          `${project_id}-maps`,
+          (oldData: MapProps[] | undefined) => {
+            if (oldData) {
+              let newData: MapProps[] = oldData.map((map) => {
+                if (map.id === updatedLayer.map_id) {
+                  return {
+                    ...map,
 
+                    map_layers: map.map_layers.map((layer) => {
+                      if (layer.id === updatedLayer.id) {
+                        layer = {
+                          ...layer,
+                          title: updatedLayer.title
+                            ? updatedLayer.title
+                            : layer.title,
+                          image: updatedLayer.image
+                            ? updatedLayer.image
+                            : layer.image,
+                        };
+                      }
+                      return layer;
+                    }),
+                  };
+                } else {
+                  return map;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousMaps };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(`${project_id}-maps`, context?.previousMaps);
+        toastError("There was an error updating this map marker.");
+      },
+    }
+  );
+}
 // Custom hook for getting boards
 export function useGetBoards(project_id: string) {
   const { data, isLoading } = useQuery(
