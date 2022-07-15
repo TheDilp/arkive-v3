@@ -5,18 +5,16 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Dispatch, SetStateAction, useState } from "react";
-import { Controller } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import {
-  UpdateMapMarkerProps,
-  UpdateMarkerInputs,
-} from "../../../../custom-types";
+import { MapProps, UpdateMarkerInputs } from "../../../../types/MapTypes";
 import {
   useGetDocuments,
   useGetMaps,
   useUpdateMapMarker,
 } from "../../../../utils/customHooks";
 import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
+import ImageSelectDropdown from "../../../Util/ImageSelectDropdown";
+import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import MarkerIconSelect from "./MarkerIconSelect";
 type Props = {
   id: string;
@@ -155,6 +153,8 @@ export default function MarkerUpdateDialog({
             className="w-full"
             placeholder="Link Document"
             value={doc_id}
+            filter
+            filterBy="title"
             onChange={(e) =>
               setVisible((prev) => ({
                 ...prev,
@@ -186,6 +186,12 @@ export default function MarkerUpdateDialog({
                 map_link: e.target.value,
               }))
             }
+            itemTemplate={(item: MapProps) => (
+              <ImgDropdownItem
+                title={item.title}
+                link={item.map_image?.link || ""}
+              />
+            )}
             options={
               maps.data
                 ? [
