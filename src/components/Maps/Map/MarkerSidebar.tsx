@@ -1,8 +1,9 @@
 import { Sidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
 import React, { Dispatch, SetStateAction } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetDocuments, useGetMaps } from "../../../utils/customHooks";
+import { supabaseStorageImagesLink } from "../../../utils/utils";
 
 type Props = {
   map_id: string | undefined;
@@ -52,13 +53,32 @@ export default function MarkerSidebar({
         )}
       >
         {document && (
-          <TabPanel header={document.title}>
+          <TabPanel
+            header={
+              <div>
+                {document.title} <i className="pi pi-file"></i>
+              </div>
+            }
+          >
             <h1>Ayyyyy</h1>
           </TabPanel>
         )}
         {map && (
-          <TabPanel header={map.title}>
-            <h1>Ayyyyy map</h1>
+          <TabPanel
+            header={
+              <div>
+                {map.title} <i className="pi pi-map"></i>
+              </div>
+            }
+          >
+            <div className="w-full overflow-hidden">
+              <Link to={`../../${map.id}`}>
+                <img
+                  src={supabaseStorageImagesLink + map.map_image?.link}
+                  className="w-full cursor-pointer markerSidebarMapPreview"
+                />
+              </Link>
+            </div>
           </TabPanel>
         )}
       </TabView>

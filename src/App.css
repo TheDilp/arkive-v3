@@ -146,6 +146,15 @@ body {
   border-top-color: var(--gray-800) !important;
 }
 
+.markerSidebarMapPreview {
+  transition: transform ease-in-out 0.1s;
+
+}
+
+.markerSidebarMapPreview:hover {
+  transform: scale(1.05);
+  transition: transform ease-in-out 0.1s;
+}
 
 /* CUSTOM SCROLLBAR */
 
