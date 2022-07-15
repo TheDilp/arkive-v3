@@ -1,14 +1,19 @@
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ImageProps, ProjectProps } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
-import { deleteProject } from "../../../utils/supabaseUtils";
-import { useGetImages, useUpdateProject } from "../../../utils/customHooks";
+import {
+  useGetImages,
+  useUpdateProject
+} from "../../../utils/customHooks";
+import { deleteProject, exportProject } from "../../../utils/supabaseUtils";
 import { supabaseStorageImagesLink, toastSuccess } from "../../../utils/utils";
-import { Dropdown } from "primereact/dropdown";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 type Props = {
   project: ProjectProps;
@@ -33,6 +38,7 @@ export default function ProjectSettings({ project }: Props) {
         });
       },
     });
+
   return (
     <article className="w-full px-3 justify-content-center text-white">
       <ConfirmDialog />
@@ -104,6 +110,50 @@ export default function ProjectSettings({ project }: Props) {
         </div>
       </section>
 
+      <section className="Lato my-6">
+        <hr />
+        <div className="w-fit">
+          <h3>Export Project</h3>
+          <p>
+            This exports all data related to documents, maps, boards and images
+            from this project. This exports them as JSON (docs, maps, boards).
+          </p>
+          <div className="w-full">
+            <Button
+              label="Export All"
+              icon="pi pi-fw pi-download"
+              className="p-button-outlined p-button-primary"
+              onClick={async () => {
+                await exportProject(project_id as string);
+                const zip = new JSZip();
+                let images_folder = zip.folder("images");
+
+                if (images?.data) {
+                  for (let index = 0; index < images?.data?.length; index++) {
+                    const res = await fetch(
+                      supabaseStorageImagesLink + images.data[index].link
+                    );
+                    const blob = await res.blob();
+                    images_folder?.file(images?.data[index].title, blob, {
+                      base64: true,
+                    });
+                  }
+                  zip
+                    ?.generateAsync({
+                      type: "blob",
+                      compression: "DEFLATE",
+                      compressionOptions: {
+                        level: 5,
+                      },
+                    })
+                    .then((content) => saveAs(content, "example.zip"));
+                }
+              }}
+              iconPos="right"
+            />
+          </div>
+        </div>
+      </section>
       <section className="Lato my-6">
         <hr />
         <div className="w-fit">

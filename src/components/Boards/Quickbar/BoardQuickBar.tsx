@@ -182,6 +182,7 @@ export default function BoardQuickBar() {
             onChange={(e) => setSearch(e.value)}
           />
         </Dialog>
+        {/* Export board dialog */}
         <Dialog
           header={`Export Board - ${board?.title}`}
           modal={false}

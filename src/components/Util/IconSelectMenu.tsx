@@ -30,7 +30,7 @@ export default function IconSelectMenu({
     ),
     parentRef,
     estimateSize: useCallback(() => 30, []),
-    overscan: 5,
+    overscan: 15,
   });
   const columnVirtualizer = useVirtual({
     horizontal: true,
@@ -54,7 +54,7 @@ export default function IconSelectMenu({
   return (
     <div
       ref={ref}
-      className="fixed surface-100 z-5 w-13rem  h-20rem"
+      className="fixed surface-100 z-5 w-13rem h-20rem border-round-sm"
       style={{
         left,
         top,
