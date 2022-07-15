@@ -532,7 +532,6 @@ export function useCreateMap() {
       title: string;
       map_image: ImageProps | undefined;
       expanded: boolean;
-      layers: [];
       folder?: boolean;
       parent?: string | null;
     }) => {

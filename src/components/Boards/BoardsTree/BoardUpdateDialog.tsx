@@ -164,7 +164,7 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
                 updateBoardMutation.mutate({
                   id: visible.id,
                   title: visible.title,
-                  parent: visible.parent,
+                  parent: visible.parent === "0" ? null : visible.parent,
                   defaultNodeColor: visible.defaultNodeColor,
                   defaultEdgeColor: visible.defaultEdgeColor,
                 })

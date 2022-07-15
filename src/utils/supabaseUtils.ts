@@ -224,10 +224,10 @@ export const createTemplate = async (
     }
   }
 };
-export const createMap = async (MapCreateProps: CreateMapProps) => {
+export const createMap = async (CreateMapProps: CreateMapProps) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase.from("maps").insert(MapCreateProps);
+    const { data, error } = await supabase.from("maps").insert(CreateMapProps);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your map.");
