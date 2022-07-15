@@ -9,7 +9,7 @@ import { SidebarContext } from "../Context/SidebarContext";
 import NavbarTitle from "./NavbarTitle";
 import NavSettingsButton from "./NavSettingsButton";
 import Quickupload from "./Quickupload";
-import SearchDialog from "./SearchDialog";
+import GlobalSearch from "./GlobalSearch";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -192,7 +192,7 @@ export default function Navbar() {
             uploadDialog={uploadDialog}
             setUploadDialog={setUploadDialog}
           />
-          <SearchDialog search={search} setSearch={setSearch} />{" "}
+          <GlobalSearch search={search} setSearch={setSearch} />{" "}
         </>
       )}
       <Menubar
