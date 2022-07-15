@@ -126,6 +126,7 @@ export default function BoardQuickBar() {
     >
       {/* Dialogs */}
       <>
+        {/* Search nodes dialog */}
         <Dialog
           visible={searchDialog}
           onHide={() => {
@@ -147,6 +148,7 @@ export default function BoardQuickBar() {
             suggestions={filteredNodes}
             onSelect={(e) => {
               if (!cyRef) return;
+              console.log(e.value);
               if (e.value) {
                 let foundNode = cyRef.current.getElementById(e.value.id);
                 cyRef.current.animate(
@@ -170,23 +172,7 @@ export default function BoardQuickBar() {
               )
             }
             itemTemplate={(item: BoardNodeProps) => (
-              <span
-                onClick={(e: any) => {
-                  if (!cyRef) return;
-                  let foundNode = cyRef.current.getElementById(item.id);
-                  cyRef.current.animate(
-                    {
-                      center: {
-                        eles: foundNode,
-                      },
-                      zoom: 1,
-                    },
-                    {
-                      duration: 1250,
-                    }
-                  );
-                }}
-              >
+              <span>
                 <ImgDropdownItem
                   title={item.label || ""}
                   link={item.customImage?.link || ""}
