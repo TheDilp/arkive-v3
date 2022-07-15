@@ -47,7 +47,7 @@ export default function MapTreeItem({
             link: "",
             type: "Image",
           },
-          layers: node.data?.layers || [],
+          map_layers: node.data?.map_layers || [],
           parent: node.parent as string,
           depth,
           show: false,

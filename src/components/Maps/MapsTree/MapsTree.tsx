@@ -115,7 +115,7 @@ export default function MapsTree({
         setMapData={setUpdateMapDialog}
       />
       <MapLayersDialog
-        visible={updateMapLayers.show}
+        visible={updateMapLayers}
         setVisible={setUpdateMapLayers}
       />
       <TreeSidebar>

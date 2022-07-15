@@ -7,7 +7,7 @@ export type MapProps = {
   parent: { id: string; title: string } | null;
   project_id: string;
   markers: MapMarkerProps[];
-  layers: MapLayerProps[];
+  map_layers: MapLayerProps[];
   folder: boolean;
   expanded: boolean;
   public: boolean;
@@ -29,7 +29,7 @@ export type MapMarkerProps = {
 export type MapLayerProps = {
   id: string;
   title: string;
-  image?: string;
+  image?: ImageProps;
   map_id: string;
 };
 
@@ -37,7 +37,7 @@ export type MapItemDisplayDialogProps = {
   id: string;
   title: string;
   map_image: ImageProps;
-  layers: MapLayerProps[];
+  map_layers: MapLayerProps[];
   parent: string;
   folder: boolean;
   depth: number;

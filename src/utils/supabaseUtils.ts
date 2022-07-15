@@ -135,7 +135,7 @@ export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link), map_layers(*)"
+      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link), map_layers(*, images(id, title, link))"
     )
     .eq("project_id", project_id)
     .order("sort", { ascending: true });

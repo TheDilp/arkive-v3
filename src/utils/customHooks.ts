@@ -926,7 +926,9 @@ export function useCreateMapLayer(project_id: string) {
                   return {
                     ...map,
                     // Check if map layers is iterable
-                    layers: map.layers ? [...map.layers, newLayer] : [newLayer],
+                    map_layers: map.map_layers
+                      ? [...map.map_layers, newLayer]
+                      : [newLayer],
                   };
                 } else {
                   return map;
