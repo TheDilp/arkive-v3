@@ -1,2 +1,2 @@
-/www.thearkive.app /homepage.html 200
-app.thearkive.app/* /index.html 200
+/app.thearkive.app/* /index.html 200
+/thearkive.app/* /homepage.html 200
