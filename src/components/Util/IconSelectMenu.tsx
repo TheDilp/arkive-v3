@@ -25,7 +25,7 @@ export default function IconSelectMenu({
   const rowVirtualizer = useVirtual({
     size: Math.ceil(
       iconList.filter((icon) =>
-        search ? icon.startsWith(search.toLowerCase()) : true
+        search ? icon.includes(search.toLowerCase()) : true
       ).length / 6
     ),
     parentRef,
