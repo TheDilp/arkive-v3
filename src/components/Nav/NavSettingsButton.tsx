@@ -11,7 +11,7 @@ export default function NavSettingsButton() {
   return projectData?.user_id === user?.id ? (
     <i
       className="pi pi-cog mr-3 cursor-pointer hover:text-primary settingsIcon"
-      onClick={() => navigate("settings/documents-settings")}
+      onClick={() => navigate("settings/project-settings")}
     ></i>
   ) : null;
 }

@@ -8,10 +8,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ImageProps, ProjectProps } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
-import {
-  useGetImages,
-  useUpdateProject
-} from "../../../utils/customHooks";
+import { useGetImages, useUpdateProject } from "../../../utils/customHooks";
 import { deleteProject, exportProject } from "../../../utils/supabaseUtils";
 import { supabaseStorageImagesLink, toastSuccess } from "../../../utils/utils";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -22,6 +19,7 @@ type Props = {
 export default function ProjectSettings({ project }: Props) {
   const { project_id } = useParams();
   const [localProject, setLocalProject] = useState<ProjectProps>(project);
+  const [loading, setLoading] = useState(false);
   const projectMutation = useUpdateProject();
   const images = useGetImages(project_id as string);
   const navigate = useNavigate();
@@ -38,6 +36,41 @@ export default function ProjectSettings({ project }: Props) {
         });
       },
     });
+
+  const exportImages = async () => {
+    setLoading(true);
+    const zip = new JSZip();
+    let images_folder = zip.folder("images");
+
+    if (images?.data) {
+      for (let index = 0; index < images?.data?.length; index++) {
+        const res = await fetch(
+          supabaseStorageImagesLink + images.data[index].link
+        );
+        const blob = await res.blob();
+        images_folder?.file(images?.data[index].title, blob, {
+          base64: true,
+        });
+      }
+      zip
+        ?.generateAsync({
+          type: "blob",
+          compression: "DEFLATE",
+          compressionOptions: {
+            level: 5,
+          },
+        })
+        .then((content) => {
+          saveAs(content, `${project_id}-images.zip`);
+          setLoading(false);
+        });
+    }
+  };
+
+  const exportAll = async () => {
+    await exportProject(project_id as string);
+    await exportImages();
+  };
 
   return (
     <article className="w-full px-3 justify-content-center text-white">
@@ -123,32 +156,23 @@ export default function ProjectSettings({ project }: Props) {
               label="Export All"
               icon="pi pi-fw pi-download"
               className="p-button-outlined p-button-primary"
-              onClick={async () => {
-                await exportProject(project_id as string);
-                const zip = new JSZip();
-                let images_folder = zip.folder("images");
-
-                if (images?.data) {
-                  for (let index = 0; index < images?.data?.length; index++) {
-                    const res = await fetch(
-                      supabaseStorageImagesLink + images.data[index].link
-                    );
-                    const blob = await res.blob();
-                    images_folder?.file(images?.data[index].title, blob, {
-                      base64: true,
-                    });
-                  }
-                  zip
-                    ?.generateAsync({
-                      type: "blob",
-                      compression: "DEFLATE",
-                      compressionOptions: {
-                        level: 5,
-                      },
-                    })
-                    .then((content) => saveAs(content, "example.zip"));
-                }
-              }}
+              onClick={exportAll}
+              iconPos="right"
+            />
+          </div>
+        </div>
+        <div className="w-full">
+          <h4>Export Images</h4>
+          <p>
+            This button exports only images that are related to this project.
+          </p>
+          <div className="w-full">
+            <Button
+              label="Export Images"
+              icon="pi pi-fw pi-download"
+              className="p-button-outlined p-button-primary"
+              onClick={exportImages}
+              loading={loading}
               iconPos="right"
             />
           </div>
