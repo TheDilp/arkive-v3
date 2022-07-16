@@ -43,9 +43,8 @@ export default function DocumentsSettingsTable() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [globalFilter, setGlobalFilter] = useState("");
-  const [selectedDocuments, setSelectedDocuments] = useState<DocumentProps[]>(
-    []
-  );
+  const [localDocuments, setLocalDocuments] = useState<DocumentProps[]>([]);
+  const [selectedDocuments, setSelectedDocuments] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const [iconSelect, setIconSelect] = useState<IconSelectProps>({
@@ -57,18 +56,18 @@ export default function DocumentsSettingsTable() {
   });
   const ref = useRef(null);
   const documents = useGetDocuments(project_id as string);
-  const [localDocuments, setLocalDocuments] = useState(documents.data);
   const { data: categories } = useGetTags(project_id as string);
   const images = useGetImages(project_id as string);
   // MUTATIONS
 
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const createDocumentMutation = useCreateDocument(project_id as string);
+
   useEffect(() => {
-    if (documents) {
+    if (documents.data) {
       setLocalDocuments(documents.data);
     }
-  }, [documents]);
+  }, [documents.data]);
 
   if (!documents) return <LoadingScreen />;
   const categoriesBodyTemplate = (rowData: DocumentProps) => {
@@ -290,16 +289,13 @@ export default function DocumentsSettingsTable() {
               acceptClassName: "p-button-danger",
               className: selectAll ? "deleteAllDocuments" : "",
               accept: () => {
-                let documentIdsForDeletion = selectedDocuments.map(
-                  (doc: DocumentProps) => doc.id
-                );
-                deleteManyDocuments(documentIdsForDeletion).then(() => {
+                deleteManyDocuments(selectedDocuments).then(() => {
                   queryClient.setQueryData(
                     `${project_id}-documents`,
                     (oldData: DocumentProps[] | undefined) => {
                       if (oldData) {
                         return oldData.filter(
-                          (doc) => !documentIdsForDeletion.includes(doc.id)
+                          (doc) => !selectedDocuments.includes(doc.id)
                         );
                       } else {
                         return [];
@@ -411,8 +407,9 @@ export default function DocumentsSettingsTable() {
     return (
       <AutoComplete
         value={
-          localDocuments?.find((doc) => doc.id === options.rowData.id)
-            ?.categories || []
+          localDocuments?.find(
+            (doc: DocumentProps) => doc.id === options.rowData.id
+          )?.categories || []
         }
         suggestions={filteredCategories}
         placeholder={
@@ -477,7 +474,6 @@ export default function DocumentsSettingsTable() {
       </>
     );
   };
-
   return (
     <section className="w-full px-2 mt-4 overflow-hidden">
       <ConfirmDialog />
@@ -495,15 +491,17 @@ export default function DocumentsSettingsTable() {
           ?.map((doc) => {
             return { ...doc, categories: doc.categories.sort() };
           })}
-        selection={selectedDocuments}
+        selection={documents.data?.filter((doc) =>
+          selectedDocuments.includes(doc.id)
+        )}
         selectionMode="checkbox"
         paginator
         rows={12}
         showGridlines
         onSelectionChange={(e) => {
           const value = e.value;
-          setSelectedDocuments(value);
-          setSelectAll(value.length === documents.data?.length);
+          setSelectedDocuments(value.map((row: DocumentProps) => row.id));
+          setSelectAll(value.length === localDocuments?.length);
         }}
         filterDisplay="menu"
         sortMode="multiple"
