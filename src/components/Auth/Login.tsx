@@ -12,12 +12,12 @@ export default function Login() {
 
   auth.onAuthStateChange((event) => {
     if (event === "SIGNED_IN" && !auth.user()) {
-      navigate("/");
+      navigate("/home");
     }
   });
 
   return auth.user() ? (
-    <Navigate to="/" />
+    <Navigate to="/home" />
   ) : (
     <div className="w-full h-screen flex align-items-center justify-content-center">
       <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-20rem flex-wrap">
