@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import {
   useCreateMapLayer,
   useDeleteMapLayer,
-  useGetMapData,
   useUpdateMapLayer,
 } from "../../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
