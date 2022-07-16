@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Merriweather:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="Home.css">
+    <link rel="stylesheet" href="../node_modules/primeflex/primeflex.css">
+    <link rel="stylesheet" href="../node_modules/primeicons/primeicons.css">
+    <link rel="stylesheet" href="../node_modules/primereact/resources/themes/arya-blue/theme.css">
+    <title>The Arkive</title>
+</head>
+
+<body style="background-color: #121212; margin:0;" class="px-3">
+    <article class="w-full h-screen Lato flex flex-wrap justify-content-center align-content-start">
+        <nav class="w-8 flex text-white justify-content-between align-items-start text-xl px-5">
+            <div class="flex align-items-center column-gap-5">
+                <div>
+                    <img class="w-3rem h-3rem" src="android-chrome-512x512.png" alt="Arkive Logo" />
+                </div>
+                <div class="hover:text-blue-400 cursor-pointer">Features</div>
+                <div class="hover:text-blue-400 cursor-pointer">Pricing</div>
+                <div class="hover:text-blue-400 cursor-pointer">FAQ</div>
+                <div class="hover:text-blue-400 cursor-pointer">
+                    Discord <i class="pi pi-discord"></i>
+                </div>
+            </div>
+            <div class="flex align-items-center column-gap-5">
+                <div class="mt-3 cursor-pointer">
+                    <a href="/login" class="text-white no-underline hover:text-blue-400">
+                        Sign in
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <section class="w-8 text-white flex flex-wrap">
+            <div class="w-full">
+                <h1 class="Merriweather text-7xl text-center mb-0">Arkive</h1>
+                <h3 class="Merriweather text-5xl text-center mt-2">Discover your world</h3>
+            </div>
+
+            <div class="w-full flex flex-wrap row-gap-8 justify-content-around">
+                <h2 class="w-full Merriweather text-center text-3xl">Features</h2>
+
+                <!-- Wiki Feature -->
+                <div class="w-full flex justify-content-between">
+                    <div class="w-8">
+                        <img src="WikiCardImg.webp" class="cardImg  border-round-sm shadow-5" loading="lazy" />
+                    </div>
+                    <div class="w-3">
+                        <h5 class="Merriweather text-2xl mb-2">Wikis <i class="pi pi-book text-2xl"></i></h5>
+                        <p class="w-full text-gray-200 line-height-3">Create wikis with our rich text editor. Organize
+                            your
+                            documents however you
+                            want. <br>
+                            Speed up your workflow with templates. <br>
+                            Link other documents, maps and more.</p>
+
+                        <a href="#allFeatures"
+                            class="hover:text-blue-400 text-white font-medium no-underline text-md p-button p-button-outlined p-button-primary">Learn
+                            More</a>
+                    </div>
+                </div>
+
+                <!-- Map Feature -->
+                <div class="w-full flex justify-content-between flex-row-reverse">
+                    <div class="w-8">
+                        <img src="MapCardImg.webp" class="cardImg border-round-sm shadow-5" loading="lazy" />
+                    </div>
+                    <div class="w-3">
+                        <h5 class="Merriweather text-2xl mb-2">Maps <i class="pi pi-map text-2xl"></i></h5>
+                        <p class="w-full text-gray-200 line-height-3">
+                            Upload maps and mark important locations with pins.
+                            <br>
+                            Connect documents and other maps to pins. <br>
+                            Create layers for each map to showcase cultures, borders, religions and more.</p>
+
+                        <a href="#all_features"
+                            class="hover:text-blue-400 text-white font-medium no-underline text-md p-button p-button-outlined p-button-primary">Learn
+                            More</a>
+                    </div>
+                </div>
+
+                <!-- Boards Feature -->
+                <div class="w-full flex justify-content-between">
+                    <div class="w-8">
+                        <img src="BoardCardImg.webp" class="cardImg border-round-sm shadow-5" loading="lazy" />
+                    </div>
+                    <div class="w-3">
+                        <h5 class="text-2xl mb-2 Merriweather">Boards <i class="pi pi-share-alt text-2xl"></i></h5>
+                        <p class="w-full text-gray-200 line-height-3">
+                            Create customizable graphs, create relations between nodes.
+                            <br>
+                            Link documents to nodes or quickly create nodes from existing documents.<br>
+                        </p>
+                        <a href="#all_features"
+                            class="hover:text-blue-400 text-white font-medium no-underline text-md p-button p-button-outlined p-button-primary">Learn
+                            More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="w-full flex flex-wrap row-gap-4 justify-content-around text-white mt-8" id="allFeatures">
+            <h2 class="w-full Merriweather text-center text-3xl mb-0">All Features</h2>
+            <h3 class="Lato text-gray-400 text-center text-2xl mt-0">Let your imagination loose with our extensive suite
+                of
+                features</h3>
+            <div class="w-full flex justify-content-center column-gap-3">
+                <div class="w-3 p-card">
+                    <h4 class="Merriweather text-center text-xl">Wikis</h4>
+                    <ul class="list-none featuresList">
+                        <li>Create extensive documents with no word limit</li>
+                        <li>Organize documents into folders</li>
+                        <li>Mark each document its own special icon</li>
+                        <li>Create and customize templates for a faster workflow</li>
+                        <li>Write documents with a rich text editor</li>
+                        <li>Link other documents, maps and even boards inside the editor</li>
+                        <li>Hover over linked documents to show a preview (map and board previews coming soon!)</li>
+                        <li>Give documents tags for faster searching and categorizing</li>
+                        <li>Make documents public so that anyone can see your work</li>
+                    </ul>
+                </div>
+                <div class="w-3 p-card">
+                    <h4 class="Merriweather text-center text-xl">Maps</h4>
+                    <ul class="list-none featuresList">
+                        <li>Create maps and organize them into folders</li>
+                        <li>Create layers to add more context to each map</li>
+                        <li>Mark important locations with customizable pins and icons (more shapes coming soon!)</li>
+                        <li>Link documents and maps to pins</li>
+                        <li>Get a quick overview of linked items by clicking on pins</li>
+                    </ul>
+                </div>
+                <div class="w-3 p-card">
+                    <h4 class="Merriweather text-center text-xl">Boards</h4>
+                    <ul class="list-none featuresList">
+                        <li>Create large graphs with countless nodes and relations (family trees, guild members, etc.)
+                        </li>
+                        <li>Customize nodes and relations with different shapes, sizes, fonts, colors, images and more
+                        </li>
+                        <li>Link documents and nodes to provide extra detail</li>
+                        <li>Drag documents onto the board to quickly create linked nodes</li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+
+        </section>
+        <div class="w-full flex flex-wrap row-gap-4 justify-content-around">
+            <h2 class="w-full text-white text-center text-3xl">Coming Soon</h2>
+            
+        </div>
+    </article>
+</body>
+
+</html>
