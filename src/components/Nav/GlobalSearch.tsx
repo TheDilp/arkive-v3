@@ -1,6 +1,5 @@
 import { Icon } from "@iconify/react";
 import { AutoComplete } from "primereact/autocomplete";
-import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { SelectButton } from "primereact/selectbutton";
 import { useEffect, useState } from "react";
@@ -38,29 +37,42 @@ export default function GlobalSearch({ search, setSearch }: Props) {
   useEffect(() => {
     if (documents && maps && boards && search && search.length >= 3) {
       const timeout = setTimeout(async () => {
-        const initialData: Array<
+        let filteredDocs: DocumentProps[] = [];
+        let filteredMaps: MapProps[] = [];
+        let filteredMarkers: MapMarkerProps[] = [];
+        let filteredBoards: BoardProps[] = [];
+        let filteredNodes: BoardNodeProps[] = [];
+        if (categories.includes("Docs")) {
+          filteredDocs = documents.filter(
+            (doc) => !doc.folder && !doc.template
+          );
+        }
+        if (categories.includes("Maps")) {
+          filteredMaps = maps.filter((map) => !map.folder);
+        }
+        if (categories.includes("Markers")) {
+          filteredMarkers = maps.map((map) => map.markers).flat();
+        }
+        if (categories.includes("Boards")) {
+          filteredBoards = boards.filter((board) => !board.folder);
+        }
+        if (categories.includes("Nodes")) {
+          filteredNodes = boards.map((board) => board.nodes).flat();
+        }
+
+        let initialData: Array<
           | DocumentProps
           | MapProps
           | BoardProps
           | BoardNodeProps
           | MapMarkerProps
-        > = [
-          ...(categories.includes("Docs")
-            ? documents.filter((doc) => !doc.folder && !doc.template)
-            : []),
-          ...(categories.includes("Maps")
-            ? maps.filter((map) => !map.folder)
-            : []),
-          ...(categories.includes("Markers")
-            ? maps.map((map) => map.markers).flat()
-            : []),
-          ...(categories.includes("Boards")
-            ? boards.filter((board) => !board.folder)
-            : []),
-          ...(categories.includes("Nodes")
-            ? boards.map((board) => board.nodes).flat()
-            : []),
-        ];
+        > = [];
+        initialData = initialData
+          .concat(filteredDocs)
+          .concat(filteredMaps)
+          .concat(filteredMarkers)
+          .concat(filteredBoards)
+          .concat(filteredNodes);
         let data = initialData.filter((item) => {
           if (!item) return false;
           if ("content" in item) {
