@@ -1,7 +1,7 @@
 import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { DndProvider } from "react-dnd";
-import { Navigate, Outlet, useParams } from "react-router-dom";
+import { Navigate, Outlet, Route, useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import {
   useGetBoards,
@@ -18,7 +18,17 @@ import ProjectContextProvider from "../Context/ProjectContext";
 import SidebarProvider from "../Context/SidebarContext";
 import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
-
+import cytoscape from "cytoscape";
+import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
+const Wiki = lazy(() => import("../Wiki/Wiki"));
+const Maps = lazy(() => import("../Maps/Maps"));
+const Boards = lazy(() => import("../Boards/Boards"));
+const ProjectSettings = lazy(
+  () => import("./ProjectSettings/ProjectSettingsIndex")
+);
+const FileBrowser = lazy(() => import("../FileBrowser/FileBrowser"));
+const Timelines = lazy(() => import("../Timelines/TImelines"));
 export default function Project() {
   const { project_id } = useParams();
   const project = useGetProjectData(project_id as string);
@@ -49,6 +59,10 @@ export default function Project() {
     }
   }, [images?.data]);
 
+  useEffect(() => {
+    cytoscape.use(edgehandles);
+    cytoscape.use(gridguide);
+  }, []);
   if (!user) return <Navigate to="/" />;
 
   if (isLoadingDocuments || isLoadingMaps || isLoadingBoards)
@@ -62,7 +76,40 @@ export default function Project() {
             <FilebrowserProvider>
               <Navbar />
               <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-                <Outlet />
+                <Route
+                  path="wiki/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Wiki />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="maps/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Maps />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="boards/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Boards />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="timelines/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Timelines />
+                    </Suspense>
+                  }
+                />
+                <Route path="filebrowser" element={<FileBrowser />} />
+                <Route path="settings/:setting" element={<ProjectSettings />} />
               </DndProvider>
             </FilebrowserProvider>
           </SidebarProvider>
