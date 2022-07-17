@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Navigate } from "react-router-dom";
 import { auth } from "../../utils/supabaseUtils";
+import PricingCard from "../LandingPage/PricingCard";
 
 export default function LandingPage() {
   const user = auth.user();
@@ -28,7 +29,14 @@ export default function LandingPage() {
               Features
             </a>
           </div>
-          <div className="hover:text-blue-400 cursor-pointer">Pricing</div>
+          <div className="hover:text-blue-400 cursor-pointer">
+            <a
+              href="#pricing"
+              className="hover:text-blue-400 text-white font-medium no-underline"
+            >
+              Pricing
+            </a>
+          </div>
           <div className="hover:text-blue-400 cursor-pointer">FAQ</div>
           <div className="hover:text-blue-400 cursor-pointer">
             <span className="hidden lg:inline">Discord</span>
@@ -475,9 +483,16 @@ export default function LandingPage() {
       </section>
       <hr className="w-full mt-0 border-gray-800" />
 
-      <div className="w-full flex flex-wrap row-gap-4 justify-content-around  lg:px-8">
+      {/* <div className="w-full flex flex-wrap row-gap-4 justify-content-around  lg:px-8">
         <h2 className="w-full text-white text-center text-3xl">Coming Soon</h2>
-      </div>
+      </div> */}
+
+      <section className="w-8 text-white px-8" id="pricing">
+        <h2 className="w-full Merriweather text-center text-3xl my-0">
+          Pricing
+        </h2>
+        <PricingCard />
+      </section>
     </article>
   );
 }
