@@ -27,7 +27,7 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
   );
   const footer = (
     <div className="flex justify-content-between ">
-      <Link to={`/project/${Project.id}/wiki`} className="no-underline">
+      <Link to={`../project/${Project.id}/wiki`} className="no-underline">
         <Button
           label="Wiki"
           icon="pi pi-fw pi-file"

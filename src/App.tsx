@@ -35,7 +35,7 @@ function App() {
   });
 
   return (
-    <main className="App flex flex-wrap justify-content-center surface-0  overflow-y-hidden">
+    <main className="App flex flex-wrap justify-content-center surface-0 overflow-y-hidden">
       <Helmet>
         <title>The Arkive</title>
         <meta
@@ -50,13 +50,13 @@ function App() {
             <Routes>
               <Route path="*" element={<NotFound />} />
               <Route path="/" element={<LandingPage />} />
-              <Route path="/home" element={<Home />} />
+              <Route path="home" element={<Home />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
               {/* <Route path="profile" element={<Profile />} /> */}
               <Route path="help" element={<Help />} />
               <Route
-                path="project/:project_id"
+                path="project/:project_id/*"
                 element={
                   <Suspense fallback={<LoadingScreen />}>
                     <Project />

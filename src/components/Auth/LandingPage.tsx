@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { auth } from "../../utils/supabaseUtils";
 
 export default function LandingPage() {
@@ -7,9 +7,12 @@ export default function LandingPage() {
   if (user) return <Navigate to="/home" />;
 
   return (
-    <article className="w-full h-screen Lato flex flex-wrap justify-content-center align-content-start overflow-y-auto px-8">
-      <nav className="w-8 flex text-white justify-content-between align-items-start text-xl px-5">
-        <div className="flex align-items-center column-gap-5">
+    <article className="w-full h-screen Lato flex flex-wrap justify-content-center align-content-start overflow-y-auto">
+      <nav
+        className="w-full sticky bg-gray-900 shadow-3 px-3 z-5 flex text-white justify-content-between align-items-start text-sm lg:text-xl lg:px-8"
+        style={{ top: 1 }}
+      >
+        <div className="flex align-items-center column-gap-4 lg:column-gap-5">
           <div>
             <img
               className="w-3rem h-3rem"
@@ -17,14 +20,22 @@ export default function LandingPage() {
               alt="Arkive Logo"
             />
           </div>
-          <div className="hover:text-blue-400 cursor-pointer">Features</div>
+          <div className="hover:text-blue-400 cursor-pointer">
+            <a
+              href="#features"
+              className="hover:text-blue-400 text-white font-medium no-underline"
+            >
+              Features
+            </a>
+          </div>
           <div className="hover:text-blue-400 cursor-pointer">Pricing</div>
           <div className="hover:text-blue-400 cursor-pointer">FAQ</div>
           <div className="hover:text-blue-400 cursor-pointer">
-            Discord <i className="pi pi-discord"></i>
+            <span className="hidden lg:inline">Discord</span>
+            <i className="pi pi-discord"></i>
           </div>
         </div>
-        <div className="flex align-items-center column-gap-5">
+        <div className="flex align-items-center ml-5 lg:ml-0">
           <div className="mt-3 cursor-pointer">
             <a
               href="/login"
@@ -35,7 +46,7 @@ export default function LandingPage() {
           </div>
         </div>
       </nav>
-      <section className="w-8 text-white flex flex-wrap">
+      <section className="w-8 text-white flex flex-wrap lg:px-8">
         <div className="w-full">
           <h1 className="Merriweather text-7xl text-center mb-0">Arkive</h1>
           <h3 className="Merriweather text-5xl text-center mt-2">
@@ -44,14 +55,19 @@ export default function LandingPage() {
         </div>
 
         {/* All Features */}
-        <div className="w-full flex flex-wrap row-gap-8 justify-content-around">
-          <h2 className="w-full Merriweather text-center text-3xl">Features</h2>
+        <div className="w-full flex flex-wrap lg:row-gap-8 justify-content-around">
+          <h2
+            className="w-full Merriweather text-center text-3xl"
+            id="features"
+          >
+            Features
+          </h2>
 
-          <div className="w-full flex justify-content-between">
-            <div className="w-8">
+          <div className="w-full flex flex-wrap lg:flex-nowrap justify-content-between">
+            <div className="w-full lg:w-8">
               <img
                 src="WikiCardImg.webp"
-                className="w-full h-full border-round-sm shadow-5"
+                className="w-full h-full border-round-sm shadow-5 hidden lg:inline"
                 loading="lazy"
                 alt="Wiki showcase"
                 style={{
@@ -59,7 +75,7 @@ export default function LandingPage() {
                 }}
               />
             </div>
-            <div className="w-3">
+            <div className="w-full text-center lg:w-3 lg:text-left">
               <h5 className="Merriweather text-2xl mb-2">
                 Wikis <i className="pi pi-book text-2xl"></i>
               </h5>
@@ -78,11 +94,11 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="w-full flex justify-content-between flex-row-reverse">
-            <div className="w-8">
+          <div className="w-full flex flex-wrap lg:flex-nowrap justify-content-between flex-row-reverse">
+            <div className="w-full lg:w-8">
               <img
                 src="MapCardImg.webp"
-                className="w-full h-full border-round-sm shadow-5"
+                className="w-full h-full border-round-sm shadow-5 hidden lg:inline"
                 loading="lazy"
                 alt="Map Showcase"
                 style={{
@@ -90,7 +106,7 @@ export default function LandingPage() {
                 }}
               />
             </div>
-            <div className="w-3">
+            <div className="w-full text-center lg:w-3 lg:text-left">
               <h5 className="Merriweather text-2xl mb-2">
                 Maps <i className="pi pi-map text-2xl"></i>
               </h5>
@@ -101,7 +117,7 @@ export default function LandingPage() {
               </p>
 
               <a
-                href="#mapsFeatures"
+                href="#wikiFeatures"
                 className="hover:text-blue-400 text-white font-medium no-underline text-md p-button p-button-outlined p-button-primary"
               >
                 Learn More
@@ -109,11 +125,11 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="w-full flex justify-content-between">
-            <div className="w-8">
+          <div className="w-full flex flex-wrap lg:flex-nowrap justify-content-between">
+            <div className="w-full lg:w-8">
               <img
                 src="BoardCardImg.webp"
-                className="w-full h-full border-round-sm shadow-5"
+                className="w-full h-full border-round-sm shadow-5 hidden lg:inline"
                 loading="lazy"
                 alt="Board Showcase"
                 style={{
@@ -121,7 +137,7 @@ export default function LandingPage() {
                 }}
               />
             </div>
-            <div className="w-3">
+            <div className="w-full text-center lg:w-3 lg:text-left">
               <h5 className="text-2xl mb-2 Merriweather">
                 Boards <i className="pi pi-share-alt text-2xl"></i>
               </h5>
@@ -131,7 +147,7 @@ export default function LandingPage() {
                 documents.
               </p>
               <a
-                href="#all_features"
+                href="#wikiFeatures"
                 className="hover:text-blue-400 text-white font-medium no-underline text-md p-button p-button-outlined p-button-primary"
               >
                 Learn More
@@ -143,7 +159,7 @@ export default function LandingPage() {
 
       <hr className="w-full mt-8 border-gray-800" />
 
-      <section className="w-full flex flex-wrap row-gap-4 justify-content-around text-white mt-8">
+      <section className="w-full flex flex-wrap row-gap-4 justify-content-around text-white mt-8 lg:px-8">
         <h2 className="w-full Merriweather text-center text-3xl my-0">
           Detailed Features
         </h2>
@@ -158,7 +174,7 @@ export default function LandingPage() {
               Projects
             </h4>
             <div className="flex flex-wrap justify-content-center align-items-start column-gap-2">
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Unlimited projects
                   <Icon icon="mdi:infinity" className="ml-2" fontSize={22} />
@@ -167,7 +183,7 @@ export default function LandingPage() {
                   Create as many worlds as you like.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Export everything
                   <Icon
@@ -181,7 +197,7 @@ export default function LandingPage() {
                   click of a button.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Global Search
                   <Icon icon="mdi:magnify" className="ml-2" fontSize={22} />
@@ -201,7 +217,7 @@ export default function LandingPage() {
               Wikis
             </h4>
             <div className="flex flex-wrap justify-content-center align-items-start column-gap-2">
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Focus on your writing{" "}
                   <Icon icon="mdi:book" className="ml-2" fontSize={22} />
@@ -211,7 +227,7 @@ export default function LandingPage() {
                   text editor with no word limit to hold you back.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Categorize with tags
                   <Icon
@@ -224,7 +240,7 @@ export default function LandingPage() {
                   Give documents tags for faster searching and categorizing
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Make documents stand out
                   <Icon icon="mdi:crown" className="ml-2" fontSize={22} />
@@ -233,9 +249,9 @@ export default function LandingPage() {
                   Mark each document its own special icon to give it some flair.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
-                  Speed things up with templates
+                  Speed up with templates
                   <Icon
                     icon="mdi:content-copy"
                     className="ml-2"
@@ -247,7 +263,7 @@ export default function LandingPage() {
                   create reusable templates.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Link everything together
                   <Icon
@@ -261,7 +277,7 @@ export default function LandingPage() {
                   editor.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Quickly preview linked items
                   <Icon
@@ -275,7 +291,7 @@ export default function LandingPage() {
                   previews coming soon!)
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Share with the world
                   <Icon icon="mdi:earth" className="ml-2" fontSize={22} />
@@ -284,7 +300,7 @@ export default function LandingPage() {
                   Make documents public so that anyone can see your work.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Export
                   <Icon
@@ -298,7 +314,7 @@ export default function LandingPage() {
                   JSON format.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Organize things your way
                   <Icon icon="mdi:file-tree" className="ml-2" fontSize={22} />
@@ -318,7 +334,7 @@ export default function LandingPage() {
               Maps
             </h4>
             <div className="flex flex-wrap justify-content-center align-items-start column-gap-2">
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Map Layers
                   <Icon
@@ -332,7 +348,7 @@ export default function LandingPage() {
                   into folders for better and faster navigation.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Pin important locations
                   <Icon icon="mdi:map-marker" className="ml-2" fontSize={22} />
@@ -342,7 +358,7 @@ export default function LandingPage() {
                   (more shapes and icons coming soon!)
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Connect documents and maps
                   <Icon
@@ -356,7 +372,7 @@ export default function LandingPage() {
                   in your world and quickly navigate between them.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Quick view
                   <Icon
@@ -369,7 +385,7 @@ export default function LandingPage() {
                   Get a quick overview of linked items by clicking on pins.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Organize things your way
                   <Icon icon="mdi:file-tree" className="ml-2" fontSize={22} />
@@ -387,7 +403,7 @@ export default function LandingPage() {
           <div className="w-full">
             <h4 className="Merriweather text-center text-xl">Boards</h4>
             <div className="flex flex-wrap justify-content-center align-items-start column-gap-2">
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Connect everything
                   <Icon
@@ -402,7 +418,7 @@ export default function LandingPage() {
                 </p>
               </div>
 
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Customize
                   <Icon
@@ -416,7 +432,7 @@ export default function LandingPage() {
                   fonts, colors, images and more.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Link documents
                   <Icon
@@ -430,7 +446,7 @@ export default function LandingPage() {
                   worlds.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Drag & Create
                   <Icon
@@ -444,7 +460,7 @@ export default function LandingPage() {
                   onto the board.
                 </p>
               </div>
-              <div className="w-3 h-12rem">
+              <div className="lg:w-3 lg:h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Organize things your way
                   <Icon icon="mdi:file-tree" className="ml-2" fontSize={22} />
@@ -459,7 +475,7 @@ export default function LandingPage() {
       </section>
       <hr className="w-full mt-0 border-gray-800" />
 
-      <div className="w-full flex flex-wrap row-gap-4 justify-content-around">
+      <div className="w-full flex flex-wrap row-gap-4 justify-content-around  lg:px-8">
         <h2 className="w-full text-white text-center text-3xl">Coming Soon</h2>
       </div>
     </article>

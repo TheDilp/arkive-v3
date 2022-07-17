@@ -155,6 +155,9 @@ body {
   transition: transform ease-in-out 0.1s;
 }
 
+.landingImgCard {
+  object-fit: cover;
+}
 
 /* CUSTOM SCROLLBAR */
 
@@ -165,11 +168,13 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
+  z-index: 0;
   background: #888;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
+  z-index: 0;
   background: #f1f1f1;
 }
 
