@@ -31,7 +31,7 @@ export default function Navbar() {
           )}
           <i
             className="pi pi-home mr-3 cursor-pointer hover:text-primary"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           ></i>
           {project_id && (
             <>

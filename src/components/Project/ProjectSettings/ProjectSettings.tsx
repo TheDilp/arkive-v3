@@ -73,7 +73,7 @@ export default function ProjectSettings({ project }: Props) {
   };
 
   return (
-    <article className="w-full px-3 justify-content-center text-white">
+    <article className="w-full px-3 justify-content-center text-white overflow-y-auto">
       <ConfirmDialog />
       <h2 className="Merriweather">{project.title} Settings</h2>
       <section className="Lato my-6">

@@ -78,7 +78,9 @@ export default function Login() {
 
             <Button
               className="w-full my-2 text-white Lato border-none"
-              onClick={() => login(email, password).then(() => navigate("/"))}
+              onClick={() =>
+                login(email, password).then(() => navigate("/home"))
+              }
               label="Sign in"
               icon="pi pi-user-plus"
               iconPos="right"

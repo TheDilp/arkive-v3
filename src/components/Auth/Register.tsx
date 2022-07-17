@@ -11,12 +11,12 @@ export default function Register() {
   const [password, setPassword] = useState("");
   auth.onAuthStateChange((event) => {
     if (event === "SIGNED_IN") {
-      navigate("/");
+      navigate("/home");
     }
   });
 
   return auth.user() ? (
-    <Navigate to="/" />
+    <Navigate to="/home" />
   ) : (
     <div className="w-full h-screen flex align-items-center justify-content-center">
       <div className="surface-card shadow-4 w-full border-round lg:w-6 flex h-full lg:h-20rem flex-wrap">
@@ -77,7 +77,9 @@ export default function Register() {
 
             <Button
               className="w-full my-2 text-white Lato border-none"
-              onClick={() => register(email, password)}
+              onClick={() =>
+                register(email, password).then(() => navigate("/login"))
+              }
               label="Sign up"
               icon="pi pi-user-plus"
               iconPos="right"

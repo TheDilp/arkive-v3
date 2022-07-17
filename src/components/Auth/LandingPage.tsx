@@ -43,6 +43,7 @@ export default function LandingPage() {
           </h3>
         </div>
 
+        {/* All Features */}
         <div className="w-full flex flex-wrap row-gap-8 justify-content-around">
           <h2 className="w-full Merriweather text-center text-3xl">Features</h2>
 
@@ -139,7 +140,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
       <hr className="w-full mt-8 border-gray-800" />
+
       <section className="w-full flex flex-wrap row-gap-4 justify-content-around text-white mt-8">
         <h2 className="w-full Merriweather text-center text-3xl my-0">
           Detailed Features
@@ -147,7 +150,52 @@ export default function LandingPage() {
         <h3 className="Lato text-gray-400 text-center text-2xl mt-0">
           Let your imagination loose with our extensive suite of features
         </h3>
+
         <div className="w-8 flex flex-wrap flex-wrap justify-content-center">
+          {/* Global Features */}
+          <div className="w-full">
+            <h4 className="Merriweather text-center text-2xl" id="wikiFeatures">
+              Projects
+            </h4>
+            <div className="flex flex-wrap justify-content-center align-items-start column-gap-2">
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Unlimited projects
+                  <Icon icon="mdi:infinity" className="ml-2" fontSize={22} />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Create as many worlds as you like.
+                </p>
+              </div>
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Export everything
+                  <Icon
+                    icon="mdi:cloud-download-outline"
+                    className="ml-2"
+                    fontSize={22}
+                  />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Your work is yours to keep - export entire projects with the
+                  click of a button.
+                </p>
+              </div>
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Global Search
+                  <Icon icon="mdi:magnify" className="ml-2" fontSize={22} />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Search anything from anywhere in your project - find documents
+                  that contain a certain phrase, go to pins on a map, find a
+                  node in large family trees and more.
+                </p>
+              </div>
+            </div>
+          </div>
+          <hr className="w-full mt-0 border-gray-800" />
+          {/* Wikis Features */}
           <div className="w-full">
             <h4 className="Merriweather text-center text-2xl" id="wikiFeatures">
               Wikis
@@ -155,7 +203,8 @@ export default function LandingPage() {
             <div className="flex flex-wrap justify-content-center align-items-start column-gap-2">
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
-                  Focus on your writing <Icon icon="mdi:book" fontSize={22} />
+                  Focus on your writing{" "}
+                  <Icon icon="mdi:book" className="ml-2" fontSize={22} />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Create immersive descriptions of your worlds using our rich
@@ -164,17 +213,12 @@ export default function LandingPage() {
               </div>
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
-                  Organize things your way
-                  <Icon icon="mdi:file-tree" fontSize={22} />
-                </h5>
-                <p className="text-gray-200 text-center">
-                  Group creations into folders for better and faster navigation.
-                </p>
-              </div>
-              <div className="w-3 h-12rem">
-                <h5 className="text-lg flex justify-content-center align-items-center">
                   Categorize with tags
-                  <Icon icon="mdi:tag-multiple" fontSize={22} />
+                  <Icon
+                    icon="mdi:tag-multiple"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Give documents tags for faster searching and categorizing
@@ -183,7 +227,7 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Make documents stand out
-                  <Icon icon="mdi:crown" fontSize={22} />
+                  <Icon icon="mdi:crown" className="ml-2" fontSize={22} />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Mark each document its own special icon to give it some flair.
@@ -192,7 +236,11 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Speed things up with templates
-                  <Icon icon="mdi:content-copy" fontSize={22} />
+                  <Icon
+                    icon="mdi:content-copy"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   No need to copy-paste when you can use our rich text editor to
@@ -202,7 +250,11 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Link everything together
-                  <Icon icon="mdi:link-variant" fontSize={22} />
+                  <Icon
+                    icon="mdi:link-variant"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Quickly link other documents, maps and even boards inside the
@@ -212,7 +264,11 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Quickly preview linked items
-                  <Icon icon="mdi:tooltip-outline" fontSize={22} />
+                  <Icon
+                    icon="mdi:tooltip-outline"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Hover over linked documents to show a preview. (map and board
@@ -222,7 +278,7 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Share with the world
-                  <Icon icon="mdi:earth" fontSize={22} />
+                  <Icon icon="mdi:earth" className="ml-2" fontSize={22} />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Make documents public so that anyone can see your work.
@@ -231,17 +287,32 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Export
-                  <Icon icon="mdi:cloud-download-outline" fontSize={22} />
+                  <Icon
+                    icon="mdi:cloud-download-outline"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Your work is yours to keep - export any document in HTML or
                   JSON format.
                 </p>
               </div>
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Organize things your way
+                  <Icon icon="mdi:file-tree" className="ml-2" fontSize={22} />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Group creations into folders for better and faster navigation.
+                </p>
+              </div>
             </div>
           </div>
+
           <hr className="w-full mt-8 border-gray-800" />
 
+          {/* Maps Features */}
           <div className="w-full">
             <h4 className="Merriweather text-center text-2xl" id="mapsFeatures">
               Maps
@@ -250,7 +321,11 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Map Layers
-                  <Icon icon="mdi:layers-triple" fontSize={22} />
+                  <Icon
+                    icon="mdi:layers-triple"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Create layers to add more context to each map Group creations
@@ -260,7 +335,7 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Pin important locations
-                  <Icon icon="mdi:map-marker" fontSize={22} />
+                  <Icon icon="mdi:map-marker" className="ml-2" fontSize={22} />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Mark important locations with customizable pins and icons.
@@ -270,7 +345,11 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Connect documents and maps
-                  <Icon icon="mdi:link-variant" fontSize={22} />
+                  <Icon
+                    icon="mdi:link-variant"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Link pins to documents and maps in order to connect locations
@@ -280,7 +359,11 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Quick view
-                  <Icon icon="mdi:comment-arrow-left-outline" fontSize={22} />
+                  <Icon
+                    icon="mdi:comment-arrow-left-outline"
+                    className="ml-2"
+                    fontSize={22}
+                  />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Get a quick overview of linked items by clicking on pins.
@@ -289,7 +372,7 @@ export default function LandingPage() {
               <div className="w-3 h-12rem">
                 <h5 className="text-lg flex justify-content-center align-items-center">
                   Organize things your way
-                  <Icon icon="mdi:file-tree" fontSize={22} />
+                  <Icon icon="mdi:file-tree" className="ml-2" fontSize={22} />
                 </h5>
                 <p className="text-gray-200 text-center">
                   Group creations into folders for better and faster navigation.
@@ -297,25 +380,85 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          {/* <div className="w-3 p-card">
+
+          <hr className="w-full mt-0 border-gray-800" />
+
+          {/* Boards Features */}
+          <div className="w-full">
             <h4 className="Merriweather text-center text-xl">Boards</h4>
-            <ul className="list-none featuresList">
-              <li>
-                Create large graphs with countless nodes and relations (family
-                trees, guild members, etc.)
-              </li>
-              <li>
-                Customize nodes and relations with different shapes, sizes,
-                fonts, colors, images and more
-              </li>
-              <li>Link documents and nodes to provide extra detail</li>
-              <li>
-                Drag documents onto the board to quickly create linked nodes
-              </li>
-            </ul>
-          </div> */}
+            <div className="flex flex-wrap justify-content-center align-items-start column-gap-2">
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Connect everything
+                  <Icon
+                    icon="mdi:graph-outline"
+                    className="ml-2"
+                    fontSize={22}
+                  />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Create large graphs with countless nodes and relations.
+                  (family trees, guild members, etc.)
+                </p>
+              </div>
+
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Customize
+                  <Icon
+                    icon="mdi:pencil-outline"
+                    className="ml-2"
+                    fontSize={22}
+                  />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Customize nodes and relations with different shapes, sizes,
+                  fonts, colors, images and more.
+                </p>
+              </div>
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Link documents
+                  <Icon
+                    icon="mdi:link-variant"
+                    className="ml-2"
+                    fontSize={22}
+                  />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Link documents to nodes and provide extra detail to your
+                  worlds.
+                </p>
+              </div>
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Drag & Create
+                  <Icon
+                    icon="mdi:file-link-outline"
+                    className="ml-2"
+                    fontSize={22}
+                  />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Quickly create nodes from existing documents by dragging them
+                  onto the board.
+                </p>
+              </div>
+              <div className="w-3 h-12rem">
+                <h5 className="text-lg flex justify-content-center align-items-center">
+                  Organize things your way
+                  <Icon icon="mdi:file-tree" className="ml-2" fontSize={22} />
+                </h5>
+                <p className="text-gray-200 text-center">
+                  Group creations into folders for better and faster navigation.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+      <hr className="w-full mt-0 border-gray-800" />
+
       <div className="w-full flex flex-wrap row-gap-4 justify-content-around">
         <h2 className="w-full text-white text-center text-3xl">Coming Soon</h2>
       </div>
