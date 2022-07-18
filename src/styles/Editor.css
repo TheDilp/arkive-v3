@@ -108,3 +108,21 @@ appeears when a mention link is hovered */
 .normalLink {
     color: var(--blue-300);
 }
+
+blockquote .remirror-mention-atom a {
+    color: var(--gray-200) !important;
+    font-size: x-large;
+    font-style: italic;
+    font-family: "Merriweather";
+}
+
+blockquote .remirror-mention-atom a i {
+    font-size: x-large;
+}
+
+[data-callout-type="info"] .remirror-mention-atom a,
+[data-callout-type="error"] .remirror-mention-atom a,
+[data-callout-type="warning"] .remirror-mention-atom a,
+[data-callout-type="success"] .remirror-mention-atom a {
+    color: black !important;
+}
