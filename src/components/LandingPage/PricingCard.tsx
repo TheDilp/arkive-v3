@@ -38,6 +38,11 @@ export default function PricingCard({
               <Icon icon="mdi:patreon" color="#ff6871" />
             </a>
           </div>
+          <span className="text-xs ml-2">
+            <a href="#faq" className="text-gray-400 no-underline">
+              Why patreon?
+            </a>
+          </span>
           <p className="text-sm text-gray-100 ml-2">
             Want to learn more? Have questions? Reach out via
             <a
