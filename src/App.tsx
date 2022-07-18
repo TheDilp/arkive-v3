@@ -65,7 +65,7 @@ function App() {
               />
 
               <Route
-                path="view/:project_id"
+                path="view/:project_id/*"
                 element={
                   <Suspense fallback={<LoadingScreen />}>
                     <PublicProject />

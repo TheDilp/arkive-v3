@@ -16,9 +16,14 @@ export default function PublicProject() {
             </Suspense>
           }
         />
-        <Suspense fallback={<LoadingScreen />}>
-          <Route path="maps/:map_id" element={<PublicMaps />} />
-        </Suspense>
+        <Route
+          path="maps/:map_id"
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <PublicMaps />
+            </Suspense>
+          }
+        />
         <Route
           path="boards/:board_id"
           element={
