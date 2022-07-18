@@ -218,10 +218,14 @@ export default function DocumentsTree() {
                   )
                   .filter((node) =>
                     selectedTags.length > 0
-                      ? node.data?.categories.some((category) =>
-                          selectedTags.includes(category)
+                      ? selectedTags.every((tag) =>
+                          node.data?.categories.includes(tag)
                         )
-                      : true
+                      : // node.data?.categories.some((category) =>
+                        //     selectedTags.includes(category)
+
+                        //     )
+                        true
                   )}
               />
             )}

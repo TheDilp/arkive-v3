@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid";
 import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
 import DocumentFromTempDialog from "./DocumentFromTempDialog";
 import DocumentCreateDialog from "./DocumentCreateDialog";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
 type Props = {
   filter: string;
   setFilter: (filter: string) => void;
@@ -71,13 +72,11 @@ export default function DocTreeFilter({
         />
         <MultiSelect
           value={selectedTags}
-          options={tags.map((tag) => ({ label: tag, value: tag }))}
+          options={tags}
           placeholder="Filter by Tags"
           className="w-full p-0"
           showClear={true}
-          display="chip"
           filter
-          filterBy="label"
           onChange={(e) => {
             if (e.value === null) {
               setSelectedTags([]);
