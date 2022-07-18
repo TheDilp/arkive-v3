@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Navigate,
   Route,
-  Routes,
-  useNavigate,
-  useParams,
+  Routes, useParams
 } from "react-router-dom";
 import { useGetMaps } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";

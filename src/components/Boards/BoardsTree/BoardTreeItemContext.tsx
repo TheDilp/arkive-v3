@@ -10,7 +10,7 @@ import {
   useDeleteBoard,
   useUpdateBoard,
 } from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   boardId: string;
@@ -79,8 +79,23 @@ export default function BoardTreeItemContext({
     { separator: true },
     {
       label: "View Public Board",
-      icon: "pi pi-fw pi-link",
+      icon: "pi pi-fw pi-external-link",
       command: () => navigate(`/view/${project_id}/boards/${displayDialog.id}`),
+    },
+    {
+      label: "Copy Public URL",
+      icon: "pi pi-fw pi-link",
+      command: () => {
+        if (navigator && navigator.clipboard) {
+          navigator.clipboard
+            .writeText(
+              `${window.location.host}/view/${project_id}/boards/${displayDialog.id}`
+            )
+            .then(() => {
+              toastSuccess("URL copied! 🔗");
+            });
+        }
+      },
     },
     {
       label: "Delete Board",

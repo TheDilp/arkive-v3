@@ -14,7 +14,7 @@ import {
   useDeleteDocument,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { saveAs } from "file-saver";
 import { ProjectContext } from "../../Context/ProjectContext";
 type Props = {
@@ -147,6 +147,26 @@ export default function DocumentTreeItemContext({
       },
     },
     { separator: true },
+    {
+      label: "View Public Document",
+      icon: "pi pi-fw pi-external-link",
+      command: () => navigate(`/view/${project_id}/wiki/${displayDialog.id}`),
+    },
+    {
+      label: "Copy Public URL",
+      icon: "pi pi-fw pi-link",
+      command: () => {
+        if (navigator && navigator.clipboard) {
+          navigator.clipboard
+            .writeText(
+              `${window.location.host}/view/${project_id}/wiki/${displayDialog.id}`
+            )
+            .then(() => {
+              toastSuccess("URL copied! 🔗");
+            });
+        }
+      },
+    },
     {
       label: "Delete Document",
       icon: "pi pi-fw pi-trash",

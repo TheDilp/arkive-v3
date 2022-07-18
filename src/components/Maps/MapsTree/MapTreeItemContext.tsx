@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MapItemDisplayDialogProps } from "../../../types/MapTypes";
 import { useDeleteMap, useUpdateMap } from "../../../utils/customHooks";
+import { toastSuccess } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   mapId: string;
@@ -81,8 +82,23 @@ export default function MapTreeItemContext({
     { separator: true },
     {
       label: "View Public Map",
-      icon: "pi pi-fw pi-link",
+      icon: "pi pi-fw pi-external-link",
       command: () => navigate(`/view/${project_id}/maps/${displayDialog.id}`),
+    },
+    {
+      label: "Copy Public URL",
+      icon: "pi pi-fw pi-link",
+      command: () => {
+        if (navigator && navigator.clipboard) {
+          navigator.clipboard
+            .writeText(
+              `${window.location.host}/view/${project_id}/maps/${displayDialog.id}`
+            )
+            .then(() => {
+              toastSuccess("URL copied! 🔗");
+            });
+        }
+      },
     },
     {
       label: "Delete Map",
