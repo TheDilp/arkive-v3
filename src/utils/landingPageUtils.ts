@@ -29,16 +29,16 @@ export const ProjectFeatureBlocks = [
     icon: "infinity",
   },
   {
-    title: "Export everything",
-    description:
-      "Your work is yours to keep - export entire projects with the click of a button.",
-    icon: "cloud-download-outline",
-  },
-  {
     title: "Global Search",
     description:
       "Search anything from anywhere in your project - find documents that contain a certain phrase, go to pins on a map, find a node in large family trees and more.",
     icon: "magnify",
+  },
+  {
+    title: "Export everything",
+    description:
+      "Your work is yours to keep - export entire projects with the click of a button.",
+    icon: "cloud-download-outline",
   },
 ];
 

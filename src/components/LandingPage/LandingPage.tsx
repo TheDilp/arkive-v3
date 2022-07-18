@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { Navigate } from "react-router-dom";
 import {
   ArkivistTier,
@@ -6,7 +5,7 @@ import {
   CuratorTier,
   MapFeatureBlocks,
   ProjectFeatureBlocks,
-  WikiFeatureBlocks,
+  WikiFeatureBlocks
 } from "../../utils/landingPageUtils";
 import { auth } from "../../utils/supabaseUtils";
 import FeatureBlock from "./FeatureBlock";
@@ -200,7 +199,7 @@ export default function LandingPage() {
           Detailed Features
         </h2>
         <h3 className="Lato text-gray-400 text-center text-2xl mt-0">
-          Unleash your imagination Xwith our extensive suite of features
+          Unleash your imagination with our extensive suite of features
         </h3>
 
         <div className="w-8 flex flex-wrap flex-wrap justify-content-center">
