@@ -221,11 +221,7 @@ export default function DocumentsTree() {
                       ? selectedTags.every((tag) =>
                           node.data?.categories.includes(tag)
                         )
-                      : // node.data?.categories.some((category) =>
-                        //     selectedTags.includes(category)
-
-                        //     )
-                        true
+                      : true
                   )}
               />
             )}

@@ -76,6 +76,7 @@ export default function DocTreeFilter({
           placeholder="Filter by Tags"
           className="w-full p-0"
           showClear={true}
+          display="chip"
           filter
           onChange={(e) => {
             if (e.value === null) {
