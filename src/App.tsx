@@ -15,7 +15,7 @@ import NotFound from "./components/Auth/NotFound";
 
 import { Helmet } from "react-helmet";
 import LoadingScreen from "./components/Util/LoadingScreen";
-import LandingPage from "./components/Auth/LandingPage";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 const Login = lazy(() => import("./components/Auth/Login"));
 const Register = lazy(() => import("./components/Auth/Register"));
