@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   DocItemDisplayDialogProps,
@@ -14,8 +14,8 @@ type Props = {
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDisplayDialog: (displayDialog: DocItemDisplayDialogProps) => void;
   setIconSelect: (iconSelect: IconSelectProps) => void;
+  setDisplayDialog: Dispatch<SetStateAction<DocItemDisplayDialogProps>>;
   cm: any;
 };
 

@@ -35,7 +35,7 @@ export default function PricingCard({
               href="#a"
             >
               Join now! (via Patreon)
-              <Icon icon="mdi:patreon" className="" />
+              <Icon icon="mdi:patreon" color="#ff6871" />
             </a>
           </div>
           <p className="text-sm text-gray-100 ml-2">

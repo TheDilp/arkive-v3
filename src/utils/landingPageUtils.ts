@@ -1,6 +1,6 @@
 export const ArkivistTier = {
   title: "Arkivist",
-  price: "$5",
+  price: "$4.99",
   features: [
     "All Features",
     "Unlimited Projects",
@@ -11,11 +11,12 @@ export const ArkivistTier = {
 
 export const CuratorTier = {
   title: "Curator",
-  price: "$8",
+  price: "$7.99",
   features: [
     "Everything from the Arkivist tier",
     "Q&A's",
     "Vote on new features",
+    "Exclusive posts",
     "Curator role on Discord",
   ],
 };

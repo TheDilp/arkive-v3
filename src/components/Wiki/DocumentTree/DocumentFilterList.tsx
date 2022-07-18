@@ -1,16 +1,31 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import React, { useCallback, useContext, useRef } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { useVirtual } from "react-virtual";
-import { DocumentProps } from "../../../custom-types";
+import {
+  DocItemDisplayDialogProps,
+  DocumentProps,
+} from "../../../custom-types";
 import { ProjectContext } from "../../Context/ProjectContext";
 
 type Props = {
   filteredTree: NodeModel<DocumentProps>[];
+  setDisplayDialog: Dispatch<SetStateAction<DocItemDisplayDialogProps>>;
+  cm: any;
 };
 
-export default function DocumentsFilterList({ filteredTree }: Props) {
+export default function DocumentsFilterList({
+  filteredTree,
+  setDisplayDialog,
+  cm,
+}: Props) {
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
   const rowVirtualizer = useVirtual({
@@ -56,6 +71,20 @@ export default function DocumentsFilterList({ filteredTree }: Props) {
               onClick={() => {
                 setDocId(filteredTree[virtualRow.index].id as string);
                 navigate(`doc/${filteredTree[virtualRow.index].id}`);
+              }}
+              onContextMenu={(e) => {
+                cm.current.show(e);
+                setDisplayDialog({
+                  id: filteredTree[virtualRow.index].id as string,
+                  title: filteredTree[virtualRow.index].text,
+                  show: false,
+                  folder: filteredTree[virtualRow.index].data?.folder || false,
+                  depth: 0,
+                  template:
+                    filteredTree[virtualRow.index].data?.template || false,
+                  parent:
+                    filteredTree[virtualRow.index].data?.parent?.id || null,
+                });
               }}
             >
               {filteredTree[virtualRow.index].droppable ? (

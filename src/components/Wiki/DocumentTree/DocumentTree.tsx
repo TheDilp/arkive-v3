@@ -173,8 +173,8 @@ export default function DocumentsTree() {
                     depth={depth}
                     isOpen={isOpen}
                     onToggle={onToggle}
-                    setDisplayDialog={setDisplayDialog}
                     setIconSelect={setIconSelect}
+                    setDisplayDialog={setDisplayDialog}
                     cm={cm}
                   />
                 )}
@@ -212,6 +212,8 @@ export default function DocumentsTree() {
             )}
             {(filter || selectedTags.length > 0) && (
               <DocumentsFilterList
+                setDisplayDialog={setDisplayDialog}
+                cm={cm}
                 filteredTree={treeData
                   .filter((node) =>
                     node.text.toLowerCase().includes(filter.toLowerCase())
