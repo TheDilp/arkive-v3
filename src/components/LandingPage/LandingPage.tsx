@@ -258,11 +258,11 @@ export default function LandingPage() {
       <hr className="w-full mt-0 border-gray-800" />
 
       {/* Pricing section */}
-      <section className="w-8 text-white px-8" id="pricing">
+      <section className="w-10 lg:w-8 text-white lg:px-8" id="pricing">
         <h2 className="w-full Merriweather text-center text-3xl my-0">
           Pricing
         </h2>
-        <div className="flex mt-5 w-full justify-content-evenly">
+        <div className="flex flex-wrap lg:flex-nowrap mt-5 w-full justify-content-evenly">
           <PricingCard {...ArkivistTier} />
           <PricingCard {...CuratorTier} />
         </div>

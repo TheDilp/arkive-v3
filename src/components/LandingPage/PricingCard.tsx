@@ -7,12 +7,12 @@ export default function PricingCard({
   features,
 }: pricingTierProps) {
   return (
-    <div className="p-card bg-gray-800 w-4 mb-5">
+    <div className="w-full lg:w-4 mb-5 p-card bg-gray-800 ">
       <div className="p-card-title mb-0 pt-2">
         <h3 className="text-center text-4xl mt-2 Merriweather">{title}</h3>
       </div>
       <div className="p-card-content pt-0">
-        <h4 className="text-center text-xl">
+        <h4 className="text-center text-2xl">
           {price}
           <span className="text-sm">/ month</span>
         </h4>
@@ -39,7 +39,7 @@ export default function PricingCard({
             </a>
           </div>
           <p className="text-sm text-gray-100 ml-2">
-            Want to learn more? Have questions? Join us on
+            Want to learn more? Have questions? Reach out via
             <a
               href="https://discord.gg/AnbtkzrffA"
               className="font-bold no-underline"

@@ -6,6 +6,7 @@ export const ArkivistTier = {
     "Unlimited Projects",
     "Unlimited Documents, Maps, Boards",
     "Unlimited File Uploads (50MB / file)",
+    "Arkivist role on Discord",
   ],
 };
 
