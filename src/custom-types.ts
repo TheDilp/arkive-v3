@@ -32,7 +32,6 @@ export type DocumentProps = {
   sort: number;
 };
 
-
 export type ImageProps = {
   id: string;
   title: string;
@@ -127,7 +126,12 @@ export type TemplateCreateProps = {
   folder?: boolean;
 };
 
-
 // OTHER
 
 export type breadcrumbsProps = { template: React.ReactNode }[];
+
+export type pricingTierProps = {
+  title: string;
+  price: string;
+  features: string[];
+};

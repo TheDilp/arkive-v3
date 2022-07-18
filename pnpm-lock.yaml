@@ -9,6 +9,7 @@ importers:
       '@iconify/react': ^3.2.1
       '@iconify/utils': ^1.0.32
       '@minoru/react-dnd-treeview': ^2.0.0
+      '@remirror/core': ^1.4.7
       '@remirror/extension-react-tables': ^1.0.33
       '@remirror/pm': ^1.0.16
       '@remirror/react': ^1.0.33
@@ -63,6 +64,7 @@ importers:
       '@floating-ui/react-dom-interactions': 0.6.0_n7yzl3mpk6lossnrbdmaavlxoy
       '@iconify/utils': 1.0.32
       '@minoru/react-dnd-treeview': 2.0.0_s2dwq6itmbotqcs7p4ayy6iyty
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-react-tables': 1.0.33_hwzgv2bgdgdqvusxlgslekbd4y
       '@remirror/pm': 1.0.16
       '@remirror/react': 1.0.33_hwzgv2bgdgdqvusxlgslekbd4y
@@ -2478,6 +2480,26 @@ packages:
       throttle-debounce: 3.0.1
     dev: false
 
+  /@remirror/core-helpers/1.0.6:
+    resolution: {integrity: sha512-4n5eii/3L85B4SSY8/9Rerpcgl+4/Zl7gMojIm43AkDqyCJNejRkqNW7jtflbkugEBjJP+sb6hEVMsW4jKCOHw==}
+    dependencies:
+      '@babel/runtime': 7.17.8
+      '@linaria/core': 3.0.0-beta.13
+      '@remirror/core-constants': 1.0.2
+      '@remirror/types': 0.1.1
+      '@types/object.omit': 3.0.0
+      '@types/object.pick': 1.3.1
+      '@types/throttle-debounce': 2.1.0
+      case-anything: 1.1.5
+      dash-get: 1.0.2
+      deepmerge: 4.2.2
+      fast-deep-equal: 3.1.3
+      make-error: 1.3.6
+      object.omit: 3.0.0
+      object.pick: 1.3.0
+      throttle-debounce: 3.0.1
+    dev: false
+
   /@remirror/core-types/1.0.4_@remirror+pm@1.0.16:
     resolution: {integrity: sha512-X36LsYdoxtrESQCXDUkgoA8Gt6neKT3Ic+vNiDoazQUb2ZMH5jQ96v2yByo8Tr2cgJLR9kqedyUEarXrMNluyg==}
     peerDependencies:
@@ -2486,6 +2508,34 @@ packages:
       '@remirror/core-constants': 1.0.2
       '@remirror/pm': 1.0.16
       '@remirror/types': 0.1.1
+    dev: false
+
+  /@remirror/core-utils/1.1.11_xvdyzkwtobn6q5hbr2yhcdzqva:
+    resolution: {integrity: sha512-zUJdkv2Rb18lkUCs2rMwalrZ/1DCg8Pl3X4RwW3sPFS9+LdyFFq5v1gDXJQmYWvLP7r6hubYKfRUwD97pxdJxA==}
+    peerDependencies:
+      '@remirror/pm': ^1.0.22
+      '@types/node': '*'
+      domino: '*'
+      jsdom: '*'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      domino:
+        optional: true
+      jsdom:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.17.8
+      '@remirror/core-constants': 1.0.2
+      '@remirror/core-helpers': 1.0.6
+      '@remirror/core-types': 1.0.4_@remirror+pm@1.0.16
+      '@remirror/messages': 1.0.7
+      '@remirror/pm': 1.0.16
+      '@types/min-document': 2.19.0
+      '@types/node': 16.11.26
+      css-in-js-utils: 3.1.0
+      min-document: 2.19.0
+      parenthesis: 3.1.8
     dev: false
 
   /@remirror/core-utils/1.1.8_xvdyzkwtobn6q5hbr2yhcdzqva:
@@ -2515,20 +2565,20 @@ packages:
       min-document: 2.19.0
     dev: false
 
-  /@remirror/core/1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva:
-    resolution: {integrity: sha512-qw47BG7yO4vuLQE9cJSTFSXKFs7Pk9psOU0HaTys2DUC2sQx+8OMCmKrsNCpYq0CvYGg+Hlog5RLKb57pw2VeA==}
+  /@remirror/core/1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva:
+    resolution: {integrity: sha512-k12bLw1id5VEGuYyY76nemW374hi1LtnOsGsLo12L4btflP2fr7r30Zt6AfgmqKnwR4KNYR3Q0Db6+0MHtfQ/A==}
     peerDependencies:
-      '@remirror/pm': ^1.0.10
+      '@remirror/pm': ^1.0.22
     dependencies:
       '@babel/runtime': 7.17.8
       '@linaria/core': 3.0.0-beta.13
       '@remirror/core-constants': 1.0.2
-      '@remirror/core-helpers': 1.0.5
+      '@remirror/core-helpers': 1.0.6
       '@remirror/core-types': 1.0.4_@remirror+pm@1.0.16
-      '@remirror/core-utils': 1.1.8_xvdyzkwtobn6q5hbr2yhcdzqva
-      '@remirror/i18n': 1.0.8
-      '@remirror/icons': 1.0.7
-      '@remirror/messages': 1.0.6
+      '@remirror/core-utils': 1.1.11_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/i18n': 1.0.9
+      '@remirror/icons': 1.0.8
+      '@remirror/messages': 1.0.7
       '@remirror/pm': 1.0.16
       nanoevents: 5.1.13
       tiny-warning: 1.0.3
@@ -2544,7 +2594,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/pm': 1.0.16
       '@remirror/preset-core': 1.0.26_xvdyzkwtobn6q5hbr2yhcdzqva
     transitivePeerDependencies:
@@ -2559,7 +2609,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-positioner': 1.2.4_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -2575,7 +2625,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@types/direction': 1.0.0
@@ -2592,7 +2642,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@remirror/theme': 1.2.1_@remirror+pm@1.0.16
@@ -2608,7 +2658,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2623,7 +2673,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@remirror/theme': 1.2.1_@remirror+pm@1.0.16
@@ -2648,7 +2698,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@remirror/theme': 1.2.1_@remirror+pm@1.0.16
@@ -2666,7 +2716,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2683,7 +2733,7 @@ packages:
       codemirror: ^5
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@types/codemirror': 5.60.5
@@ -2700,7 +2750,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2715,7 +2765,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2730,7 +2780,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2745,7 +2795,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2760,7 +2810,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2775,7 +2825,7 @@ packages:
       '@remirror/pm': ^1.0.16
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@types/querystringify': 2.0.0
@@ -2793,7 +2843,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@remirror/theme': 1.2.1_@remirror+pm@1.0.16
@@ -2814,7 +2864,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2829,7 +2879,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2844,7 +2894,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2859,7 +2909,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       round: 2.0.1
@@ -2875,7 +2925,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2890,7 +2940,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2905,7 +2955,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2920,7 +2970,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2935,7 +2985,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2950,7 +3000,7 @@ packages:
       '@remirror/pm': ^1.0.16
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@remirror/theme': 1.2.1_@remirror+pm@1.0.16
@@ -2967,7 +3017,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -2982,7 +3032,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-events': 1.1.1_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -2998,7 +3048,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-events': 1.1.1_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3015,7 +3065,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@types/marked': 4.0.3
@@ -3035,7 +3085,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-events': 1.1.1_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3052,7 +3102,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-events': 1.1.1_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3069,7 +3119,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3084,7 +3134,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3099,7 +3149,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@remirror/theme': 1.2.1_@remirror+pm@1.0.16
@@ -3115,7 +3165,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-events': 1.1.1_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3142,7 +3192,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@types/react': 17.0.43
@@ -3167,7 +3217,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-react-component': 1.1.11_hwzgv2bgdgdqvusxlgslekbd4y
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3197,7 +3247,7 @@ packages:
       '@babel/runtime': 7.17.8
       '@emotion/css': 11.7.1
       '@linaria/core': 3.0.0-beta.13
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/core-utils': 1.1.8_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-positioner': 1.2.4_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-tables': 1.0.23_xvdyzkwtobn6q5hbr2yhcdzqva
@@ -3227,7 +3277,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       escape-string-regexp: 4.0.0
@@ -3243,7 +3293,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
       - '@types/node'
@@ -3257,7 +3307,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3272,7 +3322,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3287,7 +3337,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3302,7 +3352,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
       '@remirror/theme': 1.2.1_@remirror+pm@1.0.16
@@ -3318,7 +3368,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3333,7 +3383,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/i18n': 1.0.8
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3351,7 +3401,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-text-color': 1.0.23_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3367,7 +3417,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3382,7 +3432,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3397,7 +3447,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3412,7 +3462,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
     transitivePeerDependencies:
@@ -3428,7 +3478,7 @@ packages:
       yjs: ^13.4.0
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-annotation': 1.1.21_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/messages': 1.0.6
       '@remirror/pm': 1.0.16
@@ -3454,11 +3504,28 @@ packages:
       make-plural: 6.2.2
     dev: false
 
+  /@remirror/i18n/1.0.9:
+    resolution: {integrity: sha512-uWYuFTuD5+4WEdHIvkrkimhAa3jIL89Z2KMRi2aj0pA8PDwD+svDNz8E1B1SUP2Th8JmGd0XfHRtg+OsiDTjTA==}
+    dependencies:
+      '@babel/runtime': 7.17.8
+      '@lingui/core': 3.13.2
+      '@lingui/detect-locale': 3.13.2
+      '@remirror/core-helpers': 1.0.6
+      make-plural: 6.2.2
+    dev: false
+
   /@remirror/icons/1.0.7:
     resolution: {integrity: sha512-7JQH4ssfV4sOrTc9o/2kmPHNab4JpbtcqJe950UGj+LSdSZ2sDpbfGBBqbtVlsOjVD44G8OxNe9DGP/Cds43Ag==}
     dependencies:
       '@babel/runtime': 7.17.8
       '@remirror/core-helpers': 1.0.5
+    dev: false
+
+  /@remirror/icons/1.0.8:
+    resolution: {integrity: sha512-aS8wssUaH5yfJoeEPOPLKCsK7OSmXZlmSxxQ10j5REaw9UlyEWrFAb+GjGpFqeM8o7xS9T7W0M6yWyVSaKIeng==}
+    dependencies:
+      '@babel/runtime': 7.17.8
+      '@remirror/core-helpers': 1.0.6
     dev: false
 
   /@remirror/messages/1.0.6:
@@ -3467,6 +3534,14 @@ packages:
       '@babel/runtime': 7.17.8
       '@lingui/core': 3.13.2
       '@remirror/core-helpers': 1.0.5
+    dev: false
+
+  /@remirror/messages/1.0.7:
+    resolution: {integrity: sha512-cnN5UxQGMW2rCJFqjzYzHG0qvCugraKc0r4b3atDE8HokVIJO1DHoVYux5A7UkfYVe5Enow/UUy/nj5zf3MhgA==}
+    dependencies:
+      '@babel/runtime': 7.17.8
+      '@lingui/core': 3.13.2
+      '@remirror/core-helpers': 1.0.6
     dev: false
 
   /@remirror/pm/1.0.16:
@@ -3511,7 +3586,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-doc': 1.0.21_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-events': 1.1.1_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-gap-cursor': 1.0.20_xvdyzkwtobn6q5hbr2yhcdzqva
@@ -3532,7 +3607,7 @@ packages:
       '@remirror/pm': ^1.0.10
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-bold': 1.0.20_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-columns': 1.0.20_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-font-size': 1.0.22_xvdyzkwtobn6q5hbr2yhcdzqva
@@ -3569,7 +3644,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-placeholder': 1.0.23_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-react-component': 1.1.11_hwzgv2bgdgdqvusxlgslekbd4y
       '@remirror/extension-react-ssr': 1.0.22_hwzgv2bgdgdqvusxlgslekbd4y
@@ -3591,7 +3666,7 @@ packages:
       '@remirror/pm': ^1.0.16
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-bidi': 1.0.20_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-blockquote': 1.0.23_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-bold': 1.0.20_xvdyzkwtobn6q5hbr2yhcdzqva
@@ -3639,7 +3714,7 @@ packages:
       '@babel/runtime': 7.17.8
       '@lingui/core': 3.13.2
       '@popperjs/core': 2.11.5
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-positioner': 1.2.4_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-text-color': 1.0.23_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/i18n': 1.0.8
@@ -3687,7 +3762,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-positioner': 1.2.4_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-react-component': 1.1.11_hwzgv2bgdgdqvusxlgslekbd4y
       '@remirror/extension-react-ssr': 1.0.22_hwzgv2bgdgdqvusxlgslekbd4y
@@ -3735,7 +3810,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-emoji': 1.0.23_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-events': 1.1.1_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-history': 1.0.20_xvdyzkwtobn6q5hbr2yhcdzqva
@@ -3769,7 +3844,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@types/react': 17.0.43
       react: 18.1.0
     transitivePeerDependencies:
@@ -3792,7 +3867,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/extension-react-ssr': 1.0.22_hwzgv2bgdgdqvusxlgslekbd4y
       '@remirror/pm': 1.0.16
       '@types/react': 17.0.43
@@ -10154,6 +10229,10 @@ packages:
     dependencies:
       callsites: 3.1.0
 
+  /parenthesis/3.1.8:
+    resolution: {integrity: sha512-KF/U8tk54BgQewkJPvB4s/US3VQY68BRDpH638+7O/n58TpnwiwnOtGIOsT2/i+M78s61BBpeC83STB88d8sqw==}
+    dev: false
+
   /parse-entities/2.0.0:
     resolution: {integrity: sha512-kkywGpCcRYhqQIchaWqZ875wzpS/bMKhz5HnN3p7wveJTkTtyAB/AlnS0f8DFSqYW1T82t6yEAkEcB+A1I3MbQ==}
     dependencies:
@@ -11227,8 +11306,8 @@ packages:
     resolution: {integrity: sha512-5Jb21Ty7fLFZMGay93CyFU4BwTrAkMTutsAot6sHxjlcTjLX2qQ7/svD1CbmpW5NDvUoNzn2x42mdC/A4XZXeg==}
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core-helpers': 1.0.5
-      '@remirror/core-utils': 1.1.8_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core-helpers': 1.0.6
+      '@remirror/core-utils': 1.1.11_xvdyzkwtobn6q5hbr2yhcdzqva
       prosemirror-model: 1.16.1
       prosemirror-view: 1.23.11
     transitivePeerDependencies:
@@ -12154,7 +12233,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.17.8
-      '@remirror/core': 1.4.3_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
       '@remirror/core-constants': 1.0.2
       '@remirror/core-helpers': 1.0.5
       '@remirror/core-types': 1.0.4_@remirror+pm@1.0.16

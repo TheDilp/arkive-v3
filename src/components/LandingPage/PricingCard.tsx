@@ -1,37 +1,33 @@
 import { Icon } from "@iconify/react";
-import React from "react";
+import { pricingTierProps } from "../../custom-types";
 
-type Props = {};
-
-export default function PricingCard({}: Props) {
+export default function PricingCard({
+  title,
+  price,
+  features,
+}: pricingTierProps) {
   return (
     <div className="p-card bg-gray-800 w-4 mb-5">
       <div className="p-card-title mb-0 pt-2">
-        <h3 className="text-center text-4xl mt-2 Merriweather">Arkivist</h3>
+        <h3 className="text-center text-4xl mt-2 Merriweather">{title}</h3>
       </div>
       <div className="p-card-content pt-0">
-        <h4 className="text-center text-xl">$3.99 / month</h4>
+        <h4 className="text-center text-xl">
+          {price}
+          <span className="text-sm">/ month</span>
+        </h4>
+
         <div className="px-2">
           <h5 className="font-medium text-base text-gray-200 pl-2">
             What you get:
           </h5>
-          <ul className="list-none text-lg">
-            <li className="">
-              <i className="pi pi-check text-primary"></i>
-              All features
-            </li>
-            <li className="my-1">
-              <i className="pi pi-check text-primary mr-1"></i>
-              Unlimited Projects
-            </li>
-            <li className="my-1">
-              <i className="pi pi-check text-primary mr-1"></i>
-              Unlimited Documents, Maps, Boards
-            </li>
-            <li className="my-1">
-              <i className="pi pi-check text-primary mr-1"></i>
-              Unlimited File Uploads (50MB / file)
-            </li>
+          <ul className="list-none text-lg pl-2">
+            {features.map((feature) => (
+              <li key={feature} className="my-2">
+                <i className="pi pi-check text-primary"></i>
+                {feature}
+              </li>
+            ))}
           </ul>
           <div className="w-full text-center mt-6 mb-5">
             <a

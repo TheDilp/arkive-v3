@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Navigate } from "react-router-dom";
+import { ArkivistTier, CuratorTier } from "../../utils/landingPageUtils";
 import { auth } from "../../utils/supabaseUtils";
 import PricingCard from "../LandingPage/PricingCard";
 
@@ -8,7 +9,12 @@ export default function LandingPage() {
   if (user) return <Navigate to="/home" />;
 
   return (
-    <article className="w-full h-screen Lato flex flex-wrap justify-content-center align-content-start overflow-y-auto">
+    <article
+      className="w-full h-screen Lato flex flex-wrap justify-content-center align-content-start overflow-y-auto"
+      style={{
+        scrollBehavior: "smooth",
+      }}
+    >
       <nav
         className="w-full sticky bg-gray-900 shadow-3 px-3 z-5 flex text-white justify-content-between align-items-start text-sm lg:text-xl lg:px-8"
         style={{ top: 1 }}
@@ -38,7 +44,12 @@ export default function LandingPage() {
             </a>
           </div>
           <div className="hover:text-blue-400 cursor-pointer">FAQ</div>
-          <div className="hover:text-blue-400 cursor-pointer">
+          <div
+            className="hover:text-blue-400 cursor-pointer"
+            style={{
+              color: "#7289da",
+            }}
+          >
             <span className="hidden lg:inline">Discord</span>
             <i className="pi pi-discord"></i>
           </div>
@@ -483,15 +494,15 @@ export default function LandingPage() {
       </section>
       <hr className="w-full mt-0 border-gray-800" />
 
-      {/* <div className="w-full flex flex-wrap row-gap-4 justify-content-around  lg:px-8">
-        <h2 className="w-full text-white text-center text-3xl">Coming Soon</h2>
-      </div> */}
-
+      {/* Pricing section */}
       <section className="w-8 text-white px-8" id="pricing">
         <h2 className="w-full Merriweather text-center text-3xl my-0">
           Pricing
         </h2>
-        <PricingCard />
+        <div className="flex mt-5 w-full justify-content-evenly">
+          <PricingCard {...ArkivistTier} />
+          <PricingCard {...CuratorTier} />
+        </div>
       </section>
     </article>
   );
