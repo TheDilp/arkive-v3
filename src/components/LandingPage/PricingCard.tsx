@@ -43,6 +43,8 @@ export default function PricingCard({
             <a
               href="https://discord.gg/AnbtkzrffA"
               className="font-bold no-underline"
+              target="_blank"
+              rel="noreferrer"
               style={{
                 color: "#7289da",
               }}

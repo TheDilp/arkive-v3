@@ -75,47 +75,42 @@ export default function Project() {
           <SidebarProvider>
             <FilebrowserProvider>
               <Navbar />
-              <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-                <Routes>
-                  <Route
-                    path="wiki/*"
-                    element={
-                      <Suspense fallback={<LoadingScreen />}>
-                        <Wiki />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="maps/*"
-                    element={
-                      <Suspense fallback={<LoadingScreen />}>
-                        <Maps />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="boards/*"
-                    element={
-                      <Suspense fallback={<LoadingScreen />}>
-                        <Boards />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="timelines/*"
-                    element={
-                      <Suspense fallback={<LoadingScreen />}>
-                        <Timelines />
-                      </Suspense>
-                    }
-                  />
-                  <Route path="filebrowser" element={<FileBrowser />} />
-                  <Route
-                    path="settings/:setting"
-                    element={<ProjectSettings />}
-                  />
-                </Routes>
-              </DndProvider>
+              <Routes>
+                <Route
+                  path="wiki/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Wiki />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="maps/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Maps />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="boards/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Boards />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="timelines/*"
+                  element={
+                    <Suspense fallback={<LoadingScreen />}>
+                      <Timelines />
+                    </Suspense>
+                  }
+                />
+                <Route path="filebrowser" element={<FileBrowser />} />
+                <Route path="settings/:setting" element={<ProjectSettings />} />
+              </Routes>
             </FilebrowserProvider>
           </SidebarProvider>
         </ProjectContextProvider>

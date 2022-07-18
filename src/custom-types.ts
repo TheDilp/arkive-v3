@@ -135,3 +135,9 @@ export type pricingTierProps = {
   price: string;
   features: string[];
 };
+
+export type featureBlockProps = {
+  title: string;
+  description: string;
+  icon: string;
+};
