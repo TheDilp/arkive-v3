@@ -991,7 +991,10 @@ export function useUpdateMapLayer(project_id: string) {
                           ...layer,
                           title: updatedLayer.title || layer.title,
                           image: updatedLayer.image || layer.image,
-                          public: updatedLayer.public || layer.public,
+                          public:
+                            updatedLayer.public !== undefined
+                              ? updatedLayer.public
+                              : layer.public,
                         };
                       }
                       return layer;

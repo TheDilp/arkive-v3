@@ -96,11 +96,16 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
                   <ImageSelectDropdown
                     value={layer.image}
                     onChange={(e) =>
-                      updateMapLayerMutation.mutate({
-                        id: layer.id,
-                        image: e.value as ImageProps,
-                        map_id: visible.map_id,
-                      })
+                      setLayers((prev) =>
+                        prev?.map((prevLayer) => {
+                          if (prevLayer.id === layer.id) {
+                            layer = { ...layer, image: e.value as ImageProps };
+                            return layer;
+                          } else {
+                            return prevLayer;
+                          }
+                        })
+                      )
                     }
                     filter="Map"
                   />
@@ -109,16 +114,13 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
                   className="w-1 p-button-outlined p-button-success"
                   icon="pi pi-save"
                   onClick={() => {
-                    let newTitle = layers.find(
-                      (map_layer) => map_layer.id === layer.id
-                    )?.title;
-
-                    if (newTitle)
-                      updateMapLayerMutation.mutate({
-                        id: layer.id,
-                        title: newTitle,
-                        map_id: visible.map_id,
-                      });
+                    updateMapLayerMutation.mutate({
+                      id: layer.id,
+                      title: layer.title,
+                      map_id: visible.map_id,
+                      public: layer.public,
+                      image: layer.image,
+                    });
                   }}
                 />
                 <Button
@@ -128,11 +130,16 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
                   tooltip="Toggle public"
                   icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
                   onClick={() => {
-                    updateMapLayerMutation.mutate({
-                      id: layer.id,
-                      public: !layer.public,
-                      map_id: visible.map_id,
-                    });
+                    setLayers((prev) =>
+                      prev?.map((prevLayer) => {
+                        if (prevLayer.id === layer.id) {
+                          layer = { ...layer, public: !layer.public };
+                          return layer;
+                        } else {
+                          return prevLayer;
+                        }
+                      })
+                    );
                   }}
                 />
                 <Button
