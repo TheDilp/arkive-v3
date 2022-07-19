@@ -985,17 +985,13 @@ export function useUpdateMapLayer(project_id: string) {
                 if (map.id === updatedLayer.map_id) {
                   return {
                     ...map,
-
                     map_layers: map.map_layers.map((layer) => {
                       if (layer.id === updatedLayer.id) {
                         layer = {
                           ...layer,
-                          title: updatedLayer.title
-                            ? updatedLayer.title
-                            : layer.title,
-                          image: updatedLayer.image
-                            ? updatedLayer.image
-                            : layer.image,
+                          title: updatedLayer.title || layer.title,
+                          image: updatedLayer.image || layer.image,
+                          public: updatedLayer.public || layer.public,
                         };
                       }
                       return layer;

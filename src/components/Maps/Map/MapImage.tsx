@@ -110,6 +110,7 @@ export default function MapImage({
           <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
         </LayersControl.BaseLayer>
 
+        {/* Markers layer */}
         <LayersControl.Overlay name="Markers" checked={true}>
           <LayerGroup>
             {markers
@@ -135,6 +136,7 @@ export default function MapImage({
           </LayerGroup>
         </LayersControl.Overlay>
 
+        {/* Other layers */}
         <LayerGroup>
           {map_layers
             .sort((a, b) => {
@@ -142,7 +144,7 @@ export default function MapImage({
               if (a.title < b.title) return -1;
               return 0;
             })
-            .filter((layer) => layer.image?.link)
+            .filter((layer) => layer.image?.link && layer.public)
             .map((layer) => {
               return (
                 <LayersControl.Overlay

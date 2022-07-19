@@ -31,6 +31,7 @@ export type MapLayerProps = {
   title: string;
   image?: ImageProps;
   map_id: string;
+  public: boolean;
 };
 
 export type MapItemDisplayDialogProps = {
@@ -120,6 +121,7 @@ export type CreateMapLayerProps = {
   title: string;
   image?: ImageProps;
   map_id: string;
+  public: boolean;
 };
 
 export type UpdateMapLayerProps = {
@@ -127,6 +129,7 @@ export type UpdateMapLayerProps = {
   map_id: string;
   title?: string;
   image?: ImageProps;
+  public?: boolean;
 };
 
 // MISC

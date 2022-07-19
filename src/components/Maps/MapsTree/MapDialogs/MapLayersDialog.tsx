@@ -56,6 +56,7 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
               id: uuid(),
               title: "New Layer",
               map_id: visible.map_id,
+              public: false,
             })
           }
         >
@@ -121,20 +122,17 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
                   }}
                 />
                 <Button
-                  className="w-1 p-button-outlined p-button-secondary"
+                  className={`w-1 p-button-outlined p-button-${
+                    layer.public ? "info" : "secondary"
+                  }`}
                   tooltip="Toggle public"
-                  icon="pi pi-eye"
+                  icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
                   onClick={() => {
-                    let newTitle = layers.find(
-                      (map_layer) => map_layer.id === layer.id
-                    )?.title;
-
-                    if (newTitle)
-                      updateMapLayerMutation.mutate({
-                        id: layer.id,
-                        title: newTitle,
-                        map_id: visible.map_id,
-                      });
+                    updateMapLayerMutation.mutate({
+                      id: layer.id,
+                      public: !layer.public,
+                      map_id: visible.map_id,
+                    });
                   }}
                 />
                 <Button
