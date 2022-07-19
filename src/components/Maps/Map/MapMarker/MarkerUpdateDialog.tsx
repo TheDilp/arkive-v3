@@ -1,11 +1,13 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
+import { DocumentProps } from "../../../../custom-types";
 import { MapProps, UpdateMarkerInputs } from "../../../../types/MapTypes";
 import {
   useGetDocuments,
@@ -13,7 +15,6 @@ import {
   useUpdateMapMarker,
 } from "../../../../utils/customHooks";
 import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
-import ImageSelectDropdown from "../../../Util/ImageSelectDropdown";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import MarkerIconSelect from "./MarkerIconSelect";
 type Props = {
@@ -25,6 +26,7 @@ type Props = {
   icon: string;
   doc_id?: string;
   map_link?: string;
+  public: boolean;
   setVisible: Dispatch<SetStateAction<UpdateMarkerInputs>>;
 };
 
@@ -36,6 +38,7 @@ export default function MarkerUpdateDialog({
   icon,
   doc_id,
   map_link,
+  public: markerPublic,
   show,
   setVisible,
 }: Props) {
@@ -148,6 +151,24 @@ export default function MarkerUpdateDialog({
             />
           </div>
         </div>
+
+        {/* Public setting */}
+        <div className="w-full my-3">
+          <div className="w-full">
+            <label className="mr-2">Public:</label>
+            <Checkbox
+              checked={markerPublic}
+              onChange={(e) =>
+                setVisible((prev) => ({ ...prev, public: e.checked }))
+              }
+            />
+          </div>
+          <span className="text-xs text-gray-400">
+            If a document is linked, the marker will use its public setting by
+            default.
+          </span>
+        </div>
+
         <div className="w-full">
           <Dropdown
             className="w-full"
@@ -155,12 +176,16 @@ export default function MarkerUpdateDialog({
             value={doc_id}
             filter
             filterBy="title"
-            onChange={(e) =>
+            onChange={(e) => {
+              let doc = documents.data?.find(
+                (doc: DocumentProps) => doc.id === e.value
+              );
               setVisible((prev) => ({
                 ...prev,
-                doc_id: e.target.value,
-              }))
-            }
+                doc_id: e.value,
+                public: doc ? doc.public : prev.public,
+              }));
+            }}
             options={
               documents.data
                 ? [
@@ -219,6 +244,7 @@ export default function MarkerUpdateDialog({
                 backgroundColor,
                 doc_id,
                 map_link,
+                public: markerPublic,
                 map_id: map_id as string,
                 project_id: project_id as string,
               });

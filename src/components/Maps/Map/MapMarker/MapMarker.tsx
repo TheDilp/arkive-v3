@@ -3,41 +3,40 @@ import { Dispatch, SetStateAction, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
-import { MapMarkerProps, MarkerSidebarProps } from "../../../../types/MapTypes";
+import {
+  MapMarkerProps,
+  MarkerSidebarProps,
+  UpdateMapMarkerProps,
+  UpdateMarkerInputs,
+} from "../../../../types/MapTypes";
 import { useUpdateMapMarker } from "../../../../utils/customHooks";
 
 export default function MapMarker({
-  id,
-  map_id,
-  icon,
-  color,
-  backgroundColor,
-  text,
-  lat,
-  lng,
-  doc_id,
-  map_link,
+  markerData,
   mcm,
   setUpdateMarkerDialog,
   setMarkerSidebar,
   public_view,
-}: MapMarkerProps & {
+}: {
+  markerData: MapMarkerProps;
   mcm: any;
   public_view: boolean;
   setMarkerSidebar: Dispatch<SetStateAction<MarkerSidebarProps>>;
-  setUpdateMarkerDialog: Dispatch<
-    SetStateAction<{
-      id: string;
-      icon: string;
-      text: string;
-      color: string;
-      backgroundColor: string;
-      doc_id?: string;
-      map_link?: string;
-      show: boolean;
-    }>
-  >;
+  setUpdateMarkerDialog: Dispatch<SetStateAction<UpdateMarkerInputs>>;
 }) {
+  const {
+    id,
+    map_id,
+    icon,
+    color,
+    backgroundColor,
+    text,
+    lat,
+    lng,
+    doc_id,
+    map_link,
+    public: markerPublic,
+  } = markerData;
   const { project_id } = useParams();
   const navigate = useNavigate();
   const updateMarkerMutation = useUpdateMapMarker();
@@ -75,6 +74,7 @@ export default function MapMarker({
           backgroundColor,
           doc_id,
           map_link,
+          public: markerPublic,
           show: false,
         });
       }
@@ -130,6 +130,7 @@ export default function MapMarker({
                       color,
                       backgroundColor,
                       doc_id,
+                      public: markerPublic,
                       show: true,
                     });
                   }

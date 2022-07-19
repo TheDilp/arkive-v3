@@ -126,7 +126,7 @@ export default function MapImage({
               .map((marker) => (
                 <MapMarker
                   key={marker.id}
-                  {...marker}
+                  markerData={marker}
                   mcm={mcm}
                   public_view={public_view}
                   setUpdateMarkerDialog={setUpdateMarkerDialog}

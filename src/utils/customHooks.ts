@@ -17,9 +17,11 @@ import {
 } from "../types/BoardTypes";
 import {
   CreateMapLayerProps,
+  MapMarkerProps,
   MapProps,
   MapUpdateProps,
   UpdateMapLayerProps,
+  UpdateMapMarkerProps,
 } from "../types/MapTypes";
 import {
   createBoard,
@@ -724,6 +726,7 @@ export function useCreateMapMarker(project_id: string) {
       backgroundColor?: string;
       doc_id?: string;
       map_link?: string;
+      public: boolean;
       lat: number;
       lng: number;
     }) => {
@@ -776,31 +779,8 @@ export function useCreateMapMarker(project_id: string) {
 export function useUpdateMapMarker() {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: {
-      id: string;
-      map_id: string;
-      project_id: string;
-      icon?: string;
-      color?: string;
-      backgroundColor?: string;
-      text?: string;
-      lat?: number;
-      lng?: number;
-      doc_id?: string;
-      map_link?: string;
-    }) => {
-      await updateMapMarker({
-        id: vars.id,
-        map_id: vars.map_id,
-        icon: vars.icon,
-        color: vars.color,
-        backgroundColor: vars.backgroundColor,
-        text: vars.text,
-        lat: vars.lat,
-        lng: vars.lng,
-        doc_id: vars.doc_id,
-        map_link: vars.map_link,
-      });
+    async (vars: UpdateMapMarkerProps & { project_id: string }) => {
+      await updateMapMarker(vars);
     },
     {
       onMutate: async (updatedMarker) => {
@@ -817,37 +797,20 @@ export function useUpdateMapMarker() {
                     ...map,
                     markers: map.markers.map((marker) => {
                       if (marker.id === updatedMarker.id) {
+                        Object.keys(updatedMarker).forEach((key) => {
+                          if (
+                            updatedMarker[key as keyof UpdateMapMarkerProps] ===
+                              undefined ||
+                            key === "project_id"
+                          ) {
+                            delete updatedMarker[
+                              key as keyof UpdateMapMarkerProps
+                            ];
+                          }
+                        });
                         return {
                           ...marker,
-                          // Check what values were given and set to new ones, otherwise keep old one
-                          icon: updatedMarker.icon
-                            ? updatedMarker.icon
-                            : marker.icon,
-                          color: updatedMarker.color
-                            ? updatedMarker.color
-                            : marker.color,
-                          backgroundColor: updatedMarker.backgroundColor
-                            ? updatedMarker.backgroundColor
-                            : marker.backgroundColor,
-                          text: updatedMarker.text
-                            ? updatedMarker.text
-                            : marker.text,
-                          lat: updatedMarker.lat
-                            ? updatedMarker.lat
-                            : marker.lat,
-                          lng: updatedMarker.lng
-                            ? updatedMarker.lng
-                            : marker.lng,
-                          doc_id: updatedMarker.doc_id
-                            ? updatedMarker.doc_id
-                            : updatedMarker.doc_id === null
-                            ? undefined
-                            : marker.doc_id,
-                          map_link: updatedMarker.map_link
-                            ? updatedMarker.map_link
-                            : updatedMarker.map_link === null
-                            ? undefined
-                            : marker.map_link,
+                          ...updatedMarker,
                         };
                       } else {
                         return marker;

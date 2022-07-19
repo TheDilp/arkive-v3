@@ -80,5 +80,6 @@ export const MapMarkerDialogDefault = {
   backgroundColor: "#000000",
   doc_id: undefined,
   map_link: undefined,
+  public: true,
   show: false,
 };

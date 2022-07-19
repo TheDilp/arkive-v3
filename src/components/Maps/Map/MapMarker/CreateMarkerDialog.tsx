@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
@@ -7,6 +8,7 @@ import { InputText } from "primereact/inputtext";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+import { DocumentProps } from "../../../../custom-types";
 import { MapProps } from "../../../../types/MapTypes";
 import {
   useCreateMapMarker,
@@ -71,7 +73,7 @@ export default function CreateMarkerDialog({
         </div>
 
         {/* Icon */}
-        <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">
+        <div className="w-full my-2 flex align-items-center justify-content-between">
           <span>Marker Icon:</span>
           <Icon
             className="cursor-pointer"
@@ -97,7 +99,7 @@ export default function CreateMarkerDialog({
             }
             setIconSelect={setIconSelect}
           />
-          <div className="flex align-items-center flex-row-reverse">
+          <div className="flex w align-items-center flex-row-reverse">
             <InputText
               value={newMarkerData.color}
               className="w-full ml-2"
@@ -121,7 +123,7 @@ export default function CreateMarkerDialog({
         </div>
 
         {/* Background color */}
-        <div className="w-full my-2 flex align-items-center justify-content-evenly flex-wrap">
+        <div className="w-full my-2 flex align-items-center justify-content-between">
           <span>Marker Background:</span>
 
           <div className="flex align-items-center flex-row-reverse">
@@ -146,6 +148,25 @@ export default function CreateMarkerDialog({
             />
           </div>
         </div>
+
+        {/* Public setting */}
+        <div className="w-full my-3">
+          <div className="w-full">
+            <label className="mr-2">Public:</label>
+            <Checkbox
+              checked={newMarkerData.public}
+              onChange={(e) =>
+                setNewMarkerData((prev) => ({ ...prev, public: e.checked }))
+              }
+            />
+          </div>
+          <span className="text-xs text-gray-400">
+            If a document is linked, the marker will use its public setting by
+            default.
+          </span>
+        </div>
+
+        {/* Document Selection */}
         <div className="w-full">
           <Dropdown
             className="w-full"
@@ -153,12 +174,16 @@ export default function CreateMarkerDialog({
             filter
             filterBy="title"
             value={newMarkerData.doc_id}
-            onChange={(e) =>
+            onChange={(e) => {
+              let doc = documents.data?.find(
+                (doc: DocumentProps) => doc.id === e.value
+              );
               setNewMarkerData((prev) => ({
                 ...prev,
                 doc_id: e.value,
-              }))
-            }
+                public: doc ? doc.public : prev.public,
+              }));
+            }}
             options={documents.data?.filter(
               (doc) => !doc.template && !doc.folder
             )}
@@ -166,6 +191,8 @@ export default function CreateMarkerDialog({
             optionValue={"id"}
           />
         </div>
+
+        {/* Linked Map Selection */}
         <div className="w-full">
           <Dropdown
             className="w-full mt-2"

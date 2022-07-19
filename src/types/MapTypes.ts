@@ -22,6 +22,7 @@ export type MapMarkerProps = {
   lng: number;
   text: string;
   map_id: string;
+  public: boolean;
   doc_id?: string;
   map_link?: string;
 };
@@ -58,6 +59,7 @@ export type CreateMarkerInputs = {
   color: string;
   doc_id: string;
   map_link: string;
+  public: boolean;
 };
 
 export type CreateMapProps = {
@@ -90,6 +92,7 @@ export type CreateMapMarkerProps = {
   text?: string;
   doc_id?: string;
   map_link?: string;
+  public: boolean;
 };
 
 export type UpdateMapMarkerProps = {
@@ -103,6 +106,7 @@ export type UpdateMapMarkerProps = {
   lng?: number;
   doc_id?: string;
   map_link?: string;
+  public: boolean;
 };
 
 export type UpdateMarkerInputs = {
@@ -114,6 +118,7 @@ export type UpdateMarkerInputs = {
   doc_id?: string | undefined;
   map_link?: string | undefined;
   show: boolean;
+  public: boolean;
 };
 
 export type CreateMapLayerProps = {
