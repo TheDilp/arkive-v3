@@ -105,6 +105,7 @@ export type CytoscapeNodeProps = {
     | "fontColor"
     | "fontFamily"
     | "backgroundColor"
+    | "backgroundOpacity"
     | "textHAlign"
     | "textVAlign"
     | "customImage"
@@ -120,8 +121,18 @@ export type CreateNodeProps = {
   board_id: string;
   type: string;
   backgroundColor?: string;
+  backgroundOpacity?: number;
   customImage?: ImageProps;
   doc_id?: string;
+  width?: number;
+  height?: number;
+  fontSize?: number;
+  fontColor?: string;
+  fontFamily?: string;
+  textHAlign?: "left" | "center" | "right";
+  textVAlign?: "top" | "center" | "bottom";
+  zIndex?: number;
+  locked?: boolean;
 };
 export type UpdateNodeProps = {
   id: string;

@@ -1,6 +1,8 @@
 import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
+import clipboard from "cytoscape-clipboard";
+import jquery from "jquery";
 import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import {
@@ -50,6 +52,7 @@ export default function Project() {
   useEffect(() => {
     cytoscape.use(edgehandles);
     cytoscape.use(gridguide);
+    clipboard(cytoscape, jquery);
   }, []);
   if (!user) return <Navigate to="/" />;
 

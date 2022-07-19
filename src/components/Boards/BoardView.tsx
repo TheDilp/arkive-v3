@@ -54,7 +54,7 @@ type Props = {
 export default function BoardView({ public_view, setBoardId }: Props) {
   const navigate = useNavigate();
   const { project_id, board_id, node_id } = useParams();
-  const { cyRef, ehRef, grRef } = useContext(BoardRefsContext);
+  const { cyRef, ehRef, grRef, cbRef } = useContext(BoardRefsContext);
 
   const board = useGetBoardData(
     project_id as string,
@@ -365,17 +365,72 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             y: target.position.y,
           });
       });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey) {
+          if (e.key === "c") {
+            cyRef?.current.clipboard().copy(cyRef?.current.$(":selected"));
+          } else if (e.key === "v") {
+            cyRef?.current
+              .clipboard()
+              .paste()
+              .forEach((el: any) => {
+                const { x, y } = el.position();
+
+                const {
+                  backgroundColor,
+                  customImage,
+                  fontColor,
+                  fontFamily,
+                  fontSize,
+                  height,
+                  width,
+                  textHAlign,
+                  textVAlign,
+                  type,
+                  label,
+                  locked,
+                  doc_id,
+                } = el.data();
+                createNodeMutation.mutate({
+                  backgroundColor,
+                  customImage,
+                  fontColor,
+                  fontFamily,
+                  fontSize,
+                  height,
+                  width,
+                  textHAlign,
+                  textVAlign,
+                  type,
+                  x,
+                  y,
+                  label,
+                  locked,
+                  doc_id,
+                  board_id: board_id as string,
+                  id: uuid(),
+                });
+              });
+            // for (const node of clipboard.nodes) {
+
+            // }
+          }
+        }
+      });
     }
     return () => {
-      if (!public_view)
+      if (!public_view) {
         cyRef.current.removeListener(
           "click mousedown cxttap dbltap free ehcomplete"
         );
+        window.removeEventListener("keydown", () => {});
+      }
     };
   }, [cyRef, board_id]);
 
   useEffect(() => {
-    if (!cyRef || !ehRef || !grRef) return;
+    if (!cyRef || !ehRef || !grRef || !cbRef) return;
     setLoading(true);
     if (firstRender.current) {
       firstRender.current = false;
@@ -383,6 +438,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
     // Reset when changing board_id
     ehRef.current = null;
     grRef.current = null;
+    cbRef.current = null;
     if (board_id) {
       if (setBoardId) {
         setBoardId(board_id);
@@ -463,7 +519,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
           if (cyRef) {
             cyRef.current = cy;
 
-            if (ehRef && grRef) {
+            if (ehRef && grRef && cbRef) {
               if (public_view) {
                 cy.center();
                 cy.autoungrabify(true);
@@ -472,6 +528,22 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               }
               ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
               grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
+              cbRef.current = cyRef.current.clipboard({
+                afterPaste: function (eles: any) {
+                  eles.forEach((el: any) => {
+                    // Remove duplicate because the extension adds one copy
+                    // And creating data in the DB does as well
+                    // This removes the unneccessary copy from the extension
+                    try {
+                      cyRef.current.remove(el);
+                    } catch (error) {
+                      toastWarn(
+                        "Cytoedge couldn't be removed, there was an error (BoardView 172)"
+                      );
+                    }
+                  });
+                },
+              });
             }
           }
         }}

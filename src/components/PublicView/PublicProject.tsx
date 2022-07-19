@@ -5,12 +5,14 @@ import LoadingScreen from "../Util/LoadingScreen";
 import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
+import clipboard from "cytoscape-clipboard";
 import BoardView from "../Boards/BoardView";
 import BoardRefsProvider from "../Context/BoardRefsContext";
 import MapView from "../Maps/Map/MapView";
 export default function PublicProject() {
   cytoscape.use(edgehandles);
   cytoscape.use(gridguide);
+  cytoscape.use(clipboard);
   return (
     <div className="w-screen h-screen">
       <Routes>
