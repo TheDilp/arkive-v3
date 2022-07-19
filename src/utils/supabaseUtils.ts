@@ -24,7 +24,6 @@ import {
   CreateMapLayerProps,
   CreateMapMarkerProps,
   CreateMapProps,
-  MapLayerProps,
   MapMarkerProps,
   MapProps,
   MapUpdateProps as UpdateMapProps,
@@ -304,6 +303,24 @@ export const createNode = async (CreateNodeProps: CreateNodeProps) => {
     }
   }
 };
+export const createManyNodes = async (CreateNodeProps: CreateNodeProps[]) => {
+  let user = auth.user();
+  if (user) {
+    let newNodes = CreateNodeProps.map((node) => ({
+      ...node,
+      // @ts-ignore
+      user_id: user.id,
+      customImage: node.customImage?.id,
+    }));
+    const { data, error } = await supabase.from("nodes").insert(newNodes);
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your node.");
+      throw new Error(error.message);
+    }
+  }
+};
+
 export const createEdge = async ({
   id,
   source,
@@ -325,6 +342,30 @@ export const createEdge = async ({
       lineColor,
       user_id: user.id,
     });
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your edge.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const createManyEdges = async (
+  CreateEdgeProps: Omit<BoardEdgeProps, "label">[]
+) => {
+  let user = auth.user();
+  if (user) {
+    const newEdges = CreateEdgeProps.map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      board_id: edge.board_id,
+      curveStyle: edge.curveStyle,
+      lineStyle: edge.lineStyle,
+      lineColor: edge.lineColor,
+      // @ts-ignore
+      user_id: user.id,
+    }));
+    const { data, error } = await supabase.from("edges").insert(newEdges);
     if (data) return data;
     if (error) {
       toastError("There was an error creating your edge.");
