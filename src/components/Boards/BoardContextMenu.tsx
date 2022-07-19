@@ -136,16 +136,9 @@ export default function BoardContextMenu({
       },
     },
     {
-      label:
-        nodes?.length > 1
-          ? "Un/Lock Nodes"
-          : contextMenu.selected?.locked()
-          ? "Unlock"
-          : "Lock",
-      icon:
-        nodes?.length > 1
-          ? ""
-          : `pi pi-fw pi-lock${contextMenu.selected?.locked() ? "-open" : ""}`,
+      label: "Un/Lock Nodes",
+
+      icon: `pi pi-fw pi-lock${contextMenu.selected?.locked() ? "-open" : ""}`,
 
       items: [
         {
@@ -187,8 +180,12 @@ export default function BoardContextMenu({
     {
       label: "Highlight Connected Nodes",
       command: () => {
-        contextMenu.selected.sources().flashClass("nodeHighlight", 2000);
-        contextMenu.selected.targets().flashClass("nodeHighlight", 2000);
+        contextMenu.selected
+          .sources()
+          .flashClass("incomingNodeHighlight", 2000);
+        contextMenu.selected
+          .targets()
+          .flashClass("outgoingNodeHighlight", 2000);
       },
     },
     {
