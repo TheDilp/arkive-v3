@@ -3,10 +3,12 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { auth, register } from "../../utils/supabaseUtils";
+import { toastError } from "../../utils/utils";
 import EarthIMG from "./earthimg.jpg";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   auth.onAuthStateChange((event) => {
@@ -63,9 +65,17 @@ export default function Register() {
           <div>
             <InputText
               className="mb-2 w-full"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="Nickname"
+              type="text"
+            />
+            <InputText
+              className="mb-2 w-full"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
+              type="email"
             />
             <InputText
               className="w-full"
@@ -77,9 +87,15 @@ export default function Register() {
 
             <Button
               className="w-full my-2 text-white Lato border-none"
-              onClick={() =>
-                register(email, password).then(() => navigate("/login"))
-              }
+              onClick={() => {
+                if (!nickname || !email || !password)
+                  toastError("Please fill out all fields.");
+                else {
+                  register(nickname, email, password).then(() =>
+                    navigate("/login")
+                  );
+                }
+              }}
               label="Sign up"
               icon="pi pi-user-plus"
               iconPos="right"
