@@ -115,10 +115,16 @@ export default function MapImage({
           <LayerGroup>
             {markers
               .filter((marker) => {
-                if (markerFilter === "map") {
-                  return marker.map_link;
-                } else if (markerFilter === "doc") {
-                  return marker.doc_id;
+                if (public_view) {
+                  if (marker.public) {
+                    if (markerFilter === "map") {
+                      return marker.map_link;
+                    } else if (markerFilter === "doc") {
+                      return marker.doc_id;
+                    } else {
+                      return true;
+                    }
+                  }
                 } else {
                   return true;
                 }
