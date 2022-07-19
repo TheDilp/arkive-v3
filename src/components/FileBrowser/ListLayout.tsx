@@ -97,7 +97,9 @@ export default function ListLayout({ images }: Props) {
         ref={tableRef}
         className="w-full h-full mt-5"
         size="small"
-        value={images.filter((image) => image.title.includes(filter))}
+        value={images.filter((image) =>
+          image.title.toLowerCase().includes(filter.toLowerCase())
+        )}
         paginator
         responsiveLayout="scroll"
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
