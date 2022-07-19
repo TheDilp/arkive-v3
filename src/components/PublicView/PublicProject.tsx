@@ -1,18 +1,19 @@
-import { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
-import PublicWiki from "../PublicView/Wiki/PublicWiki";
-import LoadingScreen from "../Util/LoadingScreen";
 import cytoscape from "cytoscape";
+import clipboard from "cytoscape-clipboard";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
-import clipboard from "cytoscape-clipboard";
+import jquery from "jquery";
+import { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
 import BoardView from "../Boards/BoardView";
 import BoardRefsProvider from "../Context/BoardRefsContext";
 import MapView from "../Maps/Map/MapView";
+import PublicWiki from "../PublicView/Wiki/PublicWiki";
+import LoadingScreen from "../Util/LoadingScreen";
 export default function PublicProject() {
   cytoscape.use(edgehandles);
   cytoscape.use(gridguide);
-  cytoscape.use(clipboard);
+  clipboard(cytoscape, jquery);
   return (
     <div className="w-screen h-screen">
       <Routes>

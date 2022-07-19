@@ -189,6 +189,7 @@ export type NodeUpdateDialogProps = {
 };
 
 // Edge Props
+
 export type BoardEdgeProps = {
   id: string;
   board_id: string;
@@ -229,6 +230,26 @@ export type CytoscapeEdgeProps = {
     | "targetArrowShape"
     | "zIndex"
   >;
+};
+
+export type CreateEdgeProps = {
+  id: string;
+  board_id: string;
+  label?: string;
+  source: string;
+  target: string;
+  curveStyle: string;
+  lineStyle: string;
+  lineColor: string;
+  fontSize: number;
+  fontColor: string;
+  fontFamily: string;
+  controlPointDistances: number;
+  controlPointWeights: number;
+  taxiDirection: string;
+  taxiTurn: number;
+  targetArrowShape: string;
+  zIndex: number;
 };
 
 export type UpdateEdgeInputs = Pick<

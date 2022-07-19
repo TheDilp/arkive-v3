@@ -17,10 +17,8 @@ import {
   updateColor,
 } from "../../../utils/boardUtils";
 import {
-  useDeleteEdge,
   useDeleteManyEdges,
   useDeleteManyNodes,
-  useDeleteNode,
   useGetBoardData,
   useUpdateEdge,
   useUpdateNode,
@@ -34,7 +32,11 @@ import UpdateManyNodes from "./UpdateManyNodes";
 export default function BoardQuickBar() {
   const { project_id, board_id } = useParams();
   const { cyRef, ehRef } = useContext(BoardRefsContext);
-  const board = useGetBoardData(project_id as string, board_id as string);
+  const board = useGetBoardData(
+    project_id as string,
+    board_id as string,
+    false
+  );
   const [drawMode, setDrawMode] = useState(false);
   const [search, setSearch] = useState("");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);

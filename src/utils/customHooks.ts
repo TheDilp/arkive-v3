@@ -11,6 +11,7 @@ import {
   BoardNodeProps,
   BoardProps,
   CreateBoardProps,
+  CreateEdgeProps,
   CreateNodeProps,
   UpdateEdgeProps,
   UpdateNodeProps,
@@ -27,6 +28,8 @@ import {
   createBoard,
   createDocument,
   createEdge,
+  createManyEdges,
+  createManyNodes,
   createMap,
   createMapLayer,
   createMapMarker,
@@ -1293,6 +1296,53 @@ export function useCreateNode(project_id: string) {
     }
   );
 }
+export function useCreateManyNodes(project_id: string, board_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: CreateNodeProps[]) => {
+      await createManyNodes(vars);
+    },
+    {
+      onMutate: async (newNodes) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((board) => {
+                if (board.id === board_id) {
+                  return {
+                    ...board,
+                    nodes: [
+                      ...board.nodes,
+                      ...newNodes.map((newNode) => ({
+                        ...defaultNode,
+                        ...newNode,
+                      })),
+                    ],
+                  };
+                } else {
+                  return board;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+        toastError("There was an error creating this node.");
+      },
+    }
+  );
+}
 // Custom hook for updating a node
 export function useUpdateNode(project_id: string) {
   const queryClient = useQueryClient();
@@ -1481,24 +1531,7 @@ export function useDeleteManyNodes(project_id: string) {
 export function useCreateEdge(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: {
-      id: string;
-      source: string;
-      target: string;
-      board_id: string;
-      curveStyle: string;
-      lineStyle: string;
-      lineColor: string;
-      fontColor: string;
-      fontFamily: string;
-      fontSize: number;
-      controlPointDistances: number;
-      controlPointWeights: number;
-      taxiDirection: string;
-      taxiTurn: number;
-      targetArrowShape: string;
-      zIndex: number;
-    }) => {
+    async (vars: CreateEdgeProps) => {
       const newEdge = await createEdge({
         ...vars,
       });
@@ -1516,6 +1549,47 @@ export function useCreateEdge(project_id: string) {
                   return {
                     ...board,
                     edges: [...board.edges, newEdge],
+                  };
+                } else {
+                  return board;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+      },
+    }
+  );
+}
+export function useCreateManyEdges(project_id: string, board_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: CreateEdgeProps[]) => {
+      const newEdges = await createManyEdges(vars);
+      return newEdges;
+    },
+    {
+      onMutate: async (newEdges) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((board) => {
+                if (board.id === board_id) {
+                  return {
+                    ...board,
+                    edges: [...board.edges, ...newEdges],
                   };
                 } else {
                   return board;
@@ -1631,7 +1705,6 @@ export function useDeleteEdge(project_id: string) {
     }
   );
 }
-
 export function useDeleteManyEdges(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
@@ -1675,7 +1748,6 @@ export function useDeleteManyEdges(project_id: string) {
     }
   );
 }
-
 // Custom hook for uploading images
 export function useUploadImage(project_id: string) {
   const queryClient = useQueryClient();

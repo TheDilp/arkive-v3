@@ -27,6 +27,8 @@ import {
 } from "../../utils/boardUtils";
 import {
   useCreateEdge,
+  useCreateManyEdges,
+  useCreateManyNodes,
   useCreateNode,
   useGetBoardData,
   useGetDocuments,
@@ -86,7 +88,15 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   const [quickCreate, setQuickCreate] = useState(false);
 
   const createNodeMutation = useCreateNode(project_id as string);
+  const createManyNodesMutation = useCreateManyNodes(
+    project_id as string,
+    board_id as string
+  );
   const createEdgeMutation = useCreateEdge(project_id as string);
+  const createManyEdgesMutation = useCreateManyEdges(
+    project_id as string,
+    board_id as string
+  );
   const updateNodeMutation = useUpdateNode(project_id as string);
   const uploadImageMutation = useUploadImage(project_id as string);
 
@@ -178,17 +188,18 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   };
 
   // Function for copy-pasting
-  const copyPaste = (e: KeyboardEvent) => {
+  const copyPaste = async (e: KeyboardEvent) => {
     if (e.ctrlKey) {
       if (e.key === "c") {
         cyRef?.current.clipboard().copy(cyRef?.current.$(":selected"));
       } else if (e.key === "v") {
-        cyRef?.current
-          .clipboard()
-          .paste()
-          .forEach((el: any) => {
+        const newNodes: any[] = [];
+        const newEdges: any[] = [];
+        for (const el of cyRef?.current.clipboard().paste()) {
+          if (el.isNode()) {
             const { x, y } = el.position();
             const {
+              id,
               backgroundColor,
               customImage,
               fontColor,
@@ -203,7 +214,8 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               locked,
               doc_id,
             } = el.data();
-            createNodeMutation.mutate({
+            newNodes.push({
+              id,
               backgroundColor,
               customImage,
               fontColor,
@@ -214,15 +226,20 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               textHAlign,
               textVAlign,
               type,
-              x,
-              y,
               label,
               locked,
               doc_id,
+              x,
+              y,
               board_id: board_id as string,
-              id: uuid(),
             });
-          });
+          } else if (el.isEdge()) {
+            const { classes, id, user_id, ...rest } = el.data();
+            newEdges.push({ ...rest, id: uuid() });
+          }
+        }
+        await createManyNodesMutation.mutateAsync(newNodes);
+        await createManyEdgesMutation.mutateAsync(newEdges);
       }
     }
   };
@@ -541,9 +558,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
               if (!cbRef.current)
                 cbRef.current = cyRef.current.clipboard({
-                  afterCopy: function (t: any) {
-                    console.log(t);
-                  },
+                  afterCopy: function (t: any) {},
                   afterPaste: function (eles: any) {
                     eles.forEach((el: any) => {
                       // Remove duplicate because the extension adds one copy
