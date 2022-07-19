@@ -177,6 +177,56 @@ export default function BoardView({ public_view, setBoardId }: Props) {
     }
   };
 
+  // Function for copy-pasting
+  const copyPaste = (e: KeyboardEvent) => {
+    if (e.ctrlKey) {
+      if (e.key === "c") {
+        cyRef?.current.clipboard().copy(cyRef?.current.$(":selected"));
+      } else if (e.key === "v") {
+        cyRef?.current
+          .clipboard()
+          .paste()
+          .forEach((el: any) => {
+            const { x, y } = el.position();
+            const {
+              backgroundColor,
+              customImage,
+              fontColor,
+              fontFamily,
+              fontSize,
+              height,
+              width,
+              textHAlign,
+              textVAlign,
+              type,
+              label,
+              locked,
+              doc_id,
+            } = el.data();
+            createNodeMutation.mutate({
+              backgroundColor,
+              customImage,
+              fontColor,
+              fontFamily,
+              fontSize,
+              height,
+              width,
+              textHAlign,
+              textVAlign,
+              type,
+              x,
+              y,
+              label,
+              locked,
+              doc_id,
+              board_id: board_id as string,
+              id: uuid(),
+            });
+          });
+      }
+    }
+  };
+
   useEffect(() => {
     if (board) {
       let temp_nodes: CytoscapeNodeProps[] = [];
@@ -369,58 +419,8 @@ export default function BoardView({ public_view, setBoardId }: Props) {
           });
       });
 
-      window.addEventListener("keydown", (e) => {
-        if (e.ctrlKey) {
-          if (e.key === "c") {
-            cyRef?.current.clipboard().copy(cyRef?.current.$(":selected"));
-          } else if (e.key === "v") {
-            cyRef?.current
-              .clipboard()
-              .paste()
-              .forEach((el: any) => {
-                const { x, y } = el.position();
-
-                const {
-                  backgroundColor,
-                  customImage,
-                  fontColor,
-                  fontFamily,
-                  fontSize,
-                  height,
-                  width,
-                  textHAlign,
-                  textVAlign,
-                  type,
-                  label,
-                  locked,
-                  doc_id,
-                } = el.data();
-                createNodeMutation.mutate({
-                  backgroundColor,
-                  customImage,
-                  fontColor,
-                  fontFamily,
-                  fontSize,
-                  height,
-                  width,
-                  textHAlign,
-                  textVAlign,
-                  type,
-                  x,
-                  y,
-                  label,
-                  locked,
-                  doc_id,
-                  board_id: board_id as string,
-                  id: uuid(),
-                });
-              });
-            // for (const node of clipboard.nodes) {
-
-            // }
-          }
-        }
-      });
+      // Event for copy-pasting nodes
+      document.addEventListener("keydown", copyPaste);
     }
     return () => {
       if (!public_view) {
@@ -428,7 +428,6 @@ export default function BoardView({ public_view, setBoardId }: Props) {
           "click mousedown cxttap dbltap free ehcomplete"
         );
       }
-      window.removeEventListener("keydown", () => {});
     };
   }, [cyRef, board_id]);
 
@@ -457,6 +456,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
 
     return () => {
       if (setBoardId) setBoardId("");
+      document.removeEventListener("keydown", copyPaste);
     };
   }, [board_id]);
 
