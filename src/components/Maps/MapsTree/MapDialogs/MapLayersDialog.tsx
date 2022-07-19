@@ -91,7 +91,7 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
                     )
                   }
                 />
-                <div className="w-5">
+                <div className="w-4">
                   <ImageSelectDropdown
                     value={layer.image}
                     onChange={(e) =>
@@ -107,6 +107,23 @@ export default function MapLayersDialog({ visible, setVisible }: Props) {
                 <Button
                   className="w-1 p-button-outlined p-button-success"
                   icon="pi pi-save"
+                  onClick={() => {
+                    let newTitle = layers.find(
+                      (map_layer) => map_layer.id === layer.id
+                    )?.title;
+
+                    if (newTitle)
+                      updateMapLayerMutation.mutate({
+                        id: layer.id,
+                        title: newTitle,
+                        map_id: visible.map_id,
+                      });
+                  }}
+                />
+                <Button
+                  className="w-1 p-button-outlined p-button-secondary"
+                  tooltip="Toggle public"
+                  icon="pi pi-eye"
                   onClick={() => {
                     let newTitle = layers.find(
                       (map_layer) => map_layer.id === layer.id

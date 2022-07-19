@@ -612,8 +612,6 @@ export function useGetMapData(
     { enabled: public_view }
   );
 
-  if (public_view && map) return map;
-
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   if (maps && map_id) {
     const map = maps.find((map) => map.id === map_id);
@@ -623,7 +621,7 @@ export function useGetMapData(
       return null;
     }
   } else {
-    return null;
+    if (public_view && map) return map;
   }
 }
 // Custom hook for updating a map

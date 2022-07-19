@@ -113,13 +113,15 @@ export default function MapImage({
         <LayersControl.Overlay name="Markers" checked={true}>
           <LayerGroup>
             {markers
-              .filter((marker) =>
-                markerFilter === "map"
-                  ? marker.map_link
-                  : markerFilter === "doc"
-                  ? marker.doc_id
-                  : true
-              )
+              .filter((marker) => {
+                if (markerFilter === "map") {
+                  return marker.map_link;
+                } else if (markerFilter === "doc") {
+                  return marker.doc_id;
+                } else {
+                  return true;
+                }
+              })
               .map((marker) => (
                 <MapMarker
                   key={marker.id}
