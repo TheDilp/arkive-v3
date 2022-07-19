@@ -144,7 +144,10 @@ export default function MapImage({
               if (a.title < b.title) return -1;
               return 0;
             })
-            .filter((layer) => layer.image?.link && layer.public)
+            .filter(
+              (layer) =>
+                layer.image?.link && (public_view ? layer.public : true)
+            )
             .map((layer) => {
               return (
                 <LayersControl.Overlay
