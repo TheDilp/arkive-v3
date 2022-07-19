@@ -18,6 +18,8 @@ import {
 } from "../../../utils/boardUtils";
 import {
   useDeleteEdge,
+  useDeleteManyEdges,
+  useDeleteManyNodes,
   useDeleteNode,
   useGetBoardData,
   useUpdateEdge,
@@ -49,8 +51,8 @@ export default function BoardQuickBar() {
 
   const updateNodeMutation = useUpdateNode(project_id as string);
   const updateEdgeMutation = useUpdateEdge(project_id as string);
-  const deleteNodeMutation = useDeleteNode(project_id as string);
-  const deleteEdgeMutation = useDeleteEdge(project_id as string);
+  const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
+  const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
   const debouncedColorPick = useDebouncedCallback(
     // function
     (color) => {
@@ -373,22 +375,22 @@ export default function BoardQuickBar() {
         className="pi pi-fw pi-trash cursor-pointer hover:text-blue-300 deleteSelected"
         onClick={() => {
           if (!cyRef) return;
-          if (cyRef.current.elements(":selected")?.length > 0) {
-            cyRef.current.elements(":selected").forEach((el: any) => {
-              if (el.isNode()) {
-                deleteNodeMutation.mutate({
-                  id: el.data().id,
-                  board_id: board_id as string,
-                });
-              } else {
-                deleteEdgeMutation.mutate({
-                  id: el.data().id,
-                  board_id: board_id as string,
-                });
-              }
-            });
-          } else {
+          let selected = cyRef.current.elements(":selected");
+          if (selected.length === 0) {
             toastWarn("No elements are selected.");
+            return;
+          }
+          if (selected.nodes()?.length > 0) {
+            deleteManyNodesMutation.mutate({
+              ids: selected.nodes().map((node: any) => node.data().id),
+              board_id: board_id as string,
+            });
+          }
+          if (selected.edges().length > 0) {
+            deleteManyEdgesMutation.mutate({
+              ids: selected.edges().map((edge: any) => edge.data().id),
+              board_id: board_id as string,
+            });
           }
         }}
       ></i>
