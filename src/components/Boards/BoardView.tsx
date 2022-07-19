@@ -349,8 +349,18 @@ export default function BoardView({ public_view, setBoardId }: Props) {
         if (evt.target === cyRef.current) {
           cm.current.show(evt.originalEvent);
           setContextMenu({ ...evt.position, type: "board" });
-        } else {
+        }
+        // Else - the target is a node or an edge
+        else {
           let group = evt.target._private.group;
+
+          // If the current target is not in the selected group, make it the only selected item
+          // This mimics a desktop mouse experience
+          // Otherwise, do nothing
+          if (!cyRef.current.elements(":selected").contains(evt.target)) {
+            cyRef.current.elements(":selected").unselect();
+            evt.target.select();
+          }
           if (group === "nodes") {
             cm.current.show(evt.originalEvent);
             setContextMenu({

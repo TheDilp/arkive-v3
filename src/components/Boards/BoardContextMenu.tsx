@@ -1,7 +1,10 @@
 import { ContextMenu } from "primereact/contextmenu";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { BoardContextMenuProps } from "../../types/BoardTypes";
+import {
+  BoardContextMenuProps,
+  CytoscapeNodeProps,
+} from "../../types/BoardTypes";
 import { changeLockState } from "../../utils/boardUtils";
 import {
   useCreateNode,
@@ -29,11 +32,17 @@ export default function BoardContextMenu({
   setQuickCreate,
 }: Props) {
   const { project_id, board_id } = useParams();
-  const board = useGetBoardData(project_id as string, board_id as string);
+  const board = useGetBoardData(
+    project_id as string,
+    board_id as string,
+    false
+  );
   const createNodeMutation = useCreateNode(project_id as string);
   const deleteNodeMutation = useDeleteNode(project_id as string);
   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
   const deleteEdgeMutation = useDeleteEdge(project_id as string);
+  const nodes = cyRef.current?.nodes(":selected");
+  const edges = cyRef.current?.edges(":selected");
   const boardItems = [
     {
       label: "New Node",
@@ -128,47 +137,28 @@ export default function BoardContextMenu({
     },
     {
       label:
-        cyRef.current?.nodes(":selected")?.length > 1
+        nodes?.length > 1
           ? "Un/Lock Nodes"
           : contextMenu.selected?.locked()
           ? "Unlock"
           : "Lock",
       icon:
-        cyRef.current?.nodes(":selected")?.length > 1
+        nodes?.length > 1
           ? ""
           : `pi pi-fw pi-lock${contextMenu.selected?.locked() ? "-open" : ""}`,
 
-      ...(cyRef.current?.nodes(":selected")?.length > 1
-        ? {
-            items: [
-              {
-                label: "Unlock selected",
-                icon: "pi pi-fw pi-lock-open",
-                command: () => changeLockState(cyRef, false),
-              },
-              {
-                label: "Lock selected",
-                icon: "pi pi-fw pi-lock",
-                command: () => changeLockState(cyRef, true),
-              },
-            ],
-          }
-        : {
-            command: () => {
-              let lockState = contextMenu.selected.locked();
-              if (lockState) {
-                contextMenu.selected.unlock();
-                updateManyNodesLockState([
-                  { id: contextMenu?.selected.data().id, locked: false },
-                ]);
-              } else {
-                contextMenu.selected.lock();
-                updateManyNodesLockState([
-                  { id: contextMenu?.selected.data().id, locked: true },
-                ]);
-              }
-            },
-          }),
+      items: [
+        {
+          label: "Unlock selected",
+          icon: "pi pi-fw pi-lock-open",
+          command: () => changeLockState(cyRef, false),
+        },
+        {
+          label: "Lock selected",
+          icon: "pi pi-fw pi-lock",
+          command: () => changeLockState(cyRef, true),
+        },
+      ],
     },
     {
       separator: true,
@@ -184,7 +174,7 @@ export default function BoardContextMenu({
             .outgoers("edge")
             .map((edge: any) => edge.id()),
         ];
-        if (edge_ids.length > 0) deleteManyEdges(edge_ids);
+        deleteManyEdges(edge_ids);
         cyRef.current.remove(contextMenu.selected);
         deleteNodeMutation.mutate({
           id: contextMenu.selected._private.data.id,
