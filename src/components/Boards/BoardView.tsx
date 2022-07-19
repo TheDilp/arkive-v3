@@ -1,4 +1,12 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -34,22 +42,29 @@ import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import BoardContextMenu from "./BoardContextMenu";
-import BoardQuickBar from "./Quickbar/BoardQuickBar";
 import EdgeUpdateDialog from "./EdgeUpdateDialog";
 import NodeUpdateDialog from "./NodeUpdateDialog";
+import BoardQuickBar from "./Quickbar/BoardQuickBar";
 import QuickCreateNode from "./QuickCreateNode";
 type Props = {
-  setBoardId: (boardId: string) => void;
+  public_view: boolean;
+  setBoardId?: Dispatch<SetStateAction<string>>;
 };
 
-export default function BoardView({ setBoardId }: Props) {
+export default function BoardView({ public_view, setBoardId }: Props) {
   const navigate = useNavigate();
   const { project_id, board_id, node_id } = useParams();
   const { cyRef, ehRef, grRef } = useContext(BoardRefsContext);
-  const board = useGetBoardData(project_id as string, board_id as string);
+
+  const board = useGetBoardData(
+    project_id as string,
+    board_id as string,
+    public_view
+  );
   const images = useGetImages(project_id as string);
 
-  const { data: documents } = useGetDocuments(project_id as string);
+  // PUBLIC ENABLE
+  const { data: documents } = useGetDocuments(project_id as string, false);
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
@@ -75,6 +90,90 @@ export default function BoardView({ setBoardId }: Props) {
   const updateNodeMutation = useUpdateNode(project_id as string);
   const uploadImageMutation = useUploadImage(project_id as string);
 
+  // Function which handles creating new nodes from documents
+  // The documents are dragged from a dialog window onto the board
+  const handleOnDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    let files = e.dataTransfer.files;
+    let doc_id = e.dataTransfer.getData("text");
+
+    if (doc_id) {
+      let document = documents?.find((doc) => doc.id === doc_id);
+      if (document) {
+        // @ts-ignore
+        const { top, left } = e.target.getBoundingClientRect();
+
+        // Convert mouse coordinates to canvas coordinates
+        const { x, y } = toModelPosition(cyRef, {
+          x: e.clientX - left,
+          y: e.clientY - top,
+        });
+        createNodeMutation.mutate({
+          id: uuid(),
+          label: document.title,
+          board_id: board_id as string,
+          x,
+          y,
+          type: "rectangle",
+          doc_id: document.id,
+        });
+      }
+    } else if (files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        let newImage;
+        // If the image exists do not upload it but assign to variable
+        if (images?.data.some((img) => img.title === files[i].name)) {
+          newImage = images?.data.find((img) => img.title === files[i].name);
+
+          let id = uuid();
+          // @ts-ignore
+          const { top, left } = e.target.getBoundingClientRect();
+
+          // Convert mouse coordinates to canvas coordinates
+          const { x, y } = toModelPosition(cyRef, {
+            x: e.clientX - left,
+            y: e.clientY - top,
+          });
+          createNodeMutation.mutate({
+            id,
+            board_id: board_id as string,
+            x,
+            y,
+            type: "rectangle",
+            customImage: newImage,
+          });
+        }
+        // If there is no image upload, then set node
+        else {
+          try {
+          } catch (error) {}
+          const newImage = await uploadImageMutation.mutateAsync({
+            file: files[i],
+            type: "Image",
+          });
+          // newImage = images?.data.find((img) => img.title === files[i].name);
+
+          let id = uuid();
+          // @ts-ignore
+          const { top, left } = e.target.getBoundingClientRect();
+
+          // Convert mouse coordinates to canvas coordinates
+          const { x, y } = toModelPosition(cyRef, {
+            x: e.clientX - left,
+            y: e.clientY - top,
+          });
+          createNodeMutation.mutate({
+            id,
+            board_id: board_id as string,
+            x,
+            y,
+            type: "rectangle",
+            customImage: newImage,
+          });
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (board) {
       let temp_nodes: CytoscapeNodeProps[] = [];
@@ -83,7 +182,7 @@ export default function BoardView({ setBoardId }: Props) {
         temp_nodes = board.nodes.map((node: BoardNodeProps) => ({
           data: {
             ...node,
-            classes: "boardNode",
+            classes: `boardNode ${public_view && "publicBoardNode"}`,
             label: node.label || "",
             zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
             // Custom image has priority, if not set use document image, if neither - empty array
@@ -111,7 +210,7 @@ export default function BoardView({ setBoardId }: Props) {
         temp_edges = board.edges.map((edge: BoardEdgeProps) => ({
           data: {
             ...edge,
-            classes: "boardEdge",
+            classes: `boardEdge ${public_view && "publicBoardEdge"}`,
             label: edge.label || "",
           },
         }));
@@ -147,7 +246,7 @@ export default function BoardView({ setBoardId }: Props) {
     [board_id]
   );
   useEffect(() => {
-    if (!cyRef) return;
+    if (!cyRef || public_view) return;
     if (cyRef.current) {
       cyRef.current.on(
         "ehcomplete",
@@ -267,11 +366,14 @@ export default function BoardView({ setBoardId }: Props) {
           });
       });
     }
-    return () =>
-      cyRef.current.removeListener(
-        "click mousedown cxttap dbltap free ehcomplete"
-      );
+    return () => {
+      if (!public_view)
+        cyRef.current.removeListener(
+          "click mousedown cxttap dbltap free ehcomplete"
+        );
+    };
   }, [cyRef, board_id]);
+
   useEffect(() => {
     if (!cyRef || !ehRef || !grRef) return;
     setLoading(true);
@@ -282,7 +384,9 @@ export default function BoardView({ setBoardId }: Props) {
     ehRef.current = null;
     grRef.current = null;
     if (board_id) {
-      setBoardId(board_id);
+      if (setBoardId) {
+        setBoardId(board_id);
+      }
       setTimeout(() => {
         cyRef.current.zoom(1);
         cyRef.current.center();
@@ -293,7 +397,7 @@ export default function BoardView({ setBoardId }: Props) {
     }
 
     return () => {
-      setBoardId("");
+      if (setBoardId) setBoardId("");
     };
   }, [board_id]);
 
@@ -321,110 +425,33 @@ export default function BoardView({ setBoardId }: Props) {
     <div
       className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
       onDrop={async (e) => {
-        let files = e.dataTransfer.files;
-        let doc_id = e.dataTransfer.getData("text");
-
-        if (doc_id) {
-          let document = documents?.find((doc) => doc.id === doc_id);
-          if (document) {
-            // @ts-ignore
-            const { top, left } = e.target.getBoundingClientRect();
-
-            // Convert mouse coordinates to canvas coordinates
-            const { x, y } = toModelPosition(cyRef, {
-              x: e.clientX - left,
-              y: e.clientY - top,
-            });
-            createNodeMutation.mutate({
-              id: uuid(),
-              label: document.title,
-              board_id: board_id as string,
-              x,
-              y,
-              type: "rectangle",
-              doc_id: document.id,
-            });
-          }
-        } else if (files.length > 0) {
-          for (let i = 0; i < files.length; i++) {
-            let newImage;
-            // If the image exists do not upload it but assign to variable
-            if (images?.data.some((img) => img.title === files[i].name)) {
-              newImage = images?.data.find(
-                (img) => img.title === files[i].name
-              );
-
-              let id = uuid();
-              // @ts-ignore
-              const { top, left } = e.target.getBoundingClientRect();
-
-              // Convert mouse coordinates to canvas coordinates
-              const { x, y } = toModelPosition(cyRef, {
-                x: e.clientX - left,
-                y: e.clientY - top,
-              });
-              createNodeMutation.mutate({
-                id,
-                board_id: board_id as string,
-                x,
-                y,
-                type: "rectangle",
-                customImage: newImage,
-              });
-            }
-            // If there is no image upload, then set node
-            else {
-              try {
-              } catch (error) {}
-              const newImage = await uploadImageMutation.mutateAsync({
-                file: files[i],
-                type: "Image",
-              });
-              // newImage = images?.data.find((img) => img.title === files[i].name);
-
-              let id = uuid();
-              // @ts-ignore
-              const { top, left } = e.target.getBoundingClientRect();
-
-              // Convert mouse coordinates to canvas coordinates
-              const { x, y } = toModelPosition(cyRef, {
-                x: e.clientX - left,
-                y: e.clientY - top,
-              });
-              createNodeMutation.mutate({
-                id,
-                board_id: board_id as string,
-                x,
-                y,
-                type: "rectangle",
-                customImage: newImage,
-              });
-            }
-          }
-        }
+        if (!public_view) await handleOnDrop(e);
       }}
     >
-      <BoardContextMenu
-        cm={cm}
-        cyRef={cyRef}
-        contextMenu={contextMenu}
-        setQuickCreate={setQuickCreate}
-      />
-      <NodeUpdateDialog
-        nodeUpdateDialog={nodeUpdateDialog}
-        setNodeUpdateDialog={setNodeUpdateDialog}
-      />
-      {edgeUpdateDialog.show && (
-        <EdgeUpdateDialog
-          edgeUpdateDialog={edgeUpdateDialog}
-          setEdgeUpdateDialog={setEdgeUpdateDialog}
-        />
+      {/* Public view is false when editing and true when viewing it publicaly (as a non-editor/non-owner) */}
+      {!public_view && (
+        <>
+          <BoardContextMenu
+            cm={cm}
+            cyRef={cyRef}
+            contextMenu={contextMenu}
+            setQuickCreate={setQuickCreate}
+          />
+          <NodeUpdateDialog
+            nodeUpdateDialog={nodeUpdateDialog}
+            setNodeUpdateDialog={setNodeUpdateDialog}
+          />
+          <EdgeUpdateDialog
+            edgeUpdateDialog={edgeUpdateDialog}
+            setEdgeUpdateDialog={setEdgeUpdateDialog}
+          />
+          <QuickCreateNode
+            quickCreate={quickCreate}
+            setQuickCreate={setQuickCreate}
+          />
+          <BoardQuickBar />
+        </>
       )}
-      <QuickCreateNode
-        quickCreate={quickCreate}
-        setQuickCreate={setQuickCreate}
-      />
-      <BoardQuickBar />
       <CytoscapeComponent
         elements={elements}
         className="Lato"
@@ -437,6 +464,12 @@ export default function BoardView({ setBoardId }: Props) {
             cyRef.current = cy;
 
             if (ehRef && grRef) {
+              if (public_view) {
+                cy.center();
+                cy.autoungrabify(true);
+                cy.autolock(true);
+                cy.autounselectify(true);
+              }
               ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
               grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
             }

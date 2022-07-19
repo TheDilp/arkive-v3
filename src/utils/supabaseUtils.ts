@@ -845,7 +845,7 @@ export const getSingleBoard = async (board_id: string) => {
   const { data, error } = await supabase
     .from<BoardProps>("boards")
     .select(
-      "*, nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+      "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
     .eq("id", board_id)
     .maybeSingle();

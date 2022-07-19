@@ -44,6 +44,7 @@ import {
   getDocuments,
   getImages,
   getMaps,
+  getSingleBoard,
   getSingleMap,
   getTags,
   renameImage,
@@ -132,12 +133,13 @@ export function useUpdateProject() {
   );
 }
 // Custom hook for getting documents
-export function useGetDocuments(project_id: string) {
+export function useGetDocuments(project_id: string, enabled?: boolean) {
   const { data, isLoading } = useQuery(
     `${project_id}-documents`,
     async () => await getDocuments(project_id),
     {
       staleTime: 5 * 60 * 1000,
+      enabled: enabled === undefined || enabled === true,
     }
   );
   return { data, isLoading };
@@ -1078,8 +1080,22 @@ export function useGetBoards(project_id: string) {
   return { data, isLoading };
 }
 // Custom hook for getting a single board's data
-export function useGetBoardData(project_id: string, board_id: string) {
+export function useGetBoardData(
+  project_id: string,
+  board_id: string,
+  public_view: boolean
+) {
   const queryClient = useQueryClient();
+
+  const { data: board } = useQuery(
+    `board-${board_id}`,
+    async () => getSingleBoard(board_id as string),
+    {
+      // The query only runs in public view
+      enabled: public_view,
+    }
+  );
+  if (public_view && board) return board;
   const boards: BoardProps[] | undefined = queryClient.getQueryData(
     `${project_id}-boards`
   );

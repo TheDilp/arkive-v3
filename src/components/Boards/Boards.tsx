@@ -17,10 +17,17 @@ export default function Boards() {
         <BoardsTree boardId={boardId} setBoardId={setBoardId} />
         <Routes>
           <Route path="/:board_id">
-            <Route index element={<BoardView setBoardId={setBoardId} />} />
+            <Route
+              index
+              element={
+                <BoardView public_view={false} setBoardId={setBoardId} />
+              }
+            />
             <Route
               path=":node_id"
-              element={<BoardView setBoardId={setBoardId} />}
+              element={
+                <BoardView public_view={false} setBoardId={setBoardId} />
+              }
             />
           </Route>
         </Routes>
