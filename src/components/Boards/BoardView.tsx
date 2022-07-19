@@ -366,14 +366,12 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             setContextMenu({
               ...evt.position,
               type: "node",
-              selected: evt.target,
             });
           } else if (group === "edges") {
             cm.current.show(evt.originalEvent);
             setContextMenu({
               ...evt.position,
               type: "edge",
-              selected: evt.target,
             });
           }
         }

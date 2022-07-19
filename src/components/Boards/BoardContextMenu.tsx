@@ -2,20 +2,15 @@ import { ContextMenu } from "primereact/contextmenu";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
-  BoardContextMenuProps,
-  CytoscapeNodeProps,
+  BoardContextMenuProps
 } from "../../types/BoardTypes";
 import { changeLockState } from "../../utils/boardUtils";
 import {
-  useCreateNode,
-  useDeleteEdge,
-  useDeleteManyNodes,
-  useDeleteNode,
-  useGetBoardData,
+  useCreateNode, useDeleteManyEdges,
+  useDeleteManyNodes, useGetBoardData
 } from "../../utils/customHooks";
 import {
-  deleteManyEdges,
-  updateManyNodesLockState,
+  deleteManyEdges
 } from "../../utils/supabaseUtils";
 
 type Props = {
@@ -38,9 +33,8 @@ export default function BoardContextMenu({
     false
   );
   const createNodeMutation = useCreateNode(project_id as string);
-  const deleteNodeMutation = useDeleteNode(project_id as string);
   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
-  const deleteEdgeMutation = useDeleteEdge(project_id as string);
+  const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
   const nodes = cyRef.current?.nodes(":selected");
   const edges = cyRef.current?.edges(":selected");
   const boardItems = [
@@ -120,14 +114,14 @@ export default function BoardContextMenu({
   ];
   const nodeItems = [
     {
-      label: "Center Node",
-      command: () => cyRef.current.center(contextMenu.selected),
+      label: "Center Nodes",
+      command: () => cyRef.current.center(nodes),
     },
     {
       label: "Highlight connected nodes",
       command: () => {
-        const incomers = contextMenu.selected.incomers();
-        const outgoers = contextMenu.selected.outgoers();
+        const incomers = nodes.incomers();
+        const outgoers = nodes.selected.outgoers();
 
         incomers.nodes().flashClass("incomingNodeHighlight", 1500);
         incomers.edges().flashClass("incomingEdgeHighlight", 1500);
@@ -138,7 +132,7 @@ export default function BoardContextMenu({
     {
       label: "Un/Lock Nodes",
 
-      icon: `pi pi-fw pi-lock${contextMenu.selected?.locked() ? "-open" : ""}`,
+      icon: `pi pi-fw pi-lock${nodes?.locked() ? "-open" : ""}`,
 
       items: [
         {
@@ -157,20 +151,18 @@ export default function BoardContextMenu({
       separator: true,
     },
     {
-      label: "Delete Node",
+      label: "Delete Selected Nodes",
       command: () => {
         const edge_ids = [
-          ...contextMenu.selected
-            .incomers("edge")
-            .map((edge: any) => edge.id()),
-          ...contextMenu.selected
-            .outgoers("edge")
-            .map((edge: any) => edge.id()),
+          ...nodes.incomers("edge").map((edge: any) => edge.id()),
+          ...nodes.outgoers("edge").map((edge: any) => edge.id()),
         ];
         deleteManyEdges(edge_ids);
-        cyRef.current.remove(contextMenu.selected);
-        deleteNodeMutation.mutate({
-          id: contextMenu.selected._private.data.id,
+        cyRef.current.remove(nodes.incomers("edge"));
+        cyRef.current.remove(nodes.outgoers("edge"));
+        cyRef.current.remove(nodes);
+        deleteManyNodesMutation.mutate({
+          ids: nodes.map((node: any) => node.id()),
           board_id: board_id as string,
         });
       },
@@ -180,19 +172,15 @@ export default function BoardContextMenu({
     {
       label: "Highlight Connected Nodes",
       command: () => {
-        contextMenu.selected
-          .sources()
-          .flashClass("incomingNodeHighlight", 2000);
-        contextMenu.selected
-          .targets()
-          .flashClass("outgoingNodeHighlight", 2000);
+        edges.sources().flashClass("incomingNodeHighlight", 2000);
+        edges.targets().flashClass("outgoingNodeHighlight", 2000);
       },
     },
     {
-      label: "Delete Edge",
+      label: "Delete Selected Edges",
       command: () =>
-        deleteEdgeMutation.mutate({
-          id: contextMenu.selected._private.data.id,
+        deleteManyEdgesMutation.mutate({
+          ids: edges.map((edge: any) => edge.id()),
           board_id: board_id as string,
         }),
     },

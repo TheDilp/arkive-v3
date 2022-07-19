@@ -36,6 +36,7 @@ import {
   deleteDocument,
   deleteEdge,
   deleteImagesStorage,
+  deleteManyEdges,
   deleteManyNodes,
   deleteMap,
   deleteMapLayer,
@@ -1432,6 +1433,7 @@ export function useDeleteNode(project_id: string) {
     }
   );
 }
+// Custom hook for deleting many nodes at once
 export function useDeleteManyNodes(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
@@ -1629,6 +1631,51 @@ export function useDeleteEdge(project_id: string) {
     }
   );
 }
+
+export function useDeleteManyEdges(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { ids: string[]; board_id: string }) => {
+      await deleteManyEdges(vars.ids);
+    },
+    {
+      onMutate: async (deletedEdges) => {
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              return oldData.map((board) => {
+                if (board.id === deletedEdges.board_id) {
+                  return {
+                    ...board,
+                    edges: board.edges.filter(
+                      (edge) => !deletedEdges.ids.includes(edge.id)
+                    ),
+                  };
+                } else {
+                  return board;
+                }
+              });
+            } else {
+              return [];
+            }
+          }
+        );
+
+        return { previousBoards };
+      },
+
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+      },
+    }
+  );
+}
+
 // Custom hook for uploading images
 export function useUploadImage(project_id: string) {
   const queryClient = useQueryClient();

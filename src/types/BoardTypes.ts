@@ -48,7 +48,6 @@ export type BoardContextMenuProps = {
   x: number;
   y: number;
   type: "board" | "node" | "edge";
-  selected?: any;
 };
 export type BoardItemDisplayDialogProps = {
   id: string;
