@@ -1,6 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import L, { LatLngBoundsExpression } from "leaflet";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { MapMarkerProps } from "../../../types/MapTypes";
@@ -11,16 +18,22 @@ import MapContextMenu from "../MapContextMenu";
 import MapImage from "./MapImage";
 import CreateMarkerDialog from "./MapMarker/CreateMarkerDialog";
 export default function MapView({
+  public_view,
   setMapId,
 }: {
-  setMapId: (id: string) => void;
+  public_view: boolean;
+  setMapId?: Dispatch<SetStateAction<string>>;
 }) {
   const { project_id, map_id, marker_id } = useParams();
 
   const cm = useRef(null);
   const imgRef = useRef() as any;
   const mapRef = useRef() as any;
-  const mapData = useGetMapData(project_id as string, map_id as string);
+  const mapData = useGetMapData(
+    project_id as string,
+    map_id as string,
+    public_view
+  );
   const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
@@ -56,8 +69,9 @@ export default function MapView({
       };
     }
   }, [mapData?.id, mapData?.map_image]);
+
   useEffect(() => {
-    if (map_id) setMapId(map_id);
+    if (map_id && !public_view && setMapId) setMapId(map_id);
     //  Wait for map to finish loading
     setTimeout(() => {
       if (marker_id) {
@@ -70,32 +84,49 @@ export default function MapView({
           mapRef.current.flyToBounds(bounds);
         }
       } else {
-        mapRef.current.flyToBounds(bounds);
+        mapRef.current?.flyToBounds(bounds);
       }
     }, 350);
 
-    return () => setMapId("");
+    return () => {
+      if (setMapId) setMapId("");
+    };
   }, [map_id, bounds]);
 
   if (loading)
     return (
-      <div className="w-10 h-full flex align-items-center justify-content-center">
+      <div
+        className={`${
+          public_view ? "w-full" : "w-10"
+        } h-full flex align-items-center justify-content-center`}
+      >
         <h1 className="text-white Merriweather align-self-start">
           Loading Map...
         </h1>
       </div>
     );
   return (
-    <div className={`${isTabletOrMobile ? "w-full" : "w-10"}   h-full`}>
-      <MapContextMenu
-        cm={cm}
-        mapRef={mapRef}
-        lat={newTokenDialog.lat}
-        lng={newTokenDialog.lng}
-        setNewTokenDialog={setNewTokenDialog}
-        bounds={bounds as number[][]}
-      />
-      <CreateMarkerDialog {...newTokenDialog} setVisible={setNewTokenDialog} />
+    <div
+      className={`${
+        isTabletOrMobile || public_view ? "w-full" : "w-10"
+      }   h-full`}
+    >
+      {!public_view && (
+        <>
+          <MapContextMenu
+            cm={cm}
+            mapRef={mapRef}
+            lat={newTokenDialog.lat}
+            lng={newTokenDialog.lng}
+            setNewTokenDialog={setNewTokenDialog}
+            bounds={bounds as number[][]}
+          />
+          <CreateMarkerDialog
+            {...newTokenDialog}
+            setVisible={setNewTokenDialog}
+          />
+        </>
+      )}
       <AnimatePresence exitBeforeEnter={true}>
         {mapData && bounds && (
           <motion.div
@@ -128,6 +159,7 @@ export default function MapView({
                   map_layers={mapData.map_layers}
                   setNewTokenDialog={setNewTokenDialog}
                   cm={cm}
+                  public_view={public_view}
                 />
               )}
             </MapContainer>

@@ -16,6 +16,7 @@ import NotFound from "./components/Auth/NotFound";
 import { Helmet } from "react-helmet";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import LandingPage from "./components/LandingPage/LandingPage";
+import Profile from "./components/Profile/Profile";
 
 const Login = lazy(() => import("./components/Auth/Login"));
 const Register = lazy(() => import("./components/Auth/Register"));
@@ -53,7 +54,7 @@ function App() {
               <Route path="home" element={<Home />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
-              {/* <Route path="profile" element={<Profile />} /> */}
+              <Route path="profile" element={<Profile />} />
               <Route path="help" element={<Help />} />
               <Route
                 path="project/:project_id/*"

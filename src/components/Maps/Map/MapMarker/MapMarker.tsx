@@ -20,8 +20,10 @@ export default function MapMarker({
   mcm,
   setUpdateMarkerDialog,
   setMarkerSidebar,
+  public_view,
 }: MapMarkerProps & {
   mcm: any;
+  public_view: boolean;
   setMarkerSidebar: Dispatch<SetStateAction<MarkerSidebarProps>>;
   setUpdateMarkerDialog: Dispatch<
     SetStateAction<{
@@ -42,7 +44,11 @@ export default function MapMarker({
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const eventHandlers = {
     click: (e: any) => {
-      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey) {
+      if (
+        !e.originalEvent.shiftKey &&
+        !e.originalEvent.altKey &&
+        !public_view
+      ) {
         setMarkerSidebar({
           marker_title: text,
           map_id: map_link,
@@ -59,32 +65,36 @@ export default function MapMarker({
       }
     },
     contextmenu: (e: any) => {
-      mcm.current.show(e.originalEvent);
-      setUpdateMarkerDialog({
-        id,
-        icon,
-        text,
-        color,
-        backgroundColor,
-        doc_id,
-        map_link,
-        show: false,
-      });
+      if (!public_view) {
+        mcm.current.show(e.originalEvent);
+        setUpdateMarkerDialog({
+          id,
+          icon,
+          text,
+          color,
+          backgroundColor,
+          doc_id,
+          map_link,
+          show: false,
+        });
+      }
     },
     dragend(e: any) {
-      setPosition(e.target._latlng);
-      updateMarkerMutation.mutate({
-        id,
-        map_id,
-        lat: e.target._latlng.lat,
-        lng: e.target._latlng.lng,
-        project_id: project_id as string,
-      });
+      if (!public_view) {
+        setPosition(e.target._latlng);
+        updateMarkerMutation.mutate({
+          id,
+          map_id,
+          lat: e.target._latlng.lat,
+          lng: e.target._latlng.lng,
+          project_id: project_id as string,
+        });
+      }
     },
   };
   return (
     <Marker
-      draggable={true}
+      draggable={!public_view}
       eventHandlers={eventHandlers}
       position={position}
       icon={L.divIcon({
@@ -112,15 +122,17 @@ export default function MapMarker({
                 onContextMenu={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setUpdateMarkerDialog({
-                    id,
-                    icon,
-                    text,
-                    color,
-                    backgroundColor,
-                    doc_id,
-                    show: true,
-                  });
+                  if (!public_view) {
+                    setUpdateMarkerDialog({
+                      id,
+                      icon,
+                      text,
+                      color,
+                      backgroundColor,
+                      doc_id,
+                      show: true,
+                    });
+                  }
                 }}
               ></div>
             </div>

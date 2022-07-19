@@ -44,6 +44,7 @@ import {
   getDocuments,
   getImages,
   getMaps,
+  getSingleMap,
   getTags,
   renameImage,
   sortBoardsChildren,
@@ -597,8 +598,20 @@ export function useCreateMap() {
   );
 }
 // Custom hook for getting single map data
-export function useGetMapData(project_id: string, map_id: string) {
+export function useGetMapData(
+  project_id: string,
+  map_id: string,
+  public_view: boolean
+) {
   const queryClient = useQueryClient();
+  const { data: map } = useQuery(
+    `map-${map_id}`,
+    async () => await getSingleMap(map_id as string),
+    { enabled: public_view }
+  );
+
+  if (public_view && map) return map;
+
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   if (maps && map_id) {
     const map = maps.find((map) => map.id === map_id);

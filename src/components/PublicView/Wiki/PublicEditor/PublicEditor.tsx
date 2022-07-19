@@ -20,7 +20,6 @@ import {
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
-import LoadingScreen from "../../../Util/LoadingScreen";
 import CustomLinkExtenstion from "../../../Wiki/Editor/CustomLinkExtension";
 import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
 import PublicEditorComponent from "./PublicEditorComponent";

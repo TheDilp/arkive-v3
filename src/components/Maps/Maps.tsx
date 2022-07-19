@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  Navigate,
-  Route,
-  Routes, useParams
-} from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { useGetMaps } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
 import LoadingScreen from "../Util/LoadingScreen";
@@ -28,8 +24,14 @@ export default function Maps() {
       <MapsTree mapId={mapId} setMapId={setMapId} />
       <Routes>
         <Route path="/:map_id">
-          <Route index element={<MapView setMapId={setMapId} />} />
-          <Route path=":marker_id" element={<MapView setMapId={setMapId} />} />
+          <Route
+            index
+            element={<MapView public_view={false} setMapId={setMapId} />}
+          />
+          <Route
+            path=":marker_id"
+            element={<MapView public_view={false} setMapId={setMapId} />}
+          />
         </Route>
       </Routes>
     </div>

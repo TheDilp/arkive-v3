@@ -140,12 +140,12 @@ export default function Navbar() {
           </>
         )}
         {project_id && <NavSettingsButton />}
-        {/* <i
+        <i
           className="pi pi-user mr-3 cursor-pointer hover:text-primary"
           onClick={async () => {
             navigate("/profile");
           }}
-        ></i> */}
+        ></i>
         <i
           className="pi pi-sign-out cursor-pointer hover:text-primary"
           onClick={async () => {

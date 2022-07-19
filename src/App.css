@@ -136,6 +136,11 @@ body {
 
 }
 
+.leaflet-control-layers-overlays label>* {
+  user-select: none;
+  cursor: pointer;
+}
+
 .leaflet-tooltip,
 .leaflet-tooltip-top {
   opacity: 1 !important;

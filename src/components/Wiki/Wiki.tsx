@@ -1,20 +1,14 @@
 import { ProgressSpinner } from "primereact/progressspinner";
-import { lazy, Suspense, useContext, useEffect } from "react";
+import { lazy, Suspense, useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { auth } from "../../utils/supabaseUtils";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
-import { ProjectContext } from "../Context/ProjectContext";
 import DocumentsTree from "./DocumentTree/DocumentTree";
 import FolderPage from "./FolderPage/FolderPage";
 import PropertiesPanel from "./PropertiesPanel/PropertiesPanel";
-const RemirrorContext = lazy(() => import("./Editor/RemirrorContainer"));
+const RemirrorContainer = lazy(() => import("./Editor/RemirrorContainer"));
 export default function Wiki() {
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
-  const { setId: setDocId } = useContext(ProjectContext);
-
-  useEffect(() => {
-    return () => setDocId("");
-  }, [setDocId]);
 
   return !auth.user() ? (
     <Navigate to="/login" />
@@ -34,7 +28,7 @@ export default function Wiki() {
               } h-full`}
             >
               <Suspense fallback={<ProgressSpinner />}>
-                <RemirrorContext />
+                <RemirrorContainer />
               </Suspense>
 
               <PropertiesPanel />

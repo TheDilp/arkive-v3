@@ -871,7 +871,7 @@ export const getSingleMap = async (map_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
     .select(
-      "id, title, parent(id, title), folder, expanded, project_id, public, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link)"
+      "id, title, parent(id, title), folder, expanded, project_id, public, sort, markers:markers!map_id(*), map_image:images!maps_map_image_fkey(id, title, link), map_layers(*, image(id, title, link, type))"
     )
     .eq("id", map_id)
     .maybeSingle();

@@ -6,6 +6,7 @@ import {
   LayersControl,
   useMapEvents,
 } from "react-leaflet";
+import { useParams } from "react-router-dom";
 import {
   MapLayerProps,
   MapProps,
@@ -17,12 +18,6 @@ import { supabaseStorageImagesLink } from "../../../utils/utils";
 import MapMarker from "./MapMarker/MapMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";
 import MarkerUpdateDialog from "./MapMarker/MarkerUpdateDialog";
-import { Sidebar } from "primereact/sidebar";
-import {
-  useGetDocumentData,
-  useGetDocuments,
-} from "../../../utils/customHooks";
-import { useParams } from "react-router-dom";
 import MarkerSidebar from "./MarkerSidebar";
 
 type Props = {
@@ -30,6 +25,7 @@ type Props = {
   bounds: LatLngBoundsExpression;
   imgRef: any;
   cm: any;
+  public_view: boolean;
   markers: MapProps["markers"];
   map_layers: MapLayerProps[];
   setNewTokenDialog: Dispatch<
@@ -49,9 +45,9 @@ export default function MapImage({
   markers,
   map_layers,
   setNewTokenDialog,
+  public_view,
 }: Props) {
   const mcm = useRef() as any;
-  const { project_id } = useParams();
   const [updateMarkerDialog, setUpdateMarkerDialog] =
     useState<UpdateMarkerInputs>({ ...MapMarkerDialogDefault, show: false });
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(
@@ -65,8 +61,10 @@ export default function MapImage({
   });
   const map = useMapEvents({
     contextmenu(e: any) {
-      setNewTokenDialog({ ...e.latlng, show: false });
-      cm.current.show(e.originalEvent);
+      if (!public_view) {
+        setNewTokenDialog({ ...e.latlng, show: false });
+        cm.current.show(e.originalEvent);
+      }
     },
   });
   useEffect(() => {
@@ -127,6 +125,7 @@ export default function MapImage({
                   key={marker.id}
                   {...marker}
                   mcm={mcm}
+                  public_view={public_view}
                   setUpdateMarkerDialog={setUpdateMarkerDialog}
                   setMarkerSidebar={setMarkerSidebar}
                 />

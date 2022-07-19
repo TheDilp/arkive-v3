@@ -1,4 +1,4 @@
-import PublicMapView from "./PublicMapView";
+import MapView from "../../Maps/Map/MapView";
 
 export default function PublicMaps() {
   return (
@@ -9,7 +9,7 @@ export default function PublicMaps() {
         integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
         crossOrigin=""
       />
-      <PublicMapView />
+      <MapView public_view={true} />
     </div>
   );
 }
