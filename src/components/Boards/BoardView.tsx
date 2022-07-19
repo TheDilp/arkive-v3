@@ -92,7 +92,10 @@ export default function BoardView({ public_view, setBoardId }: Props) {
 
   // Function which handles creating new nodes from documents
   // The documents are dragged from a dialog window onto the board
-  const handleOnDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+  const handleOnDrop = async (
+    e: React.DragEvent<HTMLDivElement>,
+    board_id: string
+  ) => {
     let files = e.dataTransfer.files;
     let doc_id = e.dataTransfer.getData("text");
 
@@ -424,8 +427,8 @@ export default function BoardView({ public_view, setBoardId }: Props) {
         cyRef.current.removeListener(
           "click mousedown cxttap dbltap free ehcomplete"
         );
-        window.removeEventListener("keydown", () => {});
       }
+      window.removeEventListener("keydown", () => {});
     };
   }, [cyRef, board_id]);
 
@@ -481,7 +484,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
     <div
       className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
       onDrop={async (e) => {
-        if (!public_view) await handleOnDrop(e);
+        if (!public_view) await handleOnDrop(e, board_id as string);
       }}
     >
       {/* Public view is false when editing and true when viewing it publicaly (as a non-editor/non-owner) */}
@@ -528,22 +531,26 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               }
               ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
               grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
-              cbRef.current = cyRef.current.clipboard({
-                afterPaste: function (eles: any) {
-                  eles.forEach((el: any) => {
-                    // Remove duplicate because the extension adds one copy
-                    // And creating data in the DB does as well
-                    // This removes the unneccessary copy from the extension
-                    try {
-                      cyRef.current.remove(el);
-                    } catch (error) {
-                      toastWarn(
-                        "Cytoedge couldn't be removed, there was an error (BoardView 172)"
-                      );
-                    }
-                  });
-                },
-              });
+              if (!cbRef.current)
+                cbRef.current = cyRef.current.clipboard({
+                  afterCopy: function (t: any) {
+                    console.log(t);
+                  },
+                  afterPaste: function (eles: any) {
+                    eles.forEach((el: any) => {
+                      // Remove duplicate because the extension adds one copy
+                      // And creating data in the DB does as well
+                      // This removes the unneccessary copy from the extension
+                      try {
+                        cyRef.current.remove(el);
+                      } catch (error) {
+                        toastWarn(
+                          "Cytoedge couldn't be removed, there was an error (BoardView 172)"
+                        );
+                      }
+                    });
+                  },
+                });
             }
           }
         }}
