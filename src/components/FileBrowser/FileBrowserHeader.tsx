@@ -230,26 +230,29 @@ export default function FileBrowserHeader() {
                 icon: "pi pi-exclamation-triangle",
                 acceptClassName: "p-button-danger",
                 // className: selectAll ? "deleteAllDocuments" : "",
-                accept: () => {
-                  deleteImagesStorage(selected.map((image) => image.link));
-                  deleteImageRecords(selected.map((image) => image.id)).then(
-                    () => {
-                      queryClient.setQueryData(
-                        `${project_id}-images`,
-                        (oldData: ImageProps[] | undefined) => {
-                          if (oldData) {
-                            return oldData.filter(
-                              (img) =>
-                                !selected.some((image) => image.id === img.id)
-                            );
-                          } else {
-                            return [];
-                          }
-                        }
-                      );
-                      setSelected([]);
-                    }
+                accept: async () => {
+                  console.log(selected.map((image) => image.link));
+                  await deleteImagesStorage(
+                    selected.map((image) => image.link)
                   );
+                  await deleteImageRecords(
+                    selected.map((image) => image.id)
+                  ).then(() => {
+                    queryClient.setQueryData(
+                      `${project_id}-images`,
+                      (oldData: ImageProps[] | undefined) => {
+                        if (oldData) {
+                          return oldData.filter(
+                            (img) =>
+                              !selected.some((image) => image.id === img.id)
+                          );
+                        } else {
+                          return [];
+                        }
+                      }
+                    );
+                    setSelected([]);
+                  });
                 },
               })
             }
