@@ -21,6 +21,7 @@ import {
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
 import CustomLinkExtenstion from "../../../Wiki/Editor/CustomLinkExtension";
+import { SecretExtension } from "../../../Wiki/Editor/MentionReactComponent/SecretExtension";
 import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
 import PublicEditorComponent from "./PublicEditorComponent";
 
@@ -74,6 +75,17 @@ export default function PublicEditor({
       new TextColorExtension(),
       new MarkdownExtension(),
       new TableExtension(),
+      new SecretExtension({
+        secret: true,
+      }),
+    ],
+    extraAttributes: [
+      {
+        identifiers: ["secret"],
+        attributes: {
+          class: "secretBlock",
+        },
+      },
     ],
     selection: "all",
     content: content || undefined,

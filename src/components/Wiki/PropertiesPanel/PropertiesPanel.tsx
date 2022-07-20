@@ -66,33 +66,7 @@ export default function PropertiesPanel() {
       </div>
       <div className="w-full">
         <hr className="border-gray-500" />
-        <div className="flex justify-content-center">
-          <Button
-            label="Create Template"
-            icon="pi pi-fw pi-copy"
-            iconPos="right"
-            className="p-button-outlined p-button-raised p-2"
-            onClick={() => {
-              let id = uuid();
-              if (currentDoc && user) {
-                if (currentDoc.content) {
-                  createTemplateMutation.mutate({
-                    ...currentDoc,
-                    content: currentDoc.content,
-                    id,
-                  });
-                  toastSuccess(
-                    `Template from document ${currentDoc.title} created.`
-                  );
-                } else {
-                  toastWarn(
-                    "Document must have some content in order to create template!"
-                  );
-                }
-              }
-            }}
-          />
-        </div>
+
         <div className="w-full my-2 flex justify-content-center align-items-center">
           <Link
             to={`../../../../view/${project_id}/wiki/${doc_id}`}

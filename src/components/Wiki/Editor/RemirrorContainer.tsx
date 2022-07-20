@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import {
   Remirror,
   ThemeProvider,
+  useCommands,
   useHelpers,
   useKeymap,
   useRemirror,
@@ -40,10 +41,12 @@ import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
+import { SecretExtension } from "./MentionReactComponent/SecretExtension";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
     const { project_id, doc_id } = useParams();
+    const { toggleSecret } = useCommands();
     const saveContentMutation = useUpdateDocument(project_id as string);
     const document = useGetDocumentData(project_id as string, doc_id as string);
     const handleSaveShortcut = useCallback(
@@ -71,7 +74,14 @@ const hooks = [
       [getText, doc_id]
     );
 
+    const handleSecret = useCallback(() => {
+      toggleSecret();
+      return true;
+    }, []);
+
     // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
+
+    useKeymap("Mod-g", handleSecret);
     useKeymap("Mod-s", handleSaveShortcut);
     useKeymap("Mod-e", handleExportShortcut);
   },
@@ -131,6 +141,17 @@ export default function RemirrorContainer({
       new NodeFormattingExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
+      new SecretExtension({
+        secret: false,
+      }),
+    ],
+    extraAttributes: [
+      {
+        identifiers: ["secret"],
+        attributes: {
+          class: "secretBlock",
+        },
+      },
     ],
     selection: "all",
     content: currentDocument?.content || "",

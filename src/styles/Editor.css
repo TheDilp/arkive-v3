@@ -20,6 +20,16 @@
 
 }
 
+.secretBlock {
+    background-color: rgba(131, 238, 255, 0.2);
+    padding: 1rem;
+    border-radius: 0.1rem;
+}
+
+.viewOnlyEditor .secretBlock {
+    display: none !important;
+}
+
 .remirror-editor {
     box-shadow: none !important;
     padding: 0 1rem !important;

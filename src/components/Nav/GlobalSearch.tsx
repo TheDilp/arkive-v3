@@ -51,13 +51,25 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           filteredMaps = maps.filter((map) => !map.folder);
         }
         if (categories.includes("Markers")) {
-          filteredMarkers = maps.map((map) => map.markers).flat();
+          // If maps have been already filtered save on performance
+          // Unfiltered maps have folders removed which would be skipped anyway
+          if (filteredMaps) {
+            filteredMarkers = filteredMaps.map((map) => map.markers).flat();
+          } else {
+            filteredMarkers = maps.map((map) => map.markers).flat();
+          }
         }
         if (categories.includes("Boards")) {
           filteredBoards = boards.filter((board) => !board.folder);
         }
         if (categories.includes("Nodes")) {
-          filteredNodes = boards.map((board) => board.nodes).flat();
+          // If boards have been already filtered save on performance
+          // Unfiltered boards have folders removed which would be skipped anyway
+          if (filteredBoards) {
+            filteredNodes = filteredBoards.map((board) => board.nodes).flat();
+          } else {
+            filteredNodes = boards.map((board) => board.nodes).flat();
+          }
         }
 
         let initialData: Array<
@@ -75,6 +87,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           .concat(filteredNodes);
         let data = initialData.filter((item) => {
           if (!item) return false;
+          // Check if content of document contains query
           if ("content" in item) {
             return (
               JSON.stringify(item.content)
@@ -83,14 +96,20 @@ export default function GlobalSearch({ search, setSearch }: Props) {
               item.title.toLowerCase().includes(search.toLowerCase())
             );
           } else {
+            // Title => Documents, Maps, Boards
             if ("title" in item) {
               return item.title?.toLowerCase().includes(search.toLowerCase());
-            } else if ("label" in item) {
+            }
+            // Labels => nodes
+            else if ("label" in item) {
               return item.label?.toLowerCase().includes(search.toLowerCase());
-            } else if ("text" in item) {
+            }
+            // Text => Map markers
+            else if ("text" in item) {
               return item.text?.toLowerCase().includes(search.toLowerCase());
             }
           }
+          return false;
         });
         if (data) setFilteredItems(data);
         else setFilteredItems([]);
@@ -177,7 +196,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
     >
       <div className="w-full">
         <SelectButton
-          className="w-full"
+          className="w-full flex justify-content-center"
           options={["Docs", "Maps", "Markers", "Boards", "Nodes"]}
           multiple
           value={categories}
