@@ -23,16 +23,25 @@ export default function MentionComponent() {
   const boards: BoardProps[] | undefined = queryClient.getQueryData(
     `${project_id}-boards`
   );
-  const documentItems = useMemo(
-    () =>
-      (documents?.filter((doc) => !doc.folder && !doc.template) ?? []).map(
-        (doc) => ({
-          id: doc.id,
-          label: doc.title,
-        })
-      ),
-    [documents]
-  );
+  const documentItems = useMemo(() => {
+    let only_documents =
+      documents?.filter((doc) => !doc.folder && !doc.template) ?? [];
+    let document_titles = only_documents.map((doc) => ({
+      id: doc.id,
+      label: doc.title,
+    }));
+
+    let alter_names = only_documents
+      .filter((doc) => doc.alter_names)
+      .map((doc) => {
+        return doc.alter_names.map((name, index) => ({
+          id: `alter-${index} ${doc.id}`,
+          label: name,
+        }));
+      })
+      .flat();
+    return [...document_titles, ...alter_names];
+  }, [documents]);
   const mapItems = useMemo(
     () =>
       (maps?.filter((map) => !map.folder) ?? []).map((map) => ({

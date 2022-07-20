@@ -1,13 +1,8 @@
 import { LinkExtension } from "remirror/extensions";
-const CustomLinkExtenstion = new LinkExtension({
-  autoLink: true,
-  extraAttributes: {
-    class: "normalLink",
-  },
-});
+const CustomLinkExtenstion = new LinkExtension();
 
 CustomLinkExtenstion.addHandler("onClick", (e, data) => {
-  if (e.ctrlKey) window.location.assign(data.href);
+  window.location.href = data.href;
   return true;
 });
 

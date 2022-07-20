@@ -63,6 +63,11 @@ body {
   min-width: 100%;
 }
 
+.alterNamesChips .p-chips-multiple-container .p-chips-token {
+  background-color: var(--orange-800);
+  margin: 0.1rem 0;
+}
+
 .p-autocomplete-token-label {
   font-family: "Lato", "Times New Roman", Times, serif;
 }
