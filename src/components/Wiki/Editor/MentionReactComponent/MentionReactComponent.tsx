@@ -38,7 +38,6 @@ export default function MentionReactComponent({ node }: Props) {
       : undefined;
   }
   let { id: nodeId, name: nodeName, label: nodeLabel } = node.attrs;
-  console.log(node);
   if (nodeName === "at") {
     if (docItem) {
       return (

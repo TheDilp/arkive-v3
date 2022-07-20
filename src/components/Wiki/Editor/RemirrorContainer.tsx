@@ -107,7 +107,6 @@ export default function RemirrorContainer({
         char: "$",
         appendText: "",
       },
-      
     ],
   });
 
@@ -172,7 +171,7 @@ export default function RemirrorContainer({
   }
   return (
     <div
-      className={`editorContainer overflow-y-scroll ${
+      className={`editorContainer overflow-y-scroll text-base ${
         // Check if latop, then if mobile/tablet and set width
         isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
       } h-full flex flex-wrap align-content-start text-white px-2`}

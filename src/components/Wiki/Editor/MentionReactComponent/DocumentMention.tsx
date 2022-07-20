@@ -28,7 +28,7 @@ export default function DocumentMention({
       }
     >
       <Link
-        className="Lato text-white fontWeight700"
+        className="Lato text-white fontWeight700 text-base"
         id={`link-${nodeId}`}
         to={`../doc/${nodeId}`}
       >

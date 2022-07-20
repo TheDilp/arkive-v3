@@ -7,7 +7,7 @@ type Props = {
 export default function MapMention({ title, nodeId, nodeLabel }: Props) {
   return nodeId ? (
     <Link
-      className={`Lato text-white fontWeight700`}
+      className={`Lato text-white text-base fontWeight700`}
       id={`link-${nodeId}`}
       to={`../../maps/${nodeId}`}
     >
