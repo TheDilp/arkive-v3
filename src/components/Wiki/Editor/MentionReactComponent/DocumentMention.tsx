@@ -8,7 +8,7 @@ type Props = {
   title: string;
   content: RemirrorJSON | null;
   nodeId: string | undefined;
-  nodeLabel: { alter: boolean; name: string };
+  nodeLabel: string;
 };
 export default function DocumentMention({
   title,
@@ -16,6 +16,7 @@ export default function DocumentMention({
   nodeId,
   nodeLabel,
 }: Props) {
+
   return nodeId ? (
     <HoverTooltip
       label={
@@ -32,7 +33,7 @@ export default function DocumentMention({
         id={`link-${nodeId}`}
         to={`../doc/${nodeId}`}
       >
-        {nodeLabel.alter ? nodeLabel.name : title}
+        {title || nodeLabel}
       </Link>
     </HoverTooltip>
   ) : (
@@ -42,7 +43,7 @@ export default function DocumentMention({
         toastWarn("Document not found.");
       }}
     >
-      {nodeLabel.alter ? nodeLabel.name : title}
+      {title || nodeLabel}
     </span>
   );
 }

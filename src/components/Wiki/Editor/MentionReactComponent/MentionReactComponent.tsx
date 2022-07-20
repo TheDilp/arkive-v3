@@ -15,32 +15,17 @@ export default function MentionReactComponent({ node }: Props) {
   const queryClient = useQueryClient();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { project_id } = useParams();
-  const docs: DocumentProps[] | undefined = queryClient.getQueryData(
-    `${project_id}-documents`
-  );
-  const maps: MapProps[] | undefined = queryClient.getQueryData<MapProps[]>(
-    `${project_id}-maps`
-  );
-  const boards: BoardProps[] | undefined = queryClient.getQueryData<
-    BoardProps[]
-  >(`${project_id}-boards`);
-  let docItem: DocumentProps | undefined;
-  let mapItem: MapProps | undefined;
-  let boardItem: BoardProps | undefined;
+
   let { id: nodeId, name: nodeName, label: nodeLabel } = node.attrs;
 
   if (nodeName === "at") {
-    docItem = docs
+    const docs: DocumentProps[] | undefined = queryClient.getQueryData(
+      `${project_id}-documents`
+    );
+    let docItem = docs
       ? docs.find((doc) => doc.id === nodeId.replace(/^alter-\d /g, ""))
       : undefined;
-  } else if (nodeName === "hash") {
-    mapItem = maps ? maps.find((map) => map.id === nodeId) : undefined;
-  } else {
-    boardItem = boards
-      ? boards.find((board) => board.id === nodeId)
-      : undefined;
-  }
-  if (nodeName === "at") {
+
     if (docItem) {
       let title = "";
       let id: string = nodeId;
@@ -77,6 +62,12 @@ export default function MentionReactComponent({ node }: Props) {
       );
     }
   } else if (nodeName === "hash") {
+    const maps: MapProps[] | undefined = queryClient.getQueryData<MapProps[]>(
+      `${project_id}-maps`
+    );
+    let mapItem: MapProps | undefined = maps
+      ? maps.find((map) => map.id === nodeId)
+      : undefined;
     if (mapItem) {
       return (
         <MapMention
@@ -89,6 +80,12 @@ export default function MentionReactComponent({ node }: Props) {
       return <MapMention nodeId={undefined} nodeLabel={nodeLabel} />;
     }
   } else if (nodeName === "dollah") {
+    const boards: BoardProps[] | undefined = queryClient.getQueryData<
+      BoardProps[]
+    >(`${project_id}-boards`);
+    let boardItem = boards
+      ? boards.find((board) => board.id === nodeId)
+      : undefined;
     if (boardItem) {
       return (
         <BoardMention
