@@ -1,5 +1,4 @@
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -12,6 +11,7 @@ import {
 import { auth } from "../../../utils/supabaseUtils";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
+import AlterNamesAutocomplete from "./AlterNamesAutocomplete";
 import CategoryAutocomplete from "./CategoryAutocomplete";
 import LinkedItems from "./LinkedItems";
 export default function PropertiesPanel() {
@@ -44,10 +44,7 @@ export default function PropertiesPanel() {
     >
       <div className="w-full">
         {currentDoc && (
-          <InputText
-            className="w-full border-y-none border-noround"
-            value={currentDoc?.title}
-          />
+          <AlterNamesAutocomplete alter_names={currentDoc.alter_names} />
         )}
       </div>
 

@@ -109,6 +109,11 @@ appeears when a mention link is hovered */
     color: var(--blue-300);
 }
 
+:where(h1, h2, h3, h4, h5, h6) .remirror-mention-atom a,
+.remirror-mention-atom a i {
+    font-size: inherit !important;
+}
+
 blockquote .remirror-mention-atom a {
     color: var(--gray-200) !important;
     font-size: x-large !important;

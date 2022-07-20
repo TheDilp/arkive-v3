@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
 import {
+  DocumentCreateProps,
   DocumentProps,
   DocumentUpdateProps,
   ImageProps,
@@ -169,17 +170,8 @@ export function useGetDocumentData(project_id: string, doc_id: string) {
 export function useCreateDocument(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: {
-      id: string;
-      parent?: string | null;
-      title?: string;
-      categories?: string[] | undefined;
-      folder?: boolean;
-      template?: boolean;
-      icon?: string;
-      content?: RemirrorJSON | null;
-    }) => {
-      await createDocument({ project_id, ...vars });
+    async (vars: DocumentCreateProps) => {
+      await createDocument({ ...vars, project_id });
     },
     {
       onMutate: async (newDocument) => {
@@ -200,22 +192,14 @@ export function useCreateDocument(project_id: string) {
               let newData: DocumentProps[] = [
                 ...oldData,
                 {
-                  id: newDocument.id,
-                  project_id,
-                  content: newDocument.content || null,
+                  ...newDocument,
                   // @ts-ignore
                   parent:
                     newDocument.parent && parent
                       ? { id: parent?.id, title: parent?.title }
                       : null,
-                  title: newDocument.title ? newDocument.title : "New Document",
-                  icon: newDocument.icon || "mdi:file",
-                  image: undefined,
-                  categories: newDocument.categories
-                    ? newDocument.categories
-                    : [],
-                  folder: newDocument.folder ? newDocument.folder : false,
-                  template: newDocument.template ? newDocument.template : false,
+
+                  alter_names: [],
                   expanded: false,
                   public: false,
                   sort: oldData.filter((doc) => !doc.template).length,
@@ -483,6 +467,7 @@ export function useCreateTemplate() {
                   template: true,
                   expanded: false,
                   image: undefined,
+                  alter_names: [],
                   public: false,
                   sort: oldData.filter((doc) => doc.template).length,
                 },

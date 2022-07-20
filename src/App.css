@@ -59,6 +59,10 @@ body {
   text-align: center !important;
 }
 
+.alterNamesChips>* {
+  min-width: 100%;
+}
+
 .p-autocomplete-token-label {
   font-family: "Lato", "Times New Roman", Times, serif;
 }

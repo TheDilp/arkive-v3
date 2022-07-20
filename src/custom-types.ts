@@ -24,6 +24,7 @@ export type DocumentProps = {
     sources?: { id: string; target: { id: string; label: string } }[];
     targets?: { id: string; source: { id: string; label: string } }[];
   }[];
+  alter_names: string[];
   icon: string;
   folder: boolean;
   template: boolean;
@@ -90,15 +91,16 @@ export type RegisterInputs = {
 // DATA CREATION AND UPDATE TYPES
 
 export type DocumentCreateProps = {
-  id?: string;
-  title?: string;
-  icon?: string;
-  image?: string;
+  id: string;
+  title: string;
+  icon: string;
   project_id: string;
-  parent?: string | null;
-  categories?: string[];
-  folder?: boolean;
-  content?: RemirrorJSON | null;
+  parent: string | null;
+  categories: string[];
+  folder: boolean;
+  template: boolean;
+  content: RemirrorJSON | null;
+  image?: ImageProps | undefined;
 };
 export type DocumentUpdateProps = {
   id: string;
@@ -108,6 +110,7 @@ export type DocumentUpdateProps = {
   categories?: string[];
   image?: string;
   icon?: string;
+  alter_names?: string[];
   folder?: boolean;
   expanded?: boolean;
   public?: boolean;

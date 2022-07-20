@@ -59,6 +59,15 @@ export default function DocTreeFilter({
             let id = uuid();
             createDocumentMutation.mutate({
               id,
+              title: "New Document",
+              folder: false,
+              template: false,
+              icon: "mdi:file",
+              image: undefined,
+              project_id: project_id as string,
+              parent: null,
+              content: null,
+              categories: [],
             });
           }}
         />
