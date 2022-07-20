@@ -18,7 +18,6 @@ import {
 } from "../types/BoardTypes";
 import {
   CreateMapLayerProps,
-  MapMarkerProps,
   MapProps,
   MapUpdateProps,
   UpdateMapLayerProps,
@@ -1667,8 +1666,23 @@ export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (vars: { nodes: CreateNodeProps[]; edges: CreateEdgeProps[] }) => {
-      await createManyNodes(vars.nodes);
+    async (vars: {
+      nodes: (CreateNodeProps & {
+        document: {
+          id: string;
+          image?: {
+            link?: string;
+          };
+        };
+      })[];
+      edges: CreateEdgeProps[];
+    }) => {
+      await createManyNodes(
+        vars.nodes.map((node) => {
+          const { document, ...rest } = node;
+          return rest;
+        })
+      );
       await createManyEdges(vars.edges);
     },
     {

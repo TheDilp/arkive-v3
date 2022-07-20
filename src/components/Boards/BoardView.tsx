@@ -5,7 +5,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,31 +17,32 @@ import {
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
   EdgeUpdateDialogProps,
-  NodeUpdateDialogProps
+  NodeUpdateDialogProps,
 } from "../../types/BoardTypes";
 import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  toModelPosition
+  toModelPosition,
 } from "../../utils/boardUtils";
 import {
   useCopyPasteNodesEdges,
-  useCreateEdge, useCreateNode,
+  useCreateEdge,
+  useCreateNode,
   useGetBoardData,
   useGetDocuments,
   useGetImages,
   useUpdateNode,
-  useUploadImage
+  useUploadImage,
 } from "../../utils/customHooks";
 import {
   EdgeUpdateDialogDefault,
-  NodeUpdateDialogDefault
+  NodeUpdateDialogDefault,
 } from "../../utils/defaultDisplayValues";
 import {
   defaultNode,
   supabaseStorageImagesLink,
-  toastWarn
+  toastWarn,
 } from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
@@ -203,7 +204,6 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               backgroundImage,
               board_id,
               classes,
-              document,
               user_id,
               zIndexCompare,
               x: oldX,
