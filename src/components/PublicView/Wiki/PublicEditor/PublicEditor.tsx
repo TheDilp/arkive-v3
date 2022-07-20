@@ -39,26 +39,20 @@ export default function PublicEditor({
         name: "at",
         char: "@",
         appendText: "",
-        supportedCharacters: /[^\s][\w\d_ ]+/,
       },
       {
         name: "hash",
         char: "#",
         appendText: "",
-        supportedCharacters: /[^\s][\w\d_ ]+/,
       },
       {
         name: "dollah",
         char: "$",
         appendText: "",
-        supportedCharacters: /[^\s][\w\d_ ]+/,
       },
     ],
   });
-  CustomMentionExtension.ReactComponent = useMemo(
-    () => MentionReactComponent,
-    []
-  );
+  CustomMentionExtension.ReactComponent = MentionReactComponent;
 
   const { manager, state } = useRemirror({
     extensions: () => [

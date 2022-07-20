@@ -107,13 +107,10 @@ export default function RemirrorContainer({
         char: "$",
         appendText: "",
       },
-      {
-        name: "slash",
-        char: "/",
-        appendTExt: "",
-      },
+      
     ],
   });
+
   CustomMentionExtension.ReactComponent = MentionReactComponent;
 
   const { manager, state } = useRemirror({

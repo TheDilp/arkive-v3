@@ -1,4 +1,8 @@
-import { MentionAtomPopupComponent, MentionState } from "@remirror/react";
+import {
+  MentionAtomNodeAttributes,
+  MentionAtomPopupComponent,
+  MentionState,
+} from "@remirror/react";
 import { useMemo, useState } from "react";
 import { DocumentProps } from "../../../custom-types";
 import { BoardProps } from "../../../types/BoardTypes";
@@ -50,22 +54,25 @@ export default function MentionComponent() {
       return [];
     }
     const query = mentionState.query.full.toLowerCase() ?? "";
-    return mentionState.name === "at"
-      ? documentItems
-          .filter((item) => item.label.toLowerCase().includes(query))
-          .slice(0, 5)
-          .sort()
-      : mentionState.name === "hash"
-      ? mapItems
-          .filter((item) => item.label.toLowerCase().includes(query))
-          .slice(0, 5)
-          .sort()
-      : boardItems
-          .filter((item) => item.label.toLowerCase().includes(query))
-          .slice(0, 5)
-          .sort();
+    if (mentionState.name === "at") {
+      return documentItems
+        .filter((item) => item.label.toLowerCase().includes(query))
+        .slice(0, 5)
+        .sort();
+    } else if (mentionState.name === "hash") {
+      return mapItems
+        .filter((item) => item.label.toLowerCase().includes(query))
+        .slice(0, 5)
+        .sort();
+    } else if (mentionState.name === "dollah") {
+      return boardItems
+        .filter((item) => item.label.toLowerCase().includes(query))
+        .slice(0, 5)
+        .sort();
+    } else {
+      return [];
+    }
   }, [mentionState]);
-
   return (
     <MentionAtomPopupComponent
       onChange={setMentionState}

@@ -87,7 +87,6 @@ export function useOnClickOutside(ref: any, handler: (event: any) => void) {
     };
   }, [ref, handler]);
 }
-
 // Custom hook for getting a project's data
 export function useGetProjectData(project_id: string) {
   const { data } = useQuery(

@@ -1,10 +1,8 @@
 import { FloatingWrapper, useSelectedText } from "@remirror/react";
-import { FC, useState } from "react";
-import BubbleMenuBar from "./BubbleMenuBar";
-import TextColorInput from "./TextColorInput";
+import { FC } from "react";
+import MenuBar from "../MenuBar";
 
 export const BubbleMenu: FC = () => {
-  const [colorInput, setColorInput] = useState(false);
   const selection = useSelectedText();
 
   return (
@@ -14,8 +12,7 @@ export const BubbleMenu: FC = () => {
       enabled={selection ? true : false}
       renderOutsideEditor
     >
-      <BubbleMenuBar saving={false} setColorInput={setColorInput} />
-      <TextColorInput colorInput={colorInput} setColorInput={setColorInput} />
+      <MenuBar saving={false} />
     </FloatingWrapper>
   );
 };

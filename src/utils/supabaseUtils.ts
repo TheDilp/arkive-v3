@@ -908,6 +908,17 @@ export const getSingleDocument = async (document_id: string) => {
     throw new Error(error.message);
   }
 };
+export const getPublicDocuments = async (project_id: string) => {
+  const { data, error } = await supabase
+    .from<DocumentProps>("documents")
+    .select("id, title, icon")
+    .match({ project_id, public: true });
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your documents.");
+    throw new Error(error.message);
+  }
+};
 export const getSingleMap = async (map_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")

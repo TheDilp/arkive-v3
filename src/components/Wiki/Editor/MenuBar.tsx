@@ -454,10 +454,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             ""
           )
         }
-        className="p-0 Lato w-full border-0 sticky "
+        className="p-0 Lato w-full border-0"
         style={{
-          top: "40px",
-          zIndex: 1000,
+          zIndex: 50,
         }}
       />
     </>
