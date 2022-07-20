@@ -911,8 +911,8 @@ export const getSingleDocument = async (document_id: string) => {
 export const getPublicDocuments = async (project_id: string) => {
   const { data, error } = await supabase
     .from<DocumentProps>("documents")
-    .select("id, title, icon")
-    .match({ project_id, public: true });
+    .select("id, title, icon, alter_names, public")
+    .eq("project_id", project_id);
   if (data) return data;
   if (error) {
     toastError("There was an error getting your documents.");
