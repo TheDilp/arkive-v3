@@ -1296,53 +1296,7 @@ export function useCreateNode(project_id: string) {
     }
   );
 }
-export function useCreateManyNodes(project_id: string, board_id: string) {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (vars: CreateNodeProps[]) => {
-      await createManyNodes(vars);
-    },
-    {
-      onMutate: async (newNodes) => {
-        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
-        queryClient.setQueryData(
-          `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
-            if (oldData) {
-              let newData = oldData.map((board) => {
-                if (board.id === board_id) {
-                  return {
-                    ...board,
-                    nodes: [
-                      ...board.nodes,
-                      ...newNodes.map((newNode) => ({
-                        ...defaultNode,
-                        ...newNode,
-                      })),
-                    ],
-                  };
-                } else {
-                  return board;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-        return { previousBoards };
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-boards`,
-          context?.previousBoards
-        );
-        toastError("There was an error creating this node.");
-      },
-    }
-  );
-}
+
 // Custom hook for updating a node
 export function useUpdateNode(project_id: string) {
   const queryClient = useQueryClient();
@@ -1571,47 +1525,7 @@ export function useCreateEdge(project_id: string) {
     }
   );
 }
-export function useCreateManyEdges(project_id: string, board_id: string) {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (vars: CreateEdgeProps[]) => {
-      const newEdges = await createManyEdges(vars);
-      return newEdges;
-    },
-    {
-      onMutate: async (newEdges) => {
-        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
-        queryClient.setQueryData(
-          `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
-            if (oldData) {
-              let newData = oldData.map((board) => {
-                if (board.id === board_id) {
-                  return {
-                    ...board,
-                    edges: [...board.edges, ...newEdges],
-                  };
-                } else {
-                  return board;
-                }
-              });
-              return newData;
-            } else {
-              return [];
-            }
-          }
-        );
-        return { previousBoards };
-      },
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          `${project_id}-boards`,
-          context?.previousBoards
-        );
-      },
-    }
-  );
-}
+
 // Custom hook for updating an edge
 export function useUpdateEdge(project_id: string) {
   const queryClient = useQueryClient();
@@ -1744,6 +1658,52 @@ export function useDeleteManyEdges(project_id: string) {
           `${project_id}-boards`,
           context?.previousBoards
         );
+      },
+    }
+  );
+}
+// Custom hook for copy-pasting nodes and edges in a board
+export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (vars: { nodes: CreateNodeProps[]; edges: CreateEdgeProps[] }) => {
+      await createManyNodes(vars.nodes);
+      await createManyEdges(vars.edges);
+    },
+    {
+      onMutate: async (updatedData) => {
+        console.log(updatedData);
+        const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
+
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          (oldData: BoardProps[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((board) => {
+                if (board.id === board_id) {
+                  return {
+                    ...board,
+                    nodes: [...board.nodes, ...updatedData.nodes],
+                    edges: [...board.edges, ...updatedData.edges],
+                  };
+                }
+                return board;
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousBoards };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${project_id}-boards`,
+          context?.previousBoards
+        );
+        toastError("There was an error updating this board.");
       },
     }
   );

@@ -5,7 +5,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState,
+  useState
 } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,30 +17,32 @@ import {
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
   EdgeUpdateDialogProps,
-  NodeUpdateDialogProps,
+  NodeUpdateDialogProps
 } from "../../types/BoardTypes";
 import {
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
-  toModelPosition,
+  toModelPosition
 } from "../../utils/boardUtils";
 import {
-  useCreateEdge,
-  useCreateManyEdges,
-  useCreateManyNodes,
-  useCreateNode,
+  useCopyPasteNodesEdges,
+  useCreateEdge, useCreateNode,
   useGetBoardData,
   useGetDocuments,
   useGetImages,
   useUpdateNode,
-  useUploadImage,
+  useUploadImage
 } from "../../utils/customHooks";
 import {
   EdgeUpdateDialogDefault,
-  NodeUpdateDialogDefault,
+  NodeUpdateDialogDefault
 } from "../../utils/defaultDisplayValues";
-import { supabaseStorageImagesLink, toastWarn } from "../../utils/utils";
+import {
+  defaultNode,
+  supabaseStorageImagesLink,
+  toastWarn
+} from "../../utils/utils";
 import { BoardRefsContext } from "../Context/BoardRefsContext";
 import { MediaQueryContext } from "../Context/MediaQueryContext";
 import BoardContextMenu from "./BoardContextMenu";
@@ -88,18 +90,14 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   const [quickCreate, setQuickCreate] = useState(false);
 
   const createNodeMutation = useCreateNode(project_id as string);
-  const createManyNodesMutation = useCreateManyNodes(
-    project_id as string,
-    board_id as string
-  );
   const createEdgeMutation = useCreateEdge(project_id as string);
-  const createManyEdgesMutation = useCreateManyEdges(
-    project_id as string,
-    board_id as string
-  );
+
   const updateNodeMutation = useUpdateNode(project_id as string);
   const uploadImageMutation = useUploadImage(project_id as string);
-
+  const copyPasteMutation = useCopyPasteNodesEdges(
+    project_id as string,
+    board_id as string
+  );
   // Function which handles creating new nodes from documents
   // The documents are dragged from a dialog window onto the board
   const handleOnDrop = async (
@@ -128,6 +126,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
           y,
           type: "rectangle",
           doc_id: document.id,
+          ...defaultNode,
         });
       }
     } else if (files.length > 0) {
@@ -153,6 +152,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             y,
             type: "rectangle",
             customImage: newImage,
+            ...defaultNode,
           });
         }
         // If there is no image upload, then set node
@@ -181,6 +181,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             y,
             type: "rectangle",
             customImage: newImage,
+            ...defaultNode,
           });
         }
       }
@@ -199,47 +200,33 @@ export default function BoardView({ public_view, setBoardId }: Props) {
           if (el.isNode()) {
             const { x, y } = el.position();
             const {
-              id,
-              backgroundColor,
-              customImage,
-              fontColor,
-              fontFamily,
-              fontSize,
-              height,
-              width,
-              textHAlign,
-              textVAlign,
-              type,
-              label,
-              locked,
-              doc_id,
+              backgroundImage,
+              board_id,
+              classes,
+              document,
+              user_id,
+              zIndexCompare,
+              x: oldX,
+              y: oldY,
+              ...rest
             } = el.data();
             newNodes.push({
-              id,
-              backgroundColor,
-              customImage,
-              fontColor,
-              fontFamily,
-              fontSize,
-              height,
-              width,
-              textHAlign,
-              textVAlign,
-              type,
-              label,
-              locked,
-              doc_id,
               x,
               y,
               board_id: board_id as string,
+              ...rest,
             });
           } else if (el.isEdge()) {
             const { classes, id, user_id, ...rest } = el.data();
             newEdges.push({ ...rest, id: uuid() });
           }
         }
-        await createManyNodesMutation.mutateAsync(newNodes);
-        await createManyEdgesMutation.mutateAsync(newEdges);
+        await copyPasteMutation.mutateAsync({
+          nodes: newNodes,
+          edges: newEdges,
+        });
+        // await createManyNodesMutation.mutateAsync(newNodes);
+        // await createManyEdgesMutation.mutateAsync(newEdges);
       }
     }
   };
