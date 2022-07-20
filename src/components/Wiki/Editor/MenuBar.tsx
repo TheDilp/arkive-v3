@@ -444,6 +444,22 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               }
             },
           },
+          {
+            template: (item: any, options: any) => (
+              <span
+                className={`${options.className} text-center `}
+                onClick={options.onClick}
+              >
+                <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+                  <Icon
+                    className={`${options.iconClassName} m-0 `}
+                    icon="mdi:form-textbox"
+                  />
+                </div>
+              </span>
+            ),
+            command: () => {},
+          },
         ]}
         end={() =>
           saving ? (
