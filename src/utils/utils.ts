@@ -1,27 +1,21 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { toast, ToastOptions } from "react-toastify";
-import { slashMenuItem } from "../custom-types";
 import {
   BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
-  CalloutExtension,
-  DropCursorExtension,
-  GapCursorExtension,
-  HardBreakExtension,
+  CalloutExtension, HardBreakExtension,
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
-  ItalicExtension,
-  MentionAtomExtension,
-  NodeFormattingExtension,
+  ItalicExtension, NodeFormattingExtension,
   OrderedListExtension,
   TaskListExtension,
-  UnderlineExtension,
+  UnderlineExtension
 } from "remirror/extensions";
-import MentionReactComponent from "../components/Wiki/Editor/CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
 import CustomLinkExtenstion from "../components/Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
 import { SecretExtension } from "../components/Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
+import { slashMenuItem } from "../custom-types";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",

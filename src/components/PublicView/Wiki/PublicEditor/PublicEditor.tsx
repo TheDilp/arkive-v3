@@ -1,8 +1,6 @@
 import { Remirror, ThemeProvider, useRemirror } from "@remirror/react";
 import { htmlToProsemirrorNode, RemirrorJSON } from "remirror";
-import {
-  MentionAtomExtension
-} from "remirror/extensions";
+import { MentionAtomExtension } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
 import { editorExtensions } from "../../../../utils/utils";
@@ -10,11 +8,9 @@ import MentionReactComponent from "./MentionReactComponent/PublicMentionReactCom
 import PublicEditorComponent from "./PublicEditorComponent";
 
 export default function PublicEditor({
-  editable,
   content,
   classes,
 }: {
-  editable?: boolean;
   content: RemirrorJSON | null;
   classes?: string;
 }) {
@@ -59,7 +55,7 @@ export default function PublicEditor({
             classNames={[
               `text-white Lato viewOnlyEditor w-full ${classes || "h-20rem"}`,
             ]}
-            editable={editable || false}
+            editable={false}
           >
             <PublicEditorComponent content={content} />
           </Remirror>
