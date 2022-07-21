@@ -97,12 +97,18 @@ export default function DocumentsTree() {
   const cm = useRef(null);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (documents) {
-        if (filter) {
+    if (documents) {
+      if (filter) {
+        const timeout = setTimeout(() => {
           setTreeData(
             documents
-              .filter((doc) => !doc.folder && !doc.template)
+              .filter(
+                (doc) =>
+                  !doc.folder &&
+                  !doc.template &&
+                  doc.title.toLowerCase().includes(filter.toLowerCase()) &&
+                  selectedTags.every((tag) => doc.categories.includes(tag))
+              )
               .map((doc) => ({
                 id: doc.id,
                 text: doc.title,
@@ -110,33 +116,23 @@ export default function DocumentsTree() {
                 parent: "0",
                 data: doc,
               }))
-              .filter((node) =>
-                node.text.toLowerCase().includes(filter.toLowerCase())
-              )
-              .filter((node) =>
-                selectedTags.length > 0
-                  ? selectedTags.every((tag) =>
-                      node.data?.categories.includes(tag)
-                    )
-                  : true
-              )
           );
-        } else {
-          const treeData = documents
-            .filter((doc) => !doc.template)
-            .map((doc) => ({
-              id: doc.id,
-              text: doc.title,
-              droppable: doc.folder,
-              parent: doc.parent ? (doc.parent.id as string) : "0",
-              data: doc,
-            }));
-          setTreeData(treeData);
-        }
+        }, 300);
+        return () => clearTimeout(timeout);
+      } else {
+        const treeData = documents
+          .filter((doc) => !doc.template)
+          .map((doc) => ({
+            id: doc.id,
+            text: doc.title,
+            droppable: doc.folder,
+            parent: doc.parent ? (doc.parent.id as string) : "0",
+            data: doc,
+          }));
+        setTreeData(treeData);
       }
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [documents, filter]);
+    }
+  }, [documents, filter, selectedTags]);
 
   return (
     <div
