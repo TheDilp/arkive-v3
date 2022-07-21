@@ -26,6 +26,7 @@ import {
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
+  TaskListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
@@ -39,10 +40,10 @@ import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
-import CustomLinkExtenstion from "./CustomLinkExtension";
+import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
 import EditorView from "./EditorView";
-import MentionReactComponent from "./MentionReactComponent/MentionReactComponent";
-import { SecretExtension } from "./MentionReactComponent/SecretExtension";
+import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
+import { SecretExtension } from "./S";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -125,6 +126,7 @@ export default function RemirrorContainer({
       new UnderlineExtension(),
       new BlockquoteExtension(),
       new BulletListExtension(),
+      new TaskListExtension(),
       new OrderedListExtension(),
       CustomMentionExtension,
       CustomLinkExtenstion,

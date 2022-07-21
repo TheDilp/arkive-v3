@@ -6,7 +6,7 @@ import "../../../styles/Editor.css";
 import { useGetDocumentData } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
-import MentionComponent from "./MentionComponent";
+import MentionComponent from "./CustomExtensions/CustomMention/MentionComponent";
 import MenuBar from "./MenuBar";
 type Props = {
   saving: boolean | number;

@@ -4,9 +4,9 @@ import {
   MentionState,
 } from "@remirror/react";
 import { useMemo, useState } from "react";
-import { DocumentProps } from "../../../custom-types";
-import { BoardProps } from "../../../types/BoardTypes";
-import { MapProps } from "../../../types/MapTypes";
+import { DocumentProps } from "../../../../../custom-types";
+import { BoardProps } from "../../../../../types/BoardTypes";
+import { MapProps } from "../../../../../types/MapTypes";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 

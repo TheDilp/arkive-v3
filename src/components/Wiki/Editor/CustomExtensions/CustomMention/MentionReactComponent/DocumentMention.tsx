@@ -1,9 +1,9 @@
 import { Card } from "primereact/card";
 import { Link } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
-import { toastWarn } from "../../../../utils/utils";
-import { HoverTooltip } from "../LinkHover/HoverTooltip";
-import LinkHoverWindow from "../LinkHover/LinkHoverWindow";
+import { toastWarn } from "../../../../../../utils/utils";
+import { HoverTooltip } from "../MentionHover/HoverTooltip";
+import LinkHoverWindow from "../MentionHover/MentionHoverWindow";
 type Props = {
   title: string;
   content: RemirrorJSON | null;

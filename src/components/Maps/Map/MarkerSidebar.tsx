@@ -6,7 +6,7 @@ import { MarkerSidebarProps } from "../../../types/MapTypes";
 import { useGetDocuments, useGetMaps } from "../../../utils/customHooks";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
 import PublicEditor from "../../PublicView/Wiki/PublicEditor/PublicEditor";
-import LinkHoverWindow from "../../Wiki/Editor/LinkHover/LinkHoverWindow";
+import LinkHoverWindow from "../../Wiki/Editor/CustomExtensions/CustomMention/MentionHover/MentionHoverWindow";
 
 type Props = {
   markerSidebar: MarkerSidebarProps;

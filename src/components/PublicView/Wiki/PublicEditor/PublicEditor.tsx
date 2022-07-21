@@ -20,8 +20,8 @@ import {
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
-import CustomLinkExtenstion from "../../../Wiki/Editor/CustomLinkExtension";
-import { SecretExtension } from "../../../Wiki/Editor/MentionReactComponent/SecretExtension";
+import CustomLinkExtenstion from "../../../Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
+import { SecretExtension } from "../../../Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
 import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
 import PublicEditorComponent from "./PublicEditorComponent";
 
