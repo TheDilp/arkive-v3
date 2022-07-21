@@ -268,7 +268,7 @@ export default function BoardQuickBar() {
           }}
           onHide={() => setUpdateManyDialog(false)}
         >
-          <TabView>
+          <TabView renderActiveOnly={true}>
             <TabPanel header="Nodes">
               <UpdateManyNodes />
             </TabPanel>
@@ -306,7 +306,7 @@ export default function BoardQuickBar() {
         />
         <Tooltip
           target={".saveButton"}
-          content="Save Board"
+          content="Export Board"
           position="top"
           autoHide={true}
         />
@@ -424,9 +424,9 @@ export default function BoardQuickBar() {
           });
         }}
       ></i>
-      {/* Save button */}
+      {/* Export button */}
       <i
-        className="pi pi-save cursor-pointer hover:text-blue-300 saveButton"
+        className="pi pi-download cursor-pointer hover:text-blue-300 saveButton"
         onClick={() => {
           setExportDialog({ ...exportDialog, show: true });
         }}

@@ -118,15 +118,23 @@ export default function MapImage({
                 if (public_view) {
                   if (marker.public) {
                     if (markerFilter === "map") {
-                      return marker.map_link;
+                      return false;
                     } else if (markerFilter === "doc") {
                       return marker.doc_id;
                     } else {
                       return true;
                     }
+                  } else {
+                    return false;
                   }
                 } else {
-                  return true;
+                  if (markerFilter === "map") {
+                    return marker.map_link;
+                  } else if (markerFilter === "doc") {
+                    return marker.doc_id;
+                  } else {
+                    return true;
+                  }
                 }
               })
               .map((marker) => (
