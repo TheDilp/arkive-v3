@@ -46,7 +46,7 @@ export default function MapsTree({
   });
   const updateMapMutation = useUpdateMap(project_id as string);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (maps) {
       if (filter) {
         const timeout = setTimeout(() => {

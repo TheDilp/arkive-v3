@@ -1,16 +1,20 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useContext, useLayoutEffect,
+  useRef,
+  useState
+} from "react";
 import { useParams } from "react-router-dom";
 import {
   DocItemDisplayDialogProps,
   DocumentProps,
-  IconSelectProps,
+  IconSelectProps
 } from "../../../custom-types";
 import {
   useGetDocuments,
   useSortChildren,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 import { DocItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
 import { getDepth } from "../../../utils/utils";
@@ -96,7 +100,7 @@ export default function DocumentsTree() {
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (documents) {
       if (filter) {
         const timeout = setTimeout(() => {
