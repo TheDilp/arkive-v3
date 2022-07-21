@@ -74,14 +74,8 @@ const hooks = [
       [getText, doc_id]
     );
 
-    const handleSecret = useCallback(() => {
-      toggleSecret();
-      return true;
-    }, []);
-
     // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
 
-    useKeymap("Mod-g", handleSecret);
     useKeymap("Mod-s", handleSaveShortcut);
     useKeymap("Mod-e", handleExportShortcut);
   },
@@ -142,17 +136,14 @@ export default function RemirrorContainer({
       new GapCursorExtension(),
       new DropCursorExtension(),
       new SecretExtension({
-        secret: false,
-      }),
-    ],
-    extraAttributes: [
-      {
-        identifiers: ["secret"],
-        attributes: {
+        extraAttributes: {
           class: "secretBlock",
         },
-      },
+        secret: "true",
+        classNames: "secretBlock",
+      }),
     ],
+
     selection: "all",
     content: currentDocument?.content || "",
     stringHandler: htmlToProsemirrorNode,
