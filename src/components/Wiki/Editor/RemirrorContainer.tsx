@@ -2,7 +2,6 @@ import { Icon } from "@iconify/react";
 import {
   Remirror,
   ThemeProvider,
-  useCommands,
   useHelpers,
   useKeymap,
   useRemirror,
@@ -43,12 +42,11 @@ import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
 import EditorView from "./EditorView";
 import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
-import { SecretExtension } from "./S";
+import { SecretExtension } from "./CustomExtensions/SecretExtension/SecretExtension";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
     const { project_id, doc_id } = useParams();
-    const { toggleSecret } = useCommands();
     const saveContentMutation = useUpdateDocument(project_id as string);
     const document = useGetDocumentData(project_id as string, doc_id as string);
     const handleSaveShortcut = useCallback(

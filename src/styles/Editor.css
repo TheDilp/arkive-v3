@@ -14,7 +14,6 @@
 }
 
 .editorContext {
-    /* height: 80vh; */
     margin: 0 auto;
     min-width: 50vw;
 }
@@ -27,7 +26,6 @@
 
 .editorContainer>* {
     width: 100%;
-
 }
 
 .secretBlock {
@@ -64,6 +62,14 @@
     color: var(--gray-200) !important;
     font-size: x-large;
     font-family: "Merriweather";
+}
+
+.remirror-list-item-checkbox {
+    filter: none !important;
+    background: red !important;
+    accent-color: var(--primary-color) !important;
+    width: 1rem;
+    height: 1rem;
 }
 
 .publicPage {
