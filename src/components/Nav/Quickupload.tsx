@@ -108,7 +108,7 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         ref={fileUploadRef}
         headerTemplate={headerTemplate}
         accept="image/*"
-        maxFileSize={10000000}
+        maxFileSize={20000000}
         multiple
         chooseOptions={chooseOptions}
         uploadOptions={uploadOptions}

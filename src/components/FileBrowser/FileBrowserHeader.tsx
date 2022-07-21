@@ -115,7 +115,7 @@ export default function FileBrowserHeader() {
           ref={fileUploadRef}
           headerTemplate={headerTemplate}
           accept="image/*"
-          maxFileSize={10000000}
+          maxFileSize={20000000}
           multiple
           emptyTemplate={
             <p className="text-center text-gray-400">
