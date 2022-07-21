@@ -7,7 +7,6 @@ import { v4 as uuid } from "uuid";
 import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
 import DocumentFromTempDialog from "./DocumentFromTempDialog";
 import DocumentCreateDialog from "./DocumentCreateDialog";
-import { FilterMatchMode, FilterOperator } from "primereact/api";
 type Props = {
   filter: string;
   setFilter: (filter: string) => void;

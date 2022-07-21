@@ -17,7 +17,6 @@ import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import TreeSidebar from "../../Util/TreeSidebar";
-import DocumentsFilterList from "./DocumentFilterList";
 import DocumentTreeItem from "./DocumentTreeItem";
 import DocumentTreeItemContext from "./DocumentTreeItemContext";
 import DocumentUpdateDialog from "./DocumentUpdateDialog";
@@ -98,19 +97,46 @@ export default function DocumentsTree() {
   const cm = useRef(null);
 
   useEffect(() => {
-    if (documents) {
-      const treeData = documents
-        .filter((doc) => !doc.template)
-        .map((doc) => ({
-          id: doc.id,
-          text: doc.title,
-          droppable: doc.folder,
-          parent: doc.parent ? (doc.parent.id as string) : "0",
-          data: doc,
-        }));
-      setTreeData(treeData);
-    }
-  }, [documents]);
+    const timeout = setTimeout(() => {
+      if (documents) {
+        if (filter) {
+          setTreeData(
+            documents
+              .filter((doc) => !doc.folder && !doc.template)
+              .map((doc) => ({
+                id: doc.id,
+                text: doc.title,
+                droppable: doc.folder,
+                parent: "0",
+                data: doc,
+              }))
+              .filter((node) =>
+                node.text.toLowerCase().includes(filter.toLowerCase())
+              )
+              .filter((node) =>
+                selectedTags.length > 0
+                  ? selectedTags.every((tag) =>
+                      node.data?.categories.includes(tag)
+                    )
+                  : true
+              )
+          );
+        } else {
+          const treeData = documents
+            .filter((doc) => !doc.template)
+            .map((doc) => ({
+              id: doc.id,
+              text: doc.title,
+              droppable: doc.folder,
+              parent: doc.parent ? (doc.parent.id as string) : "0",
+              data: doc,
+            }));
+          setTreeData(treeData);
+        }
+      }
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [documents, filter]);
 
   return (
     <div
@@ -146,87 +172,67 @@ export default function DocumentsTree() {
               selectedTags={selectedTags}
               setSelectedTags={setSelectedTags}
             />
-            {!filter && selectedTags.length === 0 && (
-              <Tree
-                classes={{
-                  root: "w-full projectTreeRoot pr-4 pl-0",
-                  container: "list-none",
-                  placeholder: "relative",
-                  listItem: "listitem",
-                }}
-                tree={treeData}
-                rootId={"0"}
-                sort={true}
-                insertDroppableFirst={true}
-                initialOpen={
-                  documents
-                    ?.filter((doc) => doc.expanded)
-                    .map((doc) => doc.id) || false
+            <Tree
+              classes={{
+                root: "w-full projectTreeRoot pr-4 pl-0",
+                container: "list-none",
+                placeholder: "relative",
+                listItem: "listitem",
+              }}
+              tree={treeData}
+              rootId={"0"}
+              sort={true}
+              insertDroppableFirst={true}
+              initialOpen={
+                documents?.filter((doc) => doc.expanded).map((doc) => doc.id) ||
+                false
+              }
+              render={(
+                node: NodeModel<DocumentProps>,
+                { depth, isOpen, onToggle }
+              ) => (
+                <DocumentTreeItem
+                  // @ts-ignore
+                  node={node}
+                  depth={depth}
+                  isOpen={isOpen}
+                  onToggle={onToggle}
+                  setIconSelect={setIconSelect}
+                  setDisplayDialog={setDisplayDialog}
+                  cm={cm}
+                />
+              )}
+              dragPreviewRender={(monitorProps) => (
+                <DragPreview
+                  text={monitorProps.item.text}
+                  droppable={monitorProps.item.droppable}
+                />
+              )}
+              placeholderRender={(node, { depth }) => (
+                <div
+                  style={{
+                    top: 0,
+                    right: 0,
+                    left: depth * 24,
+                    backgroundColor: "#1967d2",
+                    height: "2px",
+                    position: "absolute",
+                    transform: "translateY(-50%)",
+                  }}
+                ></div>
+              )}
+              dropTargetOffset={10}
+              canDrop={(tree, { dragSource, dropTargetId }) => {
+                const depth = getDepth(treeData, dropTargetId);
+                // Don't allow nesting documents beyond this depth
+                if (depth > 3) return false;
+                if (dragSource?.parent === dropTargetId) {
+                  return true;
                 }
-                render={(
-                  node: NodeModel<DocumentProps>,
-                  { depth, isOpen, onToggle }
-                ) => (
-                  <DocumentTreeItem
-                    // @ts-ignore
-                    node={node}
-                    depth={depth}
-                    isOpen={isOpen}
-                    onToggle={onToggle}
-                    setIconSelect={setIconSelect}
-                    setDisplayDialog={setDisplayDialog}
-                    cm={cm}
-                  />
-                )}
-                dragPreviewRender={(monitorProps) => (
-                  <DragPreview
-                    text={monitorProps.item.text}
-                    droppable={monitorProps.item.droppable}
-                  />
-                )}
-                placeholderRender={(node, { depth }) => (
-                  <div
-                    style={{
-                      top: 0,
-                      right: 0,
-                      left: depth * 24,
-                      backgroundColor: "#1967d2",
-                      height: "2px",
-                      position: "absolute",
-                      transform: "translateY(-50%)",
-                    }}
-                  ></div>
-                )}
-                dropTargetOffset={10}
-                canDrop={(tree, { dragSource, dropTargetId }) => {
-                  const depth = getDepth(treeData, dropTargetId);
-                  // Don't allow nesting documents beyond this depth
-                  if (depth > 3) return false;
-                  if (dragSource?.parent === dropTargetId) {
-                    return true;
-                  }
-                }}
-                // @ts-ignore
-                onDrop={handleDrop}
-              />
-            )}
-            {(filter || selectedTags.length > 0) && (
-              <DocumentsFilterList
-                setDisplayDialog={setDisplayDialog}
-                cm={cm}
-                filteredTree={treeData
-                  .filter((node) =>
-                    node.text.toLowerCase().includes(filter.toLowerCase())
-                  )
-                  .filter((node) =>
-                    selectedTags.length > 0
-                      ? selectedTags.every((tag) =>
-                          node.data?.categories.includes(tag)
-                        )
-                      : true
-                  )}
-              />
-            )}
+              }}
+              // @ts-ignore
+              onDrop={handleDrop}
+            />
           </TabPanel>
           <TabPanel header="Templates" className="surface-50">
             <div className="h-screen">
