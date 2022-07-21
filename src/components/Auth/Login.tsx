@@ -67,6 +67,11 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && email && password) {
+                  login(email, password).then(() => navigate("/home"));
+                }
+              }}
             />
             <InputText
               className="w-full"
@@ -74,6 +79,11 @@ export default function Login() {
               placeholder="Password"
               type={"password"}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && email && password) {
+                  login(email, password).then(() => navigate("/home"));
+                }
+              }}
             />
 
             <Button
