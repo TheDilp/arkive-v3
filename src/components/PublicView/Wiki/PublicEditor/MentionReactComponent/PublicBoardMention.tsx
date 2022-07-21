@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
 type Props = {
   nodeId: string | undefined;
@@ -15,7 +16,8 @@ export default function PublicBoardMention({
       id={`link-${nodeId}`}
       to={`../../boards/${nodeId}`}
     >
-      {title || nodeLabel}
+      <Icon icon="mdi:draw" />
+      {nodeLabel}
     </Link>
   );
 }

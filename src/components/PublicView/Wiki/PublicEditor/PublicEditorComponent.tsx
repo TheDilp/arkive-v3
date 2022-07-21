@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
+import { CommandMenu } from "../../../Wiki/Editor/CommandMenu";
 type Props = {
   content: RemirrorJSON | null;
 };
@@ -20,6 +21,7 @@ export default function PublicEditorComponent({ content }: Props) {
   return content ? (
     <>
       <EditorComponent />
+      <CommandMenu />
     </>
   ) : null;
 }
