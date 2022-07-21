@@ -6,6 +6,7 @@ import "../../../styles/Editor.css";
 import { useGetDocumentData } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
+import { CommandMenu } from "./CommandMenu";
 import MentionComponent from "./CustomExtensions/CustomMention/MentionComponent";
 import MenuBar from "./MenuBar";
 type Props = {
@@ -41,7 +42,8 @@ export default function EditorView({ saving, setSaving, firstRender }: Props) {
     <>
       <MenuBar saving={saving} />
       <EditorComponent />
-      <BubbleMenu />
+      {/* <BubbleMenu /> */}
+      <CommandMenu />
       <MentionComponent />
     </>
   ) : null;
