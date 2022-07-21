@@ -25,8 +25,8 @@ import { TextSelection } from "@remirror/pm/state";
 import { EditorView } from "@remirror/pm/view";
 
 interface SecretOptions {
-  secret: string;
-  classNames: string;
+  secret?: string;
+  classNames?: string;
 }
 
 /**
@@ -146,9 +146,9 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
    * ```
    */
   @command()
-  toggleSecret(attributes: {
-    secret: "true";
-    classNames: "secretBlock";
+  toggleSecret(attributes?: {
+    secret: string;
+    classNames: string;
   }): CommandFunction {
     return toggleWrap(this.type, attributes);
   }
@@ -167,6 +167,15 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
   // updateCallout(attributes: CalloutAttributes, pos?: number): CommandFunction {
   //   return updateNodeAttributes(this.type)(attributes, pos);
   // }
+
+  /**
+   * Attach the keyboard shortcut for making text bold to this mark and also to
+   * the `toggleBold` command.
+   */
+  @keyBinding({ shortcut: "Mod-g", command: "toggleSecret" })
+  shortcut(props: KeyBindingProps): boolean {
+    return this.toggleSecret()(props);
+  }
 
   @keyBinding({ shortcut: "Enter" })
   handleEnterKey({ dispatch, tr }: KeyBindingProps): boolean {

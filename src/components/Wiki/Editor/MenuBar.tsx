@@ -40,7 +40,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     leftAlign,
     centerAlign,
     rightAlign,
-
+    toggleSecret,
     focus,
   } = useCommands();
   const { project_id, doc_id } = useParams();
@@ -443,6 +443,23 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               } catch (error) {
                 toastError("Error saving document!");
               }
+            },
+          },
+          {
+            className: active.secret() ? "menuBarButtonActive" : "",
+            template: (item: any, options: any) => (
+              <span
+                className={`${options.className} text-center `}
+                onClick={options.onClick}
+              >
+                <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+                  <i className="pi pi-eye-slash text-gray-300"></i>
+                </div>
+              </span>
+            ),
+            command: () => {
+              toggleSecret();
+              focus();
             },
           },
         ]}
