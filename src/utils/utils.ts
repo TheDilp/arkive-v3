@@ -1,5 +1,6 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { toast, ToastOptions } from "react-toastify";
+import { slashMenuItem } from "../custom-types";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
@@ -97,6 +98,84 @@ export const defaultNode = {
   zIndex: 1,
   locked: false,
 };
+
+export const defaultSlashItems: slashMenuItem[] = [
+  {
+    name: "Heading 1",
+    type: "heading",
+    level: 1,
+    icon: "mdi:format-header-1",
+  },
+  {
+    name: "Heading 2",
+    type: "heading",
+    level: 2,
+    icon: "mdi:format-header-2",
+  },
+  {
+    name: "Heading 3",
+    type: "heading",
+    level: 3,
+    icon: "mdi:format-header-3",
+  },
+  {
+    name: "Heading 4",
+    type: "heading",
+    level: 4,
+    icon: "mdi:format-header-4",
+  },
+  {
+    name: "Heading 5",
+    type: "heading",
+    level: 5,
+    icon: "mdi:format-header-5",
+  },
+  {
+    name: "Heading 6",
+    type: "heading",
+    level: 6,
+    icon: "mdi:format-header-6",
+  },
+  { name: "Bullet List", type: "list", icon: "mdi:format-list-bulleted" },
+  { name: "Ordered List", type: "list", icon: "mdi:format-list-numbered" },
+  {
+    name: "Task List",
+    type: "list",
+    icon: "mdi:checkbox-marked-circle-outline",
+  },
+  { name: "Quote", type: "quote", icon: "mdi:comment-quote-outline" },
+  {
+    name: "Callout Info",
+    type: "callout",
+    callout_type: "info",
+    icon: "mdi:information-outline",
+    color: "lightskyblue",
+  },
+  {
+    name: "Callout Error",
+    type: "callout",
+    callout_type: "error",
+    icon: "mdi:alpha-x-circle-outline",
+    color: "#f00",
+  },
+  {
+    name: "Callout Warning",
+    type: "callout",
+    callout_type: "warning",
+    icon: "mdi:alert",
+    color: "#ff0",
+  },
+  {
+    name: "Callout Success",
+    type: "callout",
+    callout_type: "success",
+    icon: "mdi:check-outline",
+    color: "#0f0",
+  },
+  { name: "Image", type: "image", icon: "mdi:image" },
+  { name: "Divider", type: "divider", icon: "mdi:minus" },
+  { name: "Secret", type: "secret", icon: "mdi:eye-off-outline" },
+];
 
 export interface Bucket {
   id: string;

@@ -7,7 +7,7 @@ import { useGetDocumentData } from "../../../utils/customHooks";
 import { toastWarn } from "../../../utils/utils";
 import { BubbleMenu } from "./BubbleMenu/BubbleMenu";
 import { CommandMenu } from "./CommandMenu";
-import MentionComponent from "./CustomExtensions/CustomMention/MentionComponent";
+import MentionDropdownComponent from "./CustomExtensions/CustomMention/MentionDropdownComponent";
 import MenuBar from "./MenuBar";
 type Props = {
   saving: boolean | number;
@@ -44,7 +44,7 @@ export default function EditorView({ saving, setSaving, firstRender }: Props) {
       <EditorComponent />
       {/* <BubbleMenu /> */}
       <CommandMenu />
-      <MentionComponent />
+      <MentionDropdownComponent />
     </>
   ) : null;
 }

@@ -119,7 +119,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
   createInputRules(): InputRule[] {
     return [
       nodeInputRule({
-        regexp: /^::\w$/,
+        regexp: /^::s$/,
         type: this.type,
         beforeDispatch: ({ tr, start }) => {
           const $pos = tr.doc.resolve(start);
@@ -191,7 +191,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
       return false;
     }
 
-    const regex = /^::\w$/;
+    const regex = /^::s$/;
     const { text, nodeSize } = nodeBefore;
     const { textContent } = parent;
 

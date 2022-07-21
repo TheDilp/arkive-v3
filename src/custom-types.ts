@@ -144,3 +144,19 @@ export type featureBlockProps = {
   description: string;
   icon: string;
 };
+
+export type slashMenuItem = {
+  name: string;
+  type:
+    | "heading"
+    | "list"
+    | "quote"
+    | "callout"
+    | "image"
+    | "divider"
+    | "secret";
+  icon: string;
+  level?: number;
+  callout_type?: string;
+  color?: string;
+};

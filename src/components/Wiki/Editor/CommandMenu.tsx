@@ -1,27 +1,44 @@
+import { Icon } from "@iconify/react";
 import {
   FloatingWrapper,
   useChainedCommands,
-  useCommands,
   useMenuNavigation,
-  useSelectedText,
   useSuggest,
 } from "@remirror/react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { slashMenuItem } from "../../../custom-types";
+import { defaultSlashItems } from "../../../utils/utils";
 
 export function CommandMenu() {
   const chain = useChainedCommands();
-  const { change } = useSuggest({
+  const { change, exit } = useSuggest({
     char: "/",
     name: "command",
   });
-
-  const enabled = Boolean(change?.match[1]);
-  console.log(enabled);
+  const enabled = Boolean(change);
   const range = change?.range;
   const onSubmit = useCallback(
-    (cmd) => {
+    (cmd: slashMenuItem) => {
       if (cmd.type === "heading") {
         chain.toggleHeading({ level: cmd.level }).delete(range).run();
+      } else if (cmd.type === "list") {
+        if (cmd.name === "Bullet List") {
+          chain.delete(range).toggleBulletList().run();
+        } else if (cmd.name === "Ordered List") {
+          chain.delete(range).toggleOrderedList().run();
+        } else if (cmd.name === "Task List") {
+          chain.delete(range).toggleTaskList().run();
+        }
+      } else if (cmd.type === "quote") {
+        chain.delete(range).toggleBlockquote().run();
+      } else if (cmd.type === "callout") {
+        chain.delete(range).toggleCallout({ type: cmd.callout_type }).run();
+      } else if (cmd.type === "secret") {
+        chain.delete(range).toggleSecret().run();
+      } else if (cmd.type === "image") {
+        chain.delete(range).toggleSecret().run();
+      } else if (cmd.type === "divider") {
+        chain.delete(range).insertHorizontalRule().run();
       }
       // Remove trigger text for command menu
       return true;
@@ -29,22 +46,34 @@ export function CommandMenu() {
     [chain, range]
   );
 
-  const items = [
-    { name: "H1", type: "heading", level: 1 },
-    { name: "H2", type: "heading", level: 2 },
-    { name: "H3", type: "heading", level: 3 },
-    { name: "H4", type: "heading", level: 4 },
-    { name: "H5", type: "heading", level: 5 },
-    { name: "H6", type: "heading", level: 6 },
-  ];
+  const [items, setItems] = useState<slashMenuItem[]>(defaultSlashItems);
 
-  const { getMenuProps, getItemProps, indexIsSelected } = useMenuNavigation({
-    items,
-    isOpen: enabled,
-    onSubmit,
-    direction: "vertical",
-    onDismiss: useCallback(() => true, []),
-  });
+  const { getMenuProps, getItemProps, indexIsSelected, setIndex } =
+    useMenuNavigation({
+      items,
+      isOpen: enabled,
+      onSubmit,
+      direction: "vertical",
+      onDismiss: useCallback(() => true, []),
+    });
+
+  useEffect(() => {
+    if (exit) {
+      setIndex(0);
+    }
+  }, [exit]);
+
+  useEffect(() => {
+    if (change?.query.full) {
+      setItems(
+        defaultSlashItems.filter((item) =>
+          item.name.toLowerCase().startsWith(change.query.full)
+        )
+      );
+    } else {
+      setItems(defaultSlashItems);
+    }
+  }, [change?.query.full]);
 
   return (
     <FloatingWrapper
@@ -54,15 +83,13 @@ export function CommandMenu() {
       renderOutsideEditor
     >
       <ul
-        className={`${
-          !enabled ? "hidden" : ""
-        } remirror-mention-atom-popup-wrapper z-5`}
+        className="remirror-mention-atom-popup-wrapper z-5 p-0 overflow-y-auto h-15rem"
         {...getMenuProps()}
       >
         {items.map((item, index) => {
           return (
             <li
-              className={`remirror-mention-atom-popup-item ${
+              className={`remirror-mention-atom-popup-item w-12rem flex justify-content-between align-items-center ${
                 indexIsSelected(index)
                   ? "remirror-mention-atom-popup-highlight"
                   : ""
@@ -70,6 +97,7 @@ export function CommandMenu() {
               key={item.name}
               {...getItemProps({ item, index })}
             >
+              <Icon icon={item.icon} fontSize={32} color={item.color} />
               {item.name}
             </li>
           );
