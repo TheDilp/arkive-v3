@@ -23,6 +23,7 @@ const Register = lazy(() => import("./components/Auth/Register"));
 const Project = lazy(() => import("./components/Project/Project"));
 const Home = lazy(() => import("./components/Home/Home"));
 const Help = lazy(() => import("./components/Help/Help"));
+const Demo = lazy(() => import("./components/Demo/Demo"));
 const PublicProject = lazy(
   () => import("./components/PublicView/PublicProject")
 );
@@ -51,6 +52,14 @@ function App() {
             <Routes>
               <Route path="*" element={<NotFound />} />
               <Route path="/" element={<LandingPage />} />
+              <Route
+                path="demo"
+                element={
+                  <Suspense fallback={<LoadingScreen />}>
+                    <Demo />
+                  </Suspense>
+                }
+              />
               <Route path="home" element={<Home />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />

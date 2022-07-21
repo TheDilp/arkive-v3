@@ -30,6 +30,7 @@ export default function LandingPageNav() {
           </a>
         </div>
         <div className="hover:text-blue-400 cursor-pointer">FAQ</div>
+        <div className="hover:text-blue-400 cursor-pointer">Demo</div>
         <div className="hover:text-blue-400 cursor-pointer">
           <a
             href="https://discord.gg/AnbtkzrffA"

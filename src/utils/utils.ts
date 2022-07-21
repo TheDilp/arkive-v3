@@ -1,6 +1,27 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { toast, ToastOptions } from "react-toastify";
 import { slashMenuItem } from "../custom-types";
+import {
+  BlockquoteExtension,
+  BoldExtension,
+  BulletListExtension,
+  CalloutExtension,
+  DropCursorExtension,
+  GapCursorExtension,
+  HardBreakExtension,
+  HeadingExtension,
+  HorizontalRuleExtension,
+  ImageExtension,
+  ItalicExtension,
+  MentionAtomExtension,
+  NodeFormattingExtension,
+  OrderedListExtension,
+  TaskListExtension,
+  UnderlineExtension,
+} from "remirror/extensions";
+import MentionReactComponent from "../components/Wiki/Editor/CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
+import CustomLinkExtenstion from "../components/Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
+import { SecretExtension } from "../components/Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
@@ -44,6 +65,318 @@ export const getDepth = (
   }
 
   return depth;
+};
+
+export const editorExtensions = [
+  new BoldExtension(),
+  new ItalicExtension(),
+  new HeadingExtension(),
+  new UnderlineExtension(),
+  new BlockquoteExtension(),
+  new BulletListExtension(),
+  new TaskListExtension(),
+  new OrderedListExtension(),
+  CustomLinkExtenstion,
+  new ImageExtension({
+    enableResizing: true,
+  }),
+  new HorizontalRuleExtension(),
+  new CalloutExtension(),
+  new NodeFormattingExtension(),
+  new HardBreakExtension(),
+  new SecretExtension({
+    extraAttributes: {
+      class: "secretBlock",
+    },
+    secret: "true",
+    classNames: "secretBlock",
+  }),
+];
+
+export const documentDemo = {
+  type: "doc",
+  content: [
+    {
+      type: "heading",
+      attrs: {
+        level: 1,
+        style: "",
+        nodeIndent: null,
+        nodeLineHeight: null,
+        nodeTextAlignment: null,
+      },
+      content: [
+        {
+          text: "Welcome to the Arkive demo!",
+          type: "text",
+        },
+      ],
+    },
+    {
+      type: "heading",
+      attrs: {
+        level: 2,
+        style: "",
+        nodeIndent: null,
+        nodeLineHeight: null,
+        nodeTextAlignment: null,
+      },
+      content: [
+        {
+          text: "Feel free to try things out.",
+          type: "text",
+        },
+      ],
+    },
+    {
+      type: "paragraph",
+      attrs: {
+        style: "",
+        nodeIndent: null,
+        nodeLineHeight: null,
+        nodeTextAlignment: null,
+      },
+    },
+    {
+      type: "callout",
+      attrs: {
+        type: "info",
+        emoji: "",
+      },
+      content: [
+        {
+          type: "paragraph",
+          attrs: {
+            style: "",
+            nodeIndent: null,
+            nodeLineHeight: null,
+            nodeTextAlignment: null,
+          },
+          content: [
+            {
+              text: "Hint: You can use ",
+              type: "text",
+            },
+            {
+              text: '"/"',
+              type: "text",
+              marks: [
+                {
+                  type: "italic",
+                },
+              ],
+            },
+            {
+              text: " to show all the available commands.",
+              type: "text",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "paragraph",
+      attrs: {
+        style: "",
+        nodeIndent: null,
+        nodeLineHeight: null,
+        nodeTextAlignment: null,
+      },
+    },
+    {
+      type: "bulletList",
+      content: [
+        {
+          type: "listItem",
+          attrs: {
+            closed: false,
+            nested: false,
+          },
+          content: [
+            {
+              type: "paragraph",
+              attrs: {
+                style: "",
+                nodeIndent: null,
+                nodeLineHeight: null,
+                nodeTextAlignment: null,
+              },
+              content: [
+                {
+                  text: "You can create unorderedlists",
+                  type: "text",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "orderedList",
+      attrs: {
+        order: 1,
+      },
+      content: [
+        {
+          type: "listItem",
+          attrs: {
+            closed: false,
+            nested: false,
+          },
+          content: [
+            {
+              type: "paragraph",
+              attrs: {
+                style: "",
+                nodeIndent: null,
+                nodeLineHeight: null,
+                nodeTextAlignment: null,
+              },
+              content: [
+                {
+                  text: "Order lists too!",
+                  type: "text",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "taskList",
+      content: [
+        {
+          type: "taskListItem",
+          attrs: {
+            checked: false,
+          },
+          content: [
+            {
+              type: "paragraph",
+              attrs: {
+                style: "",
+                nodeIndent: null,
+                nodeLineHeight: null,
+                nodeTextAlignment: null,
+              },
+              content: [
+                {
+                  text: "And don't forget about task lists.",
+                  type: "text",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: "taskListItem",
+          attrs: {
+            checked: true,
+          },
+          content: [
+            {
+              type: "paragraph",
+              attrs: {
+                style: "",
+                nodeIndent: null,
+                nodeLineHeight: null,
+                nodeTextAlignment: null,
+              },
+              content: [
+                {
+                  text: "Check out editor demo",
+                  type: "text",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "horizontalRule",
+    },
+    {
+      type: "secret",
+      attrs: {
+        class: "secretBlock",
+        secret: "true",
+        classNames: "secretBlock",
+      },
+      content: [
+        {
+          type: "paragraph",
+          attrs: {
+            style: "",
+            nodeIndent: null,
+            nodeLineHeight: null,
+            nodeTextAlignment: null,
+          },
+          content: [
+            {
+              text: "Secret blocks can contain any other type of text, but won't be seen on the public page for this document!",
+              type: "text",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "paragraph",
+      attrs: {
+        style: "",
+        nodeIndent: null,
+        nodeLineHeight: null,
+        nodeTextAlignment: null,
+      },
+    },
+    {
+      type: "blockquote",
+      attrs: {
+        style: "",
+        nodeIndent: null,
+        nodeLineHeight: null,
+        nodeTextAlignment: null,
+      },
+      content: [
+        {
+          type: "paragraph",
+          attrs: {
+            style: "",
+            nodeIndent: null,
+            nodeLineHeight: null,
+            nodeTextAlignment: null,
+          },
+          content: [
+            {
+              text: '"The Arkive Editor is awesome!"',
+              type: "text",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          attrs: {
+            style: "",
+            nodeIndent: null,
+            nodeLineHeight: null,
+            nodeTextAlignment: null,
+          },
+          content: [
+            {
+              type: "hardBreak",
+            },
+            {
+              text: "-Arkive Developer",
+              type: "text",
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 // Regex for email and password

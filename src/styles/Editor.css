@@ -35,7 +35,7 @@
     border-radius: 0.1rem;
 }
 
-.viewOnlyEditor .secretBlock {
+.viewOnlyEditor:not(.demo) .secretBlock {
     display: none !important;
 }
 
@@ -64,9 +64,12 @@
     font-family: "Merriweather";
 }
 
+.remirror-list-item-with-custom-mark[data-checked] {
+    text-decoration: line-through;
+}
+
 .remirror-list-item-checkbox {
     filter: none !important;
-    background: red !important;
     accent-color: var(--primary-color) !important;
     width: 1rem;
     height: 1rem;

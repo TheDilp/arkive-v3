@@ -42,8 +42,15 @@ export default function FolderPage() {
             !doc.template
         )
         .sort((a, b) => {
-          return a.sort - b.sort;
+          if (a.folder && !b.folder) return -1;
+          else if (!a.folder && b.folder) return 1;
+          else {
+            if (a.title > b.title) return 1;
+            if (a.title < b.title) return -1;
+            return 0;
+          }
         });
+
       setChildren(tempChildren);
     }
   }, [doc_id, documents]);
@@ -53,6 +60,7 @@ export default function FolderPage() {
   }, [doc_id]);
 
   if (isLoading) return <LoadingScreen />;
+
   if (!currentDocument && doc_id) {
     toastWarn("Document not found");
     return <Navigate to={"../"} />;

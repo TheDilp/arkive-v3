@@ -88,7 +88,7 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
                   />
                 </div>
               ) : (
-                <Icon icon="mdi:file" className="w-full" fontSize={80} />
+                <Icon icon={doc.icon} className="w-full" fontSize={80} />
               )}
             </div>
           )}

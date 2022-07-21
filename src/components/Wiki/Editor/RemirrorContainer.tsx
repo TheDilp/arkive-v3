@@ -4,45 +4,33 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
-  BlockquoteExtension,
-  BoldExtension,
-  BulletListExtension,
-  CalloutExtension,
   DropCursorExtension,
-  GapCursorExtension,
-  HardBreakExtension,
-  HeadingExtension,
-  HorizontalRuleExtension,
-  ImageExtension,
-  ItalicExtension,
-  MentionAtomExtension,
-  NodeFormattingExtension,
-  OrderedListExtension,
-  TaskListExtension,
-  UnderlineExtension,
+  GapCursorExtension, MentionAtomExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
-import { toastSuccess, toastWarn } from "../../../utils/utils";
+import {
+  editorExtensions,
+  toastSuccess,
+  toastWarn
+} from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
-import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
-import EditorView from "./EditorView";
 import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
-import { SecretExtension } from "./CustomExtensions/SecretExtension/SecretExtension";
+import EditorView from "./EditorView";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -118,32 +106,10 @@ export default function RemirrorContainer({
 
   const { manager, state } = useRemirror({
     extensions: () => [
-      new BoldExtension(),
-      new ItalicExtension(),
-      new HeadingExtension(),
-      new UnderlineExtension(),
-      new BlockquoteExtension(),
-      new BulletListExtension(),
-      new TaskListExtension(),
-      new OrderedListExtension(),
+      ...editorExtensions,
       CustomMentionExtension,
-      CustomLinkExtenstion,
-      new ImageExtension({
-        enableResizing: true,
-      }),
-      new HorizontalRuleExtension(),
-      new CalloutExtension(),
-      new NodeFormattingExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
-      new HardBreakExtension(),
-      new SecretExtension({
-        extraAttributes: {
-          class: "secretBlock",
-        },
-        secret: "true",
-        classNames: "secretBlock",
-      }),
     ],
 
     selection: "all",
