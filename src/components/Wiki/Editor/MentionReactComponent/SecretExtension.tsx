@@ -57,11 +57,13 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
     ) => {
       const { secret, classNames } = node.attrs;
       const dom = document.createElement("div");
-      const contentDOM = document.createElement("div");
-      const secretIcon = document.createElement("i");
-      secretIcon.classList.add("pi", "pi-eye-slash");
       dom.setAttribute("secret", secret);
       dom.setAttribute("class", classNames);
+
+      const contentDOM = document.createElement("div");
+
+      const secretIcon = document.createElement("i");
+      secretIcon.classList.add("pi", "pi-eye-slash");
       dom.append(secretIcon);
       dom.append(contentDOM);
       return { dom, contentDOM };

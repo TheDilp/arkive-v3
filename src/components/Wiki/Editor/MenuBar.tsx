@@ -453,7 +453,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 onClick={options.onClick}
               >
                 <div className="flex justify-content-center m-0 customMenuBarIconContainer">
-                  <i className="pi pi-eye-slash text-gray-300"></i>
+                  <i
+                    className={`pi pi-eye${active.secret() ? "-slash" : ""}`}
+                  ></i>
                 </div>
               </span>
             ),

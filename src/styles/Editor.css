@@ -1,3 +1,13 @@
+/* MENUBAR */
+.p-menuitem-link {
+    color: var(--gray-400) !important;
+}
+
+.menuBarButtonActive span * {
+    color: white;
+}
+
+/* EDITOR */
 .Editor,
 .remirror-editor-wrapper {
     min-height: 80vh !important;
@@ -21,6 +31,7 @@
 }
 
 .secretBlock {
+    border: dashed 2px rgba(131, 238, 255, 0.5);
     background-color: rgba(131, 238, 255, 0.2);
     padding: 1rem;
     border-radius: 0.1rem;
@@ -36,7 +47,6 @@
 }
 
 .remirror-editor:not(.publicPage) {
-    /* max-height: 83.5vh; */
     overflow-y: auto;
 }
 
