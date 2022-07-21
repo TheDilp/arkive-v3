@@ -18,6 +18,7 @@ import {
   CalloutExtension,
   DropCursorExtension,
   GapCursorExtension,
+  HardBreakExtension,
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
@@ -135,6 +136,7 @@ export default function RemirrorContainer({
       new NodeFormattingExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
+      new HardBreakExtension(),
       new SecretExtension({
         extraAttributes: {
           class: "secretBlock",

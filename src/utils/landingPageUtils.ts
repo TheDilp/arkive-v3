@@ -54,12 +54,7 @@ export const WikiFeatureBlocks = [
     description: "Give documents tags for faster searching and categorizing",
     icon: "tag-multiple",
   },
-  {
-    title: "Make documents stand out",
-    description:
-      "Mark each document its own special icon to give it some flair.",
-    icon: "crown",
-  },
+
   {
     title: "Speed up with templates",
     description:
@@ -73,15 +68,27 @@ export const WikiFeatureBlocks = [
     icon: "link-variant",
   },
   {
+    title: "Share with the world",
+    description: "Make documents public so that anyone can see your work.",
+    icon: "earth",
+  },
+  {
+    title: "Keep your secrets",
+    description:
+      "Hide parts of your documents, while keeping the rest visible to the public.",
+    icon: "eye-off-outline",
+  },
+  {
     title: "Quickly preview linked items",
     description:
       "Hover over linked documents to show a preview. (map and board previews coming soon!)",
     icon: "tooltip-outline",
   },
   {
-    title: "Share with the world",
-    description: "Make documents public so that anyone can see your work.",
-    icon: "earth",
+    title: "Make documents stand out",
+    description:
+      "Mark each document its own special icon to give it some flair.",
+    icon: "crown",
   },
   {
     title: "Export",
