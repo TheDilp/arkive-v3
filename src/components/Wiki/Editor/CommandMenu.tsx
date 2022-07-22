@@ -6,8 +6,11 @@ import {
   useSuggest,
 } from "@remirror/react";
 import { useCallback, useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { slashMenuItem } from "../../../custom-types";
-import { defaultSlashItems } from "../../../utils/utils";
+import { MapProps } from "../../../types/MapTypes";
+import { defaultSlashItems, toastError } from "../../../utils/utils";
 
 export function CommandMenu() {
   const chain = useChainedCommands();
@@ -17,6 +20,9 @@ export function CommandMenu() {
   });
   const enabled = Boolean(change);
   const range = change?.range;
+  const [items, setItems] = useState<slashMenuItem[]>(defaultSlashItems);
+  const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const onSubmit = useCallback(
     (cmd: slashMenuItem) => {
       if (cmd.type === "heading") {
@@ -39,21 +45,35 @@ export function CommandMenu() {
         chain.delete(range).toggleSecret().run();
       } else if (cmd.type === "divider") {
         chain.delete(range).insertHorizontalRule().run();
+      } else if (cmd.type === "map_select") {
+        const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
+        setItems(
+          maps
+            ?.filter((map) => !map.folder)
+            .map((map) => ({
+              name: map.title,
+              type: "map",
+              icon: "mdi:map",
+              map_id: map.id,
+            })) || defaultSlashItems
+        );
       } else if (cmd.type === "map") {
-        chain
-          .delete(range)
-          .insertMapPreview({
-            id: "598c4659-fa48-41a6-ba31-83327ee07101",
-          })
-          .run();
+        if (cmd.map_id) {
+          chain
+            .delete(range)
+            .insertMapPreview({
+              id: cmd.map_id,
+            })
+            .run();
+        } else {
+          toastError("Looks like the map's id is missing.");
+        }
       }
       // Remove trigger text for command menu
       return true;
     },
     [chain, range]
   );
-
-  const [items, setItems] = useState<slashMenuItem[]>(defaultSlashItems);
 
   const { getMenuProps, getItemProps, indexIsSelected, setIndex } =
     useMenuNavigation({

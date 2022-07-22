@@ -155,8 +155,9 @@ export type slashMenuItem = {
     | "image"
     | "divider"
     | "secret"
-    | "map";
+    | "map_select"| "map";
   icon: string;
+  map_id?: string;
   level?: number;
   callout_type?: string;
   color?: string;
