@@ -27,7 +27,6 @@ export default function MapPreview({ id }: MapPreviewAttributes) {
   useLayoutEffect(() => {
     if (maps && id) {
       let map = maps.find((map) => map.id === id);
-      console.log(maps, id);
       if (map) {
         setMapdata(map);
         let img = new Image();

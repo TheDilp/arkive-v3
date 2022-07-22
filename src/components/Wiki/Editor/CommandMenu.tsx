@@ -61,7 +61,10 @@ export function CommandMenu() {
       isOpen: enabled,
       onSubmit,
       direction: "vertical",
-      onDismiss: useCallback(() => true, []),
+      onDismiss: useCallback(() => {
+        chain.delete(range).run();
+        return true;
+      }, []),
     });
 
   useEffect(() => {
