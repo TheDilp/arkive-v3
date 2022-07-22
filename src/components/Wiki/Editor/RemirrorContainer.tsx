@@ -4,7 +4,7 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -12,25 +12,45 @@ import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
   DropCursorExtension,
-  GapCursorExtension, MentionAtomExtension
+  GapCursorExtension,
+  MentionAtomExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
 import {
   editorExtensions,
   toastSuccess,
-  toastWarn
+  toastWarn,
 } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
+import {
+  BlockquoteExtension,
+  BoldExtension,
+  BulletListExtension,
+  CalloutExtension,
+  HardBreakExtension,
+  HeadingExtension,
+  HorizontalRuleExtension,
+  ImageExtension,
+  ItalicExtension,
+  NodeFormattingExtension,
+  OrderedListExtension,
+  PlaceholderExtension,
+  TaskListExtension,
+  UnderlineExtension,
+} from "remirror/extensions";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
 import EditorView from "./EditorView";
+import { SecretExtension } from "./CustomExtensions/SecretExtension/SecretExtension";
+import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
+import { MapPreviewExtension } from "./CustomExtensions/CustomPreviews/MapPreviewExtension";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -106,8 +126,34 @@ export default function RemirrorContainer({
 
   const { manager, state } = useRemirror({
     extensions: () => [
-      ...editorExtensions,
+      new PlaceholderExtension({
+        placeholder: "Write something awesome! 📜",
+      }),
+      new BoldExtension(),
+      new ItalicExtension(),
+      new HeadingExtension(),
+      new UnderlineExtension(),
+      new BlockquoteExtension(),
+      new BulletListExtension(),
+      new TaskListExtension(),
+      new OrderedListExtension(),
+      CustomLinkExtenstion,
+      new ImageExtension({
+        enableResizing: true,
+      }),
+      new HorizontalRuleExtension(),
+      new CalloutExtension(),
+      new NodeFormattingExtension(),
+      new HardBreakExtension(),
+      new SecretExtension({
+        extraAttributes: {
+          class: "secretBlock",
+        },
+        secret: "true",
+        classNames: "secretBlock",
+      }),
       CustomMentionExtension,
+      new MapPreviewExtension(),
       new GapCursorExtension(),
       new DropCursorExtension(),
     ],

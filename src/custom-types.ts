@@ -154,7 +154,8 @@ export type slashMenuItem = {
     | "callout"
     | "image"
     | "divider"
-    | "secret";
+    | "secret"
+    | "map";
   icon: string;
   level?: number;
   callout_type?: string;

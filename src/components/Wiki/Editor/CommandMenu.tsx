@@ -39,6 +39,13 @@ export function CommandMenu() {
         chain.delete(range).toggleSecret().run();
       } else if (cmd.type === "divider") {
         chain.delete(range).insertHorizontalRule().run();
+      } else if (cmd.type === "map") {
+        chain
+          .delete(range)
+          .insertMapPreview({
+            id: "598c4659-fa48-41a6-ba31-83327ee07101",
+          })
+          .run();
       }
       // Remove trigger text for command menu
       return true;
@@ -81,6 +88,7 @@ export function CommandMenu() {
       enabled={enabled}
       placement="auto"
       renderOutsideEditor
+      containerClass="commandMenu"
     >
       <ul
         className="remirror-mention-atom-popup-wrapper z-5 p-0 overflow-y-auto h-15rem"

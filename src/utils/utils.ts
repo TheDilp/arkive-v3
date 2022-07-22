@@ -4,14 +4,17 @@ import {
   BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
-  CalloutExtension, HardBreakExtension,
+  CalloutExtension,
+  HardBreakExtension,
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
-  ItalicExtension, NodeFormattingExtension,
+  ItalicExtension,
+  NodeFormattingExtension,
   OrderedListExtension,
+  PlaceholderExtension,
   TaskListExtension,
-  UnderlineExtension
+  UnderlineExtension,
 } from "remirror/extensions";
 import CustomLinkExtenstion from "../components/Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
 import { SecretExtension } from "../components/Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
@@ -62,6 +65,9 @@ export const getDepth = (
 };
 
 export const editorExtensions = [
+  new PlaceholderExtension({
+    placeholder: "Write something awesome! 📜",
+  }),
   new BoldExtension(),
   new ItalicExtension(),
   new HeadingExtension(),
@@ -502,6 +508,7 @@ export const defaultSlashItems: slashMenuItem[] = [
   { name: "Image", type: "image", icon: "mdi:image" },
   { name: "Divider", type: "divider", icon: "mdi:minus" },
   { name: "Secret", type: "secret", icon: "mdi:eye-off-outline" },
+  { name: "Map", type: "map", icon: "mdi:map" },
 ];
 
 export interface Bucket {

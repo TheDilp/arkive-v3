@@ -88,6 +88,7 @@ export default function MapMarker({
           lat: e.target._latlng.lat,
           lng: e.target._latlng.lng,
           project_id: project_id as string,
+          public: markerPublic,
         });
       }
     },
@@ -100,7 +101,7 @@ export default function MapMarker({
       icon={L.divIcon({
         iconSize: [48, 48],
         iconAnchor: [30, 46],
-        popupAnchor: [-5, -20],
+        tooltipAnchor: [-5, -20],
         className: "relative",
 
         html: ReactDOM.renderToString(
@@ -143,7 +144,6 @@ export default function MapMarker({
     >
       {text && (
         <Tooltip
-          offset={[0, -50]}
           direction="top"
           className="p-2 bg-gray-800 border-rounded-sm border-gray-800 border-solid text-white text-lg"
         >

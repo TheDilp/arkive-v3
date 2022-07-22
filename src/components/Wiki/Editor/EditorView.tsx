@@ -42,7 +42,7 @@ export default function EditorView({ saving, setSaving, firstRender }: Props) {
     <>
       <MenuBar saving={saving} />
       <EditorComponent />
-      {/* <BubbleMenu /> */}
+      <BubbleMenu />
       <CommandMenu />
       <MentionDropdownComponent />
     </>
