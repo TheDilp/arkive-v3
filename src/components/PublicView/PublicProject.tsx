@@ -1,8 +1,3 @@
-import cytoscape from "cytoscape";
-import clipboard from "cytoscape-clipboard";
-import edgehandles from "cytoscape-edgehandles";
-import gridguide from "cytoscape-grid-guide";
-import jquery from "jquery";
 import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import BoardView from "../Boards/BoardView";
@@ -11,11 +6,14 @@ import MapView from "../Maps/Map/MapView";
 import PublicWiki from "../PublicView/Wiki/PublicWiki";
 import LoadingScreen from "../Util/LoadingScreen";
 export default function PublicProject() {
-  cytoscape.use(edgehandles);
-  cytoscape.use(gridguide);
-  clipboard(cytoscape, jquery);
   return (
     <div className="w-screen h-screen">
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossOrigin=""
+      />
       <Routes>
         <Route
           path="wiki/:doc_id"

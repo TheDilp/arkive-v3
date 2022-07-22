@@ -39,6 +39,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
     return this.options.render({
       ...props,
       id: props.node.attrs.id,
+      updateId: (id: string) => (props.node.attrs.id = id),
     });
   };
 
@@ -110,6 +111,8 @@ export interface MapPreviewAttributes {
    * Unique identifier for a note
    */
   id: string;
+
+  updateId?: (id: string) => void;
 }
 
 declare global {

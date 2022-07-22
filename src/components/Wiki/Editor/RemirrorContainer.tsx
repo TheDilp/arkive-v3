@@ -51,6 +51,7 @@ import EditorView from "./EditorView";
 import { SecretExtension } from "./CustomExtensions/SecretExtension/SecretExtension";
 import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
 import { MapPreviewExtension } from "./CustomExtensions/CustomPreviews/MapPreviewExtension";
+import { ContextMenu } from "primereact/contextmenu";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -123,7 +124,6 @@ export default function RemirrorContainer({
   });
 
   CustomMentionExtension.ReactComponent = MentionReactComponent;
-
   const { manager, state } = useRemirror({
     extensions: () => [
       new PlaceholderExtension({
