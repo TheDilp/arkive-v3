@@ -8,12 +8,16 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import { ReplaceTextProps } from "remirror";
 import { slashMenuItem } from "../../../custom-types";
 import { MapProps } from "../../../types/MapTypes";
 import { defaultSlashItems, toastError } from "../../../utils/utils";
 
 export function CommandMenu() {
   const chain = useChainedCommands();
+  const [itemsType, setItemsType] = useState<"commands" | "maps" | "boards">(
+    "commands"
+  );
   const { change, exit } = useSuggest({
     char: "/",
     name: "command",
@@ -23,6 +27,8 @@ export function CommandMenu() {
   const [items, setItems] = useState<slashMenuItem[]>(defaultSlashItems);
   const { project_id } = useParams();
   const queryClient = useQueryClient();
+  const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
+
   const onSubmit = useCallback(
     (cmd: slashMenuItem) => {
       if (cmd.type === "heading") {
@@ -46,7 +52,7 @@ export function CommandMenu() {
       } else if (cmd.type === "divider") {
         chain.delete(range).insertHorizontalRule().run();
       } else if (cmd.type === "map_select") {
-        const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
+        setItemsType("maps");
         setItems(
           maps
             ?.filter((map) => !map.folder)
@@ -65,6 +71,7 @@ export function CommandMenu() {
               id: cmd.map_id,
             })
             .run();
+          setItemsType("commands");
         } else {
           toastError("Looks like the map's id is missing.");
         }
@@ -83,6 +90,7 @@ export function CommandMenu() {
       direction: "vertical",
       onDismiss: useCallback(() => {
         chain.delete(range).run();
+        setItemsType("commands");
         return true;
       }, []),
     });
@@ -95,11 +103,32 @@ export function CommandMenu() {
 
   useEffect(() => {
     if (change?.query.full) {
-      setItems(
-        defaultSlashItems.filter((item) =>
-          item.name.toLowerCase().startsWith(change.query.full)
-        )
-      );
+      if (itemsType === "commands") {
+        setItems(
+          defaultSlashItems.filter((item) =>
+            item.name.toLowerCase().startsWith(change.query.full)
+          )
+        );
+      } else if (itemsType === "maps") {
+        setItems(
+          maps
+            ?.filter(
+              (map) =>
+                !map.folder &&
+                map.title
+                  .toLowerCase()
+                  .includes(change.query.full.replace("map", "").toLowerCase())
+            )
+            .map((map) => ({
+              name: map.title,
+              type: "map",
+              icon: "mdi:map",
+              map_id: map.id,
+            })) || defaultSlashItems
+        );
+      } else if (itemsType === "boards") {
+        // Add for boards filtering
+      }
     } else {
       setItems(defaultSlashItems);
     }
