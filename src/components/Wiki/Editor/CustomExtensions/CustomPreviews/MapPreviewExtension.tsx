@@ -1,20 +1,21 @@
+import { EditorView, ProsemirrorNode } from "@remirror/pm/suggest";
 import { NodeViewComponentProps } from "@remirror/react";
 import { ComponentType } from "react";
 import {
   ApplySchemaAttributes,
   command,
   CommandFunction,
-  DOMCompatibleAttributes,
   extension,
   ExtensionTag,
   getTextSelection,
   NodeExtension,
   NodeExtensionSpec,
   NodeSpecOverride,
-  omitExtraAttributes,
+  NodeViewMethod,
   PrimitiveSelection,
 } from "remirror";
 import MapPreview from "../../PreviewComponents/MapPreview";
+import { ResizableWrapper } from "./ResizableWrapper";
 
 export interface MapOptions {
   render?: (
@@ -39,12 +40,13 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
     return this.options.render({
       ...props,
       id: props.node.attrs.id,
-      updateId: (id: string) => (props.node.attrs.id = id),
+      width: props.node.attrs.width,
+      height: props.node.attrs.height,
     });
   };
 
   createTags() {
-    return [ExtensionTag.Block];
+    return [ExtensionTag.Block, ExtensionTag.Alignment];
   }
 
   createNodeSpec(
@@ -55,34 +57,13 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       attrs: {
         ...extra.defaults(),
         id: { default: null },
+        width: { default: 615 },
+        height: { default: 480 },
       },
-      selectable: false,
+      selectable: true,
       atom: true,
-      content: "inline+",
+      content: "block+",
       ...override,
-      parseDOM: [
-        {
-          tag: "div",
-          getAttrs: (dom) => {
-            const anchor = dom as HTMLAnchorElement;
-            const id = anchor.getAttribute("data-id");
-
-            return {
-              ...extra.parse(dom),
-              id,
-            };
-          },
-        },
-        ...(override.parseDOM ?? []),
-      ],
-      toDOM: (node) => {
-        const { ...rest } = omitExtraAttributes(node.attrs, extra);
-        const attrs: DOMCompatibleAttributes = {
-          ...extra.dom(node),
-        };
-
-        return ["div", attrs];
-      },
     };
   }
 
@@ -111,8 +92,8 @@ export interface MapPreviewAttributes {
    * Unique identifier for a note
    */
   id: string;
-
-  updateId?: (id: string) => void;
+  width: number;
+  height: number;
 }
 
 declare global {

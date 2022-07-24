@@ -7,13 +7,34 @@ import {
   useRemirror,
 } from "@remirror/react";
 import { saveAs } from "file-saver";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
 import {
+  BlockquoteExtension,
+  BoldExtension,
+  BulletListExtension,
+  CalloutExtension,
   DropCursorExtension,
   GapCursorExtension,
+  HardBreakExtension,
+  HeadingExtension,
+  HorizontalRuleExtension,
+  ImageExtension,
+  ItalicExtension,
   MentionAtomExtension,
+  NodeFormattingExtension,
+  OrderedListExtension,
+  PlaceholderExtension,
+  TaskListExtension,
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
@@ -22,36 +43,15 @@ import {
   useGetDocuments,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import {
-  editorExtensions,
-  toastSuccess,
-  toastWarn,
-} from "../../../utils/utils";
+import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
-import {
-  BlockquoteExtension,
-  BoldExtension,
-  BulletListExtension,
-  CalloutExtension,
-  HardBreakExtension,
-  HeadingExtension,
-  HorizontalRuleExtension,
-  ImageExtension,
-  ItalicExtension,
-  NodeFormattingExtension,
-  OrderedListExtension,
-  PlaceholderExtension,
-  TaskListExtension,
-  UnderlineExtension,
-} from "remirror/extensions";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
-import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
-import EditorView from "./EditorView";
-import { SecretExtension } from "./CustomExtensions/SecretExtension/SecretExtension";
 import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
+import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
 import { MapPreviewExtension } from "./CustomExtensions/CustomPreviews/MapPreviewExtension";
-import { ContextMenu } from "primereact/contextmenu";
+import { SecretExtension } from "./CustomExtensions/SecretExtension/SecretExtension";
+import EditorView from "./EditorView";
 const hooks = [
   () => {
     const { getJSON, getText } = useHelpers();
@@ -123,7 +123,11 @@ export default function RemirrorContainer({
     ],
   });
 
-  CustomMentionExtension.ReactComponent = MentionReactComponent;
+  CustomMentionExtension.ReactComponent = useMemo(
+    () => MentionReactComponent,
+    []
+  );
+
   const { manager, state } = useRemirror({
     extensions: () => [
       new PlaceholderExtension({

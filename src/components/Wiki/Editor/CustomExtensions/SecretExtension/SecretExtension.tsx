@@ -5,7 +5,6 @@ import {
   extension,
   ExtensionTag,
   findNodeAtSelection,
-  getMatchString,
   InputRule,
   isElementDomNode,
   isTextSelection,

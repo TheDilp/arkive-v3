@@ -1,6 +1,8 @@
 .p-menuitem,
 .p-menuitem-link {
+    z-index: 9999;
     border-radius: 0 !important;
+    color: var(--gray-400) !important;
 }
 
 .customMenuBarIconContainer>* {

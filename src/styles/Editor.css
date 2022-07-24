@@ -1,8 +1,3 @@
-/* MENUBAR */
-.p-menuitem-link {
-    color: var(--gray-400) !important;
-}
-
 .menuBarButtonActive span * {
     color: white;
 }
@@ -166,13 +161,6 @@ blockquote .remirror-mention-atom a i {
     z-index: 500;
 }
 
-.mappreview-node-view-wrapper {
-    width: 50%;
-    height: 30rem;
-    max-height: 100% !important;
-    overflow: hidden;
-}
-
-.leaflet-pane.leaflet-map-pane {
-    width: 100% !important;
+.resizableBox {
+    /* width: 10rem !important; */
 }
