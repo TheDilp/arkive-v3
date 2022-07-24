@@ -1,10 +1,4 @@
-import {
-  CRS,
-  divIcon,
-  LatLngBoundsExpression,
-  LatLngExpression,
-  Map,
-} from "leaflet";
+import { CRS, divIcon, LatLngBoundsExpression, Map } from "leaflet";
 import React, {
   MutableRefObject,
   useEffect,
