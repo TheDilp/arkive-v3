@@ -156,7 +156,9 @@ export default function RemirrorContainer({
         classNames: "secretBlock",
       }),
       CustomMentionExtension,
-      new MapPreviewExtension(),
+      new MapPreviewExtension({
+        public_view: false,
+      }),
       new GapCursorExtension(),
       new DropCursorExtension(),
     ],

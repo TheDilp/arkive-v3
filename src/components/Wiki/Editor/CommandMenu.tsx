@@ -69,6 +69,7 @@ export function CommandMenu() {
             .delete(range)
             .insertMapPreview({
               id: cmd.map_id,
+              public_view: false,
             })
             .run();
           setItemsType("commands");

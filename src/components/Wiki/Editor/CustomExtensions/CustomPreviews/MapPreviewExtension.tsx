@@ -1,6 +1,4 @@
-import {
-  NodeViewComponentProps
-} from "@remirror/react";
+import { NodeViewComponentProps, propIsFunction } from "@remirror/react";
 import { ComponentType } from "react";
 import {
   ApplySchemaAttributes,
@@ -8,18 +6,21 @@ import {
   CommandFunction,
   extension,
   ExtensionTag,
-  getTextSelection, NodeExtension,
+  getTextSelection,
+  NodeExtension,
   NodeExtensionSpec,
-  NodeSpecOverride, PrimitiveSelection,
-  ProsemirrorAttributes
+  NodeSpecOverride,
+  PrimitiveSelection,
+  ProsemirrorAttributes,
 } from "remirror";
+import PublicPreview from "../../../../PublicView/Wiki/PublicEditor/PublicPreview/PublicPreview";
 import MapPreview from "../../PreviewComponents/MapPreview";
 
 export interface MapOptions {
   render?: (
     props: MapPreviewAttributes
   ) => React.ReactElement<HTMLElement> | null;
-  onClick: (e: any) => void;
+  public_view: Boolean;
 }
 
 /**
@@ -27,8 +28,8 @@ export interface MapOptions {
  */
 @extension<MapOptions>({
   defaultOptions: {
-    render: MapPreview,
-    onClick: (e) => console.log(e),
+    render: () => null,
+    public_view: true,
   },
 })
 export class MapPreviewExtension extends NodeExtension<MapOptions> {
@@ -37,13 +38,19 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   }
 
   ReactComponent: ComponentType<NodeViewComponentProps> = (props) => {
-    return this.options.render({
-      ...props,
-      id: props.node.attrs.id,
-      width: props.node.attrs.width,
-      height: props.node.attrs.height,
-      updateId: props.updateAttributes,
-    });
+    const { id, width, height } = props.node.attrs;
+    if (this.options.public_view) {
+      return <PublicPreview id={id} width={width} height={height} />;
+    } else {
+      return (
+        <MapPreview
+          id={id}
+          width={width}
+          height={height}
+          updateId={props.updateAttributes}
+        />
+      );
+    }
   };
 
   createTags() {
@@ -61,6 +68,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
         id: { default: null },
         width: { default: 615 },
         height: { default: 480 },
+        public_view: { default: true },
       },
       selectable: true,
       atom: true,
@@ -95,7 +103,7 @@ export interface MapPreviewAttributes {
   id: string;
   width: number;
   height: number;
-  updateId: (attrs: ProsemirrorAttributes<object>) => void;
+  updateId?: (attrs: ProsemirrorAttributes<object>) => void;
 }
 
 declare global {

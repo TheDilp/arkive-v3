@@ -1,95 +1,58 @@
-import {
-  CRS,
-  divIcon,
-  LatLngBoundsExpression,
-  LatLngExpression,
-  Map,
-} from "leaflet";
-import React, {
-  MutableRefObject,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { CRS, divIcon, LatLngBoundsExpression, Map } from "leaflet";
+import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
 import { renderToString } from "react-dom/server";
 import { ImageOverlay, MapContainer, Marker, Tooltip } from "react-leaflet";
-import { useQueryClient } from "react-query";
-import { Resizable } from "re-resizable";
-import { useParams } from "react-router-dom";
-import { MapProps } from "../../../../types/MapTypes";
-import { supabaseStorageImagesLink } from "../../../../utils/utils";
-import { MapPreviewAttributes } from "../CustomExtensions/CustomPreviews/MapPreviewExtension";
+import { useQuery } from "react-query";
+import { MapProps } from "../../../../../types/MapTypes";
+import { getSingleMap } from "../../../../../utils/supabaseUtils";
+import { supabaseStorageImagesLink } from "../../../../../utils/utils";
+import LoadingScreen from "../../../../Util/LoadingScreen";
+import { MapPreviewAttributes } from "../../../../Wiki/Editor/CustomExtensions/CustomPreviews/MapPreviewExtension";
 
-export default function MapPreview({
+export default function PublicPreview({
   id,
   width,
   height,
-  updateId,
 }: MapPreviewAttributes) {
-  const { project_id } = useParams();
-  const queryClient = useQueryClient();
-
-  const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   const mapRef = useRef() as MutableRefObject<Map>;
-  const [mapData, setMapdata] = useState<MapProps | null>(null);
   const [bounds, setBounds] = useState<number[][] | null>(null);
-  const [dims, setDims] = useState({ width, height });
+  const { data: map, isLoading } = useQuery(
+    id as string,
+    async () => await getSingleMap(id as string)
+  );
   useLayoutEffect(() => {
-    if (maps && id) {
-      let map = maps.find((map) => map.id === id);
-      if (map) {
-        setMapdata(map);
-        let img = new Image();
-        img.src = supabaseStorageImagesLink + map.map_image?.link || "";
-        img.onload = () => {
-          setBounds([
+    if (map && id) {
+      let img = new Image();
+      img.src = supabaseStorageImagesLink + map.map_image?.link || "";
+      img.onload = () => {
+        setBounds([
+          [0, 0],
+          [img.height, img.width],
+        ]);
+
+        setTimeout(() => {
+          mapRef.current.fitBounds([
             [0, 0],
             [img.height, img.width],
           ]);
-
-          setTimeout(() => {
-            mapRef.current.fitBounds([
-              [0, 0],
-              [img.height, img.width],
-            ]);
-          }, 1000);
-        };
-      }
+        }, 1000);
+      };
     }
-  }, [id]);
+  }, [id, map]);
 
-  useEffect(() => {
-    if (updateId)
-      setTimeout(() => {
-        updateId({ height: dims.height, width: dims.width });
-      }, 100);
-  }, []);
-  if (!bounds || !mapData) return null;
+  if (!bounds || !map) return null;
+  if (isLoading) return <LoadingScreen />;
   return (
-    <Resizable
-      className=""
-      bounds="window"
-      minWidth={615}
-      minHeight={480}
-      size={dims}
-      onResizeStop={(e, dir, ref, delta) => {
-        // Delta provides DELTAS (differences, changes) for the resizing, not the total and absolute dimensions
-        // We update the old size with the differences provided
-        setDims({
-          width: dims.width + delta.width,
-          height: dims.height + delta.height,
-        });
-        updateId({
-          height: dims.height + delta.height,
-          width: dims.width + delta.width,
-        });
+    <div
+      style={{
+        width,
+        height,
       }}
     >
       <MapContainer
         ref={mapRef}
         zoomControl={false}
-        className="w-full h-full bg-gray-800 border-rounded-sm relative outline-none"
+        className="w-full h-full bg-gray-700 border-rounded-sm relative outline-none"
         center={[bounds[1][0] / 2, bounds[1][1] / 2]}
         zoom={-1}
         minZoom={-3}
@@ -101,10 +64,10 @@ export default function MapPreview({
         attributionControl={false}
       >
         <ImageOverlay
-          url={supabaseStorageImagesLink + mapData.map_image?.link || ""}
+          url={supabaseStorageImagesLink + map.map_image?.link || ""}
           bounds={bounds as LatLngBoundsExpression}
         />
-        {mapData.markers.map((marker) => (
+        {map.markers.map((marker) => (
           <Marker
             key={marker.id}
             draggable={false}
@@ -150,6 +113,6 @@ export default function MapPreview({
           </Marker>
         ))}
       </MapContainer>
-    </Resizable>
+    </div>
   );
 }

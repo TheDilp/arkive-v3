@@ -88,7 +88,9 @@ export default function PublicEditor({
         classNames: "secretBlock",
       }),
       CustomMentionExtension,
-      new MapPreviewExtension(),
+      new MapPreviewExtension({
+        public_view: true,
+      }),
       new GapCursorExtension(),
       new DropCursorExtension(),
     ],
