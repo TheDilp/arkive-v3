@@ -49,11 +49,6 @@ export const WikiFeatureBlocks = [
       "Create immersive descriptions of your worlds using our rich text editor with no word limit to hold you back.",
     icon: "book",
   },
-  {
-    title: "Categorize with tags",
-    description: "Give documents tags for faster searching and categorizing",
-    icon: "tag-multiple",
-  },
 
   {
     title: "Speed up with templates",
@@ -66,6 +61,11 @@ export const WikiFeatureBlocks = [
     description:
       "Quickly link other documents, maps and even boards inside the editor.",
     icon: "link-variant",
+  },
+  {
+    title: "Embed maps and boards",
+    description: "Make documents public so that anyone can see your work.",
+    icon: "earth",
   },
   {
     title: "Share with the world",
@@ -83,6 +83,11 @@ export const WikiFeatureBlocks = [
     description:
       "Hover over linked documents to show a preview. (map and board previews coming soon!)",
     icon: "tooltip-outline",
+  },
+  {
+    title: "Categorize with tags",
+    description: "Give documents tags for faster searching and categorizing",
+    icon: "tag-multiple",
   },
   {
     title: "Make documents stand out",
@@ -107,8 +112,7 @@ export const WikiFeatureBlocks = [
 export const MapFeatureBlocks = [
   {
     title: "Map Layers",
-    description:
-      "Create layers to add more context to each map Group creations into folders for better and faster navigation.",
+    description: "Create layers to add more context to each map.",
     icon: "layers-triple",
   },
   {

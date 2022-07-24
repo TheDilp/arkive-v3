@@ -69,7 +69,7 @@ export default function MapPreview({
   return (
     <Resizable
       className=""
-      bounds="window"
+      bounds="parent"
       minWidth={615}
       minHeight={480}
       size={dims}
