@@ -12,6 +12,5 @@ export default defineConfig({
       },
     }),
     svgr(),
-    htmlPurge([]) as PluginOption,
   ],
 });
