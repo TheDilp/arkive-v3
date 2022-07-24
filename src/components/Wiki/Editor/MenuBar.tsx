@@ -41,6 +41,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     centerAlign,
     rightAlign,
     toggleSecret,
+    toggleColumns,
     focus,
   } = useCommands();
   const { project_id, doc_id } = useParams();
@@ -462,6 +463,14 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             command: () => {
               toggleSecret();
               focus();
+            },
+          },
+          {
+            icon: "pi pi-fw pi-pause",
+            command: () => {
+              toggleColumns({
+                count: 2,
+              });
             },
           },
         ]}

@@ -152,9 +152,8 @@ blockquote .remirror-mention-atom a i {
     color: black !important;
 }
 
-.leaflet-top,
-.leaflet-left {
-    z-index: 450 !important;
+.leaflet-pane {
+    z-index: 0 !important;
 }
 
 .commandMenu {
