@@ -29,6 +29,7 @@ export default function MapPreview({
   const [mapData, setMapdata] = useState<MapProps | null>(null);
   const [bounds, setBounds] = useState<number[][] | null>(null);
   const [dims, setDims] = useState({ width, height });
+  
   useLayoutEffect(() => {
     if (maps && id) {
       let map = maps.find((map) => map.id === id);

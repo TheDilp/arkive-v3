@@ -7,7 +7,7 @@ import { Dialog } from "primereact/dialog";
 import { SelectButton } from "primereact/selectbutton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Tooltip } from "primereact/tooltip";
-import { useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import { BoardExportProps, BoardNodeProps } from "../../../types/BoardTypes";
@@ -28,8 +28,11 @@ import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 import UpdateManyEdges from "./UpdateManyEdges";
 import UpdateManyNodes from "./UpdateManyNodes";
-
-export default function BoardQuickBar() {
+type Props = {
+  drawMode: boolean;
+  setDrawMode: Dispatch<SetStateAction<boolean>>;
+};
+export default function BoardQuickBar({ drawMode, setDrawMode }: Props) {
   const { project_id, board_id } = useParams();
   const { cyRef, ehRef } = useContext(BoardRefsContext);
   const board = useGetBoardData(
@@ -37,7 +40,6 @@ export default function BoardQuickBar() {
     board_id as string,
     false
   );
-  const [drawMode, setDrawMode] = useState(false);
   const [search, setSearch] = useState("");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
   const [filteredNodes, setFilteredNodes] = useState<BoardNodeProps[]>(
@@ -402,27 +404,7 @@ export default function BoardQuickBar() {
         className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
           drawMode ? "text-green-500" : ""
         } drawMode`}
-        onClick={() => {
-          setDrawMode((prev: boolean) => {
-            if (!ehRef || !cyRef) return prev;
-            if (prev && ehRef.current) {
-              ehRef.current.disable();
-              ehRef.current.disableDrawMode();
-              cyRef.current.autoungrabify(false);
-              cyRef.current.autounselectify(false);
-              cyRef.current.autolock(false);
-              cyRef.current.zoomingEnabled(true);
-              cyRef.current.userZoomingEnabled(true);
-              cyRef.current.panningEnabled(true);
-              setDrawMode(false);
-            } else {
-              ehRef.current.enable();
-              ehRef.current.enableDrawMode();
-              setDrawMode(true);
-            }
-            return !prev;
-          });
-        }}
+        onClick={() => setDrawMode(!drawMode)}
       ></i>
       {/* Export button */}
       <i

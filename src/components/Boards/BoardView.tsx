@@ -88,6 +88,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   });
 
   const [loading, setLoading] = useState(true);
+  const [drawMode, setDrawMode] = useState(false);
   const [quickCreate, setQuickCreate] = useState(false);
 
   const createNodeMutation = useCreateNode(project_id as string);
@@ -217,6 +218,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               ...rest,
             });
           } else if (el.isEdge()) {
+            console.log(el);
             const { classes, id, user_id, ...rest } = el.data();
             newEdges.push({ ...rest, id: uuid() });
           }
@@ -492,6 +494,24 @@ export default function BoardView({ public_view, setBoardId }: Props) {
     return () => clearTimeout(timeout);
   }, [node_id, cyRef]);
 
+  useEffect(() => {
+    if (ehRef && cyRef && cyRef.current && ehRef.current) {
+      if (!drawMode) {
+        ehRef.current.disable();
+        ehRef.current.disableDrawMode();
+        cyRef.current.autoungrabify(false);
+        cyRef.current.autounselectify(false);
+        cyRef.current.autolock(false);
+        cyRef.current.zoomingEnabled(true);
+        cyRef.current.userZoomingEnabled(true);
+        cyRef.current.panningEnabled(true);
+      } else {
+        ehRef.current.enable();
+        ehRef.current.enableDrawMode();
+      }
+    }
+  }, [drawMode]);
+
   return (
     <div
       className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
@@ -520,7 +540,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             quickCreate={quickCreate}
             setQuickCreate={setQuickCreate}
           />
-          <BoardQuickBar />
+          <BoardQuickBar drawMode={drawMode} setDrawMode={setDrawMode} />
         </>
       )}
       <CytoscapeComponent
@@ -541,8 +561,12 @@ export default function BoardView({ public_view, setBoardId }: Props) {
                 cy.autolock(true);
                 cy.autounselectify(true);
               }
-              ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
-              grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
+              if (!ehRef.current) {
+                ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
+              }
+              if (!grRef.current) {
+                grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
+              }
               if (!cbRef.current)
                 cbRef.current = cyRef.current.clipboard({
                   afterCopy: function (t: any) {},
