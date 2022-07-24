@@ -47,13 +47,6 @@ export default function MapPreview({
             [0, 0],
             [img.height, img.width],
           ]);
-
-          setTimeout(() => {
-            mapRef.current.fitBounds([
-              [0, 0],
-              [img.height, img.width],
-            ]);
-          }, 1000);
         };
       }
     }

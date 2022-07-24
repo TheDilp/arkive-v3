@@ -49,7 +49,6 @@ export const WikiFeatureBlocks = [
       "Create immersive descriptions of your worlds using our rich text editor with no word limit to hold you back.",
     icon: "book",
   },
-
   {
     title: "Speed up with templates",
     description:
@@ -64,8 +63,9 @@ export const WikiFeatureBlocks = [
   },
   {
     title: "Embed maps and boards",
-    description: "Make documents public so that anyone can see your work.",
-    icon: "earth",
+    description:
+      "You can embed your maps and boards into your documents - context for your world in once place.",
+    icon: "layers-outline",
   },
   {
     title: "Share with the world",

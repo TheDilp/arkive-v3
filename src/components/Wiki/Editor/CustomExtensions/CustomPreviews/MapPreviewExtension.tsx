@@ -72,6 +72,8 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       },
       selectable: true,
       atom: true,
+      allowGapCursor: true,
+
       ...override,
     };
   }

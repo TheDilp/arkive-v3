@@ -86,7 +86,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
       },
       parseDOM: [
         {
-          tag: `p[secret="${secret}"] class="${classNames}"`,
+          tag: `p[secret="${secret}"]`,
           getAttrs: (node) => {
             if (!isElementDomNode(node)) {
               return false;
