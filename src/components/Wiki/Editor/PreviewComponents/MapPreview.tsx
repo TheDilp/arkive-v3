@@ -29,7 +29,7 @@ export default function MapPreview({
   const [mapData, setMapdata] = useState<MapProps | null>(null);
   const [bounds, setBounds] = useState<number[][] | null>(null);
   const [dims, setDims] = useState({ width, height });
-  
+
   useLayoutEffect(() => {
     if (maps && id) {
       let map = maps.find((map) => map.id === id);
@@ -46,6 +46,12 @@ export default function MapPreview({
       }
     }
   }, [id]);
+
+  useEffect(() => {
+    if (mapRef && mapRef.current) {
+      mapRef.current.fitWorld();
+    }
+  }, [mapRef]);
 
   useEffect(() => {
     if (updateId)
@@ -80,7 +86,7 @@ export default function MapPreview({
         zoomControl={false}
         className="w-full h-full bg-gray-800 border-rounded-sm relative outline-none"
         center={[bounds[1][0] / 2, bounds[1][1] / 2]}
-        zoom={-1}
+        fadeAnimation={true}
         minZoom={-3}
         maxZoom={2}
         scrollWheelZoom={true}
