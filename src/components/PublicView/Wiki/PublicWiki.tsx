@@ -27,7 +27,7 @@ export default function PublicWiki() {
   }
   return (
     <div className="w-full h-full flex overflow-y-auto">
-      <div className="w-full lg:w-6 mx-auto h-fit surface-50 shadow-3 mt-6">
+      <div className="w-full lg:w-8 mx-auto h-fit surface-50 shadow-3 mt-6">
         <h1 className="Merriweather text-white text-center">
           {document?.title || ""}
         </h1>

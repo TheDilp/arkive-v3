@@ -13,7 +13,7 @@ import {
   PrimitiveSelection,
   ProsemirrorAttributes,
 } from "remirror";
-import PublicPreview from "../../../../PublicView/Wiki/PublicEditor/PublicPreview/PublicPreview";
+import PublicMapPreview from "../../../../PublicView/Wiki/PublicEditor/PublicPreview/PublicMapPreview";
 import MapPreview from "../../PreviewComponents/MapPreview";
 
 export interface MapOptions {
@@ -40,7 +40,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   ReactComponent: ComponentType<NodeViewComponentProps> = (props) => {
     const { id, width, height } = props.node.attrs;
     if (this.options.public_view) {
-      return <PublicPreview id={id} width={width} height={height} />;
+      return <PublicMapPreview id={id} width={width} height={height} />;
     } else {
       return (
         <MapPreview

@@ -80,10 +80,11 @@ export default function MapPreview({
           width: dims.width + delta.width,
           height: dims.height + delta.height,
         });
-        updateId({
-          height: dims.height + delta.height,
-          width: dims.width + delta.width,
-        });
+        if (updateId)
+          updateId({
+            height: dims.height + delta.height,
+            width: dims.width + delta.width,
+          });
       }}
     >
       <MapContainer

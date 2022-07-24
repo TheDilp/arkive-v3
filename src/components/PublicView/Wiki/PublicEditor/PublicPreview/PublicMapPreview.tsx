@@ -3,13 +3,12 @@ import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
 import { renderToString } from "react-dom/server";
 import { ImageOverlay, MapContainer, Marker, Tooltip } from "react-leaflet";
 import { useQuery } from "react-query";
-import { MapProps } from "../../../../../types/MapTypes";
 import { getSingleMap } from "../../../../../utils/supabaseUtils";
 import { supabaseStorageImagesLink } from "../../../../../utils/utils";
 import LoadingScreen from "../../../../Util/LoadingScreen";
 import { MapPreviewAttributes } from "../../../../Wiki/Editor/CustomExtensions/CustomPreviews/MapPreviewExtension";
 
-export default function PublicPreview({
+export default function PublicMapPreview({
   id,
   width,
   height,
