@@ -1,4 +1,8 @@
-import { NodeViewComponentProps, useCommands } from "@remirror/react";
+import {
+  NodeViewComponentProps,
+  propIsFunction,
+  useCommands,
+} from "@remirror/react";
 import { ComponentType } from "react";
 import {
   ApplySchemaAttributes,
@@ -13,6 +17,7 @@ import {
   NodeSpecOverride,
   omitExtraAttributes,
   PrimitiveSelection,
+  ProsemirrorAttributes,
 } from "remirror";
 import { CreateEventHandlers } from "remirror/extensions";
 import MapPreview from "../../PreviewComponents/MapPreview";
@@ -44,11 +49,12 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       id: props.node.attrs.id,
       width: props.node.attrs.width,
       height: props.node.attrs.height,
+      updateId: props.updateAttributes,
     });
   };
 
   createTags() {
-    return [ExtensionTag.InlineNode, ExtensionTag.Alignment];
+    return [ExtensionTag.InlineNode];
   }
 
   createNodeSpec(
@@ -65,8 +71,6 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       },
       selectable: true,
       atom: true,
-      content: "inline+",
-
       ...override,
     };
   }
@@ -89,26 +93,6 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       return true;
     };
   }
-  createEventHandlers(): CreateEventHandlers {
-    return {
-      click: (event, clickState) => {
-        // Check if this is a direct click which must be the case for atom
-        // nodes.
-        if (!clickState.direct) {
-          return;
-        }
-
-        const nodeWithPosition = clickState.getNode(this.type);
-
-        if (!nodeWithPosition) {
-          return;
-        }
-        if (event.ctrlKey) {
-        }
-        return true;
-      },
-    };
-  }
 }
 
 export interface MapPreviewAttributes {
@@ -118,6 +102,7 @@ export interface MapPreviewAttributes {
   id: string;
   width: number;
   height: number;
+  updateId: (attrs: ProsemirrorAttributes<object>) => void;
 }
 
 declare global {

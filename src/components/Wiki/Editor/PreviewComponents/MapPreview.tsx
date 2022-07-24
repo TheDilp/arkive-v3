@@ -1,4 +1,10 @@
-import { CRS, divIcon, LatLngBoundsExpression, Map } from "leaflet";
+import {
+  CRS,
+  divIcon,
+  LatLngBoundsExpression,
+  LatLngExpression,
+  Map,
+} from "leaflet";
 import React, {
   MutableRefObject,
   useEffect,
@@ -20,20 +26,19 @@ export default function MapPreview({
   id,
   width,
   height,
+  updateId,
 }: MapPreviewAttributes) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
 
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
   const mapRef = useRef() as MutableRefObject<Map>;
-  const [localId, setLocalId] = useState(id);
   const [mapData, setMapdata] = useState<MapProps | null>(null);
   const [bounds, setBounds] = useState<number[][] | null>(null);
   const [dims, setDims] = useState({ width, height });
-  const commands = useCommands();
   useLayoutEffect(() => {
-    if (maps && localId) {
-      let map = maps.find((map) => map.id === localId);
+    if (maps && id) {
+      let map = maps.find((map) => map.id === id);
       if (map) {
         setMapdata(map);
         let img = new Image();
@@ -45,22 +50,27 @@ export default function MapPreview({
           ]);
 
           setTimeout(() => {
-            mapRef.current.flyToBounds([
+            mapRef.current.fitBounds([
               [0, 0],
               [img.height, img.width],
-            ] as LatLngBoundsExpression);
-          }, 500);
+            ]);
+          }, 1000);
         };
       }
     }
-  }, [localId]);
+  }, [id]);
 
-  
+  useEffect(() => {
+    setTimeout(() => {
+      updateId({ height: dims.height, width: dims.width });
+    }, 100);
+  }, []);
   if (!bounds || !mapData) return null;
 
   return (
     <Resizable
-      className="relative resizableBox"
+      className=""
+      bounds="window"
       minWidth={615}
       minHeight={480}
       size={dims}
@@ -71,7 +81,10 @@ export default function MapPreview({
           width: dims.width + delta.width,
           height: dims.height + delta.height,
         });
-        width = 579;
+        updateId({
+          height: dims.height + delta.height,
+          width: dims.width + delta.width,
+        });
       }}
     >
       <MapContainer
