@@ -122,7 +122,6 @@ export default function RemirrorContainer({
       },
     ],
   });
-
   CustomMentionExtension.ReactComponent = useMemo(
     () => MentionReactComponent,
     []

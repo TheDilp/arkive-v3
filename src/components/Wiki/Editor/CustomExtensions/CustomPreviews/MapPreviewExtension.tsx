@@ -1,5 +1,4 @@
-import { EditorView, ProsemirrorNode } from "@remirror/pm/suggest";
-import { NodeViewComponentProps } from "@remirror/react";
+import { NodeViewComponentProps, useCommands } from "@remirror/react";
 import { ComponentType } from "react";
 import {
   ApplySchemaAttributes,
@@ -8,19 +7,21 @@ import {
   extension,
   ExtensionTag,
   getTextSelection,
+  isElementDomNode,
   NodeExtension,
   NodeExtensionSpec,
   NodeSpecOverride,
-  NodeViewMethod,
+  omitExtraAttributes,
   PrimitiveSelection,
 } from "remirror";
+import { CreateEventHandlers } from "remirror/extensions";
 import MapPreview from "../../PreviewComponents/MapPreview";
-import { ResizableWrapper } from "./ResizableWrapper";
 
 export interface MapOptions {
   render?: (
     props: MapPreviewAttributes
   ) => React.ReactElement<HTMLElement> | null;
+  onClick: (e: any) => void;
 }
 
 /**
@@ -29,6 +30,7 @@ export interface MapOptions {
 @extension<MapOptions>({
   defaultOptions: {
     render: MapPreview,
+    onClick: (e) => console.log(e),
   },
 })
 export class MapPreviewExtension extends NodeExtension<MapOptions> {
@@ -46,7 +48,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   };
 
   createTags() {
-    return [ExtensionTag.Block, ExtensionTag.Alignment];
+    return [ExtensionTag.InlineNode, ExtensionTag.Alignment];
   }
 
   createNodeSpec(
@@ -54,6 +56,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
     override: NodeSpecOverride
   ): NodeExtensionSpec {
     return {
+      inline: true,
       attrs: {
         ...extra.defaults(),
         id: { default: null },
@@ -62,7 +65,8 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       },
       selectable: true,
       atom: true,
-      content: "block+",
+      content: "inline+",
+
       ...override,
     };
   }
@@ -83,6 +87,26 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       } else {
       }
       return true;
+    };
+  }
+  createEventHandlers(): CreateEventHandlers {
+    return {
+      click: (event, clickState) => {
+        // Check if this is a direct click which must be the case for atom
+        // nodes.
+        if (!clickState.direct) {
+          return;
+        }
+
+        const nodeWithPosition = clickState.getNode(this.type);
+
+        if (!nodeWithPosition) {
+          return;
+        }
+        if (event.ctrlKey) {
+        }
+        return true;
+      },
     };
   }
 }

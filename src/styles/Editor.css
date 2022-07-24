@@ -162,5 +162,5 @@ blockquote .remirror-mention-atom a i {
 }
 
 .resizableBox {
-    /* width: 10rem !important; */
+    float: left;
 }
