@@ -1,7 +1,5 @@
 import {
-  NodeViewComponentProps,
-  propIsFunction,
-  useCommands,
+  NodeViewComponentProps
 } from "@remirror/react";
 import { ComponentType } from "react";
 import {
@@ -10,16 +8,11 @@ import {
   CommandFunction,
   extension,
   ExtensionTag,
-  getTextSelection,
-  isElementDomNode,
-  NodeExtension,
+  getTextSelection, NodeExtension,
   NodeExtensionSpec,
-  NodeSpecOverride,
-  omitExtraAttributes,
-  PrimitiveSelection,
-  ProsemirrorAttributes,
+  NodeSpecOverride, PrimitiveSelection,
+  ProsemirrorAttributes
 } from "remirror";
-import { CreateEventHandlers } from "remirror/extensions";
 import MapPreview from "../../PreviewComponents/MapPreview";
 
 export interface MapOptions {

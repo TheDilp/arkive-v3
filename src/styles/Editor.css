@@ -162,5 +162,5 @@ blockquote .remirror-mention-atom a i {
 }
 
 .viewOnlyEditor .mappreview-node-view-wrapper div {
-    width: 100%;
+    max-width: 100% !important;
 }
