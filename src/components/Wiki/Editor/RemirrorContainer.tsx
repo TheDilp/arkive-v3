@@ -160,6 +160,7 @@ export default function RemirrorContainer({
       CustomMentionExtension,
       new MapPreviewExtension({
         public_view: false,
+        type: null,
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
@@ -176,12 +177,13 @@ export default function RemirrorContainer({
   const saveContentMutation = useUpdateDocument(project_id as string);
 
   useEffect(() => {
-    const timeout = setTimeout(async () => {
+    let content = manager.view.state.doc.toJSON();
+    const timeout = setTimeout(() => {
       if (!firstRender.current && saving && currentDocument) {
-        await saveContentMutation.mutateAsync({
+        saveContentMutation.mutate({
           id: currentDocument.id,
           // @ts-ignore
-          content: manager.view.state.doc.toJSON(),
+          content,
         });
         setSaving(false);
       }
