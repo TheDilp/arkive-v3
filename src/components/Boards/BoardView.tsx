@@ -15,7 +15,6 @@ import {
   BoardContextMenuProps,
   BoardEdgeProps,
   BoardNodeProps,
-  BoardStateAction,
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
   EdgeUpdateDialogProps,
@@ -95,6 +94,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   const [boardState, dispatcher] = useReducer(boardStateReducer, {
     drawMode: false,
     quickCreate: false,
+    drawGrid: true,
   });
 
   const createNodeMutation = useCreateNode(project_id as string);
@@ -528,7 +528,12 @@ export default function BoardView({ public_view, setBoardId }: Props) {
       {/* Public view is false when editing and true when viewing it publicaly (as a non-editor/non-owner) */}
       {!public_view && (
         <>
-          <BoardContextMenu cm={cm} cyRef={cyRef} contextMenu={contextMenu} />
+          <BoardContextMenu
+            cm={cm}
+            cyRef={cyRef}
+            contextMenu={contextMenu}
+            boardStateDisptach={dispatcher}
+          />
           <NodeUpdateDialog
             nodeUpdateDialog={nodeUpdateDialog}
             setNodeUpdateDialog={setNodeUpdateDialog}
@@ -542,7 +547,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             boardStateDispatch={dispatcher}
           />
           <BoardQuickBar
-            drawMode={boardState.drawMode}
+            boardState={boardState}
             boardStateDispatch={dispatcher}
           />
         </>
@@ -571,9 +576,9 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               if (!grRef.current) {
                 grRef.current = cyRef.current.gridGuide({
                   ...cytoscapeGridOptions,
-                  // Don't draw the grid when public page
-                  // Draw grid in editor
-                  drawGrid: !public_view,
+                  // When in editor mode use the state
+                  // When in public mode always turn off the grid
+                  drawGrid: boardState.drawGrid,
                 });
               }
               if (!cbRef.current)

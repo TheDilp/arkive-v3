@@ -14,11 +14,13 @@ import {
   BoardExportProps,
   BoardNodeProps,
   BoardStateAction,
+  BoardStateProps,
 } from "../../../types/BoardTypes";
 import {
   changeLockState,
   BoardColorPresets,
   updateColor,
+  cytoscapeGridOptions,
 } from "../../../utils/boardUtils";
 import {
   useDeleteManyEdges,
@@ -33,10 +35,13 @@ import ImgDropdownItem from "../../Util/ImgDropdownItem";
 import UpdateManyEdges from "./UpdateManyEdges";
 import UpdateManyNodes from "./UpdateManyNodes";
 type Props = {
-  drawMode: boolean;
+  boardState: BoardStateProps;
   boardStateDispatch: Dispatch<BoardStateAction>;
 };
-export default function BoardQuickBar({ drawMode, boardStateDispatch }: Props) {
+export default function BoardQuickBar({
+  boardState,
+  boardStateDispatch,
+}: Props) {
   const { project_id, board_id } = useParams();
   const { cyRef } = useContext(BoardRefsContext);
   const board = useGetBoardData(
@@ -284,8 +289,14 @@ export default function BoardQuickBar({ drawMode, boardStateDispatch }: Props) {
           </TabView>
         </Dialog>
       </>
-
+      {/* Tooltips */}
       <span>
+        <Tooltip
+          target={".drawGrid"}
+          content="Toggle grid"
+          position="top"
+          autoHide={true}
+        />
         <Tooltip
           target={".lockSelected"}
           content="Lock selected nodes"
@@ -368,11 +379,24 @@ export default function BoardQuickBar({ drawMode, boardStateDispatch }: Props) {
           position="top"
         />
       </span>
+
       {/*Toggle grid visibility */}
-      <i
-        className="pi pi-fw pi-lock cursor-pointer hover:text-blue-300 lockSelected"
-        onClick={() => changeLockState(cyRef, true)}
-      ></i>
+      <span
+        className={`cursor-pointer flex hover:text-blue-300 ${
+          boardState.drawGrid ? "text-green-500" : ""
+        }  drawGrid`}
+        onClick={() => {
+          if (cyRef) {
+            boardStateDispatch({ type: "GRID", payload: !boardState.drawGrid });
+            cyRef.current.gridGuide({
+              ...cytoscapeGridOptions,
+              drawGrid: !boardState.drawGrid,
+            });
+          }
+        }}
+      >
+        <Icon icon="mdi:grid" />
+      </span>
       {/* Lock selected elements button */}
       <i
         className="pi pi-fw pi-lock cursor-pointer hover:text-blue-300 lockSelected"
@@ -411,9 +435,11 @@ export default function BoardQuickBar({ drawMode, boardStateDispatch }: Props) {
       {/* Drawmode button */}
       <i
         className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
-          drawMode ? "text-green-500" : ""
+          boardState.drawMode ? "text-green-500" : ""
         } drawMode`}
-        onClick={() => boardStateDispatch({ type: "DRAW", payload: !drawMode })}
+        onClick={() =>
+          boardStateDispatch({ type: "DRAW", payload: !boardState.drawMode })
+        }
       ></i>
       {/* Export button */}
       <i

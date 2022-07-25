@@ -304,6 +304,13 @@ export type EdgeUpdateDialogProps = {
   show: boolean;
 };
 
+export type BoardStateProps = {
+  drawMode: boolean;
+  quickCreate: boolean;
+  drawGrid: boolean;
+};
+
 export type BoardStateAction =
   | { type: "DRAW"; payload: boolean }
-  | { type: "QUICK"; payload: boolean };
+  | { type: "QUICK"; payload: boolean }
+  | { type: "GRID"; payload: boolean };

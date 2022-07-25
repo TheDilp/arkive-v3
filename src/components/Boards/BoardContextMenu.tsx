@@ -1,30 +1,33 @@
 import { ContextMenu } from "primereact/contextmenu";
+import { Dispatch } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
-  BoardContextMenuProps
+  BoardContextMenuProps,
+  BoardStateAction,
 } from "../../types/BoardTypes";
 import { changeLockState } from "../../utils/boardUtils";
 import {
-  useCreateNode, useDeleteManyEdges,
-  useDeleteManyNodes, useGetBoardData
+  useCreateNode,
+  useDeleteManyEdges,
+  useDeleteManyNodes,
+  useGetBoardData,
 } from "../../utils/customHooks";
-import {
-  deleteManyEdges
-} from "../../utils/supabaseUtils";
+import { deleteManyEdges } from "../../utils/supabaseUtils";
+import { defaultNode } from "../../utils/utils";
 
 type Props = {
   cyRef: any;
   cm: any;
   contextMenu: BoardContextMenuProps;
-  setQuickCreate: (quickCreate: boolean) => void;
+  boardStateDisptach: Dispatch<BoardStateAction>;
 };
 
 export default function BoardContextMenu({
   cyRef,
   cm,
   contextMenu,
-  setQuickCreate,
+  boardStateDisptach,
 }: Props) {
   const { project_id, board_id } = useParams();
   const board = useGetBoardData(
@@ -46,10 +49,10 @@ export default function BoardContextMenu({
           id,
           label: undefined,
           board_id: board_id as string,
-          backgroundColor: board?.defaultNodeColor || "#595959",
           type: "rectangle",
           x: contextMenu.x,
           y: contextMenu.y,
+          ...defaultNode,
         });
       },
     },
@@ -93,7 +96,12 @@ export default function BoardContextMenu({
     },
     {
       label: "Quick Create",
-      items: [{ label: "From Document", command: () => setQuickCreate(true) }],
+      items: [
+        {
+          label: "From Document",
+          command: () => boardStateDisptach({ type: "QUICK", payload: true }),
+        },
+      ],
     },
     {
       separator: true,

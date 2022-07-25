@@ -1,4 +1,4 @@
-import { BoardStateAction } from "../types/BoardTypes";
+import { BoardStateAction, BoardStateProps } from "../types/BoardTypes";
 import { updateManyNodesLockState } from "./supabaseUtils";
 import { toastWarn } from "./utils";
 
@@ -618,15 +618,16 @@ export function updateColor(
 }
 
 export function boardStateReducer(
-  state: { drawMode: boolean; quickCreate: boolean },
+  state: BoardStateProps,
   action: BoardStateAction
-): { drawMode: boolean; quickCreate: boolean } {
+): BoardStateProps {
   switch (action.type) {
     case "DRAW":
       return { ...state, drawMode: action.payload };
     case "QUICK":
       return { ...state, quickCreate: action.payload };
-
+    case "GRID":
+      return { ...state, drawGrid: action.payload };
     default:
       return state;
   }
