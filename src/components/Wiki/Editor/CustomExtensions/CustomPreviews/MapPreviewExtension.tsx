@@ -57,9 +57,16 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       }
     } else if (type === "board") {
       if (this.options.public_view) {
-        return <BoardPreview />;
+        return (
+          <BoardPreview
+            id={id}
+            width={width}
+            height={height}
+            updateId={props.updateAttributes}
+          />
+        );
       } else {
-        return <BoardPreview />;
+        return <BoardPreview id={id} width={width} height={height} />;
       }
     } else {
       return null;
