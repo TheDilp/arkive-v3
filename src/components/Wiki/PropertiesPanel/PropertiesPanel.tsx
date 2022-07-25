@@ -62,6 +62,7 @@ export default function PropertiesPanel() {
       )}
 
       <div className="w-full">
+        {/* Markers and Nodes document is linked to */}
         <LinkedItems />
       </div>
       <div className="w-full">

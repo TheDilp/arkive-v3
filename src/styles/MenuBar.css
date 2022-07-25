@@ -13,8 +13,8 @@
     color: lightskyblue !important;
 }
 
-.menuBarButtonActive .p-menuitem-text,
-.menuBarButtonActive>* {
+.menuBarButtonActive>.p-menuitem-text,
+.menuBarButtonActive>.p-menuitem-link {
     background-color: var(--blue-400);
 }
 

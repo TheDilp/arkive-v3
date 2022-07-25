@@ -10,7 +10,7 @@ import { renderToString } from "react-dom/server";
 import { ImageOverlay, MapContainer, Marker, Tooltip } from "react-leaflet";
 import { useQueryClient } from "react-query";
 import { Resizable } from "re-resizable";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MapProps } from "../../../../types/MapTypes";
 import { supabaseStorageImagesLink } from "../../../../utils/utils";
 import { MapPreviewAttributes } from "../CustomExtensions/CustomPreviews/MapPreviewExtension";
@@ -29,7 +29,7 @@ export default function MapPreview({
   const [mapData, setMapdata] = useState<MapProps | null>(null);
   const [bounds, setBounds] = useState<number[][] | null>(null);
   const [dims, setDims] = useState({ width, height });
-
+  const navigate = useNavigate();
   useLayoutEffect(() => {
     if (maps && id) {
       let map = maps.find((map) => map.id === id);
@@ -104,6 +104,16 @@ export default function MapPreview({
             key={marker.id}
             draggable={false}
             position={[marker.lat, marker.lng]}
+            riseOnHover={true}
+            eventHandlers={{
+              click: (e) => {
+                if (e.originalEvent.shiftKey && marker.map_link) {
+                  navigate(`../../maps/${marker.map_link}`);
+                } else if (e.originalEvent.altKey && marker.doc_id) {
+                  navigate(`../doc/${marker.doc_id}`);
+                }
+              },
+            }}
             icon={divIcon({
               iconSize: [48, 48],
               iconAnchor: [30, 46],
