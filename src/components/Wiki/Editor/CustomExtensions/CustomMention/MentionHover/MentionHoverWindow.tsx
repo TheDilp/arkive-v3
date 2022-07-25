@@ -22,7 +22,7 @@ import "remirror/styles/all.css";
 import "../../../../../../styles/Editor.css";
 import CustomLinkExtenstion from "../../CustomLink/CustomLinkExtension";
 import { MapPreviewExtension } from "../../CustomPreviews/MapPreviewExtension";
-import CustomTableExtension from "../../CustomTable/CustomTableExtension";
+// import CustomTableExtension from "../../CustomTable/CustomTableExtension";
 import { SecretExtension } from "../../SecretExtension/SecretExtension";
 import MentionReactComponent from "../MentionReactComponent/MentionReactComponent";
 import LinkHoverEditor from "./MentionHoverEditor";

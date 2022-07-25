@@ -498,7 +498,11 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 command: () => {
                   toggleColumns({
                     count: 2,
+                    ruleColor: "lightgrey",
+                    ruleStyle: "solid",
+                    ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
                 },
               },
               {
@@ -509,7 +513,12 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 command: () => {
                   toggleColumns({
                     count: 3,
+                    ruleColor: "lightgrey",
+                    ruleStyle: "solid",
+                    ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
+                  insertParagraph(" ");
                 },
               },
               {
@@ -520,7 +529,13 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 command: () => {
                   toggleColumns({
                     count: 4,
+                    ruleColor: "lightgrey",
+                    ruleStyle: "solid",
+                    ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
+                  insertParagraph(" ");
+                  insertParagraph(" ");
                 },
               },
               {
@@ -531,7 +546,14 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 command: () => {
                   toggleColumns({
                     count: 5,
+                    ruleColor: "lightgrey",
+                    ruleStyle: "solid",
+                    ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
+                  insertParagraph(" ");
+                  insertParagraph(" ");
+                  insertParagraph(" ");
                 },
               },
             ],

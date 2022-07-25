@@ -10,6 +10,7 @@ importers:
       '@iconify/utils': ^1.0.32
       '@minoru/react-dnd-treeview': ^2.0.0
       '@remirror/core': ^1.4.7
+      '@remirror/extension-react-tables': ^1.0.33
       '@remirror/pm': ^1.0.16
       '@remirror/react': ^1.0.33
       '@supabase/supabase-js': ^1.35.3
@@ -69,6 +70,7 @@ importers:
       '@iconify/utils': 1.0.32
       '@minoru/react-dnd-treeview': 2.0.0_s2dwq6itmbotqcs7p4ayy6iyty
       '@remirror/core': 1.4.7_xvdyzkwtobn6q5hbr2yhcdzqva
+      '@remirror/extension-react-tables': 1.0.33_hwzgv2bgdgdqvusxlgslekbd4y
       '@remirror/pm': 1.0.16
       '@remirror/react': 1.0.33_hwzgv2bgdgdqvusxlgslekbd4y
       '@supabase/supabase-js': 1.35.3
