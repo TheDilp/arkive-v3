@@ -467,11 +467,44 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           },
           {
             icon: "pi pi-fw pi-pause",
-            command: () => {
-              toggleColumns({
-                count: 2,
-              });
-            },
+            items: [
+              {
+                label: "2 columns",
+                className: active.columns({count: 2}) ? "menuBarButtonActive" : "",
+                command: () => {
+                  toggleColumns({
+                    count: 2,
+                  });
+                },
+              },
+              {
+                className: active.columns({count: 3}) ? "menuBarButtonActive" : "",
+                label: "3 columns",
+                command: () => {
+                  toggleColumns({
+                    count: 3,
+                  });
+                },
+              },
+              {
+                className: active.columns({count: 4}) ? "menuBarButtonActive" : "",
+                label: "4 columns",
+                command: () => {
+                  toggleColumns({
+                    count: 4,
+                  });
+                },
+              },
+              {
+                className: active.columns({count: 5}) ? "menuBarButtonActive" : "",
+                label: "5 columns",
+                command: () => {
+                  toggleColumns({
+                    count: 5,
+                  });
+                },
+              },
+            ],
           },
         ]}
         end={() =>
