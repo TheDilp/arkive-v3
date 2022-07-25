@@ -58,13 +58,15 @@ export function CommandMenu() {
         setItemsType("columns");
         setItems(columnsItems);
       } else if (cmd.type === "columns") {
-        chain
-          .delete(range)
-          .toggleColumns({
-            count: cmd.column_count,
-            ...defaultColumnProps,
-          })
-          .run();
+        chain.delete(range).toggleColumns({
+          count: cmd.column_count,
+          ...defaultColumnProps,
+        });
+        for (let index = 0; index < (cmd.column_count || 2) - 1; index++) {
+          chain.insertParagraph(" ");
+        }
+        chain.run();
+        setItemsType("commands");
       } else if (cmd.type === "divider") {
         chain.delete(range).insertHorizontalRule().run();
       } else if (cmd.type === "map_select") {

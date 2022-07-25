@@ -50,6 +50,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     toggleSecret,
     toggleColumns,
     updateNodeAttributes,
+    insertParagraph,
     focus,
   } = useCommands();
   const { project_id, doc_id } = useParams();
@@ -509,6 +510,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
                 },
               },
               {
@@ -523,6 +525,8 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
+                  insertParagraph(" ");
                 },
               },
               {
@@ -537,6 +541,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
+                  insertParagraph(" ");
+                  insertParagraph(" ");
                 },
               },
               {
@@ -551,6 +558,10 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
+                  insertParagraph(" ");
+                  insertParagraph(" ");
+                  insertParagraph(" ");
+                  insertParagraph(" ");
                 },
               },
             ],
