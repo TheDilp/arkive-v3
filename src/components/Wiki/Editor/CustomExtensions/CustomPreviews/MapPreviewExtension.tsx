@@ -57,6 +57,8 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
       }
     } else if (type === "board") {
       if (this.options.public_view) {
+        return <BoardPreview id={id} width={width} height={height} />;
+      } else {
         return (
           <BoardPreview
             id={id}
@@ -65,8 +67,6 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
             updateId={props.updateAttributes}
           />
         );
-      } else {
-        return <BoardPreview id={id} width={width} height={height} />;
       }
     } else {
       return null;
@@ -74,7 +74,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   };
 
   createTags() {
-    return [ExtensionTag.InlineNode];
+    return [ExtensionTag.Block];
   }
 
   createNodeSpec(
@@ -82,7 +82,6 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
     override: NodeSpecOverride
   ): NodeExtensionSpec {
     return {
-      inline: true,
       attrs: {
         ...extra.defaults(),
         id: { default: null },

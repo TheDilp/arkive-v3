@@ -64,7 +64,7 @@ export default function MapPreview({
     <Resizable
       className=""
       bounds="parent"
-      minWidth={615}
+      minWidth={300}
       minHeight={480}
       size={dims}
       onResizeStop={(e, dir, ref, delta) => {

@@ -126,7 +126,7 @@ export default function BoardPreview({
     <Resizable
       className="bg-gray-800 overflow-hidden"
       bounds="parent"
-      minWidth={615}
+      minWidth={300}
       minHeight={480}
       size={dims}
       onResizeStop={(e, dir, ref, delta) => {
@@ -136,6 +136,7 @@ export default function BoardPreview({
           width: dims.width + delta.width,
           height: dims.height + delta.height,
         });
+        console.log(updateId);
         if (updateId)
           updateId({
             height: dims.height + delta.height,
