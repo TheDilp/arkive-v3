@@ -3,6 +3,7 @@ import {
   useActive,
   useAttrs,
   useCommands,
+  useCurrentSelection,
   useRemirrorContext,
 } from "@remirror/react";
 import { Dialog } from "primereact/dialog";
@@ -11,7 +12,12 @@ import { Menubar } from "primereact/menubar";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { RemirrorJSON } from "remirror";
+import {
+  findChildren,
+  findNodeAtSelection,
+  findParentNode,
+  RemirrorJSON,
+} from "remirror";
 import { ImageProps } from "../../../custom-types";
 import "../../../styles/MenuBar.css";
 import { useGetImages, useUpdateDocument } from "../../../utils/customHooks";
@@ -19,6 +25,7 @@ import {
   supabaseStorageImagesLink,
   toastError,
   toastSuccess,
+  toastWarn,
 } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -42,10 +49,12 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     rightAlign,
     toggleSecret,
     toggleColumns,
+    updateNodeAttributes,
     focus,
   } = useCommands();
   const { project_id, doc_id } = useParams();
   const { getState } = useRemirrorContext();
+  const selection = useCurrentSelection();
   const active = useActive();
   const attrs = useAttrs();
   const images = useGetImages(project_id as string);
@@ -216,6 +225,25 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 icon: "pi pi-fw pi-align-right",
                 command: () => {
                   rightAlign();
+                  focus();
+                },
+              },
+              {
+                label: "Reset",
+                command: () => {
+                  const node = findParentNode({
+                    predicate: (node) => true,
+                    selection: getState().selection,
+                  });
+                  if (node) {
+                    updateNodeAttributes(node.pos, {
+                      "data-node-text-align": "none",
+                    });
+                  } else {
+                    toastWarn(
+                      "Try clicking or selecting the blocks you wish to align, instead of selecting all!"
+                    );
+                  }
                   focus();
                 },
               },
@@ -470,7 +498,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             items: [
               {
                 label: "2 columns",
-                className: active.columns({count: 2}) ? "menuBarButtonActive" : "",
+                className: active.columns({ count: 2 })
+                  ? "menuBarButtonActive"
+                  : "",
                 command: () => {
                   toggleColumns({
                     count: 2,
@@ -478,7 +508,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 },
               },
               {
-                className: active.columns({count: 3}) ? "menuBarButtonActive" : "",
+                className: active.columns({ count: 3 })
+                  ? "menuBarButtonActive"
+                  : "",
                 label: "3 columns",
                 command: () => {
                   toggleColumns({
@@ -487,7 +519,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 },
               },
               {
-                className: active.columns({count: 4}) ? "menuBarButtonActive" : "",
+                className: active.columns({ count: 4 })
+                  ? "menuBarButtonActive"
+                  : "",
                 label: "4 columns",
                 command: () => {
                   toggleColumns({
@@ -496,7 +530,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 },
               },
               {
-                className: active.columns({count: 5}) ? "menuBarButtonActive" : "",
+                className: active.columns({ count: 5 })
+                  ? "menuBarButtonActive"
+                  : "",
                 label: "5 columns",
                 command: () => {
                   toggleColumns({
