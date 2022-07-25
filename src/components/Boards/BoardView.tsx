@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useReducer,
   useRef,
   useState,
 } from "react";
@@ -14,12 +15,14 @@ import {
   BoardContextMenuProps,
   BoardEdgeProps,
   BoardNodeProps,
+  BoardStateAction,
   CytoscapeEdgeProps,
   CytoscapeNodeProps,
   EdgeUpdateDialogProps,
   NodeUpdateDialogProps,
 } from "../../types/BoardTypes";
 import {
+  boardStateReducer,
   cytoscapeGridOptions,
   cytoscapeStylesheet,
   edgehandlesSettings,
@@ -88,8 +91,11 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   });
 
   const [loading, setLoading] = useState(true);
-  const [drawMode, setDrawMode] = useState(false);
-  const [quickCreate, setQuickCreate] = useState(false);
+
+  const [boardState, dispatcher] = useReducer(boardStateReducer, {
+    drawMode: false,
+    quickCreate: false,
+  });
 
   const createNodeMutation = useCreateNode(project_id as string);
   const createEdgeMutation = useCreateEdge(project_id as string);
@@ -496,7 +502,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
 
   useEffect(() => {
     if (ehRef && cyRef && cyRef.current && ehRef.current) {
-      if (!drawMode) {
+      if (!boardState.drawMode) {
         ehRef.current.disable();
         ehRef.current.disableDrawMode();
         cyRef.current.autoungrabify(false);
@@ -510,7 +516,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
         ehRef.current.enableDrawMode();
       }
     }
-  }, [drawMode]);
+  }, [boardState.drawMode]);
 
   return (
     <div
@@ -522,12 +528,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
       {/* Public view is false when editing and true when viewing it publicaly (as a non-editor/non-owner) */}
       {!public_view && (
         <>
-          <BoardContextMenu
-            cm={cm}
-            cyRef={cyRef}
-            contextMenu={contextMenu}
-            setQuickCreate={setQuickCreate}
-          />
+          <BoardContextMenu cm={cm} cyRef={cyRef} contextMenu={contextMenu} />
           <NodeUpdateDialog
             nodeUpdateDialog={nodeUpdateDialog}
             setNodeUpdateDialog={setNodeUpdateDialog}
@@ -537,10 +538,13 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             setEdgeUpdateDialog={setEdgeUpdateDialog}
           />
           <QuickCreateNode
-            quickCreate={quickCreate}
-            setQuickCreate={setQuickCreate}
+            quickCreate={boardState.quickCreate}
+            boardStateDispatch={dispatcher}
           />
-          <BoardQuickBar drawMode={drawMode} setDrawMode={setDrawMode} />
+          <BoardQuickBar
+            drawMode={boardState.drawMode}
+            boardStateDispatch={dispatcher}
+          />
         </>
       )}
       <CytoscapeComponent

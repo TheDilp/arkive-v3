@@ -1,18 +1,19 @@
 import { Icon } from "@iconify/react";
 import { Dialog } from "primereact/dialog";
-import React from "react";
+import { Dispatch } from "react";
 import { useParams } from "react-router-dom";
+import { BoardStateAction } from "../../types/BoardTypes";
 import { useGetDocuments } from "../../utils/customHooks";
 import { supabaseStorageImagesLink } from "../../utils/utils";
 
 type Props = {
   quickCreate: boolean;
-  setQuickCreate: React.Dispatch<React.SetStateAction<boolean>>;
+  boardStateDispatch: Dispatch<BoardStateAction>;
 };
 
 export default function QuickCreateNode({
   quickCreate,
-  setQuickCreate,
+  boardStateDispatch,
 }: Props) {
   const { project_id } = useParams();
   const { data: documents } = useGetDocuments(project_id as string);
@@ -28,7 +29,7 @@ export default function QuickCreateNode({
       )}
       className="w-30rem overflow-y-auto"
       visible={quickCreate}
-      onHide={() => setQuickCreate(false)}
+      onHide={() => boardStateDispatch({ type: "QUICK", payload: false })}
       modal={false}
       position="left"
       style={{

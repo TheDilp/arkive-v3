@@ -1,3 +1,4 @@
+import { BoardStateAction } from "../types/BoardTypes";
 import { updateManyNodesLockState } from "./supabaseUtils";
 import { toastWarn } from "./utils";
 
@@ -613,5 +614,20 @@ export function updateColor(
     });
   } else {
     toastWarn("No elements are selected.");
+  }
+}
+
+export function boardStateReducer(
+  state: { drawMode: boolean; quickCreate: boolean },
+  action: BoardStateAction
+): { drawMode: boolean; quickCreate: boolean } {
+  switch (action.type) {
+    case "DRAW":
+      return { ...state, drawMode: action.payload };
+    case "QUICK":
+      return { ...state, quickCreate: action.payload };
+
+    default:
+      return state;
   }
 }

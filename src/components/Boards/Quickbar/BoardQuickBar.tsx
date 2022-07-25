@@ -10,7 +10,11 @@ import { Tooltip } from "primereact/tooltip";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
-import { BoardExportProps, BoardNodeProps } from "../../../types/BoardTypes";
+import {
+  BoardExportProps,
+  BoardNodeProps,
+  BoardStateAction,
+} from "../../../types/BoardTypes";
 import {
   changeLockState,
   BoardColorPresets,
@@ -30,11 +34,11 @@ import UpdateManyEdges from "./UpdateManyEdges";
 import UpdateManyNodes from "./UpdateManyNodes";
 type Props = {
   drawMode: boolean;
-  setDrawMode: Dispatch<SetStateAction<boolean>>;
+  boardStateDispatch: Dispatch<BoardStateAction>;
 };
-export default function BoardQuickBar({ drawMode, setDrawMode }: Props) {
+export default function BoardQuickBar({ drawMode, boardStateDispatch }: Props) {
   const { project_id, board_id } = useParams();
-  const { cyRef, ehRef } = useContext(BoardRefsContext);
+  const { cyRef } = useContext(BoardRefsContext);
   const board = useGetBoardData(
     project_id as string,
     board_id as string,
@@ -364,6 +368,11 @@ export default function BoardQuickBar({ drawMode, setDrawMode }: Props) {
           position="top"
         />
       </span>
+      {/*Toggle grid visibility */}
+      <i
+        className="pi pi-fw pi-lock cursor-pointer hover:text-blue-300 lockSelected"
+        onClick={() => changeLockState(cyRef, true)}
+      ></i>
       {/* Lock selected elements button */}
       <i
         className="pi pi-fw pi-lock cursor-pointer hover:text-blue-300 lockSelected"
@@ -404,7 +413,7 @@ export default function BoardQuickBar({ drawMode, setDrawMode }: Props) {
         className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
           drawMode ? "text-green-500" : ""
         } drawMode`}
-        onClick={() => setDrawMode(!drawMode)}
+        onClick={() => boardStateDispatch({ type: "DRAW", payload: !drawMode })}
       ></i>
       {/* Export button */}
       <i

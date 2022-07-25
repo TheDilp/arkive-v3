@@ -303,3 +303,7 @@ export type EdgeUpdateDialogProps = {
   zIndex: number;
   show: boolean;
 };
+
+export type BoardStateAction =
+  | { type: "DRAW"; payload: boolean }
+  | { type: "QUICK"; payload: boolean };
