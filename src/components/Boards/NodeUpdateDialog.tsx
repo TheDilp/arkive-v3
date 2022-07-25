@@ -5,7 +5,12 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { TabPanel, TabView } from "primereact/tabview";
-import { Dispatch, SetStateAction } from "react";
+import {
+  Dispatch,
+  KeyboardEvent,
+  KeyboardEventHandler,
+  SetStateAction,
+} from "react";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import { NodeUpdateDialogProps } from "../../types/BoardTypes";
@@ -37,6 +42,16 @@ export default function NodeUpdateDialog({
   const documents = useGetDocuments(project_id as string);
   const images = useGetImages(project_id as string);
   const updateNodeMutation = useUpdateNode(project_id as string);
+
+  const handleEnter: KeyboardEventHandler = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      const { show, ...rest } = nodeUpdateDialog;
+      updateNodeMutation.mutate({
+        ...rest,
+        board_id: board_id as string,
+      });
+    }
+  };
 
   return (
     <Dialog
@@ -76,6 +91,7 @@ export default function NodeUpdateDialog({
                           label: e.target.value,
                         }))
                       }
+                      onKeyDown={handleEnter}
                       placeholder="Node Label"
                       className="w-full"
                       autoComplete="false"
@@ -132,6 +148,7 @@ export default function NodeUpdateDialog({
                           fontColor: e.target.value,
                         }))
                       }
+                      onKeyDown={handleEnter}
                     />
                     <ColorPicker
                       className="w-min"
@@ -213,6 +230,7 @@ export default function NodeUpdateDialog({
                   max={5000}
                   step={10}
                   value={nodeUpdateDialog.width}
+                  onKeyDown={handleEnter}
                   onChange={(e) =>
                     setNodeUpdateDialog((prev) => ({
                       ...prev,
@@ -230,6 +248,7 @@ export default function NodeUpdateDialog({
                   max={5000}
                   step={10}
                   value={nodeUpdateDialog.height}
+                  onKeyDown={handleEnter}
                   onChange={(e) =>
                     setNodeUpdateDialog((prev) => ({
                       ...prev,
@@ -321,6 +340,7 @@ export default function NodeUpdateDialog({
               <InputNumber
                 className="w-full"
                 value={nodeUpdateDialog.zIndex}
+                onKeyDown={handleEnter}
                 onChange={(e) =>
                   setNodeUpdateDialog((prev) => ({
                     ...prev,
@@ -339,6 +359,7 @@ export default function NodeUpdateDialog({
                   <InputText
                     value={nodeUpdateDialog.backgroundColor}
                     className="w-full ml-2"
+                    onKeyDown={handleEnter}
                     onChange={(e) =>
                       setNodeUpdateDialog((prev) => ({
                         ...prev,
@@ -371,6 +392,7 @@ export default function NodeUpdateDialog({
                     max={1}
                     value={nodeUpdateDialog.backgroundOpacity}
                     className="w-full ml-1"
+                    onKeyDown={handleEnter}
                     onChange={(e) =>
                       setNodeUpdateDialog((prev) => ({
                         ...prev,

@@ -5,7 +5,12 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Slider } from "primereact/slider";
-import { Dispatch, SetStateAction } from "react";
+import {
+  Dispatch,
+  KeyboardEvent,
+  KeyboardEventHandler,
+  SetStateAction,
+} from "react";
 import { useParams } from "react-router-dom";
 import { EdgeUpdateDialogProps } from "../../types/BoardTypes";
 import {
@@ -31,6 +36,16 @@ export default function EdgeUpdateDialog({
   const { project_id, board_id } = useParams();
 
   const updateEdgeMutation = useUpdateEdge(project_id as string);
+
+  const handleEnter: KeyboardEventHandler = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      const { show, ...rest } = edgeUpdateDialog;
+      updateEdgeMutation.mutate({
+        ...rest,
+        board_id: board_id as string,
+      });
+    }
+  };
 
   return (
     <Dialog
@@ -60,6 +75,7 @@ export default function EdgeUpdateDialog({
 
           <InputText
             value={edgeUpdateDialog.label}
+            onKeyDown={handleEnter}
             onChange={(e) =>
               setEdgeUpdateDialog((prev) => ({
                 ...prev,
@@ -109,6 +125,7 @@ export default function EdgeUpdateDialog({
               <InputText
                 className="w-8"
                 value={edgeUpdateDialog.fontColor}
+                onKeyDown={handleEnter}
                 onChange={(e) =>
                   setEdgeUpdateDialog((prev) => ({
                     ...prev,
@@ -221,6 +238,7 @@ export default function EdgeUpdateDialog({
                   min={-1000}
                   max={1000}
                   step={5}
+                  onKeyDown={handleEnter}
                   onChange={(e) =>
                     setEdgeUpdateDialog((prev) => ({
                       ...prev,
@@ -297,6 +315,7 @@ export default function EdgeUpdateDialog({
             <InputText
               value={edgeUpdateDialog.lineColor}
               className="w-full ml-2"
+              onKeyDown={handleEnter}
               onChange={(e) =>
                 setEdgeUpdateDialog((prev) => ({
                   ...prev,
