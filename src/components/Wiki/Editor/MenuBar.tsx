@@ -494,11 +494,12 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             },
           },
           {
+            className: active.columns() ? "menuBarButtonActive" : "",
             icon: "pi pi-fw pi-pause",
             items: [
               {
                 label: "2 columns",
-                className: active.columns({ count: 2, gap: "1rem" })
+                className: active.columns({ count: 2 })
                   ? "menuBarButtonActive"
                   : "",
                 command: () => {
@@ -511,7 +512,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 },
               },
               {
-                className: active.columns({ count: 3, gap: "1rem" })
+                className: active.columns({ count: 3 })
                   ? "menuBarButtonActive"
                   : "",
                 label: "3 columns",
@@ -525,7 +526,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 },
               },
               {
-                className: active.columns({ count: 4, gap: "1rem" })
+                className: active.columns({ count: 4 })
                   ? "menuBarButtonActive"
                   : "",
                 label: "4 columns",
@@ -539,7 +540,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                 },
               },
               {
-                className: active.columns({ count: 5, gap: "1rem" })
+                className: active.columns({ count: 5 })
                   ? "menuBarButtonActive"
                   : "",
                 label: "5 columns",
