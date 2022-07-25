@@ -22,6 +22,7 @@ import { cytoscapeStylesheet } from "../../../../utils/boardUtils";
 
 const Cyto = memo(CytoscapeComponent, (prev, next) => {
   if (prev.elements.length === 0) return false;
+
   return true;
 });
 
@@ -40,8 +41,6 @@ export default function BoardPreview({
   const [elements, setElements] = useState<
     (CytoscapeNodeProps | CytoscapeEdgeProps)[]
   >([]);
-
-  const createBoardElements = useCallback((setElements) => {}, [id]);
 
   useLayoutEffect(() => {
     if (boards && id) {
@@ -98,9 +97,34 @@ export default function BoardPreview({
     }
   }, [boardData]);
 
+  const RerendCyto = useCallback(
+    () => (
+      <Cyto
+        elements={elements}
+        className="Lato absolute bg-gray-800 border-rounded-lg"
+        style={{
+          width: dims.width + "px",
+          height: dims.height + "px",
+        }}
+        wheelSensitivity={0.1}
+        minZoom={0.1}
+        maxZoom={10}
+        cy={(cy: any) => {
+          cy.center();
+          cy.autoungrabify(true);
+          cy.autolock(true);
+          cy.autounselectify(true);
+        }}
+        stylesheet={cytoscapeStylesheet}
+      />
+    ),
+    [dims, elements]
+  );
+
+  if (!boardData) return null;
   return (
     <Resizable
-      className=""
+      className="bg-gray-800 overflow-hidden"
       bounds="parent"
       minWidth={615}
       minHeight={480}
@@ -119,26 +143,7 @@ export default function BoardPreview({
           });
       }}
     >
-      {boardData && (
-        <Cyto
-          elements={elements}
-          className="Lato absolute bg-gray-800 border-rounded-lg"
-          style={{
-            width: dims.width + "px",
-            height: dims.height + "px",
-          }}
-          wheelSensitivity={0.1}
-          minZoom={0.1}
-          maxZoom={10}
-          cy={(cy: any) => {
-            cy.center();
-            cy.autoungrabify(true);
-            cy.autolock(true);
-            cy.autounselectify(true);
-          }}
-          stylesheet={cytoscapeStylesheet}
-        />
-      )}
+      <RerendCyto />
     </Resizable>
   );
 }
