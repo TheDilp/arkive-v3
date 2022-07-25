@@ -155,9 +155,13 @@ export type slashMenuItem = {
     | "image"
     | "divider"
     | "secret"
-    | "map_select"| "map";
+    | "map_select"
+    | "map"
+    | "board_select"
+    | "board";
   icon: string;
   map_id?: string;
+  board_id?: string;
   level?: number;
   callout_type?: string;
   color?: string;

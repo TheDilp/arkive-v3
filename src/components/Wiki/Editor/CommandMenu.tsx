@@ -10,6 +10,7 @@ import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { ReplaceTextProps } from "remirror";
 import { slashMenuItem } from "../../../custom-types";
+import { BoardProps } from "../../../types/BoardTypes";
 import { MapProps } from "../../../types/MapTypes";
 import { defaultSlashItems, toastError } from "../../../utils/utils";
 
@@ -28,7 +29,7 @@ export function CommandMenu() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
-
+  const boards = queryClient.getQueryData<BoardProps[]>(`${project_id}-boards`);
   const onSubmit = useCallback(
     (cmd: slashMenuItem) => {
       if (cmd.type === "heading") {
@@ -69,7 +70,32 @@ export function CommandMenu() {
             .delete(range)
             .insertMapPreview({
               id: cmd.map_id,
-              public_view: false,
+              type: "map",
+            })
+            .run();
+          setItemsType("commands");
+        } else {
+          toastError("Looks like the map's id is missing.");
+        }
+      } else if (cmd.type === "board_select") {
+        setItemsType("boards");
+        setItems(
+          boards
+            ?.filter((board) => !board.folder)
+            .map((board) => ({
+              name: board.title,
+              type: "board",
+              icon: "mdi:draw",
+              board_id: board.id,
+            })) || defaultSlashItems
+        );
+      } else if (cmd.type === "board") {
+        if (cmd.board_id) {
+          chain
+            .delete(range)
+            .insertMapPreview({
+              id: cmd.board_id,
+              type: "board",
             })
             .run();
           setItemsType("commands");
@@ -128,7 +154,24 @@ export function CommandMenu() {
             })) || defaultSlashItems
         );
       } else if (itemsType === "boards") {
-        // Add for boards filtering
+        setItems(
+          boards
+            ?.filter(
+              (board) =>
+                !board.folder &&
+                board.title
+                  .toLowerCase()
+                  .includes(
+                    change.query.full.replace("board", "").toLowerCase()
+                  )
+            )
+            .map((board) => ({
+              name: board.title,
+              type: "board",
+              icon: "mdi:draw",
+              board_id: board.id,
+            })) || defaultSlashItems
+        );
       }
     } else {
       setItems(defaultSlashItems);

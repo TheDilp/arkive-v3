@@ -157,7 +157,7 @@ blockquote .remirror-mention-atom a i {
 }
 
 .commandMenu {
-    z-index: 500;
+    z-index: 99999;
 }
 
 .mappreview-node-view-wrapper {

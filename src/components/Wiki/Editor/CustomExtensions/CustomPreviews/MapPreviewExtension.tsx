@@ -14,6 +14,7 @@ import {
   ProsemirrorAttributes,
 } from "remirror";
 import PublicMapPreview from "../../../../PublicView/Wiki/PublicEditor/PublicPreview/PublicMapPreview";
+import BoardPreview from "../../PreviewComponents/BoardPreview";
 import MapPreview from "../../PreviewComponents/MapPreview";
 
 export interface MapOptions {
@@ -21,6 +22,7 @@ export interface MapOptions {
     props: MapPreviewAttributes
   ) => React.ReactElement<HTMLElement> | null;
   public_view: Boolean;
+  type: null | "map" | "board" | "timeline";
 }
 
 /**
@@ -30,6 +32,7 @@ export interface MapOptions {
   defaultOptions: {
     render: () => null,
     public_view: true,
+    type: null,
   },
 })
 export class MapPreviewExtension extends NodeExtension<MapOptions> {
@@ -38,18 +41,28 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   }
 
   ReactComponent: ComponentType<NodeViewComponentProps> = (props) => {
-    const { id, width, height } = props.node.attrs;
-    if (this.options.public_view) {
-      return <PublicMapPreview id={id} width={width} height={height} />;
+    const { id, width, height, type } = props.node.attrs;
+    if (type === "map") {
+      if (this.options.public_view) {
+        return <PublicMapPreview id={id} width={width} height={height} />;
+      } else {
+        return (
+          <MapPreview
+            id={id}
+            width={width}
+            height={height}
+            updateId={props.updateAttributes}
+          />
+        );
+      }
+    } else if (type === "board") {
+      if (this.options.public_view) {
+        return <BoardPreview />;
+      } else {
+        return <BoardPreview />;
+      }
     } else {
-      return (
-        <MapPreview
-          id={id}
-          width={width}
-          height={height}
-          updateId={props.updateAttributes}
-        />
-      );
+      return null;
     }
   };
 
@@ -69,6 +82,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
         width: { default: 615 },
         height: { default: 480 },
         public_view: { default: true },
+        type: { default: this.options.type },
       },
       selectable: true,
       atom: true,
@@ -80,7 +94,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
 
   @command()
   insertMapPreview(
-    attributes: MapPreviewAttributes,
+    attributes: { id: string; type: null | "map" | "board" | "timeline" },
     selection?: PrimitiveSelection
   ): CommandFunction {
     return ({ tr, dispatch }) => {

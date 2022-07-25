@@ -509,6 +509,7 @@ export const defaultSlashItems: slashMenuItem[] = [
   { name: "Divider", type: "divider", icon: "mdi:minus" },
   { name: "Secret", type: "secret", icon: "mdi:eye-off-outline" },
   { name: "Map", type: "map_select", icon: "mdi:map" },
+  { name: "Board", type: "board_select", icon: "mdi:draw" },
 ];
 
 export interface Bucket {
