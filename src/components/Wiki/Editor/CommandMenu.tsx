@@ -146,11 +146,12 @@ export function CommandMenu() {
   }, [exit]);
 
   useEffect(() => {
-    if (change?.query.full) {
+    if (change?.query?.full) {
       if (itemsType === "commands") {
         setItems(
-          defaultSlashItems.filter((item) =>
-            item.name.toLowerCase().startsWith(change.query.full)
+          defaultSlashItems.filter(
+            (item) =>
+              item.name.toLowerCase().startsWith(change.query.full) || []
           )
         );
       } else if (itemsType === "columns") {
@@ -195,7 +196,7 @@ export function CommandMenu() {
     } else {
       setItems(defaultSlashItems);
     }
-  }, [change?.query.full]);
+  }, [change?.query?.full]);
 
   return (
     <FloatingWrapper
