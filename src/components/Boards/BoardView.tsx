@@ -545,7 +545,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
       )}
       <CytoscapeComponent
         elements={elements}
-        className="Lato"
+        className="Lato cy"
         wheelSensitivity={0.1}
         minZoom={0.1}
         maxZoom={10}
@@ -565,7 +565,12 @@ export default function BoardView({ public_view, setBoardId }: Props) {
                 ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
               }
               if (!grRef.current) {
-                grRef.current = cyRef.current.gridGuide(cytoscapeGridOptions);
+                grRef.current = cyRef.current.gridGuide({
+                  ...cytoscapeGridOptions,
+                  // Don't draw the grid when public page
+                  // Draw grid in editor
+                  drawGrid: !public_view,
+                });
               }
               if (!cbRef.current)
                 cbRef.current = cyRef.current.clipboard({

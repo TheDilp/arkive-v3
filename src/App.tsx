@@ -36,7 +36,7 @@ function App() {
   });
 
   return (
-    <main className="App flex flex-wrap justify-content-center surface-0 overflow-y-hidden">
+    <main className="App flex flex-wrap justify-content-center overflow-y-hidden">
       <Helmet>
         <title>The Arkive</title>
         <meta

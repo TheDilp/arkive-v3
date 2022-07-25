@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   BoardEdgeProps,
   BoardNodeProps,
@@ -34,7 +34,7 @@ export default function BoardPreview({
 }: MapPreviewAttributes) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-
+  const navigate = useNavigate();
   const boards = queryClient.getQueryData<BoardProps[]>(`${project_id}-boards`);
   const [boardData, setBoardData] = useState<BoardProps | null>(null);
   const [dims, setDims] = useState({ width, height });
@@ -110,6 +110,14 @@ export default function BoardPreview({
         minZoom={0.1}
         maxZoom={10}
         cy={(cy: any) => {
+          cy.on("click", "node", function (evt: any) {
+            const scratch = evt.target._private.scratch;
+            if (scratch?.doc_id && evt.originalEvent.altKey) {
+              navigate(`../doc/${scratch?.doc_id}`);
+            } else {
+              evt.target.select();
+            }
+          });
           cy.center();
           cy.autoungrabify(true);
           cy.autolock(true);
@@ -136,7 +144,7 @@ export default function BoardPreview({
           width: dims.width + delta.width,
           height: dims.height + delta.height,
         });
-        console.log(updateId);
+
         if (updateId)
           updateId({
             height: dims.height + delta.height,
