@@ -164,6 +164,12 @@ blockquote .remirror-mention-atom a i {
     z-index: 99999;
 }
 
+td .mappreview-node-view-wrapper>div {
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+}
+
 .mappreview-node-view-wrapper {
     width: 100% !important;
 }

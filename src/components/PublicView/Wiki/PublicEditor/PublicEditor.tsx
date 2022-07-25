@@ -1,34 +1,27 @@
 import { Remirror, ThemeProvider, useRemirror } from "@remirror/react";
 import { htmlToProsemirrorNode, RemirrorJSON } from "remirror";
 import {
-  DropCursorExtension,
-  GapCursorExtension,
-  MentionAtomExtension,
-} from "remirror/extensions";
-import "remirror/styles/all.css";
-import "../../../../styles/Editor.css";
-import { editorExtensions } from "../../../../utils/utils";
-import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
-import PublicEditorComponent from "./PublicEditorComponent";
-import {
   BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
-  CalloutExtension,
-  HardBreakExtension,
+  CalloutExtension, DropCursorExtension,
+  GapCursorExtension, HardBreakExtension,
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
-  ItalicExtension,
-  NodeFormattingExtension,
+  ItalicExtension, MentionAtomExtension, NodeFormattingExtension,
   OrderedListExtension,
   PlaceholderExtension,
   TaskListExtension,
-  UnderlineExtension,
+  UnderlineExtension
 } from "remirror/extensions";
-import { SecretExtension } from "../../../Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
-import { MapPreviewExtension } from "../../../Wiki/Editor/CustomExtensions/CustomPreviews/MapPreviewExtension";
+import "remirror/styles/all.css";
+import "../../../../styles/Editor.css";
 import CustomLinkExtenstion from "../../../Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
+import { MapPreviewExtension } from "../../../Wiki/Editor/CustomExtensions/CustomPreviews/MapPreviewExtension";
+import { SecretExtension } from "../../../Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
+import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
+import PublicEditorComponent from "./PublicEditorComponent";
 export default function PublicEditor({
   content,
   classes,
@@ -90,6 +83,7 @@ export default function PublicEditor({
       CustomMentionExtension,
       new MapPreviewExtension({
         public_view: true,
+        type: null,
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
