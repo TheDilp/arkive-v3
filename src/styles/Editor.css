@@ -156,6 +156,11 @@ blockquote .remirror-mention-atom a i {
     color: black !important;
 }
 
+[data-column-type="true"] {
+    height: 10rem;
+    border: lightgray solid 1px;
+}
+
 .leaflet-pane {
     z-index: 0 !important;
 }

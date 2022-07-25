@@ -60,7 +60,6 @@ export function CommandMenu() {
       } else if (cmd.type === "columns") {
         chain.delete(range).toggleColumns({
           count: cmd.column_count,
-          ...defaultColumnProps,
         });
         for (let index = 0; index < (cmd.column_count || 2) - 1; index++) {
           chain.insertParagraph(" ");
@@ -121,6 +120,7 @@ export function CommandMenu() {
         }
       }
       // Remove trigger text for command menu
+      chain.createTable().run();
       return true;
     },
     [chain, range]

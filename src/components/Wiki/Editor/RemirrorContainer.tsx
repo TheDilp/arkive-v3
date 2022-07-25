@@ -34,6 +34,7 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   PlaceholderExtension,
+  TableExtension,
   TaskListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
@@ -51,6 +52,7 @@ import Breadcrumbs from "../FolderPage/Breadcrumbs";
 import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
 import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
 import { MapPreviewExtension } from "./CustomExtensions/CustomPreviews/MapPreviewExtension";
+import CustomTableExtension from "./CustomExtensions/CustomTable/CustomTableExtension";
 import { SecretExtension } from "./CustomExtensions/SecretExtension/SecretExtension";
 import EditorView from "./EditorView";
 const hooks = [
@@ -134,7 +136,17 @@ export default function RemirrorContainer({
         placeholder: "Write something awesome! 📜",
       }),
       new BoldExtension(),
-      new ColumnsExtension(),
+      new ColumnsExtension({
+        defaults: {
+          count: 2,
+          fill: "auto",
+          gap: "1rem",
+          ruleColor: "lightgrey",
+          ruleStyle: "solid",
+          ruleWidth: "thin",
+          width: "100%",
+        },
+      }),
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
@@ -150,6 +162,7 @@ export default function RemirrorContainer({
       new CalloutExtension(),
       new NodeFormattingExtension(),
       new HardBreakExtension(),
+      new CustomTableExtension(),
       new SecretExtension({
         extraAttributes: {
           class: "secretBlock",
