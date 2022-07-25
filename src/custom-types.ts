@@ -154,6 +154,8 @@ export type slashMenuItem = {
     | "callout"
     | "image"
     | "divider"
+    | "columns_select"
+    | "columns"
     | "secret"
     | "map_select"
     | "map"
@@ -165,4 +167,5 @@ export type slashMenuItem = {
   level?: number;
   callout_type?: string;
   color?: string;
+  column_count?: number;
 };

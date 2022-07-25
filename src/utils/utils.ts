@@ -432,6 +432,39 @@ export const defaultNode = {
   locked: false,
 };
 
+export const columnsItems: slashMenuItem[] = [
+  {
+    name: "2 columns",
+    type: "columns",
+    icon: "mdi:view-column",
+    column_count: 2,
+  },
+  {
+    name: "3 columns",
+    type: "columns",
+    icon: "mdi:view-column",
+    column_count: 3,
+  },
+  {
+    name: "4 columns",
+    type: "columns",
+    icon: "mdi:view-column",
+    column_count: 4,
+  },
+  {
+    name: "5 columns",
+    type: "columns",
+    icon: "mdi:view-column",
+    column_count: 5,
+  },
+];
+
+export const defaultColumnProps = {
+  ruleColor: "lightgrey",
+  ruleStyle: "solid" as const,
+  ruleWidth: "thin" as const,
+};
+
 export const defaultSlashItems: slashMenuItem[] = [
   {
     name: "Heading 1",
@@ -506,6 +539,7 @@ export const defaultSlashItems: slashMenuItem[] = [
     color: "#0f0",
   },
   { name: "Image", type: "image", icon: "mdi:image" },
+  { name: "Columns", type: "columns_select", icon: "mdi:view-column" },
   { name: "Divider", type: "divider", icon: "mdi:minus" },
   { name: "Secret", type: "secret", icon: "mdi:eye-off-outline" },
   { name: "Map", type: "map_select", icon: "mdi:map" },

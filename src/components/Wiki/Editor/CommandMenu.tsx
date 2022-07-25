@@ -8,17 +8,21 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { ReplaceTextProps } from "remirror";
 import { slashMenuItem } from "../../../custom-types";
 import { BoardProps } from "../../../types/BoardTypes";
 import { MapProps } from "../../../types/MapTypes";
-import { defaultSlashItems, toastError } from "../../../utils/utils";
+import {
+  columnsItems,
+  defaultColumnProps,
+  defaultSlashItems,
+  toastError,
+} from "../../../utils/utils";
 
 export function CommandMenu() {
   const chain = useChainedCommands();
-  const [itemsType, setItemsType] = useState<"commands" | "maps" | "boards">(
-    "commands"
-  );
+  const [itemsType, setItemsType] = useState<
+    "commands" | "columns" | "maps" | "boards"
+  >("commands");
   const { change, exit } = useSuggest({
     char: "/",
     name: "command",
@@ -50,6 +54,17 @@ export function CommandMenu() {
         chain.delete(range).toggleSecret().run();
       } else if (cmd.type === "image") {
         chain.delete(range).toggleSecret().run();
+      } else if (cmd.type === "columns_select") {
+        setItemsType("columns");
+        setItems(columnsItems);
+      } else if (cmd.type === "columns") {
+        chain
+          .delete(range)
+          .toggleColumns({
+            count: cmd.column_count,
+            ...defaultColumnProps,
+          })
+          .run();
       } else if (cmd.type === "divider") {
         chain.delete(range).insertHorizontalRule().run();
       } else if (cmd.type === "map_select") {
@@ -136,6 +151,8 @@ export function CommandMenu() {
             item.name.toLowerCase().startsWith(change.query.full)
           )
         );
+      } else if (itemsType === "columns") {
+        setItems(columnsItems);
       } else if (itemsType === "maps") {
         setItems(
           maps
