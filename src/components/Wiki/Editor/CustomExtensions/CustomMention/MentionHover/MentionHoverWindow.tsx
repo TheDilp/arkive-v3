@@ -1,4 +1,3 @@
-import { TableExtension } from "@remirror/extension-react-tables";
 import { Remirror, ThemeProvider, useRemirror } from "@remirror/react";
 import { useMemo } from "react";
 import { htmlToProsemirrorNode, RemirrorJSON } from "remirror";
@@ -7,20 +6,24 @@ import {
   BoldExtension,
   BulletListExtension,
   CalloutExtension,
+  ColumnsExtension,
+  HardBreakExtension,
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
-  MarkdownExtension,
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  TextColorExtension,
+  TaskListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../../../styles/Editor.css";
 import CustomLinkExtenstion from "../../CustomLink/CustomLinkExtension";
+import { MapPreviewExtension } from "../../CustomPreviews/MapPreviewExtension";
+import CustomTableExtension from "../../CustomTable/CustomTableExtension";
+import { SecretExtension } from "../../SecretExtension/SecretExtension";
 import MentionReactComponent from "../MentionReactComponent/MentionReactComponent";
 import LinkHoverEditor from "./MentionHoverEditor";
 
@@ -63,23 +66,45 @@ export default function LinkHoverWindow({
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
+      new ColumnsExtension({
+        defaults: {
+          count: 2,
+          fill: "auto",
+          gap: "1rem",
+          ruleColor: "lightgrey",
+          ruleStyle: "solid",
+          ruleWidth: "thin",
+          width: "100%",
+        },
+      }),
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
       new BlockquoteExtension(),
-      new ImageExtension({
-        enableResizing: false,
-      }),
       new BulletListExtension(),
+      new TaskListExtension(),
       new OrderedListExtension(),
-      CustomMentionExtension,
       CustomLinkExtenstion,
+      new ImageExtension({
+        enableResizing: true,
+      }),
       new HorizontalRuleExtension(),
       new CalloutExtension(),
       new NodeFormattingExtension(),
-      new TextColorExtension(),
-      new MarkdownExtension(),
-      new TableExtension(),
+      new HardBreakExtension(),
+      new CustomTableExtension(),
+      new SecretExtension({
+        extraAttributes: {
+          class: "secretBlock",
+        },
+        secret: "true",
+        classNames: "secretBlock",
+      }),
+      CustomMentionExtension,
+      new MapPreviewExtension({
+        public_view: false,
+        type: null,
+      }),
     ],
     selection: "all",
     content: content || "",

@@ -2,9 +2,7 @@ import { Icon } from "@iconify/react";
 import {
   useActive,
   useAttrs,
-  useCommands,
-  useCurrentSelection,
-  useRemirrorContext,
+  useCommands, useRemirrorContext
 } from "@remirror/react";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
@@ -12,12 +10,7 @@ import { Menubar } from "primereact/menubar";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  findChildren,
-  findNodeAtSelection,
-  findParentNode,
-  RemirrorJSON,
-} from "remirror";
+import { findParentNode, RemirrorJSON } from "remirror";
 import { ImageProps } from "../../../custom-types";
 import "../../../styles/MenuBar.css";
 import { useGetImages, useUpdateDocument } from "../../../utils/customHooks";
@@ -25,7 +18,7 @@ import {
   supabaseStorageImagesLink,
   toastError,
   toastSuccess,
-  toastWarn,
+  toastWarn
 } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -50,12 +43,11 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     toggleSecret,
     toggleColumns,
     updateNodeAttributes,
-    insertParagraph,
+
     focus,
   } = useCommands();
   const { project_id, doc_id } = useParams();
   const { getState } = useRemirrorContext();
-  const selection = useCurrentSelection();
   const active = useActive();
   const attrs = useAttrs();
   const images = useGetImages(project_id as string);
