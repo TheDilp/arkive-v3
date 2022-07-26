@@ -62,7 +62,7 @@ export default function MapPreview({
   if (!bounds || !mapData) return null;
   return (
     <Resizable
-      className=""
+      className="test"
       bounds="parent"
       minWidth={300}
       minHeight={480}

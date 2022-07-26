@@ -94,7 +94,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   const [boardState, dispatcher] = useReducer(boardStateReducer, {
     drawMode: false,
     quickCreate: false,
-    drawGrid: true,
+    drawGrid: false,
   });
 
   const createNodeMutation = useCreateNode(project_id as string);

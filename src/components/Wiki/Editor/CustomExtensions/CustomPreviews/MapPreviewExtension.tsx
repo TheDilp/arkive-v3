@@ -74,7 +74,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   };
 
   createTags() {
-    return [ExtensionTag.Block];
+    return [ExtensionTag.InlineNode];
   }
 
   createNodeSpec(
@@ -82,6 +82,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
     override: NodeSpecOverride
   ): NodeExtensionSpec {
     return {
+      inline: true,
       attrs: {
         ...extra.defaults(),
         id: { default: null },

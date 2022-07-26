@@ -172,11 +172,19 @@ td .mappreview-node-view-wrapper>div {
 
 .mappreview-node-view-wrapper {
     width: 100% !important;
+    display: inline !important;
 }
+
 
 
 .viewOnlyEditor .mappreview-node-view-wrapper div {
     max-width: 100% !important;
+}
+
+.mappreview-node-view-wrapper div {
+    float: left !important;
+    max-width: 100%;
+    margin-right: 0.25rem;
 }
 
 .boardPreview {

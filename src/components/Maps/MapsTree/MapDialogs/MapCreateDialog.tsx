@@ -10,6 +10,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { CreateMapInputs, MapProps } from "../../../../types/MapTypes";
 import { useCreateMap, useGetImages } from "../../../../utils/customHooks";
+import { ImageProps } from "../../../../custom-types";
+import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 
 type Props = {
   mapData: boolean;
@@ -76,6 +78,9 @@ export default function MapCreateDialog({ mapData, setMapData }: Props) {
               render={({ field: { value, onChange } }) => (
                 <Dropdown
                   value={value}
+                  itemTemplate={(item: ImageProps) => (
+                    <ImgDropdownItem title={item.title} link={item.link} />
+                  )}
                   options={
                     images?.data.filter((image) => image.type === "Map") || []
                   }

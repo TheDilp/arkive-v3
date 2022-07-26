@@ -48,6 +48,7 @@ import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
+import { CustomColumnsExtension } from "./CustomExtensions/CustomColumns/CustomColumnsExtension";
 import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
 import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
 import { MapPreviewExtension } from "./CustomExtensions/CustomPreviews/MapPreviewExtension";
