@@ -172,9 +172,9 @@ td .mappreview-node-view-wrapper>div {
 
 .mappreview-node-view-wrapper {
     width: 100% !important;
-    display: inline !important;
+    display: flex;
+    justify-content: center;
 }
-
 
 
 .viewOnlyEditor .mappreview-node-view-wrapper div {

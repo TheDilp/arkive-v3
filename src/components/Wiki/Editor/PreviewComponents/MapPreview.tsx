@@ -84,7 +84,7 @@ export default function MapPreview({
       <MapContainer
         ref={mapRef}
         zoomControl={false}
-        className="w-full h-full bg-gray-800 border-rounded-sm relative outline-none"
+        className="w-full h-full surface-0 border-1 border-gray-800 border-solid border-rounded-sm relative outline-none"
         center={[bounds[1][0] / 2, bounds[1][1] / 2]}
         fadeAnimation={true}
         minZoom={-3}
