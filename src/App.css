@@ -176,7 +176,7 @@ body {
 
 .cy {
   z-index: 0 !important;
-  background: #000;
+  background: var(--surface-0);
 }
 
 /* CUSTOM SCROLLBAR */

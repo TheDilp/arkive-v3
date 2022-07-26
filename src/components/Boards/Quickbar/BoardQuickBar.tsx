@@ -293,7 +293,7 @@ export default function BoardQuickBar({
       <span>
         <Tooltip
           target={".drawGrid"}
-          content="Toggle grid"
+          content="Toggle grid display"
           position="top"
           autoHide={true}
         />
