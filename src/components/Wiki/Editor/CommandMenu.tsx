@@ -16,6 +16,7 @@ import {
   defaultColumnProps,
   defaultSlashItems,
   toastError,
+  toastWarn,
 } from "../../../utils/utils";
 
 export function CommandMenu() {
@@ -70,17 +71,27 @@ export function CommandMenu() {
       } else if (cmd.type === "divider") {
         chain.delete(range).insertHorizontalRule().run();
       } else if (cmd.type === "map_select") {
-        setItemsType("maps");
-        setItems(
-          maps
-            ?.filter((map) => !map.folder)
-            .map((map) => ({
-              name: map.title,
-              type: "map",
-              icon: "mdi:map",
-              map_id: map.id,
-            })) || defaultSlashItems
-        );
+        let newItems = maps
+          ?.filter((map) => !map.folder)
+          .map((map) => ({
+            name: map.title,
+            type: "map" as const,
+            icon: "mdi:map",
+            map_id: map.id,
+          }));
+        if (newItems) {
+          if (newItems.length === 0) {
+            toastWarn("Create some maps first to add them here.");
+            setItems(defaultSlashItems);
+            setItemsType("commands");
+          } else {
+            setItems(newItems);
+            setItemsType("maps");
+          }
+        } else {
+          setItemsType("commands");
+          setItems(defaultSlashItems);
+        }
       } else if (cmd.type === "map") {
         if (cmd.map_id) {
           chain
@@ -95,17 +106,28 @@ export function CommandMenu() {
           toastError("Looks like the map's id is missing.");
         }
       } else if (cmd.type === "board_select") {
-        setItemsType("boards");
-        setItems(
-          boards
-            ?.filter((board) => !board.folder)
-            .map((board) => ({
-              name: board.title,
-              type: "board",
-              icon: "mdi:draw",
-              board_id: board.id,
-            })) || defaultSlashItems
-        );
+        let newItems = boards
+          ?.filter((board) => !board.folder)
+          .map((board) => ({
+            name: board.title,
+            type: "board" as const,
+            icon: "mdi:draw",
+            board_id: board.id,
+          }));
+        if (newItems) {
+          if (newItems.length === 0) {
+            toastWarn("Create some maps first to add them here.");
+            setItems(defaultSlashItems);
+            setItemsType("commands");
+          } else {
+            setItems(newItems);
+            setItemsType("boards");
+          }
+        } else {
+          setItemsType("commands");
+
+          setItems(defaultSlashItems);
+        }
       } else if (cmd.type === "board") {
         if (cmd.board_id) {
           chain
@@ -142,6 +164,7 @@ export function CommandMenu() {
   useEffect(() => {
     if (exit) {
       setIndex(0);
+      setItemsType("commands");
     }
   }, [exit]);
 
@@ -149,9 +172,8 @@ export function CommandMenu() {
     if (change?.query?.full) {
       if (itemsType === "commands") {
         setItems(
-          defaultSlashItems.filter(
-            (item) =>
-              item.name.toLowerCase().startsWith(change.query.full) || []
+          defaultSlashItems.filter((item) =>
+            item.name.toLowerCase().startsWith(change.query.full.toLowerCase())
           )
         );
       } else if (itemsType === "columns") {

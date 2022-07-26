@@ -2,7 +2,8 @@ import { Icon } from "@iconify/react";
 import {
   useActive,
   useAttrs,
-  useCommands, useRemirrorContext
+  useCommands,
+  useRemirrorContext,
 } from "@remirror/react";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
@@ -18,7 +19,7 @@ import {
   supabaseStorageImagesLink,
   toastError,
   toastSuccess,
-  toastWarn
+  toastWarn,
 } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -42,8 +43,8 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     rightAlign,
     toggleSecret,
     toggleColumns,
+    createTable,
     updateNodeAttributes,
-
     focus,
   } = useCommands();
   const { project_id, doc_id } = useParams();
@@ -502,7 +503,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
-                  insertParagraph(" ");
                 },
               },
               {
@@ -517,8 +517,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
-                  insertParagraph(" ");
-                  insertParagraph(" ");
                 },
               },
               {
@@ -533,9 +531,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
-                  insertParagraph(" ");
-                  insertParagraph(" ");
-                  insertParagraph(" ");
                 },
               },
               {
@@ -550,10 +545,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                     ruleStyle: "solid",
                     ruleWidth: "thin",
                   });
-                  insertParagraph(" ");
-                  insertParagraph(" ");
-                  insertParagraph(" ");
-                  insertParagraph(" ");
                 },
               },
             ],

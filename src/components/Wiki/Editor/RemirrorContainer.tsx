@@ -4,7 +4,7 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import {
@@ -13,7 +13,7 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
@@ -35,14 +35,14 @@ import {
   OrderedListExtension,
   PlaceholderExtension,
   TaskListExtension,
-  UnderlineExtension
+  UnderlineExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
@@ -165,7 +165,10 @@ export default function RemirrorContainer({
       new GapCursorExtension(),
       new DropCursorExtension(),
     ],
-
+    onError: ({ json, invalidContent, transformers }) => {
+      // Automatically remove all invalid nodes and marks.
+      return transformers.remove(json, invalidContent);
+    },
     selection: "all",
     content: currentDocument?.content || "",
     stringHandler: htmlToProsemirrorNode,
