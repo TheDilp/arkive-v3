@@ -40,7 +40,7 @@ import {
 import {
   EdgeUpdateDialogDefault,
   NodeUpdateDialogDefault,
-} from "../../utils/defaultDisplayValues";
+} from "../../utils/defaultValues";
 import {
   defaultNode,
   supabaseStorageImagesLink,

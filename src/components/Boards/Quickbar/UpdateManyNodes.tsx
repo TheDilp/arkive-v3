@@ -19,7 +19,7 @@ import {
   useGetImages,
   useUpdateNode,
 } from "../../../utils/customHooks";
-import { NodeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
+import { NodeUpdateDialogDefault } from "../../../utils/defaultValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";

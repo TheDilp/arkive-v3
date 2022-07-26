@@ -9,7 +9,7 @@ import {
 import { useParams } from "react-router-dom";
 import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
 import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
-import { MapDialogDefault } from "../../../utils/defaultDisplayValues";
+import { MapDialogDefault } from "../../../utils/defaultValues";
 import { sortMapsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";

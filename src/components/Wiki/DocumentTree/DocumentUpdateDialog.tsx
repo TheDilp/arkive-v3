@@ -10,7 +10,7 @@ import {
   DocumentProps,
 } from "../../../custom-types";
 import { useGetDocuments, useUpdateDocument } from "../../../utils/customHooks";
-import { DocItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { DocItemDisplayDialogDefault } from "../../../utils/defaultValues";
 
 type Props = {
   displayDialog: DocItemDisplayDialogProps;

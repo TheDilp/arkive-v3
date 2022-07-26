@@ -22,7 +22,7 @@ import {
   BoardFontFamilies,
 } from "../../utils/boardUtils";
 import { useUpdateEdge } from "../../utils/customHooks";
-import { EdgeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
+import { EdgeUpdateDialogDefault } from "../../utils/defaultValues";
 
 type Props = {
   edgeUpdateDialog: EdgeUpdateDialogProps;

@@ -83,3 +83,14 @@ export const MapMarkerDialogDefault = {
   public: true,
   show: false,
 };
+
+export const DocumentCreateDefault = {
+  title: "New Document",
+  folder: false,
+  template: false,
+  icon: "mdi:file",
+  image: undefined,
+  parent: null,
+  content: null,
+  categories: [],
+};

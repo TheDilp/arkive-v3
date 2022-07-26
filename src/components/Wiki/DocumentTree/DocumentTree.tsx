@@ -16,7 +16,7 @@ import {
   useSortChildren,
   useUpdateDocument
 } from "../../../utils/customHooks";
-import { DocItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { DocItemDisplayDialogDefault } from "../../../utils/defaultValues";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import IconSelectMenu from "../../Util/IconSelectMenu";

@@ -17,6 +17,7 @@ import {
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { saveAs } from "file-saver";
 import { ProjectContext } from "../../Context/ProjectContext";
+import { DocumentCreateDefault } from "../../../utils/defaultValues";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   displayDialog: DocItemDisplayDialogProps;
@@ -215,6 +216,8 @@ export default function DocumentTreeItemContext({
             if (displayDialog.depth < 3) {
               createDocumentMutation.mutate({
                 id: uuid(),
+                ...DocumentCreateDefault,
+                project_id: project_id as string,
                 parent: displayDialog.id,
                 folder: false,
               });
@@ -230,6 +233,8 @@ export default function DocumentTreeItemContext({
             if (displayDialog.depth < 3) {
               createDocumentMutation.mutate({
                 id: uuid(),
+                ...DocumentCreateDefault,
+                project_id: project_id as string,
                 title: "New Folder",
                 parent: displayDialog.id,
                 folder: true,
@@ -256,6 +261,8 @@ export default function DocumentTreeItemContext({
         let id = uuid();
         createDocumentMutation.mutate({
           id,
+          ...DocumentCreateDefault,
+          project_id: project_id as string,
           title: "New Document",
           parent: doc_id || null,
         });
@@ -268,6 +275,8 @@ export default function DocumentTreeItemContext({
         let id = uuid();
         createDocumentMutation.mutate({
           id,
+          ...DocumentCreateDefault,
+          project_id: project_id as string,
           title: "New Folder",
           parent: doc_id || null,
           folder: true,

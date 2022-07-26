@@ -13,7 +13,7 @@ import {
   MarkerSidebarProps,
   UpdateMarkerInputs,
 } from "../../../types/MapTypes";
-import { MapMarkerDialogDefault } from "../../../utils/defaultDisplayValues";
+import { MapMarkerDialogDefault } from "../../../utils/defaultValues";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
 import MapMarker from "./MapMarker/MapMarker";
 import MarkerContextMenu from "./MapMarker/MarkerContextMenu";

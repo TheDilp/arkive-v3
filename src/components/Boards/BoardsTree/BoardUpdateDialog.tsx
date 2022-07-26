@@ -10,7 +10,7 @@ import {
   BoardProps,
 } from "../../../types/BoardTypes";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
-import { BoardUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
+import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
 
 type Props = {
   visible: BoardItemDisplayDialogProps;

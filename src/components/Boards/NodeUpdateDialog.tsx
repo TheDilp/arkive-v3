@@ -26,7 +26,7 @@ import {
   useGetImages,
   useUpdateNode,
 } from "../../utils/customHooks";
-import { NodeUpdateDialogDefault } from "../../utils/defaultDisplayValues";
+import { NodeUpdateDialogDefault } from "../../utils/defaultValues";
 import ImgDropdownItem from "../Util/ImgDropdownItem";
 type Props = {
   nodeUpdateDialog: NodeUpdateDialogProps;

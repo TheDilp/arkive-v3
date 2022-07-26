@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid";
 import { useCreateDocument, useGetTags } from "../../../../utils/customHooks";
 import DocumentFromTempDialog from "./DocumentFromTempDialog";
 import DocumentCreateDialog from "./DocumentCreateDialog";
+import { DocumentCreateDefault } from "../../../../utils/defaultValues";
 type Props = {
   filter: string;
   setFilter: (filter: string) => void;
@@ -58,15 +59,8 @@ export default function DocTreeFilter({
             let id = uuid();
             createDocumentMutation.mutate({
               id,
-              title: "New Document",
-              folder: false,
-              template: false,
-              icon: "mdi:file",
-              image: undefined,
               project_id: project_id as string,
-              parent: null,
-              content: null,
-              categories: [],
+              ...DocumentCreateDefault,
             });
           }}
         />

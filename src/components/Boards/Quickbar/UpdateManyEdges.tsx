@@ -14,7 +14,7 @@ import {
   edgeTargetArrowShapes,
 } from "../../../utils/boardUtils";
 import { useUpdateEdge } from "../../../utils/customHooks";
-import { EdgeUpdateDialogDefault } from "../../../utils/defaultDisplayValues";
+import { EdgeUpdateDialogDefault } from "../../../utils/defaultValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 

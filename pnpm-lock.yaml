@@ -14,6 +14,7 @@ importers:
       '@remirror/pm': ^1.0.16
       '@remirror/react': ^1.0.33
       '@supabase/supabase-js': ^1.35.3
+      '@tanstack/react-table': ^8.3.3
       '@tanstack/react-virtual': ^3.0.0-beta.2
       '@types/cytoscape': ^3.19.4
       '@types/file-saver': ^2.0.5
@@ -74,6 +75,7 @@ importers:
       '@remirror/pm': 1.0.16
       '@remirror/react': 1.0.33_hwzgv2bgdgdqvusxlgslekbd4y
       '@supabase/supabase-js': 1.35.3
+      '@tanstack/react-table': 8.3.3_ef5jwxihqo6n7gxfmzogljlgcm
       '@tanstack/react-virtual': 3.0.0-beta.2
       '@types/cytoscape': 3.19.4
       '@types/node': 16.11.26
@@ -4247,11 +4249,28 @@ packages:
       - supports-color
     dev: false
 
+  /@tanstack/react-table/8.3.3_ef5jwxihqo6n7gxfmzogljlgcm:
+    resolution: {integrity: sha512-Zvp40XmxJgage/GKzqQVH38gVRtF5rmLV7WIWE4WZUtKsZgPhU3ZUt7ijc2Nyej8v/KGkF4ja8FA/UITevZA4A==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/table-core': 8.3.3
+      react: 18.1.0
+      react-dom: 18.1.0_react@18.1.0
+    dev: false
+
   /@tanstack/react-virtual/3.0.0-beta.2:
     resolution: {integrity: sha512-pwA9URTHYXX/2PgIISoMcf1P77hxf5oI3L/IDQ19Q1xuAc76o2R2CwHv6vvl5fDhwVj5klOfBxJvuT61Lhy9/w==}
     engines: {node: '>=12'}
     dependencies:
       '@reach/observe-rect': 1.2.0
+    dev: false
+
+  /@tanstack/table-core/8.3.3:
+    resolution: {integrity: sha512-Y9lVatqOsQaQBmoKynWIkThC9MN+z4RCP8hSyGPlxI4K1MINFUBswpi3mEg157g0Q9UOXtmt13s7wnoHHfe+2Q==}
+    engines: {node: '>=12'}
     dev: false
 
   /@tootallnate/once/1.1.2:

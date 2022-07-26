@@ -15,7 +15,7 @@ import {
   useGetDocuments,
   useGetMaps,
 } from "../../../../utils/customHooks";
-import { MapMarkerDialogDefault } from "../../../../utils/defaultDisplayValues";
+import { MapMarkerDialogDefault } from "../../../../utils/defaultValues";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import MarkerIconSelect from "./MarkerIconSelect";
 

@@ -8,7 +8,7 @@ import {
   useGetDocumentData,
   useGetDocuments,
 } from "../../../utils/customHooks";
-import { DocItemDisplayDialogDefault } from "../../../utils/defaultDisplayValues";
+import { DocItemDisplayDialogDefault } from "../../../utils/defaultValues";
 import { toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";

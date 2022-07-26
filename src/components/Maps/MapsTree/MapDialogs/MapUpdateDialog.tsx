@@ -10,7 +10,7 @@ import {
   MapProps,
 } from "../../../../types/MapTypes";
 import { useUpdateMap } from "../../../../utils/customHooks";
-import { MapDialogDefault } from "../../../../utils/defaultDisplayValues";
+import { MapDialogDefault } from "../../../../utils/defaultValues";
 
 type Props = {
   mapData: MapItemDisplayDialogProps;
