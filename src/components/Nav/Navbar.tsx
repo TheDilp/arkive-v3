@@ -87,7 +87,7 @@ export default function Navbar() {
                   }}
                 />
               </span>
-              {/* <span className="timelineIcon mr-2">
+              <span className="timelineIcon mr-2">
                 <Icon
                   className="hover:text-primary cursor-pointer"
                   icon="mdi:chart-timeline-variant"
@@ -96,7 +96,7 @@ export default function Navbar() {
                     navigate("./timelines");
                   }}
                 />
-              </span> */}
+              </span>
               <span className="">
                 <i
                   className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
@@ -180,7 +180,7 @@ export default function Navbar() {
       }
     });
     return () => {
-      window.removeEventListener("keydown", function (e) {});
+      window.removeEventListener("keydown", function (e) { });
     };
   }, []);
 

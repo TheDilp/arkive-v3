@@ -30,6 +30,7 @@ import {
   UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
+import { TimelineType } from "../types/TimelineTypes";
 import { toastError } from "./utils";
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -164,6 +165,17 @@ export const getBoards = async (project_id: string) => {
     )
     .eq("project_id", project_id)
     .order("sort", { ascending: true });
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your boards.");
+    throw new Error(error.message);
+  }
+};
+export const getTimelines = async (project_id: string) => {
+  const { data, error } = await supabase
+    .from<TimelineType>("timelines")
+    .select("*,timeline_events(*)")
+    .eq("project_id", project_id);
   if (data) return data;
   if (error) {
     toastError("There was an error getting your boards.");

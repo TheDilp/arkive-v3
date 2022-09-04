@@ -2,7 +2,7 @@ import { LinkExtension } from "remirror/extensions";
 const CustomLinkExtenstion = new LinkExtension();
 
 CustomLinkExtenstion.addHandler("onClick", (e, data) => {
-  window.location.href = data.href;
+  window.location.replace(data.href);
   return true;
 });
 

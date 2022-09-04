@@ -5,15 +5,13 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import {
   useCallback,
   useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
+  useEffect, useMemo,
   useRef,
   useState
 } from "react";
@@ -35,13 +33,12 @@ import {
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  PlaceholderExtension,
-  TaskListExtension,
+  PlaceholderExtension, TaskListExtension, TableExtension,
   UnderlineExtension
 } from "remirror/extensions";
+
 import "remirror/styles/all.css";
 import { useDebouncedCallback } from "use-debounce";
-import { DocumentProps } from "../../../custom-types";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
@@ -168,6 +165,9 @@ export default function RemirrorContainer({
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
+      new TableExtension({
+
+      })
     ],
     onError: ({ json, invalidContent, transformers }) => {
       // Automatically remove all invalid nodes and marks.

@@ -1,10 +1,11 @@
 import { Icon } from "@iconify/react";
 import { Card } from "primereact/card";
 import React from "react";
+import TimelinesTree from "./TimelinesTree";
 
 type Props = {};
 
-export default function Timelines({}: Props) {
+export default function Timelines({ }: Props) {
   const header = (
     <img
       className="w-full h-15rem"
@@ -23,34 +24,9 @@ export default function Timelines({}: Props) {
     { id: 5, title: "Event 5", start: "-450-01-09", end: "-450-01-10" },
   ].sort((a, b) => new Date(a.start) - new Date(b.start));
   return (
-    <div className="text-white w-full h-screen flex flex-wrap overflow-y-auto">
-      {events.map((event, index) => (
-        <div
-          key={event.id}
-          className={`w-full relative flex flex-nowrap justify-content-around ${
-            index % 2 === 0 ? "evenTimelineEvent" : "oddTimelineEvent"
-          }`}
-        >
-          {index % 2 === 0 && (
-            <div className="absolute z-5 evenDivider">
-              <Icon icon="mdi:checkbox-blank-circle" fontSize={30} />
-            </div>
-          )}
-          {index % 2 !== 0 && (
-            <div className="absolute z-5 oddDivder">
-              <Icon icon="mdi:checkbox-blank-circle" fontSize={30} />
-            </div>
-          )}
-          <div className="cardContainer relative">
-            <Card
-              title={event.title}
-              subTitle={`${event.start} - ${event.end}`}
-              style={{ width: "25rem" }}
-              header={header}
-            />
-          </div>
-        </div>
-      ))}
+    <div className="w-full flex flex-nowrap justify-content-start mainScreen">
+      <TimelinesTree />
+
     </div>
   );
 }

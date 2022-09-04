@@ -53,6 +53,7 @@ import {
   getSingleBoard,
   getSingleMap,
   getTags,
+  getTimelines,
   renameImage,
   sortBoardsChildren,
   sortDocumentsChildren,
@@ -1645,6 +1646,18 @@ export function useDeleteManyEdges(project_id: string) {
     }
   );
 }
+
+export function useGetTimelines(project_id: string) {
+  const { data, isLoading } = useQuery(
+    `${project_id}-timelines`,
+    async () => await getTimelines(project_id),
+    {
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+  return { data, isLoading };
+}
+
 // Custom hook for copy-pasting nodes and edges in a board
 export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
   const queryClient = useQueryClient();
