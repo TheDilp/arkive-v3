@@ -40,7 +40,7 @@ export default function LinkedItems() {
     .flat();
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   return (
-    <Accordion activeIndex={[0, 1, 2, 3]} multiple>
+    <Accordion multiple>
       {/* Linked Maps */}
       <AccordionTab
         header={
@@ -126,12 +126,12 @@ export default function LinkedItems() {
               options={
                 images?.data
                   ? [
-                      {
-                        title: "No Image",
-                        link: "",
-                      },
-                      ...images.data,
-                    ]
+                    {
+                      title: "No Image",
+                      link: "",
+                    },
+                    ...images.data,
+                  ]
                   : []
               }
               optionLabel="title"

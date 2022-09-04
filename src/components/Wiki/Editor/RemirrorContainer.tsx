@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import {
+  OnChangeJSON,
   Remirror,
   ThemeProvider,
   useHelpers,
@@ -13,10 +14,10 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
+import { htmlToProsemirrorNode, prosemirrorNodeToHtml, RemirrorJSON } from "remirror";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -35,20 +36,21 @@ import {
   OrderedListExtension,
   PlaceholderExtension,
   TaskListExtension,
-  UnderlineExtension,
+  UnderlineExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
+import { useDebouncedCallback } from "use-debounce";
+import { DocumentProps } from "../../../custom-types";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
-import { CustomColumnsExtension } from "./CustomExtensions/CustomColumns/CustomColumnsExtension";
 import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
 import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
 import { MapPreviewExtension } from "./CustomExtensions/CustomPreviews/MapPreviewExtension";
@@ -180,21 +182,22 @@ export default function RemirrorContainer({
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
 
-  useEffect(() => {
-    let content = manager.view.state.doc.toJSON();
-    const timeout = setTimeout(() => {
-      if (!firstRender.current && saving && currentDocument) {
-        saveContentMutation.mutate({
-          id: currentDocument.id,
-          // @ts-ignore
-          content,
-        });
-        setSaving(false);
-      }
-    }, 300);
+  // useEffect(() => {
+  //   let content = manager.view.state.doc.toJSON();
+  //   const timeout = setTimeout(() => {
+  //     if (!firstRender.current && saving && currentDocument) {
+  //       saveContentMutation.mutate({
+  //         id: currentDocument.id,
+  //         // @ts-ignore
+  //         content,
+  //       });
+  //       setSaving(false);
+  //     }
+  //   }, 300);
 
-    return () => clearTimeout(timeout);
-  }, [saving]);
+  //   return () => clearTimeout(timeout);
+  // }, [saving]);
+
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
@@ -203,6 +206,25 @@ export default function RemirrorContainer({
       setDocId(doc_id);
     }
   }, [doc_id]);
+
+  const debounced = useDebouncedCallback(
+    (content: RemirrorJSON, doc_id: string) => {
+      saveContentMutation.mutate({
+        id: doc_id,
+        // @ts-ignore
+        content,
+      });
+      setSaving(false)
+
+    },
+    // delay in ms
+    300
+  );
+
+  const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {
+    debounced(content, doc_id)
+  }, [])
+
 
   if (!currentDocument) {
     toastWarn("Document not found");
@@ -213,7 +235,7 @@ export default function RemirrorContainer({
       className={`editorContainer overflow-y-scroll text-base ${
         // Check if latop, then if mobile/tablet and set width
         isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
-      } h-full flex flex-wrap align-content-start text-white px-2`}
+        } h-full flex flex-wrap align-content-start text-white px-2`}
     >
       <h1 className="w-full mt-2 mb-0 text-4xl flex justify-content-center Merriweather">
         {currentDocument && (
@@ -232,14 +254,14 @@ export default function RemirrorContainer({
             initialContent={state}
             hooks={hooks}
             classNames={["text-white Lato"]}
-            onChange={(props) => {
-              const { tr, firstRender } = props;
-              if (!firstRender && tr?.docChanged) {
-                setSaving(tr?.time);
-              }
-            }}
+            // onChange={ }
+
             editable={editable || true}
           >
+            <OnChangeJSON onChange={(content: RemirrorJSON) => {
+              setSaving(true);
+              onChange(content, doc_id as string);
+            }} />
             <EditorView
               saving={saving}
               setSaving={setSaving}
