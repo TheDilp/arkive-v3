@@ -12,6 +12,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState
@@ -182,25 +183,14 @@ export default function RemirrorContainer({
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
 
-  // useEffect(() => {
-  //   let content = manager.view.state.doc.toJSON();
-  //   const timeout = setTimeout(() => {
-  //     if (!firstRender.current && saving && currentDocument) {
-  //       saveContentMutation.mutate({
-  //         id: currentDocument.id,
-  //         // @ts-ignore
-  //         content,
-  //       });
-  //       setSaving(false);
-  //     }
-  //   }, 300);
 
-  //   return () => clearTimeout(timeout);
-  // }, [saving]);
 
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
+  // Set initial docId if app is open on document
+  // Otherwise the docId won't be set for the sidebar
+  // Because the sidebar has no access to the doc_id in url params
   useEffect(() => {
     if (doc_id && doc_id !== docId) {
       setDocId(doc_id);
