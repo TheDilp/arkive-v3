@@ -1,6 +1,6 @@
 # The Arkive
 
-## Discover your world
+## Discover your world today
 
 ![alt text](public/WikiCardImg.webp)
 ![alt text](public/MapCardImg.webp)
