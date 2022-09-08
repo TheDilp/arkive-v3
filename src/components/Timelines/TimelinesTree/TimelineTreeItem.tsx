@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Dispatch, SetStateAction } from "react";
 import { Link, useParams } from "react-router-dom";
-import { TimelineType } from "../../../types/TimelineTypes";
+import { TimelineItemDisplayDialogProps, TimelineType } from "../../../types/TimelineTypes";
 import { useUpdateTimeline } from "../../../utils/customHooks";
 type Props = {
   node: NodeModel<TimelineType>;
@@ -11,7 +11,7 @@ type Props = {
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  // setDisplayDialog: (displayDialog: MapItemDisplayDialogProps) => void;
+  setDisplayDialog: (displayDialog: TimelineItemDisplayDialogProps) => void;
   cm: any;
 };
 
@@ -21,7 +21,7 @@ export default function TimelineTreeItem({
   setTimelineId,
   depth,
   isOpen,
-  // setDisplayDialog,
+  setDisplayDialog,
   onToggle,
   cm,
 }: Props) {
@@ -37,22 +37,15 @@ export default function TimelineTreeItem({
       }}
       onContextMenu={(e) => {
         cm.current.show(e);
-        // setDisplayDialog({
-        //   id: node.id as string,
-        //   title: node.text,
-        //   folder: node.data?.folder || false,
-        //   map_image: node.data?.map_image || {
-        //     id: "",
-        //     title: "",
-        //     link: "",
-        //     type: "Image",
-        //   },
-        //   map_layers: node.data?.map_layers || [],
-        //   parent: node.parent as string,
-        //   depth,
-        //   show: false,
-        //   public: node.data?.public || false,
-        // });
+        setDisplayDialog({
+          id: node.id as string,
+          title: node.text,
+          folder: node.data?.folder || false,
+          parent: node.parent as string,
+          depth,
+          show: false,
+          public: node.data?.public || false,
+        });
       }}
     >
       {node.droppable && (

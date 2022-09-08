@@ -19,7 +19,7 @@ export default function TimelinesTree() {
     const { timelineId, setTimelineId } = useContext(TimelineContext);
     const { isTabletOrMobile } = useContext(MediaQueryContext)
     const [treeData, setTreeData] = useState<NodeModel<TimelineType>[]>([]);
-    const [updateTimelinesDialog, setUpdateTimelinesDialog] = useState<TimelineItemDisplayDialogProps>(TimelineItemDisplayDialogDefault)
+    const [updateTimelineDialog, setUpdateTimelineDialog] = useState<TimelineItemDisplayDialogProps>(TimelineItemDisplayDialogDefault)
     const updateTimelineMutation = useUpdateTimeline();
     const [filter, setFilter] = useState("");
     const { data: timelines } = useGetTimelines(project_id as string);
@@ -97,8 +97,8 @@ export default function TimelinesTree() {
             <TimelineTreeItemContext
                 cm={cm}
                 timelineId={timelineId}
-                displayDialog={updateTimelinesDialog}
-                setDisplayDialog={setUpdateTimelinesDialog}
+                displayDialog={updateTimelineDialog}
+                setDisplayDialog={setUpdateTimelineDialog}
             />
             <TreeSidebar>
                 <TimelinesFilter filter={filter} setFilter={setFilter} />
@@ -122,7 +122,7 @@ export default function TimelinesTree() {
                             depth={depth}
                             isOpen={isOpen}
                             onToggle={onToggle}
-                            // setDisplayDialog={setUpdateMapDialog}
+                            setDisplayDialog={setUpdateTimelineDialog}
                             setTimelineId={setTimelineId}
                             cm={cm}
                         />

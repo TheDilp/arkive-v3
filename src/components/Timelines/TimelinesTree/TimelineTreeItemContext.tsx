@@ -93,7 +93,7 @@ export default function TimelineTreeItemContext({
             },
         },
         {
-            label: "Delete Map",
+            label: "Delete Timeline",
             icon: "pi pi-fw pi-trash",
             command: confirmdelete,
         },
