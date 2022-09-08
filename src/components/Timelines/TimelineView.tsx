@@ -22,9 +22,9 @@ export default function TimelineView({ public_view }: Props) {
     return (
         <div className={`${public_view ? "w-full" : "w-10"
             } h-full flex align-items-end justify-content-center`}>
-            <div>
+            <div className="w-full h-full flex  align-items-center">
 
-                {timelineData && <Timeline className="w-fit" value={timelineData?.timeline_events || []} content={(item: TimelineEventType) => <TimelineEventCard {...item} />} align="alternate" layout="horizontal" />}
+                {timelineData && <Timeline className="h-10rem" value={timelineData?.timeline_events || []} content={(item: TimelineEventType) => <TimelineEventCard {...item} />} align="alternate" layout="horizontal" />}
             </div>
         </div>
     )
