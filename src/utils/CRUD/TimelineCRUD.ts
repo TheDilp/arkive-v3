@@ -48,3 +48,19 @@ export const updatedTimeline = async (
     }
   }
 };
+
+export const deleteDocument = async (timeline_id: string) => {
+  let user = auth.user();
+
+  if (user) {
+    const { error } = await supabase
+      .from<TimelineType>("timelines")
+      .delete()
+      .eq("id", timeline_id);
+
+    if (error) {
+      toastError("There was an error deleting your timeline.");
+      throw new Error(error.message);
+    }
+  }
+};
