@@ -24,7 +24,16 @@ import {
   UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
-import { TimelineCreateType, TimelineType } from "../types/TimelineTypes";
+import {
+  TimelineCreateType,
+  TimelineType,
+  TimelineUpdateType,
+} from "../types/TimelineTypes";
+import {
+  createTimeline,
+  getTimelines,
+  updatedTimeline,
+} from "./CRUD/TimelineCRUD";
 import {
   createBoard,
   createDocument,
@@ -36,7 +45,6 @@ import {
   createMapMarker,
   createNode,
   createTemplate,
-  createTimeline,
   deleteBoard,
   deleteDocument,
   deleteEdge,
@@ -55,7 +63,6 @@ import {
   getSingleBoard,
   getSingleMap,
   getTags,
-  getTimelines,
   renameImage,
   sortBoardsChildren,
   sortDocumentsChildren,
@@ -1705,12 +1712,64 @@ export function useCreateTimeline() {
         );
         return { previousTimelines };
       },
-      onError: (err, newTodo, context) => {
+      onError: (err, newTimeline, context) => {
         queryClient.setQueryData(
-          `${newTodo.project_id}-timelines`,
+          `${newTimeline.project_id}-timelines`,
           context?.previousTimelines
         );
         toastError("There was an error creating this timeline.");
+      },
+    }
+  );
+}
+export function useUpdateTimeline() {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (vars: TimelineUpdateType) => {
+      await updatedTimeline(vars);
+    },
+    {
+      onMutate: async (updatedTimeline) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${updatedTimeline.project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${updatedTimeline.project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedTimeline.parent
+              );
+              let newData = oldData.map((timeline) => {
+                if (timeline.id === updatedTimeline.id) {
+                  return {
+                    ...timeline,
+                    ...updatedTimeline,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedTimeline.parent === null
+                      ? null
+                      : timeline.parent,
+                  };
+                } else {
+                  return timeline;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, newTimeline, context) => {
+        queryClient.setQueryData(
+          `${newTimeline.project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error updating this timeline.");
       },
     }
   );

@@ -18,6 +18,16 @@ export type TimelineCreateType = {
   expanded: boolean;
 };
 
+export type TimelineUpdateType = {
+  id: string;
+  project_id: string;
+  title?: string;
+  expanded?: boolean;
+  sort?: number;
+  public?: boolean;
+  parent?: string | null;
+};
+
 // Timeline Events
 export type TimelineEventType = {
   id: string;
