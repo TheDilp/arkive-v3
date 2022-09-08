@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import "/node_modules/primeflex/primeflex.css";
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import NotFound from "./components/Auth/NotFound";
 
 // import Profile from "./components/Profile/Profile";
@@ -18,6 +18,7 @@ import LandingPage from "./components/LandingPage/LandingPage";
 import Profile from "./components/Profile/Profile";
 import LoadingScreen from "./components/Util/LoadingScreen";
 import PasswordReset from "./components/Auth/PasswordReset";
+import { supabase } from "./utils/supabaseUtils";
 
 const Login = lazy(() => import("./components/Auth/Login"));
 const Register = lazy(() => import("./components/Auth/Register"));
@@ -36,6 +37,14 @@ function App() {
     },
   });
   console.log(window.location.href)
+
+  useEffect(() => {
+    supabase.auth.onAuthStateChange(ev => {
+      if (ev === "PASSWORD_RECOVERY") {
+        console.log("PASS")
+      }
+    })
+  }, [])
 
   return (
     <main className="App flex flex-wrap justify-content-center surface-0 overflow-y-hidden">
@@ -56,6 +65,7 @@ function App() {
 
               <Route path="home" element={<Home />} />
               <Route path="login" element={<Login />} />
+              <Route path="/#access_token=:token" element={<PasswordReset />} />
               <Route path="passreset" element={<PasswordReset />} />
               <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
