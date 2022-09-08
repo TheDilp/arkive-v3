@@ -141,9 +141,7 @@ export default function RemirrorContainer({
       new HeadingExtension(),
       new UnderlineExtension(),
       new BlockquoteExtension(),
-      new BulletListExtension({
-        enableSpine: true
-      }),
+      new BulletListExtension(),
       new TaskListExtension(),
       new OrderedListExtension(),
       new LinkExtension({
