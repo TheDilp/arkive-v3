@@ -1,6 +1,6 @@
 import { Button } from "primereact/button";
 import React from "react";
-import { useCreateMap } from "../../../utils/customHooks";
+import { useCreateMap, useCreateTimeline } from "../../../utils/customHooks";
 import { v4 as uuid } from "uuid";
 import { useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
@@ -16,7 +16,7 @@ export default function TimelinesFilter({
     setFilter,
 }: Props) {
     const { project_id } = useParams();
-    // const createMapMutation = useCreateMap();
+    const createTimelineMutation = useCreateTimeline();
 
     return (
         <div className="w-full py-1 flex justify-content-between align-items-start flex-wrap">
@@ -35,14 +35,14 @@ export default function TimelinesFilter({
                 className="p-button-outlined"
                 onClick={() => {
                     let id = uuid();
-                    // createMapMutation.mutate({
-                    //     id,
-                    //     project_id: project_id as string,
-                    //     title: "New Folder",
-                    //     map_image: undefined,
-                    //     folder: true,
-                    //     expanded: false,
-                    // });
+                    createTimelineMutation.mutate({
+                        id,
+                        project_id: project_id as string,
+                        title: "New Folder",
+                        folder: true,
+                        expanded: false,
+                        parent: null
+                    });
                 }}
             />
             <Button
@@ -54,6 +54,17 @@ export default function TimelinesFilter({
                 />}
                 iconPos="right"
                 className="p-button-outlined"
+                onClick={() => {
+                    let id = uuid();
+                    createTimelineMutation.mutate({
+                        id,
+                        project_id: project_id as string,
+                        title: "New Timeline",
+                        folder: false,
+                        expanded: false,
+                        parent: null
+                    });
+                }}
             />
         </div>
     );

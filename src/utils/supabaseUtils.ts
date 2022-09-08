@@ -30,7 +30,7 @@ import {
   UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
-import { TimelineType } from "../types/TimelineTypes";
+import { TimelineCreateType, TimelineType } from "../types/TimelineTypes";
 import { toastError } from "./utils";
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -296,6 +296,21 @@ export const createBoard = async (CreateBoardProps: CreateBoardProps) => {
     if (data) return data;
     if (error) {
       toastError("There was an error creating your board.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const createTimeline = async (
+  CreateTimelineProps: TimelineCreateType
+) => {
+  let user = auth.user();
+  if (user) {
+    const { data, error } = await supabase
+      .from("timelines")
+      .insert(CreateTimelineProps);
+    if (data) return data;
+    if (error) {
+      toastError("There was an error creating your timeline.");
       throw new Error(error.message);
     }
   }

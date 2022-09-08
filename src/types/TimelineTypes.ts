@@ -8,6 +8,17 @@ export type TimelineType = {
   public: boolean;
   parent: { id: string; title: string } | null;
 };
+
+export type TimelineCreateType = {
+  id: string;
+  title: string;
+  project_id: string;
+  folder: boolean;
+  parent: string | null;
+  expanded: boolean;
+};
+
+// Timeline Events
 export type TimelineEventType = {
   id: string;
   title: string;

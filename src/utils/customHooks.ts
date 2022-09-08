@@ -24,6 +24,7 @@ import {
   UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
+import { TimelineCreateType, TimelineType } from "../types/TimelineTypes";
 import {
   createBoard,
   createDocument,
@@ -35,6 +36,7 @@ import {
   createMapMarker,
   createNode,
   createTemplate,
+  createTimeline,
   deleteBoard,
   deleteDocument,
   deleteEdge,
@@ -1656,6 +1658,62 @@ export function useGetTimelines(project_id: string) {
     }
   );
   return { data, isLoading };
+}
+
+export function useCreateTimeline() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: TimelineCreateType) => {
+      await createTimeline({ ...vars });
+    },
+    {
+      onMutate: async (newTimeline) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${newTimeline.project_id}-timelines`
+        );
+        const timelines: TimelineType[] | undefined = queryClient.getQueryData(
+          `${newTimeline.project_id}-timelines`
+        );
+        let parent = newTimeline.parent
+          ? timelines?.find((timelines) => timelines.id === newTimeline.parent)
+          : null;
+        queryClient.setQueryData(
+          `${newTimeline.project_id}-timelines`,
+          //   @ts-ignore
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newData: TimelineType[] = [
+                ...oldData,
+                {
+                  ...newTimeline,
+                  // @ts-ignore
+                  parent:
+                    newTimeline.parent && parent
+                      ? { id: parent?.id, title: parent?.title }
+                      : null,
+
+                  expanded: false,
+                  public: false,
+                  sort: oldData.length,
+                },
+              ];
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          `${newTodo.project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error creating this timeline.");
+      },
+    }
+  );
 }
 
 // Custom hook for copy-pasting nodes and edges in a board
