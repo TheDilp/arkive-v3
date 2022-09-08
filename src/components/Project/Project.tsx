@@ -1,7 +1,7 @@
 import cytoscape from "cytoscape";
+import clipboard from "cytoscape-clipboard";
 import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
-import clipboard from "cytoscape-clipboard";
 import jquery from "jquery";
 import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
@@ -11,6 +11,7 @@ import {
   useGetImages,
   useGetMaps,
   useGetProjectData,
+  useGetTimelines
 } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
 import { supabaseStorageImagesLink } from "../../utils/utils";
@@ -37,6 +38,7 @@ export default function Project() {
   );
   const { isLoading: isLoadingMaps } = useGetMaps(project_id as string);
   const { isLoading: isLoadingBoards } = useGetBoards(project_id as string);
+  const { isLoading: isLoadingTimelines } = useGetTimelines(project_id as string)
   const user = auth.user();
 
   useEffect(() => {
@@ -56,7 +58,7 @@ export default function Project() {
   }, []);
   if (!user) return <Navigate to="/" />;
 
-  if (isLoadingDocuments || isLoadingMaps || isLoadingBoards)
+  if (isLoadingDocuments || isLoadingMaps || isLoadingBoards || isLoadingTimelines)
     return <LoadingScreen />;
 
   return (

@@ -4,7 +4,7 @@ import { toastError } from "../../utils/utils";
 
 type Props = {};
 
-export default function NotFound({}: Props) {
+export default function NotFound({ }: Props) {
   toastError("Route not found!");
-  return <Navigate to="/" />;
+  return null;
 }

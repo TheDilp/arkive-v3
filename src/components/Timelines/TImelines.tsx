@@ -1,21 +1,9 @@
-import { Icon } from "@iconify/react";
-import { Card } from "primereact/card";
-import React from "react";
+import TimelineProvider from "../Context/TimelineContext";
 import TimelinesTree from "./TimelinesTree/TimelinesTree";
 
 type Props = {};
 
 export default function Timelines({ }: Props) {
-  const header = (
-    <img
-      className="w-full h-15rem"
-      style={{
-        objectFit: "cover",
-      }}
-      alt="Card"
-      src="https://i.imgur.com/5F1YC44.png"
-    />
-  );
   const events = [
     { id: 1, title: "Event 1", start: "2019-01-01", end: "2019-01-02" },
     { id: 2, title: "Event 2", start: "2019-01-03", end: "2019-01-04" },
@@ -25,7 +13,9 @@ export default function Timelines({ }: Props) {
   ].sort((a, b) => new Date(a.start) - new Date(b.start));
   return (
     <div className="w-full flex flex-nowrap justify-content-start mainScreen">
-      <TimelinesTree />
+      <TimelineProvider>
+        <TimelinesTree />
+      </TimelineProvider>
 
     </div>
   );

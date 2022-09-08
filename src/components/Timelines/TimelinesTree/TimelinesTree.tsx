@@ -6,16 +6,17 @@ import { useGetTimelines, useUpdateTimeline } from '../../../utils/customHooks';
 import { TimelineItemDisplayDialogDefault } from '../../../utils/defaultValues';
 import { getDepth } from '../../../utils/utils';
 import { MediaQueryContext } from '../../Context/MediaQueryContext';
+import { TimelineContext } from '../../Context/TimelineContext';
 import TreeSidebar from '../../Util/TreeSidebar';
 import DragPreview from '../../Wiki/DocumentTree/DragPreview';
 import TimelinesFilter from './TimelinesFilter';
 import TimelineTreeItem from './TimelineTreeItem';
 import TimelineTreeItemContext from './TimelineTreeItemContext';
 
-type Props = {}
 
-export default function TimelinesTree({ }: Props) {
-    const { project_id } = useParams()
+export default function TimelinesTree() {
+    const { project_id } = useParams();
+    const { timelineId, setTimelineId } = useContext(TimelineContext);
     const { isTabletOrMobile } = useContext(MediaQueryContext)
     const [treeData, setTreeData] = useState<NodeModel<TimelineType>[]>([]);
     const [updateTimelinesDialog, setUpdateTimelinesDialog] = useState<TimelineItemDisplayDialogProps>(TimelineItemDisplayDialogDefault)
@@ -95,7 +96,7 @@ export default function TimelinesTree({ }: Props) {
         >
             <TimelineTreeItemContext
                 cm={cm}
-                timelineId={"mapId"}
+                timelineId={timelineId}
                 displayDialog={updateTimelinesDialog}
                 setDisplayDialog={setUpdateTimelinesDialog}
             />

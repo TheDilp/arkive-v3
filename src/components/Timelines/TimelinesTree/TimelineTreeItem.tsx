@@ -1,10 +1,13 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
+import { Dispatch, SetStateAction } from "react";
 import { Link, useParams } from "react-router-dom";
 import { TimelineType } from "../../../types/TimelineTypes";
 import { useUpdateTimeline } from "../../../utils/customHooks";
 type Props = {
   node: NodeModel<TimelineType>;
+  timelineId: string;
+  setTimelineId: Dispatch<SetStateAction<string>>
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
@@ -14,8 +17,8 @@ type Props = {
 
 export default function TimelineTreeItem({
   node,
-  // mapId,
-  // setMapId,
+  timelineId,
+  setTimelineId,
   depth,
   isOpen,
   // setDisplayDialog,
@@ -30,7 +33,7 @@ export default function TimelineTreeItem({
       style={{ marginInlineStart: depth * 10 }}
       className="text-white text-md no-underline hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
       onClick={() => {
-        // if (!node.droppable) setMapId(node.id as string);
+        if (!node.droppable) setTimelineId(node.id as string);
       }}
       onContextMenu={(e) => {
         cm.current.show(e);

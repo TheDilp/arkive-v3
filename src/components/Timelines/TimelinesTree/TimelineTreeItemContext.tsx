@@ -4,7 +4,7 @@ import { ContextMenu } from "primereact/contextmenu";
 import React, { Dispatch, SetStateAction } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TimelineItemDisplayDialogProps } from "../../../types/TimelineTypes";
-import { useDeleteMap, useDeleteTimeline, useUpdateTimeline } from "../../../utils/customHooks";
+import { useDeleteTimeline, useUpdateTimeline } from "../../../utils/customHooks";
 import { toastSuccess } from "../../../utils/utils";
 type Props = {
     cm: React.RefObject<ContextMenu>;
