@@ -59,7 +59,6 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "prebuild": "[[ $CI = true ]] && npx pnpm install -r --store=node_modules/.pnpm-store || echo skiping pnpm install",
     "start": "vite",
     "build": "vite build",
     "test": "react-scripts test",
