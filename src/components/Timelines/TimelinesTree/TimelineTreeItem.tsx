@@ -81,7 +81,7 @@ export default function TimelineTreeItem({
         <Icon icon="mdi:chart-timeline-variant" inline={true} className="mr-1" />
       )}
       <div
-        className={`Lato w-10 ${"mapId" === node.id ? "text-primary" : ""}`}
+        className={`Lato w-10 ${timelineId === node.id ? "text-primary" : ""}`}
         onClick={(e) => {
           if (node.droppable) {
             e.preventDefault();

@@ -118,12 +118,12 @@ export default function TimelinesTree() {
                     render={(node: NodeModel<TimelineType>, { depth, isOpen, onToggle }) => (
                         <TimelineTreeItem
                             node={node}
-                            // mapId={mapId}
+                            timelineId={timelineId}
                             depth={depth}
                             isOpen={isOpen}
                             onToggle={onToggle}
                             // setDisplayDialog={setUpdateMapDialog}
-                            // setMapId={setMapId}
+                            setTimelineId={setTimelineId}
                             cm={cm}
                         />
                     )}
