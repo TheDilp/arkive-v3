@@ -15,7 +15,7 @@ import PricingCard from "./PricingCard";
 
 export default function LandingPage() {
   const user = auth.user();
-  if (user) return <Navigate to="/home" />;
+  if (user) return null;
 
   return (
     <article
