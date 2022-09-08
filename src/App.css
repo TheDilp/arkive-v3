@@ -118,8 +118,9 @@ body {
   color: white !important;
 }
 
-.evenTimelineEvent {
-  margin-left: 30rem;
+
+.p-timeline .p-timeline-event:nth-child(even) {
+  margin-top: -20rem;
 }
 
 .oddTimelineEvent {

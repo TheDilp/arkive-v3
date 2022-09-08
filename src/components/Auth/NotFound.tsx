@@ -6,5 +6,5 @@ type Props = {};
 
 export default function NotFound({ }: Props) {
   toastError("Route not found!");
-  return null;
+  return <Navigate to="/" />;
 }

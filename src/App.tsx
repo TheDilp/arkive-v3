@@ -36,15 +36,7 @@ function App() {
       },
     },
   });
-  console.log(window.location.href)
 
-  useEffect(() => {
-    supabase.auth.onAuthStateChange(ev => {
-      if (ev === "PASSWORD_RECOVERY") {
-        console.log("PASS")
-      }
-    })
-  }, [])
 
   return (
     <main className="App flex flex-wrap justify-content-center surface-0 overflow-y-hidden">
@@ -65,8 +57,7 @@ function App() {
 
               <Route path="home" element={<Home />} />
               <Route path="login" element={<Login />} />
-              <Route path="/#access_token=:token" element={<PasswordReset />} />
-              <Route path="passreset" element={<PasswordReset />} />
+              {/* <Route path="passreset" element={<PasswordReset />} /> */}
               <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
               <Route path="help" element={<Help />} />

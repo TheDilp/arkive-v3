@@ -1703,6 +1703,7 @@ export function useCreateTimeline() {
                   expanded: false,
                   public: false,
                   sort: oldData.length,
+                  timeline_events: [],
                 },
               ];
               return newData;
@@ -1809,7 +1810,22 @@ export function useDeleteTimeline() {
     }
   );
 }
-
+export function useGetTimelineData(project_id: string, timeline_id: string) {
+  const queryClient = useQueryClient();
+  const timelines = queryClient.getQueryData<TimelineType[]>(
+    `${project_id}-timelines`
+  );
+  if (timelines && timeline_id) {
+    const timeline = timelines.find((timeline) => timeline.id === timeline_id);
+    if (timeline) {
+      return timeline;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
 // Custom hook for copy-pasting nodes and edges in a board
 export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
   const queryClient = useQueryClient();

@@ -94,9 +94,9 @@ export default function PasswordReset() {
                         <Button
                             className="w-full my-2 text-white Lato border-none"
                             onClick={async () => {
-                                // await supabase.auth.api.updateUser("f58db987-a018-4b68-aa0f-92178e70f180", {
-                                //     password: password1
-                                // })
+                                await supabase.auth.api.updateUser("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjYyNjQ0NzUzLCJzdWIiOiJmNThkYjk4Ny1hMDE4LTRiNjgtYWEwZi05MjE3OGU3MGYxODAiLCJlbWFpbCI6Im1hcmlqYS52aWxpbW9ub3ZpY0B5YWhvby5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7fSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJzZXNzaW9uX2lkIjoiMTI0OTRlYmMtNmViNS00NzkxLWJjYzMtMjdkZjVlM2U3ZjAyIn0.T5lYqdswwJFtMVcn37j02phmRKnhAfEZRNn5b4lxNps", {
+                                    password: "12345678"
+                                })
                             }
                             }
                             label="Reset"
@@ -106,7 +106,7 @@ export default function PasswordReset() {
                         <Button
                             className="w-full my-2 text-white Lato border-none"
                             onClick={async () => {
-                                await supabase.auth.api.resetPasswordForEmail("mihailobeograd.dilparic@gmail.com", {
+                                await supabase.auth.api.resetPasswordForEmail("marija.vilimonovic@yahoo.com", {
                                     redirectTo: "/passreset"
                                 })
                             }

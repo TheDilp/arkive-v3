@@ -1,3 +1,5 @@
+import { ImageProps } from "../custom-types";
+
 export type TimelineType = {
   id: string;
   title: string;
@@ -6,6 +8,7 @@ export type TimelineType = {
   expanded: boolean;
   sort: number;
   public: boolean;
+  timeline_events: TimelineEventType[];
   parent: { id: string; title: string } | null;
 };
 
@@ -47,7 +50,7 @@ export type TimelineEventType = {
   timeline_id: string;
   doc_id: string;
   map_id: string;
-  image: string;
+  image: ImageProps;
   icon: string;
   public: boolean;
 };
