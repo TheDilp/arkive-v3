@@ -2,7 +2,7 @@ import { NodeModel, Tree } from '@minoru/react-dnd-treeview';
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { TimelineType } from '../../../types/TimelineTypes';
-import { useGetTimelines } from '../../../utils/customHooks';
+import { useGetTimelines, useUpdateTimeline } from '../../../utils/customHooks';
 import { getDepth } from '../../../utils/utils';
 import { MediaQueryContext } from '../../Context/MediaQueryContext';
 import TreeSidebar from '../../Util/TreeSidebar';
@@ -16,6 +16,7 @@ export default function TimelinesTree({ }: Props) {
     const { project_id } = useParams()
     const { isTabletOrMobile } = useContext(MediaQueryContext)
     const [treeData, setTreeData] = useState<NodeModel<TimelineType>[]>([]);
+    const updateTimelineMutation = useUpdateTimeline();
     const [filter, setFilter] = useState("");
     const { data: timelines } = useGetTimelines(project_id as string);
     const cm = useRef() as any;
@@ -34,7 +35,13 @@ export default function TimelinesTree({ }: Props) {
     ) => {
         // Set the user's current view to the new tree
         setTreeData(newTree);
-
+        // SAFEGUARD: If parent is the same, avoid unneccesary update
+        if (dragSource.data?.parent?.id !== dropTargetId)
+            await updateTimelineMutation.mutateAsync({
+                id: dragSourceId,
+                parent: dropTargetId === "0" ? null : dropTargetId,
+                project_id: project_id as string
+            });
 
     };
 

@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Link, useParams } from "react-router-dom";
 import { TimelineType } from "../../../types/TimelineTypes";
-import { useUpdateMap } from "../../../utils/customHooks";
+import { useUpdateMap, useUpdateTimeline } from "../../../utils/customHooks";
 type Props = {
   node: NodeModel<TimelineType>;
   depth: number;
@@ -23,7 +23,7 @@ export default function TimelineTreeItem({
   cm,
 }: Props) {
   const { project_id } = useParams();
-  const updateMapMutation = useUpdateMap(project_id as string);
+  const updateTimelineMutation = useUpdateTimeline();
   return (
     <Link
       to={node.id as string}
@@ -57,9 +57,10 @@ export default function TimelineTreeItem({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            updateMapMutation.mutate({
+            updateTimelineMutation.mutate({
               id: node.id as string,
               expanded: !isOpen,
+              project_id: project_id as string
             });
             onToggle();
           }}
@@ -82,9 +83,10 @@ export default function TimelineTreeItem({
           if (node.droppable) {
             e.preventDefault();
             e.stopPropagation();
-            updateMapMutation.mutate({
+            updateTimelineMutation.mutate({
               id: node.id as string,
               expanded: !isOpen,
+              project_id: project_id as string
             });
             onToggle();
           }

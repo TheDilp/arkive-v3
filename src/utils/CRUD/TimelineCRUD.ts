@@ -9,7 +9,7 @@ import { toastError } from "../utils";
 export const getTimelines = async (project_id: string) => {
   const { data, error } = await supabase
     .from<TimelineType>("timelines")
-    .select("*,timeline_events(*)")
+    .select("*,timeline_events(*), parent(id, title)")
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {
