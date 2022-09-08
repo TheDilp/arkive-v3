@@ -34,7 +34,8 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   PlaceholderExtension, TaskListExtension, TableExtension,
-  UnderlineExtension
+  UnderlineExtension,
+  LinkExtension
 } from "remirror/extensions";
 
 import "remirror/styles/all.css";
@@ -140,10 +141,16 @@ export default function RemirrorContainer({
       new HeadingExtension(),
       new UnderlineExtension(),
       new BlockquoteExtension(),
-      new BulletListExtension(),
+      new BulletListExtension({
+        enableSpine: true
+      }),
       new TaskListExtension(),
       new OrderedListExtension(),
-      CustomLinkExtenstion,
+      new LinkExtension({
+        autoLink: true,
+        defaultTarget: "_blank",
+        selectTextOnClick: true
+      }),
       new ImageExtension({
         enableResizing: true,
       }),
@@ -182,9 +189,6 @@ export default function RemirrorContainer({
   const { data: documents } = useGetDocuments(project_id as string);
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
-
-
-
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
@@ -244,9 +248,8 @@ export default function RemirrorContainer({
             initialContent={state}
             hooks={hooks}
             classNames={["text-white Lato"]}
-            // onChange={ }
-
             editable={editable || true}
+            autoFocus
           >
             <OnChangeJSON onChange={(content: RemirrorJSON) => {
               setSaving(true);
