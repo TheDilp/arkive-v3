@@ -25,6 +25,17 @@ import {
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
 import {
+  TimelineCreateType,
+  TimelineType,
+  TimelineUpdateType,
+} from "../types/TimelineTypes";
+import {
+  createTimeline,
+  deleteTimeline,
+  getTimelines,
+  updatedTimeline,
+} from "./CRUD/TimelineCRUD";
+import {
   createBoard,
   createDocument,
   createEdge,
@@ -1645,6 +1656,160 @@ export function useDeleteManyEdges(project_id: string) {
     }
   );
 }
+
+export function useGetTimelines(project_id: string) {
+  const { data, isLoading } = useQuery(
+    `${project_id}-timelines`,
+    async () => await getTimelines(project_id),
+    {
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+  return { data, isLoading };
+}
+
+export function useCreateTimeline() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: TimelineCreateType) => {
+      await createTimeline({ ...vars });
+    },
+    {
+      onMutate: async (newTimeline) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${newTimeline.project_id}-timelines`
+        );
+        const timelines: TimelineType[] | undefined = queryClient.getQueryData(
+          `${newTimeline.project_id}-timelines`
+        );
+        let parent = newTimeline.parent
+          ? timelines?.find((timelines) => timelines.id === newTimeline.parent)
+          : null;
+        queryClient.setQueryData(
+          `${newTimeline.project_id}-timelines`,
+          //   @ts-ignore
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newData: TimelineType[] = [
+                ...oldData,
+                {
+                  ...newTimeline,
+                  // @ts-ignore
+                  parent:
+                    newTimeline.parent && parent
+                      ? { id: parent?.id, title: parent?.title }
+                      : null,
+
+                  expanded: false,
+                  public: false,
+                  sort: oldData.length,
+                },
+              ];
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, newTimeline, context) => {
+        queryClient.setQueryData(
+          `${newTimeline.project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error creating this timeline.");
+      },
+    }
+  );
+}
+export function useUpdateTimeline() {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (vars: TimelineUpdateType) => {
+      await updatedTimeline(vars);
+    },
+    {
+      onMutate: async (updatedTimeline) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${updatedTimeline.project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${updatedTimeline.project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newParent = oldData.find(
+                (doc) => doc.id === updatedTimeline.parent
+              );
+              let newData = oldData.map((timeline) => {
+                if (timeline.id === updatedTimeline.id) {
+                  return {
+                    ...timeline,
+                    ...updatedTimeline,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : updatedTimeline.parent === null
+                      ? null
+                      : timeline.parent,
+                  };
+                } else {
+                  return timeline;
+                }
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, newTimeline, context) => {
+        queryClient.setQueryData(
+          `${newTimeline.project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error updating this timeline.");
+      },
+    }
+  );
+}
+export function useDeleteTimeline() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: Pick<TimelineType, "id" | "project_id">) => {
+      await deleteTimeline(vars.id);
+    },
+    {
+      onMutate: async (deletedTimeline) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${deletedTimeline.project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${deletedTimeline.project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              return oldData.filter(
+                (timeline) => timeline.id !== deletedTimeline.id
+              );
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, deletedTimeline, context) => {
+        queryClient.setQueryData(
+          `${deletedTimeline.project_id}-timelines`,
+          context?.previousTimelines
+        );
+      },
+    }
+  );
+}
+
 // Custom hook for copy-pasting nodes and edges in a board
 export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
   const queryClient = useQueryClient();

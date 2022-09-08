@@ -30,6 +30,7 @@ import {
   UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
+import { TimelineCreateType, TimelineType } from "../types/TimelineTypes";
 import { toastError } from "./utils";
 
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -288,6 +289,7 @@ export const createBoard = async (CreateBoardProps: CreateBoardProps) => {
     }
   }
 };
+
 export const createNode = async (CreateNodeProps: CreateNodeProps) => {
   let user = auth.user();
   if (user) {

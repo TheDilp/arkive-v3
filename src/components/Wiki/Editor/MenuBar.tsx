@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { deleteTable } from "@remirror/pm/dist-types/tables";
 import {
   useActive,
   useAttrs,
@@ -44,6 +45,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     toggleSecret,
     toggleColumns,
     createTable,
+    deleteTable,
     updateNodeAttributes,
     focus,
   } = useCommands();
@@ -88,9 +90,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             options={
               images?.data
                 ? [
-                    { title: "No image", id: null },
-                    ...images?.data.filter((image) => image.type === "Image"),
-                  ]
+                  { title: "No image", id: null },
+                  ...images?.data.filter((image) => image.type === "Image"),
+                ]
                 : []
             }
             value={{ title: "No image", id: null }}
@@ -298,9 +300,8 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               {
                 label: "Info",
                 icon: "pi pi-fw pi-info-circle",
-                className: `calloutInfoButton ${
-                  active.callout({ type: "info" }) ? "menuBarButtonActive" : ""
-                }`,
+                className: `calloutInfoButton ${active.callout({ type: "info" }) ? "menuBarButtonActive" : ""
+                  }`,
                 command: () => {
                   calloutToggle("info");
                   focus();
@@ -351,11 +352,10 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                       />
                     </span>
                     <span
-                      className={`${options.labelClassName} ${
-                        active.callout({ type: "warning" })
-                          ? "menuBarButtonActive"
-                          : ""
-                      }`}
+                      className={`${options.labelClassName} ${active.callout({ type: "warning" })
+                        ? "menuBarButtonActive"
+                        : ""
+                        }`}
                     >
                       {item.label}
                     </span>
@@ -378,11 +378,10 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                   >
                     <span className="">
                       <Icon
-                        className={`${options.iconClassName} ${
-                          active.callout({ type: "success" })
-                            ? "menuBarButtonActive"
-                            : ""
-                        }`}
+                        className={`${options.iconClassName} ${active.callout({ type: "success" })
+                          ? "menuBarButtonActive"
+                          : ""
+                          }`}
                         icon="clarity:success-standard-line"
                         color="#0f0"
                       />
@@ -414,9 +413,8 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           {
             template: (item: any, options: any) => (
               <span
-                className={`${options.className} text-center  ${
-                  active.horizontalRule() ? "menuBarButtonActive" : ""
-                }`}
+                className={`${options.className} text-center  ${active.horizontalRule() ? "menuBarButtonActive" : ""
+                  }`}
                 onClick={options.onClick}
               >
                 <div className="flex justify-content-center m-0 customMenuBarIconContainer">
@@ -440,7 +438,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               if (link) {
                 let href = window.prompt("Enter the URL:", link);
                 if (href) {
-                  updateLink({ href, target: "_self" });
+                  updateLink({ href, target: "_blank" });
                   focus();
                 } else {
                   removeLink();
@@ -448,7 +446,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               } else {
                 let href = window.prompt("Enter the URL:", undefined);
                 if (href) {
-                  updateLink({ href, target: "_self" });
+                  updateLink({ href, target: "_blank" });
                   focus();
                 }
               }
@@ -549,6 +547,8 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               },
             ],
           },
+          // { label: "TABLE", command: () => createTable({ columnsCount: 3, rowsCount: 3 }) },
+          // { label: "DT", command: () => deleteTable() }
         ]}
         end={() =>
           saving ? (

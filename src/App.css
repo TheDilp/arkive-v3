@@ -36,14 +36,15 @@ body {
   padding: 0 !important;
 }
 
-.remirror-table-controller-trigger-area {
-  pointer-events: none !important;
-}
 
-.remirror-table-controller-mark-column-corner,
+/* .remirror-table-controller-trigger-area {
+  pointer-events: none !important;
+} */
+
+/* .remirror-table-controller-mark-column-corner,
 .remirror-table-controller-mark-row-corner {
   display: none !important;
-}
+} */
 
 
 .wikiTabs .p-tabview-nav li {

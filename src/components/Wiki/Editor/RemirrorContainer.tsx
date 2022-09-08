@@ -1,22 +1,22 @@
 import { Icon } from "@iconify/react";
 import {
+  OnChangeJSON,
   Remirror,
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror,
+  useRemirror
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import {
   useCallback,
   useContext,
-  useEffect,
-  useMemo,
+  useEffect, useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { htmlToProsemirrorNode, prosemirrorNodeToHtml } from "remirror";
+import { htmlToProsemirrorNode, prosemirrorNodeToHtml, RemirrorJSON } from "remirror";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -33,22 +33,23 @@ import {
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  PlaceholderExtension,
-  TaskListExtension,
+  PlaceholderExtension, TaskListExtension, TableExtension,
   UnderlineExtension,
+  LinkExtension
 } from "remirror/extensions";
+
 import "remirror/styles/all.css";
+import { useDebouncedCallback } from "use-debounce";
 import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import Breadcrumbs from "../FolderPage/Breadcrumbs";
-import { CustomColumnsExtension } from "./CustomExtensions/CustomColumns/CustomColumnsExtension";
 import CustomLinkExtenstion from "./CustomExtensions/CustomLink/CustomLinkExtension";
 import MentionReactComponent from "./CustomExtensions/CustomMention/MentionReactComponent/MentionReactComponent";
 import { MapPreviewExtension } from "./CustomExtensions/CustomPreviews/MapPreviewExtension";
@@ -140,10 +141,16 @@ export default function RemirrorContainer({
       new HeadingExtension(),
       new UnderlineExtension(),
       new BlockquoteExtension(),
-      new BulletListExtension(),
+      new BulletListExtension({
+        enableSpine: true
+      }),
       new TaskListExtension(),
       new OrderedListExtension(),
-      CustomLinkExtenstion,
+      new LinkExtension({
+        autoLink: true,
+        defaultTarget: "_blank",
+        selectTextOnClick: true
+      }),
       new ImageExtension({
         enableResizing: true,
       }),
@@ -165,6 +172,9 @@ export default function RemirrorContainer({
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
+      new TableExtension({
+
+      })
     ],
     onError: ({ json, invalidContent, transformers }) => {
       // Automatically remove all invalid nodes and marks.
@@ -179,30 +189,36 @@ export default function RemirrorContainer({
   const { data: documents } = useGetDocuments(project_id as string);
   const [saving, setSaving] = useState<number | boolean>(false);
   const saveContentMutation = useUpdateDocument(project_id as string);
-
-  useEffect(() => {
-    let content = manager.view.state.doc.toJSON();
-    const timeout = setTimeout(() => {
-      if (!firstRender.current && saving && currentDocument) {
-        saveContentMutation.mutate({
-          id: currentDocument.id,
-          // @ts-ignore
-          content,
-        });
-        setSaving(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [saving]);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const { id: docId, setId: setDocId } = useContext(ProjectContext);
 
+  // Set initial docId if app is open on document
+  // Otherwise the docId won't be set for the sidebar
+  // Because the sidebar has no access to the doc_id in url params
   useEffect(() => {
     if (doc_id && doc_id !== docId) {
       setDocId(doc_id);
     }
   }, [doc_id]);
+
+  const debounced = useDebouncedCallback(
+    (content: RemirrorJSON, doc_id: string) => {
+      saveContentMutation.mutate({
+        id: doc_id,
+        // @ts-ignore
+        content,
+      });
+      setSaving(false)
+
+    },
+    // delay in ms
+    300
+  );
+
+  const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {
+    debounced(content, doc_id)
+  }, [])
+
 
   if (!currentDocument) {
     toastWarn("Document not found");
@@ -213,7 +229,7 @@ export default function RemirrorContainer({
       className={`editorContainer overflow-y-scroll text-base ${
         // Check if latop, then if mobile/tablet and set width
         isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
-      } h-full flex flex-wrap align-content-start text-white px-2`}
+        } h-full flex flex-wrap align-content-start text-white px-2`}
     >
       <h1 className="w-full mt-2 mb-0 text-4xl flex justify-content-center Merriweather">
         {currentDocument && (
@@ -232,14 +248,13 @@ export default function RemirrorContainer({
             initialContent={state}
             hooks={hooks}
             classNames={["text-white Lato"]}
-            onChange={(props) => {
-              const { tr, firstRender } = props;
-              if (!firstRender && tr?.docChanged) {
-                setSaving(tr?.time);
-              }
-            }}
             editable={editable || true}
+            autoFocus
           >
+            <OnChangeJSON onChange={(content: RemirrorJSON) => {
+              setSaving(true);
+              onChange(content, doc_id as string);
+            }} />
             <EditorView
               saving={saving}
               setSaving={setSaving}

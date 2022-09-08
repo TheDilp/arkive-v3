@@ -71,6 +71,15 @@ export const MapDialogDefault = {
   depth: 0,
   public: false,
 };
+export const TimelineItemDisplayDialogDefault = {
+  id: "",
+  title: "",
+  parent: "",
+  show: false,
+  folder: false,
+  depth: 0,
+  public: false,
+};
 
 export const MapMarkerDialogDefault = {
   id: "",

@@ -17,6 +17,7 @@ import { Helmet } from "react-helmet";
 import LandingPage from "./components/LandingPage/LandingPage";
 import Profile from "./components/Profile/Profile";
 import LoadingScreen from "./components/Util/LoadingScreen";
+import PasswordReset from "./components/Auth/PasswordReset";
 
 const Login = lazy(() => import("./components/Auth/Login"));
 const Register = lazy(() => import("./components/Auth/Register"));
@@ -54,6 +55,7 @@ function App() {
 
               <Route path="home" element={<Home />} />
               <Route path="login" element={<Login />} />
+              <Route path="passreset" element={<PasswordReset />} />
               <Route path="register" element={<Register />} />
               <Route path="profile" element={<Profile />} />
               <Route path="help" element={<Help />} />

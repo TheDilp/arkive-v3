@@ -1,10 +1,8 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
+  useContext, useLayoutEffect,
   useRef,
-  useState,
+  useState
 } from "react";
 import { useParams } from "react-router-dom";
 import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
@@ -16,11 +14,11 @@ import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
 import MapCreateDialog from "./MapDialogs/MapCreateDialog";
+import MapLayersDialog from "./MapDialogs/MapLayersDialog";
+import MapUpdateDialog from "./MapDialogs/MapUpdateDialog";
 import MapsFilter from "./MapsFilter";
 import MapTreeItem from "./MapTreeItem";
 import MapTreeItemContext from "./MapTreeItemContext";
-import MapUpdateDialog from "./MapDialogs/MapUpdateDialog";
-import MapLayersDialog from "./MapDialogs/MapLayersDialog";
 
 export default function MapsTree({
   mapId,

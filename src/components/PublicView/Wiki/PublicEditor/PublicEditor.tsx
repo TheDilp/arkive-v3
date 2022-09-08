@@ -62,7 +62,11 @@ export default function PublicEditor({
       new HeadingExtension(),
       new UnderlineExtension(),
       new BlockquoteExtension(),
-      new BulletListExtension(),
+      new BulletListExtension(
+        {
+          enableSpine: true
+        }
+      ),
       new TaskListExtension(),
       new OrderedListExtension(),
       CustomLinkExtenstion,

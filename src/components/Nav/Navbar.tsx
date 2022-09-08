@@ -180,7 +180,7 @@ export default function Navbar() {
       }
     });
     return () => {
-      window.removeEventListener("keydown", function (e) {});
+      window.removeEventListener("keydown", function (e) { });
     };
   }, []);
 

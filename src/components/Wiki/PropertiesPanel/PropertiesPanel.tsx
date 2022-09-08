@@ -1,15 +1,12 @@
 import { Button } from "primereact/button";
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import {
-  useCreateTemplate,
   useGetDocumentData,
   useGetProjectData,
-  useGetTags,
+  useGetTags
 } from "../../../utils/customHooks";
 import { auth } from "../../../utils/supabaseUtils";
-import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import AlterNamesAutocomplete from "./AlterNamesAutocomplete";
 import CategoryAutocomplete from "./CategoryAutocomplete";
@@ -29,15 +26,12 @@ export default function PropertiesPanel() {
     }
   }, [categories]);
 
-  const createTemplateMutation = useCreateTemplate();
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   return (
     <div
-      className={`${
-        isLaptop ? "w-3" : "w-2"
-      } surface-50 text-white align-items-start align-content-start Lato ${
-        isTabletOrMobile ? "hidden" : "flex flex-wrap"
-      }`}
+      className={`${isLaptop ? "w-3" : "w-2"
+        } surface-50 text-white align-items-start align-content-start Lato ${isTabletOrMobile ? "hidden" : "flex flex-wrap"
+        }`}
       style={{
         height: "96.4vh",
       }}

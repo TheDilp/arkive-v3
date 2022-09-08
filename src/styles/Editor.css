@@ -156,6 +156,24 @@ blockquote .remirror-mention-atom a i {
     color: black !important;
 }
 
+.remirror-list-spine {
+    border-color: var(--gray-500) !important;
+}
+
+/* Unordered list icons when expanded and collapsed */
+.remirror-list-item-with-custom-mark:not(.remirror-collapsible-list-item-closed) .remirror-list-item-marker-container div {
+    background-color: var(--gray-300);
+}
+
+.remirror-list-item-with-custom-mark.remirror-collapsible-list-item-closed .remirror-list-item-marker-container div {
+    background-color: var(--gray-600);
+}
+
+/* Button with no children in unordered list */
+.remirror-list-item-marker-container div.remirror-collapsible-list-item-button.disabled {
+    display: none;
+}
+
 .leaflet-pane {
     z-index: 0 !important;
 }
