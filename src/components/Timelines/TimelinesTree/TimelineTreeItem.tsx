@@ -1,8 +1,8 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Link, useParams } from "react-router-dom";
-import { TimelineType } from "../../types/TimelineTypes";
-import { useUpdateMap } from "../../utils/customHooks";
+import { TimelineType } from "../../../types/TimelineTypes";
+import { useUpdateMap } from "../../../utils/customHooks";
 type Props = {
   node: NodeModel<TimelineType>;
   depth: number;

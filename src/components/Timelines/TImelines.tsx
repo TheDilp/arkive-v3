@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Card } from "primereact/card";
 import React from "react";
-import TimelinesTree from "./TimelinesTree";
+import TimelinesTree from "./TimelinesTree/TimelinesTree";
 
 type Props = {};
 

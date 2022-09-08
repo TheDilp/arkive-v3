@@ -1,12 +1,13 @@
 import { NodeModel, Tree } from '@minoru/react-dnd-treeview';
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { TimelineType } from '../../types/TimelineTypes';
-import { useGetTimelines } from '../../utils/customHooks';
-import { getDepth } from '../../utils/utils';
-import { MediaQueryContext } from '../Context/MediaQueryContext';
-import TreeSidebar from '../Util/TreeSidebar';
-import DragPreview from '../Wiki/DocumentTree/DragPreview';
+import { TimelineType } from '../../../types/TimelineTypes';
+import { useGetTimelines } from '../../../utils/customHooks';
+import { getDepth } from '../../../utils/utils';
+import { MediaQueryContext } from '../../Context/MediaQueryContext';
+import TreeSidebar from '../../Util/TreeSidebar';
+import DragPreview from '../../Wiki/DocumentTree/DragPreview';
+import TimelinesFilter from './TimelinesFilter';
 import TimelineTreeItem from './TimelineTreeItem';
 
 type Props = {}
@@ -74,9 +75,6 @@ export default function TimelinesTree({ }: Props) {
         }
     }, [timelines, filter]);
 
-
-
-
     return (
         <div
             className={` text-white pt-2 px-2 ${isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
@@ -86,6 +84,7 @@ export default function TimelinesTree({ }: Props) {
             }}
         >
             <TreeSidebar>
+                <TimelinesFilter filter={filter} setFilter={setFilter} />
                 <Tree
                     classes={{
                         root: "w-full overflow-y-auto projectTreeRoot p-0",
