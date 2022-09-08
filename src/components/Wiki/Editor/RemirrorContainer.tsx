@@ -172,9 +172,7 @@ export default function RemirrorContainer({
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
-      new TableExtension({
-
-      })
+      new TableExtension()
     ],
     onError: ({ json, invalidContent, transformers }) => {
       // Automatically remove all invalid nodes and marks.
