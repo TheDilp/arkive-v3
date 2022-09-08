@@ -93,7 +93,11 @@ export default function PasswordReset() {
 
                         <Button
                             className="w-full my-2 text-white Lato border-none"
-                            onClick={() => { }
+                            onClick={async () => {
+                                await supabase.auth.api.updateUser("f58db987-a018-4b68-aa0f-92178e70f180", {
+                                    password: password1
+                                })
+                            }
                             }
                             label="Reset"
                             icon="pi pi-user-plus"
