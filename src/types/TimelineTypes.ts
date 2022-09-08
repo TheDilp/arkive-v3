@@ -28,6 +28,16 @@ export type TimelineUpdateType = {
   parent?: string | null;
 };
 
+export type TimelineItemDisplayDialogProps = {
+  id: string;
+  title: string;
+  parent: string;
+  folder: boolean;
+  depth: number;
+  public: boolean;
+  show: boolean;
+};
+
 // Timeline Events
 export type TimelineEventType = {
   id: string;

@@ -49,7 +49,7 @@ export const updatedTimeline = async (
   }
 };
 
-export const deleteDocument = async (timeline_id: string) => {
+export const deleteTimeline = async (timeline_id: string) => {
   let user = auth.user();
 
   if (user) {

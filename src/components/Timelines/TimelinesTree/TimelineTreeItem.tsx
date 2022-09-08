@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Link, useParams } from "react-router-dom";
 import { TimelineType } from "../../../types/TimelineTypes";
-import { useUpdateMap, useUpdateTimeline } from "../../../utils/customHooks";
+import { useUpdateTimeline } from "../../../utils/customHooks";
 type Props = {
   node: NodeModel<TimelineType>;
   depth: number;
@@ -75,7 +75,7 @@ export default function TimelineTreeItem({
       {node.droppable ? (
         <Icon icon="bxs:folder" inline={true} className="mr-1" />
       ) : (
-        <Icon icon={"mdi:chart-timeline-variant"} inline={true} className="mr-1" />
+        <Icon icon="mdi:chart-timeline-variant" inline={true} className="mr-1" />
       )}
       <div
         className={`Lato w-10 ${"mapId" === node.id ? "text-primary" : ""}`}

@@ -1,14 +1,16 @@
 import { NodeModel, Tree } from '@minoru/react-dnd-treeview';
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { TimelineType } from '../../../types/TimelineTypes';
+import { TimelineItemDisplayDialogProps, TimelineType } from '../../../types/TimelineTypes';
 import { useGetTimelines, useUpdateTimeline } from '../../../utils/customHooks';
+import { TimelineItemDisplayDialogDefault } from '../../../utils/defaultValues';
 import { getDepth } from '../../../utils/utils';
 import { MediaQueryContext } from '../../Context/MediaQueryContext';
 import TreeSidebar from '../../Util/TreeSidebar';
 import DragPreview from '../../Wiki/DocumentTree/DragPreview';
 import TimelinesFilter from './TimelinesFilter';
 import TimelineTreeItem from './TimelineTreeItem';
+import TimelineTreeItemContext from './TimelineTreeItemContext';
 
 type Props = {}
 
@@ -16,6 +18,7 @@ export default function TimelinesTree({ }: Props) {
     const { project_id } = useParams()
     const { isTabletOrMobile } = useContext(MediaQueryContext)
     const [treeData, setTreeData] = useState<NodeModel<TimelineType>[]>([]);
+    const [updateTimelinesDialog, setUpdateTimelinesDialog] = useState<TimelineItemDisplayDialogProps>(TimelineItemDisplayDialogDefault)
     const updateTimelineMutation = useUpdateTimeline();
     const [filter, setFilter] = useState("");
     const { data: timelines } = useGetTimelines(project_id as string);
@@ -90,6 +93,12 @@ export default function TimelinesTree({ }: Props) {
                 height: "96vh",
             }}
         >
+            <TimelineTreeItemContext
+                cm={cm}
+                timelineId={"mapId"}
+                displayDialog={updateTimelinesDialog}
+                setDisplayDialog={setUpdateTimelinesDialog}
+            />
             <TreeSidebar>
                 <TimelinesFilter filter={filter} setFilter={setFilter} />
                 <Tree

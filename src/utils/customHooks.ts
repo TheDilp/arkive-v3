@@ -31,6 +31,7 @@ import {
 } from "../types/TimelineTypes";
 import {
   createTimeline,
+  deleteTimeline,
   getTimelines,
   updatedTimeline,
 } from "./CRUD/TimelineCRUD";
@@ -1770,6 +1771,40 @@ export function useUpdateTimeline() {
           context?.previousTimelines
         );
         toastError("There was an error updating this timeline.");
+      },
+    }
+  );
+}
+export function useDeleteTimeline() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: Pick<TimelineType, "id" | "project_id">) => {
+      await deleteTimeline(vars.id);
+    },
+    {
+      onMutate: async (deletedTimeline) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${deletedTimeline.project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${deletedTimeline.project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              return oldData.filter(
+                (timeline) => timeline.id !== deletedTimeline.id
+              );
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, deletedTimeline, context) => {
+        queryClient.setQueryData(
+          `${deletedTimeline.project_id}-timelines`,
+          context?.previousTimelines
+        );
       },
     }
   );
