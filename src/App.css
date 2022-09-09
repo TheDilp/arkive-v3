@@ -119,8 +119,18 @@ body {
 }
 
 
-.p-timeline:not(.simpleTimeline) .p-timeline-event:nth-child(even) {
+.p-timeline.detailedTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
   margin-top: -20rem;
+}
+
+.p-timeline.detailedTimeline.verticalTimeline .p-timeline-event-separator {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.p-timeline.detailedTimeline.verticalTimeline .p-timeline-event:nth-child(even) .p-timeline-event-content {
+  display: flex;
+  justify-content: flex-end;
 }
 
 
