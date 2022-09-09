@@ -103,3 +103,18 @@ export const DocumentCreateDefault = {
   content: null,
   categories: [],
 };
+
+export const TimelineEventCreateDefault = {
+  title: "New Timeline Event",
+  start_day: undefined,
+  start_month: undefined,
+  start_year: 0,
+  end_day: undefined,
+  end_month: undefined,
+  end_year: 0,
+  icon: "mdi:chart-timeline-variant",
+  image: undefined,
+  doc_id: undefined,
+  map_id: undefined,
+  public: false,
+};

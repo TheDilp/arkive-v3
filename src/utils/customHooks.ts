@@ -1874,7 +1874,7 @@ export function useCreateTimelineEvent(project_id: string) {
           `${project_id}-timelines`,
           context?.previousTimelines
         );
-        toastError("There was an error creating this timeline.");
+        toastError("There was an error creating this timeline event.");
       },
     }
   );
@@ -1921,7 +1921,7 @@ export function useUpdateTimelineEvent(project_id: string) {
           `${project_id}-timelines`,
           context?.previousTimelines
         );
-        toastError("There was an error updating this timeline.");
+        toastError("There was an error updating this timeline event.");
       },
     }
   );

@@ -55,7 +55,7 @@ export default function MapCreateDialog({ mapData, setMapData }: Props) {
       onHide={() => setMapData(false)}
       modal={false}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap justify-content-center">
           <div className="w-8">
             <InputText
