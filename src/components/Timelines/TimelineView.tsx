@@ -7,7 +7,7 @@ import {
     useUpdateTimelineEvent,
 } from "../../utils/customHooks";
 import { TimelineContext } from "../Context/TimelineContext";
-import TimelineEventCard from "./TimelineEventCard";
+import TimelineEventCard from "./TimelineEventCard/TimelineEventCard";
 import TimelineEventDialog from "./TimelineEventDialog";
 import TimelineQuickBar from "./TimelineQuickBar";
 type Props = {

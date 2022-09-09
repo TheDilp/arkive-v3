@@ -118,6 +118,14 @@ body {
   color: white !important;
 }
 
+.timelineCardTitle i {
+  display: none;
+}
+
+.timelineEventCard:hover i {
+  display: inline;
+  cursor: pointer;
+}
 
 .p-timeline.detailedTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
   margin-top: -20rem;
