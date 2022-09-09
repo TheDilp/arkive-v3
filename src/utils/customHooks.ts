@@ -25,6 +25,10 @@ import {
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
 import {
+  TimelineEventCreateType,
+  TimelineEventUpdateType,
+} from "../types/TimelineEventTypes";
+import {
   TimelineCreateType,
   TimelineType,
   TimelineUpdateType,
@@ -35,6 +39,10 @@ import {
   getTimelines,
   updatedTimeline,
 } from "./CRUD/TimelineCRUD";
+import {
+  createTimelineEvent,
+  updatedTimelineEvent,
+} from "./CRUD/TimelineEventsCRUD";
 import {
   createBoard,
   createDocument,
@@ -1826,6 +1834,99 @@ export function useGetTimelineData(project_id: string, timeline_id: string) {
     return null;
   }
 }
+
+export function useCreateTimelineEvent(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: TimelineEventCreateType) => {
+      await createTimelineEvent({ ...vars });
+    },
+    {
+      onMutate: async (newTimelineEvent) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${project_id}-timelines`
+        );
+
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          //   @ts-ignore
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newData: TimelineType[] = oldData.map((timeline) => {
+                if (timeline.id === newTimelineEvent.timeline_id) {
+                  timeline.timeline_events = [
+                    ...timeline.timeline_events,
+                    newTimelineEvent,
+                  ];
+                }
+                return timeline;
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, newTimeline, context) => {
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error creating this timeline.");
+      },
+    }
+  );
+}
+export function useUpdateTimelineEvent(project_id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (vars: TimelineEventUpdateType) => {
+      await updatedTimelineEvent(vars);
+    },
+    {
+      onMutate: async (updatedTimelineEvent) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((timeline) => {
+                if (timeline.id === updatedTimelineEvent.timeline_id) {
+                  timeline.timeline_events = timeline.timeline_events.map(
+                    (event) => {
+                      if (event.id === updatedTimelineEvent.id) {
+                        return { ...event, ...updatedTimelineEvent };
+                      }
+                      return event;
+                    }
+                  );
+                }
+                return timeline;
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, updatedTimelineEvent, context) => {
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error updating this timeline.");
+      },
+    }
+  );
+}
+
 // Custom hook for copy-pasting nodes and edges in a board
 export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
   const queryClient = useQueryClient();

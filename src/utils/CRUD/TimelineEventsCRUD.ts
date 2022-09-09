@@ -20,7 +20,6 @@ export const createTimelineEvent = async (
     }
   }
 };
-
 export const updatedTimelineEvent = async (
   UpdateTimelineEventProps: TimelineEventUpdateType
 ) => {

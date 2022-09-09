@@ -14,8 +14,8 @@ export default function TimelineView({ public_view }: Props) {
     const { project_id, timeline_id } = useParams();
     const { setTimelineId } = useContext(TimelineContext);
     const timelineData = useGetTimelineData(project_id as string, timeline_id as string);
-    useLayoutEffect(() => {
 
+    useLayoutEffect(() => {
         if (timeline_id) {
             setTimelineId(timeline_id)
         }
