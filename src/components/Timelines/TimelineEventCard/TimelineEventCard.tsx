@@ -2,6 +2,7 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { TimelineEventType } from "../../../types/TimelineEventTypes";
 import { supabaseStorageImagesLink } from "../../../utils/utils";
+import TimelineEventCardSubtitle from "./TimelineEventCardSubtitle";
 import TimelineEventCardTitle from "./TimelineEventCardTitle";
 
 export default function TimelineEventCard({
@@ -17,8 +18,7 @@ export default function TimelineEventCard({
     return (
         <Card
             title={() => <TimelineEventCardTitle title={title} />}
-            subTitle={`${start_day || ""}/${start_month || ""}/${start_year} - ${end_day || ""
-                }/${end_month || ""}/${end_year}`}
+            subTitle={() => <TimelineEventCardSubtitle start_day={start_day} start_month={start_month} start_year={start_year} end_day={end_day} end_month={end_month} end_year={end_year} />}
             className="w-20rem h-20rem timelineEventCard"
         >
             {image && (

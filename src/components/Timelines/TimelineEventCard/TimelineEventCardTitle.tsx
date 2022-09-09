@@ -4,6 +4,6 @@ type Props = {
 
 export default function TimelineEventCardTitle({ title }: Props) {
     return (
-        <div className="timelineCardTitle">{title} <i className="pi pi-pencil"></i></div>
+        <div className="timelineCardTitle text-center">{title} <i className="pi pi-pencil"></i></div>
     )
 }
