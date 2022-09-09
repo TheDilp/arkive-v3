@@ -111,6 +111,7 @@ export default function PublicEditor({
               `text-white Lato viewOnlyEditor w-full ${classes || "h-20rem"}`,
             ]}
             editable={false}
+            
           >
             <PublicEditorComponent content={content} />
           </Remirror>

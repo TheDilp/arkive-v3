@@ -190,6 +190,7 @@ td .mappreview-node-view-wrapper>div {
 
 .mappreview-node-view-wrapper {
     width: 100% !important;
+    min-height: 1rem;
     display: flex;
     justify-content: center;
 }

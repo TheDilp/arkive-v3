@@ -32,7 +32,7 @@ const Timelines = lazy(() => import("../Timelines/TImelines"));
 export default function Project() {
   const { project_id } = useParams();
   const project = useGetProjectData(project_id as string);
-  const images = useGetImages(project_id as string);
+  // const images = useGetImages(project_id as string);
   const { isLoading: isLoadingDocuments } = useGetDocuments(
     project_id as string
   );
@@ -41,15 +41,15 @@ export default function Project() {
   const { isLoading: isLoadingTimelines } = useGetTimelines(project_id as string)
   const user = auth.user();
 
-  useEffect(() => {
-    if (images?.data) {
-      let maps = images.data.filter((image) => image.type === "Map");
-      for (const map of maps) {
-        let img = new Image();
-        img.src = supabaseStorageImagesLink + map.link;
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (images?.data) {
+  //     let maps = images.data.filter((image) => image.type === "Map");
+  //     for (const map of maps) {
+  //       let img = new Image();
+  //       img.src = supabaseStorageImagesLink + map.link;
+  //     }
+  //   }
+  // }, []);
 
   useEffect(() => {
     cytoscape.use(edgehandles);

@@ -31,7 +31,7 @@ export default function EditorView({ saving, setSaving, firstRender }: Props) {
     }
     if (doc_id) {
       if (currentDocument) {
-        setContent(currentDocument.content ?? "");
+        // setContent(currentDocument.content ?? "");
       } else {
         toastWarn("Document doesn't seem to exist.");
         navigate("../");

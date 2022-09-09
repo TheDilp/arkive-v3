@@ -141,7 +141,9 @@ export default function RemirrorContainer({
       new HeadingExtension(),
       new UnderlineExtension(),
       new BlockquoteExtension(),
-      new BulletListExtension(),
+      new BulletListExtension({
+        enableSpine: true
+      }),
       new TaskListExtension(),
       new OrderedListExtension(),
       new LinkExtension({
@@ -245,7 +247,6 @@ export default function RemirrorContainer({
             hooks={hooks}
             classNames={["text-white Lato"]}
             editable={editable || true}
-            autoFocus
           >
             <OnChangeJSON onChange={(content: RemirrorJSON) => {
               setSaving(true);
