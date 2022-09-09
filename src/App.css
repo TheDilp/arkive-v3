@@ -119,34 +119,10 @@ body {
 }
 
 
-.p-timeline .p-timeline-event:nth-child(even) {
+.p-timeline:not(.simpleTimeline) .p-timeline-event:nth-child(even) {
   margin-top: -20rem;
 }
 
-.oddTimelineEvent {
-  margin-right: 30rem;
-}
-
-.evenTimelineEvent .cardContainer {
-  border-left: 3px solid white;
-  padding-left: 5rem;
-}
-
-.oddTimelineEvent .cardContainer {
-  border-right: 3px solid white;
-  padding-right: 5rem;
-}
-
-.evenTimelineEvent .evenDivider {
-  left: 29rem;
-  top: 10rem;
-}
-
-.oddTimelineEvent .oddDivder {
-  left: 59rem;
-  top: 10rem;
-
-}
 
 .leaflet-control-layers-overlays label>* {
   user-select: none;
