@@ -1,7 +1,8 @@
+import { Button } from "primereact/button";
 import { Timeline } from "primereact/timeline"
 import { useContext, useLayoutEffect } from "react";
 import { useParams } from "react-router-dom"
-import { TimelineEventType } from "../../types/TimelineTypes";
+import { TimelineEventType } from "../../types/TimelineEventTypes";
 import { useGetTimelineData } from "../../utils/customHooks";
 import { TimelineContext } from "../Context/TimelineContext";
 import TimelineEventCard from "./TimelineEventCard";
@@ -22,10 +23,15 @@ export default function TimelineView({ public_view }: Props) {
     return (
         <div className={`${public_view ? "w-full" : "w-10"
             } h-full flex align-items-end justify-content-center`}>
-            <div className="w-full h-full flex  align-items-center">
+            {timelineData &&
+                <div className="w-full h-full flex px-4 align-items-center overflow-x-auto">
 
-                {timelineData && <Timeline className="h-10rem" value={timelineData?.timeline_events || []} content={(item: TimelineEventType) => <TimelineEventCard {...item} />} align="alternate" layout="horizontal" />}
-            </div>
+                    <Timeline className="h-10rem" value={timelineData?.timeline_events || []} content={(item: TimelineEventType) => <TimelineEventCard {...item} />} align="alternate" layout="horizontal" />
+                    <Button className="p-button-rounded w-3rem h-3rem" icon="pi pi-plus" tooltip="New Event" tooltipOptions={{
+                        position: "left"
+                    }} />
+                </div>
+            }
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import { ImageProps } from "../custom-types";
+import { TimelineEventType } from "./TimelineEventTypes";
 
 export type TimelineType = {
   id: string;
@@ -39,18 +39,4 @@ export type TimelineItemDisplayDialogProps = {
   depth: number;
   public: boolean;
   show: boolean;
-};
-
-// Timeline Events
-export type TimelineEventType = {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
-  timeline_id: string;
-  doc_id: string;
-  map_id: string;
-  image: ImageProps;
-  icon: string;
-  public: boolean;
 };

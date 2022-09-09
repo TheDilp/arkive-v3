@@ -17,7 +17,7 @@ type Props = {
 
 export default function EditorView({ saving, setSaving, firstRender }: Props) {
   const { project_id, doc_id } = useParams();
-  const { setContent } = useRemirrorContext();
+  // const { setContent } = useRemirrorContext();
   const navigate = useNavigate();
 
   const currentDocument = useGetDocumentData(

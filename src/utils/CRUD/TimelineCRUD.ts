@@ -48,7 +48,6 @@ export const updatedTimeline = async (
     }
   }
 };
-
 export const deleteTimeline = async (timeline_id: string) => {
   let user = auth.user();
 
