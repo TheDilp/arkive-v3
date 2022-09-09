@@ -110,8 +110,8 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
           tr.doc
         );
         const node = this.type.create(attributes);
-        dispatch?.(tr.replaceRangeWith(from, to, node));
-      } else {
+        if (node)
+          dispatch?.(tr.replaceRangeWith(from, to, node));
       }
       return true;
     };

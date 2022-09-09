@@ -172,9 +172,7 @@ export default function RemirrorContainer({
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
-      new TableExtension({
-
-      })
+      new TableExtension()
     ],
     onError: ({ json, invalidContent, transformers }) => {
       // Automatically remove all invalid nodes and marks.
@@ -249,7 +247,6 @@ export default function RemirrorContainer({
             hooks={hooks}
             classNames={["text-white Lato"]}
             editable={editable || true}
-            autoFocus
           >
             <OnChangeJSON onChange={(content: RemirrorJSON) => {
               setSaving(true);

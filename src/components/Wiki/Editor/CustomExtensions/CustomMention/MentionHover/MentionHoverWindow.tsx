@@ -12,15 +12,15 @@ import {
   HorizontalRuleExtension,
   ImageExtension,
   ItalicExtension,
+  LinkExtension,
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
   TaskListExtension,
-  UnderlineExtension
+  UnderlineExtension, TableExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../../../styles/Editor.css";
-import CustomLinkExtenstion from "../../CustomLink/CustomLinkExtension";
 import { MapPreviewExtension } from "../../CustomPreviews/MapPreviewExtension";
 import { SecretExtension } from "../../SecretExtension/SecretExtension";
 import MentionReactComponent from "../MentionReactComponent/MentionReactComponent";
@@ -65,17 +65,7 @@ export default function LinkHoverWindow({
   const { manager, state } = useRemirror({
     extensions: () => [
       new BoldExtension(),
-      new ColumnsExtension({
-        defaults: {
-          count: 2,
-          fill: "auto",
-          gap: "1rem",
-          ruleColor: "lightgrey",
-          ruleStyle: "solid",
-          ruleWidth: "thin",
-          width: "100%",
-        },
-      }),
+      new ColumnsExtension(),
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
@@ -83,7 +73,11 @@ export default function LinkHoverWindow({
       new BulletListExtension(),
       new TaskListExtension(),
       new OrderedListExtension(),
-      CustomLinkExtenstion,
+      new LinkExtension({
+        autoLink: true,
+        defaultTarget: "_blank",
+        selectTextOnClick: true
+      }),
       new ImageExtension({
         enableResizing: true,
       }),
@@ -103,6 +97,7 @@ export default function LinkHoverWindow({
         public_view: false,
         type: null,
       }),
+      new TableExtension(),
     ],
     selection: "all",
     content: content || "",

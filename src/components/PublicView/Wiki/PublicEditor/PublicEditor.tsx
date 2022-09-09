@@ -4,20 +4,20 @@ import {
   BlockquoteExtension,
   BoldExtension,
   BulletListExtension,
-  CalloutExtension, DropCursorExtension,
+  CalloutExtension, ColumnsExtension, DropCursorExtension,
   GapCursorExtension, HardBreakExtension,
   HeadingExtension,
   HorizontalRuleExtension,
   ImageExtension,
-  ItalicExtension, MentionAtomExtension, NodeFormattingExtension,
+  ItalicExtension, LinkExtension, MentionAtomExtension, NodeFormattingExtension,
   OrderedListExtension,
   PlaceholderExtension,
+  TableExtension,
   TaskListExtension,
   UnderlineExtension
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../styles/Editor.css";
-import CustomLinkExtenstion from "../../../Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
 import { MapPreviewExtension } from "../../../Wiki/Editor/CustomExtensions/CustomPreviews/MapPreviewExtension";
 import { SecretExtension } from "../../../Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
 import MentionReactComponent from "./MentionReactComponent/PublicMentionReactComponent";
@@ -58,18 +58,19 @@ export default function PublicEditor({
         placeholder: "Write something awesome! 📜",
       }),
       new BoldExtension(),
+      new ColumnsExtension(),
       new ItalicExtension(),
       new HeadingExtension(),
       new UnderlineExtension(),
       new BlockquoteExtension(),
-      new BulletListExtension(
-        {
-          enableSpine: true
-        }
-      ),
+      new BulletListExtension(),
       new TaskListExtension(),
       new OrderedListExtension(),
-      CustomLinkExtenstion,
+      new LinkExtension({
+        autoLink: true,
+        defaultTarget: "_blank",
+        selectTextOnClick: true
+      }),
       new ImageExtension({
         enableResizing: true,
       }),
@@ -86,11 +87,12 @@ export default function PublicEditor({
       }),
       CustomMentionExtension,
       new MapPreviewExtension({
-        public_view: true,
+        public_view: false,
         type: null,
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
+      new TableExtension()
     ],
     selection: "all",
     content: content || undefined,
@@ -109,6 +111,7 @@ export default function PublicEditor({
               `text-white Lato viewOnlyEditor w-full ${classes || "h-20rem"}`,
             ]}
             editable={false}
+            
           >
             <PublicEditorComponent content={content} />
           </Remirror>
