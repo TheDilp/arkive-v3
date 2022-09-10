@@ -36,6 +36,7 @@ body {
   padding: 0 !important;
 }
 
+
 /* .remirror-table-controller-trigger-area {
   pointer-events: none !important;
 } */
@@ -44,6 +45,7 @@ body {
 .remirror-table-controller-mark-row-corner {
   display: none !important;
 } */
+
 
 .wikiTabs .p-tabview-nav li {
   width: 100%;
@@ -59,7 +61,7 @@ body {
   text-align: center !important;
 }
 
-.alterNamesChips > * {
+.alterNamesChips>* {
   min-width: 100%;
 }
 
@@ -115,18 +117,7 @@ body {
 .p-breadcrumb-home a span {
   color: white !important;
 }
-.timelineContainer {
-  height: 100%;
-  border-bottom: var(--gray-200) solid 0.25rem;
-  overflow-y: hidden;
-}
 
-.timelineEventCardContainer::after {
-  width: min-content;
-  border-left: var(--gray-300) 1px dashed;
-  height: 100%;
-  content: "";
-}
 .timelineCardTitle i {
   display: none;
 }
@@ -135,13 +126,32 @@ body {
   display: inline;
   cursor: pointer;
 }
-.timelineEventCard .p-card-body {
-  padding-left: 0;
-  padding-right: 0;
-  padding-bottom: 0;
+
+
+
+.p-timeline.detailedTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
+  margin-top: -20rem;
 }
 
-.leaflet-control-layers-overlays label > * {
+.p-timeline.detailedTimeline.horizontalTimeline  .p-timeline-event:nth-child(odd) .timelineEventCardContainer {
+  align-items: flex-start;
+}
+.p-timeline.detailedTimeline.horizontalTimeline  .p-timeline-event:nth-child(even) .timelineEventCardContainer {
+  align-items: flex-end;
+}
+
+.p-timeline.detailedTimeline.verticalTimeline .p-timeline-event-separator {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.p-timeline.detailedTimeline.verticalTimeline .p-timeline-event:nth-child(even) .p-timeline-event-content {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+.leaflet-control-layers-overlays label>* {
   user-select: none;
   cursor: pointer;
 }
@@ -157,6 +167,7 @@ body {
 
 .markerSidebarMapPreview {
   transition: transform ease-in-out 0.1s;
+
 }
 
 .markerSidebarMapPreview:hover {

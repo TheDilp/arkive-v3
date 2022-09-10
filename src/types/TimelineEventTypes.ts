@@ -3,7 +3,6 @@ import { ImageProps } from "../custom-types";
 export type TimelineEventType = {
   id: string;
   title: string;
-  age?: string;
   start_day?: number;
   start_month?: number;
   start_year: number;
@@ -21,7 +20,6 @@ export type TimelineEventType = {
 export type TimelineEventCreateType = {
   id: string;
   title: string;
-  age?: string;
   start_day?: number;
   start_month?: number;
   start_year: number;
@@ -40,7 +38,6 @@ export type TimelineEventUpdateType = {
   id: string;
   timeline_id: string;
   title?: string;
-  age?: string;
   start_day?: number;
   start_month?: number;
   start_year?: number;

@@ -42,11 +42,10 @@ export default function TimelineEventUpdateDialog() {
                 <div className="w-full py-2">
                     <Dropdown
                         value={eventData.image}
-                        filter
                         itemTemplate={(item: ImageProps) => (
                             <ImgDropdownItem title={item.title} link={item.link} />
                         )}
-                        options={images?.data.filter((image) => image.type === "Image") || []}
+                        options={images?.data.filter((image) => image.type === "Map") || []}
                         onChange={(e) =>
                             setEventData((prev) => ({ ...prev, image: e.value } as TimelineEventUpdateType))
                         }

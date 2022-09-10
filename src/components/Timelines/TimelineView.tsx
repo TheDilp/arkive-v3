@@ -1,10 +1,12 @@
 import { Timeline } from "primereact/timeline";
-import { useContext, useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useReducer, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TimelineEventType } from "../../types/TimelineEventTypes";
 import {
-    useGetTimelineData
+    useGetTimelineData,
+    useUpdateTimelineEvent,
 } from "../../utils/customHooks";
+import { TimelineEventCreateDefault } from "../../utils/defaultValues";
 import { TimelineContext } from "../Context/TimelineContext";
 import TimelineEventProvider from "../Context/TimelineEventContext";
 import SimpleTimelineEvent from "./TimelineEvent/SimpleTimelineEvent";
@@ -72,28 +74,24 @@ export default function TimelineView({ public_view }: Props) {
                 <>
                     {timelineData && (
                         <div className="w-full h-full flex px-4 align-items-center overflow-x-auto">
-                            <div className="w-full flex timelineContainer">
-
-                                {timelineData.timeline_events.sort(TimelineEventsSort).map(eventData => <TimelineEventCard key={eventData.id} eventData={eventData} />)}
-                                {/* <Timeline
+                            <Timeline
                                 className={`w-full  ${view.details ? "detailedTimeline" : "simpleTimeline"
-                            } ${view.horizontal
-                                ? "horizontalTimeline"
-                                : "verticalTimeline h-full"
-                            }`}
-                            value={timelineData?.timeline_events.sort(TimelineEventsSort) || []}
-                            content={(eventData: TimelineEventType) =>
-                                view.details ? (
-                                    <TimelineEventCard eventData={eventData} />
+                                    } ${view.horizontal
+                                        ? "horizontalTimeline h-10rem"
+                                        : "verticalTimeline h-full"
+                                    }`}
+                                value={timelineData?.timeline_events.sort(TimelineEventsSort) || []}
+                                content={(eventData: TimelineEventType) =>
+                                    view.details ? (
+                                        <TimelineEventCard eventData={eventData} />
                                     ) : (
                                         <SimpleTimelineEvent {...eventData} />
-                                        )
-                                    }
-                                    // opposite={(item) => item.title}
-                                    align="alternate"
+                                    )
+                                }
+                                // opposite={(item) => item.title}
+                                align="alternate"
                                 layout={view.horizontal ? "horizontal" : "vertical"}
-                            /> */}
-                            </div>
+                            />
                         </div>
                     )}
                 </>

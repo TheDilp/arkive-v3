@@ -1707,7 +1707,7 @@ export function useCreateTimeline() {
                     newTimeline.parent && parent
                       ? { id: parent?.id, title: parent?.title }
                       : null,
-                  start_year: 0,
+
                   expanded: false,
                   public: false,
                   sort: oldData.length,
