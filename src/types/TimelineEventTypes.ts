@@ -10,8 +10,8 @@ export type TimelineEventType = {
   end_month?: number;
   end_year: number;
   timeline_id: string;
-  doc_id?: string | null;
-  map_id?: string | null;
+  doc_id?: string;
+  map_id?: string;
   image?: ImageProps;
   icon: string;
   public: boolean;

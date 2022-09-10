@@ -25,9 +25,28 @@ export default function TimelineView({ public_view }: Props) {
         project_id as string,
         timeline_id as string
     );
-
-
     const [view, setView] = useState({ details: true, horizontal: true });
+
+    function TimelineEventsSort(a: TimelineEventType, b: TimelineEventType) {
+        if (a.start_year > b.start_year) { return 1; }
+        else if (a.start_year < b.start_year) { return -1; }
+        else {
+            if (a.start_month && b.start_month) {
+                if (a.start_month > b.start_month) { return 1 }
+                if (a.start_month < b.start_month) { return -1 }
+                else {
+                    if (a.start_day && b.start_day) {
+                        if (a.start_day > b.start_day) { return 1 }
+                        if (a.start_day < b.start_day) { return -1 }
+                        else {
+                            return 0
+                        }
+                    }
+                }
+            }
+        }
+        return 0
+    }
 
 
     useLayoutEffect(() => {
@@ -61,7 +80,7 @@ export default function TimelineView({ public_view }: Props) {
                                         ? "horizontalTimeline h-10rem"
                                         : "verticalTimeline h-full"
                                     }`}
-                                value={timelineData?.timeline_events || []}
+                                value={timelineData?.timeline_events.sort(TimelineEventsSort) || []}
                                 content={(eventData: TimelineEventType) =>
                                     view.details ? (
                                         <TimelineEventCard eventData={eventData} />
