@@ -84,6 +84,14 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             className="w-full"
             placeholder="Custom Image"
             optionLabel="title"
+            virtualScrollerOptions={{
+              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                return (
+                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                  </div>
+                )
+              }
+            }}
             itemTemplate={(item: ImageProps) => (
               <ImgDropdownItem title={item.title} link={item.link} />
             )}

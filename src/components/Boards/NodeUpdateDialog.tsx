@@ -55,13 +55,11 @@ export default function NodeUpdateDialog({
 
   return (
     <Dialog
-      header={`Update ${
-        typeof nodeUpdateDialog.id === "string" ? "Node" : "Many Nodes"
-      } ${
-        typeof nodeUpdateDialog.id === "string"
+      header={`Update ${typeof nodeUpdateDialog.id === "string" ? "Node" : "Many Nodes"
+        } ${typeof nodeUpdateDialog.id === "string"
           ? nodeUpdateDialog.label
           : "" || ""
-      }`}
+        }`}
       style={{
         width: "24.75vw",
       }}
@@ -279,11 +277,11 @@ export default function NodeUpdateDialog({
                 options={
                   documents.data
                     ? [
-                        { title: "No document", id: null },
-                        ...documents.data.filter(
-                          (doc) => !doc.template && !doc.folder
-                        ),
-                      ]
+                      { title: "No document", id: null },
+                      ...documents.data.filter(
+                        (doc) => !doc.template && !doc.folder
+                      ),
+                    ]
                     : []
                 }
                 optionLabel={"title"}
@@ -303,18 +301,25 @@ export default function NodeUpdateDialog({
                 className="w-full"
                 placeholder="Custom Image"
                 optionLabel="title"
-                virtualScrollerOptions={{ itemSize: 38 }}
+                virtualScrollerOptions={{
+                  lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                    return (
+                      <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                      </div>
+                    )
+                  }
+                }}
                 itemTemplate={(item: ImageProps) => (
                   <ImgDropdownItem title={item.title} link={item.link} />
                 )}
                 options={
                   images?.data
                     ? [
-                        { title: "No image", id: null },
-                        ...images?.data.filter(
-                          (image) => image.type === "Image"
-                        ),
-                      ]
+                      { title: "No image", id: null },
+                      ...images?.data.filter(
+                        (image) => image.type === "Image"
+                      ),
+                    ]
                     : []
                 }
                 value={nodeUpdateDialog.customImage}

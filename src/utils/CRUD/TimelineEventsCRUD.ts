@@ -10,9 +10,10 @@ export const createTimelineEvent = async (
 ) => {
   let user = auth.user();
   if (user) {
-    const { data, error } = await supabase
-      .from("timeline_events")
-      .insert(CreateTimelineEventProps);
+    const { data, error } = await supabase.from("timeline_events").insert({
+      ...CreateTimelineEventProps,
+      image: CreateTimelineEventProps.image?.id,
+    });
     if (data) return data;
     if (error) {
       toastError("There was an error updating your timeline event.");
@@ -27,7 +28,10 @@ export const updatedTimelineEvent = async (
   if (user) {
     const { data, error } = await supabase
       .from("timeline_events")
-      .update(UpdateTimelineEventProps)
+      .update({
+        ...UpdateTimelineEventProps,
+        image: UpdateTimelineEventProps.image?.id,
+      })
       .eq("id", UpdateTimelineEventProps.id);
     if (data) return data;
     if (error) {

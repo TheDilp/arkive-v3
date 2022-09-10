@@ -13,30 +13,30 @@ import { Toolbar } from "primereact/toolbar";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import {
   DocumentProps,
   IconSelectProps,
-  ImageProps,
+  ImageProps
 } from "../../../custom-types";
 import {
   useCreateDocument,
   useGetDocuments,
   useGetImages,
   useGetTags,
-  useUpdateDocument,
+  useUpdateDocument
 } from "../../../utils/customHooks";
 import {
   deleteDocument,
-  deleteManyDocuments,
+  deleteManyDocuments
 } from "../../../utils/supabaseUtils";
 import {
   searchCategory,
-  supabaseStorageImagesLink,
+  supabaseStorageImagesLink
 } from "../../../utils/utils";
-import LoadingScreen from "../../Util/LoadingScreen";
 import IconSelectMenu from "../../Util/IconSelectMenu";
-import { v4 as uuid } from "uuid";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
+import LoadingScreen from "../../Util/LoadingScreen";
 export default function DocumentsSettingsTable() {
   const { project_id } = useParams();
 
@@ -270,7 +270,7 @@ export default function DocumentsSettingsTable() {
           icon="pi pi-plus"
           className="p-button-success mr-2 p-button-outlined"
           onClick={async () => {
-            let id = uuid();
+            let id: string = uuid();
             createDocumentMutation.mutate({ id });
           }}
         />
@@ -381,15 +381,23 @@ export default function DocumentsSettingsTable() {
           className="w-full"
           placeholder="Custom Image"
           optionLabel="title"
+          virtualScrollerOptions={{
+            lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+              return (
+                <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                </div>
+              )
+            }
+          }}
           itemTemplate={(item: ImageProps) => (
             <ImgDropdownItem title={item.title} link={item.link} />
           )}
           options={
             images?.data
               ? [
-                  { title: "No image", id: null },
-                  ...images?.data.filter((image) => image.type === "Image"),
-                ]
+                { title: "No image", id: null },
+                ...images?.data.filter((image) => image.type === "Image"),
+              ]
               : []
           }
           value={options.rowData.image}

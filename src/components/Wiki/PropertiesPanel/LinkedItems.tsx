@@ -134,6 +134,14 @@ export default function LinkedItems() {
                   ]
                   : []
               }
+              virtualScrollerOptions={{
+                lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                  return (
+                    <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                    </div>
+                  )
+                }
+              }}
               optionLabel="title"
               value={document?.image || undefined}
               onChange={(e) =>

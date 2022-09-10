@@ -22,14 +22,19 @@ export default function TimelineEventCard({ eventData }: Props) {
                 subTitle={() => <TimelineEventCardSubtitle start_day={start_day} start_month={start_month} start_year={start_year} end_day={end_day} end_month={end_month} end_year={end_year} />}
                 className="w-20rem h-min timelineEventCard"
             >
-                {image && (
-                    <img
-                        src={`${supabaseStorageImagesLink}/${image.link}`}
-                        alt={title}
-                        width={200}
-                        className="shadow-1"
-                    />
-                )}
+                <div className="w-full h-full flex justify-content-center">
+
+                    {image && (
+                        <img
+                            src={`${supabaseStorageImagesLink}/${image.link}`}
+                            alt={title}
+                            className="w-full h-8rem"
+                            style={{
+                                objectFit: "contain"
+                            }}
+                        />
+                    )}
+                </div>
 
             </Card>
         </div>

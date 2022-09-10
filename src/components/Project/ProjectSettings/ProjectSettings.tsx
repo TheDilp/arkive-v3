@@ -121,15 +121,23 @@ export default function ProjectSettings({ project }: Props) {
             className="w-full"
             placeholder="Custom Image"
             optionLabel="title"
+            virtualScrollerOptions={{
+              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                return (
+                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                  </div>
+                )
+              }
+            }}
             itemTemplate={(item: ImageProps) => (
               <ImgDropdownItem title={item.title} link={item.link} />
             )}
             options={
               images?.data
                 ? [
-                    { title: "No image", id: null },
-                    ...images?.data.filter((image) => image.type === "Image"),
-                  ]
+                  { title: "No image", id: null },
+                  ...images?.data.filter((image) => image.type === "Image"),
+                ]
                 : []
             }
             value={localProject.cardImage}

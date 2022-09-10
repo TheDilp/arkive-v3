@@ -145,6 +145,10 @@ body {
   margin-right: 2rem;
 }
 
+.p-timeline.detailedTimeline.verticalTimeline .p-timeline-event {
+  min-height: 10rem;
+}
+
 .p-timeline.detailedTimeline.verticalTimeline .p-timeline-event:nth-child(even) .p-timeline-event-content {
   display: flex;
   justify-content: flex-end;

@@ -21,6 +21,7 @@ import {
 import { v4 as uuid } from "uuid";
 import { Checkbox } from "primereact/checkbox";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
+import { DocumentCreateDefault } from "../../../../utils/defaultValues";
 
 type Props = {
   visible: boolean;
@@ -53,11 +54,11 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
     let id = uuid();
     createDocumentMutation.mutate({
       id,
+      ...DocumentCreateDefault,
       ...data,
       template: false,
-      content: data.template
-        ? documents?.find((doc) => doc.id === data.template)?.content
-        : null,
+      project_id: project_id as string,
+      content: data.template ? (documents?.find((doc) => doc.id === data.template)?.content || null) : null,
     });
 
     if (closeOnDone) {
@@ -115,17 +116,25 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                     placeholder="Custom Image"
                     optionLabel="title"
                     optionValue="id"
+                    virtualScrollerOptions={{
+                      lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                        return (
+                          <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                          </div>
+                        )
+                      }
+                    }}
                     itemTemplate={(item: ImageProps) => (
                       <ImgDropdownItem title={item.title} link={item.link} />
                     )}
                     options={
                       images?.data
                         ? [
-                            { title: "No image", id: null },
-                            ...images?.data.filter(
-                              (image: ImageProps) => image.type === "Image"
-                            ),
-                          ]
+                          { title: "No image", id: null },
+                          ...images?.data.filter(
+                            (image: ImageProps) => image.type === "Image"
+                          ),
+                        ]
                         : []
                     }
                     value={field.value}
@@ -152,9 +161,9 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                     options={
                       documents
                         ? [
-                            { title: "Root Folder", id: null },
-                            ...documents?.filter((doc) => doc.folder),
-                          ]
+                          { title: "Root Folder", id: null },
+                          ...documents?.filter((doc) => doc.folder),
+                        ]
                         : []
                     }
                   />
@@ -176,11 +185,11 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
                     options={
                       documents
                         ? [
-                            { title: "No Template", id: null },
-                            ...documents?.filter(
-                              (doc) => doc.template && !doc.folder
-                            ),
-                          ]
+                          { title: "No Template", id: null },
+                          ...documents?.filter(
+                            (doc) => doc.template && !doc.folder
+                          ),
+                        ]
                         : []
                     }
                   />

@@ -42,13 +42,22 @@ export default function TimelineEventUpdateDialog() {
                 <div className="w-full py-2">
                     <Dropdown
                         value={eventData.image}
+                        filter
                         itemTemplate={(item: ImageProps) => (
                             <ImgDropdownItem title={item.title} link={item.link} />
                         )}
-                        options={images?.data.filter((image) => image.type === "Map") || []}
+                        options={images?.data.filter((image) => image.type === "Image") || []}
                         onChange={(e) =>
                             setEventData((prev) => ({ ...prev, image: e.value } as TimelineEventUpdateType))
                         }
+                        virtualScrollerOptions={{
+                            lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                                return (
+                                    <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                                    </div>
+                                )
+                            }
+                        }}
                         placeholder="Timeline Event Image"
                         optionLabel="title"
                         className="w-full"

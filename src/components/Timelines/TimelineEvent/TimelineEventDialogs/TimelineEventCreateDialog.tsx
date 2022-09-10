@@ -4,7 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { ImageProps } from "../../../../custom-types";
@@ -49,10 +49,19 @@ export default function TimelineEventCreateDialog() {
                 <div className="w-full py-2">
                     <Dropdown
                         value={newEventData.image}
+                        
                         itemTemplate={(item: ImageProps) => (
                             <ImgDropdownItem title={item.title} link={item.link} />
                         )}
-                        options={images?.data.filter((image) => image.type === "Map") || []}
+                        virtualScrollerOptions={{
+                            lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                                return (
+                                    <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                                    </div>
+                                )
+                            }
+                        }}
+                        options={images?.data.filter((image) => image.type === "Image") || []}
                         onChange={(e) =>
                             setNewEventData((prev) => ({ ...prev, image: e.value }))
                         }

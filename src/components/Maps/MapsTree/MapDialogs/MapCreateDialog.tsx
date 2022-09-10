@@ -55,7 +55,7 @@ export default function MapCreateDialog({ mapData, setMapData }: Props) {
       onHide={() => setMapData(false)}
       modal={false}
     >
-    <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap justify-content-center">
           <div className="w-8">
             <InputText
@@ -84,6 +84,14 @@ export default function MapCreateDialog({ mapData, setMapData }: Props) {
                   options={
                     images?.data.filter((image) => image.type === "Map") || []
                   }
+                  virtualScrollerOptions={{
+                    lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                      return (
+                        <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                        </div>
+                      )
+                    }
+                  }}
                   onChange={(e) => onChange(e.value)}
                   placeholder="Map Image"
                   optionLabel="title"

@@ -26,18 +26,26 @@ export default function ImageSelectDropdown({
       options={
         images?.data
           ? [
-              {
-                title: "No Image",
-                link: "",
-              },
-              ...images.data.filter((image) => image.type === filter),
-            ]
+            {
+              title: "No Image",
+              link: "",
+            },
+            ...images.data.filter((image) => image.type === filter),
+          ]
           : []
       }
       optionLabel="title"
       value={value}
       onChange={onChange}
       placeholder="Select Image"
+      virtualScrollerOptions={{
+        lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+          return (
+            <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+            </div>
+          )
+        }
+      }}
       itemTemplate={(item: ImageProps) => (
         <ImgDropdownItem title={item.title} link={item.link} />
       )}

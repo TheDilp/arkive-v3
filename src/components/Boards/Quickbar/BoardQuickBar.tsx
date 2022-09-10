@@ -161,9 +161,16 @@ export default function BoardQuickBar({
             value={search}
             field="label"
             suggestions={filteredNodes}
+            virtualScrollerOptions={{
+              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: filteredNodes.length === 0, delay: 0, loadingTemplate: (options) => {
+                return (
+                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                  </div>
+                )
+              }
+            }}
             onSelect={(e) => {
               if (!cyRef) return;
-              console.log(e.value);
               if (e.value) {
                 let foundNode = cyRef.current.getElementById(e.value.id);
                 cyRef.current.animate(
@@ -382,9 +389,8 @@ export default function BoardQuickBar({
 
       {/*Toggle grid visibility */}
       <span
-        className={`cursor-pointer flex hover:text-blue-300 ${
-          boardState.drawGrid ? "text-green-500" : ""
-        }  drawGrid`}
+        className={`cursor-pointer flex hover:text-blue-300 ${boardState.drawGrid ? "text-green-500" : ""
+          }  drawGrid`}
         onClick={() => {
           if (cyRef) {
             boardStateDispatch({ type: "GRID", payload: !boardState.drawGrid });
@@ -434,9 +440,8 @@ export default function BoardQuickBar({
 
       {/* Drawmode button */}
       <i
-        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
-          boardState.drawMode ? "text-green-500" : ""
-        } drawMode`}
+        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""
+          } drawMode`}
         onClick={() =>
           boardStateDispatch({ type: "DRAW", payload: !boardState.drawMode })
         }

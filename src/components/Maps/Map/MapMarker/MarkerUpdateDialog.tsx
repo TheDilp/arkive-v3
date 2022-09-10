@@ -189,11 +189,11 @@ export default function MarkerUpdateDialog({
             options={
               documents.data
                 ? [
-                    { title: "No document", id: null },
-                    ...documents.data.filter(
-                      (doc) => !doc.template && !doc.folder
-                    ),
-                  ]
+                  { title: "No document", id: null },
+                  ...documents.data.filter(
+                    (doc) => !doc.template && !doc.folder
+                  ),
+                ]
                 : []
             }
             optionLabel={"title"}
@@ -217,12 +217,20 @@ export default function MarkerUpdateDialog({
                 link={item.map_image?.link || ""}
               />
             )}
+            virtualScrollerOptions={{
+              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: maps.data?.length === 0, delay: 0, loadingTemplate: (options) => {
+                return (
+                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
+                  </div>
+                )
+              }
+            }}
             options={
               maps.data
                 ? [
-                    { title: "No map", id: null },
-                    ...maps.data.filter((map) => !map.folder),
-                  ]
+                  { title: "No map", id: null },
+                  ...maps.data.filter((map) => !map.folder),
+                ]
                 : []
             }
             optionLabel={"title"}
