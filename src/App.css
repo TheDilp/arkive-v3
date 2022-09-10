@@ -127,6 +127,8 @@ body {
   cursor: pointer;
 }
 
+
+
 .p-timeline.detailedTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
   margin-top: -20rem;
 }

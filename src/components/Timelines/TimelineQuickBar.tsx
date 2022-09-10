@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from 'react'
 
 type Props = {
     view: { details: boolean, horizontal: boolean };
-    setShowTimelineEventDialog: Dispatch<SetStateAction<boolean>>
+    setShowTimelineEventDialog: (show: boolean) => void
     setView: Dispatch<SetStateAction<{ details: boolean, horizontal: boolean }>>
 }
 

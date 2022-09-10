@@ -1,24 +1,23 @@
-import { Dialog } from "primereact/dialog";
-import { Dispatch, SetStateAction, useReducer, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useCreateTimelineEvent, useGetImages } from "../../utils/customHooks";
-import { v4 as uuid } from "uuid";
-import { InputMask } from "primereact/inputmask";
-import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
-import ImgDropdownItem from "../Util/ImgDropdownItem";
-import { ImageProps } from "../../custom-types";
-import { TimelineEventCreateDefault } from "../../utils/defaultValues";
-import { TimelineEventCreateType } from "../../types/TimelineEventTypes";
-import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
+import { InputText } from "primereact/inputtext";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
+import { ImageProps } from "../../../../custom-types";
+import { TimelineEventCreateType } from "../../../../types/TimelineEventTypes";
+import { useCreateTimelineEvent, useGetImages } from "../../../../utils/customHooks";
+import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
+import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 type Props = {
     showDialog: boolean;
-    setShowDialog: Dispatch<SetStateAction<boolean>>;
+    setShowDialog: (show: boolean) => void;
 };
 
-export default function TimelineEventDialog({
+export default function TimelineEventCreateDialog({
     showDialog,
     setShowDialog,
 }: Props) {
@@ -40,7 +39,7 @@ export default function TimelineEventDialog({
             className="w-3"
         >
             <div className="flex flex-wrap justify-content-center">
-                <div className="w-8">
+                <div className="w-full">
                     <InputText
                         placeholder="Timeline Event Title"
                         className="w-full"
@@ -51,7 +50,7 @@ export default function TimelineEventDialog({
                         autoFocus={true}
                     />
                 </div>
-                <div className="w-8 py-2">
+                <div className="w-full py-2">
                     <Dropdown
                         value={newEventData.image}
                         itemTemplate={(item: ImageProps) => (
@@ -68,7 +67,8 @@ export default function TimelineEventDialog({
                 </div>
 
                 {/* Start date fields */}
-                <div className="w-full flex justify-content-between">
+                <div className="w-full flex flex-wrap justify-content-between py-2">
+                    <label className="w-full text-gray-300 mb-2">Start Date</label>
                     <div className="w-3">
                         <InputNumber
                             placeholder="Start Day"
@@ -116,7 +116,8 @@ export default function TimelineEventDialog({
                     </div>
                 </div>
                 {/* End date fields */}
-                <div className="w-full flex justify-content-between">
+                <div className="w-full flex flex-wrap justify-content-between">
+                    <label className="w-full text-gray-300 mb-2">End Date</label>
                     <div className="w-3">
                         <InputNumber
                             placeholder="End Day"
@@ -164,7 +165,7 @@ export default function TimelineEventDialog({
                     </div>
                 </div>
 
-                <div className="w-8 flex mb-2 justify-content-between  align-items-center">
+                <div className="w-full flex my-4 justify-content-between align-items-center">
                     <span>Close Dialog on Done:</span>
                     <Checkbox
                         checked={closeOnDone}

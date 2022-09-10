@@ -1,4 +1,4 @@
-import { TimelineEventType } from "../../../types/TimelineEventTypes";
+import { TimelineEventType } from "../../../../types/TimelineEventTypes";
 
 export default function TimelineEventCardSubtitle({
     start_day,

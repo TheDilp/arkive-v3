@@ -1,7 +1,6 @@
-import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { TimelineEventType } from "../../../types/TimelineEventTypes";
-import { supabaseStorageImagesLink } from "../../../utils/utils";
+import { TimelineEventType } from "../../../../types/TimelineEventTypes";
+import { supabaseStorageImagesLink } from "../../../../utils/utils";
 import TimelineEventCardSubtitle from "./TimelineEventCardSubtitle";
 import TimelineEventCardTitle from "./TimelineEventCardTitle";
 
@@ -35,7 +34,6 @@ export default function TimelineEventCard({
                 asperiores earum nam nobis, culpa ratione quam perferendis esse,
                 cupiditate neque quas!
             </p>
-            <Button label="Edit event" className="p-button-text" />
         </Card>
     );
 }
