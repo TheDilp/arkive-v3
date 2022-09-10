@@ -9,6 +9,7 @@ export type TimelineType = {
   sort: number;
   public: boolean;
   timeline_events: TimelineEventType[];
+  start_year: number;
   parent: { id: string; title: string } | null;
 };
 
