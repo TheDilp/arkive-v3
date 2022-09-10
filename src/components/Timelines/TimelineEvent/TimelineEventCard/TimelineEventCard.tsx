@@ -4,16 +4,11 @@ import { supabaseStorageImagesLink } from "../../../../utils/utils";
 import TimelineEventCardSubtitle from "./TimelineEventCardSubtitle";
 import TimelineEventCardTitle from "./TimelineEventCardTitle";
 
-export default function TimelineEventCard({
-    title,
-    image,
-    start_day,
-    start_month,
-    start_year,
-    end_day,
-    end_month,
-    end_year,
-}: TimelineEventType) {
+type Props = {
+    eventData: TimelineEventType
+}
+export default function TimelineEventCard({ eventData }: Props) {
+    const { title, start_day, start_month, start_year, end_day, end_month, end_year, image } = eventData
     return (
         <Card
             title={() => <TimelineEventCardTitle title={title} />}

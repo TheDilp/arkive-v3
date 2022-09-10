@@ -50,18 +50,3 @@ export type TimelineEventUpdateType = {
   icon?: string;
   public?: boolean;
 };
-
-export type TimelineEventDialogAction =
-  | {
-      type: "SET_SHOW_CREATE" | "SET_SHOW_UPDATE";
-      payload: boolean;
-    }
-  | {
-      type: "SET_EVENT_DATA";
-      payload: Omit<TimelineEventCreateType, "id" | "timeline_id">;
-    };
-export type TimelineEventDialogState = {
-  showCreateEvent: boolean;
-  showUpdateEvent: boolean;
-  eventData: Omit<TimelineEventCreateType, "id" | "timeline_id">;
-};

@@ -1,19 +1,16 @@
 import { Dialog } from "primereact/dialog";
+import { useContext } from "react";
+import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 
-type Props = {
-    showDialog: boolean;
-    setShowDialog: (show: boolean) => void;
-};
 
-export default function TimelineEventUpdateDialog({
-    showDialog,
-    setShowDialog,
-}: Props) {
+export default function TimelineEventUpdateDialog() {
+    const { showUpdateDialog, setShowUpdateDialog } = useContext(TimelineEventContext)
+
     return (
         <Dialog
             header="Create Timeline Event"
-            visible={showDialog}
-            onHide={() => setShowDialog(false)}
+            visible={showUpdateDialog}
+            onHide={() => setShowUpdateDialog(false)}
             className="w-3"
         >
             TimelineEventUpdateDialog

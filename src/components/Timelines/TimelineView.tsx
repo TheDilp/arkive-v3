@@ -7,8 +7,8 @@ import {
     useUpdateTimelineEvent,
 } from "../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../utils/defaultValues";
-import { TimelineEventDialogReducer } from "../../utils/Reducers/TimelineEventReducers";
 import { TimelineContext } from "../Context/TimelineContext";
+import TimelineEventProvider from "../Context/TimelineEventContext";
 import SimpleTimelineEvent from "./TimelineEvent/SimpleTimelineEvent";
 import TimelineEventCard from "./TimelineEvent/TimelineEventCard/TimelineEventCard";
 import TimelineEventCreateDialog from "./TimelineEvent/TimelineEventDialogs/TimelineEventCreateDialog";
@@ -25,9 +25,7 @@ export default function TimelineView({ public_view }: Props) {
         project_id as string,
         timeline_id as string
     );
-    const [eventState, dispatch] = useReducer(TimelineEventDialogReducer, {
-        showCreateEvent: false, showUpdateEvent: false, eventData: TimelineEventCreateDefault
-    })
+
 
     const [view, setView] = useState({ details: true, horizontal: true });
 
@@ -43,39 +41,42 @@ export default function TimelineView({ public_view }: Props) {
             className={`${public_view ? "w-full" : "w-10"
                 } h-full flex align-items-end justify-content-center`}
         >
-            <TimelineEventCreateDialog
-                showDialog={eventState.showCreateEvent}
-                setShowDialog={(show: boolean) => dispatch({ type: "SET_SHOW_CREATE", payload: show })}
-            />
-            <TimelineEventUpdateDialog showDialog={eventState.showUpdateEvent}
-                setShowDialog={(show: boolean) => dispatch({ type: "SET_SHOW_UPDATE", payload: show })} />
-            <TimelineQuickBar
-                view={view}
-                setShowTimelineEventDialog={(show: boolean) => dispatch({ type: "SET_SHOW_CREATE", payload: show })}
-                setView={setView}
-            />
-            {timelineData && (
-                <div className="w-full h-full flex px-4 align-items-center overflow-x-auto">
-                    <Timeline
-                        className={`w-full  ${view.details ? "detailedTimeline" : "simpleTimeline"
-                            } ${view.horizontal
-                                ? "horizontalTimeline h-10rem"
-                                : "verticalTimeline h-full"
-                            }`}
-                        value={timelineData?.timeline_events || []}
-                        content={(item: TimelineEventType) =>
-                            view.details ? (
-                                <TimelineEventCard {...item} />
-                            ) : (
-                                <SimpleTimelineEvent {...item} />
-                            )
-                        }
-                        // opposite={(item) => item.title}
-                        align="alternate"
-                        layout={view.horizontal ? "horizontal" : "vertical"}
-                    />
-                </div>
-            )}
+            <TimelineEventProvider>
+
+                <TimelineEventCreateDialog
+
+                />
+                <TimelineEventUpdateDialog />
+                <TimelineQuickBar
+                    view={view}
+
+                    setView={setView}
+                />
+                <>
+                    {timelineData && (
+                        <div className="w-full h-full flex px-4 align-items-center overflow-x-auto">
+                            <Timeline
+                                className={`w-full  ${view.details ? "detailedTimeline" : "simpleTimeline"
+                                    } ${view.horizontal
+                                        ? "horizontalTimeline h-10rem"
+                                        : "verticalTimeline h-full"
+                                    }`}
+                                value={timelineData?.timeline_events || []}
+                                content={(eventData: TimelineEventType) =>
+                                    view.details ? (
+                                        <TimelineEventCard eventData={eventData} />
+                                    ) : (
+                                        <SimpleTimelineEvent {...eventData} />
+                                    )
+                                }
+                                // opposite={(item) => item.title}
+                                align="alternate"
+                                layout={view.horizontal ? "horizontal" : "vertical"}
+                            />
+                        </div>
+                    )}
+                </>
+            </TimelineEventProvider>
         </div>
     );
 }

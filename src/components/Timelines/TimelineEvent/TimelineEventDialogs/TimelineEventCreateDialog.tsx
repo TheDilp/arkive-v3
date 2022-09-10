@@ -4,24 +4,20 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { ImageProps } from "../../../../custom-types";
 import { TimelineEventCreateType } from "../../../../types/TimelineEventTypes";
 import { useCreateTimelineEvent, useGetImages } from "../../../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
+import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
-type Props = {
-    showDialog: boolean;
-    setShowDialog: (show: boolean) => void;
-};
 
-export default function TimelineEventCreateDialog({
-    showDialog,
-    setShowDialog,
-}: Props) {
+
+export default function TimelineEventCreateDialog() {
     const { project_id, timeline_id } = useParams();
+    const { showCreateDialog, setShowCreateDialog } = useContext(TimelineEventContext)
     const images = useGetImages(project_id as string);
     const createTimelineEventMutation = useCreateTimelineEvent(
         project_id as string
@@ -34,8 +30,8 @@ export default function TimelineEventCreateDialog({
     return (
         <Dialog
             header="Create Timeline Event"
-            visible={showDialog}
-            onHide={() => setShowDialog(false)}
+            visible={showCreateDialog}
+            onHide={() => setShowCreateDialog(false)}
             className="w-3"
         >
             <div className="flex flex-wrap justify-content-center">
