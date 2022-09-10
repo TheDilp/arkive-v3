@@ -118,6 +118,15 @@ body {
   color: white !important;
 }
 
+.linkTimelineEventCard {
+  transition: all 0.25s ease;
+
+}
+.linkTimelineEventCard:hover {
+  transition: all 0.25s ease;
+  transform: scale(1.05);
+}
+
 .timelineCardTitle i {
   display: none;
 }
@@ -126,7 +135,6 @@ body {
   display: inline;
   cursor: pointer;
 }
-
 
 
 .p-timeline.detailedTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {

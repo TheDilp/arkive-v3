@@ -11,6 +11,7 @@ import { ImageProps } from "../../../../custom-types";
 import { TimelineEventCreateType } from "../../../../types/TimelineEventTypes";
 import { useCreateTimelineEvent, useGetImages } from "../../../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
+import { toastWarn } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 
@@ -49,7 +50,7 @@ export default function TimelineEventCreateDialog() {
                 <div className="w-full py-2">
                     <Dropdown
                         value={newEventData.image}
-                        
+
                         itemTemplate={(item: ImageProps) => (
                             <ImgDropdownItem title={item.title} link={item.link} />
                         )}
@@ -185,6 +186,31 @@ export default function TimelineEventCreateDialog() {
                         iconPos="right"
                         type="submit"
                         onClick={async () => {
+
+                            if (newEventData.end_year && newEventData.start_year) {
+                                if (newEventData.end_year < newEventData.start_year) {
+                                    toastWarn("End date cannot be less than start date.");
+                                    return;
+                                }
+                                else if (newEventData.end_year === newEventData.start_year) {
+                                    if (newEventData.end_month && newEventData.start_month) {
+                                        if (newEventData.end_month < newEventData.start_month) {
+                                            toastWarn("End date cannot be less than start date.");
+                                            return;
+                                        }
+                                        else if (newEventData.end_month === newEventData.start_month) {
+                                            if (newEventData.end_day && newEventData.start_day) {
+                                                if ((newEventData.end_day < newEventData.start_day)) {
+                                                    toastWarn("End date cannot be less than start date.");
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+
                             await createTimelineEventMutation.mutateAsync({
                                 id: uuid(),
                                 ...newEventData,

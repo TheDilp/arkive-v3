@@ -6,17 +6,19 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ImageProps } from "../../../../custom-types";
+import { DocumentProps, ImageProps } from "../../../../custom-types";
 import { TimelineEventUpdateType } from "../../../../types/TimelineEventTypes";
-import { useGetImages, useUpdateTimelineEvent } from "../../../../utils/customHooks";
+import { useGetDocuments, useGetImages, useUpdateTimelineEvent } from "../../../../utils/customHooks";
+import { toastWarn } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 
 
 export default function TimelineEventUpdateDialog() {
     const { showUpdateDialog, setShowUpdateDialog, eventData, setEventData } = useContext(TimelineEventContext)
-    const { project_id } = useParams()
-    const images = useGetImages(project_id as string)
+    const { project_id } = useParams();
+    const { data: docs } = useGetDocuments(project_id as string);
+    const images = useGetImages(project_id as string);
     const updateTimelineEventMutation = useUpdateTimelineEvent(project_id as string);
     const [closeOnDone, setCloseOnDone] = useState(true)
     return (
@@ -26,7 +28,6 @@ export default function TimelineEventUpdateDialog() {
             onHide={() => setShowUpdateDialog(false)}
             className="w-3"
         >
-
             {eventData && <div className="flex flex-wrap justify-content-center">
                 <div className="w-full">
                     <InputText
@@ -39,7 +40,7 @@ export default function TimelineEventUpdateDialog() {
                         autoFocus={true}
                     />
                 </div>
-                <div className="w-full py-2">
+                <div className="w-full my-2">
                     <Dropdown
                         value={eventData.image}
                         filter
@@ -61,6 +62,36 @@ export default function TimelineEventUpdateDialog() {
                         placeholder="Timeline Event Image"
                         optionLabel="title"
                         className="w-full"
+                    />
+                </div>
+                <div className="w-full">
+                    <Dropdown
+                        className="w-full"
+                        placeholder="Link Document"
+                        value={eventData.doc_id}
+                        filter
+                        filterBy="title"
+                        onChange={(e) => {
+                            let doc = docs?.find(
+                                (doc: DocumentProps) => doc.id === e.value
+                            );
+                            if (doc) {
+                                setEventData((prev => ({ ...prev, doc_id: doc?.id }) as TimelineEventUpdateType))
+                            }
+
+                        }}
+                        options={
+                            docs
+                                ? [
+                                    { title: "No document", id: null },
+                                    ...docs.filter(
+                                        (doc) => !doc.template && !doc.folder
+                                    ),
+                                ]
+                                : []
+                        }
+                        optionLabel={"title"}
+                        optionValue={"id"}
                     />
                 </div>
 
@@ -172,12 +203,35 @@ export default function TimelineEventUpdateDialog() {
                 </div>
                 <div className="w-full flex justify-content-end">
                     <Button
-                        label="Create Event"
-                        className="p-button-success p-button-outlined p-button-raised"
-                        icon="pi pi-plus"
+                        label="Update Event"
+                        className="p-button-primary p-button-outlined p-button-raised"
+                        icon="pi pi-save"
                         iconPos="right"
                         type="submit"
                         onClick={() => {
+                            if (eventData.end_year && eventData.start_year) {
+                                if (eventData.end_year < eventData.start_year) {
+                                    toastWarn("End date cannot be less than start date.");
+                                    return;
+                                }
+                                else if (eventData.end_year === eventData.start_year) {
+                                    if (eventData.end_month && eventData.start_month) {
+                                        if (eventData.end_month < eventData.start_month) {
+                                            toastWarn("End date cannot be less than start date.");
+                                            return;
+                                        }
+                                        else if (eventData.end_month === eventData.start_month) {
+                                            if (eventData.end_day && eventData.start_day) {
+                                                if ((eventData.end_day < eventData.start_day)) {
+                                                    toastWarn("End date cannot be less than start date.");
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
                             updateTimelineEventMutation.mutate({
                                 ...eventData,
                             });
@@ -185,8 +239,7 @@ export default function TimelineEventUpdateDialog() {
                                 setShowUpdateDialog(false)
                                 setEventData(null);
                             }
-                        }
-                        }
+                        }}
                     />
                 </div>
             </div>}
