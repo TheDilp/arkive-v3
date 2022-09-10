@@ -133,6 +133,13 @@ body {
   margin-top: -20rem;
 }
 
+.p-timeline.detailedTimeline.horizontalTimeline  .p-timeline-event:nth-child(odd) .timelineEventCardContainer {
+  align-items: flex-start;
+}
+.p-timeline.detailedTimeline.horizontalTimeline  .p-timeline-event:nth-child(even) .timelineEventCardContainer {
+  align-items: flex-end;
+}
+
 .p-timeline.detailedTimeline.verticalTimeline .p-timeline-event-separator {
   margin-left: 2rem;
   margin-right: 2rem;
