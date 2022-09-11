@@ -8,9 +8,9 @@ import { InputText } from "primereact/inputtext";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { ImageProps } from "../../../../custom-types";
+import { DocumentProps, ImageProps } from "../../../../custom-types";
 import { TimelineEventCreateType } from "../../../../types/TimelineEventTypes";
-import { useCreateTimelineEvent, useGetImages } from "../../../../utils/customHooks";
+import { useCreateTimelineEvent, useGetDocuments, useGetImages } from "../../../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
 import { toastWarn } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
@@ -21,6 +21,7 @@ export default function TimelineEventCreateDialog() {
     const { project_id, timeline_id } = useParams();
     const { showCreateDialog, setShowCreateDialog } = useContext(TimelineEventContext)
     const images = useGetImages(project_id as string);
+    const { data: docs } = useGetDocuments(project_id as string)
     const createTimelineEventMutation = useCreateTimelineEvent(
         project_id as string
     );
@@ -36,7 +37,7 @@ export default function TimelineEventCreateDialog() {
             onHide={() => setShowCreateDialog(false)}
             className="w-3"
             modal={false}
-            position="left"
+            position="top-left"
         >
             <div className="flex flex-wrap justify-content-center">
                 <div className="w-full">
@@ -52,6 +53,7 @@ export default function TimelineEventCreateDialog() {
                 </div>
                 <div className="w-full py-2">
                     <Dropdown
+
                         value={newEventData.image}
 
                         itemTemplate={(item: ImageProps) => (
@@ -72,6 +74,36 @@ export default function TimelineEventCreateDialog() {
                         placeholder="Timeline Event Image"
                         optionLabel="title"
                         className="w-full"
+                    />
+                </div>
+                <div className="w-full py-2">
+                    <Dropdown
+                        className="w-full"
+                        placeholder="Link Document"
+                        value={newEventData.doc_id}
+                        filter
+                        filterBy="title"
+                        onChange={(e) => {
+                            let doc = docs?.find(
+                                (doc: DocumentProps) => doc.id === e.value
+                            );
+                            if (doc) {
+                                setNewEventData(
+                                    (prev) =>
+                                        ({ ...prev, doc_id: doc?.id })
+                                );
+                            }
+                        }}
+                        options={
+                            docs
+                                ? [
+                                    { title: "No document", id: null },
+                                    ...docs.filter((doc) => !doc.template && !doc.folder),
+                                ]
+                                : []
+                        }
+                        optionLabel={"title"}
+                        optionValue={"id"}
                     />
                 </div>
 
