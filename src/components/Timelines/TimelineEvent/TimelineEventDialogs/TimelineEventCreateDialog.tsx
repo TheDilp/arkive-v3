@@ -1,5 +1,6 @@
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
+import { ColorPicker } from "primereact/colorpicker";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
@@ -34,6 +35,8 @@ export default function TimelineEventCreateDialog() {
             visible={showCreateDialog}
             onHide={() => setShowCreateDialog(false)}
             className="w-3"
+            modal={false}
+            position="left"
         >
             <div className="flex flex-wrap justify-content-center">
                 <div className="w-full">
@@ -172,6 +175,22 @@ export default function TimelineEventCreateDialog() {
                 </div>
 
                 <div className="w-full flex my-4 justify-content-between align-items-center">
+                    <span>Event Card Color:</span>
+                    <InputText value={newEventData.eventBgColor}
+                        onChange={(e) => setNewEventData((prev) => ({
+                            ...prev,
+                            eventBgColor: "#" + e.target.value?.toString().replaceAll("#", ""),
+                        }))}
+                        prefix="#" />
+                    <ColorPicker
+                        value={newEventData.eventBgColor}
+                        onChange={(e) => setNewEventData(prev => ({
+                            ...prev, eventBgColor: ("#" +
+                                e.value?.toString().replaceAll("#", "")) as string
+                        }))}
+                    />
+                </div>
+                <div className="w-full flex my-4 justify-content-between align-items-center">
                     <span>Close Dialog on Done:</span>
                     <Checkbox
                         checked={closeOnDone}
@@ -186,7 +205,6 @@ export default function TimelineEventCreateDialog() {
                         iconPos="right"
                         type="submit"
                         onClick={async () => {
-
                             if (newEventData.end_year && newEventData.start_year) {
                                 if (newEventData.end_year < newEventData.start_year) {
                                     toastWarn("End date cannot be less than start date.");

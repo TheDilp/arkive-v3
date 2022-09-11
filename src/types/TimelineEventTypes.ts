@@ -13,6 +13,7 @@ export type TimelineEventType = {
   doc_id?: string;
   map_id?: string;
   image?: ImageProps;
+  eventBgColor: string;
   icon: string;
   public: boolean;
 };
@@ -30,6 +31,7 @@ export type TimelineEventCreateType = {
   doc_id?: string;
   map_id?: string;
   image?: ImageProps;
+  eventBgColor: string;
   icon: string;
   public: boolean;
 };
@@ -47,6 +49,7 @@ export type TimelineEventUpdateType = {
   doc_id?: string;
   map_id?: string;
   image?: ImageProps;
+  eventBgColor?: string;
   icon?: string;
   public?: boolean;
 };

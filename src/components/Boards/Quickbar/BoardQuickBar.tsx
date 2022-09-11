@@ -18,7 +18,7 @@ import {
 } from "../../../types/BoardTypes";
 import {
   changeLockState,
-  BoardColorPresets,
+  ColorPresets,
   updateColor,
   cytoscapeGridOptions,
 } from "../../../utils/boardUtils";
@@ -360,7 +360,7 @@ export default function BoardQuickBar({
           hideEvent="focus"
         >
           <div className="flex flex-wrap w-10rem">
-            {BoardColorPresets.map((color) => (
+            {ColorPresets.map((color) => (
               <div
                 key={color}
                 className="w-1rem h-1rem border-rounded cursor-pointer"

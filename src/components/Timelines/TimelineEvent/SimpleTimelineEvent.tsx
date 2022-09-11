@@ -1,9 +1,13 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { TimelineEventType } from '../../../types/TimelineEventTypes'
 
-export default function SimpleTimelineEvent({ title, start_day, start_month, start_year, end_day, end_month, end_year }: Pick<TimelineEventType, "title" | "start_day" | "start_month" | "start_year" | "end_day" | "end_month" | "end_year">) {
+export default function SimpleTimelineEvent({ title, start_day, start_month, start_year, end_day, end_month, end_year, doc_id }: Pick<TimelineEventType, "title" | "doc_id" | "start_day" | "start_month" | "start_year" | "end_day" | "end_month" | "end_year">) {
+    const navigate = useNavigate()
     return (
-        <div className="simple-event">
+        <div className={`simple-event ${doc_id ? "cursor-pointer" : ""}`} onClick={() => {
+            if (doc_id) navigate(`../../../wiki/doc/${doc_id}`)
+        }}>
             <h4 className='m-0'>
                 {title}
             </h4>
