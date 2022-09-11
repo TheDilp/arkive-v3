@@ -1,14 +1,15 @@
+import { Icon } from "@iconify/react";
 import { Timeline } from "primereact/timeline";
-import { useContext, useLayoutEffect, useReducer, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TimelineEventType } from "../../types/TimelineEventTypes";
 import {
     useGetTimelineData,
-    useUpdateTimelineEvent,
+    useUpdateTimelineEvent
 } from "../../utils/customHooks";
-import { TimelineEventCreateDefault } from "../../utils/defaultValues";
 import { TimelineContext } from "../Context/TimelineContext";
 import TimelineEventProvider from "../Context/TimelineEventContext";
+import MarkerIconSelect from "../Maps/Map/MapMarker/MarkerIconSelect";
 import SimpleTimelineEvent from "./TimelineEvent/SimpleTimelineEvent";
 import TimelineEventCard from "./TimelineEvent/TimelineEventCard/TimelineEventCard";
 import TimelineEventCreateDialog from "./TimelineEvent/TimelineEventDialogs/TimelineEventCreateDialog";
@@ -25,39 +26,67 @@ export default function TimelineView({ public_view }: Props) {
         project_id as string,
         timeline_id as string
     );
+    const updateTimelineEventMutation = useUpdateTimelineEvent(project_id as string)
     const [view, setView] = useState({ details: true, horizontal: true });
-
+    const [iconSelect, setIconSelect] = useState<{
+        id?: string;
+        show: boolean;
+        top: number;
+        left: number;
+    }>({
+        id: "",
+        show: false,
+        top: 0,
+        left: 0,
+    });
     function TimelineEventsSort(a: TimelineEventType, b: TimelineEventType) {
-        if (a.start_year > b.start_year) { return 1; }
-        else if (a.start_year < b.start_year) { return -1; }
-        else {
+        if (a.start_year > b.start_year) {
+            return 1;
+        } else if (a.start_year < b.start_year) {
+            return -1;
+        } else {
             if (a.start_month && b.start_month) {
-                if (a.start_month > b.start_month) { return 1 }
-                if (a.start_month < b.start_month) { return -1 }
-                else {
+                if (a.start_month > b.start_month) {
+                    return 1;
+                }
+                if (a.start_month < b.start_month) {
+                    return -1;
+                } else {
                     if (a.start_day && b.start_day) {
-                        if (a.start_day > b.start_day) { return 1 }
-                        if (a.start_day < b.start_day) { return -1 }
-                        else {
-                            if (a.title > b.title) { return 1 }
-                            if (a.title < b.title) { return -1 }
-                            return 0
+                        if (a.start_day > b.start_day) {
+                            return 1;
+                        }
+                        if (a.start_day < b.start_day) {
+                            return -1;
+                        } else {
+                            if (a.title > b.title) {
+                                return 1;
+                            }
+                            if (a.title < b.title) {
+                                return -1;
+                            }
+                            return 0;
+                        }
+                    } else {
+                        if (a.title > b.title) {
+                            return 1;
+                        }
+                        if (a.title < b.title) {
+                            return -1;
                         }
                     }
-                    else {
-                        if (a.title > b.title) { return 1 }
-                        if (a.title < b.title) { return -1 }
-                    }
+                }
+            } else {
+                if (a.title > b.title) {
+                    return 1;
+                }
+                if (a.title < b.title) {
+                    return -1;
                 }
             }
-            else {
-                if (a.title > b.title) { return 1 }
-                if (a.title < b.title) { return -1 }
-            }
         }
-        return 0
+        return 0;
     }
-
 
     useLayoutEffect(() => {
         if (timeline_id) {
@@ -71,15 +100,18 @@ export default function TimelineView({ public_view }: Props) {
                 } h-full flex align-items-end justify-content-center`}
         >
             <TimelineEventProvider>
-
-                <TimelineEventCreateDialog
-
-                />
+                <TimelineEventCreateDialog />
                 <TimelineEventUpdateDialog />
-                <TimelineQuickBar
-                    view={view}
-
-                    setView={setView}
+                <TimelineQuickBar view={view} setView={setView} />
+                <MarkerIconSelect
+                    {...iconSelect}
+                    setValue={(icon: string) => {
+                        if (iconSelect.id) {
+                            updateTimelineEventMutation.mutate({ id: iconSelect.id, timeline_id: timeline_id as string, icon })
+                        }
+                    }
+                    }
+                    setIconSelect={setIconSelect}
                 />
                 <>
                     {timelineData && (
@@ -90,7 +122,9 @@ export default function TimelineView({ public_view }: Props) {
                                         ? "horizontalTimeline h-10rem"
                                         : "verticalTimeline h-full"
                                     }`}
-                                value={timelineData?.timeline_events.sort(TimelineEventsSort) || []}
+                                value={
+                                    timelineData?.timeline_events.sort(TimelineEventsSort) || []
+                                }
                                 content={(eventData: TimelineEventType) =>
                                     view.details ? (
                                         <TimelineEventCard eventData={eventData} />
@@ -100,12 +134,33 @@ export default function TimelineView({ public_view }: Props) {
                                 }
                                 // opposite={(item) => item.title}
                                 align="alternate"
+                                marker={(item: TimelineEventType) => (
+                                    <div className="w-2rem h-2rem border-circle border-1 p-1 flex justify-content-center align-items-center"
+                                        style={{
+                                            borderColor: item.eventBgColor === "#1e1e1e" ? "white" : item.eventBgColor
+                                        }}>
+                                        <Icon
+                                            icon={item.icon}
+                                            color={item.eventBgColor === "#1e1e1e" ? "white" : item.eventBgColor}
+                                            className="w-full h-full cursor-pointer hover:border-green-300"
+                                            onClick={(e) =>
+                                                setIconSelect({
+                                                    ...iconSelect,
+                                                    id: item.id,
+                                                    show: true,
+                                                    top: e.clientY,
+                                                    left: e.clientX,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                )}
                                 layout={view.horizontal ? "horizontal" : "vertical"}
                             />
                         </div>
                     )}
                 </>
             </TimelineEventProvider>
-        </div>
+        </div >
     );
 }

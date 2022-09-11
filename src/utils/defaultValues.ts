@@ -106,6 +106,8 @@ export const DocumentCreateDefault = {
 
 export const TimelineEventCreateDefault = {
   title: "New Timeline Event",
+  description: undefined,
+  age: undefined,
   start_day: undefined,
   start_month: undefined,
   start_year: 0,

@@ -54,11 +54,12 @@ export default function IconSelectMenu({
   return (
     <div
       ref={ref}
-      className="fixed surface-100 z-5 w-13rem h-20rem border-round-sm"
+      className="fixed surface-100 w-13rem h-20rem border-round-sm"
       style={{
         left,
         top,
         display: show ? "block" : "none",
+        zIndex: 9999
       }}
     >
       <div ref={parentRef} className="List w-full h-full overflow-auto">
@@ -96,11 +97,10 @@ export default function IconSelectMenu({
                       if (closeEdit) closeEdit();
                       iconMutation.mutate({
                         id,
-                        icon: `${
-                          filteredIconList[
-                            virtualRow.index * 6 + virtualColumn.index
-                          ]
-                        }`,
+                        icon: `${filteredIconList[
+                          virtualRow.index * 6 + virtualColumn.index
+                        ]
+                          }`,
                       });
                       setIconSelect({
                         id,
@@ -111,11 +111,10 @@ export default function IconSelectMenu({
                       });
                     }}
                     fontSize={30}
-                    icon={`${
-                      filteredIconList[
-                        virtualRow.index * 6 + virtualColumn.index
-                      ]
-                    }`}
+                    icon={`${filteredIconList[
+                      virtualRow.index * 6 + virtualColumn.index
+                    ]
+                      }`}
                   />
                 </div>
               ))}

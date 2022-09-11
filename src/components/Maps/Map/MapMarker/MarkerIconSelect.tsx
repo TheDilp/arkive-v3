@@ -18,6 +18,7 @@ type Props = {
   show: boolean;
   setIconSelect: Dispatch<
     SetStateAction<{
+      id?: string;
       show: boolean;
       top: number;
       left: number;
@@ -103,18 +104,16 @@ export default function MarkerIconSelect({
                     height: `${virtualRow.size}px`,
                     transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
                   }}
-                  title={`${
-                    filteredIconList[virtualRow.index * 6 + virtualColumn.index]
-                  }`}
+                  title={`${filteredIconList[virtualRow.index * 6 + virtualColumn.index]
+                    }`}
                 >
                   <Icon
                     className="mx-auto hover:text-blue-300 cursor-pointer"
                     onClick={() => {
                       setValue(
-                        `${
-                          filteredIconList[
-                            virtualRow.index * 6 + virtualColumn.index
-                          ]
+                        `${filteredIconList[
+                        virtualRow.index * 6 + virtualColumn.index
+                        ]
                         }`
                       );
                       setIconSelect({
@@ -124,11 +123,10 @@ export default function MarkerIconSelect({
                       });
                     }}
                     fontSize={30}
-                    icon={`${
-                      filteredIconList[
-                        virtualRow.index * 6 + virtualColumn.index
-                      ]
-                    }`}
+                    icon={`${filteredIconList[
+                      virtualRow.index * 6 + virtualColumn.index
+                    ]
+                      }`}
                   />
                 </div>
               ))}

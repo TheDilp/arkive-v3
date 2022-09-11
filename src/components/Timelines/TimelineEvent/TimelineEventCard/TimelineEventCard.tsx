@@ -10,7 +10,7 @@ type Props = {
     eventData: TimelineEventType
 }
 export default function TimelineEventCard({ eventData }: Props) {
-    const { title, start_day, start_month, start_year, end_day, end_month, end_year, image, doc_id, eventBgColor } = eventData;
+    const { title, description, start_day, start_month, start_year, end_day, end_month, end_year, image, doc_id, eventBgColor } = eventData;
     const { setShowUpdateDialog, setEventData } = useContext(TimelineEventContext);
     const navigate = useNavigate();
     return (
@@ -31,8 +31,10 @@ export default function TimelineEventCard({ eventData }: Props) {
                 }}
             >
                 <div className="w-full h-full flex justify-content-center">
-                    <p className="w-full">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, soluta corrupti, eligendi voluptatibus et cum blanditiis nulla sit maiores ea quasi aperiam, fugit nisi consequuntur delectus veritatis in non enim.
+                    <p className="w-full " style={{
+                        wordBreak: "break-all"
+                    }}>
+                        {description}
                     </p>
                     {/* {image && (
                         <img
