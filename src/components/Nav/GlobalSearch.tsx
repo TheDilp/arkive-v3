@@ -203,8 +203,16 @@ export default function GlobalSearch({ search, setSearch }: Props) {
       return <Icon icon={"mdi:vector-polyline"} />;
     }
     // Board
-    else {
+    else if (item.defaultNodeColor) {
       return <Icon icon={"mdi:draw"} />;
+    }
+    // Timeline Event
+    else if (item.timeline_id) {
+      return <Icon icon={item.icon} />
+    }
+    // Timeline
+    else {
+      return <Icon icon="mdi:chart-timeline-variant" />
     }
   }
 
