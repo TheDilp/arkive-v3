@@ -217,7 +217,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
   }
 
   // Display map, board or timeline in parenthesese if it's a marker, node or timeline
-  function displayMapOrBoard(item: any) {
+  function displayMapBoardTimeline(item: any) {
     if (item.map_id) {
       const map = maps?.find((map) => map.id === item.map_id);
       if (map) return map.title;
@@ -284,7 +284,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           }}
           itemTemplate={(item) => (
             <div
-              className="text-white text-lg"
+              className="text-white text-lg white-space-nowrap overflow-hidden text-overflow-ellipsis w-20rem"
               onClick={(e) => {
                 setFilteredItems([]);
                 setSearch(null);
@@ -292,7 +292,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
             >
               {displayIcon(item)}
               {item.title || item.label || item.text}{" "}
-              {(item.map_id || item.board_id) && `(${displayMapOrBoard(item)})`}
+              {(item.map_id || item.board_id || item.timeline_id) && `(${displayMapBoardTimeline(item)})`}
             </div>
           )}
           completeMethod={(e) => {
