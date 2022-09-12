@@ -118,6 +118,21 @@ body {
   color: white !important;
 }
 
+.simpleEventContent {
+  height: 5rem !important;
+}
+.simpleTimelineEvent:nth-child(even) {
+  flex-direction: column;
+}
+.simpleTimelineEvent:nth-child(odd) {
+  flex-direction: column-reverse;
+}
+.simpleTimelineEvent:nth-child(even) .simpleEventContentOdd * {
+  display: none;
+}
+.simpleTimelineEvent:nth-child(odd) .simpleEventContentOdd * {
+  display: none;
+}
 .linkTimelineEventCard {
   transition: all 0.25s ease;
 

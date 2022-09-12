@@ -30,7 +30,6 @@ type Props = {
 
 export default function TimelineView({ public_view }: Props) {
     const { project_id, timeline_id, event_id } = useParams();
-    const timelineRef = useRef() as MutableRefObject<Timeline>;
     const { setTimelineId } = useContext(TimelineContext);
     const timelineData = useGetTimelineData(
         project_id as string,
@@ -106,10 +105,6 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, []);
 
-    useEffect(() => {
-        if (event_id && timelineRef.current) {
-        }
-    }, [event_id]);
 
     return (
         <div
@@ -138,14 +133,14 @@ export default function TimelineView({ public_view }: Props) {
                         </>
                     )}
                     {timelineData && (
-                        <div className="w-full h-full flex px-4 align-items-center overflow-x-auto">
-                            <Timeline
+                        <div className={`w-full h-full flex px-4 align-items-center overflow-x-auto ${view.horizontal ? "flex-row" : "flex-column"}`}>
+                            {timelineData?.timeline_events.sort(TimelineEventsSort).map(event => <SimpleTimelineEvent key={event.id} {...event} public_view={public_view} setIconSelect={setIconSelect} view={view} />)}
+                            {/* <Timeline
                                 className={`w-full  ${view.details ? "detailedTimeline" : "simpleTimeline"
                                     } ${view.horizontal
                                         ? "horizontalTimeline h-10rem"
                                         : "verticalTimeline h-full"
                                     }`}
-                                ref={timelineRef}
                                 value={
                                     timelineData?.timeline_events.sort(TimelineEventsSort) || []
                                 }
@@ -170,7 +165,7 @@ export default function TimelineView({ public_view }: Props) {
                                     />
                                 )}
                                 layout={view.horizontal ? "horizontal" : "vertical"}
-                            />
+                            /> */}
                         </div>
                     )}
                 </>
