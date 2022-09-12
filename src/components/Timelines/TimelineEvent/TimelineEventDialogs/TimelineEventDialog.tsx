@@ -44,12 +44,12 @@ export default function TimelineEventDialog() {
     const { data: maps } = useGetMaps(project_id as string);
     const [closeOnDone, setCloseOnDone] = useState(true);
 
-
     const confirmdelete = () => {
         confirmDialog({
             message: (
                 <div>
-                    {`Are you sure you want to delete ${eventData?.title || "this event"}?`}
+                    {`Are you sure you want to delete ${eventData?.title || "this event"
+                        }?`}
                 </div>
             ),
             header: `Delete ${eventData?.title || "Event"}`,
@@ -60,7 +60,7 @@ export default function TimelineEventDialog() {
                     deleteTimelineEventMutation.mutate({
                         id: eventData.id,
                         project_id: project_id as string,
-                        timeline_id: timeline_id as string
+                        timeline_id: timeline_id as string,
                     });
                 setShowDialog(false);
             },
@@ -68,12 +68,14 @@ export default function TimelineEventDialog() {
         });
     };
 
-
     return (
         <Dialog
             header={`${eventData?.id === "" ? "Create" : "Update"} Timeline Event`}
             visible={showDialog}
-            onHide={() => { setShowDialog(false); setEventData(TimelineEventCreateDefault) }}
+            onHide={() => {
+                setShowDialog(false);
+                setEventData(TimelineEventCreateDefault);
+            }}
             className="w-3"
             modal={false}
         >
@@ -202,9 +204,7 @@ export default function TimelineEventDialog() {
                                     } as TimelineEventUpdateType)
                                 )
                             }
-                            options={maps?.filter(
-                                (map) => !map.folder
-                            )}
+                            options={maps?.filter((map) => !map.folder)}
                             optionLabel={"title"}
                             optionValue={"id"}
                         />
@@ -406,10 +406,39 @@ export default function TimelineEventDialog() {
                     </div>
                     <div className="w-full flex mb-2 justify-content-between align-items-center">
                         <span>Event Card Style:</span>
-                        <Dropdown value={eventData.styleType} onChange={(e) => setEventData(prev => ({ ...prev, styleType: e.value }) as TimelineEventUpdateType)} options={[{ value: "background", display: "Background" }, { value: "outline", display: "Outline" }]} optionLabel="display" optionValue="value" />
+                        <Dropdown
+                            value={eventData.styleType}
+                            onChange={(e) =>
+                                setEventData(
+                                    (prev) =>
+                                        ({ ...prev, styleType: e.value } as TimelineEventUpdateType)
+                                )
+                            }
+                            options={[
+                                { value: "background", display: "Background" },
+                                { value: "outline", display: "Outline" },
+                            ]}
+                            optionLabel="display"
+                            optionValue="value"
+                        />
                     </div>
                     <div className="w-full flex mb-2 justify-content-between align-items-center">
-                        <InputTextarea className="w-full" rows={3} value={eventData.description} onChange={(e) => setEventData(prev => ({ ...prev, description: e.target.value }) as TimelineEventUpdateType)} />
+                        <InputTextarea
+                            className="w-full"
+                            rows={3}
+                            maxLength={250}
+                            placeholder="Timeline Event Description (max 250 characters)"
+                            value={eventData.description}
+                            onChange={(e) =>
+                                setEventData(
+                                    (prev) =>
+                                    ({
+                                        ...prev,
+                                        description: e.target.value,
+                                    } as TimelineEventUpdateType)
+                                )
+                            }
+                        />
                     </div>
                     <div className="w-full flex mb-2 justify-content-between align-items-center">
                         <span>Close Dialog on Done:</span>
@@ -419,9 +448,17 @@ export default function TimelineEventDialog() {
                         />
                     </div>
                     <div className="w-full flex justify-content-between">
-                        {eventData.id !== "" && <Button label="Delete" className="p-button-danger p-button-outlined" icon="pi pi-trash" onClick={confirmdelete} />}
+                        {eventData.id !== "" && (
+                            <Button
+                                label="Delete"
+                                className="p-button-danger p-button-outlined"
+                                icon="pi pi-trash"
+                                onClick={confirmdelete}
+                            />
+                        )}
                         <Button
-                            label={`${eventData.id === "" ? "Create" : "Update"} Timeline Event`}
+                            label={`${eventData.id === "" ? "Create" : "Update"
+                                } Timeline Event`}
                             className="p-button-primary p-button-outlined p-button-raised"
                             icon="pi pi-save"
                             iconPos="right"
@@ -452,9 +489,13 @@ export default function TimelineEventDialog() {
                                     }
                                 }
                                 if (eventData.id === "") {
-                                    createTimelineEventMutation.mutate({ ...TimelineEventCreateDefault, ...eventData, id: uuid(), timeline_id: timeline_id as string })
-                                }
-                                else {
+                                    createTimelineEventMutation.mutate({
+                                        ...TimelineEventCreateDefault,
+                                        ...eventData,
+                                        id: uuid(),
+                                        timeline_id: timeline_id as string,
+                                    });
+                                } else {
                                     updateTimelineEventMutation.mutate({
                                         ...eventData,
                                     });

@@ -32,7 +32,7 @@ export default function TimelineEventCard({ eventData }: Props) {
                     }`}
                 style={{
                     backgroundColor: styleType === "background" ? eventBgColor : "",
-                    border: styleType === "outline" ? `solid 5px ${eventBgColor}` : ""
+                    border: styleType === "outline" ? `solid 3px ${eventBgColor}` : ""
                 }}
                 title={() => (
                     <div className="timelineCardTitle text-center">
