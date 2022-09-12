@@ -19,20 +19,20 @@ export default function TimelineEventCard({ eventData }: Props) {
         end_day,
         end_month,
         end_year,
-        image,
         doc_id,
         eventBgColor,
+        styleType,
     } = eventData;
     const { setShowDialog, setEventData } = useContext(TimelineEventContext);
     const navigate = useNavigate();
-    console.log(image);
     return (
         <div className="h-20rem flex timelineEventCardContainer">
             <Card
                 className={`w-20rem h-min timelineEventCard ${doc_id && "cursor-pointer linkTimelineEventCard"
                     }`}
                 style={{
-                    backgroundColor: eventBgColor,
+                    backgroundColor: styleType === "background" ? eventBgColor : "",
+                    border: styleType === "outline" ? `solid 5px ${eventBgColor}` : ""
                 }}
                 title={() => (
                     <div className="timelineCardTitle text-center">

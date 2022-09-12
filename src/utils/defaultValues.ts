@@ -121,5 +121,6 @@ export const TimelineEventCreateDefault = {
   doc_id: undefined,
   map_id: undefined,
   eventBgColor: "#1e1e1e",
+  styleType: "background",
   public: false,
 };

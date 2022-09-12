@@ -16,6 +16,7 @@ export type TimelineEventType = {
   image?: ImageProps;
   age?: string;
   eventBgColor: string;
+  styleType: "background" | "outline";
   icon: string;
   public: boolean;
 };
@@ -36,6 +37,7 @@ export type TimelineEventCreateType = {
   image?: ImageProps;
   age?: string;
   eventBgColor: string;
+  styleType: string;
   icon: string;
   public: boolean;
 };
@@ -56,6 +58,7 @@ export type TimelineEventUpdateType = {
   image?: ImageProps;
   age?: string;
   eventBgColor?: string;
+  styleType?: string;
   icon?: string;
   public?: boolean;
 };
