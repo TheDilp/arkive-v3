@@ -9,6 +9,7 @@ import { MediaQueryContext } from '../../Context/MediaQueryContext';
 import { TimelineContext } from '../../Context/TimelineContext';
 import TreeSidebar from '../../Util/TreeSidebar';
 import DragPreview from '../../Wiki/DocumentTree/DragPreview';
+import TimelineDialog from './TimelineDialog';
 import TimelinesFilter from './TimelinesFilter';
 import TimelineTreeItem from './TimelineTreeItem';
 import TimelineTreeItemContext from './TimelineTreeItemContext';
@@ -20,9 +21,9 @@ export default function TimelinesTree() {
     const { isTabletOrMobile } = useContext(MediaQueryContext)
     const [treeData, setTreeData] = useState<NodeModel<TimelineType>[]>([]);
     const [updateTimelineDialog, setUpdateTimelineDialog] = useState<TimelineItemDisplayDialogProps>(TimelineItemDisplayDialogDefault)
-    const updateTimelineMutation = useUpdateTimeline();
     const [filter, setFilter] = useState("");
     const { data: timelines } = useGetTimelines(project_id as string);
+    const updateTimelineMutation = useUpdateTimeline();
     const cm = useRef() as any;
 
     const handleDrop = async (
@@ -88,7 +89,7 @@ export default function TimelinesTree() {
 
     return (
         <div
-            className={` text-white pt-2 px-2 ${isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
+            className={`text-white pt-2 px-2 ${isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
                 }`}
             style={{
                 height: "96vh",
@@ -100,6 +101,7 @@ export default function TimelinesTree() {
                 displayDialog={updateTimelineDialog}
                 setDisplayDialog={setUpdateTimelineDialog}
             />
+            <TimelineDialog eventData={updateTimelineDialog} setEventData={setUpdateTimelineDialog} />
             <TreeSidebar>
                 <TimelinesFilter filter={filter} setFilter={setFilter} />
                 <Tree

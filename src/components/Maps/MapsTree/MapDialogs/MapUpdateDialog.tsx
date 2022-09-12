@@ -24,15 +24,15 @@ export default function MapUpdateDialog({ mapData, setMapData }: Props) {
   const updateMapMutation = useUpdateMap(project_id as string);
 
   function recursiveDescendantRemove(
-    doc: MapProps,
+    map: MapProps,
     index: number,
     array: MapProps[],
     selected_id: string
   ): boolean {
-    if (doc.parent === null) {
+    if (map.parent === null) {
       return true;
     } else {
-      const parent = array.find((d) => d.id === doc.parent?.id);
+      const parent = array.find((d) => d.id === map.parent?.id);
       if (parent) {
         if (parent.id === selected_id) {
           return false;

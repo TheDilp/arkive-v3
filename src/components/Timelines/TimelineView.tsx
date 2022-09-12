@@ -3,10 +3,12 @@ import { Timeline } from "primereact/timeline";
 import { useContext, useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TimelineEventType } from "../../types/TimelineEventTypes";
+import { TimelineItemDisplayDialogProps } from "../../types/TimelineTypes";
 import {
     useGetTimelineData,
     useUpdateTimelineEvent
 } from "../../utils/customHooks";
+import { TimelineItemDisplayDialogDefault } from "../../utils/defaultValues";
 import { TimelineContext } from "../Context/TimelineContext";
 import TimelineEventProvider from "../Context/TimelineEventContext";
 import MarkerIconSelect from "../Maps/Map/MapMarker/MarkerIconSelect";
