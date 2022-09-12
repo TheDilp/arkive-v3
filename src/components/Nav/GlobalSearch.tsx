@@ -32,15 +32,16 @@ export default function GlobalSearch({ search, setSearch }: Props) {
   const { data: boards } = useGetBoards(project_id as string);
   const { data: timelines } = useGetTimelines(project_id as string);
   const [filteredItems, setFilteredItems] = useState<
-    Array<
-      | DocumentType
-      | MapType
-      | BoardType
-      | BoardNodeType
-      | MapMarkerType
-      | TimelineType
-      | TimelineEventType
-    >
+    {
+      category: string, items:
+      (| DocumentType
+        | MapType
+        | BoardType
+        | BoardNodeType
+        | MapMarkerType
+        | TimelineType
+        | TimelineEventType)[]
+    }[]
   >([]);
   const [categories, setCategories] = useState([
     "Docs",
@@ -113,51 +114,36 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           }
         }
 
-        let initialData: Array<
-          | DocumentType
-          | MapType
-          | BoardType
-          | BoardNodeType
-          | MapMarkerType
-          | TimelineType
-          | TimelineEventType
-        > = [];
-        initialData = initialData
-          .concat(filteredDocs)
-          .concat(filteredMaps)
-          .concat(filteredMarkers)
-          .concat(filteredBoards)
-          .concat(filteredNodes)
-          .concat(filteredTimelines)
-          .concat(filteredTimelineEvents);
-        let data = initialData.filter((item) => {
-          if (!item) return false;
-          // Check if content of document contains query
-          if ("content" in item) {
-            return (
-              JSON.stringify(item.content)
-                .toLowerCase()
-                .includes(search.toLowerCase()) ||
-              item.title.toLowerCase().includes(search.toLowerCase())
-            );
-          } else {
-            // Title => Documents, Maps, Boards, Timelines, Timeline Events
-            if ("title" in item) {
-              return item.title?.toLowerCase().includes(search.toLowerCase());
-            }
-            // Labels => nodes
-            else if ("label" in item) {
-              return item.label?.toLowerCase().includes(search.toLowerCase());
-            }
-            // Text => Map markers
-            else if ("text" in item) {
-              return item.text?.toLowerCase().includes(search.toLowerCase());
-            }
-          }
-          return false;
-        });
-        console.log(initialData)
-        if (data) setFilteredItems(data);
+        let initialData: {
+          category: string, items:
+          (| DocumentType
+            | MapType
+            | BoardType
+            | BoardNodeType
+            | MapMarkerType
+            | TimelineType
+            | TimelineEventType)[]
+        }[] = [];
+        initialData
+          .push({
+            category: "Documents", items: filteredDocs.filter(doc => {
+              return (
+                JSON.stringify(doc.content)
+                  .toLowerCase()
+                  .includes(search.toLowerCase()) ||
+                doc.title.toLowerCase().includes(search.toLowerCase())
+              );
+            })
+          })
+        initialData
+          .push({ category: "Maps", items: filteredMaps.filter(map => { return map.title?.toLowerCase().includes(search.toLowerCase()); }) })
+        initialData.push({ category: "Markers", items: filteredMarkers.filter(marker => { return marker.text?.toLowerCase().includes(search.toLowerCase()); }) })
+        initialData.push({ category: "Boards", items: filteredBoards.filter(board => { return board.title?.toLowerCase().includes(search.toLowerCase()); }) });
+        initialData.push({ category: "Nodes", items: filteredNodes.filter(node => { return node.label?.toLowerCase().includes(search.toLowerCase()) }) })
+        initialData.push({ category: "Timelines", items: filteredTimelines.filter(timeline => { return timeline.title?.toLowerCase().includes(search.toLowerCase()); }) })
+        initialData.push({ category: "Events", items: filteredTimelineEvents.filter(event => { return event.title?.toLowerCase().includes(search.toLowerCase()); }) });
+
+        if (initialData) setFilteredItems(initialData);
         else setFilteredItems([]);
       }, 1000);
       return () => clearTimeout(timeout);
@@ -179,8 +165,12 @@ export default function GlobalSearch({ search, setSearch }: Props) {
       navigate(`./maps/${item.map_id}/${item.id}`);
     } else if (item.board_id) {
       navigate(`./boards/${item.board_id}/${item.id}`);
-    } else {
+    } else if (item.defaultNodeColor) {
       navigate(`./boards/${item.id}`);
+    } else if (item.timeline_id) {
+      navigate(`./timelines/${item.timeline_id}/${item.id}`);
+    } else {
+      navigate(`./timelines/${item.id}`);
     }
   }
 
@@ -208,11 +198,11 @@ export default function GlobalSearch({ search, setSearch }: Props) {
     }
     // Timeline Event
     else if (item.timeline_id) {
-      return <Icon icon={item.icon} />
+      return <Icon icon={item.icon} />;
     }
     // Timeline
     else {
-      return <Icon icon="mdi:chart-timeline-variant" />
+      return <Icon icon="mdi:chart-timeline-variant" />;
     }
   }
 
@@ -273,6 +263,9 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           className="w-full mt-2"
           inputClassName="w-full"
           placeholder="Enter at least 3 characters"
+          optionGroupLabel="category"
+          optionGroupChildren="items"
+          optionGroupTemplate={(item) => <div className="py-1 border-bottom-1">{item.category}</div>}
           suggestions={filteredItems}
           value={search}
           selectedItemTemplate={(item) => {
@@ -292,7 +285,8 @@ export default function GlobalSearch({ search, setSearch }: Props) {
             >
               {displayIcon(item)}
               {item.title || item.label || item.text}{" "}
-              {(item.map_id || item.board_id || item.timeline_id) && `(${displayMapBoardTimeline(item)})`}
+              {(item.map_id || item.board_id || item.timeline_id) &&
+                `(${displayMapBoardTimeline(item)})`}
             </div>
           )}
           completeMethod={(e) => {

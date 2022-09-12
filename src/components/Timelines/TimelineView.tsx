@@ -57,13 +57,13 @@ export default function TimelineView({ public_view }: Props) {
     const [sortedEvents, setSortedEvents] = useState<TimelineEventType[]>([])
 
     const rowVirtualizer = useVirtual({
-        size: timelineData?.timeline_events.length || 0,
+        size: sortedEvents.length || 0,
         parentRef,
         estimateSize: useCallback(() => view.details ? 320 : 80, [view.details]),
         overscan: 5,
     });
     const columnVirtualizer = useVirtual({
-        size: timelineData?.timeline_events.length || 0,
+        size: sortedEvents.length || 0,
         parentRef,
         estimateSize: useCallback(() => 320, []),
         overscan: 5,
@@ -146,12 +146,30 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, [timeline_id]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (timelineData?.timeline_events) {
             let temp = timelineData.timeline_events.sort(TimelineEventDateSort);
             setSortedEvents(temp)
         }
+        return () => {
+            setSortedEvents([])
+        }
     }, [timelineData?.timeline_events])
+
+    useEffect(() => {
+        if (event_id && sortedEvents) {
+            if (view.horizontal) {
+                let index = sortedEvents.findIndex(event => event.id === event_id);
+                if (index !== -1)
+                    columnVirtualizer.scrollToIndex(index - 1)
+            }
+            else {
+                let index = sortedEvents.findIndex(event => event.id === event_id)
+                if (index !== -1)
+                    rowVirtualizer.scrollToIndex(index)
+            }
+        }
+    }, [event_id, sortedEvents])
 
 
     return (
@@ -247,20 +265,6 @@ export default function TimelineView({ public_view }: Props) {
                                     }
                                 </div>
                             </div>
-
-
-                            {/* {timelineData?.timeline_events
-                                .sort(TimelineEventsSort)
-                                .map((eventData, index) => (
-                                    <TimelineEvent
-                                        key={eventData.id}
-                                        index={index}
-                                        eventData={eventData}
-                                        public_view={public_view}
-                                        setIconSelect={setIconSelect}
-                                        view={view}
-                                    />
-                                ))} */}
                         </div>
                     )}
                 </>
