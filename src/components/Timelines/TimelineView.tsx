@@ -70,7 +70,8 @@ export default function TimelineView({ public_view }: Props) {
         horizontal: true
     });
 
-    function TimelineEventsSort(a: TimelineEventType, b: TimelineEventType) {
+    // Sort by date
+    function TimelineEventDateSort(a: TimelineEventType, b: TimelineEventType): number {
         if (a.start_year > b.start_year) {
             return 1;
         } else if (a.start_year < b.start_year) {
@@ -116,7 +117,28 @@ export default function TimelineView({ public_view }: Props) {
                 }
             }
         }
-        return 0;
+        return 0
+    }
+
+    // First sort by age and then by date if needed
+    function TimelineEventsSort(a: TimelineEventType, b: TimelineEventType): number {
+        if ((a.age && b.age)) {
+            if (a.age > b.age) {
+                return 1
+            }
+            else if (a.age < b.age) {
+                return -1
+            }
+            else {
+                return TimelineEventDateSort(a, b)
+            }
+        }
+        else if ((a.age === undefined && b.age === undefined)) {
+            return 0;
+        }
+        else {
+            return TimelineEventDateSort(a, b)
+        }
     }
     useLayoutEffect(() => {
         if (timeline_id) {
@@ -126,7 +148,7 @@ export default function TimelineView({ public_view }: Props) {
 
     useEffect(() => {
         if (timelineData?.timeline_events) {
-            let temp = timelineData.timeline_events.sort(TimelineEventsSort);
+            let temp = timelineData.timeline_events.sort(TimelineEventDateSort);
             setSortedEvents(temp)
         }
     }, [timelineData?.timeline_events])
