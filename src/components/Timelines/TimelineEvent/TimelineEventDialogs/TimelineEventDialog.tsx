@@ -13,6 +13,7 @@ import { TimelineEventUpdateType } from "../../../../types/TimelineEventTypes";
 import { ColorPresets } from "../../../../utils/boardUtils";
 import {
     useCreateTimelineEvent,
+    useDeleteTimelineEvent,
     useGetDocuments,
     useGetImages,
     useGetMaps,
@@ -25,6 +26,7 @@ import { MapProps } from "../../../../types/MapTypes";
 import { v4 as uuid } from "uuid";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
 import { InputTextarea } from "primereact/inputtextarea";
+import { confirmDialog } from "primereact/confirmdialog";
 
 export default function TimelineEventDialog() {
     const { showDialog, setShowDialog, eventData, setEventData } =
@@ -38,8 +40,35 @@ export default function TimelineEventDialog() {
     const updateTimelineEventMutation = useUpdateTimelineEvent(
         project_id as string
     );
+    const deleteTimelineEventMutation = useDeleteTimelineEvent();
     const { data: maps } = useGetMaps(project_id as string);
     const [closeOnDone, setCloseOnDone] = useState(true);
+
+
+    const confirmdelete = () => {
+        confirmDialog({
+            message: (
+                <div>
+                    {`Are you sure you want to delete ${eventData?.title || "this event"}?`}
+                </div>
+            ),
+            header: `Delete ${eventData?.title || "Event"}`,
+            icon: "pi pi-exclamation-triangle",
+            acceptClassName: "p-button-outlined text-red-500",
+            accept: async () => {
+                if (eventData?.id)
+                    deleteTimelineEventMutation.mutate({
+                        id: eventData.id,
+                        project_id: project_id as string,
+                        timeline_id: timeline_id as string
+                    });
+                setShowDialog(false);
+            },
+            reject: () => { },
+        });
+    };
+
+
     return (
         <Dialog
             header={`${eventData?.id === "" ? "Create" : "Update"} Timeline Event`}
@@ -386,7 +415,8 @@ export default function TimelineEventDialog() {
                             onChange={(e) => setCloseOnDone(e.checked)}
                         />
                     </div>
-                    <div className="w-full flex justify-content-end">
+                    <div className="w-full flex justify-content-between">
+                        {eventData.id !== "" && <Button label="Delete" className="p-button-danger p-button-outlined" icon="pi pi-trash" onClick={confirmdelete} />}
                         <Button
                             label={`${eventData.id === "" ? "Create" : "Update"} Timeline Event`}
                             className="p-button-primary p-button-outlined p-button-raised"

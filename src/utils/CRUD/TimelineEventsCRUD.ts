@@ -21,7 +21,7 @@ export const createTimelineEvent = async (
     }
   }
 };
-export const updatedTimelineEvent = async (
+export const updateTimelineEvent = async (
   UpdateTimelineEventProps: TimelineEventUpdateType
 ) => {
   let user = auth.user();
@@ -34,6 +34,26 @@ export const updatedTimelineEvent = async (
       })
       .eq("id", UpdateTimelineEventProps.id);
     if (data) return data;
+    if (error) {
+      toastError("There was an error updating your timeline event.");
+      throw new Error(error.message);
+    }
+  }
+};
+export const deleteTimelineEvent = async ({
+  id,
+}: {
+  id: string;
+  project_id: string;
+  timeline_id: string;
+}) => {
+  let user = auth.user();
+  if (user) {
+    const { error } = await supabase
+      .from("timeline_events")
+      .delete()
+      .eq("id", id);
+
     if (error) {
       toastError("There was an error updating your timeline event.");
       throw new Error(error.message);

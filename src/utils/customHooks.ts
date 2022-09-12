@@ -41,7 +41,8 @@ import {
 } from "./CRUD/TimelineCRUD";
 import {
   createTimelineEvent,
-  updatedTimelineEvent,
+  deleteTimelineEvent,
+  updateTimelineEvent,
 } from "./CRUD/TimelineEventsCRUD";
 import {
   createBoard,
@@ -1884,7 +1885,7 @@ export function useUpdateTimelineEvent(project_id: string) {
 
   return useMutation(
     async (vars: TimelineEventUpdateType) => {
-      await updatedTimelineEvent(vars);
+      await updateTimelineEvent(vars);
     },
     {
       onMutate: async (updatedTimelineEvent) => {
@@ -1922,6 +1923,46 @@ export function useUpdateTimelineEvent(project_id: string) {
           context?.previousTimelines
         );
         toastError("There was an error updating this timeline event.");
+      },
+    }
+  );
+}
+export function useDeleteTimelineEvent() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; project_id: string; timeline_id: string }) => {
+      await deleteTimelineEvent(vars);
+    },
+    {
+      onMutate: async (deletedTimelineEvent) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${deletedTimelineEvent.project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${deletedTimelineEvent.project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let temp = oldData.map((timeline) => {
+                if (timeline.id === deletedTimelineEvent.timeline_id) {
+                  timeline.timeline_events = timeline.timeline_events.filter(
+                    (event) => event.id !== deletedTimelineEvent.id
+                  );
+                }
+                return timeline;
+              });
+              return temp;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, deletedTimeline, context) => {
+        queryClient.setQueryData(
+          `${deletedTimeline.project_id}-timelines`,
+          context?.previousTimelines
+        );
       },
     }
   );
