@@ -428,7 +428,7 @@ export default function TimelineEventDialog() {
                             rows={3}
                             maxLength={250}
                             placeholder="Timeline Event Description (max 250 characters)"
-                            value={eventData.description}
+                            value={eventData.description || ""}
                             onChange={(e) =>
                                 setEventData(
                                     (prev) =>

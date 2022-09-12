@@ -1,7 +1,8 @@
 import { Card } from "primereact/card";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { TimelineEventType } from "../../../types/TimelineEventTypes";
+import { TimelineEventContext } from "../../Context/TimelineEventContext";
 import TimelineEventCardSubtitle from "./TimelineEventCard/TimelineEventCardSubtitle";
 import TimelineEventIcon from "./TimelineEventIcon";
 
@@ -41,6 +42,7 @@ export default function TimelineEvent({
         icon,
     } = eventData;
     const navigate = useNavigate();
+    const { setShowDialog, setEventData } = useContext(TimelineEventContext)
     // Display event card
     if (view.details)
         return (
@@ -75,8 +77,8 @@ export default function TimelineEvent({
                                     <i
                                         className="pi pi-pencil"
                                         onClick={() => {
-                                            // setEventData(eventData);
-                                            // setShowDialog(true);
+                                            setEventData(eventData);
+                                            setShowDialog(true);
                                         }}
                                     ></i>
                                 )}

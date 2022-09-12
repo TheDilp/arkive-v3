@@ -124,11 +124,12 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, [timeline_id]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (timelineData?.timeline_events) {
-            setSortedEvents(timelineData.timeline_events.sort(TimelineEventsSort))
+            let temp = timelineData.timeline_events.sort(TimelineEventsSort);
+            setSortedEvents(temp)
         }
-    }, [timelineData])
+    }, [timelineData?.timeline_events])
 
 
     return (
