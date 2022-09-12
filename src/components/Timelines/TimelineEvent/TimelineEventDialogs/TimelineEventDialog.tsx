@@ -345,7 +345,7 @@ export default function TimelineEventDialog() {
                         </div>
                     </div>
 
-                    <div className="w-full flex my-4 justify-content-between align-items-center">
+                    <div className="w-full flex my-2 justify-content-between align-items-center">
                         <span>Event Card Color:</span>
                         <InputText
                             value={eventData.eventBgColor}
@@ -404,7 +404,10 @@ export default function TimelineEventDialog() {
                             }
                         />
                     </div>
-
+                    <div className="w-full flex mb-2 justify-content-between align-items-center">
+                        <span>Event Card Style:</span>
+                        <Dropdown value={eventData.styleType} onChange={(e) => setEventData(prev => ({ ...prev, styleType: e.value }) as TimelineEventUpdateType)} options={[{ value: "background", display: "Background" }, { value: "outline", display: "Outline" }]} optionLabel="display" optionValue="value" />
+                    </div>
                     <div className="w-full flex mb-2 justify-content-between align-items-center">
                         <InputTextarea className="w-full" rows={3} value={eventData.description} onChange={(e) => setEventData(prev => ({ ...prev, description: e.target.value }) as TimelineEventUpdateType)} />
                     </div>
