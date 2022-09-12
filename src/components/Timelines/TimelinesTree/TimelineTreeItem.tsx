@@ -68,11 +68,16 @@ export default function TimelineTreeItem({
           )}
         </span>
       )}
-      {node.droppable ? (
-        <Icon icon="bxs:folder" inline={true} className="mr-1" />
-      ) : (
-        <Icon icon="mdi:chart-timeline-variant" inline={true} className="mr-1" />
-      )}
+      <span onClick={e => {
+        e.preventDefault();
+        e.stopPropagation()
+      }}>
+        {node.droppable ? (
+          <Icon icon="bxs:folder" inline={true} className="mr-1" />
+        ) : (
+          <Icon icon="mdi:chart-timeline-variant" inline={true} className="mr-1" />
+        )}
+      </span>
       <div
         className={`Lato w-10 ${timelineId === node.id ? "text-primary" : ""}`}
         onClick={(e) => {

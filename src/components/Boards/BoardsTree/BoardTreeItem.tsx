@@ -73,11 +73,17 @@ export default function BoardTreeItem({
           )}
         </span>
       )}
-      {node.droppable ? (
-        <Icon icon="bxs:folder" inline={true} className="mr-1" />
-      ) : (
-        <Icon icon={"mdi:draw"} inline={true} className="mr-1" />
-      )}
+      <span onClick={e => {
+        e.preventDefault();
+        e.stopPropagation()
+      }}>
+
+        {node.droppable ? (
+          <Icon icon="bxs:folder" inline={true} className="mr-1" />
+        ) : (
+          <Icon icon={"mdi:draw"} inline={true} className="mr-1" />
+        )}
+      </span>
       <div
         className={`w-10 Lato ${boardId === node.id ? "text-primary" : ""}`}
         onClick={(e) => {

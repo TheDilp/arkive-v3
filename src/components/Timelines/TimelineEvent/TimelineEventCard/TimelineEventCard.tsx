@@ -2,7 +2,6 @@ import { Card } from "primereact/card";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { TimelineEventType } from "../../../../types/TimelineEventTypes";
-import { supabaseStorageImagesLink } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import TimelineEventCardSubtitle from "./TimelineEventCardSubtitle";
 

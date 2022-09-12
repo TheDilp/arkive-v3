@@ -74,11 +74,17 @@ export default function MapTreeItem({
           )}
         </span>
       )}
-      {node.droppable ? (
-        <Icon icon="bxs:folder" inline={true} className="mr-1" />
-      ) : (
-        <Icon icon={"mdi:map"} inline={true} className="mr-1" />
-      )}
+      <span onClick={e => {
+        e.preventDefault();
+        e.stopPropagation()
+      }}>
+
+        {node.droppable ? (
+          <Icon icon="bxs:folder" inline={true} className="mr-1" />
+        ) : (
+          <Icon icon={"mdi:map"} inline={true} className="mr-1" />
+        )}
+      </span>
       <div
         className={`Lato w-10 ${mapId === node.id ? "text-primary" : ""}`}
         onClick={(e) => {

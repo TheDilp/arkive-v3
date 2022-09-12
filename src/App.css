@@ -138,6 +138,7 @@ body {
 
 .p-timeline.simpleTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
   height: 7.5rem;
+  width: 12rem;
 }
 .p-timeline.detailedTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
   margin-top: -20rem;
