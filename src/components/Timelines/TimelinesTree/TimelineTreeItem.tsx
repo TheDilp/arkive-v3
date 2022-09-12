@@ -32,7 +32,12 @@ export default function TimelineTreeItem({
       to={node.id as string}
       style={{ marginInlineStart: depth * 10 }}
       className="text-white text-md no-underline hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center"
-      onClick={() => {
+      onClick={(e) => {
+        if (node.droppable) {
+          e.preventDefault();
+          e.stopPropagation();
+          return
+        }
         if (!node.droppable) setTimelineId(node.id as string);
       }}
       onContextMenu={(e) => {
