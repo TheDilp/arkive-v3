@@ -105,7 +105,6 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, []);
 
-
     return (
         <div
             className={`${public_view ? "w-full" : "w-10"
@@ -133,8 +132,22 @@ export default function TimelineView({ public_view }: Props) {
                         </>
                     )}
                     {timelineData && (
-                        <div className={`w-full h-full flex px-4 align-items-center overflow-x-auto ${view.horizontal ? "flex-row" : "flex-column"}`}>
-                            {timelineData?.timeline_events.sort(TimelineEventsSort).map(event => <SimpleTimelineEvent key={event.id} {...event} public_view={public_view} setIconSelect={setIconSelect} view={view} />)}
+                        <div
+                            className={`w-full h-full flex px-4 align-items-center overflow-x-auto ${view.horizontal ? "flex-row" : "flex-column"
+                                }`}
+                        >
+                            {timelineData?.timeline_events
+                                .sort(TimelineEventsSort)
+                                .map((eventData, index) => (
+                                    <SimpleTimelineEvent
+                                        key={eventData.id}
+                                        index={index}
+                                        eventData={eventData}
+                                        public_view={public_view}
+                                        setIconSelect={setIconSelect}
+                                        view={view}
+                                    />
+                                ))}
                             {/* <Timeline
                                 className={`w-full  ${view.details ? "detailedTimeline" : "simpleTimeline"
                                     } ${view.horizontal

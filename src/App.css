@@ -120,6 +120,7 @@ body {
 
 .simpleEventContent {
   height: 5rem !important;
+  min-width: 15rem !important;
 }
 .simpleTimelineEvent:nth-child(even) {
   flex-direction: column;
@@ -130,7 +131,7 @@ body {
 .simpleTimelineEvent:nth-child(even) .simpleEventContentOdd * {
   display: none;
 }
-.simpleTimelineEvent:nth-child(odd) .simpleEventContentOdd * {
+.simpleTimelineEvent:nth-child(odd) .simpleEventContentEe * {
   display: none;
 }
 .linkTimelineEventCard {
