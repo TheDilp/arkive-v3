@@ -120,7 +120,6 @@ body {
 
 .simpleEventContent {
   height: 5rem !important;
-  min-width: 15rem !important;
 }
 .simpleTimelineEvent:nth-child(even) {
   flex-direction: column;

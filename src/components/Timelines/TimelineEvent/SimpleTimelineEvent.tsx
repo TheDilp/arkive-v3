@@ -53,7 +53,7 @@ export default function SimpleTimelineEvent({
                 if (doc_id && !public_view) navigate(`../../../wiki/doc/${doc_id}`);
             }}
         >
-            <div className="simpleEventContent simpleEventContentEven flex flex-column justify-content-center">
+            <div className="simpleEventContent simpleEventContentEven flex flex-column justify-content-center w-20rem">
                 <h4 className="m-0 white-space-nowrap overflow-hidden text-overflow-ellipsis text-center Merriweather">
                     {title}
                 </h4>
@@ -66,8 +66,8 @@ export default function SimpleTimelineEvent({
                 </p>
             </div>
             {/* Event timeline line */}
-            <div className={`w-full relative flex justify-content-center align-items-center`}>
-                <span className="absolute z-5 bg-gray-900 border-circle">
+            <div className={`w-full relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"}`}>
+                <span className="absolute z-2 bg-gray-900 border-circle">
                     <TimelineEventIcon
                         id={id}
                         eventBgColor={eventBgColor}
@@ -78,7 +78,7 @@ export default function SimpleTimelineEvent({
                 </span>
                 <div className="w-full z-1 border-top-1 border-left-1 h-full"></div>
             </div>
-            <div className="simpleEventContent simpleEventContentOdd"></div>
+            <div className="simpleEventContent simpleEventContentOdd w-20rem"></div>
         </div>
     );
 }

@@ -133,7 +133,7 @@ export default function TimelineView({ public_view }: Props) {
                     )}
                     {timelineData && (
                         <div
-                            className={`w-full h-full flex px-4 align-items-center overflow-x-auto ${view.horizontal ? "flex-row" : "flex-column"
+                            className={`w-full h-full flex px-4 py-8 align-items-center overflow-x-auto ${view.horizontal ? "flex-row" : "flex-column"
                                 }`}
                         >
                             {timelineData?.timeline_events
