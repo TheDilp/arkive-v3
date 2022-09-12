@@ -12,6 +12,7 @@ type Props = {
             left: number;
         }>
     >;
+    public_view?: boolean;
 };
 
 export default function TimelineEventIcon({ item, setIconSelect }: Props) {

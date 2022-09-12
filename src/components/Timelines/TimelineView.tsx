@@ -1,12 +1,19 @@
 import { Icon } from "@iconify/react";
 import { Timeline } from "primereact/timeline";
-import { useContext, useLayoutEffect, useState } from "react";
+import {
+    MutableRefObject,
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from "react";
 import { useParams } from "react-router-dom";
 import { TimelineEventType } from "../../types/TimelineEventTypes";
 import { TimelineItemDisplayDialogProps } from "../../types/TimelineTypes";
 import {
     useGetTimelineData,
-    useUpdateTimelineEvent
+    useUpdateTimelineEvent,
 } from "../../utils/customHooks";
 import { TimelineItemDisplayDialogDefault } from "../../utils/defaultValues";
 import { TimelineContext } from "../Context/TimelineContext";
@@ -22,13 +29,16 @@ type Props = {
 };
 
 export default function TimelineView({ public_view }: Props) {
-    const { project_id, timeline_id } = useParams();
+    const { project_id, timeline_id, event_id } = useParams();
+    const timelineRef = useRef() as MutableRefObject<Timeline>;
     const { setTimelineId } = useContext(TimelineContext);
     const timelineData = useGetTimelineData(
         project_id as string,
         timeline_id as string
     );
-    const updateTimelineEventMutation = useUpdateTimelineEvent(project_id as string)
+    const updateTimelineEventMutation = useUpdateTimelineEvent(
+        project_id as string
+    );
     const [view, setView] = useState({ details: true, horizontal: true });
     const [iconSelect, setIconSelect] = useState<{
         id?: string;
@@ -96,26 +106,37 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, []);
 
+    useEffect(() => {
+        if (event_id && timelineRef.current) {
+        }
+    }, [event_id]);
+
     return (
         <div
             className={`${public_view ? "w-full" : "w-10"
                 } h-full flex align-items-end justify-content-center`}
         >
             <TimelineEventProvider>
-                {/* <TimelineEventCreateDialog /> */}
-                <TimelineEventDialog />
-                <TimelineQuickBar view={view} setView={setView} />
-                <MarkerIconSelect
-                    {...iconSelect}
-                    setValue={(icon: string) => {
-                        if (iconSelect.id) {
-                            updateTimelineEventMutation.mutate({ id: iconSelect.id, timeline_id: timeline_id as string, icon })
-                        }
-                    }
-                    }
-                    setIconSelect={setIconSelect}
-                />
                 <>
+                    {!public_view && (
+                        <>
+                            <TimelineEventDialog />
+                            <TimelineQuickBar view={view} setView={setView} />
+                            <MarkerIconSelect
+                                {...iconSelect}
+                                setValue={(icon: string) => {
+                                    if (iconSelect.id) {
+                                        updateTimelineEventMutation.mutate({
+                                            id: iconSelect.id,
+                                            timeline_id: timeline_id as string,
+                                            icon,
+                                        });
+                                    }
+                                }}
+                                setIconSelect={setIconSelect}
+                            />
+                        </>
+                    )}
                     {timelineData && (
                         <div className="w-full h-full flex px-4 align-items-center overflow-x-auto">
                             <Timeline
@@ -124,20 +145,29 @@ export default function TimelineView({ public_view }: Props) {
                                         ? "horizontalTimeline h-10rem"
                                         : "verticalTimeline h-full"
                                     }`}
+                                ref={timelineRef}
                                 value={
                                     timelineData?.timeline_events.sort(TimelineEventsSort) || []
                                 }
                                 content={(eventData: TimelineEventType) =>
                                     view.details ? (
-                                        <TimelineEventCard eventData={eventData} />
+                                        <TimelineEventCard eventData={eventData}
+                                            public_view={public_view}
+                                        />
                                     ) : (
-                                        <SimpleTimelineEvent {...eventData} />
+                                        <SimpleTimelineEvent {...eventData}
+                                            public_view={public_view}
+
+                                        />
                                     )
                                 }
-                                // opposite={(item) => item.title}
                                 align="alternate"
                                 marker={(item: TimelineEventType) => (
-                                    <TimelineEventIcon item={item} setIconSelect={setIconSelect} />
+                                    <TimelineEventIcon
+                                        item={item}
+                                        setIconSelect={setIconSelect}
+                                        public_view={public_view}
+                                    />
                                 )}
                                 layout={view.horizontal ? "horizontal" : "vertical"}
                             />
@@ -145,6 +175,6 @@ export default function TimelineView({ public_view }: Props) {
                     )}
                 </>
             </TimelineEventProvider>
-        </div >
+        </div>
     );
 }

@@ -7,8 +7,9 @@ import TimelineEventCardSubtitle from "./TimelineEventCardSubtitle";
 
 type Props = {
     eventData: TimelineEventType;
+    public_view?: boolean
 };
-export default function TimelineEventCard({ eventData }: Props) {
+export default function TimelineEventCard({ eventData, public_view }: Props) {
     const {
         title,
         description,
@@ -36,13 +37,13 @@ export default function TimelineEventCard({ eventData }: Props) {
                 title={() => (
                     <div className="timelineCardTitle text-center">
                         {title}{" "}
-                        <i
+                        {!public_view && <i
                             className="pi pi-pencil"
                             onClick={() => {
                                 setEventData(eventData);
                                 setShowDialog(true);
                             }}
-                        ></i>
+                        ></i>}
                     </div>
                 )}
                 subTitle={() => (

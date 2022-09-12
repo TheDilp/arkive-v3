@@ -55,7 +55,7 @@ export default function TimelineTreeItemContext({
             reject: () => { },
         });
     };
-    const mapItems = [
+    const timelineItems = [
         {
             label: "Update Timeline",
             icon: () => <Icon icon="mdi:chart-timeline-variant" inline={true} className="mr-1" />,
@@ -75,7 +75,7 @@ export default function TimelineTreeItemContext({
         {
             label: "View Public Timeline",
             icon: "pi pi-fw pi-external-link",
-            command: () => navigate(`/view/${project_id}/maps/${displayDialog.id}`),
+            command: () => navigate(`/view/${project_id}/timelines/${displayDialog.id}`),
         },
         {
             label: "Copy Public URL",
@@ -84,7 +84,7 @@ export default function TimelineTreeItemContext({
                 if (navigator && navigator.clipboard) {
                     navigator.clipboard
                         .writeText(
-                            `${window.location.host}/view/${project_id}/maps/${displayDialog.id}`
+                            `${window.location.host}/view/${project_id}/timelines/${displayDialog.id}`
                         )
                         .then(() => {
                             toastSuccess("URL copied! 🔗");
@@ -116,7 +116,7 @@ export default function TimelineTreeItemContext({
         <>
             <ConfirmDialog />
             <ContextMenu
-                model={displayDialog.folder ? folderItems : mapItems}
+                model={displayDialog.folder ? folderItems : timelineItems}
                 ref={cm}
                 className="Lato w-14rem"
             />

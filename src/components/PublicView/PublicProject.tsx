@@ -4,6 +4,7 @@ import BoardView from "../Boards/BoardView";
 import BoardRefsProvider from "../Context/BoardRefsContext";
 import MapView from "../Maps/Map/MapView";
 import PublicWiki from "../PublicView/Wiki/PublicWiki";
+import TimelineView from "../Timelines/TimelineView";
 import LoadingScreen from "../Util/LoadingScreen";
 export default function PublicProject() {
   return (
@@ -38,6 +39,14 @@ export default function PublicProject() {
               <BoardRefsProvider>
                 <BoardView public_view={true} />
               </BoardRefsProvider>
+            </Suspense>
+          }
+        />
+        <Route
+          path="timelines/:timeline_id"
+          element={
+            <Suspense fallback={<LoadingScreen />}>
+              <TimelineView public_view={true} />
             </Suspense>
           }
         />
