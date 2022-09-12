@@ -60,7 +60,14 @@ export default function TimelineView({ public_view }: Props) {
         size: timelineData?.timeline_events.length || 0,
         parentRef,
         estimateSize: useCallback(() => view.details ? 320 : 80, [view.details]),
-        overscan: 10,
+        overscan: 5,
+    });
+    const columnVirtualizer = useVirtual({
+        size: timelineData?.timeline_events.length || 0,
+        parentRef,
+        estimateSize: useCallback(() => 320, []),
+        overscan: 5,
+        horizontal: true
     });
 
     function TimelineEventsSort(a: TimelineEventType, b: TimelineEventType) {
@@ -150,38 +157,38 @@ export default function TimelineView({ public_view }: Props) {
                             />
                         </>
                     )}
-                    {timelineData && (
+                    {sortedEvents && sortedEvents.length > 0 && (
                         <div
-                            className={`w-full h-full flex px-4 py-8 align-items-center overflow-x-auto ${view.horizontal ? "flex-row" : "flex-column"
-                                }`}
+                            className={`w-full h-full flex align-items-center`}
                         >
                             <div
                                 ref={parentRef}
-                                className="flex"
                                 style={{
-                                    height: `100%`,
                                     width: `100%`,
+                                    height: `90%`,
                                     overflow: 'auto',
                                 }}
                             >
                                 {/* The large inner element to hold all of the items */}
                                 <div
-                                    className="flex justify-content-center"
+                                    className="flex align-items-center"
                                     style={{
-                                        height: `${rowVirtualizer.totalSize}px`,
-                                        width: '100%',
+                                        width: "100%",
+                                        height: '100%',
                                         position: 'relative',
                                     }}
                                 >
                                     {/* Only the visible items in the virtualizer, manually positioned to be in view */}
-                                    {rowVirtualizer.virtualItems.map((virtualItem) => (
+                                    {view.horizontal ? columnVirtualizer.virtualItems.map((virtualItem) => (
                                         <div
                                             key={virtualItem.key}
+                                            className="flex flex-column justify-content-center"
                                             style={{
                                                 position: 'absolute',
                                                 top: 0,
-                                                height: view.details ? "20rem" : "5rem",
-                                                transform: `translateY(${virtualItem.start}px)`,
+                                                width: "20rem",
+                                                height: `100%`,
+                                                transform: `translateX(${virtualItem.start}px)`,
                                             }}
                                         >
                                             <TimelineEvent
@@ -192,7 +199,29 @@ export default function TimelineView({ public_view }: Props) {
                                                 view={view}
                                             />
                                         </div>
-                                    ))}
+                                    )) :
+                                        rowVirtualizer.virtualItems.map((virtualItem) => (
+                                            <div
+                                                key={virtualItem.key}
+                                                className="flex justify-content-center align-items-start"
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    height: view.details ? "20rem" : "5rem",
+                                                    width: "100%",
+                                                    transform: `translateY(${virtualItem.start}px)`,
+                                                }}
+                                            >
+                                                <TimelineEvent
+                                                    index={virtualItem.index}
+                                                    eventData={sortedEvents[virtualItem.index]}
+                                                    public_view={public_view}
+                                                    setIconSelect={setIconSelect}
+                                                    view={view}
+                                                />
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                             </div>
 
@@ -213,6 +242,6 @@ export default function TimelineView({ public_view }: Props) {
                     )}
                 </>
             </TimelineEventProvider>
-        </div>
+        </div >
     );
 }

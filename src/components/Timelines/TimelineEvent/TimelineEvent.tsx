@@ -41,7 +41,6 @@ export default function TimelineEvent({
         icon,
     } = eventData;
     const navigate = useNavigate();
-
     // Display event card
     if (view.details)
         return (
@@ -126,7 +125,6 @@ export default function TimelineEvent({
     // Display simple event
     return (
         <div
-            id={id}
             className={`flex justify-content-center simpleTimelineEvent ${doc_id ? "cursor-pointer" : ""
                 } ${view.horizontal
                     ? index % 2 === 0
@@ -140,7 +138,7 @@ export default function TimelineEvent({
                 if (doc_id && !public_view) navigate(`../../../wiki/doc/${doc_id}`);
             }}
         >
-            <div className="simpleEventContent simpleEventContentEven flex flex-column justify-content-center w-15rem">
+            <div className={`simpleEventContent simpleEventContentEven flex flex-column justify-content-${view.horizontal ? (index % 2 === 0 ? "start" : "end") : "center"} w-20rem`}>
                 <h4 className="m-0 white-space-nowrap overflow-hidden text-overflow-ellipsis text-center Merriweather">
                     {title}
                 </h4>
@@ -154,7 +152,7 @@ export default function TimelineEvent({
             </div>
             {/* Event timeline line */}
             <div
-                className={`w-full relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"
+                className={`relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"
                     }`}
             >
                 <span className="absolute z-2 bg-gray-900 border-circle">
@@ -168,7 +166,7 @@ export default function TimelineEvent({
                 </span>
                 <div className="w-full z-1 border-top-1 border-left-1 h-full"></div>
             </div>
-            <div className="simpleEventContent simpleEventContentOdd w-15rem"></div>
+            <div className="simpleEventContent simpleEventContentOdd w-20rem"></div>
         </div>
     );
 }
