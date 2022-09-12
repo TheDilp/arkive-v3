@@ -7,48 +7,72 @@ import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import TimelineEventCardSubtitle from "./TimelineEventCardSubtitle";
 
 type Props = {
-    eventData: TimelineEventType
-}
+    eventData: TimelineEventType;
+};
 export default function TimelineEventCard({ eventData }: Props) {
-    const { title, description, start_day, start_month, start_year, end_day, end_month, end_year, image, doc_id, eventBgColor } = eventData;
-    const { setShowUpdateDialog, setEventData } = useContext(TimelineEventContext);
+    const {
+        title,
+        description,
+        start_day,
+        start_month,
+        start_year,
+        end_day,
+        end_month,
+        end_year,
+        image,
+        doc_id,
+        eventBgColor,
+    } = eventData;
+    const { setShowDialog, setEventData } = useContext(TimelineEventContext);
     const navigate = useNavigate();
+    console.log(image);
     return (
         <div className="h-20rem flex timelineEventCardContainer">
             <Card
-                className={`w-20rem h-min timelineEventCard ${doc_id && "cursor-pointer linkTimelineEventCard"}`}
+                className={`w-20rem h-min timelineEventCard ${doc_id && "cursor-pointer linkTimelineEventCard"
+                    }`}
                 style={{
-                    backgroundColor: eventBgColor
+                    backgroundColor: eventBgColor,
                 }}
-                title={() => <div className="timelineCardTitle text-center">{title} <i className="pi pi-pencil" onClick={() => {
-                    setEventData(eventData);
-                    setShowUpdateDialog(true)
-                }}></i></div>}
-                subTitle={() => <TimelineEventCardSubtitle start_day={start_day} start_month={start_month} start_year={start_year} end_day={end_day} end_month={end_month} end_year={end_year} />}
+                title={() => (
+                    <div className="timelineCardTitle text-center">
+                        {title}{" "}
+                        <i
+                            className="pi pi-pencil"
+                            onClick={() => {
+                                setEventData(eventData);
+                                setShowDialog(true);
+                            }}
+                        ></i>
+                    </div>
+                )}
+                subTitle={() => (
+                    <TimelineEventCardSubtitle
+                        start_day={start_day}
+                        start_month={start_month}
+                        start_year={start_year}
+                        end_day={end_day}
+                        end_month={end_month}
+                        end_year={end_year}
+                    />
+                )}
                 onClick={() => {
                     // if (doc_id)
                     //     navigate(`../../../wiki/doc/${doc_id}`)
                 }}
             >
                 <div className="w-full h-full flex justify-content-center">
-                    <p className="w-full " style={{
-                        wordBreak: "break-all"
-                    }}>
+                    <p
+                        className="w-full "
+                        style={{
+                            wordBreak: "break-all",
+                        }}
+                    >
                         {description}
                     </p>
-                    {/* {image && (
-                        <img
-                            src={`${supabaseStorageImagesLink}/${image.link}`}
-                            alt={title}
-                            className="w-full h-8rem"
-                            style={{
-                                objectFit: "contain"
-                            }}
-                        />
-                    )} */}
-                </div>
 
+                </div>
             </Card>
-        </div >
+        </div>
     );
 }

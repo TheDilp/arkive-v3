@@ -12,29 +12,38 @@ import { DocumentProps, ImageProps } from "../../../../custom-types";
 import { TimelineEventUpdateType } from "../../../../types/TimelineEventTypes";
 import { ColorPresets } from "../../../../utils/boardUtils";
 import {
+    useCreateTimelineEvent,
     useGetDocuments,
     useGetImages,
+    useGetMaps,
     useUpdateTimelineEvent,
 } from "../../../../utils/customHooks";
 import { toastWarn } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
+import { MapProps } from "../../../../types/MapTypes";
+import { v4 as uuid } from "uuid";
+import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
 
-export default function TimelineEventUpdateDialog() {
-    const { showUpdateDialog, setShowUpdateDialog, eventData, setEventData } =
+export default function TimelineEventDialog() {
+    const { showDialog, setShowDialog, eventData, setEventData } =
         useContext(TimelineEventContext);
-    const { project_id } = useParams();
+    const { project_id, timeline_id } = useParams();
     const { data: docs } = useGetDocuments(project_id as string);
     const images = useGetImages(project_id as string);
+    const createTimelineEventMutation = useCreateTimelineEvent(
+        project_id as string
+    );
     const updateTimelineEventMutation = useUpdateTimelineEvent(
         project_id as string
     );
+    const { data: maps } = useGetMaps(project_id as string);
     const [closeOnDone, setCloseOnDone] = useState(true);
     return (
         <Dialog
-            header="Update Timeline Event"
-            visible={showUpdateDialog}
-            onHide={() => setShowUpdateDialog(false)}
+            header={`${eventData?.id === "" ? "Create" : "Update"} Timeline Event`}
+            visible={showDialog}
+            onHide={() => { setShowDialog(false); setEventData(TimelineEventCreateDefault) }}
             className="w-3"
             modal={false}
         >
@@ -120,6 +129,52 @@ export default function TimelineEventUpdateDialog() {
                                     ]
                                     : []
                             }
+                            optionLabel={"title"}
+                            optionValue={"id"}
+                        />
+                    </div>
+
+                    <div className="w-full">
+                        <Dropdown
+                            className="w-full"
+                            placeholder="Link Map"
+                            filter
+                            filterBy="title"
+                            virtualScrollerOptions={{
+                                lazy: true,
+                                onLazyLoad: () => { },
+                                itemSize: 50,
+                                showLoader: true,
+                                loading: maps?.length === 0,
+                                delay: 0,
+                                loadingTemplate: (options) => {
+                                    return (
+                                        <div
+                                            className="flex align-items-center p-2"
+                                            style={{ height: "38px" }}
+                                        ></div>
+                                    );
+                                },
+                            }}
+                            itemTemplate={(item: MapProps) => (
+                                <ImgDropdownItem
+                                    title={item.title}
+                                    link={item.map_image?.link || ""}
+                                />
+                            )}
+                            value={eventData.map_id}
+                            onChange={(e) =>
+                                setEventData(
+                                    (prev) =>
+                                    ({
+                                        ...prev,
+                                        map_id: e.value,
+                                    } as TimelineEventUpdateType)
+                                )
+                            }
+                            options={maps?.filter(
+                                (map) => !map.folder
+                            )}
                             optionLabel={"title"}
                             optionValue={"id"}
                         />
@@ -262,10 +317,20 @@ export default function TimelineEventUpdateDialog() {
 
                     <div className="w-full flex my-4 justify-content-between align-items-center">
                         <span>Event Card Color:</span>
-                        <InputText value={eventData.eventBgColor} onChange={(e) => setEventData((prev) => ({
-                            ...prev,
-                            eventBgColor: "#" + e.target.value?.toString().replaceAll("#", ""),
-                        }) as TimelineEventUpdateType)} prefix="#" />
+                        <InputText
+                            value={eventData.eventBgColor}
+                            onChange={(e) =>
+                                setEventData(
+                                    (prev) =>
+                                    ({
+                                        ...prev,
+                                        eventBgColor:
+                                            "#" + e.target.value?.toString().replaceAll("#", ""),
+                                    } as TimelineEventUpdateType)
+                                )
+                            }
+                            prefix="#"
+                        />
                         <i className="pi pi-fw pi-palette cursor-pointer hover:text-blue-300 colorPresets"></i>
                         <Tooltip
                             target={".colorPresets"}
@@ -282,10 +347,14 @@ export default function TimelineEventUpdateDialog() {
                                             backgroundColor: `#${color}`,
                                         }}
                                         onClick={() => {
-                                            setEventData((prev) => ({
-                                                ...prev,
-                                                eventBgColor: "#" + color.toString().replaceAll("#", ""),
-                                            }) as TimelineEventUpdateType)
+                                            setEventData(
+                                                (prev) =>
+                                                ({
+                                                    ...prev,
+                                                    eventBgColor:
+                                                        "#" + color.toString().replaceAll("#", ""),
+                                                } as TimelineEventUpdateType)
+                                            );
                                         }}
                                     ></div>
                                 ))}
@@ -294,15 +363,19 @@ export default function TimelineEventUpdateDialog() {
                         <ColorPicker
                             value={eventData.eventBgColor}
                             onChange={(e) =>
-                                setEventData((prev) => ({
-                                    ...prev,
-                                    eventBgColor: "#" + e.value?.toString().replaceAll("#", ""),
-                                }) as TimelineEventUpdateType)
+                                setEventData(
+                                    (prev) =>
+                                    ({
+                                        ...prev,
+                                        eventBgColor:
+                                            "#" + e.value?.toString().replaceAll("#", ""),
+                                    } as TimelineEventUpdateType)
+                                )
                             }
                         />
                     </div>
 
-                    <div className="w-full flex my-4 justify-content-between align-items-center">
+                    <div className="w-full flex mb-2 justify-content-between align-items-center">
                         <span>Close Dialog on Done:</span>
                         <Checkbox
                             checked={closeOnDone}
@@ -311,7 +384,7 @@ export default function TimelineEventUpdateDialog() {
                     </div>
                     <div className="w-full flex justify-content-end">
                         <Button
-                            label="Update Event"
+                            label={`${eventData.id === "" ? "Create" : "Update"} Timeline Event`}
                             className="p-button-primary p-button-outlined p-button-raised"
                             icon="pi pi-save"
                             iconPos="right"
@@ -341,12 +414,17 @@ export default function TimelineEventUpdateDialog() {
                                         }
                                     }
                                 }
-                                updateTimelineEventMutation.mutate({
-                                    ...eventData,
-                                });
+                                if (eventData.id === "") {
+                                    createTimelineEventMutation.mutate({ ...TimelineEventCreateDefault, ...eventData, id: uuid(), timeline_id: timeline_id as string })
+                                }
+                                else {
+                                    updateTimelineEventMutation.mutate({
+                                        ...eventData,
+                                    });
+                                }
                                 if (closeOnDone) {
-                                    setShowUpdateDialog(false);
-                                    setEventData(null);
+                                    setShowDialog(false);
+                                    setEventData(TimelineEventCreateDefault);
                                 }
                             }}
                         />

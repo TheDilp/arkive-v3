@@ -1,5 +1,6 @@
 import { Button } from 'primereact/button'
 import { Dispatch, SetStateAction, useContext } from 'react'
+import { TimelineEventCreateDefault } from '../../utils/defaultValues';
 import { TimelineEventContext } from '../Context/TimelineEventContext';
 
 type Props = {
@@ -8,7 +9,7 @@ type Props = {
 }
 
 export default function TimelineQuickBar({ view, setView }: Props) {
-    const { showCreateDialog, setShowCreateDialog } = useContext(TimelineEventContext)
+    const { showDialog, setShowDialog, setEventData } = useContext(TimelineEventContext)
 
     return (
         <div
@@ -26,7 +27,7 @@ export default function TimelineQuickBar({ view, setView }: Props) {
                 onClick={() => setView(prev => ({ ...prev, details: true }))}
             />
             <Button className="p-button-text w-3rem h-3rem" icon="pi pi-plus" tooltip="New Event" tooltipOptions={{ position: "top" }}
-                onClick={() => setShowCreateDialog(true)}
+                onClick={() => { setShowDialog(true); setEventData(TimelineEventCreateDefault) }}
             />
             <Button className={`p-button-text w-3rem h-3rem ${!view.horizontal && "p-button-secondary"}`} icon="pi pi-arrows-h" tooltip="Horizontal View" tooltipOptions={{ position: "top" }}
                 onClick={() => setView(prev => ({ ...prev, horizontal: true }))}

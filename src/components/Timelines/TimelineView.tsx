@@ -12,8 +12,8 @@ import TimelineEventProvider from "../Context/TimelineEventContext";
 import MarkerIconSelect from "../Maps/Map/MapMarker/MarkerIconSelect";
 import SimpleTimelineEvent from "./TimelineEvent/SimpleTimelineEvent";
 import TimelineEventCard from "./TimelineEvent/TimelineEventCard/TimelineEventCard";
-import TimelineEventCreateDialog from "./TimelineEvent/TimelineEventDialogs/TimelineEventCreateDialog";
-import TimelineEventUpdateDialog from "./TimelineEvent/TimelineEventDialogs/TimelineEventUpdateDialog";
+import TimelineEventIcon from "./TimelineEvent/TimelineEventCard/TimelineEventIcon";
+import TimelineEventDialog from "./TimelineEvent/TimelineEventDialogs/TimelineEventDialog";
 import TimelineQuickBar from "./TimelineQuickBar";
 type Props = {
     public_view: boolean;
@@ -100,8 +100,8 @@ export default function TimelineView({ public_view }: Props) {
                 } h-full flex align-items-end justify-content-center`}
         >
             <TimelineEventProvider>
-                <TimelineEventCreateDialog />
-                <TimelineEventUpdateDialog />
+                {/* <TimelineEventCreateDialog /> */}
+                <TimelineEventDialog />
                 <TimelineQuickBar view={view} setView={setView} />
                 <MarkerIconSelect
                     {...iconSelect}
@@ -135,25 +135,7 @@ export default function TimelineView({ public_view }: Props) {
                                 // opposite={(item) => item.title}
                                 align="alternate"
                                 marker={(item: TimelineEventType) => (
-                                    <div className="w-2rem h-2rem border-circle border-1 p-1 flex justify-content-center align-items-center"
-                                        style={{
-                                            borderColor: item.eventBgColor === "#1e1e1e" ? "white" : item.eventBgColor
-                                        }}>
-                                        <Icon
-                                            icon={item.icon}
-                                            color={item.eventBgColor === "#1e1e1e" ? "white" : item.eventBgColor}
-                                            className="w-full h-full cursor-pointer hover:border-green-300"
-                                            onClick={(e) =>
-                                                setIconSelect({
-                                                    ...iconSelect,
-                                                    id: item.id,
-                                                    show: true,
-                                                    top: e.clientY,
-                                                    left: e.clientX,
-                                                })
-                                            }
-                                        />
-                                    </div>
+                                    <TimelineEventIcon item={item} setIconSelect={setIconSelect} />
                                 )}
                                 layout={view.horizontal ? "horizontal" : "vertical"}
                             />

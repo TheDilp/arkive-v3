@@ -2,17 +2,15 @@ import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { TimelineEventUpdateType } from "../../types/TimelineEventTypes";
 
 export const TimelineEventContext = createContext<{
-    showCreateDialog: boolean;
-    setShowCreateDialog: Dispatch<SetStateAction<boolean>>;
-    showUpdateDialog: boolean;
-    setShowUpdateDialog: Dispatch<SetStateAction<boolean>>;
+    showDialog: boolean;
+    setShowDialog: Dispatch<SetStateAction<boolean>>;
+
     eventData: TimelineEventUpdateType | null;
     setEventData: Dispatch<SetStateAction<TimelineEventUpdateType | null>>;
 }>({
-    showCreateDialog: false,
-    setShowCreateDialog: () => { },
-    showUpdateDialog: false,
-    setShowUpdateDialog: () => { },
+    showDialog: false,
+    setShowDialog: () => { },
+
     eventData: null,
     setEventData: () => { },
 });
@@ -23,15 +21,12 @@ type Props = {
 
 export default function TimelineEventProvider({ children }: Props) {
     const [showCreateDialog, setShowCreateDialog] = useState(false);
-    const [showUpdateDialog, setShowUpdateDialog] = useState(false);
     const [eventData, setEventData] = useState<TimelineEventUpdateType | null>(null);
     return (
         <TimelineEventContext.Provider
             value={{
-                showCreateDialog,
-                setShowCreateDialog,
-                showUpdateDialog,
-                setShowUpdateDialog,
+                showDialog: showCreateDialog,
+                setShowDialog: setShowCreateDialog,
                 eventData,
                 setEventData,
             }}
