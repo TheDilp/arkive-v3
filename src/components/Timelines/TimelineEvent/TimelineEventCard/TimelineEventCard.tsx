@@ -62,15 +62,7 @@ export default function TimelineEventCard({ eventData }: Props) {
                 }}
             >
                 <div className="w-full h-full flex justify-content-center">
-                    <p
-                        className="w-full "
-                        style={{
-                            wordBreak: "break-all",
-                        }}
-                    >
-                        {description}
-                    </p>
-
+                    <p className="w-full text-center">{description}</p>
                 </div>
             </Card>
         </div>

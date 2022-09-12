@@ -24,6 +24,7 @@ import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import { MapProps } from "../../../../types/MapTypes";
 import { v4 as uuid } from "uuid";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
+import { InputTextarea } from "primereact/inputtextarea";
 
 export default function TimelineEventDialog() {
     const { showDialog, setShowDialog, eventData, setEventData } =
@@ -375,6 +376,9 @@ export default function TimelineEventDialog() {
                         />
                     </div>
 
+                    <div className="w-full flex mb-2 justify-content-between align-items-center">
+                        <InputTextarea className="w-full" rows={3} value={eventData.description} onChange={(e) => setEventData(prev => ({ ...prev, description: e.target.value }) as TimelineEventUpdateType)} />
+                    </div>
                     <div className="w-full flex mb-2 justify-content-between align-items-center">
                         <span>Close Dialog on Done:</span>
                         <Checkbox
