@@ -106,7 +106,7 @@ export default function LinkHoverWindow({
   // ======================================================
 
   return (
-    <div className={`editorContainer w-full ${classes || "h-20rem"} `}>
+    <div className={`editorContainer w-full ${classes || "h-20rem"}`} style={{ zIndex: 999 }}>
       {content ? (
         <ThemeProvider>
           <Remirror

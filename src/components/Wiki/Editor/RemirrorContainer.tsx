@@ -196,6 +196,7 @@ export default function RemirrorContainer({
   useEffect(() => {
     if (doc_id && doc_id !== docId) {
       setDocId(doc_id);
+      manager.view.updateState(manager.createState({ content: currentDocument?.content || "" }));
     }
   }, [doc_id]);
 

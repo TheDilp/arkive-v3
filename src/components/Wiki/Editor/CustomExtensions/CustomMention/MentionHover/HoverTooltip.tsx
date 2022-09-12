@@ -64,7 +64,7 @@ export const HoverTooltip = ({
               position: "fixed",
               top: y ?? "",
               left: x ?? "",
-              zIndex: 5555,
+              zIndex: 9999,
             },
           })}
         >
