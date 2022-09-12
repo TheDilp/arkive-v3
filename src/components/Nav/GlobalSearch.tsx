@@ -4,13 +4,22 @@ import { Dialog } from "primereact/dialog";
 import { SelectButton } from "primereact/selectbutton";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DocumentProps } from "../../custom-types";
-import { BoardNodeProps, BoardProps } from "../../types/BoardTypes";
-import { MapMarkerProps, MapProps } from "../../types/MapTypes";
+import { DocumentProps as DocumentType } from "../../custom-types";
+import {
+  BoardNodeProps as BoardNodeType,
+  BoardProps as BoardType,
+} from "../../types/BoardTypes";
+import {
+  MapMarkerProps as MapMarkerType,
+  MapProps as MapType,
+} from "../../types/MapTypes";
+import { TimelineEventType } from "../../types/TimelineEventTypes";
+import { TimelineType } from "../../types/TimelineTypes";
 import {
   useGetBoards,
   useGetDocuments,
   useGetMaps,
+  useGetTimelines,
 } from "../../utils/customHooks";
 type Props = {
   search: string | null;
@@ -21,9 +30,16 @@ export default function GlobalSearch({ search, setSearch }: Props) {
   const { data: documents } = useGetDocuments(project_id as string);
   const { data: maps } = useGetMaps(project_id as string);
   const { data: boards } = useGetBoards(project_id as string);
+  const { data: timelines } = useGetTimelines(project_id as string);
   const [filteredItems, setFilteredItems] = useState<
     Array<
-      DocumentProps | MapProps | BoardProps | BoardNodeProps | MapMarkerProps
+      | DocumentType
+      | MapType
+      | BoardType
+      | BoardNodeType
+      | MapMarkerType
+      | TimelineType
+      | TimelineEventType
     >
   >([]);
   const [categories, setCategories] = useState([
@@ -32,16 +48,27 @@ export default function GlobalSearch({ search, setSearch }: Props) {
     "Markers",
     "Boards",
     "Nodes",
+    "Timelines",
+    "Events",
   ]);
   const navigate = useNavigate();
   useEffect(() => {
-    if (documents && maps && boards && search && search.length >= 3) {
+    if (
+      documents &&
+      maps &&
+      boards &&
+      timelines &&
+      search &&
+      search.length >= 3
+    ) {
       const timeout = setTimeout(async () => {
-        let filteredDocs: DocumentProps[] = [];
-        let filteredMaps: MapProps[] = [];
-        let filteredMarkers: MapMarkerProps[] = [];
-        let filteredBoards: BoardProps[] = [];
-        let filteredNodes: BoardNodeProps[] = [];
+        let filteredDocs: DocumentType[] = [];
+        let filteredMaps: MapType[] = [];
+        let filteredMarkers: MapMarkerType[] = [];
+        let filteredBoards: BoardType[] = [];
+        let filteredNodes: BoardNodeType[] = [];
+        let filteredTimelines: TimelineType[] = [];
+        let filteredTimelineEvents: TimelineEventType[] = [];
         if (categories.includes("Docs")) {
           filteredDocs = documents.filter(
             (doc) => !doc.folder && !doc.template
@@ -71,20 +98,38 @@ export default function GlobalSearch({ search, setSearch }: Props) {
             filteredNodes = boards.map((board) => board.nodes).flat();
           }
         }
+        if (categories.includes("Timelines")) {
+          filteredTimelines = timelines.filter((timeline) => !timeline.folder);
+        }
+        if (categories.includes("Events")) {
+          if (filteredTimelines) {
+            filteredTimelineEvents = filteredTimelines
+              .map((timeline) => timeline.timeline_events)
+              .flat();
+          } else {
+            filteredTimelineEvents = timelines
+              .map((timeline) => timeline.timeline_events)
+              .flat();
+          }
+        }
 
         let initialData: Array<
-          | DocumentProps
-          | MapProps
-          | BoardProps
-          | BoardNodeProps
-          | MapMarkerProps
+          | DocumentType
+          | MapType
+          | BoardType
+          | BoardNodeType
+          | MapMarkerType
+          | TimelineType
+          | TimelineEventType
         > = [];
         initialData = initialData
           .concat(filteredDocs)
           .concat(filteredMaps)
           .concat(filteredMarkers)
           .concat(filteredBoards)
-          .concat(filteredNodes);
+          .concat(filteredNodes)
+          .concat(filteredTimelines)
+          .concat(filteredTimelineEvents);
         let data = initialData.filter((item) => {
           if (!item) return false;
           // Check if content of document contains query
@@ -96,7 +141,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
               item.title.toLowerCase().includes(search.toLowerCase())
             );
           } else {
-            // Title => Documents, Maps, Boards
+            // Title => Documents, Maps, Boards, Timelines, Timeline Events
             if ("title" in item) {
               return item.title?.toLowerCase().includes(search.toLowerCase());
             }
@@ -111,6 +156,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           }
           return false;
         });
+        console.log(initialData)
         if (data) setFilteredItems(data);
         else setFilteredItems([]);
       }, 1000);
@@ -162,7 +208,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
     }
   }
 
-  // Display map or board in parenthesese if it's a marker or node
+  // Display map, board or timeline in parenthesese if it's a marker, node or timeline
   function displayMapOrBoard(item: any) {
     if (item.map_id) {
       const map = maps?.find((map) => map.id === item.map_id);
@@ -170,6 +216,11 @@ export default function GlobalSearch({ search, setSearch }: Props) {
     } else if (item.board_id) {
       const board = boards?.find((board) => board.id === item.board_id);
       if (board) return board.title;
+    } else if (item.timeline_id) {
+      const timeline = timelines?.find(
+        (timeline) => timeline.id === item.timeline_id
+      );
+      if (timeline) return timeline.title;
     } else {
       return "";
     }
@@ -197,7 +248,15 @@ export default function GlobalSearch({ search, setSearch }: Props) {
       <div className="w-full">
         <SelectButton
           className="w-full flex justify-content-center"
-          options={["Docs", "Maps", "Markers", "Boards", "Nodes"]}
+          options={[
+            "Docs",
+            "Maps",
+            "Markers",
+            "Boards",
+            "Nodes",
+            "Timelines",
+            "Events",
+          ]}
           multiple
           value={categories}
           onChange={(e) => setCategories(e.value)}
