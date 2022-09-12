@@ -19,9 +19,8 @@ import { TimelineItemDisplayDialogDefault } from "../../utils/defaultValues";
 import { TimelineContext } from "../Context/TimelineContext";
 import TimelineEventProvider from "../Context/TimelineEventContext";
 import MarkerIconSelect from "../Maps/Map/MapMarker/MarkerIconSelect";
-import SimpleTimelineEvent from "./TimelineEvent/SimpleTimelineEvent";
-import TimelineEventCard from "./TimelineEvent/TimelineEventCard/TimelineEventCard";
-import TimelineEventIcon from "./TimelineEvent/TimelineEventCard/TimelineEventIcon";
+import TimelineEvent from "./TimelineEvent/TimelineEvent";
+import TimelineEventIcon from "./TimelineEvent/TimelineEventIcon";
 import TimelineEventDialog from "./TimelineEvent/TimelineEventDialogs/TimelineEventDialog";
 import TimelineQuickBar from "./TimelineQuickBar";
 type Props = {
@@ -139,7 +138,7 @@ export default function TimelineView({ public_view }: Props) {
                             {timelineData?.timeline_events
                                 .sort(TimelineEventsSort)
                                 .map((eventData, index) => (
-                                    <SimpleTimelineEvent
+                                    <TimelineEvent
                                         key={eventData.id}
                                         index={index}
                                         eventData={eventData}

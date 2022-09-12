@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Dispatch, SetStateAction } from "react";
-import { TimelineEventType } from "../../../../types/TimelineEventTypes";
+import { TimelineEventType } from "../../../types/TimelineEventTypes";
 
 type Props = {
     id: string;
