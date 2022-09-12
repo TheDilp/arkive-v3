@@ -14,7 +14,6 @@ importers:
       '@remirror/pm': 2.0.0-beta.15
       '@remirror/react': 2.0.0-beta.15
       '@supabase/supabase-js': ^1.35.3
-      '@tanstack/react-virtual': ^3.0.0-beta.2
       '@types/cytoscape': ^3.19.4
       '@types/file-saver': ^2.0.5
       '@types/leaflet': ^1.7.9
@@ -74,7 +73,6 @@ importers:
       '@remirror/pm': 2.0.0-beta.15
       '@remirror/react': 2.0.0-beta.15_ynrh5vsymqsz72twuyk64neip4
       '@supabase/supabase-js': 1.35.6
-      '@tanstack/react-virtual': 3.0.0-beta.18_react@18.2.0
       '@types/cytoscape': 3.19.7
       '@types/node': 16.11.56
       '@types/react': 17.0.49
@@ -4362,21 +4360,6 @@ packages:
       loader-utils: 2.0.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /@tanstack/react-virtual/3.0.0-beta.18_react@18.2.0:
-    resolution: {integrity: sha512-mnyCZT6htcRNw1jVb+WyfMUMbd1UmXX/JWPuMf6Bmj92DB/V7Ogk5n5rby5Y5aste7c7mlsBeMF8HtpwERRvEQ==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      '@tanstack/virtual-core': 3.0.0-beta.18
-      react: 18.2.0
-    dev: false
-
-  /@tanstack/virtual-core/3.0.0-beta.18:
-    resolution: {integrity: sha512-tcXutY05NpN9lp3+AXI9Sn85RxSPV0EJC0XMim9oeQj/E7bjXoL0qZ4Er4wwnvIbv/hZjC91EmbIQGjgdr6nZg==}
-    engines: {node: '>=12'}
     dev: false
 
   /@tootallnate/once/1.1.2:

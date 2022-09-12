@@ -43,70 +43,85 @@ export default function TimelineEvent({
     const navigate = useNavigate();
 
     // Display event card
-    if (view.details) return <div className={`flex justify-content-center ${doc_id ? "cursor-pointer" : ""
-        } ${view.horizontal
-            ? index % 2 === 0
-                ? "flex-column"
-                : "flex-column-reverse"
-            : index % 2 === 0
-                ? "flex-row"
-                : "flex-row-reverse"
-        }`}>
-        <div className={`h-20rem simpleEventContentEven flex flex-column ${index % 2 === 0 ? "justify-content-start" : "justify-content-end"}`}>
-            <Card
-                className={`w-20rem h-18rem timelineEventCard ${doc_id && "cursor-pointer linkTimelineEventCard"
+    if (view.details)
+        return (
+            <div
+                className={`flex justify-content-center ${doc_id ? "cursor-pointer" : ""
+                    } ${view.horizontal
+                        ? index % 2 === 0
+                            ? "flex-column"
+                            : "flex-column-reverse"
+                        : index % 2 === 0
+                            ? "flex-row"
+                            : "flex-row-reverse"
                     }`}
-                style={{
-                    backgroundColor: styleType === "background" ? eventBgColor : "",
-                    border: styleType === "outline" ? `solid 3px ${eventBgColor}` : ""
-                }}
-                title={() => (
-                    <div className="timelineCardTitle text-center">
-                        {title}{" "}
-                        {!public_view && <i
-                            className="pi pi-pencil"
-                            onClick={() => {
-                                // setEventData(eventData);
-                                // setShowDialog(true);
-                            }}
-                        ></i>}
-                    </div>
-                )}
-                subTitle={() => (
-                    <TimelineEventCardSubtitle
-                        start_day={start_day}
-                        start_month={start_month}
-                        start_year={start_year}
-                        end_day={end_day}
-                        end_month={end_month}
-                        end_year={end_year}
-                    />
-                )}
-                onClick={() => {
-                    // if (doc_id)
-                    //     navigate(`../../../wiki/doc/${doc_id}`)
-                }}
             >
-                <div className="w-full h-full flex justify-content-center">
-                    <p className="w-full text-center">{description}</p>
+                <div
+                    className={`w-20rem h-20rem simpleEventContentEven flex align-items-center ${view.horizontal ? "flex-column" : "flex-row"
+                        } ${index % 2 === 0 ? "justify-content-start" : "justify-content-end"
+                        }`}
+                >
+                    <Card
+                        className={`w-18rem h-18rem timelineEventCard ${doc_id && "cursor-pointer linkTimelineEventCard"
+                            }`}
+                        style={{
+                            backgroundColor: styleType === "background" ? eventBgColor : "",
+                            border:
+                                styleType === "outline" ? `solid 3px ${eventBgColor}` : "",
+                        }}
+                        title={() => (
+                            <div className="timelineCardTitle text-center">
+                                {title}{" "}
+                                {!public_view && (
+                                    <i
+                                        className="pi pi-pencil"
+                                        onClick={() => {
+                                            // setEventData(eventData);
+                                            // setShowDialog(true);
+                                        }}
+                                    ></i>
+                                )}
+                            </div>
+                        )}
+                        subTitle={() => (
+                            <TimelineEventCardSubtitle
+                                start_day={start_day}
+                                start_month={start_month}
+                                start_year={start_year}
+                                end_day={end_day}
+                                end_month={end_month}
+                                end_year={end_year}
+                            />
+                        )}
+                        onClick={() => {
+                            // if (doc_id)
+                            //     navigate(`../../../wiki/doc/${doc_id}`)
+                        }}
+                    >
+                        <div className="w-full h-full flex justify-content-center">
+                            <p className="w-full text-center m-0">{description}</p>
+                        </div>
+                    </Card>
                 </div>
-            </Card>
-        </div>
-        {/* Event timeline line */}
-        <div className={`w-full relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"}`}>
-            <span className="absolute z-2 bg-gray-900 border-circle">
-                <TimelineEventIcon
-                    id={id}
-                    eventBgColor={eventBgColor}
-                    icon={icon}
-                    setIconSelect={setIconSelect}
-                    public_view={public_view}
-                />
-            </span>
-            <div className="w-full z-1 border-top-1 border-left-1 h-full"></div>
-        </div>
-        <div className="w-20rem h-20rem simpleEventContentOdd"></div>
-    </div>
+                {/* Event timeline line */}
+                <div
+                    className={`w-full relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"
+                        }`}
+                >
+                    <span className="absolute z-2 bg-gray-900 border-circle">
+                        <TimelineEventIcon
+                            id={id}
+                            eventBgColor={eventBgColor}
+                            icon={icon}
+                            setIconSelect={setIconSelect}
+                            public_view={public_view}
+                        />
+                    </span>
+                    <div className="w-full z-1 border-top-1 border-left-1 h-full"></div>
+                </div>
+                <div className="w-20rem h-20rem simpleEventContentOdd"></div>
+            </div>
+        );
 
     // Display simple event
     return (
@@ -125,7 +140,7 @@ export default function TimelineEvent({
                 if (doc_id && !public_view) navigate(`../../../wiki/doc/${doc_id}`);
             }}
         >
-            <div className="simpleEventContent simpleEventContentEven flex flex-column justify-content-center w-20rem">
+            <div className="simpleEventContent simpleEventContentEven flex flex-column justify-content-center w-15rem">
                 <h4 className="m-0 white-space-nowrap overflow-hidden text-overflow-ellipsis text-center Merriweather">
                     {title}
                 </h4>
@@ -138,7 +153,10 @@ export default function TimelineEvent({
                 </p>
             </div>
             {/* Event timeline line */}
-            <div className={`w-full relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"}`}>
+            <div
+                className={`w-full relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"
+                    }`}
+            >
                 <span className="absolute z-2 bg-gray-900 border-circle">
                     <TimelineEventIcon
                         id={id}
@@ -150,7 +168,7 @@ export default function TimelineEvent({
                 </span>
                 <div className="w-full z-1 border-top-1 border-left-1 h-full"></div>
             </div>
-            <div className="simpleEventContent simpleEventContentOdd w-20rem"></div>
+            <div className="simpleEventContent simpleEventContentOdd w-15rem"></div>
         </div>
     );
 }

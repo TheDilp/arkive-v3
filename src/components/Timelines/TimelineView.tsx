@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { Timeline } from "primereact/timeline";
 import {
     MutableRefObject,
+    useCallback,
     useContext,
     useEffect,
     useLayoutEffect,
@@ -23,12 +24,16 @@ import TimelineEvent from "./TimelineEvent/TimelineEvent";
 import TimelineEventIcon from "./TimelineEvent/TimelineEventIcon";
 import TimelineEventDialog from "./TimelineEvent/TimelineEventDialogs/TimelineEventDialog";
 import TimelineQuickBar from "./TimelineQuickBar";
+import { useVirtual } from "react-virtual";
+
 type Props = {
     public_view: boolean;
 };
 
 export default function TimelineView({ public_view }: Props) {
     const { project_id, timeline_id, event_id } = useParams();
+    const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
+
     const { setTimelineId } = useContext(TimelineContext);
     const timelineData = useGetTimelineData(
         project_id as string,
@@ -49,6 +54,15 @@ export default function TimelineView({ public_view }: Props) {
         top: 0,
         left: 0,
     });
+    const [sortedEvents, setSortedEvents] = useState<TimelineEventType[]>([])
+
+    const rowVirtualizer = useVirtual({
+        size: timelineData?.timeline_events.length || 0,
+        parentRef,
+        estimateSize: useCallback(() => view.details ? 320 : 80, [view.details]),
+        overscan: 10,
+    });
+
     function TimelineEventsSort(a: TimelineEventType, b: TimelineEventType) {
         if (a.start_year > b.start_year) {
             return 1;
@@ -97,12 +111,18 @@ export default function TimelineView({ public_view }: Props) {
         }
         return 0;
     }
-
     useLayoutEffect(() => {
         if (timeline_id) {
             setTimelineId(timeline_id);
         }
-    }, []);
+    }, [timeline_id]);
+
+    useLayoutEffect(() => {
+        if (timelineData?.timeline_events) {
+            setSortedEvents(timelineData.timeline_events.sort(TimelineEventsSort))
+        }
+    }, [timelineData])
+
 
     return (
         <div
@@ -135,7 +155,49 @@ export default function TimelineView({ public_view }: Props) {
                             className={`w-full h-full flex px-4 py-8 align-items-center overflow-x-auto ${view.horizontal ? "flex-row" : "flex-column"
                                 }`}
                         >
-                            {timelineData?.timeline_events
+                            <div
+                                ref={parentRef}
+                                className="flex"
+                                style={{
+                                    height: `100%`,
+                                    width: `100%`,
+                                    overflow: 'auto',
+                                }}
+                            >
+                                {/* The large inner element to hold all of the items */}
+                                <div
+                                    className="flex justify-content-center"
+                                    style={{
+                                        height: `${rowVirtualizer.totalSize}px`,
+                                        width: '100%',
+                                        position: 'relative',
+                                    }}
+                                >
+                                    {/* Only the visible items in the virtualizer, manually positioned to be in view */}
+                                    {rowVirtualizer.virtualItems.map((virtualItem) => (
+                                        <div
+                                            key={virtualItem.key}
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                height: view.details ? "20rem" : "5rem",
+                                                transform: `translateY(${virtualItem.start}px)`,
+                                            }}
+                                        >
+                                            <TimelineEvent
+                                                index={virtualItem.index}
+                                                eventData={sortedEvents[virtualItem.index]}
+                                                public_view={public_view}
+                                                setIconSelect={setIconSelect}
+                                                view={view}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+
+                            {/* {timelineData?.timeline_events
                                 .sort(TimelineEventsSort)
                                 .map((eventData, index) => (
                                     <TimelineEvent
@@ -146,38 +208,7 @@ export default function TimelineView({ public_view }: Props) {
                                         setIconSelect={setIconSelect}
                                         view={view}
                                     />
-                                ))}
-                            {/* <Timeline
-                                className={`w-full  ${view.details ? "detailedTimeline" : "simpleTimeline"
-                                    } ${view.horizontal
-                                        ? "horizontalTimeline h-10rem"
-                                        : "verticalTimeline h-full"
-                                    }`}
-                                value={
-                                    timelineData?.timeline_events.sort(TimelineEventsSort) || []
-                                }
-                                content={(eventData: TimelineEventType) =>
-                                    view.details ? (
-                                        <TimelineEventCard eventData={eventData}
-                                            public_view={public_view}
-                                        />
-                                    ) : (
-                                        <SimpleTimelineEvent {...eventData}
-                                            public_view={public_view}
-
-                                        />
-                                    )
-                                }
-                                align="alternate"
-                                marker={(item: TimelineEventType) => (
-                                    <TimelineEventIcon
-                                        item={item}
-                                        setIconSelect={setIconSelect}
-                                        public_view={public_view}
-                                    />
-                                )}
-                                layout={view.horizontal ? "horizontal" : "vertical"}
-                            /> */}
+                                ))} */}
                         </div>
                     )}
                 </>
