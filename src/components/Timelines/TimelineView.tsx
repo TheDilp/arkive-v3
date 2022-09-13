@@ -248,7 +248,13 @@ export default function TimelineView({ public_view }: Props) {
                                     </div>
                                     :
                                     // Vertical view
-                                    <div>
+                                    <div
+                                        style={{
+                                            height: `${columnVirtualizer.totalSize}px`,
+                                            width: '100%',
+                                            position: 'relative',
+                                        }}
+                                    >
                                         {rowVirtualizer.virtualItems.map((virtualItem) => (
                                             <div
                                                 key={virtualItem.key}
