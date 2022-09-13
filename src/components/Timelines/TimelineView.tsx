@@ -161,12 +161,16 @@ export default function TimelineView({ public_view }: Props) {
             if (view.horizontal) {
                 let index = sortedEvents.findIndex(event => event.id === event_id);
                 if (index !== -1)
-                    columnVirtualizer.scrollToIndex(index - 1)
+                    columnVirtualizer.scrollToIndex(index, {
+                        align: "center"
+                    })
             }
             else {
                 let index = sortedEvents.findIndex(event => event.id === event_id)
                 if (index !== -1)
-                    rowVirtualizer.scrollToIndex(index)
+                    rowVirtualizer.scrollToIndex(index, {
+                        align: "center"
+                    })
             }
         }
     }, [event_id, sortedEvents])
