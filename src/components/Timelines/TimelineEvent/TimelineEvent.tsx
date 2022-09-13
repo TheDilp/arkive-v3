@@ -24,7 +24,7 @@ export default function TimelineEvent({
             left: number;
         }>
     >;
-    view: { details: boolean; horizontal: boolean };
+    view: { details: "detailed" | "simple"; horizontal: "horizontal" | "vertical" };
 }) {
     const {
         id,
@@ -45,11 +45,11 @@ export default function TimelineEvent({
     const navigate = useNavigate();
     const { setShowDialog, setEventData } = useContext(TimelineEventContext)
     // Display event card
-    if (view.details)
+    if (view.details === "detailed")
         return (
             <div
                 className={`flex justify-content-center ${doc_id ? "cursor-pointer" : ""
-                    } ${view.horizontal
+                    } ${view.horizontal === "horizontal"
                         ? index % 2 === 0
                             ? "flex-column"
                             : "flex-column-reverse"
@@ -59,7 +59,7 @@ export default function TimelineEvent({
                     }`}
             >
                 <div
-                    className={`w-20rem h-20rem simpleEventContentEven flex align-items-center ${view.horizontal ? "flex-column" : "flex-row"
+                    className={`w-20rem h-20rem simpleEventContentEven flex align-items-center ${view.horizontal === "horizontal" ? "flex-column" : "flex-row"
                         } ${index % 2 === 0 ? "justify-content-start" : "justify-content-end"
                         }`}
                 >
@@ -108,7 +108,7 @@ export default function TimelineEvent({
                 </div>
                 {/* Event timeline line */}
                 <div
-                    className={`w-full relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"
+                    className={`w-full relative flex justify-content-center align-items-center ${view.horizontal === "vertical" && "w-min"
                         }`}
                 >
                     <span className="absolute z-2 bg-gray-900 border-circle">
@@ -130,7 +130,7 @@ export default function TimelineEvent({
     return (
         <div
             className={`flex justify-content-center simpleTimelineEvent ${doc_id ? "cursor-pointer" : ""
-                } ${view.horizontal
+                } ${view.horizontal === "horizontal"
                     ? index % 2 === 0
                         ? "flex-column"
                         : "flex-column-reverse"
@@ -142,7 +142,7 @@ export default function TimelineEvent({
                 if (doc_id && !public_view) navigate(`../../../wiki/doc/${doc_id}`);
             }}
         >
-            <div className={`simpleEventContent simpleEventContentEven flex flex-column justify-content-${view.horizontal ? (index % 2 === 0 ? "start" : "end") : "center"} w-20rem`}>
+            <div className={`simpleEventContent simpleEventContentEven flex flex-column justify-content-${view.horizontal === "horizontal" ? (index % 2 === 0 ? "start" : "end") : "center"} w-20rem`}>
                 <h4 className="m-0 white-space-nowrap overflow-hidden text-overflow-ellipsis text-center Merriweather">
                     {title}
                 </h4>
@@ -156,7 +156,7 @@ export default function TimelineEvent({
             </div>
             {/* Event timeline line */}
             <div
-                className={`relative flex justify-content-center align-items-center ${!view.horizontal && "w-min"
+                className={`relative flex justify-content-center align-items-center ${view.horizontal === "vertical" && "w-min"
                     }`}
             >
                 <span className="absolute z-2 bg-gray-900 border-circle">

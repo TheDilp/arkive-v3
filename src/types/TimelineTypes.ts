@@ -9,6 +9,8 @@ export type TimelineType = {
   sort: number;
   public: boolean;
   timeline_events: TimelineEventType[];
+  defaultOrientation: "horizontal" | "vertical";
+  defaultDetails: "detailed" | "simple";
   parent: { id: string; title: string } | null;
 };
 
@@ -29,6 +31,8 @@ export type TimelineUpdateType = {
   sort?: number;
   public?: boolean;
   parent?: string | null;
+  defaultOrientation?: "horizontal" | "vertical";
+  defaultDetails?: "detailed" | "simple";
 };
 
 export type TimelineItemDisplayDialogProps = {
@@ -39,4 +43,6 @@ export type TimelineItemDisplayDialogProps = {
   depth: number;
   public: boolean;
   show: boolean;
+  defaultOrientation: "horizontal" | "vertical";
+  defaultDetails: "detailed" | "simple";
 };

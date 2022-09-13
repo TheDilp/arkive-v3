@@ -79,6 +79,8 @@ export const TimelineItemDisplayDialogDefault = {
   folder: false,
   depth: 0,
   public: false,
+  defaultOrientation: "horizontal" as const,
+  defaultDetails: "detailed" as const,
 };
 
 export const MapMarkerDialogDefault = {

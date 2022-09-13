@@ -50,6 +50,8 @@ export default function TimelineTreeItem({
           depth,
           show: false,
           public: node.data?.public || false,
+          defaultOrientation: node.data?.defaultOrientation || "horizontal",
+          defaultDetails: node.data?.defaultDetails || "simple"
         });
       }}
     >

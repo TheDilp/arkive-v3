@@ -4,12 +4,12 @@ import { TimelineEventCreateDefault } from '../../utils/defaultValues';
 import { TimelineEventContext } from '../Context/TimelineEventContext';
 
 type Props = {
-    view: { details: boolean, horizontal: boolean };
-    setView: Dispatch<SetStateAction<{ details: boolean, horizontal: boolean }>>
+    view: { details: "detailed" | "simple", horizontal: "horizontal" | "vertical" };
+    setView: Dispatch<SetStateAction<{ details: "detailed" | "simple", horizontal: "horizontal" | "vertical" }>>
 }
 
 export default function TimelineQuickBar({ view, setView }: Props) {
-    const { showDialog, setShowDialog, setEventData } = useContext(TimelineEventContext)
+    const { setShowDialog, setEventData } = useContext(TimelineEventContext)
 
     return (
         <div
@@ -20,20 +20,20 @@ export default function TimelineQuickBar({ view, setView }: Props) {
                 zIndex: 5,
             }}
         >
-            <Button className={`p-button-text w-3rem h-3rem ${view.details && "p-button-secondary"}`} icon="pi pi-circle" tooltip="Simple View" tooltipOptions={{ position: "top" }}
-                onClick={() => setView(prev => ({ ...prev, details: false }))}
+            <Button className={`p-button-text w-3rem h-3rem ${view.details === "detailed" && "p-button-secondary"}`} icon="pi pi-circle" tooltip="Simple View" tooltipOptions={{ position: "top" }}
+                onClick={() => setView(prev => ({ ...prev, details: 'simple' }))}
             />
-            <Button className={`p-button-text w-3rem h-3rem ${!view.details && "p-button-secondary"}`} icon="pi pi-id-card" tooltip="Detailed View" tooltipOptions={{ position: "top" }}
-                onClick={() => setView(prev => ({ ...prev, details: true }))}
+            <Button className={`p-button-text w-3rem h-3rem ${view.details === "simple" && "p-button-secondary"}`} icon="pi pi-id-card" tooltip="Detailed View" tooltipOptions={{ position: "top" }}
+                onClick={() => setView(prev => ({ ...prev, details: 'detailed' }))}
             />
             <Button className="p-button-text w-3rem h-3rem" icon="pi pi-plus" tooltip="New Event" tooltipOptions={{ position: "top" }}
                 onClick={() => { setShowDialog(true); setEventData(TimelineEventCreateDefault) }}
             />
-            <Button className={`p-button-text w-3rem h-3rem ${!view.horizontal && "p-button-secondary"}`} icon="pi pi-arrows-h" tooltip="Horizontal View" tooltipOptions={{ position: "top" }}
-                onClick={() => setView(prev => ({ ...prev, horizontal: true }))}
+            <Button className={`p-button-text w-3rem h-3rem ${view.horizontal === "vertical" && "p-button-secondary"}`} icon="pi pi-arrows-h" tooltip="Horizontal View" tooltipOptions={{ position: "top" }}
+                onClick={() => setView(prev => ({ ...prev, horizontal: 'horizontal' }))}
             />
-            <Button className={`p-button-text w-3rem h-3rem ${view.horizontal && "p-button-secondary"}`} icon="pi pi-arrows-v" tooltip="Vertical View" tooltipOptions={{ position: "top" }}
-                onClick={() => setView(prev => ({ ...prev, horizontal: false }))}
+            <Button className={`p-button-text w-3rem h-3rem ${view.horizontal === "horizontal" && "p-button-secondary"}`} icon="pi pi-arrows-v" tooltip="Vertical View" tooltipOptions={{ position: "top" }}
+                onClick={() => setView(prev => ({ ...prev, horizontal: 'vertical' }))}
             />
         </div>
     )

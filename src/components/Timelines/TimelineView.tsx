@@ -42,7 +42,7 @@ export default function TimelineView({ public_view }: Props) {
     const updateTimelineEventMutation = useUpdateTimelineEvent(
         project_id as string
     );
-    const [view, setView] = useState({ details: true, horizontal: true });
+    const [view, setView] = useState({ details: timelineData?.defaultDetails || "detailed", horizontal: timelineData?.defaultOrientation || "horizontal" });
     const [iconSelect, setIconSelect] = useState<{
         id?: string;
         show: boolean;
@@ -59,7 +59,7 @@ export default function TimelineView({ public_view }: Props) {
     const rowVirtualizer = useVirtual({
         size: sortedEvents.length || 0,
         parentRef,
-        estimateSize: useCallback(() => view.details ? 320 : 80, [view.details]),
+        estimateSize: useCallback(() => view.details === "detailed" ? 320 : 80, [view.details]),
         overscan: 5,
     });
     const columnVirtualizer = useVirtual({
@@ -158,7 +158,7 @@ export default function TimelineView({ public_view }: Props) {
 
     useEffect(() => {
         if (event_id && sortedEvents) {
-            if (view.horizontal) {
+            if (view.horizontal === "horizontal") {
                 let index = sortedEvents.findIndex(event => event.id === event_id);
                 if (index !== -1)
                     columnVirtualizer.scrollToIndex(index, {
@@ -175,6 +175,7 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, [event_id, sortedEvents])
 
+    console.log(rowVirtualizer.totalSize)
 
     return (
         <div
@@ -214,7 +215,7 @@ export default function TimelineView({ public_view }: Props) {
                                     overflow: 'auto',
                                 }}
                             >
-                                {view.horizontal ?
+                                {view.horizontal === "horizontal" ?
                                     // Horizontal view
                                     <div
                                         className="flex align-items-center"
@@ -250,7 +251,7 @@ export default function TimelineView({ public_view }: Props) {
                                     // Vertical view
                                     <div
                                         style={{
-                                            height: `${columnVirtualizer.totalSize}px`,
+                                            height: `${rowVirtualizer.totalSize}px`,
                                             width: '100%',
                                             position: 'relative',
                                         }}
@@ -262,7 +263,7 @@ export default function TimelineView({ public_view }: Props) {
                                                 style={{
                                                     position: 'absolute',
                                                     top: 0,
-                                                    height: view.details ? "20rem" : "5rem",
+                                                    height: view.details === "detailed" ? "20rem" : "5rem",
                                                     width: "100%",
                                                     transform: `translateY(${virtualItem.start}px)`,
                                                 }}
