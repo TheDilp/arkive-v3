@@ -210,38 +210,42 @@ export default function TimelineView({ public_view }: Props) {
                                     overflow: 'auto',
                                 }}
                             >
-                                {/* The large inner element to hold all of the items */}
-                                <div
-                                    className="flex align-items-center"
-                                    style={{
-                                        width: "100%",
-                                        height: '100%',
-                                        position: 'relative',
-                                    }}
-                                >
-                                    {/* Only the visible items in the virtualizer, manually positioned to be in view */}
-                                    {view.horizontal ? columnVirtualizer.virtualItems.map((virtualItem) => (
-                                        <div
-                                            key={virtualItem.key}
-                                            className="flex flex-column justify-content-center"
-                                            style={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                width: "20rem",
-                                                height: `100%`,
-                                                transform: `translateX(${virtualItem.start}px)`,
-                                            }}
-                                        >
-                                            <TimelineEvent
-                                                index={virtualItem.index}
-                                                eventData={sortedEvents[virtualItem.index]}
-                                                public_view={public_view}
-                                                setIconSelect={setIconSelect}
-                                                view={view}
-                                            />
-                                        </div>
-                                    )) :
-                                        rowVirtualizer.virtualItems.map((virtualItem) => (
+                                {view.horizontal ?
+                                    // Horizontal view
+                                    <div
+                                        className="flex align-items-center"
+                                        style={{
+                                            width: `${columnVirtualizer.totalSize}px`,
+                                            height: '100%',
+                                            position: 'relative',
+                                        }}
+                                    >
+                                        {columnVirtualizer.virtualItems.map((virtualItem) => (
+                                            <div
+                                                key={virtualItem.key}
+                                                className="flex flex-column justify-content-center"
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    width: "20rem",
+                                                    height: `100%`,
+                                                    transform: `translateX(${virtualItem.start}px)`,
+                                                }}
+                                            >
+                                                <TimelineEvent
+                                                    index={virtualItem.index}
+                                                    eventData={sortedEvents[virtualItem.index]}
+                                                    public_view={public_view}
+                                                    setIconSelect={setIconSelect}
+                                                    view={view}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    :
+                                    // Vertical view
+                                    <div>
+                                        {rowVirtualizer.virtualItems.map((virtualItem) => (
                                             <div
                                                 key={virtualItem.key}
                                                 className="flex justify-content-center align-items-start"
@@ -261,9 +265,10 @@ export default function TimelineView({ public_view }: Props) {
                                                     view={view}
                                                 />
                                             </div>
-                                        ))
-                                    }
-                                </div>
+                                        ))}
+                                    </div>
+
+                                }
                             </div>
                         </div>
                     )}
