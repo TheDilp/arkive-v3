@@ -81,7 +81,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
         if (categories.includes("Markers")) {
           // If maps have been already filtered save on performance
           // Unfiltered maps have folders removed which would be skipped anyway
-          if (filteredMaps) {
+          if (filteredMaps.length > 0) {
             filteredMarkers = filteredMaps.map((map) => map.markers).flat();
           } else {
             filteredMarkers = maps.map((map) => map.markers).flat();
@@ -93,7 +93,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
         if (categories.includes("Nodes")) {
           // If boards have been already filtered save on performance
           // Unfiltered boards have folders removed which would be skipped anyway
-          if (filteredBoards) {
+          if (filteredBoards.length > 0) {
             filteredNodes = filteredBoards.map((board) => board.nodes).flat();
           } else {
             filteredNodes = boards.map((board) => board.nodes).flat();
@@ -103,7 +103,9 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           filteredTimelines = timelines.filter((timeline) => !timeline.folder);
         }
         if (categories.includes("Events")) {
-          if (filteredTimelines) {
+          // If timelines have been already filtered save on performance
+          // Unfiltered timelines have folders removed which would be skipped anyway
+          if (filteredTimelines.length > 0) {
             filteredTimelineEvents = filteredTimelines
               .map((timeline) => timeline.timeline_events)
               .flat();
@@ -245,7 +247,7 @@ export default function GlobalSearch({ search, setSearch }: Props) {
     >
       <div className="w-full">
         <SelectButton
-          className="w-full flex justify-content-center"
+          className="w-full flex flex-wrap justify-content-center"
           options={[
             "Docs",
             "Maps",
