@@ -129,11 +129,12 @@ export default function GlobalSearch({ search, setSearch }: Props) {
         initialData
           .push({
             category: "Documents", items: filteredDocs.filter(doc => {
+              console.log(doc.alter_names)
               return (
                 JSON.stringify(doc.content)
                   .toLowerCase()
                   .includes(search.toLowerCase()) ||
-                doc.title.toLowerCase().includes(search.toLowerCase())
+                doc.title.toLowerCase().includes(search.toLowerCase()) || doc.alter_names?.some(name => name.toLowerCase().includes(search.toLowerCase()))
               );
             })
           })

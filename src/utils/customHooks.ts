@@ -1713,6 +1713,8 @@ export function useCreateTimeline() {
                   public: false,
                   sort: oldData.length,
                   timeline_events: [],
+                  defaultDetails: "detailed",
+                  defaultOrientation: "horizontal",
                 },
               ];
               return newData;

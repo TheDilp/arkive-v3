@@ -122,7 +122,8 @@ export default function TimelineView({ public_view }: Props) {
 
     // First sort by age and then by date if needed
     function TimelineEventsSort(a: TimelineEventType, b: TimelineEventType): number {
-        if ((a.age && b.age)) {
+        if (a.age && b.age) {
+
             if (a.age > b.age) {
                 return 1
             }
@@ -133,12 +134,15 @@ export default function TimelineView({ public_view }: Props) {
                 return TimelineEventDateSort(a, b)
             }
         }
-        else if ((a.age === undefined && b.age === undefined)) {
-            return 0;
-        }
         else {
             return TimelineEventDateSort(a, b)
         }
+        // else if ((a.age === undefined && b.age === undefined)) {
+        //     return 0;
+        // }
+        // else {
+        //     return TimelineEventDateSort(a, b)
+        // }
     }
     useLayoutEffect(() => {
         if (timeline_id) {
@@ -148,7 +152,7 @@ export default function TimelineView({ public_view }: Props) {
 
     useLayoutEffect(() => {
         if (timelineData?.timeline_events) {
-            let temp = timelineData.timeline_events.sort(TimelineEventDateSort);
+            let temp = timelineData.timeline_events.sort(TimelineEventsSort);
             setSortedEvents(temp)
         }
         return () => {

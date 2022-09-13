@@ -197,7 +197,10 @@ export default function RemirrorContainer({
     if (doc_id && doc_id !== docId) {
       setDocId(doc_id);
     }
-    manager.view.updateState(manager.createState({ content: currentDocument?.content || "" }));
+    // Board previews in the editor crash without this, needs to wait 1ms to mount editor first
+    setTimeout(() => {
+      manager.view.updateState(manager.createState({ content: currentDocument?.content || "" }));
+    }, 1)
   }, [doc_id]);
 
   const debounced = useDebouncedCallback(

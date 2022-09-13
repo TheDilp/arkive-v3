@@ -495,6 +495,7 @@ export default function TimelineEventDialog() {
                                         id: uuid(),
                                         timeline_id: timeline_id as string,
                                     });
+                                    setEventData(TimelineEventCreateDefault);
                                 } else {
                                     updateTimelineEventMutation.mutate({
                                         ...eventData,

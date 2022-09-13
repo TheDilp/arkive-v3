@@ -48,7 +48,7 @@ export default function TimelineEvent({
     if (view.details === "detailed")
         return (
             <div
-                className={`flex justify-content-center ${doc_id ? "cursor-pointer" : ""
+                className={`flex justify-content-center py-2 ${doc_id ? "cursor-pointer" : ""
                     } ${view.horizontal === "horizontal"
                         ? index % 2 === 0
                             ? "flex-column"
@@ -57,6 +57,10 @@ export default function TimelineEvent({
                             ? "flex-row"
                             : "flex-row-reverse"
                     }`}
+
+                style={{
+                    backgroundColor: age === "Third" ? "rgba(100, 200, 255, 0.5)" : (age === "PrePheagonEra" ? "rgba(200, 100,100,1)" : "")
+                }}
             >
                 <div
                     className={`w-20rem h-20rem simpleEventContentEven flex align-items-center ${view.horizontal === "horizontal" ? "flex-column" : "flex-row"

@@ -22,9 +22,10 @@ export default function TimelineEventCardSubtitle({
         <div className="text-center">
             {start_day ? start_day + "/" : ""}
             {start_month ? start_month + "/" : ""}
-            {start_year} - {end_day ? end_day + "/" : ""}
+            {start_year} {(end_year === start_year && !end_day && !end_month) ? "" : "-"} {end_day ? end_day + "/" : ""}
             {end_month ? end_month + "/" : ""}
-            {end_year}
+            {(end_year === start_year && !end_day && !end_month) ? "" : end_year}
+            {age}
         </div>
     );
 }

@@ -66,15 +66,15 @@ export default function BoardPreview({
             // Empty string ("") causes issues with cytoscape, so an empty array must be used
             backgroundImage: node.customImage?.link
               ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
-                  " ",
-                  "%20"
-                )}`
+                " ",
+                "%20"
+              )}`
               : node.document?.image?.link
-              ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
+                ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
                   " ",
                   "%20"
                 )}`
-              : [],
+                : [],
           },
           scratch: {
             doc_id: node.document?.id,
@@ -122,6 +122,17 @@ export default function BoardPreview({
           cy.autoungrabify(true);
           cy.autolock(true);
           cy.autounselectify(true);
+          cy.animate(
+            {
+              pan: {
+                x: 250, y: 450
+              },
+              zoom: 1,
+            },
+            {
+              duration: 1,
+            }
+          );
         }}
         stylesheet={cytoscapeStylesheet}
       />
