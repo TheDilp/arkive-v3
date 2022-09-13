@@ -156,6 +156,12 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, [timelineData?.timeline_events])
 
+    useLayoutEffect(() => {
+        if (timelineData) {
+            setView({ horizontal: timelineData.defaultOrientation, details: timelineData.defaultDetails })
+        }
+    }, [timelineData])
+
     useEffect(() => {
         if (event_id && sortedEvents) {
             if (view.horizontal === "horizontal") {
@@ -175,7 +181,6 @@ export default function TimelineView({ public_view }: Props) {
         }
     }, [event_id, sortedEvents])
 
-    console.log(rowVirtualizer.totalSize)
 
     return (
         <div
