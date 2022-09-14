@@ -140,7 +140,7 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
                             updateTimelineMutation.mutate({
                                 id: eventData.id,
                                 title: eventData.title,
-                                parent: eventData.parent,
+                                parent: eventData.parent === "0" ? null : eventData.parent,
                                 defaultOrientation: eventData.defaultOrientation,
                                 defaultDetails: eventData.defaultDetails,
                                 project_id: project_id as string,

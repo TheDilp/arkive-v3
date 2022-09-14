@@ -48,8 +48,8 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
     let indexes = newTree
       .filter(
         (board) =>
-          board.data?.parent?.id === dropTargetId ||
-          (board.data?.parent?.id === undefined && dropTargetId === "0")
+          board.parent === dropTargetId ||
+          (board.parent === undefined && dropTargetId === "0")
       )
       .map((board, index) => {
         return { id: board.id as string, sort: index, parent: board.parent === "0" ? null : board.parent as string };

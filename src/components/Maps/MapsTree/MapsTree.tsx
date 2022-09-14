@@ -97,8 +97,8 @@ export default function MapsTree({
     let indexes = newTree
       .filter(
         (map) =>
-          map.data?.parent?.id === dropTargetId ||
-          (map.data?.parent?.id === undefined && dropTargetId === "0")
+          map.parent === dropTargetId ||
+          (map.parent === undefined && dropTargetId === "0")
       )
       .map((map, index) => {
         return { id: map.id as string, sort: index, parent: map.parent === "0" ? null : map.parent as string };

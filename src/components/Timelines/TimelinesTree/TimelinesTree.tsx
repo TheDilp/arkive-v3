@@ -41,17 +41,17 @@ export default function TimelinesTree() {
         }
     ) => {
 
-
         let indexes: SortIndexes = newTree
             .filter(
                 (timeline) =>
-                    timeline.data?.parent?.id === dropTargetId ||
-                    (timeline.data?.parent?.id === undefined && dropTargetId === "0")
+                    timeline.parent === dropTargetId ||
+                    (timeline.parent === undefined && dropTargetId === "0")
             )
             .map((timeline, index) => {
                 return { id: timeline.id as string, sort: index, parent: timeline.parent === "0" ? null : timeline.parent as string };
             });
         // Set the user's current view to the new tree
+        console.log(newTree, dropTargetId)
         setTreeData(newTree);
         sortChildrenMutation.mutate({
             project_id: project_id as string,
