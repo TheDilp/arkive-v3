@@ -913,6 +913,7 @@ export const getPublicDocuments = async (project_id: string) => {
   const { data, error } = await supabase
     .from<DocumentProps>("documents")
     .select("id, title, icon, alter_names, public")
+    .eq("public", true)
     .eq("project_id", project_id);
   if (data) return data;
   if (error) {

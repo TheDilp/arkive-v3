@@ -72,7 +72,7 @@ export default function PublicEditor({
         selectTextOnClick: true
       }),
       new ImageExtension({
-        enableResizing: true,
+        enableResizing: false,
       }),
       new HorizontalRuleExtension(),
       new CalloutExtension(),
@@ -111,7 +111,7 @@ export default function PublicEditor({
               `text-white Lato viewOnlyEditor w-full ${classes || "h-20rem"}`,
             ]}
             editable={false}
-            
+
           >
             <PublicEditorComponent content={content} />
           </Remirror>
