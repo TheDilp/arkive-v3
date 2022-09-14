@@ -41,10 +41,10 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   }
 
   ReactComponent: ComponentType<NodeViewComponentProps> = (props) => {
-    const { id, width, height, x, y, type } = props.node.attrs;
+    const { id, width, height, x, y, zoom, type } = props.node.attrs;
     if (type === "map") {
       if (this.options.public_view) {
-        return <PublicMapPreview id={id} width={width} height={height} x={x} y={y} />;
+        return <PublicMapPreview id={id} width={width} height={height} x={x} y={y} zoom={zoom} />;
       } else {
         return (
           <MapPreview
@@ -53,13 +53,14 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
             height={height}
             x={x}
             y={y}
+            zoom={zoom}
             updateAttributes={props.updateAttributes}
           />
         );
       }
     } else if (type === "board") {
       if (this.options.public_view) {
-        return <BoardPreview id={id} width={width} height={height} x={x} y={y} />;
+        return <BoardPreview id={id} width={width} height={height} x={x} y={y} zoom={zoom} />;
       } else {
         return (
           <BoardPreview
@@ -68,6 +69,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
             height={height}
             x={x}
             y={y}
+            zoom={zoom}
             updateAttributes={props.updateAttributes}
           />
         );
@@ -93,6 +95,7 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
         height: { default: 480 },
         x: { default: 0 },
         y: { default: 0 },
+        zoom: { default: 1 },
         public_view: { default: true },
         type: { default: this.options.type },
       },
@@ -133,6 +136,7 @@ export interface MapPreviewAttributes {
   height: number;
   x: number;
   y: number;
+  zoom: number;
   updateAttributes?: (attrs: ProsemirrorAttributes<object>) => void;
 }
 
