@@ -41,30 +41,34 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
   }
 
   ReactComponent: ComponentType<NodeViewComponentProps> = (props) => {
-    const { id, width, height, type } = props.node.attrs;
+    const { id, width, height, x, y, type } = props.node.attrs;
     if (type === "map") {
       if (this.options.public_view) {
-        return <PublicMapPreview id={id} width={width} height={height} />;
+        return <PublicMapPreview id={id} width={width} height={height} x={x} y={y} />;
       } else {
         return (
           <MapPreview
             id={id}
             width={width}
             height={height}
-            updateId={props.updateAttributes}
+            x={x}
+            y={y}
+            updateAttributes={props.updateAttributes}
           />
         );
       }
     } else if (type === "board") {
       if (this.options.public_view) {
-        return <BoardPreview id={id} width={width} height={height} />;
+        return <BoardPreview id={id} width={width} height={height} x={x} y={y} />;
       } else {
         return (
           <BoardPreview
             id={id}
             width={width}
             height={height}
-            updateId={props.updateAttributes}
+            x={x}
+            y={y}
+            updateAttributes={props.updateAttributes}
           />
         );
       }
@@ -87,6 +91,8 @@ export class MapPreviewExtension extends NodeExtension<MapOptions> {
         id: { default: null },
         width: { default: 615 },
         height: { default: 480 },
+        x: { default: 0 },
+        y: { default: 0 },
         public_view: { default: true },
         type: { default: this.options.type },
       },
@@ -125,7 +131,9 @@ export interface MapPreviewAttributes {
   id: string;
   width: number;
   height: number;
-  updateId?: (attrs: ProsemirrorAttributes<object>) => void;
+  x: number;
+  y: number;
+  updateAttributes?: (attrs: ProsemirrorAttributes<object>) => void;
 }
 
 declare global {

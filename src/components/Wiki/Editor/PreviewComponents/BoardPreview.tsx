@@ -30,7 +30,8 @@ export default function BoardPreview({
   id,
   width,
   height,
-  updateId,
+  x, y,
+  updateAttributes,
 }: MapPreviewAttributes) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
@@ -122,17 +123,19 @@ export default function BoardPreview({
           cy.autoungrabify(true);
           cy.autolock(true);
           cy.autounselectify(true);
-          cy.animate(
-            {
-              pan: {
-                x: 250, y: 450
-              },
-              zoom: 1,
-            },
-            {
-              duration: 1,
+          const pan = cy.pan();
+          const zoom = cy.zoom();
+          cy.viewport({
+            pan: {
+              x: x * zoom + pan.x, y: y * zoom + pan.y
             }
-          );
+          })
+          cy.on("mouseup", function (e: any) {
+            try {
+              if (updateAttributes) updateAttributes(e.target.pan())
+            } catch (error) {
+            }
+          })
         }}
         stylesheet={cytoscapeStylesheet}
       />
@@ -156,8 +159,8 @@ export default function BoardPreview({
           height: dims.height + delta.height,
         });
 
-        if (updateId)
-          updateId({
+        if (updateAttributes)
+          updateAttributes({
             height: dims.height + delta.height,
             width: dims.width + delta.width,
           });

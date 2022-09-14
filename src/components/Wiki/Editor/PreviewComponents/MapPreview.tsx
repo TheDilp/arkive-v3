@@ -19,7 +19,7 @@ export default function MapPreview({
   id,
   width,
   height,
-  updateId,
+  updateAttributes: updateId,
 }: MapPreviewAttributes) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
