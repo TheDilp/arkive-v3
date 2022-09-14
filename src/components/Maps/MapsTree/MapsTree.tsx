@@ -5,10 +5,11 @@ import {
   useState
 } from "react";
 import { useParams } from "react-router-dom";
+import { SortIndexes } from "../../../custom-types";
 import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
 import { useGetMaps, useSortChildren } from "../../../utils/customHooks";
 import { MapDialogDefault } from "../../../utils/defaultValues";
-import { getDepth } from "../../../utils/utils";
+import { getDepth, handleDrop, TreeSortFunc } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
@@ -66,7 +67,7 @@ export default function MapsTree({
         return () => clearTimeout(timeout);
       } else {
         setTreeData(
-          maps.map((m) => ({
+          maps.sort((a, b) => TreeSortFunc(a.sort, b.sort)).map((m) => ({
             id: m.id,
             parent: m.parent?.id || "0",
             text: m.title,
@@ -80,38 +81,6 @@ export default function MapsTree({
     }
   }, [maps, filter]);
 
-  const handleDrop = async (
-    newTree: NodeModel<MapProps>[],
-    {
-      dragSourceId,
-      dragSource,
-      dropTargetId,
-    }: {
-      dragSourceId: string;
-      dragSource: NodeModel<MapProps>;
-      dropTargetId: string;
-    }
-  ) => {
-
-
-    let indexes = newTree
-      .filter(
-        (map) =>
-          map.parent === dropTargetId ||
-          (map.parent === undefined && dropTargetId === "0")
-      )
-      .map((map, index) => {
-        return { id: map.id as string, sort: index, parent: map.parent === "0" ? null : map.parent as string };
-      });
-    // Set the user's current view to the new tree
-    setTreeData(newTree);
-    sortChildrenMutation.mutate({
-      project_id: project_id as string,
-      type: "maps",
-      indexes: indexes || [],
-    });
-
-  };
 
   return (
     <div
@@ -201,7 +170,8 @@ export default function MapsTree({
             }
           }}
           //@ts-ignore
-          onDrop={handleDrop}
+          onDrop={(tree, options) => handleDrop(tree, options, setTreeData, sortChildrenMutation, project_id as string, "maps")}
+
         />
       </TreeSidebar>
     </div>

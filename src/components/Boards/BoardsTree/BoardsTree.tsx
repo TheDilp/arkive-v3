@@ -8,7 +8,7 @@ import {
 import { useGetBoards, useSortChildren, useUpdateBoard } from "../../../utils/customHooks";
 import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
 import { sortBoardsChildren } from "../../../utils/supabaseUtils";
-import { getDepth } from "../../../utils/utils";
+import { getDepth, handleDrop, TreeSortFunc } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
@@ -32,39 +32,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const sortChildrenMutation = useSortChildren();
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<BoardItemDisplayDialogProps>(BoardUpdateDialogDefault);
-  const handleDrop = (
-    newTree: NodeModel<BoardProps>[],
-    {
-      dragSourceId,
-      dragSource,
-      dropTargetId,
-    }: {
-      dragSourceId: string;
-      dragSource: NodeModel<BoardProps>;
-      dropTargetId: string;
-    }
-  ) => {
 
-    let indexes = newTree
-      .filter(
-        (board) =>
-          board.parent === dropTargetId ||
-          (board.parent === undefined && dropTargetId === "0")
-      )
-      .map((board, index) => {
-        return { id: board.id as string, sort: index, parent: board.parent === "0" ? null : board.parent as string };
-      });
-
-    // Set the user's current view to the new tree
-    setTreeData(newTree);
-    sortChildrenMutation.mutate({
-      project_id: project_id as string,
-      type: "boards",
-      indexes: indexes || [],
-    });
-
-
-  };
   useLayoutEffect(() => {
     if (boards) {
       if (filter) {
@@ -88,7 +56,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
         return () => clearTimeout(timeout);
       } else {
         setTreeData(
-          boards.map((board) => ({
+          boards.sort((a, b) => TreeSortFunc(a.sort, b.sort)).map((board) => ({
             id: board.id,
             parent: board.parent?.id || "0",
             text: board.title,
@@ -183,7 +151,8 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
             }
           }}
           //@ts-ignore
-          onDrop={handleDrop}
+          onDrop={(tree, options) => handleDrop(tree, options, setTreeData, sortChildrenMutation, project_id as string, "boards")}
+
         />
       </TreeSidebar>
     </div>

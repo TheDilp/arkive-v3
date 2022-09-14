@@ -1,4 +1,6 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
+import { Dispatch, SetStateAction } from "react";
+import { UseMutationResult } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
 import {
   BlockquoteExtension,
@@ -18,7 +20,10 @@ import {
 } from "remirror/extensions";
 import CustomLinkExtenstion from "../components/Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
 import { SecretExtension } from "../components/Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
-import { slashMenuItem } from "../custom-types";
+import { DocumentProps, slashMenuItem, SortIndexes } from "../custom-types";
+import { BoardProps } from "../types/BoardTypes";
+import { MapProps } from "../types/MapTypes";
+import { TimelineType } from "../types/TimelineTypes";
 const defaultToastConfig: ToastOptions = {
   autoClose: 1250,
   theme: "dark",
@@ -557,3 +562,62 @@ export interface Bucket {
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 export const supabaseStorageImagesLink = `${supabaseUrl}/storage/v1/object/public/images/`;
 
+export const TreeSortFunc = (sortA: number, sortB: number) => {
+  if (sortA > sortB) return 1;
+  if (sortA < sortB) return -1;
+  return 0;
+};
+
+export const handleDrop = async (
+  newTree: NodeModel<DocumentProps | MapProps | BoardProps | TimelineType>[],
+  {
+    dragSourceId,
+    dragSource,
+    dropTargetId,
+  }: {
+    dragSourceId: string;
+    dragSource: NodeModel<DocumentProps | MapProps | BoardProps | TimelineType>;
+    dropTargetId: string;
+  },
+  setTreeData: (
+    newTree: NodeModel<DocumentProps | MapProps | BoardProps | TimelineType>[]
+  ) => void,
+  sortChildrenMutation: UseMutationResult<
+    void,
+    unknown,
+    {
+      project_id: string;
+      type: "documents" | "maps" | "boards" | "timelines";
+      indexes: SortIndexes;
+    },
+    {
+      previousData: unknown;
+    }
+  >,
+  project_id: string,
+  type: "documents" | "maps" | "boards" | "timelines"
+) => {
+  let indexes: SortIndexes = newTree
+    .filter(
+      (doc) =>
+        doc.parent === dropTargetId ||
+        (doc.parent === undefined &&
+          dropTargetId === "0" &&
+          // @ts-ignore
+          (!doc.data?.template || true))
+    )
+    .map((doc, index) => {
+      // doc.parent.toString() => Dnd Treeview allows for strings and numbers, we want only strings
+      return {
+        id: doc.id as string,
+        sort: index,
+        parent: doc.parent === "0" ? null : (doc.parent as string),
+      };
+    });
+  setTreeData(newTree);
+  sortChildrenMutation.mutate({
+    project_id: project_id as string,
+    type,
+    indexes: indexes || [],
+  });
+};

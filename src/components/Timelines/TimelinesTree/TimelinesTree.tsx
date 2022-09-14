@@ -1,11 +1,10 @@
 import { NodeModel, Tree } from '@minoru/react-dnd-treeview';
 import { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { SortIndexes } from '../../../custom-types';
 import { TimelineItemDisplayDialogProps, TimelineType } from '../../../types/TimelineTypes';
 import { useGetTimelines, useSortChildren } from '../../../utils/customHooks';
 import { TimelineItemDisplayDialogDefault } from '../../../utils/defaultValues';
-import { getDepth } from '../../../utils/utils';
+import { getDepth, handleDrop, TreeSortFunc } from '../../../utils/utils';
 import { MediaQueryContext } from '../../Context/MediaQueryContext';
 import { TimelineContext } from '../../Context/TimelineContext';
 import TreeSidebar from '../../Util/TreeSidebar';
@@ -25,42 +24,7 @@ export default function TimelinesTree() {
     const [filter, setFilter] = useState("");
     const { data: timelines } = useGetTimelines(project_id as string);
     const sortChildrenMutation = useSortChildren();
-
     const cm = useRef() as any;
-
-    const handleDrop = (
-        newTree: NodeModel<TimelineType>[],
-        {
-            dragSourceId,
-            dragSource,
-            dropTargetId,
-        }: {
-            dragSourceId: string;
-            dragSource: NodeModel<TimelineType>;
-            dropTargetId: string;
-        }
-    ) => {
-
-        let indexes: SortIndexes = newTree
-            .filter(
-                (timeline) =>
-                    timeline.parent === dropTargetId ||
-                    (timeline.parent === undefined && dropTargetId === "0")
-            )
-            .map((timeline, index) => {
-                return { id: timeline.id as string, sort: index, parent: timeline.parent === "0" ? null : timeline.parent as string };
-            });
-        // Set the user's current view to the new tree
-        console.log(newTree, dropTargetId)
-        setTreeData(newTree);
-        sortChildrenMutation.mutate({
-            project_id: project_id as string,
-            type: "timelines",
-            indexes: indexes || [],
-        });
-
-
-    };
 
     useLayoutEffect(() => {
         if (timelines) {
@@ -85,7 +49,7 @@ export default function TimelinesTree() {
                 return () => clearTimeout(timeout);
             } else {
                 setTreeData(
-                    timelines.map((t) => ({
+                    timelines.sort((a, b) => TreeSortFunc(a.sort, b.sort)).map((t) => ({
                         id: t.id,
                         parent: t.parent?.id || "0",
                         text: t.title,
@@ -170,7 +134,8 @@ export default function TimelinesTree() {
                         }
                     }}
                     //@ts-ignore
-                    onDrop={handleDrop}
+                    onDrop={(tree, options) => handleDrop(tree, options, setTreeData, sortChildrenMutation, project_id as string, "timelines")}
+
                 />
             </TreeSidebar>
         </div>

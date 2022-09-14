@@ -325,6 +325,7 @@ export function useSortChildren() {
 
               for (const item of newData.indexes) {
                 const index = oldData.findIndex((doc) => doc.id === item.id);
+                console.log(index, oldData);
                 if (index !== -1) {
                   let newParent = oldData.find((doc) => doc.id === item.parent);
                   sortedData[index] = {

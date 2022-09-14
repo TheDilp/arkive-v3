@@ -17,7 +17,7 @@ import {
   useSortChildren
 } from "../../../utils/customHooks";
 import { DocItemDisplayDialogDefault } from "../../../utils/defaultValues";
-import { getDepth } from "../../../utils/utils";
+import { getDepth, handleDrop, TreeSortFunc } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import TreeSidebar from "../../Util/TreeSidebar";
@@ -48,44 +48,39 @@ export default function DocumentsTree() {
     show: false,
   });
   // Function to handle the drop functionality of the tree
-  const handleDrop = async (
-    newTree: NodeModel<DocumentProps>[],
-    {
-      dragSourceId,
-      dragSource,
-      dropTargetId,
-    }: {
-      dragSourceId: string;
-      dragSource: NodeModel<DocumentProps>;
-      dropTargetId: string;
-    }
-  ) => {
+  // const handleDrop = async (
+  //   newTree: NodeModel<DocumentProps>[],
+  //   {
+  //     dragSourceId,
+  //     dragSource,
+  //     dropTargetId,
+  //   }: {
+  //     dragSourceId: string;
+  //     dragSource: NodeModel<DocumentProps>;
+  //     dropTargetId: string;
+  //   }
+  // ) => {
 
-    let indexes: SortIndexes = newTree
-      .filter(
-        (doc) =>
-          (doc.parent === dropTargetId ||
-            (doc.parent === undefined && dropTargetId === "0")) &&
-          !doc.data?.template
-      )
-      .map((doc, index) => {
-        // doc.parent.toString() => Dnd Treeview allows for strings and numbers, we want only strings
-        return { id: doc.id as string, sort: index, parent: doc.parent === "0" ? null : doc.parent.toString() };
-      });
-    // updateDocumentMutation.mutate({
-    //   id: dragSourceId,
-    //   parent: dropTargetId === "0" ? null : dropTargetId,
-    //   sort: newSort
-    // })
-    setTreeData(newTree);
-    sortChildrenMutation.mutate({
-      project_id: project_id as string,
-      type: "documents",
-      indexes: indexes || [],
-    })
-    // setTreeData(newTree);
+  //   let indexes: SortIndexes = newTree
+  //     .filter(
+  //       (doc) =>
+  //         (doc.parent === dropTargetId ||
+  //           (doc.parent === undefined && dropTargetId === "0")) &&
+  //         !doc.data?.template
+  //     )
+  //     .map((doc, index) => {
+  //       // doc.parent.toString() => Dnd Treeview allows for strings and numbers, we want only strings
+  //       return { id: doc.id as string, sort: index, parent: doc.parent === "0" ? null : doc.parent as string };
+  //     });
+  //   setTreeData(newTree);
+  //   sortChildrenMutation.mutate({
+  //     project_id: project_id as string,
+  //     type: "documents",
+  //     indexes: indexes || [],
+  //   })
+  //   // setTreeData(newTree);
 
-  };
+  // };
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
@@ -115,11 +110,7 @@ export default function DocumentsTree() {
         return () => clearTimeout(timeout);
       } else {
         const treeData = documents
-          .filter((doc) => !doc.template).sort((a, b) => {
-            if (a.sort > b.sort) return 1;
-            if (a.sort < b.sort) return -1;
-            return 0
-          })
+          .filter((doc) => !doc.template).sort((a, b) => TreeSortFunc(a.sort, b.sort))
           .map((doc) => ({
             id: doc.id,
             text: doc.title,
@@ -224,7 +215,7 @@ export default function DocumentsTree() {
                 }
               }}
               // @ts-ignore
-              onDrop={handleDrop}
+              onDrop={(tree, options) => handleDrop(tree, options, setTreeData, sortChildrenMutation, project_id as string, "documents")}
             />
           </TabPanel>
           <TabPanel header="Templates" className="surface-50">
