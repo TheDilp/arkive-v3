@@ -214,7 +214,7 @@ export default function RemirrorContainer({
 
     },
     // delay in ms
-    300
+    850
   );
 
   const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {

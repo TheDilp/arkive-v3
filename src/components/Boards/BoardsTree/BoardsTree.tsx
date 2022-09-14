@@ -5,7 +5,7 @@ import {
   BoardItemDisplayDialogProps,
   BoardProps,
 } from "../../../types/BoardTypes";
-import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
+import { useGetBoards, useSortChildren, useUpdateBoard } from "../../../utils/customHooks";
 import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
 import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
@@ -29,6 +29,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const [treeData, setTreeData] = useState<NodeModel<BoardProps>[]>([]);
   const { data: boards } = useGetBoards(project_id as string);
   const updateBoardMutation = useUpdateBoard(project_id as string);
+  const sortChildrenMutation = useSortChildren();
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<BoardItemDisplayDialogProps>(BoardUpdateDialogDefault);
   const handleDrop = (
@@ -43,8 +44,6 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
       dropTargetId: string;
     }
   ) => {
-    // Set the user's current view to the new tree
-    setTreeData(newTree);
 
     let indexes = newTree
       .filter(
@@ -53,18 +52,18 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
           (board.data?.parent?.id === undefined && dropTargetId === "0")
       )
       .map((board, index) => {
-        return { id: board.id as string, sort: index };
+        return { id: board.id as string, sort: index, parent: board.parent === "0" ? null : board.parent as string };
       });
 
-    sortBoardsChildren(indexes);
-
-    // SAFEGUARD: If parent is the same, avoid unneccesary update
-    if (dragSource.data?.parent?.id === dropTargetId) return;
-
-    updateBoardMutation.mutate({
-      id: dragSourceId,
-      parent: dropTargetId === "0" ? null : dropTargetId,
+    // Set the user's current view to the new tree
+    setTreeData(newTree);
+    sortChildrenMutation.mutate({
+      project_id: project_id as string,
+      type: "boards",
+      indexes: indexes || [],
     });
+
+
   };
   useLayoutEffect(() => {
     if (boards) {
@@ -105,9 +104,8 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
 
   return (
     <div
-      className={` text-white pt-2 px-2 ${
-        isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
-      }`}
+      className={` text-white pt-2 px-2 ${isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
+        }`}
       style={{
         height: "96vh",
       }}
@@ -133,8 +131,8 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
             container: "list-none",
             placeholder: "relative",
           }}
-          sort={true}
-          insertDroppableFirst={true}
+          sort={false}
+          insertDroppableFirst={false}
           initialOpen={
             boards
               ?.filter((board) => board.expanded)

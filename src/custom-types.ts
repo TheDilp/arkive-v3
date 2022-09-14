@@ -169,3 +169,9 @@ export type slashMenuItem = {
   color?: string;
   column_count?: number;
 };
+
+export type SortIndexes = {
+  id: string;
+  sort: number;
+  parent: string | null;
+}[];

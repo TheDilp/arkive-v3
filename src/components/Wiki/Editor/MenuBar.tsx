@@ -569,7 +569,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
         }
         className="p-0 Lato w-full border-0"
         style={{
-          zIndex: 50,
+          zIndex: 30,
         }}
       />
     </>

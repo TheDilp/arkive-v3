@@ -6,9 +6,8 @@ import {
 } from "react";
 import { useParams } from "react-router-dom";
 import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
-import { useGetMaps, useUpdateMap } from "../../../utils/customHooks";
+import { useGetMaps, useSortChildren } from "../../../utils/customHooks";
 import { MapDialogDefault } from "../../../utils/defaultValues";
-import { sortMapsChildren } from "../../../utils/supabaseUtils";
 import { getDepth } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
@@ -42,7 +41,7 @@ export default function MapsTree({
     map_id: "",
     show: false,
   });
-  const updateMapMutation = useUpdateMap(project_id as string);
+  const sortChildrenMutation = useSortChildren();
 
   useLayoutEffect(() => {
     if (maps) {
@@ -93,8 +92,7 @@ export default function MapsTree({
       dropTargetId: string;
     }
   ) => {
-    // Set the user's current view to the new tree
-    setTreeData(newTree);
+
 
     let indexes = newTree
       .filter(
@@ -103,22 +101,22 @@ export default function MapsTree({
           (map.data?.parent?.id === undefined && dropTargetId === "0")
       )
       .map((map, index) => {
-        return { id: map.id as string, sort: index };
+        return { id: map.id as string, sort: index, parent: map.parent === "0" ? null : map.parent as string };
       });
-    // SAFEGUARD: If parent is the same, avoid unneccesary update
-    if (dragSource.data?.parent?.id !== dropTargetId)
-      await updateMapMutation.mutateAsync({
-        id: dragSourceId,
-        parent: dropTargetId === "0" ? null : dropTargetId,
-      });
-    sortMapsChildren(indexes);
+    // Set the user's current view to the new tree
+    setTreeData(newTree);
+    sortChildrenMutation.mutate({
+      project_id: project_id as string,
+      type: "maps",
+      indexes: indexes || [],
+    });
+
   };
 
   return (
     <div
-      className={` text-white pt-2 px-2 ${
-        isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
-      }`}
+      className={` text-white pt-2 px-2 ${isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
+        }`}
       style={{
         height: "96vh",
       }}
@@ -157,8 +155,8 @@ export default function MapsTree({
           }}
           tree={treeData}
           rootId={"0"}
-          sort={true}
-          insertDroppableFirst={true}
+          sort={false}
+          insertDroppableFirst={false}
           initialOpen={
             maps?.filter((map) => map.expanded).map((map) => map.id) || false
           }

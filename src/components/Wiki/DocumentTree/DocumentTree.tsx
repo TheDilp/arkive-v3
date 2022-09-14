@@ -9,12 +9,12 @@ import { useParams } from "react-router-dom";
 import {
   DocItemDisplayDialogProps,
   DocumentProps,
-  IconSelectProps
+  IconSelectProps,
+  SortIndexes
 } from "../../../custom-types";
 import {
   useGetDocuments,
-  useSortChildren,
-  useUpdateDocument
+  useSortChildren
 } from "../../../utils/customHooks";
 import { DocItemDisplayDialogDefault } from "../../../utils/defaultValues";
 import { getDepth } from "../../../utils/utils";
@@ -39,7 +39,6 @@ export default function DocumentsTree() {
   const [displayDialog, setDisplayDialog] = useState<DocItemDisplayDialogProps>(
     DocItemDisplayDialogDefault
   );
-  const updateDocumentMutation = useUpdateDocument(project_id as string);
   const sortChildrenMutation = useSortChildren();
   const [iconSelect, setIconSelect] = useState<IconSelectProps>({
     id: "",
@@ -61,40 +60,31 @@ export default function DocumentsTree() {
       dropTargetId: string;
     }
   ) => {
-    setTreeData(newTree);
-    if (dragSource.data?.parent?.id !== dropTargetId) {
-      // Update the document's parent
-      // setTreeData(newTree);
-      await updateDocumentMutation.mutateAsync({
-        id: dragSourceId,
-        parent: dropTargetId === "0" ? null : dropTargetId,
-      });
-      // return;
-    }
-    let indexes = newTree
+
+    let indexes: SortIndexes = newTree
       .filter(
         (doc) =>
-          (doc.data?.parent?.id === dropTargetId ||
-            (doc.data?.parent?.id === undefined && dropTargetId === "0")) &&
+          (doc.parent === dropTargetId ||
+            (doc.parent === undefined && dropTargetId === "0")) &&
           !doc.data?.template
       )
       .map((doc, index) => {
-        return { id: doc.id as string, sort: index };
+        // doc.parent.toString() => Dnd Treeview allows for strings and numbers, we want only strings
+        return { id: doc.id as string, sort: index, parent: doc.parent === "0" ? null : doc.parent.toString() };
       });
+    // updateDocumentMutation.mutate({
+    //   id: dragSourceId,
+    //   parent: dropTargetId === "0" ? null : dropTargetId,
+    //   sort: newSort
+    // })
+    setTreeData(newTree);
     sortChildrenMutation.mutate({
       project_id: project_id as string,
       type: "documents",
       indexes: indexes || [],
-    });
+    })
+    // setTreeData(newTree);
 
-    // SAFEGUARD: If parent is the same, avoid unneccesary update
-
-    // sortChildrenMutation.mutate({
-    //   project_id: project_id as string,
-    //   type: "documents",
-    //   indexes,
-    // });
-    // Set the user's current view to the new tree
   };
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
@@ -125,14 +115,18 @@ export default function DocumentsTree() {
         return () => clearTimeout(timeout);
       } else {
         const treeData = documents
-          .filter((doc) => !doc.template)
+          .filter((doc) => !doc.template).sort((a, b) => {
+            if (a.sort > b.sort) return 1;
+            if (a.sort < b.sort) return -1;
+            return 0
+          })
           .map((doc) => ({
             id: doc.id,
             text: doc.title,
             droppable: doc.folder,
             parent: doc.parent ? (doc.parent.id as string) : "0",
             data: doc,
-          }));
+          }))
         setTreeData(treeData);
       }
     }
@@ -140,9 +134,8 @@ export default function DocumentsTree() {
 
   return (
     <div
-      className={`text-white ${
-        isTabletOrMobile ? "hidden" : isLaptop ? "w-3" : "w-2"
-      } flex flex-wrap ${isTabletOrMobile ? "surface-0" : "surface-50"}`}
+      className={`text-white ${isTabletOrMobile ? "hidden" : isLaptop ? "w-3" : "w-2"
+        } flex flex-wrap ${isTabletOrMobile ? "surface-0" : "surface-50"}`}
     >
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
@@ -165,7 +158,7 @@ export default function DocumentsTree() {
           panelContainerClassName="pr-0"
           renderActiveOnly={true}
         >
-          <TabPanel header="Documents" className="p-0 surface-50">
+          <TabPanel header="Documents" className="p-0 surface-50 ">
             <DocTreeFilter
               filter={filter}
               setFilter={setFilter}
@@ -174,15 +167,15 @@ export default function DocumentsTree() {
             />
             <Tree
               classes={{
-                root: "w-full projectTreeRoot pr-4 pl-0",
+                root: "w-full projectTreeRoot pr-4 pl-0  overflow-y-auto",
                 container: "list-none",
                 placeholder: "relative",
                 listItem: "listitem",
               }}
               tree={treeData}
               rootId={"0"}
-              sort={true}
-              insertDroppableFirst={true}
+              sort={false}
+              insertDroppableFirst={false}
               initialOpen={
                 documents?.filter((doc) => doc.expanded).map((doc) => doc.id) ||
                 false

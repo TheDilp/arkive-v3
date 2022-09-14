@@ -1,8 +1,9 @@
 import { NodeModel, Tree } from '@minoru/react-dnd-treeview';
-import React, { useContext, useLayoutEffect, useRef, useState } from 'react'
+import { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { SortIndexes } from '../../../custom-types';
 import { TimelineItemDisplayDialogProps, TimelineType } from '../../../types/TimelineTypes';
-import { useGetTimelines, useUpdateTimeline } from '../../../utils/customHooks';
+import { useGetTimelines, useSortChildren } from '../../../utils/customHooks';
 import { TimelineItemDisplayDialogDefault } from '../../../utils/defaultValues';
 import { getDepth } from '../../../utils/utils';
 import { MediaQueryContext } from '../../Context/MediaQueryContext';
@@ -23,10 +24,11 @@ export default function TimelinesTree() {
     const [updateTimelineDialog, setUpdateTimelineDialog] = useState<TimelineItemDisplayDialogProps>(TimelineItemDisplayDialogDefault)
     const [filter, setFilter] = useState("");
     const { data: timelines } = useGetTimelines(project_id as string);
-    const updateTimelineMutation = useUpdateTimeline();
+    const sortChildrenMutation = useSortChildren();
+
     const cm = useRef() as any;
 
-    const handleDrop = async (
+    const handleDrop = (
         newTree: NodeModel<TimelineType>[],
         {
             dragSourceId,
@@ -38,15 +40,25 @@ export default function TimelinesTree() {
             dropTargetId: string;
         }
     ) => {
+
+
+        let indexes: SortIndexes = newTree
+            .filter(
+                (timeline) =>
+                    timeline.data?.parent?.id === dropTargetId ||
+                    (timeline.data?.parent?.id === undefined && dropTargetId === "0")
+            )
+            .map((timeline, index) => {
+                return { id: timeline.id as string, sort: index, parent: timeline.parent === "0" ? null : timeline.parent as string };
+            });
         // Set the user's current view to the new tree
         setTreeData(newTree);
-        // SAFEGUARD: If parent is the same, avoid unneccesary update
-        if (dragSource.data?.parent?.id !== dropTargetId)
-            await updateTimelineMutation.mutateAsync({
-                id: dragSourceId,
-                parent: dropTargetId === "0" ? null : dropTargetId,
-                project_id: project_id as string
-            });
+        sortChildrenMutation.mutate({
+            project_id: project_id as string,
+            type: "timelines",
+            indexes: indexes || [],
+        });
+
 
     };
 
@@ -112,8 +124,8 @@ export default function TimelinesTree() {
                     }}
                     tree={treeData}
                     rootId={"0"}
-                    sort={true}
-                    insertDroppableFirst={true}
+                    sort={false}
+                    insertDroppableFirst={false}
                     initialOpen={
                         timelines?.filter((timeline) => timeline.expanded).map((timeline) => timeline.id) || false
                     }

@@ -41,12 +41,11 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
             }
         }
     }
-    console.log(eventData);
 
     return (
         <Dialog
             className="w-3"
-            header={`Update Map - ${eventData.title}`}
+            header={`Update Timeline - ${eventData.title}`}
             modal={false}
             visible={eventData.show}
             onHide={() => setEventData(TimelineItemDisplayDialogDefault)}

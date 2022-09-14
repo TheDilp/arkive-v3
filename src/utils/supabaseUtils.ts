@@ -8,6 +8,7 @@ import {
   ImageProps,
   ProfileProps,
   ProjectProps,
+  SortIndexes,
   TemplateCreateProps,
 } from "../custom-types";
 import {
@@ -376,9 +377,7 @@ export const createManyEdges = async (
 };
 
 // UPDATE
-export const sortDocumentsChildren = async (
-  indexes: ({ id: string; sort: number } | undefined)[]
-) => {
+export const sortDocumentsChildren = async (indexes: SortIndexes) => {
   const { data, error } = await supabase.rpc("sort_documents_children", {
     payload: indexes,
   });
@@ -388,17 +387,18 @@ export const sortDocumentsChildren = async (
     throw new Error(error.message);
   }
 };
-export const sortMapsChildren = async (
-  indexes: ({ id: string; sort: number } | undefined)[]
-) => {
+export const sortMapsChildren = async (indexes: SortIndexes) => {
   await supabase.rpc("sort_maps_children", {
     payload: indexes,
   });
 };
-export const sortBoardsChildren = async (
-  indexes: ({ id: string; sort: number } | undefined)[]
-) => {
+export const sortBoardsChildren = async (indexes: SortIndexes) => {
   await supabase.rpc("sort_boards_children", {
+    payload: indexes,
+  });
+};
+export const sortTimelinesChildren = async (indexes: SortIndexes) => {
+  await supabase.rpc("sort_timelines_children", {
     payload: indexes,
   });
 };

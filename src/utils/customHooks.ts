@@ -7,6 +7,7 @@ import {
   DocumentUpdateProps,
   ImageProps,
   ProjectProps,
+  SortIndexes,
 } from "../custom-types";
 import {
   BoardNodeProps,
@@ -77,6 +78,7 @@ import {
   sortBoardsChildren,
   sortDocumentsChildren,
   sortMapsChildren,
+  sortTimelinesChildren,
   updateBoard,
   updateDocument,
   updateEdge,
@@ -293,12 +295,13 @@ export function useSortChildren() {
   return useMutation(
     async (vars: {
       project_id: string;
-      type: "documents" | "maps" | "boards";
-      indexes: { id: string; sort: number }[];
+      type: "documents" | "maps" | "boards" | "timelines";
+      indexes: SortIndexes;
     }) => {
       if (vars.type === "documents") await sortDocumentsChildren(vars.indexes);
       if (vars.type === "maps") await sortMapsChildren(vars.indexes);
       if (vars.type === "boards") await sortBoardsChildren(vars.indexes);
+      if (vars.type === "timelines") await sortTimelinesChildren(vars.indexes);
     },
     {
       onMutate: async (newData) => {
@@ -308,17 +311,34 @@ export function useSortChildren() {
         queryClient.setQueryData(
           `${newData.project_id}-${newData.type}`,
           (
-            oldData: (DocumentProps[] | MapProps[] | BoardProps[]) | undefined
+            oldData:
+              | (DocumentProps | MapProps | BoardProps | TimelineType)[]
+              | undefined
           ) => {
             if (oldData) {
-              let sortedData: any[] = [...oldData];
+              let sortedData: (
+                | DocumentProps
+                | MapProps
+                | BoardProps
+                | TimelineType
+              )[] = [...oldData];
+
               for (const item of newData.indexes) {
                 const index = oldData.findIndex((doc) => doc.id === item.id);
                 if (index !== -1) {
-                  sortedData[index] = { ...sortedData[index], sort: item.sort };
+                  let newParent = oldData.find((doc) => doc.id === item.parent);
+                  sortedData[index] = {
+                    ...sortedData[index],
+                    sort: item.sort,
+                    parent: newParent
+                      ? { id: newParent.id, title: newParent.title }
+                      : item.parent === null
+                      ? null
+                      : sortedData[index].parent,
+                  };
                 }
               }
-              return sortedData;
+              return [...sortedData];
             } else {
               return [];
             }
