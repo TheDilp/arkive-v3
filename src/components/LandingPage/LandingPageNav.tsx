@@ -30,7 +30,7 @@ export default function LandingPageNav() {
           </a>
         </div>
         <div className="hover:text-blue-400 cursor-pointer">FAQ</div>
-      <div className="hover:text-blue-400 cursor-pointer">
+        <div className="hover:text-blue-400 cursor-pointer">
           <a
             href="https://discord.gg/AnbtkzrffA"
             className="no-underline"
@@ -52,7 +52,7 @@ export default function LandingPageNav() {
       <div className="flex align-items-center ml-5 lg:ml-0">
         <div className="mt-3 cursor-pointer">
           <a
-            href="/login"
+            href="/auth"
             className="text-white no-underline hover:text-blue-400"
           >
             Sign in

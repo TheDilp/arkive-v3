@@ -33,7 +33,7 @@ export default function Home() {
     },
   });
   if (error || isLoading) return <LoadingScreen />;
-  if (!auth.user()) return <Navigate to="/login" />;
+  if (!auth.user()) return <Navigate to="/auth" />;
   return (
     <div className="Home w-full flex flex-wrap align-content-start h-screen overflow-y-auto">
       <div

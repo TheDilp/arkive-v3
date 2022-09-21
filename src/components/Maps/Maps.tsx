@@ -12,7 +12,7 @@ export default function Maps() {
 
   if (isLoading) return <LoadingScreen />;
   return !auth.user() ? (
-    <Navigate to="/login" />
+    <Navigate to="/auth" />
   ) : (
     <div className="w-full flex flex-nowrap justify-content-start mainScreen">
       <MapsTree mapId={mapId} setMapId={setMapId} />

@@ -11,7 +11,7 @@ export default function Wiki() {
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
 
   return !auth.user() ? (
-    <Navigate to="/login" />
+    <Navigate to="/auth" />
   ) : (
     <div className="w-full flex flex-wrap justify-content-start mainScreen">
       <DocumentsTree />

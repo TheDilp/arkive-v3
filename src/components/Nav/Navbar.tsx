@@ -150,7 +150,7 @@ export default function Navbar() {
           className="pi pi-sign-out cursor-pointer hover:text-primary"
           onClick={async () => {
             await logout();
-            navigate("/login");
+            navigate("/auth");
           }}
         ></i>
       </div>
@@ -180,7 +180,7 @@ export default function Navbar() {
       }
     });
     return () => {
-      window.removeEventListener("keydown", function (e) { });
+      window.removeEventListener("keydown", function (e) {});
     };
   }, []);
 
