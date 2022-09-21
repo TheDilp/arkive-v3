@@ -1,4 +1,5 @@
-import { Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import {
   ArkivistTier,
   BoardFeatureBlocks,
@@ -15,6 +16,18 @@ import PricingCard from "./PricingCard";
 
 export default function LandingPage() {
   const user = auth.user();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const sub = auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN" && !auth.user()) {
+        navigate("/home");
+      }
+    });
+    return () => {
+      sub.data?.unsubscribe();
+    };
+  }, []);
+
   if (user) return <Navigate to="/home" />;
 
   return (
@@ -47,7 +60,6 @@ export default function LandingPage() {
               <img
                 src="WikiCardImg.webp"
                 className="w-full h-full border-round-sm shadow-5 hidden lg:inline"
-                loading="lazy"
                 alt="Wiki showcase"
                 style={{
                   objectFit: "cover",
@@ -78,7 +90,6 @@ export default function LandingPage() {
               <img
                 src="MapCardImg.webp"
                 className="w-full h-full border-round-sm shadow-5 hidden lg:inline"
-                loading="lazy"
                 alt="Map Showcase"
                 style={{
                   objectFit: "cover",

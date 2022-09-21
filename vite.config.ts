@@ -1,4 +1,4 @@
-import svgr from "@honkhonk/vite-plugin-svgr";
+import viteCompression from "vite-plugin-compression";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 export default defineConfig({
@@ -10,6 +10,7 @@ export default defineConfig({
         },
       },
     }),
+    viteCompression(),
   ],
   build: {
     rollupOptions: {

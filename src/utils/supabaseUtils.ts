@@ -44,17 +44,21 @@ export const auth = supabase.auth;
 
 // Auth functions
 
-export const register = async (
-  nickname: string,
-  email: string,
-  password: string
-) => {
-  const { user, error } = await supabase.auth.signUp(
-    { email, password },
+export const register = async (nickname: string, email: string) => {
+  const { user, error } = await supabase.auth.signIn(
     {
-      data: { nickname },
+      provider: "google",
+    },
+    {
+      shouldCreateUser: true,
     }
   );
+  // const { user, error } = await supabase.auth.signUp(
+  //   { email },
+  //   {
+  //     data: { nickname },
+  //   }
+  // );
 
   if (user) return user;
   if (error) {
@@ -63,19 +67,14 @@ export const register = async (
   }
 };
 
-export const login = async (email: string, password: string) => {
-  const { user, error } = await supabase.auth.signIn({ email, password });
-  // {
-  //   provider: "discord",
-  // },
-  // {
-  //   redirectTo: "https://thearkive.app",
-  // }
+export const login = async (provider: "google" | "discord") => {
+  const { user, error } = await supabase.auth.signIn({ provider });
+
   if (user) {
     return user;
   }
   if (error) {
-    toastError(error.message);
+    toastError("Please register an account first.");
     return null;
   }
 };

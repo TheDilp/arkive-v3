@@ -2,7 +2,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { auth, register } from "../../utils/supabaseUtils";
+import { auth, register, supabase } from "../../utils/supabaseUtils";
 import { toastError } from "../../utils/utils";
 import EarthIMG from "./earthimg.jpg";
 
@@ -10,7 +10,6 @@ export default function Register() {
   const navigate = useNavigate();
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   auth.onAuthStateChange((event) => {
     if (event === "SIGNED_IN") {
       navigate("/home");
@@ -77,23 +76,14 @@ export default function Register() {
               placeholder="Email"
               type="email"
             />
-            <InputText
-              className="w-full"
-              value={password}
-              placeholder="Password"
-              type={"password"}
-              onChange={(e) => setPassword(e.target.value)}
-            />
 
             <Button
               className="w-full my-2 text-white Lato border-none"
               onClick={() => {
-                if (!nickname || !email || !password)
+                if (!nickname || !email)
                   toastError("Please fill out all fields.");
                 else {
-                  register(nickname, email, password).then(() =>
-                    navigate("/login")
-                  );
+                  register(nickname, email).then(() => navigate("/login"));
                 }
               }}
               label="Sign up"
