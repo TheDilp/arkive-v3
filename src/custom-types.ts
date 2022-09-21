@@ -81,13 +81,6 @@ export type CreateDocumentInputs = {
   template: string;
 };
 
-// Inputs for updating
-
-export type RegisterInputs = {
-  email: string;
-  password: string;
-};
-
 // DATA CREATION AND UPDATE TYPES
 
 export type DocumentCreateProps = {

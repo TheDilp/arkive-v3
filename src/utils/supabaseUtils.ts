@@ -44,29 +44,6 @@ export const auth = supabase.auth;
 
 // Auth functions
 
-export const register = async (nickname: string, email: string) => {
-  const { user, error } = await supabase.auth.signIn(
-    {
-      provider: "google",
-    },
-    {
-      shouldCreateUser: true,
-    }
-  );
-  // const { user, error } = await supabase.auth.signUp(
-  //   { email },
-  //   {
-  //     data: { nickname },
-  //   }
-  // );
-
-  if (user) return user;
-  if (error) {
-    toastError(error.message);
-    return error;
-  }
-};
-
 export const login = async (provider: "google" | "discord") => {
   const { user, error } = await supabase.auth.signIn({ provider });
 
@@ -74,7 +51,7 @@ export const login = async (provider: "google" | "discord") => {
     return user;
   }
   if (error) {
-    toastError("Please register an account first.");
+    toastError("There was an error signing you up/in.");
     return null;
   }
 };

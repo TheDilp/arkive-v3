@@ -52,9 +52,8 @@ function App() {
               <Route path="/" element={<LandingPage />} />
 
               <Route path="home" element={<Home />} />
-              <Route path="login" element={<Auth />} />
+              <Route path="auth" element={<Auth />} />
               {/* <Route path="passreset" element={<PasswordReset />} /> */}
-              {/* <Route path="register" element={<Register />} /> */}
               <Route path="profile" element={<Profile />} />
               <Route path="help" element={<Help />} />
               <Route
