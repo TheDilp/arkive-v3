@@ -43,6 +43,7 @@ export default function TimelineEvent({
     end_month,
     end_year,
     doc_id,
+    map_id,
     eventBgColor,
     styleType,
     icon,
@@ -87,6 +88,18 @@ export default function TimelineEvent({
             title={() => (
               <div className="timelineCardTitle text-center">
                 {title}{" "}
+                {doc_id && (
+                  <i
+                    className="pi pi-file"
+                    onClick={() => navigate(`../../../wiki/doc/${doc_id}`)}
+                  ></i>
+                )}{" "}
+                {map_id && (
+                  <i
+                    className="pi pi-map"
+                    onClick={() => navigate(`../../../maps/${map_id}`)}
+                  ></i>
+                )}{" "}
                 {!public_view && (
                   <i
                     className="pi pi-pencil"
