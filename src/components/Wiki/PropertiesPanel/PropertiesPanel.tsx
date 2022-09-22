@@ -1,10 +1,9 @@
 import { Button } from "primereact/button";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   useGetDocumentData,
   useGetProjectData,
-  useGetTags,
 } from "../../../utils/customHooks";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import AlterNamesAutocomplete from "./AlterNamesAutocomplete";
@@ -14,15 +13,6 @@ export default function PropertiesPanel() {
   const { project_id, doc_id } = useParams();
   const currentDoc = useGetDocumentData(project_id as string, doc_id as string);
   const project = useGetProjectData(project_id as string);
-  const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
-  const { data: categories, refetch: refetchAllTags } = useGetTags(
-    project_id as string
-  );
-  useEffect(() => {
-    if (categories.length > 0) {
-      setFilteredCategories(categories);
-    }
-  }, [categories]);
 
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   return (
@@ -44,14 +34,7 @@ export default function PropertiesPanel() {
 
       {project && currentDoc && (
         <div className="p-fluid w-full">
-          <CategoryAutocomplete
-            currentDoc={currentDoc}
-            currentProject={project}
-            categories={categories}
-            refetchAllTags={refetchAllTags}
-            filteredCategories={filteredCategories}
-            setFilteredCategories={setFilteredCategories}
-          />
+          <CategoryAutocomplete currentDoc={currentDoc} />
         </div>
       )}
 

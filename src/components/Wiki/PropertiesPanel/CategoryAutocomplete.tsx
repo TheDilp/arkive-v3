@@ -1,26 +1,17 @@
 import { AutoComplete } from "primereact/autocomplete";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { DocumentProps, ProjectProps } from "../../../custom-types";
+import { useGetTags } from "../../../utils/customHooks";
 import { updateDocument } from "../../../utils/supabaseUtils";
 import { searchCategory } from "../../../utils/utils";
 
 type Props = {
   currentDoc: DocumentProps;
-  categories: string[] | undefined;
-  refetchAllTags: any;
-  filteredCategories: string[];
-  currentProject: ProjectProps;
-  setFilteredCategories: (categories: string[]) => void;
 };
 
-export default function CategoryAutocomplete({
-  currentDoc,
-  categories,
-  refetchAllTags,
-  filteredCategories,
-  setFilteredCategories,
-}: Props) {
+export default function CategoryAutocomplete({ currentDoc }: Props) {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const updateCategoriesMutation = useMutation(
@@ -65,7 +56,15 @@ export default function CategoryAutocomplete({
       },
     }
   );
-
+  const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
+  const { data: categories, refetch: refetchAllTags } = useGetTags(
+    project_id as string
+  );
+  useEffect(() => {
+    if (categories.length > 0) {
+      setFilteredCategories(categories);
+    }
+  }, [categories]);
   return (
     <AutoComplete
       inputClassName="Lato border-noround"
