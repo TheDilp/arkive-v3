@@ -148,40 +148,6 @@ export default function TimelineEventDialog() {
             />
           </div> */}
 
-              {/* Document link dropdown */}
-              <div className="w-full">
-                <Dropdown
-                  className="w-full"
-                  placeholder="Link Document"
-                  value={eventData.doc_id}
-                  filter
-                  filterBy="title"
-                  onChange={(e) => {
-                    let doc = docs?.find(
-                      (doc: DocumentProps) => doc.id === e.value
-                    );
-                    if (doc) {
-                      setEventData(
-                        (prev) =>
-                          ({
-                            ...prev,
-                            doc_id: doc?.id,
-                          } as TimelineEventUpdateType)
-                      );
-                    }
-                  }}
-                  options={
-                    docs
-                      ? [
-                          { title: "No document", id: null },
-                          ...docs.filter((doc) => !doc.template && !doc.folder),
-                        ]
-                      : []
-                  }
-                  optionLabel={"title"}
-                  optionValue={"id"}
-                />
-              </div>
               <div className="w-full">
                 <Dropdown
                   className="w-full"
@@ -198,51 +164,14 @@ export default function TimelineEventDialog() {
                         } as TimelineEventUpdateType)
                     );
                   }}
-                  options={currentTimeline?.timeline_ages || []}
-                  optionLabel={"title"}
-                  optionValue={"id"}
-                />
-              </div>
-              {/* Map link dropdown */}
-              <div className="w-full">
-                <Dropdown
-                  className="w-full"
-                  placeholder="Link Map"
-                  filter
-                  filterBy="title"
-                  virtualScrollerOptions={{
-                    lazy: true,
-                    onLazyLoad: () => {},
-                    itemSize: 50,
-                    showLoader: true,
-                    loading: maps?.length === 0,
-                    delay: 0,
-                    loadingTemplate: (options) => {
-                      return (
-                        <div
-                          className="flex align-items-center p-2"
-                          style={{ height: "38px" }}
-                        ></div>
-                      );
-                    },
-                  }}
-                  itemTemplate={(item: MapProps) => (
-                    <ImgDropdownItem
-                      title={item.title}
-                      link={item.map_image?.link || ""}
-                    />
-                  )}
-                  value={eventData.map_id}
-                  onChange={(e) =>
-                    setEventData(
-                      (prev) =>
-                        ({
-                          ...prev,
-                          map_id: e.value,
-                        } as TimelineEventUpdateType)
-                    )
+                  options={
+                    currentTimeline?.timeline_ages
+                      ? [
+                          { id: null, title: "None" },
+                          ...currentTimeline?.timeline_ages,
+                        ]
+                      : []
                   }
-                  options={maps?.filter((map) => !map.folder)}
                   optionLabel={"title"}
                   optionValue={"id"}
                 />
@@ -562,6 +491,88 @@ export default function TimelineEventDialog() {
                   }}
                 />
               </div>
+            </div>
+          </TabPanel>
+          <TabPanel header="Links">
+            {/* Document link dropdown */}
+            <div className="w-full">
+              <label className="w-full">Document</label>
+              <Dropdown
+                className="w-full"
+                placeholder="Link Document"
+                value={eventData.doc_id}
+                filter
+                filterBy="title"
+                onChange={(e) => {
+                  let doc = docs?.find(
+                    (doc: DocumentProps) => doc.id === e.value
+                  );
+                  if (doc) {
+                    setEventData(
+                      (prev) =>
+                        ({
+                          ...prev,
+                          doc_id: doc?.id,
+                        } as TimelineEventUpdateType)
+                    );
+                  }
+                }}
+                options={
+                  docs
+                    ? [
+                        { title: "No document", id: null },
+                        ...docs.filter((doc) => !doc.template && !doc.folder),
+                      ]
+                    : []
+                }
+                optionLabel={"title"}
+                optionValue={"id"}
+              />
+            </div>
+            {/* Map link dropdown */}
+            <div className="w-full mt-2">
+              <label className="w-full">Map</label>
+              <Dropdown
+                className="w-full"
+                placeholder="Link Map"
+                filter
+                filterBy="title"
+                virtualScrollerOptions={{
+                  lazy: true,
+                  onLazyLoad: () => {},
+                  itemSize: 50,
+                  showLoader: true,
+                  loading: maps?.length === 0,
+                  delay: 0,
+                  loadingTemplate: (options) => {
+                    return (
+                      <div
+                        className="flex align-items-center p-2"
+                        style={{ height: "38px" }}
+                      ></div>
+                    );
+                  },
+                }}
+                itemTemplate={(item: MapProps) => (
+                  <ImgDropdownItem
+                    title={item.title}
+                    link={item.map_image?.link || ""}
+                  />
+                )}
+                value={eventData.map_id}
+                onChange={(e) =>
+                  setEventData(
+                    (prev) =>
+                      ({
+                        ...prev,
+                        map_id: e.value,
+                      } as TimelineEventUpdateType)
+                  )
+                }
+                options={maps?.filter((map) => !map.folder)}
+                optionLabel={"title"}
+                optionValue={"id"}
+              />
             </div>
           </TabPanel>
         </TabView>

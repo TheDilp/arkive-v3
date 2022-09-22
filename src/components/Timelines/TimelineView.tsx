@@ -143,15 +143,13 @@ export default function TimelineView({ public_view }: Props) {
       } else {
         return TimelineEventDateSort(a, b);
       }
+    } else if (ageA && !ageB) {
+      return -1;
+    } else if (!ageA && ageB) {
+      return 1;
     } else {
       return TimelineEventDateSort(a, b);
     }
-    // else if ((a.age === undefined && b.age === undefined)) {
-    //     return 0;
-    // }
-    // else {
-    //     return TimelineEventDateSort(a, b)
-    // }
   }
   useLayoutEffect(() => {
     if (timeline_id) {
