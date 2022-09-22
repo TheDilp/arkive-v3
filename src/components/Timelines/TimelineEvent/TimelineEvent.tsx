@@ -62,6 +62,9 @@ export default function TimelineEvent({
             ? "flex-row"
             : "flex-row-reverse"
         }`}
+        style={{
+          backgroundColor: timeline_ages?.color + "99",
+        }}
       >
         <div
           className={`w-20rem h-20rem simpleEventContentEven flex align-items-center ${

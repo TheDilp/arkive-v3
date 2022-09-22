@@ -1931,7 +1931,17 @@ export function useUpdateTimelineEvent(project_id: string) {
                   timeline.timeline_events = timeline.timeline_events.map(
                     (event) => {
                       if (event.id === updatedTimelineEvent.id) {
-                        return { ...event, ...updatedTimelineEvent };
+                        return {
+                          ...event,
+                          ...updatedTimelineEvent,
+                          timeline_ages: updatedTimelineEvent.timeline_age_id
+                            ? timeline.timeline_ages.find(
+                                (age) =>
+                                  age.id ===
+                                  updatedTimelineEvent.timeline_age_id
+                              )
+                            : undefined,
+                        };
                       }
                       return event;
                     }
