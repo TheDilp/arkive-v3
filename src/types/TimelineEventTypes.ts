@@ -59,6 +59,6 @@ export type TimelineEventUpdateType = {
   map_id?: string;
   age?: string;
   eventBgColor?: string;
-  styleType: "background" | "outline";
+  styleType?: "background" | "outline";
   public?: boolean;
 };

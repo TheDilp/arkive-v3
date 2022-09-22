@@ -4,9 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import {
   useGetDocumentData,
   useGetProjectData,
-  useGetTags
+  useGetTags,
 } from "../../../utils/customHooks";
-import { auth } from "../../../utils/supabaseUtils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import AlterNamesAutocomplete from "./AlterNamesAutocomplete";
 import CategoryAutocomplete from "./CategoryAutocomplete";
@@ -19,7 +18,6 @@ export default function PropertiesPanel() {
   const { data: categories, refetch: refetchAllTags } = useGetTags(
     project_id as string
   );
-  const user = auth.user();
   useEffect(() => {
     if (categories.length > 0) {
       setFilteredCategories(categories);
@@ -29,9 +27,11 @@ export default function PropertiesPanel() {
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   return (
     <div
-      className={`${isLaptop ? "w-3" : "w-2"
-        } surface-50 text-white align-items-start align-content-start Lato ${isTabletOrMobile ? "hidden" : "flex flex-wrap"
-        }`}
+      className={`${
+        isLaptop ? "w-3" : "w-2"
+      } surface-50 text-white align-items-start align-content-start Lato ${
+        isTabletOrMobile ? "hidden" : "flex flex-wrap"
+      }`}
       style={{
         height: "96.4vh",
       }}

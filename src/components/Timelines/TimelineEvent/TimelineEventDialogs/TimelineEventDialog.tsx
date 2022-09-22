@@ -1,39 +1,38 @@
+import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
+import { confirmDialog } from "primereact/confirmdialog";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { useContext, useState } from "react";
+import { InputTextarea } from "primereact/inputtextarea";
 import { Tooltip } from "primereact/tooltip";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { DocumentProps, ImageProps } from "../../../../custom-types";
+import { v4 as uuid } from "uuid";
+import { DocumentProps } from "../../../../custom-types";
+import { MapProps } from "../../../../types/MapTypes";
 import { TimelineEventUpdateType } from "../../../../types/TimelineEventTypes";
 import { ColorPresets } from "../../../../utils/boardUtils";
 import {
   useCreateTimelineEvent,
   useDeleteTimelineEvent,
   useGetDocuments,
-  useGetImages,
   useGetMaps,
   useUpdateTimelineEvent,
 } from "../../../../utils/customHooks";
+import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
 import { toastWarn } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
-import { MapProps } from "../../../../types/MapTypes";
-import { v4 as uuid } from "uuid";
-import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
-import { InputTextarea } from "primereact/inputtextarea";
-import { confirmDialog } from "primereact/confirmdialog";
 
 export default function TimelineEventDialog() {
   const { showDialog, setShowDialog, eventData, setEventData } =
     useContext(TimelineEventContext);
   const { project_id, timeline_id } = useParams();
   const { data: docs } = useGetDocuments(project_id as string);
-  const images = useGetImages(project_id as string);
   const createTimelineEventMutation = useCreateTimelineEvent(
     project_id as string
   );
@@ -41,6 +40,7 @@ export default function TimelineEventDialog() {
     project_id as string
   );
   const deleteTimelineEventMutation = useDeleteTimelineEvent();
+
   const { data: maps } = useGetMaps(project_id as string);
   const [closeOnDone, setCloseOnDone] = useState(true);
 
@@ -168,7 +168,55 @@ export default function TimelineEventDialog() {
               optionValue={"id"}
             />
           </div>
-
+          <div className="w-full">
+            <AutoComplete
+              inputClassName="Lato border-noround"
+              value={currentDoc.categories}
+              suggestions={filteredCategories}
+              placeholder={
+                currentDoc.categories.length > 0
+                  ? ""
+                  : "Enter tags for this document"
+              }
+              completeMethod={(e) =>
+                searchCategory(e, categories || [], setFilteredCategories)
+              }
+              multiple
+              onSelect={(e) => {
+                if (!currentDoc.categories.includes(e.value)) {
+                  updateCategoriesMutation.mutate({
+                    doc_id: currentDoc.id,
+                    categories: [...currentDoc.categories, e.value],
+                  });
+                }
+              }}
+              onUnselect={(e) => {
+                if (currentDoc.categories.includes(e.value)) {
+                  updateCategoriesMutation.mutate({
+                    doc_id: currentDoc.id,
+                    categories: currentDoc.categories.filter(
+                      (category) => category !== e.value
+                    ),
+                  });
+                }
+              }}
+              onKeyPress={async (e) => {
+                // For adding completely new tags
+                if (e.key === "Enter" && e.currentTarget.value !== "") {
+                  if (!currentDoc.categories.includes(e.currentTarget.value)) {
+                    updateCategoriesMutation.mutate({
+                      doc_id: currentDoc.id,
+                      categories: [
+                        ...currentDoc.categories,
+                        e.currentTarget.value,
+                      ],
+                    });
+                  }
+                  e.currentTarget.value = "";
+                }
+              }}
+            />
+          </div>
           {/* Map link dropdown */}
           <div className="w-full">
             <Dropdown

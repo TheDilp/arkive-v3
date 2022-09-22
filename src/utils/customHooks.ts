@@ -74,6 +74,7 @@ import {
   getSingleBoard,
   getSingleMap,
   getTags,
+  getTimelineAges,
   renameImage,
   sortBoardsChildren,
   sortDocumentsChildren,
@@ -1989,6 +1990,18 @@ export function useDeleteTimelineEvent() {
       },
     }
   );
+}
+
+export function useGetTimelineAges(timeline_id: string) {
+  const { data, refetch }: { data: string[][] | undefined; refetch: any } =
+    useQuery(
+      `timelineAges-${timeline_id}`,
+      async () => await getTimelineAges(timeline_id),
+      {
+        staleTime: 5 * 60 * 1000,
+      }
+    );
+  return { data: data?.[0] || [], refetch };
 }
 
 // Custom hook for copy-pasting nodes and edges in a board

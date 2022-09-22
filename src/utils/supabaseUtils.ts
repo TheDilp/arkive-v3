@@ -122,6 +122,16 @@ export const getTags = async (project_id: string) => {
     throw new Error(error.message);
   }
 };
+export const getTimelineAges = async (timeline_id: string) => {
+  const { data, error } = await supabase.rpc("get_timeline_ages", {
+    p_id: timeline_id,
+  });
+  if (data) return data;
+  if (error) {
+    toastError("There was an error getting your timeline's ages.");
+    throw new Error(error.message);
+  }
+};
 export const getMaps = async (project_id: string) => {
   const { data, error } = await supabase
     .from<MapProps>("maps")
