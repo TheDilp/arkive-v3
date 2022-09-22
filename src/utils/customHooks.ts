@@ -38,7 +38,11 @@ import {
   TimelineType,
   TimelineUpdateType,
 } from "../types/TimelineTypes";
-import { createTimelineAge, updateTimelineAge } from "./CRUD/TimelineAgesCRUD";
+import {
+  createTimelineAge,
+  deleteTimelineAge,
+  updateTimelineAge,
+} from "./CRUD/TimelineAgesCRUD";
 import {
   createTimeline,
   deleteTimeline,
@@ -2079,6 +2083,46 @@ export function useUpdateTimelineAge(project_id: string) {
           context?.previousTimelines
         );
         toastError("There was an error updating this timeline event.");
+      },
+    }
+  );
+}
+export function useDeleteTimelineAge(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: { id: string; timeline_id: string }) => {
+      await deleteTimelineAge(vars);
+    },
+    {
+      onMutate: async (deletedTimelineAge) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let temp = oldData.map((timeline) => {
+                if (timeline.id === deletedTimelineAge.timeline_id) {
+                  timeline.timeline_ages = timeline.timeline_ages.filter(
+                    (event) => event.id !== deletedTimelineAge.id
+                  );
+                }
+                return timeline;
+              });
+              return temp;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, deletedTimeline, context) => {
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          context?.previousTimelines
+        );
       },
     }
   );

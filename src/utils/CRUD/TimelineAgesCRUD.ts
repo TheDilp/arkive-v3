@@ -18,7 +18,7 @@ export const createTimelineAge = async (
       });
     if (data) return data;
     if (error) {
-      toastError("There was an error updating your timeline event.");
+      toastError("There was an error updating your timeline age.");
       throw new Error(error.message);
     }
   }
@@ -36,7 +36,7 @@ export const updateTimelineAge = async (
       .eq("id", UpdateTimelineAgeProps.id);
     if (data) return data;
     if (error) {
-      toastError("There was an error updating your timeline event.");
+      toastError("There was an error updating your timeline age.");
       throw new Error(error.message);
     }
   }
@@ -45,7 +45,6 @@ export const deleteTimelineAge = async ({
   id,
 }: {
   id: string;
-  project_id: string;
   timeline_id: string;
 }) => {
   let user = auth.user();
@@ -56,7 +55,7 @@ export const deleteTimelineAge = async ({
       .eq("id", id);
 
     if (error) {
-      toastError("There was an error updating your timeline event.");
+      toastError("There was an error updating your timeline age.");
       throw new Error(error.message);
     }
   }

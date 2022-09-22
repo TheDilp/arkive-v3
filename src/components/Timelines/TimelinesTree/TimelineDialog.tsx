@@ -15,19 +15,17 @@ import {
   useUpdateTimeline,
   useUpdateTimelineAge,
   useSortTimelineAges,
+  useDeleteTimelineAge,
 } from "../../../utils/customHooks";
 import { TimelineItemDisplayDialogDefault } from "../../../utils/defaultValues";
 import { SelectButton } from "primereact/selectbutton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { v4 as uuid } from "uuid";
 import { DataTable } from "primereact/datatable";
-import {
-  Column,
-  ColumnEditorOptions,
-  ColumnEditorType,
-} from "primereact/column";
+import { Column, ColumnEditorOptions } from "primereact/column";
 import { ColorPicker } from "primereact/colorpicker";
 import { TimelineAgeType } from "../../../types/TimelineAgeTypes";
+import { confirmDialog } from "primereact/confirmdialog";
 
 type Props = {
   eventData: TimelineItemDisplayDialogProps;
@@ -44,6 +42,7 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
   const updateTimelineMutation = useUpdateTimeline();
   const createTimelineAgeMutation = useCreateTimelineAge(project_id as string);
   const updateTimelineAgeMutation = useUpdateTimelineAge(project_id as string);
+  const deleteTimelineAgeMutation = useDeleteTimelineAge(project_id as string);
   const sortTimelineAgesMutation = useSortTimelineAges();
   function recursiveDescendantRemove(
     timeline: TimelineType,
@@ -78,12 +77,37 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
       </div>
     );
   };
+  const deleteTemplate = (rowData: TimelineAgeType) => {
+    return (
+      <div className="w-3rem">
+        <Button
+          className="p-button-danger p-button-outlined p-button-rounded"
+          icon="pi pi-fw pi-trash"
+          iconPos="right"
+          onClick={() => {
+            confirmDialog({
+              message: `Are you sure you want to delete ${rowData.title}?`,
+              header: `Deleting ${rowData.title}`,
+              icon: "pi pi-exclamation-triangle",
+              acceptClassName: "p-button-danger",
+              accept: () => {
+                deleteTimelineAgeMutation.mutate({
+                  id: rowData.id,
+                  timeline_id: rowData.timeline_id,
+                });
+              },
+            });
+          }}
+        />
+      </div>
+    );
+  };
 
   const textEditor = (options: ColumnEditorOptions) => {
     return (
       <InputText
         type="text"
-        className="w-12"
+        className="w-12rem"
         value={options.value}
         onChange={(e) => {
           if (options.editorCallback) options.editorCallback(e.target.value);
@@ -95,7 +119,7 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
     return (
       <div className="flex align-items-center justify-content-between w-full">
         <InputText
-          className="w-12"
+          className="w-6rem mr-2"
           value={options.value}
           onChange={(e) => {
             if (options.editorCallback) options.editorCallback(e.target.value);
@@ -255,7 +279,7 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
                 title: "New Age",
                 timeline_id: eventData.id,
                 color: "#121212",
-                sort: 0,
+                sort: currentTimeline?.timeline_ages.length || 0,
               })
             }
           ></Button>
@@ -286,11 +310,8 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
               editor={(options) => colorEditor(options)}
               body={colorTemplate}
             ></Column>
-            <Column
-              rowEditor
-              headerStyle={{ width: "10%", minWidth: "8rem" }}
-              bodyStyle={{ textAlign: "center" }}
-            ></Column>
+            <Column rowEditor className="flex justify-content-center"></Column>
+            <Column body={deleteTemplate}></Column>
           </DataTable>
         </TabPanel>
       </TabView>
