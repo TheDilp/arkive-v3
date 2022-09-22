@@ -106,6 +106,15 @@ export const DocumentCreateDefault = {
   categories: [],
 };
 
+export const TimelineCreateDefault = {
+  expanded: false,
+  public: false,
+  timeline_events: [],
+  timeline_ages: [],
+  defaultDetails: "detailed" as const,
+  defaultOrientation: "horizontal" as const,
+};
+
 export const TimelineEventCreateDefault = {
   id: "",
   timeline_id: "",

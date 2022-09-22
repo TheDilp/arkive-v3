@@ -1,3 +1,4 @@
+import { TimelineAgeType } from "./TimelineAgeTypes";
 import { TimelineEventType } from "./TimelineEventTypes";
 
 export type TimelineType = {
@@ -9,6 +10,7 @@ export type TimelineType = {
   sort: number;
   public: boolean;
   timeline_events: TimelineEventType[];
+  timeline_ages: TimelineAgeType[];
   defaultOrientation: "horizontal" | "vertical";
   defaultDetails: "detailed" | "simple";
   parent: { id: string; title: string } | null;

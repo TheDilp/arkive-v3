@@ -25,6 +25,7 @@ import {
   UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
+import { TimelineAgeCreateType } from "../types/TimelineAgeTypes";
 import {
   TimelineEventCreateType,
   TimelineEventUpdateType,
@@ -34,6 +35,7 @@ import {
   TimelineType,
   TimelineUpdateType,
 } from "../types/TimelineTypes";
+import { createTimelineAge } from "./CRUD/TimelineAgesCRUD";
 import {
   createTimeline,
   deleteTimeline,
@@ -45,6 +47,7 @@ import {
   deleteTimelineEvent,
   updateTimelineEvent,
 } from "./CRUD/TimelineEventsCRUD";
+import { TimelineCreateDefault } from "./defaultValues";
 import {
   createBoard,
   createDocument,
@@ -1723,6 +1726,7 @@ export function useCreateTimeline() {
               let newData: TimelineType[] = [
                 ...oldData,
                 {
+                  ...TimelineCreateDefault,
                   ...newTimeline,
                   // @ts-ignore
                   parent:
@@ -1730,12 +1734,7 @@ export function useCreateTimeline() {
                       ? { id: parent?.id, title: parent?.title }
                       : null,
 
-                  expanded: false,
-                  public: false,
                   sort: oldData.length,
-                  timeline_events: [],
-                  defaultDetails: "detailed",
-                  defaultOrientation: "horizontal",
                 },
               ];
               return newData;
@@ -1986,6 +1985,51 @@ export function useDeleteTimelineEvent() {
           `${deletedTimeline.project_id}-timelines`,
           context?.previousTimelines
         );
+      },
+    }
+  );
+}
+
+export function useCreateTimelineAge(project_id: string) {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: TimelineAgeCreateType) => {
+      await createTimelineAge({ ...vars });
+    },
+    {
+      onMutate: async (newTimelineAge) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${project_id}-timelines`
+        );
+
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          //   @ts-ignore
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newData: TimelineType[] = oldData.map((timeline) => {
+                if (timeline.id === newTimelineAge.timeline_id) {
+                  timeline.timeline_ages = [
+                    ...timeline.timeline_ages,
+                    newTimelineAge,
+                  ];
+                }
+                return timeline;
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, newTimeline, context) => {
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error creating this timeline event.");
       },
     }
   );

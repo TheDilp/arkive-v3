@@ -1,4 +1,3 @@
-import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
@@ -8,6 +7,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
+import { TabPanel, TabView } from "primereact/tabview";
 import { Tooltip } from "primereact/tooltip";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -16,7 +16,6 @@ import { DocumentProps } from "../../../../custom-types";
 import { MapProps } from "../../../../types/MapTypes";
 import { TimelineEventUpdateType } from "../../../../types/TimelineEventTypes";
 import { ColorPresets } from "../../../../utils/boardUtils";
-import { DataTable } from "primereact/datatable";
 import {
   useCreateTimelineEvent,
   useDeleteTimelineEvent,
@@ -25,10 +24,9 @@ import {
   useUpdateTimelineEvent,
 } from "../../../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
-import { searchCategory, toastWarn } from "../../../../utils/utils";
+import { toastWarn } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
-import { TabView, TabPanel } from "primereact/tabview";
 export default function TimelineEventDialog() {
   const { showDialog, setShowDialog, eventData, setEventData } =
     useContext(TimelineEventContext);
@@ -87,7 +85,7 @@ export default function TimelineEventDialog() {
     >
       {eventData && (
         <TabView>
-          <TabPanel header="Timeline Info">
+          <TabPanel header="Timeline Event Data">
             <div className="flex flex-wrap justify-content-center">
               <div className="w-full">
                 <InputText
@@ -591,7 +589,6 @@ export default function TimelineEventDialog() {
               </div>
             </div>
           </TabPanel>
-          <TabPanel header="Ages"></TabPanel>
         </TabView>
       )}
     </Dialog>
