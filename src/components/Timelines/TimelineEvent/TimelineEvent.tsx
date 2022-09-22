@@ -62,14 +62,6 @@ export default function TimelineEvent({
             ? "flex-row"
             : "flex-row-reverse"
         }`}
-        style={{
-          backgroundColor:
-            age === "Third"
-              ? "rgba(100, 200, 255, 0.5)"
-              : age === "PrePheagonEra"
-              ? "rgba(200, 100,100,1)"
-              : "",
-        }}
       >
         <div
           className={`w-20rem h-20rem simpleEventContentEven flex align-items-center ${
@@ -112,10 +104,6 @@ export default function TimelineEvent({
                 age={age}
               />
             )}
-            onClick={() => {
-              // if (doc_id)
-              //     navigate(`../../../wiki/doc/${doc_id}`)
-            }}
           >
             <div className="w-full h-full flex justify-content-center">
               <p className="w-full text-center m-0">{description}</p>

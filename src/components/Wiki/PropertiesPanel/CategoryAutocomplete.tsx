@@ -2,7 +2,7 @@ import { AutoComplete } from "primereact/autocomplete";
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { DocumentProps, ProjectProps } from "../../../custom-types";
+import { DocumentProps } from "../../../custom-types";
 import { useGetTags } from "../../../utils/customHooks";
 import { updateDocument } from "../../../utils/supabaseUtils";
 import { searchCategory } from "../../../utils/utils";

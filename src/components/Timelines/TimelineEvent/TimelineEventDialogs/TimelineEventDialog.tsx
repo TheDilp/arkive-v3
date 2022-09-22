@@ -21,10 +21,11 @@ import {
   useDeleteTimelineEvent,
   useGetDocuments,
   useGetMaps,
+  useGetTimelineAges,
   useUpdateTimelineEvent,
 } from "../../../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
-import { toastWarn } from "../../../../utils/utils";
+import { searchCategory, toastWarn } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 
@@ -32,7 +33,7 @@ export default function TimelineEventDialog() {
   const { showDialog, setShowDialog, eventData, setEventData } =
     useContext(TimelineEventContext);
   const { project_id, timeline_id } = useParams();
-  const { data: docs } = useGetDocuments(project_id as string);
+
   const createTimelineEventMutation = useCreateTimelineEvent(
     project_id as string
   );
@@ -41,9 +42,11 @@ export default function TimelineEventDialog() {
   );
   const deleteTimelineEventMutation = useDeleteTimelineEvent();
 
+  const { data: docs } = useGetDocuments(project_id as string);
   const { data: maps } = useGetMaps(project_id as string);
+  const { data: ages } = useGetTimelineAges(timeline_id as string);
   const [closeOnDone, setCloseOnDone] = useState(true);
-
+  const [filteredAges, setFilteredAges] = useState<string[]>([]);
   const confirmdelete = () => {
     confirmDialog({
       message: (
@@ -171,47 +174,51 @@ export default function TimelineEventDialog() {
           <div className="w-full">
             <AutoComplete
               inputClassName="Lato border-noround"
-              value={currentDoc.categories}
-              suggestions={filteredCategories}
+              value={eventData.age}
+              suggestions={filteredAges}
+              onChange={(e) =>
+                setEventData(
+                  (prev) =>
+                    ({
+                      ...prev,
+                      age: e.value,
+                    } as TimelineEventUpdateType)
+                )
+              }
               placeholder={
-                currentDoc.categories.length > 0
-                  ? ""
-                  : "Enter tags for this document"
+                ages.length > 0 ? "" : "Enter an age for this document"
               }
               completeMethod={(e) =>
-                searchCategory(e, categories || [], setFilteredCategories)
+                searchCategory(e, ages || [], setFilteredAges)
               }
-              multiple
               onSelect={(e) => {
-                if (!currentDoc.categories.includes(e.value)) {
-                  updateCategoriesMutation.mutate({
-                    doc_id: currentDoc.id,
-                    categories: [...currentDoc.categories, e.value],
-                  });
-                }
+                setEventData(
+                  (prev) =>
+                    ({
+                      ...prev,
+                      age: e.value,
+                    } as TimelineEventUpdateType)
+                );
               }}
               onUnselect={(e) => {
-                if (currentDoc.categories.includes(e.value)) {
-                  updateCategoriesMutation.mutate({
-                    doc_id: currentDoc.id,
-                    categories: currentDoc.categories.filter(
-                      (category) => category !== e.value
-                    ),
-                  });
-                }
+                setEventData(
+                  (prev) =>
+                    ({
+                      ...prev,
+                      age: undefined,
+                    } as TimelineEventUpdateType)
+                );
               }}
               onKeyPress={async (e) => {
                 // For adding completely new tags
                 if (e.key === "Enter" && e.currentTarget.value !== "") {
-                  if (!currentDoc.categories.includes(e.currentTarget.value)) {
-                    updateCategoriesMutation.mutate({
-                      doc_id: currentDoc.id,
-                      categories: [
-                        ...currentDoc.categories,
-                        e.currentTarget.value,
-                      ],
-                    });
-                  }
+                  setEventData(
+                    (prev) =>
+                      ({
+                        ...prev,
+                        age: e.currentTarget.value,
+                      } as TimelineEventUpdateType)
+                  );
                   e.currentTarget.value = "";
                 }
               }}

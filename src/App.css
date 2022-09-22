@@ -36,7 +36,6 @@ body {
   padding: 0 !important;
 }
 
-
 /* .remirror-table-controller-trigger-area {
   pointer-events: none !important;
 } */
@@ -45,7 +44,6 @@ body {
 .remirror-table-controller-mark-row-corner {
   display: none !important;
 } */
-
 
 .wikiTabs .p-tabview-nav li {
   width: 100%;
@@ -61,7 +59,7 @@ body {
   text-align: center !important;
 }
 
-.alterNamesChips>* {
+.alterNamesChips > * {
   min-width: 100%;
 }
 
@@ -133,14 +131,6 @@ body {
 .simpleTimelineEvent:nth-child(odd) .simpleEventContentEe * {
   display: none;
 }
-.linkTimelineEventCard {
-  transition: all 0.25s ease;
-
-}
-.linkTimelineEventCard:hover {
-  transition: all 0.25s ease;
-  transform: scale(1.05);
-}
 
 .timelineCardTitle i {
   display: none;
@@ -151,20 +141,26 @@ body {
   cursor: pointer;
 }
 
-.p-timeline.simpleTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
+.p-timeline.simpleTimeline.horizontalTimeline
+  .p-timeline-event:nth-child(even) {
   height: 7.5rem;
 }
-.p-timeline.simpleTimeline.horizontalTimeline .p-timeline-event{
+.p-timeline.simpleTimeline.horizontalTimeline .p-timeline-event {
   min-width: 10rem;
 }
-.p-timeline.detailedTimeline.horizontalTimeline .p-timeline-event:nth-child(even) {
+.p-timeline.detailedTimeline.horizontalTimeline
+  .p-timeline-event:nth-child(even) {
   margin-top: -20rem;
 }
 
-.p-timeline.detailedTimeline.horizontalTimeline  .p-timeline-event:nth-child(odd) .timelineEventCardContainer {
+.p-timeline.detailedTimeline.horizontalTimeline
+  .p-timeline-event:nth-child(odd)
+  .timelineEventCardContainer {
   align-items: flex-start;
 }
-.p-timeline.detailedTimeline.horizontalTimeline  .p-timeline-event:nth-child(even) .timelineEventCardContainer {
+.p-timeline.detailedTimeline.horizontalTimeline
+  .p-timeline-event:nth-child(even)
+  .timelineEventCardContainer {
   align-items: flex-end;
 }
 
@@ -177,13 +173,14 @@ body {
   min-height: 10rem;
 }
 
-.p-timeline.detailedTimeline.verticalTimeline .p-timeline-event:nth-child(even) .p-timeline-event-content {
+.p-timeline.detailedTimeline.verticalTimeline
+  .p-timeline-event:nth-child(even)
+  .p-timeline-event-content {
   display: flex;
   justify-content: flex-end;
 }
 
-
-.leaflet-control-layers-overlays label>* {
+.leaflet-control-layers-overlays label > * {
   user-select: none;
   cursor: pointer;
 }
@@ -199,7 +196,6 @@ body {
 
 .markerSidebarMapPreview {
   transition: transform ease-in-out 0.1s;
-
 }
 
 .markerSidebarMapPreview:hover {

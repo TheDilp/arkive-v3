@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
 import { TimelineEventType } from "../../types/TimelineEventTypes";
 import {
-  useGetTimelineAges,
   useGetTimelineData,
   useUpdateTimelineEvent,
 } from "../../utils/customHooks";
@@ -38,7 +37,7 @@ export default function TimelineView({ public_view }: Props) {
   const updateTimelineEventMutation = useUpdateTimelineEvent(
     project_id as string
   );
-  const { data: ages } = useGetTimelineAges(timeline_id as string);
+
   const [view, setView] = useState({
     details: timelineData?.defaultDetails || "detailed",
     horizontal: timelineData?.defaultOrientation || "horizontal",
@@ -125,7 +124,6 @@ export default function TimelineView({ public_view }: Props) {
     }
     return 0;
   }
-
   // First sort by age and then by date if needed
   function TimelineEventsSort(
     a: TimelineEventType,
