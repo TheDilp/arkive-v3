@@ -271,7 +271,7 @@ export default function TimelineView({ public_view }: Props) {
                     {rowVirtualizer.virtualItems.map((virtualItem) => (
                       <div
                         key={virtualItem.key}
-                        className="flex justify-content-center align-items-start"
+                        className="flex justify-content-center align-items-start "
                         style={{
                           position: "absolute",
                           top: 0,

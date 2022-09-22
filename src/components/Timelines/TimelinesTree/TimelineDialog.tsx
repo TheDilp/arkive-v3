@@ -135,6 +135,14 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
               );
           }}
         />
+        <Button
+          className="p-button-rounded p-button-text ml-2"
+          tooltip="Reset"
+          icon="pi pi-undo"
+          onClick={(e) => {
+            if (options.editorCallback) options.editorCallback("#121212");
+          }}
+        ></Button>
       </div>
     );
   };

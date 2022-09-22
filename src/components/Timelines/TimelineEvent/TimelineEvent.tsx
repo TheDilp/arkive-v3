@@ -63,7 +63,7 @@ export default function TimelineEvent({
             : "flex-row-reverse"
         }`}
         style={{
-          backgroundColor: timeline_ages?.color + "99",
+          backgroundColor: timeline_ages?.color,
         }}
       >
         <div
