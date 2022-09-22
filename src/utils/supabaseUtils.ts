@@ -45,10 +45,7 @@ export const auth = supabase.auth;
 // Auth functions
 
 export const login = async (provider: "google" | "discord") => {
-  const { user, error } = await supabase.auth.signIn(
-    { provider },
-    { redirectTo: "http://localhost:5173" }
-  );
+  const { user, error } = await supabase.auth.signIn({ provider });
 
   if (user) {
     return user;
