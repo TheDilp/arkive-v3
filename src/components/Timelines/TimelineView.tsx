@@ -30,7 +30,7 @@ export default function TimelineView({ public_view }: Props) {
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
 
   const { setTimelineId } = useContext(TimelineContext);
-  const timelineData = useGetTimelineData(
+  const currentTimeline = useGetTimelineData(
     project_id as string,
     timeline_id as string
   );
@@ -39,8 +39,8 @@ export default function TimelineView({ public_view }: Props) {
   );
 
   const [view, setView] = useState({
-    details: timelineData?.defaultDetails || "detailed",
-    horizontal: timelineData?.defaultOrientation || "horizontal",
+    details: currentTimeline?.defaultDetails || "detailed",
+    horizontal: currentTimeline?.defaultOrientation || "horizontal",
   });
   const [iconSelect, setIconSelect] = useState<{
     id?: string;
@@ -129,10 +129,16 @@ export default function TimelineView({ public_view }: Props) {
     a: TimelineEventType,
     b: TimelineEventType
   ): number {
-    if (a.timeline_ages?.id && b.timeline_ages?.id) {
-      if (a.timeline_ages.sort > b.timeline_ages.sort) {
+    const ageA = currentTimeline?.timeline_ages.find(
+      (age) => age.id === a.timeline_age_id
+    );
+    const ageB = currentTimeline?.timeline_ages.find(
+      (age) => age.id === b.timeline_age_id
+    );
+    if (ageA && ageB) {
+      if (ageA.sort > ageB.sort) {
         return 1;
-      } else if (a.timeline_ages.sort < b.timeline_ages.sort) {
+      } else if (ageA.sort < ageB.sort) {
         return -1;
       } else {
         return TimelineEventDateSort(a, b);
@@ -154,23 +160,23 @@ export default function TimelineView({ public_view }: Props) {
   }, [timeline_id]);
 
   useLayoutEffect(() => {
-    if (timelineData?.timeline_events) {
-      let temp = timelineData.timeline_events.sort(TimelineEventsSort);
+    if (currentTimeline?.timeline_events) {
+      let temp = currentTimeline.timeline_events.sort(TimelineEventsSort);
       setSortedEvents(temp);
     }
     return () => {
       setSortedEvents([]);
     };
-  }, [timelineData?.timeline_events]);
+  }, [currentTimeline?.timeline_events]);
 
   useLayoutEffect(() => {
-    if (timelineData) {
+    if (currentTimeline) {
       setView({
-        horizontal: timelineData.defaultOrientation,
-        details: timelineData.defaultDetails,
+        horizontal: currentTimeline.defaultOrientation,
+        details: currentTimeline.defaultDetails,
       });
     }
-  }, [timelineData]);
+  }, [currentTimeline]);
 
   useEffect(() => {
     if (event_id && sortedEvents) {
@@ -254,6 +260,13 @@ export default function TimelineView({ public_view }: Props) {
                           eventData={sortedEvents[virtualItem.index]}
                           public_view={public_view}
                           setIconSelect={setIconSelect}
+                          timeline_age={
+                            currentTimeline?.timeline_ages.find(
+                              (age) =>
+                                age.id ===
+                                sortedEvents[virtualItem.index].timeline_age_id
+                            ) || undefined
+                          }
                           view={view}
                         />
                       </div>

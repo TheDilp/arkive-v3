@@ -16,6 +16,7 @@ export type TimelineEventType = {
   map_id?: string;
   image?: ImageProps;
   timeline_ages?: TimelineAgeType;
+  timeline_age_id?: string;
   eventBgColor: string;
   styleType: "background" | "outline";
   icon: string;

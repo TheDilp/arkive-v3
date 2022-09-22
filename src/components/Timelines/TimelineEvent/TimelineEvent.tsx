@@ -1,6 +1,7 @@
 import { Card } from "primereact/card";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { TimelineAgeType } from "../../../types/TimelineAgeTypes";
 import { TimelineEventType } from "../../../types/TimelineEventTypes";
 import { TimelineEventContext } from "../../Context/TimelineEventContext";
 import TimelineEventCardSubtitle from "./TimelineEventCard/TimelineEventCardSubtitle";
@@ -11,6 +12,7 @@ export default function TimelineEvent({
   eventData,
   public_view,
   setIconSelect,
+  timeline_age,
   view,
 }: {
   index: number;
@@ -24,6 +26,7 @@ export default function TimelineEvent({
       left: number;
     }>
   >;
+  timeline_age?: TimelineAgeType;
   view: {
     details: "detailed" | "simple";
     horizontal: "horizontal" | "vertical";
@@ -39,7 +42,6 @@ export default function TimelineEvent({
     end_day,
     end_month,
     end_year,
-    timeline_ages,
     doc_id,
     eventBgColor,
     styleType,
@@ -63,7 +65,7 @@ export default function TimelineEvent({
             : "flex-row-reverse"
         }`}
         style={{
-          backgroundColor: timeline_ages?.color,
+          backgroundColor: timeline_age?.color,
         }}
       >
         <div
@@ -104,7 +106,7 @@ export default function TimelineEvent({
                 end_day={end_day}
                 end_month={end_month}
                 end_year={end_year}
-                timeline_ages={timeline_ages}
+                timeline_age={timeline_age}
               />
             )}
           >

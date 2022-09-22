@@ -10,7 +10,7 @@ export const getTimelines = async (project_id: string) => {
   const { data, error } = await supabase
     .from<TimelineType>("timelines")
     .select(
-      "*,timeline_events(*, image (id, title, link), timeline_ages(title,sort,color)), parent(id, title), timeline_ages!timeline_ages_timeline_id_fkey(*)"
+      "*,timeline_events(*, image (id, title, link)), parent(id, title), timeline_ages!timeline_ages_timeline_id_fkey(*)"
     )
     .eq("project_id", project_id)
     .order("sort", { foreignTable: "timeline_ages" });
