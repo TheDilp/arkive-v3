@@ -1,5 +1,3 @@
-import { ImageProps } from "../custom-types";
-
 export type TimelineAgeType = {
   id: string;
   title: string;
@@ -18,6 +16,7 @@ export type TimelineAgeCreateType = {
 
 export type TimelineAgeUpdateType = {
   id: string;
+  timeline_id: string;
   title?: string;
   color?: string;
   sort?: number;

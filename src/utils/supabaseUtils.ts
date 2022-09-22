@@ -382,6 +382,16 @@ export const sortTimelinesChildren = async (indexes: SortIndexes) => {
     payload: indexes,
   });
 };
+export const sortTimelineAges = async (
+  indexes: {
+    id: string;
+    sort: number;
+  }[]
+) => {
+  await supabase.rpc("sort_timeline_ages", {
+    payload: indexes,
+  });
+};
 
 export const updateDocument = async (
   DocumentUpdateProps: DocumentUpdateProps

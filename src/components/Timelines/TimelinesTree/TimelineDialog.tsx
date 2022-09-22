@@ -13,14 +13,21 @@ import {
   useGetTimelines,
   useGetTimelineData,
   useUpdateTimeline,
+  useUpdateTimelineAge,
+  useSortTimelineAges,
 } from "../../../utils/customHooks";
 import { TimelineItemDisplayDialogDefault } from "../../../utils/defaultValues";
 import { SelectButton } from "primereact/selectbutton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { v4 as uuid } from "uuid";
 import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import {
+  Column,
+  ColumnEditorOptions,
+  ColumnEditorType,
+} from "primereact/column";
 import { ColorPicker } from "primereact/colorpicker";
+import { TimelineAgeType } from "../../../types/TimelineAgeTypes";
 
 type Props = {
   eventData: TimelineItemDisplayDialogProps;
@@ -36,6 +43,8 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
   );
   const updateTimelineMutation = useUpdateTimeline();
   const createTimelineAgeMutation = useCreateTimelineAge(project_id as string);
+  const updateTimelineAgeMutation = useUpdateTimelineAge(project_id as string);
+  const sortTimelineAgesMutation = useSortTimelineAges();
   function recursiveDescendantRemove(
     timeline: TimelineType,
     index: number,
@@ -57,26 +66,54 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
       }
     }
   }
-  const textEditor = (options: any) => {
+  const textEditor = (options: ColumnEditorOptions) => {
     return (
       <InputText
         type="text"
+        className="w-12"
         value={options.value}
-        onChange={(e) => options.editorCallback(e.target.value)}
+        onChange={(e) => {
+          if (options.editorCallback) options.editorCallback(e.target.value);
+        }}
       />
     );
   };
-  const colorEditor = (options: any) => {
+  const colorEditor = (options: ColumnEditorOptions) => {
     return (
-      <ColorPicker
-        value={options.value}
-        onChange={(e) => options.editorCallback(e.target.value)}
-      />
+      <div className="flex align-items-center justify-content-evenly">
+        <InputText
+          className="w-6"
+          value={options.value}
+          onChange={(e) => {
+            if (options.editorCallback) options.editorCallback(e.target.value);
+          }}
+        />
+        <ColorPicker
+          className="w-min"
+          value={options.value}
+          onChange={(e) => {
+            if (options.editorCallback) options.editorCallback(e.target.value);
+          }}
+        />
+      </div>
     );
+  };
+  const onRowReorder = (e: any) => {
+    const indexes: { id: string; sort: number }[] = e.value.map(
+      (age: TimelineAgeType, index: number) => ({
+        id: age.id,
+        sort: index,
+      })
+    );
+    sortTimelineAgesMutation.mutate({
+      project_id: project_id as string,
+      timeline_id: eventData.id,
+      indexes,
+    });
   };
   return (
     <Dialog
-      className="w-3"
+      className="w-4"
       style={{
         height: "30rem",
       }}
@@ -207,8 +244,13 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
             }
           ></Button>
           <DataTable
-            value={currentTimeline?.timeline_ages || []}
+            value={
+              currentTimeline?.timeline_ages.sort((a, b) => a.sort - b.sort) ||
+              []
+            }
             reorderableRows
+            onRowReorder={onRowReorder}
+            editMode="row"
           >
             <Column rowReorder></Column>
             <Column
@@ -218,6 +260,11 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
             <Column
               field="color"
               editor={(options) => colorEditor(options)}
+            ></Column>
+            <Column
+              rowEditor
+              headerStyle={{ width: "10%", minWidth: "8rem" }}
+              bodyStyle={{ textAlign: "center" }}
             ></Column>
           </DataTable>
         </TabPanel>

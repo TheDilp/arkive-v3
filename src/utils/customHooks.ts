@@ -25,7 +25,10 @@ import {
   UpdateMapLayerProps,
   UpdateMapMarkerProps,
 } from "../types/MapTypes";
-import { TimelineAgeCreateType } from "../types/TimelineAgeTypes";
+import {
+  TimelineAgeCreateType,
+  TimelineAgeUpdateType,
+} from "../types/TimelineAgeTypes";
 import {
   TimelineEventCreateType,
   TimelineEventUpdateType,
@@ -35,7 +38,7 @@ import {
   TimelineType,
   TimelineUpdateType,
 } from "../types/TimelineTypes";
-import { createTimelineAge } from "./CRUD/TimelineAgesCRUD";
+import { createTimelineAge, updateTimelineAge } from "./CRUD/TimelineAgesCRUD";
 import {
   createTimeline,
   deleteTimeline,
@@ -81,6 +84,7 @@ import {
   sortBoardsChildren,
   sortDocumentsChildren,
   sortMapsChildren,
+  sortTimelineAges,
   sortTimelinesChildren,
   updateBoard,
   updateDocument,
@@ -328,7 +332,6 @@ export function useSortChildren() {
 
               for (const item of newData.indexes) {
                 const index = oldData.findIndex((doc) => doc.id === item.id);
-                console.log(index, oldData);
                 if (index !== -1) {
                   let newParent = oldData.find((doc) => doc.id === item.parent);
                   sortedData[index] = {
@@ -359,6 +362,7 @@ export function useSortChildren() {
     }
   );
 }
+
 // Custom hook for deleting a document
 export function useDeleteDocument(project_id: string) {
   const queryClient = useQueryClient();
@@ -2030,6 +2034,102 @@ export function useCreateTimelineAge(project_id: string) {
           context?.previousTimelines
         );
         toastError("There was an error creating this timeline event.");
+      },
+    }
+  );
+}
+export function useUpdateTimelineAge(project_id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (vars: TimelineAgeUpdateType) => {
+      await updateTimelineAge(vars);
+    },
+    {
+      onMutate: async (updatedTimelineAge) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              let newData = oldData.map((timeline) => {
+                if (timeline.id === updatedTimelineAge.timeline_id) {
+                  timeline.timeline_ages = timeline.timeline_ages.map((age) => {
+                    if (age.id === updatedTimelineAge.id) {
+                      return { ...age, ...updatedTimelineAge };
+                    }
+                    return age;
+                  });
+                }
+                return timeline;
+              });
+              return newData;
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, updatedTimelineEvent, context) => {
+        queryClient.setQueryData(
+          `${project_id}-timelines`,
+          context?.previousTimelines
+        );
+        toastError("There was an error updating this timeline event.");
+      },
+    }
+  );
+}
+export function useSortTimelineAges() {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (vars: {
+      project_id: string;
+      timeline_id: string;
+      indexes: { id: string; sort: number }[];
+    }) => {
+      sortTimelineAges(vars.indexes);
+    },
+    {
+      onMutate: async (newData) => {
+        const previousTimelines = queryClient.getQueryData(
+          `${newData.project_id}-timelines`
+        );
+        queryClient.setQueryData(
+          `${newData.project_id}-timelines`,
+          (oldData: TimelineType[] | undefined) => {
+            if (oldData) {
+              return oldData.map((timeline) => {
+                if (timeline.id === newData.timeline_id) {
+                  // Find the index of the age
+                  for (const updatedAge of newData.indexes) {
+                    let ageIdx = timeline.timeline_ages.findIndex(
+                      (age) => age.id === updatedAge.id
+                    );
+                    // If index is found update the age's sort to the new sort
+                    if (ageIdx !== -1) {
+                      timeline.timeline_ages[ageIdx].sort = updatedAge.sort;
+                    }
+                  }
+                }
+
+                return timeline;
+              });
+            } else {
+              return [];
+            }
+          }
+        );
+        return { previousTimelines };
+      },
+      onError: (err, newData, context) => {
+        queryClient.setQueryData(
+          `${newData.project_id}-timelines}`,
+          context?.previousTimelines
+        );
       },
     }
   );
