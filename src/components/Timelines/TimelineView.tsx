@@ -282,7 +282,7 @@ export default function TimelineView({ public_view }: Props) {
                     {rowVirtualizer.virtualItems.map((virtualItem) => (
                       <div
                         key={virtualItem.key}
-                        className="flex justify-content-center align-items-start "
+                        className="flex justify-content-center align-items-start"
                         style={{
                           position: "absolute",
                           top: 0,
@@ -297,6 +297,13 @@ export default function TimelineView({ public_view }: Props) {
                           eventData={sortedEvents[virtualItem.index]}
                           public_view={public_view}
                           setIconSelect={setIconSelect}
+                          timeline_age={
+                            currentTimeline?.timeline_ages.find(
+                              (age) =>
+                                age.id ===
+                                sortedEvents[virtualItem.index].timeline_age_id
+                            ) || undefined
+                          }
                           view={view}
                         />
                       </div>

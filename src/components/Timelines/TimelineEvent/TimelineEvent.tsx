@@ -54,7 +54,7 @@ export default function TimelineEvent({
   if (view.details === "detailed")
     return (
       <div
-        className={`flex justify-content-center py-2 ${
+        className={`flex justify-content-center ${
           doc_id ? "cursor-pointer" : ""
         } ${
           view.horizontal === "horizontal"
@@ -163,6 +163,9 @@ export default function TimelineEvent({
           ? "flex-row"
           : "flex-row-reverse"
       }`}
+      style={{
+        backgroundColor: timeline_age?.color,
+      }}
       onClick={() => {
         if (doc_id && !public_view) navigate(`../../../wiki/doc/${doc_id}`);
       }}
@@ -179,7 +182,7 @@ export default function TimelineEvent({
         <h4 className="m-0 white-space-nowrap overflow-hidden text-overflow-ellipsis text-center Merriweather">
           {title}
         </h4>
-        <p className="m-0 text-center Lato text-gray-500 font-bold simpleEventDate">
+        <p className="m-0 text-sm text-white text-center Lato font-bold simpleEventDate">
           {start_day ? start_day + "/" : ""}
           {start_month ? start_month + "/" : ""}
           {start_year} - {end_day ? end_day + "/" : ""}
