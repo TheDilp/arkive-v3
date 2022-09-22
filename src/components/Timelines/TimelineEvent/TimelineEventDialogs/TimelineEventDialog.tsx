@@ -1,3 +1,4 @@
+import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
@@ -21,6 +22,7 @@ import {
   useDeleteTimelineEvent,
   useGetDocuments,
   useGetMaps,
+  useGetTimelineData,
   useUpdateTimelineEvent,
 } from "../../../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
@@ -44,6 +46,10 @@ export default function TimelineEventDialog() {
   const { data: maps } = useGetMaps(project_id as string);
   const [closeOnDone, setCloseOnDone] = useState(true);
   const [filteredAges, setFilteredAges] = useState<string[]>([]);
+  const currentTimeline = useGetTimelineData(
+    project_id as string,
+    timeline_id as string
+  );
   const confirmdelete = () => {
     confirmDialog({
       message: (
@@ -177,57 +183,25 @@ export default function TimelineEventDialog() {
                 />
               </div>
               <div className="w-full">
-                {/* <AutoComplete
-                  inputClassName="Lato border-noround"
-                  value={eventData.age}
-                  suggestions={filteredAges}
-                  onChange={(e) =>
+                <Dropdown
+                  className="w-full"
+                  placeholder="Set Age"
+                  filter
+                  filterBy="title"
+                  value={eventData.timeline_age_id}
+                  onChange={(e) => {
                     setEventData(
                       (prev) =>
                         ({
                           ...prev,
-                          age: e.value,
-                        } as TimelineEventUpdateType)
-                    )
-                  }
-                  placeholder={
-                    ages.length > 0 ? "" : "Enter an age for this document"
-                  }
-                  completeMethod={(e) =>
-                    searchCategory(e, ages || [], setFilteredAges)
-                  }
-                  onSelect={(e) => {
-                    setEventData(
-                      (prev) =>
-                        ({
-                          ...prev,
-                          age: e.value,
+                          timeline_age_id: e.value,
                         } as TimelineEventUpdateType)
                     );
                   }}
-                  onUnselect={(e) => {
-                    setEventData(
-                      (prev) =>
-                        ({
-                          ...prev,
-                          age: undefined,
-                        } as TimelineEventUpdateType)
-                    );
-                  }}
-                  onKeyPress={async (e) => {
-                    // For adding completely new tags
-                    if (e.key === "Enter" && e.currentTarget.value !== "") {
-                      setEventData(
-                        (prev) =>
-                          ({
-                            ...prev,
-                            age: e.currentTarget.value,
-                          } as TimelineEventUpdateType)
-                      );
-                      e.currentTarget.value = "";
-                    }
-                  }}
-                /> */}
+                  options={currentTimeline?.timeline_ages || []}
+                  optionLabel={"title"}
+                  optionValue={"id"}
+                />
               </div>
               {/* Map link dropdown */}
               <div className="w-full">
@@ -326,7 +300,7 @@ export default function TimelineEventDialog() {
                     incrementButtonClassName="w-12"
                     decrementButtonClassName="w-12"
                     showButtons
-                    min={0}
+                    min={-2147483600}
                     max={2147483600}
                     value={eventData.start_year}
                     onChange={(e) =>
@@ -393,7 +367,7 @@ export default function TimelineEventDialog() {
                     incrementButtonClassName="w-12"
                     decrementButtonClassName="w-12"
                     showButtons
-                    min={0}
+                    min={-2147483600}
                     max={2147483600}
                     value={eventData.end_year}
                     onChange={(e) =>
@@ -563,10 +537,11 @@ export default function TimelineEventDialog() {
                         }
                       }
                     }
+                    const { timeline_ages, ...rest } = eventData;
                     if (eventData.id === "") {
                       createTimelineEventMutation.mutate({
                         ...TimelineEventCreateDefault,
-                        ...eventData,
+                        ...rest,
                         id: uuid(),
                         timeline_id: timeline_id as string,
                       });
@@ -575,7 +550,7 @@ export default function TimelineEventDialog() {
                       );
                     } else {
                       updateTimelineEventMutation.mutate({
-                        ...eventData,
+                        ...rest,
                       });
                     }
                     if (closeOnDone) {

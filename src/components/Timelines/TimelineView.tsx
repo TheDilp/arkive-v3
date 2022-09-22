@@ -129,10 +129,10 @@ export default function TimelineView({ public_view }: Props) {
     a: TimelineEventType,
     b: TimelineEventType
   ): number {
-    if (a.age && b.age) {
-      if (a.age > b.age) {
+    if (a.timeline_ages?.id && b.timeline_ages?.id) {
+      if (a.timeline_ages.sort > b.timeline_ages.sort) {
         return 1;
-      } else if (a.age < b.age) {
+      } else if (a.timeline_ages.sort < b.timeline_ages.sort) {
         return -1;
       } else {
         return TimelineEventDateSort(a, b);

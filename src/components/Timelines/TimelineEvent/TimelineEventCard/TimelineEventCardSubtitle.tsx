@@ -7,7 +7,7 @@ export default function TimelineEventCardSubtitle({
   end_day,
   end_month,
   end_year,
-  age,
+  timeline_ages,
 }: Pick<
   TimelineEventType,
   | "start_day"
@@ -16,7 +16,7 @@ export default function TimelineEventCardSubtitle({
   | "end_day"
   | "end_month"
   | "end_year"
-  | "age"
+  | "timeline_ages"
 >) {
   return (
     <div className="text-center">
@@ -26,7 +26,8 @@ export default function TimelineEventCardSubtitle({
       {end_year === start_year && !end_day && !end_month ? "" : "-"}{" "}
       {end_day ? end_day + "/" : ""}
       {end_month ? end_month + "/" : ""}
-      {end_year === start_year && !end_day && !end_month ? "" : end_year} {age}
+      {end_year === start_year && !end_day && !end_month ? "" : end_year} <br />
+      {timeline_ages?.title}
     </div>
   );
 }

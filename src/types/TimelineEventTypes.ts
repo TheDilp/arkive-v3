@@ -1,4 +1,5 @@
 import { ImageProps } from "../custom-types";
+import { TimelineAgeType } from "./TimelineAgeTypes";
 
 export type TimelineEventType = {
   id: string;
@@ -14,7 +15,7 @@ export type TimelineEventType = {
   doc_id?: string;
   map_id?: string;
   image?: ImageProps;
-  age?: string;
+  timeline_ages?: TimelineAgeType;
   eventBgColor: string;
   styleType: "background" | "outline";
   icon: string;
@@ -35,7 +36,8 @@ export type TimelineEventCreateType = {
   doc_id?: string;
   map_id?: string;
   image?: ImageProps;
-  age?: string;
+  timeline_ages?: TimelineAgeType;
+  timeline_age_id?: string;
   eventBgColor: string;
   styleType: "background" | "outline";
   icon: string;
@@ -57,7 +59,8 @@ export type TimelineEventUpdateType = {
   image?: ImageProps;
   doc_id?: string;
   map_id?: string;
-  age?: string;
+  timeline_ages?: TimelineAgeType;
+  timeline_age_id?: string;
   eventBgColor?: string;
   styleType?: "background" | "outline";
   public?: boolean;

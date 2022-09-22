@@ -39,7 +39,7 @@ export default function TimelineEvent({
     end_day,
     end_month,
     end_year,
-    age,
+    timeline_ages,
     doc_id,
     eventBgColor,
     styleType,
@@ -101,7 +101,7 @@ export default function TimelineEvent({
                 end_day={end_day}
                 end_month={end_month}
                 end_year={end_year}
-                age={age}
+                timeline_ages={timeline_ages}
               />
             )}
           >
