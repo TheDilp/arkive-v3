@@ -66,6 +66,19 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
       }
     }
   }
+
+  const colorTemplate = (rowData: TimelineAgeType) => {
+    return (
+      <div className="flex align-items-center justify-content-evenly w-full">
+        {rowData.color}{" "}
+        <div
+          className="w-2rem h-2rem border-round"
+          style={{ backgroundColor: rowData.color }}
+        ></div>
+      </div>
+    );
+  };
+
   const textEditor = (options: ColumnEditorOptions) => {
     return (
       <InputText
@@ -80,9 +93,9 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
   };
   const colorEditor = (options: ColumnEditorOptions) => {
     return (
-      <div className="flex align-items-center justify-content-evenly">
+      <div className="flex align-items-center justify-content-between w-full">
         <InputText
-          className="w-6"
+          className="w-12"
           value={options.value}
           onChange={(e) => {
             if (options.editorCallback) options.editorCallback(e.target.value);
@@ -92,7 +105,10 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
           className="w-min"
           value={options.value}
           onChange={(e) => {
-            if (options.editorCallback) options.editorCallback(e.target.value);
+            if (options.editorCallback && e.value)
+              options.editorCallback(
+                "#" + e.value.toString().replaceAll("#", "")
+              );
           }}
         />
       </div>
@@ -113,9 +129,9 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
   };
   return (
     <Dialog
-      className="w-4"
+      className="w-5"
       style={{
-        height: "30rem",
+        height: "40rem",
       }}
       header={`Update Timeline - ${eventData.title}`}
       modal={false}
@@ -244,12 +260,20 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
             }
           ></Button>
           <DataTable
+            className="overflow-y-auto"
+            style={{
+              height: "25rem",
+            }}
             value={
               currentTimeline?.timeline_ages.sort((a, b) => a.sort - b.sort) ||
               []
             }
+            scrollable
             reorderableRows
             onRowReorder={onRowReorder}
+            onRowEditComplete={(e) => {
+              updateTimelineAgeMutation.mutate({ ...e.newData });
+            }}
             editMode="row"
           >
             <Column rowReorder></Column>
@@ -260,6 +284,7 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
             <Column
               field="color"
               editor={(options) => colorEditor(options)}
+              body={colorTemplate}
             ></Column>
             <Column
               rowEditor
