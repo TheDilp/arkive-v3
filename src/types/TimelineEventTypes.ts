@@ -53,12 +53,12 @@ export type TimelineEventUpdateType = {
   end_day?: number;
   end_month?: number;
   end_year?: number;
+  icon?: string;
+  image?: ImageProps;
   doc_id?: string;
   map_id?: string;
-  image?: ImageProps;
   age?: string;
   eventBgColor?: string;
   styleType: "background" | "outline";
-  icon?: string;
   public?: boolean;
 };

@@ -65,6 +65,7 @@ export default function Auth() {
                 backgroundColor: "#7289DA",
               }}
             />
+
             <Button
               className="w-full my-2 bg-blue-500 text-white Lato border-none"
               onClick={() => login("google")}

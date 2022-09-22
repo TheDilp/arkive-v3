@@ -5,18 +5,23 @@ import {
   ThemeProvider,
   useHelpers,
   useKeymap,
-  useRemirror
+  useRemirror,
 } from "@remirror/react";
 import { saveAs } from "file-saver";
 import {
   useCallback,
   useContext,
-  useEffect, useMemo,
+  useEffect,
+  useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { htmlToProsemirrorNode, prosemirrorNodeToHtml, RemirrorJSON } from "remirror";
+import {
+  htmlToProsemirrorNode,
+  prosemirrorNodeToHtml,
+  RemirrorJSON,
+} from "remirror";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -33,9 +38,11 @@ import {
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
-  PlaceholderExtension, TaskListExtension, TableExtension,
+  PlaceholderExtension,
+  TaskListExtension,
+  TableExtension,
   UnderlineExtension,
-  LinkExtension
+  LinkExtension,
 } from "remirror/extensions";
 
 import "remirror/styles/all.css";
@@ -44,8 +51,9 @@ import "../../../styles/Editor.css";
 import {
   useGetDocumentData,
   useGetDocuments,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
+import { supabase } from "../../../utils/supabaseUtils";
 import { toastSuccess, toastWarn } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import { ProjectContext } from "../../Context/ProjectContext";
@@ -142,14 +150,14 @@ export default function RemirrorContainer({
       new UnderlineExtension(),
       new BlockquoteExtension(),
       new BulletListExtension({
-        enableSpine: true
+        enableSpine: true,
       }),
       new TaskListExtension(),
       new OrderedListExtension(),
       new LinkExtension({
         autoLink: true,
         defaultTarget: "_blank",
-        selectTextOnClick: true
+        selectTextOnClick: true,
       }),
       new ImageExtension({
         enableResizing: true,
@@ -172,7 +180,7 @@ export default function RemirrorContainer({
       }),
       new GapCursorExtension(),
       new DropCursorExtension(),
-      new TableExtension()
+      new TableExtension(),
     ],
     onError: ({ json, invalidContent, transformers }) => {
       // Automatically remove all invalid nodes and marks.
@@ -199,8 +207,10 @@ export default function RemirrorContainer({
     }
     // Board previews in the editor crash without this, needs to wait 1ms to mount editor first
     setTimeout(() => {
-      manager.view.updateState(manager.createState({ content: currentDocument?.content || "" }));
-    }, 1)
+      manager.view.updateState(
+        manager.createState({ content: currentDocument?.content || "" })
+      );
+    }, 1);
   }, [doc_id]);
 
   const debounced = useDebouncedCallback(
@@ -210,17 +220,15 @@ export default function RemirrorContainer({
         // @ts-ignore
         content,
       });
-      setSaving(false)
-
+      setSaving(false);
     },
     // delay in ms
     850
   );
 
   const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {
-    debounced(content, doc_id)
-  }, [])
-
+    debounced(content, doc_id);
+  }, []);
 
   if (!currentDocument) {
     toastWarn("Document not found");
@@ -231,7 +239,7 @@ export default function RemirrorContainer({
       className={`editorContainer overflow-y-scroll text-base ${
         // Check if latop, then if mobile/tablet and set width
         isTabletOrMobile ? "w-12" : isLaptop ? "w-9" : "w-10"
-        } h-full flex flex-wrap align-content-start text-white px-2`}
+      } h-full flex flex-wrap align-content-start text-white px-2`}
     >
       <h1 className="w-full mt-2 mb-0 text-4xl flex justify-content-center Merriweather">
         {currentDocument && (
@@ -252,10 +260,12 @@ export default function RemirrorContainer({
             classNames={["text-white Lato"]}
             editable={editable || true}
           >
-            <OnChangeJSON onChange={(content: RemirrorJSON) => {
-              setSaving(true);
-              onChange(content, doc_id as string);
-            }} />
+            <OnChangeJSON
+              onChange={(content: RemirrorJSON) => {
+                setSaving(true);
+                onChange(content, doc_id as string);
+              }}
+            />
             <EditorView
               saving={saving}
               setSaving={setSaving}

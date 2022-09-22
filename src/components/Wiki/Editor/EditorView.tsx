@@ -1,4 +1,4 @@
-import { EditorComponent, useRemirrorContext } from "@remirror/react";
+import { EditorComponent } from "@remirror/react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "remirror/styles/all.css";
@@ -38,6 +38,7 @@ export default function EditorView({ saving, setSaving, firstRender }: Props) {
       }
     }
   }, [doc_id]);
+
   return doc_id ? (
     <>
       <MenuBar saving={saving} />
