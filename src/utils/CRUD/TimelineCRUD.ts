@@ -14,7 +14,6 @@ export const getTimelines = async (project_id: string) => {
     )
     .eq("project_id", project_id)
     .order("sort", { foreignTable: "timeline_ages" });
-  console.log(data);
   if (data) return data;
   if (error) {
     toastError("There was an error getting your timlines.");

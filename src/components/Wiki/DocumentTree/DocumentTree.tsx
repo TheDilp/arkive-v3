@@ -1,21 +1,14 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { TabPanel, TabView } from "primereact/tabview";
-import {
-  useContext, useLayoutEffect,
-  useRef,
-  useState
-} from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   DocItemDisplayDialogProps,
   DocumentProps,
   IconSelectProps,
-  SortIndexes
+  SortIndexes,
 } from "../../../custom-types";
-import {
-  useGetDocuments,
-  useSortChildren
-} from "../../../utils/customHooks";
+import { useGetDocuments, useSortChildren } from "../../../utils/customHooks";
 import { DocItemDisplayDialogDefault } from "../../../utils/defaultValues";
 import { getDepth, handleDrop, TreeSortFunc } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
@@ -47,47 +40,14 @@ export default function DocumentsTree() {
     left: 0,
     show: false,
   });
-  // Function to handle the drop functionality of the tree
-  // const handleDrop = async (
-  //   newTree: NodeModel<DocumentProps>[],
-  //   {
-  //     dragSourceId,
-  //     dragSource,
-  //     dropTargetId,
-  //   }: {
-  //     dragSourceId: string;
-  //     dragSource: NodeModel<DocumentProps>;
-  //     dropTargetId: string;
-  //   }
-  // ) => {
 
-  //   let indexes: SortIndexes = newTree
-  //     .filter(
-  //       (doc) =>
-  //         (doc.parent === dropTargetId ||
-  //           (doc.parent === undefined && dropTargetId === "0")) &&
-  //         !doc.data?.template
-  //     )
-  //     .map((doc, index) => {
-  //       // doc.parent.toString() => Dnd Treeview allows for strings and numbers, we want only strings
-  //       return { id: doc.id as string, sort: index, parent: doc.parent === "0" ? null : doc.parent as string };
-  //     });
-  //   setTreeData(newTree);
-  //   sortChildrenMutation.mutate({
-  //     project_id: project_id as string,
-  //     type: "documents",
-  //     indexes: indexes || [],
-  //   })
-  //   // setTreeData(newTree);
-
-  // };
   // doc_id => param from URL
   // docId => state that's used for highlighting the current document in the tree
   const cm = useRef(null);
 
   useLayoutEffect(() => {
     if (documents) {
-      if (filter) {
+      if (filter || selectedTags.length > 0) {
         const timeout = setTimeout(() => {
           setTreeData(
             documents
@@ -110,14 +70,15 @@ export default function DocumentsTree() {
         return () => clearTimeout(timeout);
       } else {
         const treeData = documents
-          .filter((doc) => !doc.template).sort((a, b) => TreeSortFunc(a.sort, b.sort))
+          .filter((doc) => !doc.template)
+          .sort((a, b) => TreeSortFunc(a.sort, b.sort))
           .map((doc) => ({
             id: doc.id,
             text: doc.title,
             droppable: doc.folder,
             parent: doc.parent ? (doc.parent.id as string) : "0",
             data: doc,
-          }))
+          }));
         setTreeData(treeData);
       }
     }
@@ -125,8 +86,9 @@ export default function DocumentsTree() {
 
   return (
     <div
-      className={`text-white ${isTabletOrMobile ? "hidden" : isLaptop ? "w-3" : "w-2"
-        } flex flex-wrap ${isTabletOrMobile ? "surface-0" : "surface-50"}`}
+      className={`text-white ${
+        isTabletOrMobile ? "hidden" : isLaptop ? "w-3" : "w-2"
+      } flex flex-wrap ${isTabletOrMobile ? "surface-0" : "surface-50"}`}
     >
       {iconSelect.show && (
         <IconSelectMenu {...iconSelect} setIconSelect={setIconSelect} />
@@ -215,7 +177,17 @@ export default function DocumentsTree() {
                 }
               }}
               // @ts-ignore
-              onDrop={(tree, options) => handleDrop(tree, options, setTreeData, sortChildrenMutation, project_id as string, "documents")}
+              onDrop={(tree, options) =>
+                handleDrop(
+                  tree,
+                  // @ts-ignore
+                  options,
+                  setTreeData,
+                  sortChildrenMutation,
+                  project_id as string,
+                  "documents"
+                )
+              }
             />
           </TabPanel>
           <TabPanel header="Templates" className="surface-50">
