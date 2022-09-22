@@ -17,22 +17,23 @@ import { v4 as uuid } from "uuid";
 import {
   DocumentProps,
   IconSelectProps,
-  ImageProps
+  ImageProps,
 } from "../../../custom-types";
 import {
   useCreateDocument,
   useGetDocuments,
   useGetImages,
   useGetTags,
-  useUpdateDocument
+  useUpdateDocument,
 } from "../../../utils/customHooks";
+import { DocumentCreateDefault } from "../../../utils/defaultValues";
 import {
   deleteDocument,
-  deleteManyDocuments
+  deleteManyDocuments,
 } from "../../../utils/supabaseUtils";
 import {
   searchCategory,
-  supabaseStorageImagesLink
+  supabaseStorageImagesLink,
 } from "../../../utils/utils";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -270,8 +271,11 @@ export default function DocumentsSettingsTable() {
           icon="pi pi-plus"
           className="p-button-success mr-2 p-button-outlined"
           onClick={async () => {
-            let id: string = uuid();
-            createDocumentMutation.mutate({ id });
+            createDocumentMutation.mutate({
+              id: uuid(),
+              ...DocumentCreateDefault,
+              project_id: project_id as string,
+            });
           }}
         />
         <Button
@@ -382,12 +386,20 @@ export default function DocumentsSettingsTable() {
           placeholder="Custom Image"
           optionLabel="title"
           virtualScrollerOptions={{
-            lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+            lazy: true,
+            onLazyLoad: () => {},
+            itemSize: 50,
+            showLoader: true,
+            loading: images?.data.length === 0,
+            delay: 0,
+            loadingTemplate: (options) => {
               return (
-                <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                </div>
-              )
-            }
+                <div
+                  className="flex align-items-center p-2"
+                  style={{ height: "38px" }}
+                ></div>
+              );
+            },
           }}
           itemTemplate={(item: ImageProps) => (
             <ImgDropdownItem title={item.title} link={item.link} />
@@ -395,9 +407,9 @@ export default function DocumentsSettingsTable() {
           options={
             images?.data
               ? [
-                { title: "No image", id: null },
-                ...images?.data.filter((image) => image.type === "Image"),
-              ]
+                  { title: "No image", id: null },
+                  ...images?.data.filter((image) => image.type === "Image"),
+                ]
               : []
           }
           value={options.rowData.image}

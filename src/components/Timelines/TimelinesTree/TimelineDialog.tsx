@@ -146,14 +146,14 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
       </div>
     );
   };
-  const onRowReorder = (e: any) => {
+  const onRowReorder = async (e: any) => {
     const indexes: { id: string; sort: number }[] = e.value.map(
       (age: TimelineAgeType, index: number) => ({
         id: age.id,
         sort: index,
       })
     );
-    sortTimelineAgesMutation.mutate({
+    await sortTimelineAgesMutation.mutateAsync({
       project_id: project_id as string,
       timeline_id: eventData.id,
       indexes,
@@ -292,7 +292,7 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
             }
           ></Button>
           <DataTable
-            className="overflow-y-auto"
+            className="overflow-y-auto py-4"
             style={{
               height: "25rem",
             }}

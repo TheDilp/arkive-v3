@@ -165,7 +165,7 @@ export default function TimelineView({ public_view }: Props) {
     return () => {
       setSortedEvents([]);
     };
-  }, [currentTimeline?.timeline_events]);
+  }, [currentTimeline?.timeline_events, currentTimeline?.timeline_ages]);
 
   useLayoutEffect(() => {
     if (currentTimeline) {

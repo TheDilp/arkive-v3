@@ -2156,22 +2156,24 @@ export function useSortTimelineAges() {
           `${newData.project_id}-timelines`,
           (oldData: TimelineType[] | undefined) => {
             if (oldData) {
-              return oldData.map((timeline) => {
+              let temp = oldData.map((timeline) => {
                 if (timeline.id === newData.timeline_id) {
                   // Find the index of the age
-                  for (const updatedAge of newData.indexes) {
-                    let ageIdx = timeline.timeline_ages.findIndex(
-                      (age) => age.id === updatedAge.id
-                    );
-                    // If index is found update the age's sort to the new sort
-                    if (ageIdx !== -1) {
-                      timeline.timeline_ages[ageIdx].sort = updatedAge.sort;
+
+                  timeline.timeline_ages = timeline.timeline_ages.map((age) => {
+                    let idx = newData.indexes.findIndex((i) => i.id === age.id);
+                    if (idx !== -1) {
+                      return { ...age, sort: newData.indexes[idx].sort };
                     }
-                  }
+                    return age;
+                  });
+
+                  return timeline;
                 }
 
                 return timeline;
               });
+              return temp;
             } else {
               return [];
             }
