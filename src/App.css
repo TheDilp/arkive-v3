@@ -132,11 +132,11 @@ body {
   display: none;
 }
 
-.timelineCardTitle i {
+.timelineCardTitle i.pi-pencil {
   display: none;
 }
 
-.timelineEventCard:hover i {
+.timelineEventCard:hover i.pi-pencil {
   display: inline;
   cursor: pointer;
 }
