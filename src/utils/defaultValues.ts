@@ -123,6 +123,6 @@ export const TimelineEventCreateDefault = {
   doc_id: undefined,
   map_id: undefined,
   eventBgColor: "#1e1e1e",
-  styleType: "background",
+  styleType: "background" as const,
   public: false,
 };
