@@ -3,7 +3,6 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import React from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
   DocItemDisplayDialogProps,
@@ -26,26 +25,6 @@ export default function DocumentUpdateDialog({
   const { project_id } = useParams();
   const updateDocumentMutation = useUpdateDocument(project_id as string);
   const { data } = useGetDocuments(project_id as string);
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Pick<DocItemDisplayDialogProps, "title" | "parent">>({
-    defaultValues: {
-      title: displayDialog.title,
-      parent: displayDialog.parent,
-    },
-  });
-  const onSubmit: SubmitHandler<{
-    title: string;
-    parent: string | null | undefined;
-  }> = (data) => {
-    updateDocumentMutation.mutate({
-      id: displayDialog.id,
-      ...data,
-    });
-    setDisplayDialog(DocItemDisplayDialogDefault);
-  };
 
   function recursiveDescendantFilter(
     doc: DocumentProps,
@@ -77,67 +56,65 @@ export default function DocumentUpdateDialog({
       onHide={() => setDisplayDialog(DocItemDisplayDialogDefault)}
       modal={false}
     >
-      <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+      <div className="my-2">
+        <InputText
+          className="w-full"
+          value={displayDialog.title}
+          onChange={(e) =>
+            setDisplayDialog((prev) => ({ ...prev, title: e.target.value }))
+          }
+          autoFocus={true}
+        />
+      </div>
+      {!displayDialog.template && (
         <div className="my-2">
-          <Controller
-            name="title"
-            control={control}
-            render={({ field }) => (
-              <InputText
-                className="w-full"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                autoFocus={true}
-              />
-            )}
+          <Dropdown
+            className="w-full"
+            placeholder="Document Folder"
+            optionLabel="title"
+            optionValue="id"
+            value={displayDialog.parent}
+            filter
+            onChange={(e) =>
+              setDisplayDialog((prev) => ({ ...prev, parent: e.value }))
+            }
+            options={
+              data
+                ? [
+                    { title: "Root", id: null },
+                    ...data.filter((doc, idx, array) => {
+                      if (!doc.folder || doc.id === displayDialog.id)
+                        return false;
+                      return recursiveDescendantFilter(
+                        doc,
+                        idx,
+                        array,
+                        displayDialog.id
+                      );
+                    }),
+                  ]
+                : []
+            }
           />
         </div>
-        {!displayDialog.template && (
-          <div className="my-2">
-            <Controller
-              name="parent"
-              control={control}
-              render={({ field }) => (
-                <Dropdown
-                  className="w-full"
-                  placeholder="Document Folder"
-                  optionLabel="title"
-                  optionValue="id"
-                  value={field.value}
-                  filter
-                  onChange={(e) => field.onChange(e.value)}
-                  options={
-                    data
-                      ? [
-                          { title: "Root", id: null },
-                          ...data.filter((doc, idx, array) => {
-                            if (!doc.folder || doc.id === displayDialog.id)
-                              return false;
-                            return recursiveDescendantFilter(
-                              doc,
-                              idx,
-                              array,
-                              displayDialog.id
-                            );
-                          }),
-                        ]
-                      : []
-                  }
-                />
-              )}
-            />
-          </div>
-        )}
-        <div className="flex w-full">
-          <Button
-            className="ml-auto p-button-outlined p-button-success"
-            label="Save"
-            icon="pi pi-fw pi-save"
-            iconPos="right"
-            type="submit"
-          />
-        </div>
-      </form>
+      )}
+      <div className="flex w-full">
+        <Button
+          className="ml-auto p-button-outlined p-button-success"
+          label="Save"
+          icon="pi pi-fw pi-save"
+          iconPos="right"
+          type="submit"
+          onClick={() => {
+            updateDocumentMutation.mutate({
+              id: displayDialog.id,
+              title: displayDialog.title,
+              parent: displayDialog.parent,
+            });
+            setDisplayDialog(DocItemDisplayDialogDefault);
+          }}
+        />
+      </div>
     </Dialog>
   );
 }

@@ -98,12 +98,10 @@ export default function DocumentsTree() {
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
-      {displayDialog.show && (
-        <DocumentUpdateDialog
-          displayDialog={displayDialog}
-          setDisplayDialog={setDisplayDialog}
-        />
-      )}
+      <DocumentUpdateDialog
+        displayDialog={displayDialog}
+        setDisplayDialog={setDisplayDialog}
+      />
 
       <TreeSidebar>
         <TabView

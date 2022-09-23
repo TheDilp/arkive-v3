@@ -121,6 +121,8 @@ export default function MapCreateDialog({ openDialog, setOpenDialog }: Props) {
                   id: uuid(),
                   project_id: project_id as string,
                 });
+                setNewMapData(MapCreateDefault);
+                if (closeOnDone) setOpenDialog(false);
               }
             }}
           />
