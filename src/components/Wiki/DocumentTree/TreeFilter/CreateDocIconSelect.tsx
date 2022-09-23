@@ -15,7 +15,7 @@ type Props = {
       left: number;
     }>
   >;
-  setValue: (name: "icon", value: string, config?: Object) => void;
+  setValue: (value: string) => void;
 };
 
 export default function CreateDocIconSelect({
@@ -80,8 +80,7 @@ export default function CreateDocIconSelect({
                     className="mx-auto hover:text-blue-300 cursor-pointer"
                     onClick={() => {
                       setValue(
-                        "icon",
-                        `mdi:${
+                        `${
                           iconList[virtualRow.index * 6 + virtualColumn.index]
                         }`
                       );
@@ -92,7 +91,7 @@ export default function CreateDocIconSelect({
                       });
                     }}
                     fontSize={30}
-                    icon={`mdi:${
+                    icon={`${
                       iconList[virtualRow.index * 6 + virtualColumn.index]
                     }`}
                   />
