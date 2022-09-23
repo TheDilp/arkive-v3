@@ -15,7 +15,6 @@ export default function Profile() {
     isLoading,
   } = useQuery("getProfile", async () => await getProfile());
   const [localProfile, setLocalProfile] = useState(profile || null);
-  console.log(profile)
   useEffect(() => {
     if (profile) setLocalProfile(profile);
   }, [profile]);

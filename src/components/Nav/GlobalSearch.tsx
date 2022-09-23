@@ -33,14 +33,16 @@ export default function GlobalSearch({ search, setSearch }: Props) {
   const { data: timelines } = useGetTimelines(project_id as string);
   const [filteredItems, setFilteredItems] = useState<
     {
-      category: string, items:
-      (| DocumentType
+      category: string;
+      items: (
+        | DocumentType
         | MapType
         | BoardType
         | BoardNodeType
         | MapMarkerType
         | TimelineType
-        | TimelineEventType)[]
+        | TimelineEventType
+      )[];
     }[]
   >([]);
   const [categories, setCategories] = useState([
@@ -117,34 +119,67 @@ export default function GlobalSearch({ search, setSearch }: Props) {
         }
 
         let initialData: {
-          category: string, items:
-          (| DocumentType
+          category: string;
+          items: (
+            | DocumentType
             | MapType
             | BoardType
             | BoardNodeType
             | MapMarkerType
             | TimelineType
-            | TimelineEventType)[]
+            | TimelineEventType
+          )[];
         }[] = [];
-        initialData
-          .push({
-            category: "Documents", items: filteredDocs.filter(doc => {
-              console.log(doc.alter_names)
-              return (
-                JSON.stringify(doc.content)
-                  .toLowerCase()
-                  .includes(search.toLowerCase()) ||
-                doc.title.toLowerCase().includes(search.toLowerCase()) || doc.alter_names?.some(name => name.toLowerCase().includes(search.toLowerCase()))
-              );
-            })
-          })
-        initialData
-          .push({ category: "Maps", items: filteredMaps.filter(map => { return map.title?.toLowerCase().includes(search.toLowerCase()); }) })
-        initialData.push({ category: "Markers", items: filteredMarkers.filter(marker => { return marker.text?.toLowerCase().includes(search.toLowerCase()); }) })
-        initialData.push({ category: "Boards", items: filteredBoards.filter(board => { return board.title?.toLowerCase().includes(search.toLowerCase()); }) });
-        initialData.push({ category: "Nodes", items: filteredNodes.filter(node => { return node.label?.toLowerCase().includes(search.toLowerCase()) }) })
-        initialData.push({ category: "Timelines", items: filteredTimelines.filter(timeline => { return timeline.title?.toLowerCase().includes(search.toLowerCase()); }) })
-        initialData.push({ category: "Events", items: filteredTimelineEvents.filter(event => { return event.title?.toLowerCase().includes(search.toLowerCase()); }) });
+        initialData.push({
+          category: "Documents",
+          items: filteredDocs.filter((doc) => {
+            return (
+              JSON.stringify(doc.content)
+                .toLowerCase()
+                .includes(search.toLowerCase()) ||
+              doc.title.toLowerCase().includes(search.toLowerCase()) ||
+              doc.alter_names?.some((name) =>
+                name.toLowerCase().includes(search.toLowerCase())
+              )
+            );
+          }),
+        });
+        initialData.push({
+          category: "Maps",
+          items: filteredMaps.filter((map) => {
+            return map.title?.toLowerCase().includes(search.toLowerCase());
+          }),
+        });
+        initialData.push({
+          category: "Markers",
+          items: filteredMarkers.filter((marker) => {
+            return marker.text?.toLowerCase().includes(search.toLowerCase());
+          }),
+        });
+        initialData.push({
+          category: "Boards",
+          items: filteredBoards.filter((board) => {
+            return board.title?.toLowerCase().includes(search.toLowerCase());
+          }),
+        });
+        initialData.push({
+          category: "Nodes",
+          items: filteredNodes.filter((node) => {
+            return node.label?.toLowerCase().includes(search.toLowerCase());
+          }),
+        });
+        initialData.push({
+          category: "Timelines",
+          items: filteredTimelines.filter((timeline) => {
+            return timeline.title?.toLowerCase().includes(search.toLowerCase());
+          }),
+        });
+        initialData.push({
+          category: "Events",
+          items: filteredTimelineEvents.filter((event) => {
+            return event.title?.toLowerCase().includes(search.toLowerCase());
+          }),
+        });
 
         if (initialData) setFilteredItems(initialData);
         else setFilteredItems([]);
@@ -268,7 +303,9 @@ export default function GlobalSearch({ search, setSearch }: Props) {
           placeholder="Enter at least 3 characters"
           optionGroupLabel="category"
           optionGroupChildren="items"
-          optionGroupTemplate={(item) => <div className="py-1 border-bottom-1">{item.category}</div>}
+          optionGroupTemplate={(item) => (
+            <div className="py-1 border-bottom-1">{item.category}</div>
+          )}
           suggestions={filteredItems}
           value={search}
           selectedItemTemplate={(item) => {

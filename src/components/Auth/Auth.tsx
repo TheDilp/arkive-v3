@@ -9,7 +9,6 @@ export default function Auth() {
 
   useEffect(() => {
     const sub = auth.onAuthStateChange((event) => {
-      console.log(event);
       if (event === "SIGNED_IN") {
         navigate("/home");
       }

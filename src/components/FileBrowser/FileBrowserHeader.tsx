@@ -231,7 +231,6 @@ export default function FileBrowserHeader() {
                 acceptClassName: "p-button-danger",
                 // className: selectAll ? "deleteAllDocuments" : "",
                 accept: async () => {
-                  console.log(selected.map((image) => image.link));
                   await deleteImagesStorage(
                     selected.map((image) => image.link)
                   );

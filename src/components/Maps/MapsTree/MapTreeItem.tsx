@@ -35,13 +35,12 @@ export default function MapTreeItem({
         if (node.droppable) {
           e.preventDefault();
           e.stopPropagation();
-          return
+          return;
         }
         if (!node.droppable) setMapId(node.id as string);
       }}
       onContextMenu={(e) => {
         cm.current.show(e);
-        console.log(node.data);
         setDisplayDialog({
           id: node.id as string,
           title: node.text,
@@ -79,11 +78,12 @@ export default function MapTreeItem({
           )}
         </span>
       )}
-      <span onClick={e => {
-        e.preventDefault();
-        e.stopPropagation()
-      }}>
-
+      <span
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         {node.droppable ? (
           <Icon icon="bxs:folder" inline={true} className="mr-1" />
         ) : (

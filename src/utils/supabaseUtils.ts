@@ -863,7 +863,6 @@ export const exportProject = async (project_id: string) => {
         "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
       )
       .eq("project_id", project_id);
-    console.log(boards);
     saveAs(
       new Blob([JSON.stringify(boards)], {
         type: "text/plain;charset=utf-8",

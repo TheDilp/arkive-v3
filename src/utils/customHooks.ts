@@ -2217,7 +2217,6 @@ export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
     },
     {
       onMutate: async (updatedData) => {
-        console.log(updatedData);
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
 
         queryClient.setQueryData(

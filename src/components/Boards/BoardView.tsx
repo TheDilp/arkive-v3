@@ -224,7 +224,6 @@ export default function BoardView({ public_view, setBoardId }: Props) {
               ...rest,
             });
           } else if (el.isEdge()) {
-            console.log(el);
             const { classes, id, user_id, ...rest } = el.data();
             newEdges.push({ ...rest, id: uuid() });
           }
