@@ -6,12 +6,12 @@ import { RadioButton } from "primereact/radiobutton";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { DocumentCreateProps, DocumentProps } from "../../../../custom-types";
+import { DocumentProps } from "../../../../custom-types";
 import {
   useCreateDocument,
   useGetDocuments,
-  useGetTemplates,
 } from "../../../../utils/customHooks";
+import { toastSuccess } from "../../../../utils/utils";
 type Props = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -39,6 +39,7 @@ export default function DocumentFromTempDialog({ visible, setVisible }: Props) {
       title: customName || template.title,
       parent,
     });
+    toastSuccess(`Document ${customName || template.title} created!`);
   }
   return (
     <Dialog
@@ -51,24 +52,19 @@ export default function DocumentFromTempDialog({ visible, setVisible }: Props) {
       }}
     >
       <h3 className="Lato">Select a template</h3>
-      <div className="field-radiobutton flex flex-wrap align-items-start h-5rem overflow-y-auto">
-        {documents &&
-          documents
-            .filter((doc) => doc.template)
-            .map((template) => (
-              <div
-                className="w-6 my-1 Lato flex align-items-center"
-                key={template.id}
-              >
-                <RadioButton
-                  className="mr-2"
-                  value={template.id}
-                  onChange={(e) => setSelectedTemplate(template)}
-                  checked={selectedTemplate?.id === template.id}
-                />
-                {template.title}
-              </div>
-            ))}
+      <div className="w-full">
+        <Dropdown
+          className="w-full"
+          placeholder="Select Template"
+          value={selectedTemplate}
+          optionLabel="title"
+          options={documents?.filter((doc) => doc.template) || []}
+          itemTemplate={(item: DocumentProps) => <div>{item.title}</div>}
+          onChange={(e) => {
+            setSelectedTemplate(e.value);
+            console.log(e.value);
+          }}
+        />
       </div>
       <div className="w-full my-2">
         <InputText

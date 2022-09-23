@@ -40,7 +40,6 @@
     "react-dnd": "^16.0.1",
     "react-dom": "^18.1.0",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.30.0",
     "react-leaflet": "^4.0.0",
     "react-notify": "^3.0.0",
     "react-query": "^3.39.1",
