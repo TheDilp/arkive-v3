@@ -106,6 +106,16 @@ export const DocumentCreateDefault = {
   categories: [],
 };
 
+export const MapCreateDefault = {
+  id: "",
+  title: "New Map",
+  map_image: undefined,
+  parent: undefined,
+  sort: 999,
+  folder: false,
+  expanded: false,
+};
+
 export const TimelineCreateDefault = {
   expanded: false,
   public: false,

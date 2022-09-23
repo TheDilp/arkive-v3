@@ -37,7 +37,6 @@ export function CommandMenu() {
   const boards = queryClient.getQueryData<BoardProps[]>(`${project_id}-boards`);
   const onSubmit = useCallback(
     (cmd: slashMenuItem) => {
-      console.log(range, change)
       if (cmd.type === "heading") {
         chain.toggleHeading({ level: cmd.level }).delete(range).run();
       } else if (cmd.type === "list") {
@@ -96,7 +95,8 @@ export function CommandMenu() {
       } else if (cmd.type === "map") {
         if (cmd.map_id) {
           chain
-            .delete(range).insertText(" ")
+            .delete(range)
+            .insertText(" ")
             .insertMapPreview({
               id: cmd.map_id,
               type: "map",
@@ -132,7 +132,8 @@ export function CommandMenu() {
       } else if (cmd.type === "board") {
         if (cmd.board_id) {
           chain
-            .delete(range).insertText(" ")
+            .delete(range)
+            .insertText(" ")
             .insertMapPreview({
               id: cmd.board_id,
               type: "board",
@@ -236,10 +237,11 @@ export function CommandMenu() {
         {items.map((item, index) => {
           return (
             <li
-              className={`remirror-mention-atom-popup-item w-12rem flex justify-content-between align-items-center ${indexIsSelected(index)
-                ? "remirror-mention-atom-popup-highlight"
-                : ""
-                }`}
+              className={`remirror-mention-atom-popup-item w-12rem flex justify-content-between align-items-center ${
+                indexIsSelected(index)
+                  ? "remirror-mention-atom-popup-highlight"
+                  : ""
+              }`}
               key={item.name}
               {...getItemProps({ item, index })}
             >

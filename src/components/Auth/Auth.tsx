@@ -47,16 +47,16 @@ export default function Auth() {
             alt="planet placeholder"
           />
         </div>
-        <div className="w-full lg:w-5 p-4">
+        <div className="w-full lg:w-5 p-4 flex flex-column justify-content-between">
           <div className="text-center mb-5">
             <div className="text-900 text-3xl font-medium mb-3 Merriweather">
               Welcome to the Arkive!
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-column">
             <Button
-              className="w-full my-2 text-white Lato border-none"
+              className="w-full my-2 text-white Lato border-none hover:bg-indigo-600"
               onClick={() => login("discord")}
               label="Continue with Discord"
               icon="pi pi-discord"
@@ -67,7 +67,7 @@ export default function Auth() {
             />
 
             <Button
-              className="w-full my-2 bg-blue-500 text-white Lato border-none"
+              className="w-full my-2 bg-blue-500 text-white Lato border-none hover:bg-blue-700"
               onClick={() => login("google")}
               label="Continue with Google"
               icon="pi pi-google"

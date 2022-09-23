@@ -1,11 +1,6 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import {
-  useContext, useLayoutEffect,
-  useRef,
-  useState
-} from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { SortIndexes } from "../../../custom-types";
 import { MapItemDisplayDialogProps, MapProps } from "../../../types/MapTypes";
 import { useGetMaps, useSortChildren } from "../../../utils/customHooks";
 import { MapDialogDefault } from "../../../utils/defaultValues";
@@ -67,13 +62,15 @@ export default function MapsTree({
         return () => clearTimeout(timeout);
       } else {
         setTreeData(
-          maps.sort((a, b) => TreeSortFunc(a.sort, b.sort)).map((m) => ({
-            id: m.id,
-            parent: m.parent?.id || "0",
-            text: m.title,
-            droppable: m.folder,
-            data: m,
-          }))
+          maps
+            .sort((a, b) => TreeSortFunc(a.sort, b.sort))
+            .map((m) => ({
+              id: m.id,
+              parent: m.parent?.id || "0",
+              text: m.title,
+              droppable: m.folder,
+              data: m,
+            }))
         );
       }
     } else {
@@ -81,11 +78,11 @@ export default function MapsTree({
     }
   }, [maps, filter]);
 
-
   return (
     <div
-      className={` text-white pt-2 px-2 ${isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
-        }`}
+      className={` text-white pt-2 px-2 ${
+        isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
+      }`}
       style={{
         height: "96vh",
       }}
@@ -98,8 +95,8 @@ export default function MapsTree({
         setUpdateMapLayers={setUpdateMapLayers}
       />
       <MapCreateDialog
-        mapData={createMapDialog}
-        setMapData={() => setCreateMapDialog(false)}
+        openDialog={createMapDialog}
+        setOpenDialog={() => setCreateMapDialog(false)}
       />
 
       <MapUpdateDialog
@@ -170,8 +167,16 @@ export default function MapsTree({
             }
           }}
           //@ts-ignore
-          onDrop={(tree, options) => handleDrop(tree, options, setTreeData, sortChildrenMutation, project_id as string, "maps")}
-
+          onDrop={(tree, options) =>
+            handleDrop(
+              tree,
+              options,
+              setTreeData,
+              sortChildrenMutation,
+              project_id as string,
+              "maps"
+            )
+          }
         />
       </TreeSidebar>
     </div>
