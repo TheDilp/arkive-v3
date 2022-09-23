@@ -71,9 +71,27 @@ export default function UpdateManyNodes() {
                 }))
               }
               placeholder="Node Label"
-              className="w-5"
+              className="w-max"
               autoComplete="false"
             />
+            <Button
+              type="submit"
+              className="p-button-square p-button-success p-button-outlined w-2"
+              icon="pi pi-save"
+              iconPos="right"
+              onClick={() => {
+                if (!cyRef) return;
+                updateManyNodesFunction(
+                  {
+                    label: manyNodesData.label,
+                  },
+                  cyRef
+                );
+              }}
+            />
+          </div>
+          <label className="w-full text-sm text-gray-400">Font Size</label>
+          <div className="w-full flex flex-wrap justify-content-between">
             <Dropdown
               className="w-3"
               options={BoardFontSizes}
@@ -95,7 +113,6 @@ export default function UpdateManyNodes() {
                 if (!cyRef) return;
                 updateManyNodesFunction(
                   {
-                    label: manyNodesData.label,
                     fontSize: manyNodesData.fontSize,
                   },
                   cyRef
@@ -103,8 +120,10 @@ export default function UpdateManyNodes() {
               }}
             />
 
-            <div className="flex flex-nowrap justify-content-start align-items-end align-content-center w-full mt-1">
-              <div className="w-4">
+            {/* Font size */}
+
+            <div className="flex flex-nowrap justify-content-between align-items-end align-content-center w-full mt-1">
+              <div className="w-max">
                 <label htmlFor="" className="text-sm text-gray-400">
                   Font Family
                 </label>
@@ -120,33 +139,7 @@ export default function UpdateManyNodes() {
                   }
                 />
               </div>
-              <div className="w-6 flex flex-wrap mr-5">
-                <label className="w-full text-sm text-gray-400 text-center">
-                  Label Color
-                </label>
-                <div className="flex justify-content-between align-items-center">
-                  <InputText
-                    value={manyNodesData.fontColor}
-                    className="w-8 ml-2"
-                    onChange={(e) =>
-                      setManyNodesData((prev: ManyNodesProps) => ({
-                        ...prev,
-                        fontColor: e.target.value,
-                      }))
-                    }
-                  />
-                  <ColorPicker
-                    className="w-3"
-                    value={manyNodesData.fontColor}
-                    onChange={(e) =>
-                      setManyNodesData((prev: ManyNodesProps) => ({
-                        ...prev,
-                        fontColor: e.value as string,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
+
               <Button
                 type="submit"
                 className="p-button-square p-button-success p-button-outlined w-2"
@@ -157,16 +150,65 @@ export default function UpdateManyNodes() {
                   updateManyNodesFunction(
                     {
                       fontFamily: manyNodesData.fontFamily,
-                      fontColor:
-                        "#" + manyNodesData.fontColor.replaceAll("#", ""),
                     },
                     cyRef
                   );
                 }}
               />
             </div>
+
+            {/* Label color */}
+            <div className="flex flex-nowrap justify-content-start align-items-end align-content-center w-full mt-1">
+              <div className="flex flex-wrap align-items-center justify-content-start w-10">
+                <label htmlFor="" className="w-full text-sm text-gray-400">
+                  Label Color
+                </label>
+                <div>
+                  <InputText
+                    value={manyNodesData.fontColor}
+                    className="w-10"
+                    onChange={(e) =>
+                      setManyNodesData((prev: ManyNodesProps) => ({
+                        ...prev,
+                        fontColor: e.target.value,
+                      }))
+                    }
+                  />
+                  <ColorPicker
+                    className="ml-1"
+                    value={manyNodesData.fontColor}
+                    onChange={(e) =>
+                      setManyNodesData((prev: ManyNodesProps) => ({
+                        ...prev,
+                        fontColor: e.value as string,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+              <div className="w-2 flex justify-content-end">
+                <Button
+                  type="submit"
+                  className="p-button-square p-button-success p-button-outlined w-full"
+                  icon="pi pi-save"
+                  iconPos="right"
+                  onClick={() => {
+                    if (!cyRef) return;
+                    updateManyNodesFunction(
+                      {
+                        fontColor:
+                          "#" + manyNodesData.fontColor.replaceAll("#", ""),
+                      },
+                      cyRef
+                    );
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Horizontal Align */}
             <div className="flex flex-nowrap justify-content-between align-items-end align-content-center w-full mt-1">
-              <div className="w-4">
+              <div className="w-max">
                 <label htmlFor="" className="text-sm text-gray-400">
                   Horizontal Align
                 </label>
@@ -182,7 +224,28 @@ export default function UpdateManyNodes() {
                   }
                 />
               </div>
-              <div className="w-4">
+
+              <div className="w-2">
+                <Button
+                  type="submit"
+                  className="p-button-square p-button-success p-button-outlined w-full"
+                  icon="pi pi-save"
+                  iconPos="right"
+                  onClick={() => {
+                    if (!cyRef) return;
+                    updateManyNodesFunction(
+                      {
+                        textHAlign: manyNodesData.textHAlign,
+                      },
+                      cyRef
+                    );
+                  }}
+                />
+              </div>
+            </div>
+            {/* Vertical Align */}
+            <div className="flex flex-nowrap justify-content-between align-items-end align-content-center w-full mt-1">
+              <div className="w-max">
                 <label htmlFor="" className="text-sm text-gray-400">
                   Vertical Align
                 </label>
@@ -198,6 +261,7 @@ export default function UpdateManyNodes() {
                   }
                 />
               </div>
+
               <div className="w-2">
                 <Button
                   type="submit"
@@ -209,7 +273,6 @@ export default function UpdateManyNodes() {
                     updateManyNodesFunction(
                       {
                         textVAlign: manyNodesData.textVAlign,
-                        textHAlign: manyNodesData.textHAlign,
                       },
                       cyRef
                     );
@@ -252,10 +315,10 @@ export default function UpdateManyNodes() {
             }}
           />
         </div>
-        <div className="w-4">
-          <label className="text-sm text-gray-400">Width</label>
+        <div className="w-full flex flex-wrap justify-content-between">
+          <label className="text-sm w-full text-gray-400">Width</label>
           <InputNumber
-            inputClassName="w-full"
+            inputClassName="w-6rem"
             showButtons
             min={10}
             max={5000}
@@ -268,12 +331,26 @@ export default function UpdateManyNodes() {
               }))
             }
           />
+          <Button
+            type="submit"
+            className="p-button-square p-button-success p-button-outlined w-2"
+            icon="pi pi-save"
+            iconPos="right"
+            onClick={() => {
+              if (!cyRef) return;
+              updateManyNodesFunction(
+                {
+                  width: manyNodesData.width,
+                },
+                cyRef
+              );
+            }}
+          />
         </div>
-        <div className="w-4">
-          <label className="text-sm text-gray-400">Height</label>
-
+        <div className="w-full flex flex-wrap justify-content-between">
+          <label className="text-sm w-full text-gray-400">Height</label>
           <InputNumber
-            inputClassName="w-full"
+            inputClassName="w-6rem"
             showButtons
             min={10}
             max={5000}
@@ -286,18 +363,15 @@ export default function UpdateManyNodes() {
               }))
             }
           />
-        </div>
-        <div className="w-2">
           <Button
             type="submit"
-            className="p-button-square p-button-success p-button-outlined w-full"
+            className="p-button-square p-button-success p-button-outlined w-2"
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
               if (!cyRef) return;
               updateManyNodesFunction(
                 {
-                  width: manyNodesData.width,
                   height: manyNodesData.height,
                 },
                 cyRef
@@ -323,11 +397,11 @@ export default function UpdateManyNodes() {
           options={
             documents.data
               ? [
-                { title: "No document", id: null },
-                ...documents.data.filter(
-                  (doc) => !doc.template && !doc.folder
-                ),
-              ]
+                  { title: "No document", id: null },
+                  ...documents.data.filter(
+                    (doc) => !doc.template && !doc.folder
+                  ),
+                ]
               : []
           }
           optionLabel={"title"}
@@ -361,12 +435,20 @@ export default function UpdateManyNodes() {
           placeholder="Custom Image"
           optionLabel="title"
           virtualScrollerOptions={{
-            lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+            lazy: true,
+            onLazyLoad: () => {},
+            itemSize: 50,
+            showLoader: true,
+            loading: images?.data.length === 0,
+            delay: 0,
+            loadingTemplate: (options) => {
               return (
-                <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                </div>
-              )
-            }
+                <div
+                  className="flex align-items-center p-2"
+                  style={{ height: "38px" }}
+                ></div>
+              );
+            },
           }}
           itemTemplate={(item: ImageProps) => (
             <ImgDropdownItem title={item.title} link={item.link} />
@@ -374,9 +456,9 @@ export default function UpdateManyNodes() {
           options={
             images?.data
               ? [
-                { title: "No image", id: null },
-                ...images?.data.filter((image) => image.type === "Image"),
-              ]
+                  { title: "No image", id: null },
+                  ...images?.data.filter((image) => image.type === "Image"),
+                ]
               : []
           }
           value={manyNodesData.customImage}

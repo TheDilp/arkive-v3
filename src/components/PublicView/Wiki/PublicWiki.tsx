@@ -49,14 +49,14 @@ export default function PublicWiki() {
             setFiltered(_filteredDocs);
           }}
           className="h-2rem w-full flex justify-content-end"
-          inputClassName="border-x-none border-top-none border-bottom-2 w-15rem mb-1"
+          inputClassName="border-x-none border-top-none border-bottom-2 w-15rem mb-1 outline-none"
           placeholder="🔍"
           field="title"
           onChange={(e) => setSearch(e.value)}
           onSelect={(e) => {
             if (e.value) {
               navigate(`../wiki/${e.value.id}`);
-              setSearch(null)
+              setSearch(null);
             }
           }}
         />
