@@ -49,7 +49,7 @@ export default function DocTreeFilter({
         visible={docFromTempDialog}
         setVisible={setDocFromTempDialog}
       />
-      <div className="w-full py-1 flex justify-content-center">
+      <div className="w-full flex justify-content-center">
         <SplitButton
           label="Quick Create"
           icon="pi pi-bolt"

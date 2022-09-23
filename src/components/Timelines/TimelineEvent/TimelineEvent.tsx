@@ -179,9 +179,10 @@ export default function TimelineEvent({
             : "center"
         } w-20rem`}
       >
-        <h4 className="m-0 white-space-nowrap overflow-hidden text-overflow-ellipsis text-center Merriweather">
-          {title}
-        </h4>
+        <div className="m-0 font-bold white-space-nowrap overflow-hidden text-overflow-ellipsis text-center Merriweather">
+          {title} <br />
+          <span className="text-sm">{timeline_age?.title}</span>
+        </div>
         <p className="m-0 text-sm text-white text-center Lato font-bold simpleEventDate">
           {start_day ? start_day + "/" : ""}
           {start_month ? start_month + "/" : ""}

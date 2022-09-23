@@ -1,20 +1,19 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 import { useCallback, useContext, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useVirtual } from "react-virtual";
+import { v4 as uuid } from "uuid";
 import {
-  IconSelectProps,
   DocItemDisplayDialogProps,
+  IconSelectProps,
 } from "../../../../custom-types";
 import {
-  useCreateDocument,
   useCreateTemplate,
   useGetTemplates,
 } from "../../../../utils/customHooks";
-import { v4 as uuid } from "uuid";
 import { defaultTemplate } from "../../../../utils/utils";
-import { InputText } from "primereact/inputtext";
 import { ProjectContext } from "../../../Context/ProjectContext";
 type Props = {
   setIconSelect: (iconSelect: IconSelectProps) => void;
@@ -46,7 +45,7 @@ export default function TemplatesTree({
     <div className="">
       <div className="w-full flex flex-wrap justify-content-center">
         <Button
-          className="p-button-outlined my-2"
+          className="p-button-outlined my-2 w-full mx-2"
           label="New Template"
           icon="pi pi-copy"
           iconPos="right"
