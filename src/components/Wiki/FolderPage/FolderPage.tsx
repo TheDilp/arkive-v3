@@ -82,12 +82,10 @@ export default function FolderPage() {
         displayDialog={displayDialog}
         setDisplayDialog={setDisplayDialog}
       />
-      {displayDialog.show && (
-        <DocumentUpdateDialog
-          displayDialog={displayDialog}
-          setDisplayDialog={setDisplayDialog}
-        />
-      )}
+      <DocumentUpdateDialog
+        displayDialog={displayDialog}
+        setDisplayDialog={setDisplayDialog}
+      />
       <section
         className={`Lato w-full h-full flex flex-wrap ${
           isTabletOrMobile ? "justify-content-between column-gap-2 " : ""

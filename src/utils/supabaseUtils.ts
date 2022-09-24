@@ -143,7 +143,7 @@ export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
     .from<BoardType>("boards")
     .select(
-      "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
+      "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, title, image(link)), customImage(id, title, link, type)), edges(*)"
     )
     .eq("project_id", project_id)
     .order("sort", { ascending: true });

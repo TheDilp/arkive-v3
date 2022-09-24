@@ -60,6 +60,7 @@ export type BoardItemDisplayDialogType = {
   defaultEdgeColor: string;
   public: boolean;
   show: boolean;
+  showTemplates: boolean;
 };
 
 // Node Props
@@ -85,6 +86,7 @@ export type BoardNodeType = {
   doc_id?: string;
   document?: {
     id: string;
+    title: string;
     image?: {
       link?: string;
     };

@@ -76,6 +76,12 @@ export default function BoardTreeItemContext({
           public: !displayDialog.public,
         }),
     },
+    {
+      label: "Manage Templates",
+      icon: `pi pi-fw pi-copy`,
+      command: () =>
+        setDisplayDialog({ ...displayDialog, showTemplates: true }),
+    },
     { separator: true },
     {
       label: "View Public Board",

@@ -1,3 +1,4 @@
+import { stringify } from "querystring";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { RemirrorJSON } from "remirror";
@@ -1273,6 +1274,7 @@ export function useCreateNode(project_id: string) {
               let document:
                 | {
                     id: string;
+                    title: string;
                     image: {
                       link?: string;
                     };
@@ -1286,6 +1288,7 @@ export function useCreateNode(project_id: string) {
                 if (doc)
                   document = {
                     id: doc.id,
+                    title: doc.title,
                     image: {
                       link: doc.image?.link,
                     },
@@ -1359,6 +1362,7 @@ export function useUpdateNode(project_id: string) {
               let document:
                 | {
                     id: string;
+                    title: string;
                     image: {
                       link?: string;
                     };
@@ -1374,6 +1378,7 @@ export function useUpdateNode(project_id: string) {
                 if (doc)
                   document = {
                     id: doc.id,
+                    title: doc.title,
                     image: {
                       link: doc.image?.link,
                     },
@@ -2199,6 +2204,7 @@ export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
       nodes: (CreateNodeType & {
         document: {
           id: string;
+          title: string;
           image?: {
             link?: string;
           };

@@ -21,6 +21,7 @@ export const BoardUpdateDialogDefault = {
   folder: false,
   depth: 0,
   show: false,
+  showTemplates: false,
   expanded: false,
   public: false,
 };

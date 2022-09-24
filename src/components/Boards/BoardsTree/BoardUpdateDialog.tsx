@@ -1,28 +1,24 @@
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
-import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { TabPanel, TabView } from "primereact/tabview";
 import { Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
 import {
   BoardItemDisplayDialogType,
-  BoardNodeType,
   BoardType,
 } from "../../../types/BoardTypes";
+
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
-import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
 type Props = {
-  visible: BoardItemDisplayDialogType;
-  setVisible: Dispatch<SetStateAction<BoardItemDisplayDialogType>>;
+  boardData: BoardItemDisplayDialogType;
+  setBoardData: Dispatch<SetStateAction<BoardItemDisplayDialogType>>;
 };
 
-export default function BoardUpdateDialog({ visible, setVisible }: Props) {
+export default function BoardUpdateDialog({ boardData, setBoardData }: Props) {
   const { project_id } = useParams();
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const { data: boards } = useGetBoards(project_id as string);
@@ -51,11 +47,11 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
 
   return (
     <Dialog
-      header={`Update Board ${visible.title}`}
-      visible={visible.show}
+      header={`Update Board ${boardData.title}`}
+      visible={boardData.show}
       modal={false}
       className="w-2"
-      onHide={() => setVisible(BoardUpdateDialogDefault)}
+      onHide={() => setBoardData(BoardUpdateDialogDefault)}
     >
       <div className="flex flex-wrap justify-content-center row-gap-2">
         <div className="w-full">
@@ -63,9 +59,9 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
           <InputText
             placeholder="Board Title"
             className="w-full"
-            value={visible.title}
+            value={boardData.title}
             onChange={(e) =>
-              setVisible((prev) => ({
+              setBoardData((prev) => ({
                 ...prev,
                 title: e.target.value,
               }))
@@ -82,9 +78,9 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
             placeholder="Board Folder"
             optionLabel="title"
             optionValue="id"
-            value={visible.parent}
+            value={boardData.parent}
             onChange={(e) =>
-              setVisible((prev) => ({
+              setBoardData((prev) => ({
                 ...prev,
                 parent: e.value,
               }))
@@ -94,13 +90,13 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
                 ? [
                     { title: "Root", id: null },
                     ...boards.filter((board, idx, array) => {
-                      if (!board.folder || board.id === visible.id)
+                      if (!board.folder || board.id === boardData.id)
                         return false;
                       return recursiveDescendantRemove(
                         board,
                         idx,
                         array,
-                        visible.id
+                        boardData.id
                       );
                     }),
                   ]
@@ -115,18 +111,18 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
           </label>
           <InputText
             className="w-10"
-            value={visible.defaultNodeColor}
+            value={boardData.defaultNodeColor}
             onChange={(e) =>
-              setVisible((prev) => ({
+              setBoardData((prev) => ({
                 ...prev,
                 defaultNodeColor: e.target.value,
               }))
             }
           />
           <ColorPicker
-            value={visible.defaultNodeColor}
+            value={boardData.defaultNodeColor}
             onChange={(e) =>
-              setVisible((prev) => ({
+              setBoardData((prev) => ({
                 ...prev,
                 defaultNodeColor: ("#" + e.value) as string,
               }))
@@ -139,18 +135,18 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
           </label>
           <InputText
             className="w-10"
-            value={visible.defaultEdgeColor}
+            value={boardData.defaultEdgeColor}
             onChange={(e) =>
-              setVisible((prev) => ({
+              setBoardData((prev) => ({
                 ...prev,
                 defaultEdgeColor: e.target.value,
               }))
             }
           />
           <ColorPicker
-            value={visible.defaultEdgeColor}
+            value={boardData.defaultEdgeColor}
             onChange={(e) =>
-              setVisible((prev) => ({
+              setBoardData((prev) => ({
                 ...prev,
                 defaultEdgeColor: ("#" + e.value) as string,
               }))
@@ -160,53 +156,22 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
 
         <div className="w-full flex justify-content-end">
           <Button
-            label={`Update ${visible.folder ? "Folder" : "Board"}`}
+            label={`Update ${boardData.folder ? "Folder" : "Board"}`}
             className="p-button-success p-button-outlined mt-2"
             icon="pi pi-save"
             iconPos="right"
             onClick={() =>
               updateBoardMutation.mutate({
-                id: visible.id,
-                title: visible.title,
-                parent: visible.parent === "0" ? null : visible.parent,
-                defaultNodeColor: visible.defaultNodeColor,
-                defaultEdgeColor: visible.defaultEdgeColor,
+                id: boardData.id,
+                title: boardData.title,
+                parent: boardData.parent === "0" ? null : boardData.parent,
+                defaultNodeColor: boardData.defaultNodeColor,
+                defaultEdgeColor: boardData.defaultEdgeColor,
               })
             }
           />
         </div>
       </div>
-      {/* <DataTable
-            scrollDirection="both"
-            scrollable
-            editMode="row"
-            value={
-              boards
-                ?.find((board) => board.id === visible.id)
-                ?.nodes.filter((node) => node.template) || []
-            }
-            size="small"
-          >
-            <Column field="label" header="Label" frozen></Column>
-            <Column header="Edit" rowEditor frozen></Column>
-            <Column
-              field="customImage"
-              body={(rowData: BoardNodeType) =>
-                rowData?.customImage?.link ? (
-                  <ImgDropdownItem
-                    title=""
-                    link={rowData?.customImage?.link || ""}
-                  />
-                ) : (
-                  <div></div>
-                )
-              }
-            ></Column>
-            <Column field="width" header="Width"></Column>
-            <Column field="height" header="Height"></Column>
-            <Column field="backgroundColor" header="Color"></Column>
-            <Column field="backgroundOpacity" header="Opacity"></Column>
-          </DataTable> */}
     </Dialog>
   );
 }

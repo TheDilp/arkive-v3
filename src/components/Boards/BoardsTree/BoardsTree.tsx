@@ -5,18 +5,14 @@ import {
   BoardItemDisplayDialogType,
   BoardType,
 } from "../../../types/BoardTypes";
-import {
-  useGetBoards,
-  useSortChildren,
-  useUpdateBoard,
-} from "../../../utils/customHooks";
+import { useGetBoards, useSortChildren } from "../../../utils/customHooks";
 import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
-import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth, handleDrop, TreeSortFunc } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
 import BoardsFilter from "./BoardsFilter";
+import BoardTemplateDialog from "./BoardTemplateDialog";
 import BoardTreeItem from "./BoardTreeItem";
 import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
@@ -32,7 +28,6 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const [filter, setFilter] = useState("");
   const [treeData, setTreeData] = useState<NodeModel<BoardType>[]>([]);
   const { data: boards } = useGetBoards(project_id as string);
-  const updateBoardMutation = useUpdateBoard(project_id as string);
   const sortChildrenMutation = useSortChildren();
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<BoardItemDisplayDialogType>(BoardUpdateDialogDefault);
@@ -91,12 +86,14 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
         displayDialog={updateBoardDialog}
         setDisplayDialog={setUpdateBoardDialog}
       />
-      {updateBoardDialog.show && (
-        <BoardUpdateDialog
-          visible={updateBoardDialog}
-          setVisible={setUpdateBoardDialog}
-        />
-      )}
+      <BoardUpdateDialog
+        boardData={updateBoardDialog}
+        setBoardData={setUpdateBoardDialog}
+      />
+      <BoardTemplateDialog
+        boardData={updateBoardDialog}
+        setBoardData={setUpdateBoardDialog}
+      />
       <TreeSidebar>
         <BoardsFilter filter={filter} setFilter={setFilter} />
         <Tree
@@ -158,6 +155,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
           onDrop={(tree, options) =>
             handleDrop(
               tree,
+              // @ts-ignore
               options,
               setTreeData,
               sortChildrenMutation,
