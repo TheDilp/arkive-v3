@@ -12,7 +12,7 @@ import {
   SetStateAction,
 } from "react";
 import { useParams } from "react-router-dom";
-import { EdgeUpdateDialogProps } from "../../types/BoardTypes";
+import { EdgeUpdateDialogType } from "../../types/BoardTypes";
 import {
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
@@ -25,8 +25,8 @@ import { useUpdateEdge } from "../../utils/customHooks";
 import { EdgeUpdateDialogDefault } from "../../utils/defaultValues";
 
 type Props = {
-  edgeUpdateDialog: EdgeUpdateDialogProps;
-  setEdgeUpdateDialog: Dispatch<SetStateAction<EdgeUpdateDialogProps>>;
+  edgeUpdateDialog: EdgeUpdateDialogType;
+  setEdgeUpdateDialog: Dispatch<SetStateAction<EdgeUpdateDialogType>>;
 };
 
 export default function EdgeUpdateDialog({

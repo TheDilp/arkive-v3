@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { DocumentProps as DocumentType } from "../../custom-types";
 import {
-  BoardNodeProps as BoardNodeType,
-  BoardProps as BoardType,
+  BoardNodeType as BoardNodeType,
+  BoardType as BoardType,
 } from "../../types/BoardTypes";
 import {
   MapMarkerProps as MapMarkerType,

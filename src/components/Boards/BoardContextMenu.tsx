@@ -2,10 +2,7 @@ import { ContextMenu } from "primereact/contextmenu";
 import { Dispatch } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import {
-  BoardContextMenuProps,
-  BoardStateAction,
-} from "../../types/BoardTypes";
+import { BoardContextMenuType, BoardStateAction } from "../../types/BoardTypes";
 import { changeLockState } from "../../utils/boardUtils";
 import {
   useCreateNode,
@@ -19,7 +16,7 @@ import { defaultNode } from "../../utils/utils";
 type Props = {
   cyRef: any;
   cm: any;
-  contextMenu: BoardContextMenuProps;
+  contextMenu: BoardContextMenuType;
   boardStateDisptach: Dispatch<BoardStateAction>;
 };
 

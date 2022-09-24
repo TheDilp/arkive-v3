@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
-import { NodeUpdateDialogProps } from "../../../types/BoardTypes";
+import { NodeUpdateDialogType } from "../../../types/BoardTypes";
 import {
   BoardFontSizes,
   boardNodeShapes,
@@ -24,7 +24,7 @@ import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
-type ManyNodesProps = Omit<NodeUpdateDialogProps, "id">;
+type ManyNodesProps = Omit<NodeUpdateDialogType, "id">;
 
 export default function UpdateManyNodes() {
   const [manyNodesData, setManyNodesData] = useState<ManyNodesProps>(

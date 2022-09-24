@@ -1,12 +1,9 @@
-import {
-  MentionAtomPopupComponent,
-  MentionState
-} from "@remirror/react";
+import { MentionAtomPopupComponent, MentionState } from "@remirror/react";
 import { useMemo, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { DocumentProps } from "../../../../../custom-types";
-import { BoardProps } from "../../../../../types/BoardTypes";
+import { BoardType } from "../../../../../types/BoardTypes";
 import { MapProps } from "../../../../../types/MapTypes";
 
 export default function MentionDropdownComponent() {
@@ -60,7 +57,7 @@ export default function MentionDropdownComponent() {
         .slice(0, 5)
         .sort();
     } else if (mentionState.name === "dollah") {
-      const boards: BoardProps[] | undefined = queryClient.getQueryData(
+      const boards: BoardType[] | undefined = queryClient.getQueryData(
         `${project_id}-boards`
       );
 

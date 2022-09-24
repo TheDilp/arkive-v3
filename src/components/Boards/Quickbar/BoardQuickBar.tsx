@@ -11,10 +11,10 @@ import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import {
-  BoardExportProps,
-  BoardNodeProps,
+  BoardExportType,
+  BoardNodeType,
   BoardStateAction,
-  BoardStateProps,
+  BoardStateType,
 } from "../../../types/BoardTypes";
 import {
   changeLockState,
@@ -35,7 +35,7 @@ import ImgDropdownItem from "../../Util/ImgDropdownItem";
 import UpdateManyEdges from "./UpdateManyEdges";
 import UpdateManyNodes from "./UpdateManyNodes";
 type Props = {
-  boardState: BoardStateProps;
+  boardState: BoardStateType;
   boardStateDispatch: Dispatch<BoardStateAction>;
 };
 export default function BoardQuickBar({
@@ -51,11 +51,11 @@ export default function BoardQuickBar({
   );
   const [search, setSearch] = useState("");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
-  const [filteredNodes, setFilteredNodes] = useState<BoardNodeProps[]>(
+  const [filteredNodes, setFilteredNodes] = useState<BoardNodeType[]>(
     board?.nodes.filter((node) => node.label) || []
   );
   const [searchDialog, setSearchDialog] = useState(false);
-  const [exportDialog, setExportDialog] = useState<BoardExportProps>({
+  const [exportDialog, setExportDialog] = useState<BoardExportType>({
     view: "Graph",
     background: "Color",
     type: "PNG",
@@ -162,12 +162,20 @@ export default function BoardQuickBar({
             field="label"
             suggestions={filteredNodes}
             virtualScrollerOptions={{
-              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: filteredNodes.length === 0, delay: 0, loadingTemplate: (options) => {
+              lazy: true,
+              onLazyLoad: () => {},
+              itemSize: 50,
+              showLoader: true,
+              loading: filteredNodes.length === 0,
+              delay: 0,
+              loadingTemplate: (options) => {
                 return (
-                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                  </div>
-                )
-              }
+                  <div
+                    className="flex align-items-center p-2"
+                    style={{ height: "38px" }}
+                  ></div>
+                );
+              },
             }}
             onSelect={(e) => {
               if (!cyRef) return;
@@ -193,7 +201,7 @@ export default function BoardQuickBar({
                 ) || []
               )
             }
-            itemTemplate={(item: BoardNodeProps) => (
+            itemTemplate={(item: BoardNodeType) => (
               <span>
                 <ImgDropdownItem
                   title={item.label || ""}
@@ -389,8 +397,9 @@ export default function BoardQuickBar({
 
       {/*Toggle grid visibility */}
       <span
-        className={`cursor-pointer flex hover:text-blue-300 ${boardState.drawGrid ? "text-green-500" : ""
-          }  drawGrid`}
+        className={`cursor-pointer flex hover:text-blue-300 ${
+          boardState.drawGrid ? "text-green-500" : ""
+        }  drawGrid`}
         onClick={() => {
           if (cyRef) {
             boardStateDispatch({ type: "GRID", payload: !boardState.drawGrid });
@@ -440,8 +449,9 @@ export default function BoardQuickBar({
 
       {/* Drawmode button */}
       <i
-        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""
-          } drawMode`}
+        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
+          boardState.drawMode ? "text-green-500" : ""
+        } drawMode`}
         onClick={() =>
           boardStateDispatch({ type: "DRAW", payload: !boardState.drawMode })
         }

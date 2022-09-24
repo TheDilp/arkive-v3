@@ -21,7 +21,7 @@ import {
 import CustomLinkExtenstion from "../components/Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
 import { SecretExtension } from "../components/Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
 import { DocumentProps, slashMenuItem, SortIndexes } from "../custom-types";
-import { BoardProps } from "../types/BoardTypes";
+import { BoardType } from "../types/BoardTypes";
 import { MapProps } from "../types/MapTypes";
 import { TimelineType } from "../types/TimelineTypes";
 const defaultToastConfig: ToastOptions = {
@@ -569,18 +569,18 @@ export const TreeSortFunc = (sortA: number, sortB: number) => {
 };
 
 export const handleDrop = async (
-  newTree: NodeModel<DocumentProps | MapProps | BoardProps | TimelineType>[],
+  newTree: NodeModel<DocumentProps | MapProps | BoardType | TimelineType>[],
   {
     dragSourceId,
     dragSource,
     dropTargetId,
   }: {
     dragSourceId: string;
-    dragSource: NodeModel<DocumentProps | MapProps | BoardProps | TimelineType>;
+    dragSource: NodeModel<DocumentProps | MapProps | BoardType | TimelineType>;
     dropTargetId: string;
   },
   setTreeData: (
-    newTree: NodeModel<DocumentProps | MapProps | BoardProps | TimelineType>[]
+    newTree: NodeModel<DocumentProps | MapProps | BoardType | TimelineType>[]
   ) => void,
   sortChildrenMutation: UseMutationResult<
     void,

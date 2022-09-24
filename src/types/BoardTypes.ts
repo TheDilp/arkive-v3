@@ -1,13 +1,13 @@
 import { ImageProps } from "../custom-types";
 
 // Board props
-export type BoardProps = {
+export type BoardType = {
   id: string;
   title: string;
   parent: { id: string; title: string } | null;
   project_id: string;
-  nodes: BoardNodeProps[];
-  edges: BoardEdgeProps[];
+  nodes: BoardNodeType[];
+  edges: BoardEdgeType[];
   defaultNodeColor: string;
   defaultEdgeColor: string;
   folder: boolean;
@@ -16,7 +16,7 @@ export type BoardProps = {
   sort: number;
 };
 
-export type CreateBoardProps = {
+export type CreateBoardType = {
   id: string;
   title: string;
   project_id: string;
@@ -24,7 +24,7 @@ export type CreateBoardProps = {
   folder: boolean;
 };
 
-export type UpdateBoardProps = {
+export type UpdateBoardType = {
   id: string;
   title?: string;
   parent?: string | null;
@@ -33,23 +33,23 @@ export type UpdateBoardProps = {
   defaultEdgeColor?: string;
   public?: boolean;
 };
-export type UpdateBoardInputs = Pick<BoardProps, "title"> & {
+export type UpdateBoardInputs = Pick<BoardType, "title"> & {
   parent: string;
 };
 
-export type BoardExportProps = {
+export type BoardExportType = {
   view: "Graph" | "View";
   background: "Color" | "Transparent";
   type: "PNG" | "JPEG" | "JSON";
   show: boolean;
 };
 
-export type BoardContextMenuProps = {
+export type BoardContextMenuType = {
   x: number;
   y: number;
   type: "board" | "node" | "edge";
 };
-export type BoardItemDisplayDialogProps = {
+export type BoardItemDisplayDialogType = {
   id: string;
   title: string;
   parent: string;
@@ -64,7 +64,7 @@ export type BoardItemDisplayDialogProps = {
 
 // Node Props
 
-export type BoardNodeProps = {
+export type BoardNodeType = {
   id: string;
   label?: string;
   x: number;
@@ -90,9 +90,9 @@ export type BoardNodeProps = {
   };
   board_id: string;
 };
-export type CytoscapeNodeProps = {
+export type CytoscapeNodeType = {
   data: Pick<
-    BoardNodeProps,
+    BoardNodeType,
     | "id"
     | "label"
     | "width"
@@ -109,10 +109,10 @@ export type CytoscapeNodeProps = {
     | "textVAlign"
     | "customImage"
   >;
-  position: Pick<BoardNodeProps, "x" | "y">;
+  position: Pick<BoardNodeType, "x" | "y">;
   locked: boolean;
 };
-export type CreateNodeProps = {
+export type CreateNodeType = {
   id: string;
   label?: string;
   x: number;
@@ -132,8 +132,9 @@ export type CreateNodeProps = {
   textVAlign: "top" | "center" | "bottom";
   zIndex: number;
   locked: boolean;
+  template: boolean;
 };
-export type UpdateNodeProps = {
+export type UpdateNodeType = {
   id: string;
   label?: string;
   x?: number;
@@ -154,7 +155,7 @@ export type UpdateNodeProps = {
   locked?: boolean;
 };
 export type UpdateNodeInputs = Pick<
-  NodeUpdateDialogProps,
+  NodeUpdateDialogType,
   | "label"
   | "type"
   | "doc_id"
@@ -169,7 +170,7 @@ export type UpdateNodeInputs = Pick<
   | "backgroundOpacity"
   | "zIndex"
 >;
-export type NodeUpdateDialogProps = {
+export type NodeUpdateDialogType = {
   id: string;
   label: string;
   type: string;
@@ -190,7 +191,7 @@ export type NodeUpdateDialogProps = {
 
 // Edge Props
 
-export type BoardEdgeProps = {
+export type BoardEdgeType = {
   id: string;
   board_id: string;
   label?: string;
@@ -210,9 +211,9 @@ export type BoardEdgeProps = {
   zIndex: number;
 };
 
-export type CytoscapeEdgeProps = {
+export type CytoscapeEdgeType = {
   data: Pick<
-    BoardEdgeProps,
+    BoardEdgeType,
     | "id"
     | "label"
     | "source"
@@ -232,7 +233,7 @@ export type CytoscapeEdgeProps = {
   >;
 };
 
-export type CreateEdgeProps = {
+export type CreateEdgeType = {
   id: string;
   board_id: string;
   label?: string;
@@ -253,7 +254,7 @@ export type CreateEdgeProps = {
 };
 
 export type UpdateEdgeInputs = Pick<
-  EdgeUpdateDialogProps,
+  EdgeUpdateDialogType,
   | "label"
   | "curveStyle"
   | "lineStyle"
@@ -269,7 +270,7 @@ export type UpdateEdgeInputs = Pick<
   | "zIndex"
 >;
 
-export type UpdateEdgeProps = {
+export type UpdateEdgeType = {
   id: string;
   board_id: string;
   label?: string;
@@ -286,7 +287,7 @@ export type UpdateEdgeProps = {
   targetArrowShape?: string;
   zIndex?: number;
 };
-export type EdgeUpdateDialogProps = {
+export type EdgeUpdateDialogType = {
   id: string;
   label: string;
   curveStyle: string;
@@ -304,7 +305,7 @@ export type EdgeUpdateDialogProps = {
   show: boolean;
 };
 
-export type BoardStateProps = {
+export type BoardStateType = {
   drawMode: boolean;
   quickCreate: boolean;
   drawGrid: boolean;

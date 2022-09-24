@@ -1,7 +1,7 @@
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { DocumentProps } from "../../../../../../custom-types";
-import { BoardProps } from "../../../../../../types/BoardTypes";
+import { BoardType } from "../../../../../../types/BoardTypes";
 import { MapProps } from "../../../../../../types/MapTypes";
 import BoardMention from "./BoardMention";
 import DocumentMention from "./DocumentMention";
@@ -80,8 +80,8 @@ export default function MentionReactComponent({ node }: Props) {
       return <MapMention nodeId={undefined} nodeLabel={nodeLabel} />;
     }
   } else if (nodeName === "dollah") {
-    const boards: BoardProps[] | undefined = queryClient.getQueryData<
-      BoardProps[]
+    const boards: BoardType[] | undefined = queryClient.getQueryData<
+      BoardType[]
     >(`${project_id}-boards`);
     let boardItem = boards
       ? boards.find((board) => board.id === nodeId)

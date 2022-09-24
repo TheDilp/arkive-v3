@@ -13,7 +13,7 @@ import {
 } from "react";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
-import { NodeUpdateDialogProps } from "../../types/BoardTypes";
+import { NodeUpdateDialogType } from "../../types/BoardTypes";
 import {
   BoardFontSizes,
   boardNodeShapes,
@@ -29,8 +29,8 @@ import {
 import { NodeUpdateDialogDefault } from "../../utils/defaultValues";
 import ImgDropdownItem from "../Util/ImgDropdownItem";
 type Props = {
-  nodeUpdateDialog: NodeUpdateDialogProps;
-  setNodeUpdateDialog: Dispatch<SetStateAction<NodeUpdateDialogProps>>;
+  nodeUpdateDialog: NodeUpdateDialogType;
+  setNodeUpdateDialog: Dispatch<SetStateAction<NodeUpdateDialogType>>;
 };
 
 export default function NodeUpdateDialog({
@@ -81,7 +81,7 @@ export default function NodeUpdateDialog({
 
                   <div className="w-full flex flex-wrap">
                     <label className="w-full text-sm text-gray-400">
-                      Node Labels
+                      Node Label
                     </label>
 
                     <InputText

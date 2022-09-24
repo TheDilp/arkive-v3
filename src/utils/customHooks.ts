@@ -10,13 +10,13 @@ import {
   SortIndexes,
 } from "../custom-types";
 import {
-  BoardNodeProps,
-  BoardProps,
-  CreateBoardProps,
-  CreateEdgeProps,
-  CreateNodeProps,
-  UpdateEdgeProps,
-  UpdateNodeProps,
+  BoardNodeType,
+  BoardType,
+  CreateBoardType,
+  CreateEdgeType,
+  CreateNodeType,
+  UpdateEdgeType,
+  UpdateNodeType,
 } from "../types/BoardTypes";
 import {
   CreateMapLayerProps,
@@ -323,14 +323,14 @@ export function useSortChildren() {
           `${newData.project_id}-${newData.type}`,
           (
             oldData:
-              | (DocumentProps | MapProps | BoardProps | TimelineType)[]
+              | (DocumentProps | MapProps | BoardType | TimelineType)[]
               | undefined
           ) => {
             if (oldData) {
               let sortedData: (
                 | DocumentProps
                 | MapProps
-                | BoardProps
+                | BoardType
                 | TimelineType
               )[] = [...oldData];
 
@@ -408,25 +408,23 @@ export function useDeleteDocument(project_id: string) {
 
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               let newData = oldData.map((board) => {
                 let newBoard = { ...board };
                 if (
                   newBoard.nodes.some(
-                    (node: BoardNodeProps) =>
+                    (node: BoardNodeType) =>
                       node.document?.id === deletedDocument.id
                   )
                 ) {
-                  newBoard.nodes = newBoard.nodes.map(
-                    (node: BoardNodeProps) => {
-                      if (node.document?.id === deletedDocument.id) {
-                        return { ...node, document: undefined };
-                      } else {
-                        return node;
-                      }
+                  newBoard.nodes = newBoard.nodes.map((node: BoardNodeType) => {
+                    if (node.document?.id === deletedDocument.id) {
+                      return { ...node, document: undefined };
+                    } else {
+                      return node;
                     }
-                  );
+                  });
                 }
                 return newBoard;
               });
@@ -1095,7 +1093,7 @@ export function useGetBoardData(
     }
   );
   if (public_view && board) return board;
-  const boards: BoardProps[] | undefined = queryClient.getQueryData(
+  const boards: BoardType[] | undefined = queryClient.getQueryData(
     `${project_id}-boards`
   );
   if (boards) {
@@ -1108,7 +1106,7 @@ export function useGetBoardData(
 export function useCreateBoard() {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: CreateBoardProps) => {
+    async (vars: CreateBoardType) => {
       const newBoard = await createBoard({
         ...vars,
       });
@@ -1121,7 +1119,7 @@ export function useCreateBoard() {
         );
         queryClient.setQueryData(
           `${newBoard.project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               return [
                 ...oldData,
@@ -1187,7 +1185,7 @@ export function useUpdateBoard(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               let newParent = oldData.find(
                 (doc) => doc.id === updatedBoard.parent
@@ -1237,7 +1235,7 @@ export function useDeleteBoard(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               return oldData.filter((board) => board.id !== deletedBoard.id);
             } else {
@@ -1260,7 +1258,7 @@ export function useDeleteBoard(project_id: string) {
 export function useCreateNode(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: CreateNodeProps) => {
+    async (vars: CreateNodeType) => {
       await createNode({
         ...vars,
       });
@@ -1270,7 +1268,7 @@ export function useCreateNode(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               let document:
                 | {
@@ -1338,7 +1336,7 @@ export function useUpdateNode(project_id: string) {
 
   return useMutation(
     async (
-      vars: Omit<UpdateNodeProps, "customImage"> & {
+      vars: Omit<UpdateNodeType, "customImage"> & {
         board_id: string;
         customImage?: ImageProps;
       }
@@ -1354,7 +1352,7 @@ export function useUpdateNode(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               // Init document variable as undefined
               let document:
@@ -1440,7 +1438,7 @@ export function useDeleteNode(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               return oldData.map((board) => {
                 if (board.id === deletedNode.board_id) {
@@ -1484,7 +1482,7 @@ export function useDeleteManyNodes(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               return oldData.map((board) => {
                 if (board.id === deletedNodes.board_id) {
@@ -1520,7 +1518,7 @@ export function useDeleteManyNodes(project_id: string) {
 export function useCreateEdge(project_id: string) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (vars: CreateEdgeProps) => {
+    async (vars: CreateEdgeType) => {
       const newEdge = await createEdge({
         ...vars,
       });
@@ -1531,7 +1529,7 @@ export function useCreateEdge(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               let newData = oldData.map((board) => {
                 if (board.id === newEdge.board_id) {
@@ -1566,7 +1564,7 @@ export function useUpdateEdge(project_id: string) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (vars: UpdateEdgeProps) => {
+    async (vars: UpdateEdgeType) => {
       await updateEdge(vars);
     },
     {
@@ -1574,7 +1572,7 @@ export function useUpdateEdge(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               return oldData.map((board) => {
                 if (board.id === updatedEdge.board_id) {
@@ -1623,7 +1621,7 @@ export function useDeleteEdge(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               return oldData.map((board) => {
                 if (board.id === deletedEdge.board_id) {
@@ -1665,7 +1663,7 @@ export function useDeleteManyEdges(project_id: string) {
         const previousBoards = queryClient.getQueryData(`${project_id}-boards`);
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               return oldData.map((board) => {
                 if (board.id === deletedEdges.board_id) {
@@ -2197,7 +2195,7 @@ export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
 
   return useMutation(
     async (vars: {
-      nodes: (CreateNodeProps & {
+      nodes: (CreateNodeType & {
         document: {
           id: string;
           image?: {
@@ -2205,7 +2203,7 @@ export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
           };
         };
       })[];
-      edges: CreateEdgeProps[];
+      edges: CreateEdgeType[];
     }) => {
       await createManyNodes(
         vars.nodes.map((node) => {
@@ -2221,7 +2219,7 @@ export function useCopyPasteNodesEdges(project_id: string, board_id: string) {
 
         queryClient.setQueryData(
           `${project_id}-boards`,
-          (oldData: BoardProps[] | undefined) => {
+          (oldData: BoardType[] | undefined) => {
             if (oldData) {
               let newData = oldData.map((board) => {
                 if (board.id === board_id) {

@@ -4,7 +4,7 @@ import { ContextMenu } from "primereact/contextmenu";
 import React from "react";
 import { To, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { BoardItemDisplayDialogProps } from "../../../types/BoardTypes";
+import { BoardItemDisplayDialogType } from "../../../types/BoardTypes";
 import {
   useCreateBoard,
   useDeleteBoard,
@@ -14,8 +14,8 @@ import { toastSuccess, toastWarn } from "../../../utils/utils";
 type Props = {
   cm: React.RefObject<ContextMenu>;
   boardId: string;
-  displayDialog: BoardItemDisplayDialogProps;
-  setDisplayDialog: (displayDialog: BoardItemDisplayDialogProps) => void;
+  displayDialog: BoardItemDisplayDialogType;
+  setDisplayDialog: (displayDialog: BoardItemDisplayDialogType) => void;
 };
 
 export default function BoardTreeItemContext({

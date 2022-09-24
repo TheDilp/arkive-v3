@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { slashMenuItem } from "../../../custom-types";
-import { BoardProps } from "../../../types/BoardTypes";
+import { BoardType } from "../../../types/BoardTypes";
 import { MapProps } from "../../../types/MapTypes";
 import {
   columnsItems,
@@ -34,7 +34,7 @@ export function CommandMenu() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const maps = queryClient.getQueryData<MapProps[]>(`${project_id}-maps`);
-  const boards = queryClient.getQueryData<BoardProps[]>(`${project_id}-boards`);
+  const boards = queryClient.getQueryData<BoardType[]>(`${project_id}-boards`);
   const onSubmit = useCallback(
     (cmd: slashMenuItem) => {
       if (cmd.type === "heading") {

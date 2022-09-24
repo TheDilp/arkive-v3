@@ -2,18 +2,18 @@ import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { Link, useParams } from "react-router-dom";
 import {
-  BoardItemDisplayDialogProps,
-  BoardProps,
+  BoardItemDisplayDialogType,
+  BoardType,
 } from "../../../types/BoardTypes";
 import { useUpdateBoard } from "../../../utils/customHooks";
 type Props = {
   boardId: string;
   setBoardId: (boardId: string) => void;
-  node: NodeModel<BoardProps>;
+  node: NodeModel<BoardType>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  setDisplayDialog: (displayDialog: BoardItemDisplayDialogProps) => void;
+  setDisplayDialog: (displayDialog: BoardItemDisplayDialogType) => void;
   cm: any;
 };
 
@@ -38,7 +38,7 @@ export default function BoardTreeItem({
         if (node.droppable) {
           e.preventDefault();
           e.stopPropagation();
-          return
+          return;
         }
         if (!node.droppable) setBoardId(node.id as string);
       }}
@@ -78,11 +78,12 @@ export default function BoardTreeItem({
           )}
         </span>
       )}
-      <span onClick={e => {
-        e.preventDefault();
-        e.stopPropagation()
-      }}>
-
+      <span
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         {node.droppable ? (
           <Icon icon="bxs:folder" inline={true} className="mr-1" />
         ) : (

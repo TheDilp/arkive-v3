@@ -2,10 +2,14 @@ import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  BoardItemDisplayDialogProps,
-  BoardProps,
+  BoardItemDisplayDialogType,
+  BoardType,
 } from "../../../types/BoardTypes";
-import { useGetBoards, useSortChildren, useUpdateBoard } from "../../../utils/customHooks";
+import {
+  useGetBoards,
+  useSortChildren,
+  useUpdateBoard,
+} from "../../../utils/customHooks";
 import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
 import { sortBoardsChildren } from "../../../utils/supabaseUtils";
 import { getDepth, handleDrop, TreeSortFunc } from "../../../utils/utils";
@@ -26,12 +30,12 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const cm = useRef() as any;
   const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [filter, setFilter] = useState("");
-  const [treeData, setTreeData] = useState<NodeModel<BoardProps>[]>([]);
+  const [treeData, setTreeData] = useState<NodeModel<BoardType>[]>([]);
   const { data: boards } = useGetBoards(project_id as string);
   const updateBoardMutation = useUpdateBoard(project_id as string);
   const sortChildrenMutation = useSortChildren();
   const [updateBoardDialog, setUpdateBoardDialog] =
-    useState<BoardItemDisplayDialogProps>(BoardUpdateDialogDefault);
+    useState<BoardItemDisplayDialogType>(BoardUpdateDialogDefault);
 
   useLayoutEffect(() => {
     if (boards) {
@@ -56,13 +60,15 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
         return () => clearTimeout(timeout);
       } else {
         setTreeData(
-          boards.sort((a, b) => TreeSortFunc(a.sort, b.sort)).map((board) => ({
-            id: board.id,
-            parent: board.parent?.id || "0",
-            text: board.title,
-            droppable: board.folder,
-            data: board,
-          }))
+          boards
+            .sort((a, b) => TreeSortFunc(a.sort, b.sort))
+            .map((board) => ({
+              id: board.id,
+              parent: board.parent?.id || "0",
+              text: board.title,
+              droppable: board.folder,
+              data: board,
+            }))
         );
       }
     } else {
@@ -72,8 +78,9 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
 
   return (
     <div
-      className={` text-white pt-2 px-2 ${isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
-        }`}
+      className={` text-white pt-2 px-2 ${
+        isTabletOrMobile ? "surface-0 hidden" : "surface-50 w-2"
+      }`}
       style={{
         height: "96vh",
       }}
@@ -107,10 +114,7 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
               .map((board) => board.id) || false
           }
           rootId="0"
-          render={(
-            node: NodeModel<BoardProps>,
-            { depth, isOpen, onToggle }
-          ) => (
+          render={(node: NodeModel<BoardType>, { depth, isOpen, onToggle }) => (
             <BoardTreeItem
               node={node}
               boardId={boardId}
@@ -151,8 +155,16 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
             }
           }}
           //@ts-ignore
-          onDrop={(tree, options) => handleDrop(tree, options, setTreeData, sortChildrenMutation, project_id as string, "boards")}
-
+          onDrop={(tree, options) =>
+            handleDrop(
+              tree,
+              options,
+              setTreeData,
+              sortChildrenMutation,
+              project_id as string,
+              "boards"
+            )
+          }
         />
       </TreeSidebar>
     </div>

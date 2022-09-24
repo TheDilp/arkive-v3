@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { Slider } from "primereact/slider";
 import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { EdgeUpdateDialogProps } from "../../../types/BoardTypes";
+import { EdgeUpdateDialogType } from "../../../types/BoardTypes";
 import {
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
@@ -22,7 +22,7 @@ export default function UpdateManyEdges() {
   const { project_id, board_id } = useParams();
   const { cyRef } = useContext(BoardRefsContext);
   const [manyEdgesData, setManyEdgesData] = useState<
-    Omit<EdgeUpdateDialogProps, "id">
+    Omit<EdgeUpdateDialogType, "id">
   >(EdgeUpdateDialogDefault);
   const updateEdgeMutation = useUpdateEdge(project_id as string);
 
@@ -57,7 +57,7 @@ export default function UpdateManyEdges() {
           <InputText
             value={manyEdgesData.label}
             onChange={(e) =>
-              setManyEdgesData((prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+              setManyEdgesData((prev: Omit<EdgeUpdateDialogType, "id">) => ({
                 ...prev,
                 label: e.target.value,
               }))
@@ -93,7 +93,7 @@ export default function UpdateManyEdges() {
           placeholder="Curve Type"
           value={manyEdgesData.curveStyle}
           onChange={(e) => {
-            setManyEdgesData((prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+            setManyEdgesData((prev: Omit<EdgeUpdateDialogType, "id">) => ({
               ...prev,
               curveStyle: e.value,
             }));
@@ -132,7 +132,7 @@ export default function UpdateManyEdges() {
                 step={10}
                 onChange={(e) =>
                   setManyEdgesData(
-                    (prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+                    (prev: Omit<EdgeUpdateDialogType, "id">) => ({
                       ...prev,
                       controlPointDistances: e.value as number,
                     })
@@ -152,7 +152,7 @@ export default function UpdateManyEdges() {
                 step={0.1}
                 onChange={(e) =>
                   setManyEdgesData(
-                    (prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+                    (prev: Omit<EdgeUpdateDialogType, "id">) => ({
                       ...prev,
                       controlPointWeights: e.value as number,
                     })
@@ -176,7 +176,7 @@ export default function UpdateManyEdges() {
                   options={boardEdgeTaxiDirections}
                   onChange={(e) => {
                     setManyEdgesData(
-                      (prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+                      (prev: Omit<EdgeUpdateDialogType, "id">) => ({
                         ...prev,
                         taxiDirection: e.value,
                       })
@@ -198,7 +198,7 @@ export default function UpdateManyEdges() {
                 step={5}
                 onChange={(e) =>
                   setManyEdgesData(
-                    (prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+                    (prev: Omit<EdgeUpdateDialogType, "id">) => ({
                       ...prev,
                       taxiTurn: e.value as number,
                     })
@@ -218,7 +218,7 @@ export default function UpdateManyEdges() {
           placeholder="Edge Line style"
           value={manyEdgesData.lineStyle}
           onChange={(e) =>
-            setManyEdgesData((prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+            setManyEdgesData((prev: Omit<EdgeUpdateDialogType, "id">) => ({
               ...prev,
               lineStyle: e.value,
             }))
@@ -249,7 +249,7 @@ export default function UpdateManyEdges() {
           optionLabel="label"
           optionValue="value"
           onChange={(e) =>
-            setManyEdgesData((prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+            setManyEdgesData((prev: Omit<EdgeUpdateDialogType, "id">) => ({
               ...prev,
               targetArrowShape: e.value,
             }))
@@ -282,7 +282,7 @@ export default function UpdateManyEdges() {
           className="w-9"
           value={manyEdgesData.zIndex}
           onChange={(e) =>
-            setManyEdgesData((prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+            setManyEdgesData((prev: Omit<EdgeUpdateDialogType, "id">) => ({
               ...prev,
               zIndex: e.value as number,
             }))
@@ -308,7 +308,7 @@ export default function UpdateManyEdges() {
             className="w-1"
             value={manyEdgesData.lineColor}
             onChange={(e) =>
-              setManyEdgesData((prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+              setManyEdgesData((prev: Omit<EdgeUpdateDialogType, "id">) => ({
                 ...prev,
                 lineColor: ("#" +
                   e.value?.toString().replaceAll("#", "")) as string,
@@ -319,7 +319,7 @@ export default function UpdateManyEdges() {
             value={manyEdgesData.lineColor}
             className="w-8 ml-2"
             onChange={(e) =>
-              setManyEdgesData((prev: Omit<EdgeUpdateDialogProps, "id">) => ({
+              setManyEdgesData((prev: Omit<EdgeUpdateDialogType, "id">) => ({
                 ...prev,
                 lineColor: "#" + e.target.value.replaceAll("#", ""),
               }))

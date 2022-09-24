@@ -12,13 +12,13 @@ import CytoscapeComponent from "react-cytoscapejs";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import {
-  BoardContextMenuProps,
-  BoardEdgeProps,
-  BoardNodeProps,
-  CytoscapeEdgeProps,
-  CytoscapeNodeProps,
-  EdgeUpdateDialogProps,
-  NodeUpdateDialogProps,
+  BoardContextMenuType,
+  BoardEdgeType,
+  BoardNodeType,
+  CytoscapeEdgeType,
+  CytoscapeNodeType,
+  EdgeUpdateDialogType,
+  NodeUpdateDialogType,
 } from "../../types/BoardTypes";
 import {
   boardStateReducer,
@@ -73,17 +73,17 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   // PUBLIC ENABLE
   const { data: documents } = useGetDocuments(project_id as string, false);
   const [elements, setElements] = useState<
-    (CytoscapeNodeProps | CytoscapeEdgeProps)[]
+    (CytoscapeNodeType | CytoscapeEdgeType)[]
   >([]);
 
   const cm = useRef() as any;
   const firstRender = useRef(true) as any;
   const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [nodeUpdateDialog, setNodeUpdateDialog] =
-    useState<NodeUpdateDialogProps>(NodeUpdateDialogDefault);
+    useState<NodeUpdateDialogType>(NodeUpdateDialogDefault);
   const [edgeUpdateDialog, setEdgeUpdateDialog] =
-    useState<EdgeUpdateDialogProps>(EdgeUpdateDialogDefault);
-  const [contextMenu, setContextMenu] = useState<BoardContextMenuProps>({
+    useState<EdgeUpdateDialogType>(EdgeUpdateDialogDefault);
+  const [contextMenu, setContextMenu] = useState<BoardContextMenuType>({
     x: 0,
     y: 0,
     type: "board",
@@ -240,10 +240,10 @@ export default function BoardView({ public_view, setBoardId }: Props) {
 
   useEffect(() => {
     if (board) {
-      let temp_nodes: CytoscapeNodeProps[] = [];
-      let temp_edges: CytoscapeEdgeProps[] = [];
+      let temp_nodes: CytoscapeNodeType[] = [];
+      let temp_edges: CytoscapeEdgeType[] = [];
       if (board.nodes.length > 0) {
-        temp_nodes = board.nodes.map((node: BoardNodeProps) => ({
+        temp_nodes = board.nodes.map((node: BoardNodeType) => ({
           data: {
             ...node,
             classes: `boardNode ${public_view && "publicBoardNode"}`,
@@ -271,7 +271,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
         }));
       }
       if (board.edges.length > 0) {
-        temp_edges = board.edges.map((edge: BoardEdgeProps) => ({
+        temp_edges = board.edges.map((edge: BoardEdgeType) => ({
           data: {
             ...edge,
             classes: `boardEdge ${public_view && "publicBoardEdge"}`,

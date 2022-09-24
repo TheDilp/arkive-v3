@@ -12,14 +12,14 @@ import {
   TemplateCreateProps,
 } from "../custom-types";
 import {
-  BoardEdgeProps,
-  BoardNodeProps,
-  BoardProps,
-  CreateBoardProps,
-  CreateNodeProps,
-  UpdateBoardProps,
-  UpdateEdgeProps,
-  UpdateNodeProps,
+  BoardEdgeType,
+  BoardNodeType,
+  BoardType,
+  CreateBoardType,
+  CreateNodeType,
+  UpdateBoardType,
+  UpdateEdgeType,
+  UpdateNodeType,
 } from "../types/BoardTypes";
 import {
   CreateMapLayerProps,
@@ -141,7 +141,7 @@ export const getMaps = async (project_id: string) => {
 };
 export const getBoards = async (project_id: string) => {
   const { data, error } = await supabase
-    .from<BoardProps>("boards")
+    .from<BoardType>("boards")
     .select(
       "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )
@@ -258,7 +258,7 @@ export const createMapLayer = async (
     }
   }
 };
-export const createBoard = async (CreateBoardProps: CreateBoardProps) => {
+export const createBoard = async (CreateBoardProps: CreateBoardType) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase
@@ -272,7 +272,7 @@ export const createBoard = async (CreateBoardProps: CreateBoardProps) => {
   }
 };
 
-export const createNode = async (CreateNodeProps: CreateNodeProps) => {
+export const createNode = async (CreateNodeProps: CreateNodeType) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase.from("nodes").insert({
@@ -287,7 +287,7 @@ export const createNode = async (CreateNodeProps: CreateNodeProps) => {
     }
   }
 };
-export const createManyNodes = async (CreateNodeProps: CreateNodeProps[]) => {
+export const createManyNodes = async (CreateNodeProps: CreateNodeType[]) => {
   let user = auth.user();
   if (user) {
     let newNodes = CreateNodeProps.map((node) => ({
@@ -313,7 +313,7 @@ export const createEdge = async ({
   curveStyle,
   lineStyle,
   lineColor,
-}: Omit<BoardEdgeProps, "label">) => {
+}: Omit<BoardEdgeType, "label">) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase.from("edges").insert({
@@ -334,7 +334,7 @@ export const createEdge = async ({
   }
 };
 export const createManyEdges = async (
-  CreateEdgeProps: Omit<BoardEdgeProps, "label">[]
+  CreateEdgeProps: Omit<BoardEdgeType, "label">[]
 ) => {
   let user = auth.user();
   if (user) {
@@ -491,7 +491,7 @@ export const updateMapLayer = async (
     }
   }
 };
-export const updateBoard = async (UpdateBoardProps: UpdateBoardProps) => {
+export const updateBoard = async (UpdateBoardProps: UpdateBoardType) => {
   let user = auth.user();
 
   if (user) {
@@ -507,7 +507,7 @@ export const updateBoard = async (UpdateBoardProps: UpdateBoardProps) => {
     }
   }
 };
-export const updateNode = async (UpdateNodeProps: UpdateNodeProps) => {
+export const updateNode = async (UpdateNodeProps: UpdateNodeType) => {
   let user = auth.user();
 
   if (user) {
@@ -523,7 +523,7 @@ export const updateNode = async (UpdateNodeProps: UpdateNodeProps) => {
     }
   }
 };
-export const updateEdge = async (UpdateEdgeProps: UpdateEdgeProps) => {
+export const updateEdge = async (UpdateEdgeProps: UpdateEdgeType) => {
   let user = auth.user();
   if (user) {
     const { data, error } = await supabase
@@ -585,7 +585,7 @@ export const updateManyNodesPosition = async (
     payload,
   });
 };
-export const updateManyNodesData = async (payload: BoardNodeProps[]) => {
+export const updateManyNodesData = async (payload: BoardNodeType[]) => {
   await supabase.rpc("update_many_nodes_data", { payload });
 };
 export const updateManyNodesLockState = async (
@@ -858,7 +858,7 @@ export const exportProject = async (project_id: string) => {
     );
 
     const { data: boards, error } = await supabase
-      .from<BoardProps>("boards")
+      .from<BoardType>("boards")
       .select(
         "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
       )
@@ -876,7 +876,7 @@ export const exportProject = async (project_id: string) => {
 
 export const getSingleBoard = async (board_id: string) => {
   const { data, error } = await supabase
-    .from<BoardProps>("boards")
+    .from<BoardType>("boards")
     .select(
       "*, parent(id, title), nodes!nodes_board_id_fkey(*, document:documents(id, image(link)), customImage(id, title, link, type)), edges(*)"
     )

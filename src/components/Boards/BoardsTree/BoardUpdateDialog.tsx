@@ -6,15 +6,15 @@ import { InputText } from "primereact/inputtext";
 import { Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
 import {
-  BoardItemDisplayDialogProps,
-  BoardProps,
+  BoardItemDisplayDialogType,
+  BoardType,
 } from "../../../types/BoardTypes";
 import { useGetBoards, useUpdateBoard } from "../../../utils/customHooks";
 import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
 
 type Props = {
-  visible: BoardItemDisplayDialogProps;
-  setVisible: Dispatch<SetStateAction<BoardItemDisplayDialogProps>>;
+  visible: BoardItemDisplayDialogType;
+  setVisible: Dispatch<SetStateAction<BoardItemDisplayDialogType>>;
 };
 
 export default function BoardUpdateDialog({ visible, setVisible }: Props) {
@@ -23,9 +23,9 @@ export default function BoardUpdateDialog({ visible, setVisible }: Props) {
   const { data: boards } = useGetBoards(project_id as string);
 
   function recursiveDescendantRemove(
-    doc: BoardProps,
+    doc: BoardType,
     index: number,
-    array: BoardProps[],
+    array: BoardType[],
     selected_id: string
   ): boolean {
     if (doc.parent === null) {

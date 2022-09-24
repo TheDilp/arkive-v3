@@ -9,11 +9,11 @@ import React, {
 import { useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  BoardEdgeProps,
-  BoardNodeProps,
-  BoardProps,
-  CytoscapeEdgeProps,
-  CytoscapeNodeProps,
+  BoardEdgeType,
+  BoardNodeType,
+  BoardType,
+  CytoscapeEdgeType,
+  CytoscapeNodeType,
 } from "../../../../types/BoardTypes";
 import { MapPreviewAttributes } from "../CustomExtensions/CustomPreviews/MapPreviewExtension";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -38,11 +38,11 @@ export default function BoardPreview({
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const boards = queryClient.getQueryData<BoardProps[]>(`${project_id}-boards`);
-  const [boardData, setBoardData] = useState<BoardProps | null>(null);
+  const boards = queryClient.getQueryData<BoardType[]>(`${project_id}-boards`);
+  const [boardData, setBoardData] = useState<BoardType | null>(null);
   const [dims, setDims] = useState({ width, height });
   const [elements, setElements] = useState<
-    (CytoscapeNodeProps | CytoscapeEdgeProps)[]
+    (CytoscapeNodeType | CytoscapeEdgeType)[]
   >([]);
 
   useLayoutEffect(() => {
@@ -56,10 +56,10 @@ export default function BoardPreview({
 
   useEffect(() => {
     if (boardData) {
-      let temp_nodes: CytoscapeNodeProps[] = [];
-      let temp_edges: CytoscapeEdgeProps[] = [];
+      let temp_nodes: CytoscapeNodeType[] = [];
+      let temp_edges: CytoscapeEdgeType[] = [];
       if (boardData.nodes.length > 0) {
-        temp_nodes = boardData.nodes.map((node: BoardNodeProps) => ({
+        temp_nodes = boardData.nodes.map((node: BoardNodeType) => ({
           data: {
             ...node,
             classes: "boardNode publicBoardNode",
@@ -87,7 +87,7 @@ export default function BoardPreview({
         }));
       }
       if (boardData.edges.length > 0) {
-        temp_edges = boardData.edges.map((edge: BoardEdgeProps) => ({
+        temp_edges = boardData.edges.map((edge: BoardEdgeType) => ({
           data: {
             ...edge,
             classes: "boardEdge publicBoardEdge",
