@@ -14,6 +14,7 @@ import {
   useGetImages,
 } from "../../../../utils/customHooks";
 import { DocumentCreateDefault } from "../../../../utils/defaultValues";
+import { virtualScrollerSettings } from "../../../../utils/utils";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import CreateDocIconSelect from "./CreateDocIconSelect";
 
@@ -66,22 +67,7 @@ export default function DocumentCreateDialog({ visible, setVisible }: Props) {
               placeholder="Custom Image"
               optionLabel="title"
               optionValue="id"
-              virtualScrollerOptions={{
-                lazy: true,
-                onLazyLoad: () => {},
-                itemSize: 50,
-                showLoader: true,
-                loading: images?.data.length === 0,
-                delay: 0,
-                loadingTemplate: (options) => {
-                  return (
-                    <div
-                      className="flex align-items-center p-2"
-                      style={{ height: "38px" }}
-                    ></div>
-                  );
-                },
-              }}
+              virtualScrollerOptions={virtualScrollerSettings}
               itemTemplate={(item: ImageProps) => (
                 <ImgDropdownItem title={item.title} link={item.link} />
               )}

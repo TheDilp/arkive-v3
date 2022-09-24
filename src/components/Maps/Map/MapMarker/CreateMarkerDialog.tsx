@@ -16,6 +16,7 @@ import {
   useGetMaps,
 } from "../../../../utils/customHooks";
 import { MapMarkerDialogDefault } from "../../../../utils/defaultValues";
+import { virtualScrollerSettings } from "../../../../utils/utils";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 import MarkerIconSelect from "./MarkerIconSelect";
 
@@ -199,14 +200,7 @@ export default function CreateMarkerDialog({
             placeholder="Link Map"
             filter
             filterBy="title"
-            virtualScrollerOptions={{
-              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: maps.data?.length === 0, delay: 0, loadingTemplate: (options) => {
-                return (
-                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                  </div>
-                )
-              }
-            }}
+            virtualScrollerOptions={virtualScrollerSettings}
             itemTemplate={(item: MapProps) => (
               <ImgDropdownItem
                 title={item.title}

@@ -34,6 +34,7 @@ import {
 import {
   searchCategory,
   supabaseStorageImagesLink,
+  virtualScrollerSettings,
 } from "../../../utils/utils";
 import IconSelectMenu from "../../Util/IconSelectMenu";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -385,22 +386,7 @@ export default function DocumentsSettingsTable() {
           className="w-full"
           placeholder="Custom Image"
           optionLabel="title"
-          virtualScrollerOptions={{
-            lazy: true,
-            onLazyLoad: () => {},
-            itemSize: 50,
-            showLoader: true,
-            loading: images?.data.length === 0,
-            delay: 0,
-            loadingTemplate: (options) => {
-              return (
-                <div
-                  className="flex align-items-center p-2"
-                  style={{ height: "38px" }}
-                ></div>
-              );
-            },
-          }}
+          virtualScrollerOptions={virtualScrollerSettings}
           itemTemplate={(item: ImageProps) => (
             <ImgDropdownItem title={item.title} link={item.link} />
           )}

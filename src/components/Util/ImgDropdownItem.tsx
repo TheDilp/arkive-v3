@@ -17,7 +17,6 @@ export default function ImgDropdownItem({ title, link }: Props) {
           }}
           src={`${supabaseStorageImagesLink}${link}`}
           alt={title}
-          loading="lazy"
         />
       )}
       <span>{title}</span>

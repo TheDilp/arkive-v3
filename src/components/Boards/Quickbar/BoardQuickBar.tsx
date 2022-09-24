@@ -29,7 +29,7 @@ import {
   useUpdateEdge,
   useUpdateNode,
 } from "../../../utils/customHooks";
-import { toastWarn } from "../../../utils/utils";
+import { toastWarn, virtualScrollerSettings } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 import UpdateManyEdges from "./UpdateManyEdges";
@@ -161,22 +161,7 @@ export default function BoardQuickBar({
             value={search}
             field="label"
             suggestions={filteredNodes}
-            virtualScrollerOptions={{
-              lazy: true,
-              onLazyLoad: () => {},
-              itemSize: 50,
-              showLoader: true,
-              loading: filteredNodes.length === 0,
-              delay: 0,
-              loadingTemplate: (options) => {
-                return (
-                  <div
-                    className="flex align-items-center p-2"
-                    style={{ height: "38px" }}
-                  ></div>
-                );
-              },
-            }}
+            virtualScrollerOptions={virtualScrollerSettings}
             onSelect={(e) => {
               if (!cyRef) return;
               if (e.value) {

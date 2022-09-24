@@ -21,6 +21,7 @@ import {
   toastError,
   toastSuccess,
   toastWarn,
+  virtualScrollerSettings,
 } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -84,23 +85,16 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             className="w-full"
             placeholder="Custom Image"
             optionLabel="title"
-            virtualScrollerOptions={{
-              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
-                return (
-                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                  </div>
-                )
-              }
-            }}
+            virtualScrollerOptions={virtualScrollerSettings}
             itemTemplate={(item: ImageProps) => (
               <ImgDropdownItem title={item.title} link={item.link} />
             )}
             options={
               images?.data
                 ? [
-                  { title: "No image", id: null },
-                  ...images?.data.filter((image) => image.type === "Image"),
-                ]
+                    { title: "No image", id: null },
+                    ...images?.data.filter((image) => image.type === "Image"),
+                  ]
                 : []
             }
             value={{ title: "No image", id: null }}
@@ -308,8 +302,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               {
                 label: "Info",
                 icon: "pi pi-fw pi-info-circle",
-                className: `calloutInfoButton ${active.callout({ type: "info" }) ? "menuBarButtonActive" : ""
-                  }`,
+                className: `calloutInfoButton ${
+                  active.callout({ type: "info" }) ? "menuBarButtonActive" : ""
+                }`,
                 command: () => {
                   calloutToggle("info");
                   focus();
@@ -360,10 +355,11 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                       />
                     </span>
                     <span
-                      className={`${options.labelClassName} ${active.callout({ type: "warning" })
-                        ? "menuBarButtonActive"
-                        : ""
-                        }`}
+                      className={`${options.labelClassName} ${
+                        active.callout({ type: "warning" })
+                          ? "menuBarButtonActive"
+                          : ""
+                      }`}
                     >
                       {item.label}
                     </span>
@@ -386,10 +382,11 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
                   >
                     <span className="">
                       <Icon
-                        className={`${options.iconClassName} ${active.callout({ type: "success" })
-                          ? "menuBarButtonActive"
-                          : ""
-                          }`}
+                        className={`${options.iconClassName} ${
+                          active.callout({ type: "success" })
+                            ? "menuBarButtonActive"
+                            : ""
+                        }`}
                         icon="clarity:success-standard-line"
                         color="#0f0"
                       />
@@ -421,8 +418,9 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           {
             template: (item: any, options: any) => (
               <span
-                className={`${options.className} text-center  ${active.horizontalRule() ? "menuBarButtonActive" : ""
-                  }`}
+                className={`${options.className} text-center  ${
+                  active.horizontalRule() ? "menuBarButtonActive" : ""
+                }`}
                 onClick={options.onClick}
               >
                 <div className="flex justify-content-center m-0 customMenuBarIconContainer">

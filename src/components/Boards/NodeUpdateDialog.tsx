@@ -32,7 +32,7 @@ import {
   useUpdateNode,
 } from "../../utils/customHooks";
 import { NodeUpdateDialogDefault } from "../../utils/defaultValues";
-import { toastSuccess } from "../../utils/utils";
+import { toastSuccess, virtualScrollerSettings } from "../../utils/utils";
 import DialogLabel from "../Util/DialogLabel";
 import ImgDropdownItem from "../Util/ImgDropdownItem";
 type Props = {
@@ -309,22 +309,7 @@ export default function NodeUpdateDialog({
                 className="w-full"
                 placeholder="Custom Image"
                 optionLabel="title"
-                virtualScrollerOptions={{
-                  lazy: true,
-                  onLazyLoad: () => {},
-                  itemSize: 50,
-                  showLoader: true,
-                  loading: images?.data.length === 0,
-                  delay: 0,
-                  loadingTemplate: (options) => {
-                    return (
-                      <div
-                        className="flex align-items-center p-2"
-                        style={{ height: "38px" }}
-                      ></div>
-                    );
-                  },
-                }}
+                virtualScrollerOptions={virtualScrollerSettings}
                 itemTemplate={(item: ImageProps) => (
                   <ImgDropdownItem title={item.title} link={item.link} />
                 )}

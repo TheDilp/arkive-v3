@@ -26,7 +26,7 @@ import {
   useUpdateTimelineEvent,
 } from "../../../../utils/customHooks";
 import { TimelineEventCreateDefault } from "../../../../utils/defaultValues";
-import { toastWarn } from "../../../../utils/utils";
+import { toastWarn, virtualScrollerSettings } from "../../../../utils/utils";
 import { TimelineEventContext } from "../../../Context/TimelineEventContext";
 import ImgDropdownItem from "../../../Util/ImgDropdownItem";
 export default function TimelineEventDialog() {
@@ -126,22 +126,7 @@ export default function TimelineEventDialog() {
                     ({ ...prev, image: e.value } as TimelineEventUpdateType)
                 )
               }
-              virtualScrollerOptions={{
-                lazy: true,
-                onLazyLoad: () => {},
-                itemSize: 50,
-                showLoader: true,
-                loading: images?.data.length === 0,
-                delay: 0,
-                loadingTemplate: (options) => {
-                  return (
-                    <div
-                      className="flex align-items-center p-2"
-                      style={{ height: "38px" }}
-                    ></div>
-                  );
-                },
-              }}
+              virtualScrollerOptions={virtualScrollerSettings}
               placeholder="Timeline Event Image"
               optionLabel="title"
               className="w-full"
@@ -463,22 +448,7 @@ export default function TimelineEventDialog() {
                   placeholder="Link Map"
                   filter
                   filterBy="title"
-                  virtualScrollerOptions={{
-                    lazy: true,
-                    onLazyLoad: () => {},
-                    itemSize: 50,
-                    showLoader: true,
-                    loading: maps?.length === 0,
-                    delay: 0,
-                    loadingTemplate: (options) => {
-                      return (
-                        <div
-                          className="flex align-items-center p-2"
-                          style={{ height: "38px" }}
-                        ></div>
-                      );
-                    },
-                  }}
+                  virtualScrollerOptions={virtualScrollerSettings}
                   itemTemplate={(item: MapProps) => (
                     <ImgDropdownItem
                       title={item.title}

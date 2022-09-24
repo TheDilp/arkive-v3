@@ -14,7 +14,10 @@ import {
   useGetMaps,
   useUpdateDocument,
 } from "../../../utils/customHooks";
-import { supabaseStorageImagesLink } from "../../../utils/utils";
+import {
+  supabaseStorageImagesLink,
+  virtualScrollerSettings,
+} from "../../../utils/utils";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
 export default function LinkedItems() {
@@ -126,22 +129,15 @@ export default function LinkedItems() {
               options={
                 images?.data
                   ? [
-                    {
-                      title: "No Image",
-                      link: "",
-                    },
-                    ...images.data,
-                  ]
+                      {
+                        title: "No Image",
+                        link: "",
+                      },
+                      ...images.data,
+                    ]
                   : []
               }
-              virtualScrollerOptions={{
-                lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
-                  return (
-                    <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                    </div>
-                  )
-                }
-              }}
+              virtualScrollerOptions={virtualScrollerSettings}
               optionLabel="title"
               value={document?.image || undefined}
               onChange={(e) =>

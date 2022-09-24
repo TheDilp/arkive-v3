@@ -24,7 +24,7 @@ import {
   useUpdateNode,
 } from "../../../utils/customHooks";
 import { NodeUpdateDialogDefault } from "../../../utils/defaultValues";
-import { toastWarn } from "../../../utils/utils";
+import { toastWarn, virtualScrollerSettings } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
 import DialogLabel from "../../Util/DialogLabel";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
@@ -447,22 +447,7 @@ export default function UpdateManyNodes() {
           className="w-9"
           placeholder="Custom Image"
           optionLabel="title"
-          virtualScrollerOptions={{
-            lazy: true,
-            onLazyLoad: () => {},
-            itemSize: 50,
-            showLoader: true,
-            loading: images?.data.length === 0,
-            delay: 0,
-            loadingTemplate: (options) => {
-              return (
-                <div
-                  className="flex align-items-center p-2"
-                  style={{ height: "38px" }}
-                ></div>
-              );
-            },
-          }}
+          virtualScrollerOptions={virtualScrollerSettings}
           itemTemplate={(item: ImageProps) => (
             <ImgDropdownItem title={item.title} link={item.link} />
           )}

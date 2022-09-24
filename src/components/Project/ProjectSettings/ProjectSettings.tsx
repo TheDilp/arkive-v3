@@ -10,7 +10,11 @@ import { ImageProps, ProjectProps } from "../../../custom-types";
 import defaultImage from "../../../styles/DefaultProjectImage.jpg";
 import { useGetImages, useUpdateProject } from "../../../utils/customHooks";
 import { deleteProject, exportProject } from "../../../utils/supabaseUtils";
-import { supabaseStorageImagesLink, toastSuccess } from "../../../utils/utils";
+import {
+  supabaseStorageImagesLink,
+  toastSuccess,
+  virtualScrollerSettings,
+} from "../../../utils/utils";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 type Props = {
   project: ProjectProps;
@@ -121,23 +125,16 @@ export default function ProjectSettings({ project }: Props) {
             className="w-full"
             placeholder="Custom Image"
             optionLabel="title"
-            virtualScrollerOptions={{
-              lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
-                return (
-                  <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                  </div>
-                )
-              }
-            }}
+            virtualScrollerOptions={virtualScrollerSettings}
             itemTemplate={(item: ImageProps) => (
               <ImgDropdownItem title={item.title} link={item.link} />
             )}
             options={
               images?.data
                 ? [
-                  { title: "No image", id: null },
-                  ...images?.data.filter((image) => image.type === "Image"),
-                ]
+                    { title: "No image", id: null },
+                    ...images?.data.filter((image) => image.type === "Image"),
+                  ]
                 : []
             }
             value={localProject.cardImage}
