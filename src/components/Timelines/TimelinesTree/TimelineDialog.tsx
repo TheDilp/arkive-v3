@@ -308,18 +308,30 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
             }}
             editMode="row"
           >
-            <Column rowReorder></Column>
+            <Column
+              rowReorder
+              style={{
+                maxWidth: "1.75rem",
+              }}
+            ></Column>
             <Column
               field="title"
+              header="Title"
+              className="w-full"
               editor={(options) => textEditor(options)}
             ></Column>
             <Column
+              header="Color"
               field="color"
               editor={(options) => colorEditor(options)}
               body={colorTemplate}
             ></Column>
-            <Column rowEditor className="flex justify-content-center"></Column>
-            <Column body={deleteTemplate}></Column>
+            <Column
+              rowEditor
+              className="flex justify-content-center"
+              header="Edit"
+            ></Column>
+            <Column body={deleteTemplate} header="Delete"></Column>
           </DataTable>
         </TabPanel>
       </TabView>
