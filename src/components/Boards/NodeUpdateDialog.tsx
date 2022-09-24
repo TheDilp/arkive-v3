@@ -10,10 +10,16 @@ import {
   KeyboardEvent,
   KeyboardEventHandler,
   SetStateAction,
+  useState,
 } from "react";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
-import { NodeUpdateDialogType } from "../../types/BoardTypes";
+import {
+  BoardNodeType,
+  BoardType,
+  NodeUpdateDialogType,
+} from "../../types/BoardTypes";
 import {
   BoardFontSizes,
   boardNodeShapes,
@@ -22,6 +28,7 @@ import {
   textVAlignOptions,
 } from "../../utils/boardUtils";
 import {
+  useGetBoardData,
   useGetDocuments,
   useGetImages,
   useUpdateNode,
@@ -38,9 +45,16 @@ export default function NodeUpdateDialog({
   setNodeUpdateDialog,
 }: Props) {
   const { project_id, board_id } = useParams();
-
+  const queryClient = useQueryClient();
   const documents = useGetDocuments(project_id as string);
+  const board = useGetBoardData(
+    project_id as string,
+    board_id as string,
+    false
+  );
   const images = useGetImages(project_id as string);
+  const [selectedTemplate, setSeelctedTemplate] =
+    useState<BoardNodeType | null>(null);
   const updateNodeMutation = useUpdateNode(project_id as string);
 
   const handleEnter: KeyboardEventHandler = (e: KeyboardEvent) => {
@@ -52,6 +66,71 @@ export default function NodeUpdateDialog({
       });
     }
   };
+
+  function setTemplateStyle(templateStyle: BoardNodeType) {
+    setSeelctedTemplate(templateStyle);
+    queryClient.setQueryData(
+      `${project_id}-boards`,
+      (oldData: BoardType[] | undefined) => {
+        if (oldData) {
+          let newData = oldData.map((board) => {
+            if (board.id === board_id) {
+              return {
+                ...board,
+                nodes: board.nodes.map((node) => {
+                  if (node.id === nodeUpdateDialog.id) {
+                    return {
+                      ...node,
+                      ...templateStyle,
+                      id: node.id,
+                      document: node.document,
+                      customImage: node.customImage,
+                      template: node.template,
+                    };
+                  }
+                  return node;
+                }),
+              };
+            }
+            return board;
+          });
+          return newData;
+        } else {
+          return [];
+        }
+      }
+    );
+  }
+
+  function resetTemplateStyle() {
+    setSeelctedTemplate(null);
+    queryClient.setQueryData(
+      `${project_id}-boards`,
+      (oldData: BoardType[] | undefined) => {
+        if (oldData) {
+          return oldData.map((board) => {
+            if (board.id === board_id) {
+              return {
+                ...board,
+                nodes: board.nodes.map((node) => {
+                  if (node.id === nodeUpdateDialog.id) {
+                    node = {
+                      ...node,
+                      ...nodeUpdateDialog,
+                    };
+                  }
+                  return node;
+                }),
+              };
+            }
+            return board;
+          });
+        } else {
+          return [];
+        }
+      }
+    );
+  }
 
   return (
     <Dialog
@@ -69,7 +148,10 @@ export default function NodeUpdateDialog({
       visible={nodeUpdateDialog.show}
       modal={false}
       position={"bottom-left"}
-      onHide={() => setNodeUpdateDialog(NodeUpdateDialogDefault)}
+      onHide={() => {
+        resetTemplateStyle();
+        setNodeUpdateDialog(NodeUpdateDialogDefault);
+      }}
     >
       <div className="h-full flex flex-column justify-content-between">
         <TabView className="w-full">
@@ -344,7 +426,7 @@ export default function NodeUpdateDialog({
             </div>
           </TabPanel>
           <TabPanel header="Misc">
-            <div className="w-full my-2">
+            <div className="w-full mb-2">
               <div className="w-full flex flex-wrap">
                 <label className="w-full text-sm text-gray-400">
                   Node Level
@@ -419,6 +501,26 @@ export default function NodeUpdateDialog({
                 </div>
               </div>
             </div>
+            <div className="w-full">
+              <Dropdown
+                onChange={(e) => {
+                  if (e.value as NodeUpdateDialogType) {
+                    setTemplateStyle(e.value);
+                  } else {
+                    resetTemplateStyle();
+                  }
+                }}
+                value={nodeUpdateDialog.template}
+                options={
+                  board?.nodes
+                    ? [
+                        { label: "None", value: null },
+                        ...board.nodes.filter((node) => node.template),
+                      ]
+                    : []
+                }
+              />
+            </div>
           </TabPanel>
         </TabView>
         <div className="w-full flex justify-content-end">
@@ -429,11 +531,31 @@ export default function NodeUpdateDialog({
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
-              const { show, ...rest } = nodeUpdateDialog;
-              updateNodeMutation.mutate({
-                ...rest,
-                board_id: board_id as string,
-              });
+              if (selectedTemplate) {
+                console.log(selectedTemplate);
+                const {
+                  id,
+                  board_id,
+                  template,
+                  customImage,
+                  document,
+                  doc_id,
+                  ...restTemplate
+                } = selectedTemplate;
+                const { show, ...restDialog } = nodeUpdateDialog;
+
+                updateNodeMutation.mutate({
+                  ...restDialog,
+                  ...restTemplate,
+                  board_id: board_id as string,
+                });
+              } else {
+                const { show, ...rest } = nodeUpdateDialog;
+                updateNodeMutation.mutate({
+                  ...rest,
+                  board_id: board_id as string,
+                });
+              }
             }}
           />
         </div>

@@ -82,6 +82,7 @@ export type BoardNodeType = {
   backgroundOpacity: number;
   zIndex: number;
   locked: boolean;
+  doc_id?: string;
   document?: {
     id: string;
     image?: {
@@ -188,6 +189,7 @@ export type NodeUpdateDialogType = {
   backgroundOpacity: number;
   zIndex: number;
   show: boolean;
+  template: boolean;
 };
 
 // Edge Props

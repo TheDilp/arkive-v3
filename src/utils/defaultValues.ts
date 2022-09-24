@@ -1,5 +1,7 @@
 // Default empty props for dialogs
 
+import { NodeUpdateDialogType } from "../types/BoardTypes";
+
 export const DocItemDisplayDialogDefault = {
   id: "",
   title: "",
@@ -23,7 +25,7 @@ export const BoardUpdateDialogDefault = {
   public: false,
 };
 
-export const NodeUpdateDialogDefault = {
+export const NodeUpdateDialogDefault: NodeUpdateDialogType = {
   id: "",
   label: "",
   type: "rectangle",
@@ -40,6 +42,7 @@ export const NodeUpdateDialogDefault = {
   backgroundOpacity: 1,
   zIndex: 1,
   show: false,
+  template: false,
 };
 
 export const EdgeUpdateDialogDefault = {

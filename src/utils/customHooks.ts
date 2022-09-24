@@ -1338,6 +1338,7 @@ export function useUpdateNode(project_id: string) {
     async (
       vars: Omit<UpdateNodeType, "customImage"> & {
         board_id: string;
+        template?: boolean;
         customImage?: ImageProps;
       }
     ) => {
