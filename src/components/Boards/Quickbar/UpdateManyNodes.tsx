@@ -647,13 +647,11 @@ export default function UpdateManyNodes() {
                   board_id,
                   template,
                   document,
-                  doc_id,
                   label,
                   x,
                   y,
                   ...restTemplate
                 } = manyNodesData.selectedTemplate as BoardNodeType;
-                console.log(restTemplate);
                 updateManyNodesFunction(restTemplate, cyRef);
               }
             }}

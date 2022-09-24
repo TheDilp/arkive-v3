@@ -12,22 +12,18 @@ import {
   SetStateAction,
   useState,
 } from "react";
-import { QueryClient, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
+import { BoardNodeType, NodeUpdateDialogType } from "../../types/BoardTypes";
 import {
-  BoardNodeType,
-  BoardType,
-  NodeUpdateDialogType,
-} from "../../types/BoardTypes";
-import {
+  BoardFontFamilies,
   BoardFontSizes,
   boardNodeShapes,
-  BoardFontFamilies,
+  resetTemplateStyle,
+  setTemplateStyle,
   textHAlignOptions,
   textVAlignOptions,
-  setTemplateStyle,
-  resetTemplateStyle,
 } from "../../utils/boardUtils";
 import {
   useGetBoardData,
@@ -477,7 +473,6 @@ export default function NodeUpdateDialog({
                   board_id,
                   template,
                   document,
-                  doc_id,
                   x,
                   y,
                   label,
