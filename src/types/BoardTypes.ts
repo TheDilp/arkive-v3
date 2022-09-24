@@ -89,6 +89,7 @@ export type BoardNodeType = {
     };
   };
   board_id: string;
+  template: boolean;
 };
 export type CytoscapeNodeType = {
   data: Pick<

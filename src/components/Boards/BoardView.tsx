@@ -243,32 +243,34 @@ export default function BoardView({ public_view, setBoardId }: Props) {
       let temp_nodes: CytoscapeNodeType[] = [];
       let temp_edges: CytoscapeEdgeType[] = [];
       if (board.nodes.length > 0) {
-        temp_nodes = board.nodes.map((node: BoardNodeType) => ({
-          data: {
-            ...node,
-            classes: `boardNode ${public_view && "publicBoardNode"}`,
-            label: node.label || "",
-            zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
-            // Custom image has priority, if not set use document image, if neither - empty array
-            // Empty string ("") causes issues with cytoscape, so an empty array must be used
-            backgroundImage: node.customImage?.link
-              ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
-                  " ",
-                  "%20"
-                )}`
-              : node.document?.image?.link
-              ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
-                  " ",
-                  "%20"
-                )}`
-              : [],
-          },
-          scratch: {
-            doc_id: node.document?.id,
-          },
-          locked: node.locked,
-          position: { x: node.x, y: node.y },
-        }));
+        temp_nodes = board.nodes
+          .filter((node) => !node.template)
+          .map((node: BoardNodeType) => ({
+            data: {
+              ...node,
+              classes: `boardNode ${public_view && "publicBoardNode"}`,
+              label: node.label || "",
+              zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
+              // Custom image has priority, if not set use document image, if neither - empty array
+              // Empty string ("") causes issues with cytoscape, so an empty array must be used
+              backgroundImage: node.customImage?.link
+                ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(
+                    " ",
+                    "%20"
+                  )}`
+                : node.document?.image?.link
+                ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(
+                    " ",
+                    "%20"
+                  )}`
+                : [],
+            },
+            scratch: {
+              doc_id: node.document?.id,
+            },
+            locked: node.locked,
+            position: { x: node.x, y: node.y },
+          }));
       }
       if (board.edges.length > 0) {
         temp_edges = board.edges.map((edge: BoardEdgeType) => ({

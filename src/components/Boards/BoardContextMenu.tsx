@@ -156,6 +156,22 @@ export default function BoardContextMenu({
       separator: true,
     },
     {
+      label: "Template From Node",
+      command: () => {
+        let id = uuid();
+        createNodeMutation.mutate({
+          id,
+          label: "Node Template",
+          board_id: board_id as string,
+          type: "rectangle",
+          x: contextMenu.x,
+          y: contextMenu.y,
+          ...defaultNode,
+          template: true,
+        });
+      },
+    },
+    {
       label: "Delete Selected Nodes",
       command: () => {
         const edge_ids = [

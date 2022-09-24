@@ -21,7 +21,7 @@ import {
 import CustomLinkExtenstion from "../components/Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
 import { SecretExtension } from "../components/Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
 import { DocumentProps, slashMenuItem, SortIndexes } from "../custom-types";
-import { BoardType } from "../types/BoardTypes";
+import { BoardType, CreateNodeType } from "../types/BoardTypes";
 import { MapProps } from "../types/MapTypes";
 import { TimelineType } from "../types/TimelineTypes";
 const defaultToastConfig: ToastOptions = {
@@ -423,7 +423,10 @@ export const defaultTemplate = {
   },
 };
 
-export const defaultNode = {
+export const defaultNode: Omit<
+  CreateNodeType,
+  "id" | "x" | "y" | "project_id" | "type" | "board_id"
+> = {
   width: 50,
   height: 50,
   fontSize: 16,
@@ -435,6 +438,7 @@ export const defaultNode = {
   backgroundOpacity: 1,
   zIndex: 1,
   locked: false,
+  template: false,
 };
 
 export const columnsItems: slashMenuItem[] = [
