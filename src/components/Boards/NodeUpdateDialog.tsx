@@ -34,6 +34,8 @@ import {
   useUpdateNode,
 } from "../../utils/customHooks";
 import { NodeUpdateDialogDefault } from "../../utils/defaultValues";
+import { toastSuccess } from "../../utils/utils";
+import DialogLabel from "../Util/DialogLabel";
 import ImgDropdownItem from "../Util/ImgDropdownItem";
 type Props = {
   nodeUpdateDialog: NodeUpdateDialogType;
@@ -53,7 +55,7 @@ export default function NodeUpdateDialog({
     false
   );
   const images = useGetImages(project_id as string);
-  const [selectedTemplate, setSeelctedTemplate] =
+  const [selectedTemplate, setSelectedTemplate] =
     useState<BoardNodeType | null>(null);
   const updateNodeMutation = useUpdateNode(project_id as string);
 
@@ -68,7 +70,7 @@ export default function NodeUpdateDialog({
   };
 
   function setTemplateStyle(templateStyle: BoardNodeType) {
-    setSeelctedTemplate(templateStyle);
+    setSelectedTemplate(templateStyle);
     queryClient.setQueryData(
       `${project_id}-boards`,
       (oldData: BoardType[] | undefined) => {
@@ -83,6 +85,7 @@ export default function NodeUpdateDialog({
                       ...node,
                       ...templateStyle,
                       id: node.id,
+                      label: node.label,
                       document: node.document,
                       customImage: node.customImage,
                       template: node.template,
@@ -103,7 +106,7 @@ export default function NodeUpdateDialog({
   }
 
   function resetTemplateStyle() {
-    setSeelctedTemplate(null);
+    setSelectedTemplate(null);
     queryClient.setQueryData(
       `${project_id}-boards`,
       (oldData: BoardType[] | undefined) => {
@@ -149,7 +152,7 @@ export default function NodeUpdateDialog({
       modal={false}
       position={"bottom-left"}
       onHide={() => {
-        resetTemplateStyle();
+        if (selectedTemplate) resetTemplateStyle();
         setNodeUpdateDialog(NodeUpdateDialogDefault);
       }}
     >
@@ -162,9 +165,7 @@ export default function NodeUpdateDialog({
                   {/* Label text */}
 
                   <div className="w-full flex flex-wrap">
-                    <label className="w-full text-sm text-gray-400">
-                      Node Label
-                    </label>
+                    <DialogLabel text="Node Label" />
 
                     <InputText
                       value={nodeUpdateDialog.label}
@@ -185,9 +186,7 @@ export default function NodeUpdateDialog({
                   {/* Font Family */}
 
                   <div className="w-4 flex flex-wrap">
-                    <label htmlFor="" className="w-full text-sm text-gray-400">
-                      Font Family
-                    </label>
+                    <DialogLabel text="Font Family" />
                     <Dropdown
                       className="w-full"
                       options={BoardFontFamilies}
@@ -201,9 +200,7 @@ export default function NodeUpdateDialog({
                     />
                   </div>
                   <div className="w-3 flex flex-wrap">
-                    <label className="w-full text-sm text-gray-400">
-                      Label Size
-                    </label>
+                    <DialogLabel text="Label Size" />
                     <Dropdown
                       className="w-full"
                       options={BoardFontSizes}
@@ -219,9 +216,7 @@ export default function NodeUpdateDialog({
                   </div>
                   {/* Label color */}
                   <div className="w-4 flex flex-wrap justify-content-between align-items-center">
-                    <label className="w-full text-sm text-gray-400">
-                      Label Color
-                    </label>
+                    <DialogLabel text="Label Color" />
                     <InputText
                       className="w-8"
                       value={nodeUpdateDialog.fontColor}
@@ -248,9 +243,7 @@ export default function NodeUpdateDialog({
 
                   <div className="flex flex-nowrap w-full mt-1">
                     <div className="w-6">
-                      <label htmlFor="" className="text-sm text-gray-400">
-                        Horizontal Align
-                      </label>
+                      <DialogLabel text="Horizontal Align" />
                       <Dropdown
                         className="w-full"
                         options={textHAlignOptions}
@@ -264,9 +257,7 @@ export default function NodeUpdateDialog({
                       />
                     </div>
                     <div className="w-6">
-                      <label htmlFor="" className="text-sm text-gray-400">
-                        Vertical Align
-                      </label>
+                      <DialogLabel text="Vertical Align" />
                       <Dropdown
                         className="w-full"
                         options={textVAlignOptions}
@@ -287,9 +278,7 @@ export default function NodeUpdateDialog({
           <TabPanel header="Node Shape">
             <div className="w-full flex flex-wrap justify-content-between">
               <div className="w-full my-1">
-                <label className="w-full text-sm text-gray-400">
-                  Node Shape
-                </label>
+                <DialogLabel text="Node Shape" />
                 <Dropdown
                   options={boardNodeShapes}
                   className="w-full"
@@ -305,7 +294,7 @@ export default function NodeUpdateDialog({
                 />
               </div>
               <div className="w-5">
-                <label className="text-sm text-gray-400">Width</label>
+                <DialogLabel text="Width" />
                 <InputNumber
                   inputClassName="w-full"
                   showButtons
@@ -323,7 +312,7 @@ export default function NodeUpdateDialog({
                 />
               </div>
               <div className="w-5">
-                <label className="text-sm text-gray-400">Height</label>
+                <DialogLabel text="Height" />
                 <InputNumber
                   inputClassName="w-full"
                   showButtons
@@ -344,9 +333,7 @@ export default function NodeUpdateDialog({
           </TabPanel>
           <TabPanel header="Node Image">
             <div className="w-full my-1">
-              <label className="w-full text-sm text-gray-400">
-                Linked Document
-              </label>
+              <DialogLabel text="Linked Document" />
               <Dropdown
                 className="w-full"
                 placeholder="Link Document"
@@ -374,9 +361,7 @@ export default function NodeUpdateDialog({
               />
             </div>
             <div className="w-full my-1">
-              <label className="w-full text-sm text-gray-400">
-                Custom Image
-              </label>
+              <DialogLabel text="Custom Image" />
               <div className="text-xs text-gray-400">
                 Note: Custom images override images from linked documents.
               </div>
@@ -428,9 +413,7 @@ export default function NodeUpdateDialog({
           <TabPanel header="Misc">
             <div className="w-full mb-2">
               <div className="w-full flex flex-wrap">
-                <label className="w-full text-sm text-gray-400">
-                  Node Level
-                </label>
+                <DialogLabel text="Node Level" />
                 <span className="w-full text-xs text-gray-400">
                   Changes if node is above or below others
                 </span>
@@ -450,9 +433,7 @@ export default function NodeUpdateDialog({
             </div>
             <div className="w-full flex flex-nowrap my-1">
               <div className="w-4">
-                <label className="w-full text-sm text-gray-400">
-                  Background Color
-                </label>
+                <DialogLabel text="Background Color" />
                 <div className="flex align-items-center flex-row-reverse">
                   <InputText
                     value={nodeUpdateDialog.backgroundColor}
@@ -478,9 +459,9 @@ export default function NodeUpdateDialog({
                 </div>
               </div>
               <div className="w-8">
-                <label className="w-full text-sm text-gray-400 pl-1">
-                  Background Opacity
-                </label>
+                <span className="pl-1">
+                  <DialogLabel text="Background Opacity" />
+                </span>
                 <div className="flex align-items-center flex-row-reverse">
                   <InputNumber
                     showButtons
@@ -501,8 +482,10 @@ export default function NodeUpdateDialog({
                 </div>
               </div>
             </div>
-            <div className="w-full">
+            <div className="w-full flex flex-wrap">
+              <DialogLabel text="Template" />
               <Dropdown
+                tooltip="Select template and save to save changes"
                 onChange={(e) => {
                   if (e.value as NodeUpdateDialogType) {
                     setTemplateStyle(e.value);
@@ -524,6 +507,7 @@ export default function NodeUpdateDialog({
           </TabPanel>
         </TabView>
         <div className="w-full flex justify-content-end">
+          <label className=""></label>
           <Button
             label="Save Node"
             type="submit"
@@ -532,7 +516,6 @@ export default function NodeUpdateDialog({
             iconPos="right"
             onClick={() => {
               if (selectedTemplate) {
-                console.log(selectedTemplate);
                 const {
                   id,
                   board_id,
@@ -540,6 +523,7 @@ export default function NodeUpdateDialog({
                   customImage,
                   document,
                   doc_id,
+                  label,
                   ...restTemplate
                 } = selectedTemplate;
                 const { show, ...restDialog } = nodeUpdateDialog;
@@ -549,6 +533,8 @@ export default function NodeUpdateDialog({
                   ...restTemplate,
                   board_id: board_id as string,
                 });
+                setSelectedTemplate(null);
+                toastSuccess("Template Applied");
               } else {
                 const { show, ...rest } = nodeUpdateDialog;
                 updateNodeMutation.mutate({
