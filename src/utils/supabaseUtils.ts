@@ -760,7 +760,10 @@ export const uploadImage = async (
     try {
       const { data, error } = await supabase.storage
         .from("images")
-        .upload(`${project_id}/${type}/${file.name}`, file, { upsert: false });
+        .upload(`${project_id}/${type}/${file.name}`, file, {
+          cacheControl: "86400",
+          upsert: false,
+        });
 
       if (data) {
         const { data: newImage, error: newImageError } = await supabase
