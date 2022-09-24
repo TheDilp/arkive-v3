@@ -285,7 +285,6 @@ export default function BoardView({ public_view, setBoardId }: Props) {
       setElements(elements);
     }
   }, [board]);
-
   // Change function when the board_id changes
   const makeEdgeCallback = useCallback(
     (source, target, color?: string) => {

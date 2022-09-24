@@ -1,4 +1,11 @@
-import { BoardStateAction, BoardStateType } from "../types/BoardTypes";
+import { QueryClient } from "react-query";
+import {
+  BoardNodeType,
+  BoardStateAction,
+  BoardStateType,
+  BoardType,
+  NodeUpdateDialogType,
+} from "../types/BoardTypes";
 import { updateManyNodesLockState } from "./supabaseUtils";
 import { toastWarn } from "./utils";
 
@@ -626,7 +633,6 @@ export function updateColor(
     toastWarn("No elements are selected.");
   }
 }
-
 export function boardStateReducer(
   state: BoardStateType,
   action: BoardStateAction
@@ -641,4 +647,79 @@ export function boardStateReducer(
     default:
       return state;
   }
+}
+
+export function setTemplateStyle(
+  queryClient: QueryClient,
+  templateStyle: BoardNodeType,
+  project_id: string,
+  board_id: string,
+  node_id: string
+) {
+  queryClient.setQueryData(
+    `${project_id}-boards`,
+    (oldData: BoardType[] | undefined) => {
+      if (oldData) {
+        let newData = oldData.map((board) => {
+          if (board.id === board_id) {
+            return {
+              ...board,
+              nodes: board.nodes.map((node) => {
+                if (node.id === node_id) {
+                  return {
+                    ...node,
+                    ...templateStyle,
+                    id: node.id,
+                    label: node.label,
+                    x: node.x,
+                    y: node.y,
+                    template: node.template,
+                  };
+                }
+                return node;
+              }),
+            };
+          }
+          return board;
+        });
+        return newData;
+      } else {
+        return [];
+      }
+    }
+  );
+}
+
+export function resetTemplateStyle(
+  queryClient: QueryClient,
+  project_id: string,
+  board_id: string,
+  nodeUpdateDialog: NodeUpdateDialogType
+) {
+  queryClient.setQueryData(
+    `${project_id}-boards`,
+    (oldData: BoardType[] | undefined) => {
+      if (oldData) {
+        return oldData.map((board) => {
+          if (board.id === board_id) {
+            return {
+              ...board,
+              nodes: board.nodes.map((node) => {
+                if (node.id === nodeUpdateDialog.id) {
+                  node = {
+                    ...node,
+                    ...nodeUpdateDialog,
+                  };
+                }
+                return node;
+              }),
+            };
+          }
+          return board;
+        });
+      } else {
+        return [];
+      }
+    }
+  );
 }

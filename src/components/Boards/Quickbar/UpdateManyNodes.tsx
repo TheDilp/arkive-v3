@@ -4,17 +4,21 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { useContext, useState } from "react";
+import { useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../../custom-types";
-import { NodeUpdateDialogType } from "../../../types/BoardTypes";
+import { BoardNodeType, NodeUpdateDialogType } from "../../../types/BoardTypes";
 import {
   BoardFontSizes,
   boardNodeShapes,
   BoardFontFamilies,
   textHAlignOptions,
   textVAlignOptions,
+  setTemplateStyle,
+  resetTemplateStyle,
 } from "../../../utils/boardUtils";
 import {
+  useGetBoardData,
   useGetDocuments,
   useGetImages,
   useUpdateNode,
@@ -22,19 +26,28 @@ import {
 import { NodeUpdateDialogDefault } from "../../../utils/defaultValues";
 import { toastWarn } from "../../../utils/utils";
 import { BoardRefsContext } from "../../Context/BoardRefsContext";
+import DialogLabel from "../../Util/DialogLabel";
 import ImgDropdownItem from "../../Util/ImgDropdownItem";
 
-type ManyNodesProps = Omit<NodeUpdateDialogType, "id">;
+type ManyNodesProps = Omit<NodeUpdateDialogType, "id"> & {
+  selectedTemplate: BoardNodeType | null;
+};
 
 export default function UpdateManyNodes() {
-  const [manyNodesData, setManyNodesData] = useState<ManyNodesProps>(
-    NodeUpdateDialogDefault
-  );
+  const [manyNodesData, setManyNodesData] = useState<ManyNodesProps>({
+    ...NodeUpdateDialogDefault,
+    selectedTemplate: null,
+  });
   const { cyRef } = useContext(BoardRefsContext);
   const { project_id, board_id } = useParams();
   const updateNodeMutation = useUpdateNode(project_id as string);
   const documents = useGetDocuments(project_id as string);
   const images = useGetImages(project_id as string);
+  const board = useGetBoardData(
+    project_id as string,
+    board_id as string,
+    false
+  );
   const updateManyNodesFunction = (
     values: { [key: string]: any },
     cyRef: any
@@ -602,6 +615,49 @@ export default function UpdateManyNodes() {
               }}
             />
           </div>
+        </div>
+        <div className="w-full flex flex-wrap">
+          <DialogLabel text="Template" />
+          <Dropdown
+            tooltip="Select template and save to save changes"
+            placeholder="Select Template"
+            optionLabel="label"
+            value={manyNodesData.selectedTemplate}
+            options={
+              board?.nodes
+                ? [
+                    { label: "None", value: null },
+                    ...board.nodes.filter((node) => node.template),
+                  ]
+                : []
+            }
+            onChange={(e) =>
+              setManyNodesData((prev) => ({
+                ...prev,
+                selectedTemplate: e.value,
+              }))
+            }
+          />
+          <Button
+            icon="pi pi-save"
+            onClick={(e) => {
+              if (manyNodesData.selectedTemplate && cyRef) {
+                const {
+                  id,
+                  board_id,
+                  template,
+                  document,
+                  doc_id,
+                  label,
+                  x,
+                  y,
+                  ...restTemplate
+                } = manyNodesData.selectedTemplate as BoardNodeType;
+                console.log(restTemplate);
+                updateManyNodesFunction(restTemplate, cyRef);
+              }
+            }}
+          />
         </div>
       </div>
     </>

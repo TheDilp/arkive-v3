@@ -12,7 +12,7 @@ import {
   SetStateAction,
   useState,
 } from "react";
-import { useQueryClient } from "react-query";
+import { QueryClient, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { ImageProps } from "../../custom-types";
 import {
@@ -26,6 +26,8 @@ import {
   BoardFontFamilies,
   textHAlignOptions,
   textVAlignOptions,
+  setTemplateStyle,
+  resetTemplateStyle,
 } from "../../utils/boardUtils";
 import {
   useGetBoardData,
@@ -69,72 +71,6 @@ export default function NodeUpdateDialog({
     }
   };
 
-  function setTemplateStyle(templateStyle: BoardNodeType) {
-    setSelectedTemplate(templateStyle);
-    queryClient.setQueryData(
-      `${project_id}-boards`,
-      (oldData: BoardType[] | undefined) => {
-        if (oldData) {
-          let newData = oldData.map((board) => {
-            if (board.id === board_id) {
-              return {
-                ...board,
-                nodes: board.nodes.map((node) => {
-                  if (node.id === nodeUpdateDialog.id) {
-                    return {
-                      ...node,
-                      ...templateStyle,
-                      id: node.id,
-                      label: node.label,
-                      document: node.document,
-                      customImage: node.customImage,
-                      template: node.template,
-                    };
-                  }
-                  return node;
-                }),
-              };
-            }
-            return board;
-          });
-          return newData;
-        } else {
-          return [];
-        }
-      }
-    );
-  }
-
-  function resetTemplateStyle() {
-    setSelectedTemplate(null);
-    queryClient.setQueryData(
-      `${project_id}-boards`,
-      (oldData: BoardType[] | undefined) => {
-        if (oldData) {
-          return oldData.map((board) => {
-            if (board.id === board_id) {
-              return {
-                ...board,
-                nodes: board.nodes.map((node) => {
-                  if (node.id === nodeUpdateDialog.id) {
-                    node = {
-                      ...node,
-                      ...nodeUpdateDialog,
-                    };
-                  }
-                  return node;
-                }),
-              };
-            }
-            return board;
-          });
-        } else {
-          return [];
-        }
-      }
-    );
-  }
-
   return (
     <Dialog
       header={`Update ${
@@ -152,7 +88,13 @@ export default function NodeUpdateDialog({
       modal={false}
       position={"bottom-left"}
       onHide={() => {
-        if (selectedTemplate) resetTemplateStyle();
+        if (selectedTemplate)
+          resetTemplateStyle(
+            queryClient,
+            project_id as string,
+            board_id as string,
+            nodeUpdateDialog
+          );
         setNodeUpdateDialog(NodeUpdateDialogDefault);
       }}
     >
@@ -486,11 +428,25 @@ export default function NodeUpdateDialog({
               <DialogLabel text="Template" />
               <Dropdown
                 tooltip="Select template and save to save changes"
+                optionLabel="label"
                 onChange={(e) => {
                   if (e.value as NodeUpdateDialogType) {
-                    setTemplateStyle(e.value);
+                    setSelectedTemplate(e.value);
+                    setTemplateStyle(
+                      queryClient,
+                      e.value,
+                      project_id as string,
+                      board_id as string,
+                      nodeUpdateDialog.id
+                    );
                   } else {
-                    resetTemplateStyle();
+                    setSelectedTemplate(null);
+                    resetTemplateStyle(
+                      queryClient,
+                      project_id as string,
+                      board_id as string,
+                      nodeUpdateDialog
+                    );
                   }
                 }}
                 value={nodeUpdateDialog.template}
@@ -520,14 +476,14 @@ export default function NodeUpdateDialog({
                   id,
                   board_id,
                   template,
-                  customImage,
                   document,
                   doc_id,
+                  x,
+                  y,
                   label,
                   ...restTemplate
                 } = selectedTemplate;
                 const { show, ...restDialog } = nodeUpdateDialog;
-
                 updateNodeMutation.mutate({
                   ...restDialog,
                   ...restTemplate,

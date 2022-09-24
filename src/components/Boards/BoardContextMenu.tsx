@@ -11,7 +11,7 @@ import {
   useGetBoardData,
 } from "../../utils/customHooks";
 import { deleteManyEdges } from "../../utils/supabaseUtils";
-import { defaultNode } from "../../utils/utils";
+import { defaultNode, toastSuccess, toastWarn } from "../../utils/utils";
 
 type Props = {
   cyRef: any;
@@ -158,17 +158,34 @@ export default function BoardContextMenu({
     {
       label: "Template From Node",
       command: () => {
+        let selected = cyRef.current.nodes(":selected");
+        if (selected.length !== 1) {
+          toastWarn("Please select only one node to create a template from.");
+          return;
+        }
+        let {
+          backgroundImage,
+          classes,
+          customImage,
+          document,
+          id: templateId,
+          locked,
+          template,
+          zIndexCompare,
+          ...nodeData
+        } = selected[0].data();
         let id = uuid();
         createNodeMutation.mutate({
-          id,
-          label: "Node Template",
+          ...defaultNode,
           board_id: board_id as string,
-          type: "rectangle",
+          ...nodeData,
+          label: nodeData.label || "New Template",
+          id,
           x: contextMenu.x,
           y: contextMenu.y,
-          ...defaultNode,
           template: true,
         });
+        toastSuccess("Template created from node.");
       },
     },
     {

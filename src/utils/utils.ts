@@ -1,25 +1,6 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { Dispatch, SetStateAction } from "react";
 import { UseMutationResult } from "react-query";
 import { toast, ToastOptions } from "react-toastify";
-import {
-  BlockquoteExtension,
-  BoldExtension,
-  BulletListExtension,
-  CalloutExtension,
-  HardBreakExtension,
-  HeadingExtension,
-  HorizontalRuleExtension,
-  ImageExtension,
-  ItalicExtension,
-  NodeFormattingExtension,
-  OrderedListExtension,
-  PlaceholderExtension,
-  TaskListExtension,
-  UnderlineExtension,
-} from "remirror/extensions";
-import CustomLinkExtenstion from "../components/Wiki/Editor/CustomExtensions/CustomLink/CustomLinkExtension";
-import { SecretExtension } from "../components/Wiki/Editor/CustomExtensions/SecretExtension/SecretExtension";
 import { DocumentProps, slashMenuItem, SortIndexes } from "../custom-types";
 import { BoardType, CreateNodeType } from "../types/BoardTypes";
 import { MapProps } from "../types/MapTypes";
@@ -68,35 +49,6 @@ export const getDepth = (
 
   return depth;
 };
-
-export const editorExtensions = [
-  new PlaceholderExtension({
-    placeholder: "Write something awesome! 📜",
-  }),
-  new BoldExtension(),
-  new ItalicExtension(),
-  new HeadingExtension(),
-  new UnderlineExtension(),
-  new BlockquoteExtension(),
-  new BulletListExtension(),
-  new TaskListExtension(),
-  new OrderedListExtension(),
-  CustomLinkExtenstion,
-  new ImageExtension({
-    enableResizing: true,
-  }),
-  new HorizontalRuleExtension(),
-  new CalloutExtension(),
-  new NodeFormattingExtension(),
-  new HardBreakExtension(),
-  new SecretExtension({
-    extraAttributes: {
-      class: "secretBlock",
-    },
-    secret: "true",
-    classNames: "secretBlock",
-  }),
-];
 
 export const documentDemo = {
   type: "doc",
