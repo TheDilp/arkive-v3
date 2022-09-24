@@ -59,13 +59,7 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
         }}
       >
         {chooseButton}
-        <span
-          onClick={() => {
-            fileUploadRef.current?.upload();
-          }}
-        >
-          {uploadButton}
-        </span>
+        <span onClick={() => {}}>{uploadButton}</span>
         <span
           onClick={() => {
             fileUploadRef.current?.clear();
@@ -104,7 +98,7 @@ export default function Quickupload({ uploadDialog, setUploadDialog }: Props) {
           maxHeight: "40rem",
           overflowY: "auto",
         }}
-        name="demo[]"
+        name="quickupload[]"
         ref={fileUploadRef}
         headerTemplate={headerTemplate}
         accept="image/*"

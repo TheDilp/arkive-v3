@@ -86,7 +86,6 @@ export default function FileBrowserHeader() {
         {chooseButton}
         <span
           onClick={() => {
-            fileUploadRef.current?.upload();
             setTotalSize(0);
           }}
         >
