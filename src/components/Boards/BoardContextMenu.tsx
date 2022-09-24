@@ -166,7 +166,6 @@ export default function BoardContextMenu({
         let {
           backgroundImage,
           classes,
-          customImage,
           document,
           id: templateId,
           locked,

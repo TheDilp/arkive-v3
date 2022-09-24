@@ -445,11 +445,14 @@ export default function NodeUpdateDialog({
                     );
                   }
                 }}
-                value={nodeUpdateDialog.template}
+                value={selectedTemplate}
                 options={
                   board?.nodes
                     ? [
-                        { label: "None", value: null },
+                        {
+                          label: "Default Node Appearance",
+                          value: NodeUpdateDialogDefault,
+                        },
                         ...board.nodes.filter((node) => node.template),
                       ]
                     : []

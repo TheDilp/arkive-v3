@@ -433,7 +433,7 @@ export const cytoscapeStylesheet = [
     selector: ":selected",
     style: {
       "overlay-color": "green",
-      "overlay-padding": 2,
+      "overlay-padding": 5,
       "overlay-opacity": 0.5,
       "line-color": "green",
       "target-arrow-color": "green",
@@ -666,6 +666,7 @@ export function setTemplateStyle(
               ...board,
               nodes: board.nodes.map((node) => {
                 if (node.id === node_id) {
+                  console.log(templateStyle);
                   return {
                     ...node,
                     ...templateStyle,
@@ -673,6 +674,7 @@ export function setTemplateStyle(
                     label: node.label,
                     x: node.x,
                     y: node.y,
+                    document: node.document,
                     template: node.template,
                   };
                 }
