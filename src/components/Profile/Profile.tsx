@@ -3,7 +3,7 @@ import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { getProfile, updateProfile } from "../../utils/supabaseUtils";
+import { auth, getProfile, updateProfile } from "../../utils/supabaseUtils";
 import { toastSuccess } from "../../utils/utils";
 import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
@@ -18,7 +18,7 @@ export default function Profile() {
   useEffect(() => {
     if (profile) setLocalProfile(profile);
   }, [profile]);
-
+  console.log();
   if (error || isLoading) return <LoadingScreen />;
 
   const header = (
@@ -30,6 +30,7 @@ export default function Profile() {
           objectFit: "cover",
         }}
         src={
+          auth.user()?.user_metadata.avatar_url ||
           localProfile?.profile_image ||
           `https://avatars.dicebear.com/api/bottts/${profile?.user_id}.svg`
         }
