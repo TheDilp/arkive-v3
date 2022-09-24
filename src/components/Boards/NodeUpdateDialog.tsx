@@ -55,20 +55,23 @@ export default function NodeUpdateDialog({
 
   return (
     <Dialog
-      header={`Update ${typeof nodeUpdateDialog.id === "string" ? "Node" : "Many Nodes"
-        } ${typeof nodeUpdateDialog.id === "string"
+      header={`Update ${
+        typeof nodeUpdateDialog.id === "string" ? "Node" : "Many Nodes"
+      } ${
+        typeof nodeUpdateDialog.id === "string"
           ? nodeUpdateDialog.label
           : "" || ""
-        }`}
+      }`}
       style={{
         width: "24.75vw",
+        height: "27rem",
       }}
       visible={nodeUpdateDialog.show}
       modal={false}
       position={"bottom-left"}
       onHide={() => setNodeUpdateDialog(NodeUpdateDialogDefault)}
     >
-      <div>
+      <div className="h-full flex flex-column justify-content-between">
         <TabView className="w-full">
           <TabPanel header="Node Label">
             <div className="w-full flex flex-nowrap">
@@ -78,7 +81,7 @@ export default function NodeUpdateDialog({
 
                   <div className="w-full flex flex-wrap">
                     <label className="w-full text-sm text-gray-400">
-                      Node Label
+                      Node Labels
                     </label>
 
                     <InputText
@@ -277,11 +280,11 @@ export default function NodeUpdateDialog({
                 options={
                   documents.data
                     ? [
-                      { title: "No document", id: null },
-                      ...documents.data.filter(
-                        (doc) => !doc.template && !doc.folder
-                      ),
-                    ]
+                        { title: "No document", id: null },
+                        ...documents.data.filter(
+                          (doc) => !doc.template && !doc.folder
+                        ),
+                      ]
                     : []
                 }
                 optionLabel={"title"}
@@ -302,12 +305,20 @@ export default function NodeUpdateDialog({
                 placeholder="Custom Image"
                 optionLabel="title"
                 virtualScrollerOptions={{
-                  lazy: true, onLazyLoad: () => { }, itemSize: 50, showLoader: true, loading: images?.data.length === 0, delay: 0, loadingTemplate: (options) => {
+                  lazy: true,
+                  onLazyLoad: () => {},
+                  itemSize: 50,
+                  showLoader: true,
+                  loading: images?.data.length === 0,
+                  delay: 0,
+                  loadingTemplate: (options) => {
                     return (
-                      <div className="flex align-items-center p-2" style={{ height: '38px' }}>
-                      </div>
-                    )
-                  }
+                      <div
+                        className="flex align-items-center p-2"
+                        style={{ height: "38px" }}
+                      ></div>
+                    );
+                  },
                 }}
                 itemTemplate={(item: ImageProps) => (
                   <ImgDropdownItem title={item.title} link={item.link} />
@@ -315,11 +326,11 @@ export default function NodeUpdateDialog({
                 options={
                   images?.data
                     ? [
-                      { title: "No image", id: null },
-                      ...images?.data.filter(
-                        (image) => image.type === "Image"
-                      ),
-                    ]
+                        { title: "No image", id: null },
+                        ...images?.data.filter(
+                          (image) => image.type === "Image"
+                        ),
+                      ]
                     : []
                 }
                 value={nodeUpdateDialog.customImage}
