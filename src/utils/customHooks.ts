@@ -6,6 +6,7 @@ import {
   DocumentProps,
   DocumentUpdateProps,
   ImageProps,
+  ProjectBoardSettings,
   ProjectProps,
   SortIndexes,
 } from "../custom-types";
@@ -138,12 +139,14 @@ export function useUpdateProject() {
       title?: string;
       categories?: string[];
       cardImage?: string;
+      board_settings?: ProjectBoardSettings;
     }) =>
       await updateProject(
         vars.project_id,
         vars.title,
         vars.categories,
-        vars.cardImage
+        vars.cardImage,
+        vars.board_settings
       ),
     {
       onMutate: async (updatedProject) => {

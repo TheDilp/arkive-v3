@@ -34,6 +34,7 @@ import {
   useGetBoardData,
   useGetDocuments,
   useGetImages,
+  useGetProjectData,
   useUpdateNode,
   useUploadImage,
 } from "../../utils/customHooks";
@@ -62,7 +63,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
   const navigate = useNavigate();
   const { project_id, board_id, node_id } = useParams();
   const { cyRef, ehRef, grRef, cbRef } = useContext(BoardRefsContext);
-
+  const project = useGetProjectData(project_id as string);
   const board = useGetBoardData(
     project_id as string,
     board_id as string,
@@ -555,9 +556,9 @@ export default function BoardView({ public_view, setBoardId }: Props) {
       <CytoscapeComponent
         elements={elements}
         className="Lato cy"
-        wheelSensitivity={0.1}
         minZoom={0.1}
         maxZoom={10}
+        wheelSensitivity={project?.board_settings.wheelSensitivity}
         style={{ width: "100%", height: "100%", opacity: loading ? 0 : 1 }}
         cy={(cy: any) => {
           if (cyRef) {

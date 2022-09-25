@@ -8,13 +8,11 @@ import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import {
   useGetBoards,
   useGetDocuments,
-  useGetImages,
   useGetMaps,
   useGetProjectData,
-  useGetTimelines
+  useGetTimelines,
 } from "../../utils/customHooks";
 import { auth } from "../../utils/supabaseUtils";
-import { supabaseStorageImagesLink } from "../../utils/utils";
 import FilebrowserProvider from "../Context/FileBrowserContext";
 import MediaQueryProvider from "../Context/MediaQueryContext";
 import ProjectContextProvider from "../Context/ProjectContext";
@@ -38,18 +36,10 @@ export default function Project() {
   );
   const { isLoading: isLoadingMaps } = useGetMaps(project_id as string);
   const { isLoading: isLoadingBoards } = useGetBoards(project_id as string);
-  const { isLoading: isLoadingTimelines } = useGetTimelines(project_id as string)
+  const { isLoading: isLoadingTimelines } = useGetTimelines(
+    project_id as string
+  );
   const user = auth.user();
-
-  // useEffect(() => {
-  //   if (images?.data) {
-  //     let maps = images.data.filter((image) => image.type === "Map");
-  //     for (const map of maps) {
-  //       let img = new Image();
-  //       img.src = supabaseStorageImagesLink + map.link;
-  //     }
-  //   }
-  // }, []);
 
   useEffect(() => {
     cytoscape.use(edgehandles);
@@ -58,7 +48,12 @@ export default function Project() {
   }, []);
   if (!user) return <Navigate to="/" />;
 
-  if (isLoadingDocuments || isLoadingMaps || isLoadingBoards || isLoadingTimelines)
+  if (
+    isLoadingDocuments ||
+    isLoadingMaps ||
+    isLoadingBoards ||
+    isLoadingTimelines
+  )
     return <LoadingScreen />;
 
   return (

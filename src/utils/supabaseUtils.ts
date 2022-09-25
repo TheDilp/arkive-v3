@@ -7,6 +7,7 @@ import {
   DocumentUpdateProps,
   ImageProps,
   ProfileProps,
+  ProjectBoardSettings,
   ProjectProps,
   SortIndexes,
   TemplateCreateProps,
@@ -91,7 +92,7 @@ export const getCurrentProject = async (project_id: string) => {
   if (user) {
     const { data: project, error } = await supabase
       .from<ProjectProps>("projects")
-      .select("id, title, user_id, cardImage")
+      .select("id, title, user_id, cardImage, board_settings")
       .eq("id", project_id);
 
     if (project) return project[0];
@@ -417,7 +418,8 @@ export const updateProject = async (
   project_id: string,
   title?: string,
   categories?: string[],
-  cardImage?: string
+  cardImage?: string,
+  board_settings?: ProjectBoardSettings
 ) => {
   let user = auth.user();
 
@@ -428,6 +430,7 @@ export const updateProject = async (
         title,
         categories,
         cardImage,
+        board_settings,
       })
       .eq("id", project_id);
 

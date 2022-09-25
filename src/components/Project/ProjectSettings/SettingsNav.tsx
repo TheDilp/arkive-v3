@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { Link, useParams } from "react-router-dom";
 
 export default function SettingsNav() {
@@ -24,12 +25,12 @@ export default function SettingsNav() {
       </Link>
 
       <Link
-        to="../settings/project-theme"
+        to="../settings/board-settings"
         className={`no-underline text-gray-400 hover:text-white ${
           setting === "project-theme" && "text-white"
         }`}
       >
-        {/* <li
+        <li
           className={`w-15rem cursor-pointer py-2 pl-1 my-1 hover:text-white ${
             setting === "project-theme" && "text-white bg-blue-700 "
           }`}
@@ -37,9 +38,13 @@ export default function SettingsNav() {
             borderRadius: "0.35rem",
           }}
         >
-          <i className="pi pi-fw pi-palette mr-2"></i>
-          Project Theme
-        </li> */}
+          <Icon
+            className="hover:text-primary cursor-pointer "
+            icon="mdi:draw"
+            fontSize={20}
+          />
+          Board Settings
+        </li>
       </Link>
       <Link
         to="../settings/documents-settings"

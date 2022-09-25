@@ -8,8 +8,12 @@ export type ProjectProps = {
   user_id: string;
   categories: string[];
   createdAt: Date;
+  board_settings: ProjectBoardSettings;
 };
-
+export type ProjectBoardSettings = {
+  wheelSensitivity: number;
+};
+// ====================================================
 export type DocumentProps = {
   id: string;
   title: string;

@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { ProjectProps } from "../../../custom-types";
 import { useGetProjectData } from "../../../utils/customHooks";
+import BoardSettings from "./BoardSettings";
 import DocumentsSettingsTable from "./DocumentsSettingsTable";
 import ProjectSettings from "./ProjectSettings";
 import SettingsNav from "./SettingsNav";
@@ -20,6 +21,9 @@ export default function ProjectSettingsIndex() {
             <ProjectSettings project={project as ProjectProps} />
           )}
           {setting === "documents-settings" && <DocumentsSettingsTable />}
+          {setting === "board-settings" && (
+            <BoardSettings project={project as ProjectProps} />
+          )}
         </div>
       )}
     </div>
