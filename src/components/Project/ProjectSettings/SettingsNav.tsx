@@ -27,12 +27,12 @@ export default function SettingsNav() {
       <Link
         to="../settings/board-settings"
         className={`no-underline text-gray-400 hover:text-white ${
-          setting === "project-theme" && "text-white"
+          setting === "board-settings" && "text-white"
         }`}
       >
         <li
           className={`w-15rem cursor-pointer py-2 pl-1 my-1 hover:text-white ${
-            setting === "project-theme" && "text-white bg-blue-700 "
+            setting === "board-settings" && "text-white bg-blue-700 "
           }`}
           style={{
             borderRadius: "0.35rem",
