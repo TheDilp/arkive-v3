@@ -13,6 +13,7 @@ export default defineConfig({
     viteCompression(),
   ],
   build: {
+    minify: true,
     rollupOptions: {
       output: {
         manualChunks(id) {

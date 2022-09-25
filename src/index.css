@@ -1,0 +1,20 @@
+@font-face {
+  font-family: Lato;
+  src: url("../public/Lato-Regular.ttf");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Lato;
+  src: url("../public/Lato-Bold.ttf");
+  font-weight: 700;
+}
+@font-face {
+  font-family: Merriweather;
+  src: url("../public/Merriweather-Regular.ttf");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Merriweather;
+  src: url("../public/Merriweather-Bold.ttf");
+  font-weight: 700;
+}
