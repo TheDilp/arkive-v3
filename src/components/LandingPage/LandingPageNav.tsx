@@ -6,11 +6,7 @@ export default function LandingPageNav() {
     >
       <div className="flex align-items-center column-gap-4 lg:column-gap-5">
         <div className="flex align-items-end">
-          <img
-            className="w-3rem h-3rem"
-            src="android-chrome-512x512.png"
-            alt="Arkive Logo"
-          />
+          <img className="w-3rem h-3rem" src="Logo.png" alt="Arkive Logo" />
           <span className="text-sm">Alpha</span>
         </div>
         <div className="hover:text-blue-400 cursor-pointer">

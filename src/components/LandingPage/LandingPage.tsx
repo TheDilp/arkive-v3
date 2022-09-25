@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
-  ArkivistTier,
+  // ArkivistTier,
+  // CuratorTier,
   BoardFeatureBlocks,
-  CuratorTier,
   MapFeatureBlocks,
   ProjectFeatureBlocks,
   WikiFeatureBlocks,
 } from "../../utils/landingPageUtils";
 import { auth } from "../../utils/supabaseUtils";
-import FAQ from "./FAQ";
+// import FAQ from "./FAQ";
 import FeatureBlock from "./FeatureBlock";
 import LandingPageNav from "./LandingPageNav";
-import PricingCard from "./PricingCard";
+// import PricingCard from "./PricingCard";
 
 export default function LandingPage() {
   const user = auth.user();

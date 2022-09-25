@@ -1,20 +1,24 @@
 @font-face {
   font-family: Lato;
-  src: url("../public/Lato-Regular.ttf");
+  src: url("/Lato-Regular.ttf");
   font-weight: 400;
+  font-display: swap;
 }
 @font-face {
   font-family: Lato;
-  src: url("../public/Lato-Bold.ttf");
+  src: url("/Lato-Bold.ttf");
   font-weight: 700;
+  font-display: swap;
 }
 @font-face {
   font-family: Merriweather;
-  src: url("../public/Merriweather-Regular.ttf");
+  src: url("/Merriweather-Regular.ttf");
   font-weight: 400;
+  font-display: swap;
 }
 @font-face {
   font-family: Merriweather;
-  src: url("../public/Merriweather-Bold.ttf");
+  src: url("/Merriweather-Bold.ttf");
   font-weight: 700;
+  font-display: swap;
 }

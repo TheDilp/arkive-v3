@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from "framer-motion";
 import L, { LatLngBoundsExpression } from "leaflet";
 import {
   Dispatch,
@@ -126,45 +125,36 @@ export default function MapView({
           />
         </>
       )}
-      <AnimatePresence exitBeforeEnter={true}>
-        {mapData && bounds && (
-          <motion.div
-            key={mapData.id}
-            transition={{ duration: 0.25 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="w-full h-full"
+      {mapData && bounds && (
+        <div key={mapData.id} className="w-full h-full">
+          <MapContainer
+            ref={mapRef}
+            className="w-full h-full bg-gray-900 relative outline-none"
+            center={[bounds[1][0] / 2, bounds[1][1] / 2]}
+            zoom={0}
+            minZoom={-3}
+            maxZoom={2}
+            scrollWheelZoom={true}
+            zoomSnap={0}
+            crs={L.CRS.Simple}
+            bounds={bounds as LatLngBoundsExpression}
+            attributionControl={false}
           >
-            <MapContainer
-              ref={mapRef}
-              className="w-full h-full bg-gray-900 relative outline-none"
-              center={[bounds[1][0] / 2, bounds[1][1] / 2]}
-              zoom={0}
-              minZoom={-3}
-              maxZoom={2}
-              scrollWheelZoom={true}
-              zoomSnap={0}
-              crs={L.CRS.Simple}
-              bounds={bounds as LatLngBoundsExpression}
-              attributionControl={false}
-            >
-              {mapData.map_image?.link && (
-                <MapImage
-                  src={`${supabaseStorageImagesLink}${mapData.map_image.link}`}
-                  bounds={bounds as LatLngBoundsExpression}
-                  imgRef={imgRef}
-                  markers={mapData.markers}
-                  map_layers={mapData.map_layers}
-                  setNewTokenDialog={setNewTokenDialog}
-                  cm={cm}
-                  public_view={public_view}
-                />
-              )}
-            </MapContainer>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {mapData.map_image?.link && (
+              <MapImage
+                src={`${supabaseStorageImagesLink}${mapData.map_image.link}`}
+                bounds={bounds as LatLngBoundsExpression}
+                imgRef={imgRef}
+                markers={mapData.markers}
+                map_layers={mapData.map_layers}
+                setNewTokenDialog={setNewTokenDialog}
+                cm={cm}
+                public_view={public_view}
+              />
+            )}
+          </MapContainer>
+        </div>
+      )}
     </div>
   );
 }

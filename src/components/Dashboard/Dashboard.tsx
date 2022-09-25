@@ -7,7 +7,7 @@ import { auth, createProject, getProjects } from "../../utils/supabaseUtils";
 import Navbar from "../Nav/Navbar";
 import LoadingScreen from "../Util/LoadingScreen";
 import ProjectCard from "./ProjectCard";
-export default function Home() {
+export default function Dashboard() {
   const queryClient = useQueryClient();
   const {
     data: projects,
