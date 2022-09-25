@@ -1,4 +1,4 @@
-import L, { LatLngBoundsExpression } from "leaflet";
+import { LatLngBoundsExpression, CRS } from "leaflet";
 import {
   Dispatch,
   SetStateAction,
@@ -79,7 +79,7 @@ export default function MapView({
         if (marker) {
           mapRef.current.flyTo([marker.lat, marker.lng]);
         } else {
-          mapRef.current.flyToBounds(bounds);
+          mapRef.current.flyToBounds(setBounds);
         }
       } else {
         mapRef.current?.flyToBounds(bounds);
@@ -136,7 +136,7 @@ export default function MapView({
             maxZoom={2}
             scrollWheelZoom={true}
             zoomSnap={0}
-            crs={L.CRS.Simple}
+            crs={CRS.Simple}
             bounds={bounds as LatLngBoundsExpression}
             attributionControl={false}
           >
