@@ -7,7 +7,7 @@ import { Dialog } from "primereact/dialog";
 import { SelectButton } from "primereact/selectbutton";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Tooltip } from "primereact/tooltip";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import {
@@ -19,8 +19,8 @@ import {
 import {
   changeLockState,
   ColorPresets,
-  updateColor,
   cytoscapeGridOptions,
+  updateColor,
 } from "../../../utils/boardUtils";
 import {
   useDeleteManyEdges,
@@ -49,12 +49,12 @@ export default function BoardQuickBar({
     board_id as string,
     false
   );
-  const [search, setSearch] = useState("");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchDialog, setSearchDialog] = useState(false);
   const [filteredNodes, setFilteredNodes] = useState<BoardNodeType[]>(
     board?.nodes.filter((node) => node.label) || []
   );
-  const [searchDialog, setSearchDialog] = useState(false);
   const [exportDialog, setExportDialog] = useState<BoardExportType>({
     view: "Graph",
     background: "Color",
