@@ -56,7 +56,6 @@ export default function NodeUpdateDialog({
   const [selectedTemplate, setSelectedTemplate] =
     useState<BoardNodeType | null>(null);
   const updateNodeMutation = useUpdateNode(project_id as string);
-
   const handleEnter: KeyboardEventHandler = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       const { show, ...rest } = nodeUpdateDialog;
@@ -66,7 +65,6 @@ export default function NodeUpdateDialog({
       });
     }
   };
-
   return (
     <Dialog
       header={`Update ${
@@ -91,6 +89,7 @@ export default function NodeUpdateDialog({
             board_id as string,
             nodeUpdateDialog
           );
+        setSelectedTemplate(null);
         setNodeUpdateDialog(NodeUpdateDialogDefault);
       }}
     >
@@ -119,7 +118,6 @@ export default function NodeUpdateDialog({
                       autoComplete="false"
                     />
                   </div>
-                  {/* Label size */}
 
                   {/* Font Family */}
 
@@ -137,6 +135,8 @@ export default function NodeUpdateDialog({
                       }
                     />
                   </div>
+                  {/* Label size */}
+
                   <div className="w-3 flex flex-wrap">
                     <DialogLabel text="Label Size" />
                     <Dropdown
@@ -408,6 +408,7 @@ export default function NodeUpdateDialog({
             <div className="w-full flex flex-wrap">
               <DialogLabel text="Template" />
               <Dropdown
+                disabled={nodeUpdateDialog.template}
                 tooltip="Select template and save to save changes"
                 optionLabel="label"
                 onChange={(e) => {
@@ -447,7 +448,6 @@ export default function NodeUpdateDialog({
           </TabPanel>
         </TabView>
         <div className="w-full flex justify-content-end">
-          <label className=""></label>
           <Button
             label="Save Node"
             type="submit"
@@ -456,16 +456,8 @@ export default function NodeUpdateDialog({
             iconPos="right"
             onClick={() => {
               if (selectedTemplate) {
-                const {
-                  id,
-                  board_id,
-                  template,
-                  document,
-                  x,
-                  y,
-                  label,
-                  ...restTemplate
-                } = selectedTemplate;
+                const { id, template, document, x, y, label, ...restTemplate } =
+                  selectedTemplate;
                 const { show, ...restDialog } = nodeUpdateDialog;
                 updateNodeMutation.mutate({
                   ...restDialog,
@@ -478,8 +470,10 @@ export default function NodeUpdateDialog({
                 const { show, ...rest } = nodeUpdateDialog;
                 updateNodeMutation.mutate({
                   ...rest,
-                  board_id: board_id as string,
+                  // Second operator is for when the component is used in the BoardTree to update templates
+                  board_id: (board_id as string) || rest?.board_id,
                 });
+                setSelectedTemplate(null);
               }
             }}
           />

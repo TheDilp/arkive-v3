@@ -1,18 +1,28 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useContext, useLayoutEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useParams } from "react-router-dom";
 import {
   BoardItemDisplayDialogType,
   BoardType,
+  NodeUpdateDialogType,
 } from "../../../types/BoardTypes";
 import { useGetBoards, useSortChildren } from "../../../utils/customHooks";
-import { BoardUpdateDialogDefault } from "../../../utils/defaultValues";
+import {
+  BoardUpdateDialogDefault,
+  NodeUpdateDialogDefault,
+} from "../../../utils/defaultValues";
 import { getDepth, handleDrop, TreeSortFunc } from "../../../utils/utils";
 import { MediaQueryContext } from "../../Context/MediaQueryContext";
 import TreeSidebar from "../../Util/TreeSidebar";
 import DragPreview from "../../Wiki/DocumentTree/DragPreview";
+import NodeUpdateDialog from "../NodeUpdateDialog";
 import BoardsFilter from "./BoardsFilter";
-import BoardTemplateDialog from "./BoardTemplateDialog";
 import BoardTreeItem from "./BoardTreeItem";
 import BoardTreeItemContext from "./BoardTreeItemContext";
 import BoardUpdateDialog from "./BoardUpdateDialog";
@@ -27,12 +37,15 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
   const { isTabletOrMobile } = useContext(MediaQueryContext);
   const [filter, setFilter] = useState("");
   const [treeData, setTreeData] = useState<NodeModel<BoardType>[]>([]);
+  const [templateNode, setTemplateNode] = useState<NodeUpdateDialogType>(
+    NodeUpdateDialogDefault
+  );
   const { data: boards } = useGetBoards(project_id as string);
   const sortChildrenMutation = useSortChildren();
   const [updateBoardDialog, setUpdateBoardDialog] =
     useState<BoardItemDisplayDialogType>(BoardUpdateDialogDefault);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (boards) {
       if (filter) {
         const timeout = setTimeout(() => {
@@ -89,11 +102,13 @@ export default function BoardsTree({ boardId, setBoardId }: Props) {
       <BoardUpdateDialog
         boardData={updateBoardDialog}
         setBoardData={setUpdateBoardDialog}
+        setTemplateNode={setTemplateNode}
       />
-      <BoardTemplateDialog
-        boardData={updateBoardDialog}
-        setBoardData={setUpdateBoardDialog}
+      <NodeUpdateDialog
+        nodeUpdateDialog={templateNode}
+        setNodeUpdateDialog={setTemplateNode}
       />
+
       <TreeSidebar>
         <BoardsFilter filter={filter} setFilter={setFilter} />
         <Tree

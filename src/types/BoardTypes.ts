@@ -60,7 +60,6 @@ export type BoardItemDisplayDialogType = {
   defaultEdgeColor: string;
   public: boolean;
   show: boolean;
-  showTemplates: boolean;
 };
 
 // Node Props
@@ -184,6 +183,7 @@ export type NodeUpdateDialogType = {
   fontColor: string;
   fontFamily: string;
   doc_id?: string;
+  board_id: string;
   customImage?: ImageProps;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";

@@ -26,6 +26,10 @@ import { Column, ColumnEditorOptions } from "primereact/column";
 import { ColorPicker } from "primereact/colorpicker";
 import { TimelineAgeType } from "../../../types/TimelineAgeTypes";
 import { confirmDialog } from "primereact/confirmdialog";
+import {
+  dataTableColorEditor,
+  dataTableTextEditor,
+} from "../../Util/DataTableEditors";
 
 type Props = {
   eventData: TimelineItemDisplayDialogProps;
@@ -103,49 +107,6 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
     );
   };
 
-  const textEditor = (options: ColumnEditorOptions) => {
-    return (
-      <InputText
-        type="text"
-        className="w-12rem"
-        value={options.value}
-        onChange={(e) => {
-          if (options.editorCallback) options.editorCallback(e.target.value);
-        }}
-      />
-    );
-  };
-  const colorEditor = (options: ColumnEditorOptions) => {
-    return (
-      <div className="flex align-items-center justify-content-between w-full">
-        <InputText
-          className="w-6rem mr-2"
-          value={options.value}
-          onChange={(e) => {
-            if (options.editorCallback) options.editorCallback(e.target.value);
-          }}
-        />
-        <ColorPicker
-          className="w-min"
-          value={options.value}
-          onChange={(e) => {
-            if (options.editorCallback && e.value)
-              options.editorCallback(
-                "#" + e.value.toString().replaceAll("#", "")
-              );
-          }}
-        />
-        <Button
-          className="p-button-rounded p-button-text ml-2"
-          tooltip="Reset"
-          icon="pi pi-undo"
-          onClick={(e) => {
-            if (options.editorCallback) options.editorCallback("#121212");
-          }}
-        ></Button>
-      </div>
-    );
-  };
   const onRowReorder = async (e: any) => {
     const indexes: { id: string; sort: number }[] = e.value.map(
       (age: TimelineAgeType, index: number) => ({
@@ -161,7 +122,7 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
   };
   return (
     <Dialog
-      className="w-5"
+      className="w-4"
       style={{
         height: "40rem",
       }}
@@ -318,20 +279,35 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
               field="title"
               header="Title"
               className="w-full"
-              editor={(options) => textEditor(options)}
+              editor={(options) => dataTableTextEditor(options)}
             ></Column>
             <Column
               header="Color"
               field="color"
-              editor={(options) => colorEditor(options)}
+              editor={(options) => dataTableColorEditor(options)}
               body={colorTemplate}
             ></Column>
             <Column
               rowEditor
               className="flex justify-content-center"
               header="Edit"
+              headerStyle={{
+                maxWidth: "4rem",
+              }}
+              bodyStyle={{
+                maxWidth: "4rem",
+              }}
             ></Column>
-            <Column body={deleteTemplate} header="Delete"></Column>
+            <Column
+              body={deleteTemplate}
+              header="Delete"
+              headerStyle={{
+                maxWidth: "5rem",
+              }}
+              bodyStyle={{
+                maxWidth: "5rem",
+              }}
+            ></Column>
           </DataTable>
         </TabPanel>
       </TabView>

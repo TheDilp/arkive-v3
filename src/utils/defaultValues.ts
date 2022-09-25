@@ -1,6 +1,9 @@
 // Default empty props for dialogs
 
-import { NodeUpdateDialogType } from "../types/BoardTypes";
+import {
+  BoardItemDisplayDialogType,
+  NodeUpdateDialogType,
+} from "../types/BoardTypes";
 
 export const DocItemDisplayDialogDefault = {
   id: "",
@@ -12,7 +15,7 @@ export const DocItemDisplayDialogDefault = {
   parent: "",
 };
 
-export const BoardUpdateDialogDefault = {
+export const BoardUpdateDialogDefault: BoardItemDisplayDialogType = {
   id: "",
   title: "",
   defaultNodeColor: "#595959",
@@ -21,7 +24,6 @@ export const BoardUpdateDialogDefault = {
   folder: false,
   depth: 0,
   show: false,
-  showTemplates: false,
   expanded: false,
   public: false,
 };
