@@ -72,6 +72,9 @@ export default function BoardUpdateDialog({
       visible={boardData.show}
       modal={false}
       className="w-3"
+      style={{
+        maxHeight: "32rem",
+      }}
       onHide={() => setBoardData(BoardUpdateDialogDefault)}
     >
       <TabView renderActiveOnly={true}>
@@ -201,11 +204,6 @@ export default function BoardUpdateDialog({
           </div>
         </TabPanel>
         <TabPanel header="Templates">
-          {
-            boards
-              ?.find((board) => board.id === boardData.id)
-              ?.nodes.filter((node) => node.template)[0]?.label
-          }
           <DataTable
             value={
               boards
