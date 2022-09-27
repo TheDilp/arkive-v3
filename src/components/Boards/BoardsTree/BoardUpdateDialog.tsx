@@ -88,6 +88,18 @@ export default function BoardUpdateDialog({
                 placeholder="Board Title"
                 className="w-full"
                 value={boardData.title}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    updateBoardMutation.mutate({
+                      id: boardData.id,
+                      title: boardData.title,
+                      parent:
+                        boardData.parent === "0" ? null : boardData.parent,
+                      defaultNodeColor: boardData.defaultNodeColor,
+                      defaultEdgeColor: boardData.defaultEdgeColor,
+                    });
+                  }
+                }}
                 onChange={(e) =>
                   setBoardData((prev) => ({
                     ...prev,
@@ -134,55 +146,58 @@ export default function BoardUpdateDialog({
                 }
               />
             </div>
-
-            <div className="w-full flex flex-wrap justify-content-between align-items-center">
-              <label className="w-full text-sm text-gray-400">
-                Default Node Color
-              </label>
-              <InputText
-                className="w-10"
-                value={boardData.defaultNodeColor}
-                onChange={(e) =>
-                  setBoardData((prev) => ({
-                    ...prev,
-                    defaultNodeColor: e.target.value,
-                  }))
-                }
-              />
-              <ColorPicker
-                value={boardData.defaultNodeColor}
-                onChange={(e) =>
-                  setBoardData((prev) => ({
-                    ...prev,
-                    defaultNodeColor: ("#" + e.value) as string,
-                  }))
-                }
-              />
-            </div>
-            <div className="w-full flex flex-wrap justify-content-between align-items-center">
-              <label className="w-full text-sm text-gray-400">
-                Default Edge Color
-              </label>
-              <InputText
-                className="w-10"
-                value={boardData.defaultEdgeColor}
-                onChange={(e) =>
-                  setBoardData((prev) => ({
-                    ...prev,
-                    defaultEdgeColor: e.target.value,
-                  }))
-                }
-              />
-              <ColorPicker
-                value={boardData.defaultEdgeColor}
-                onChange={(e) =>
-                  setBoardData((prev) => ({
-                    ...prev,
-                    defaultEdgeColor: ("#" + e.value) as string,
-                  }))
-                }
-              />
-            </div>
+            {!boardData.folder && (
+              <>
+                <div className="w-full flex flex-wrap justify-content-between align-items-center">
+                  <label className="w-full text-sm text-gray-400">
+                    Default Node Color
+                  </label>
+                  <InputText
+                    className="w-10"
+                    value={boardData.defaultNodeColor}
+                    onChange={(e) =>
+                      setBoardData((prev) => ({
+                        ...prev,
+                        defaultNodeColor: e.target.value,
+                      }))
+                    }
+                  />
+                  <ColorPicker
+                    value={boardData.defaultNodeColor}
+                    onChange={(e) =>
+                      setBoardData((prev) => ({
+                        ...prev,
+                        defaultNodeColor: ("#" + e.value) as string,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="w-full flex flex-wrap justify-content-between align-items-center">
+                  <label className="w-full text-sm text-gray-400">
+                    Default Edge Color
+                  </label>
+                  <InputText
+                    className="w-10"
+                    value={boardData.defaultEdgeColor}
+                    onChange={(e) =>
+                      setBoardData((prev) => ({
+                        ...prev,
+                        defaultEdgeColor: e.target.value,
+                      }))
+                    }
+                  />
+                  <ColorPicker
+                    value={boardData.defaultEdgeColor}
+                    onChange={(e) =>
+                      setBoardData((prev) => ({
+                        ...prev,
+                        defaultEdgeColor: ("#" + e.value) as string,
+                      }))
+                    }
+                  />
+                </div>
+              </>
+            )}
 
             <div className="w-full flex justify-content-end">
               <Button
