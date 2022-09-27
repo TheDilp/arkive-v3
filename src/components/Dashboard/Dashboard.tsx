@@ -47,13 +47,13 @@ export default function Dashboard() {
       <div
         className={`flex w-full ${isTabletOrMobile ? "flex-wrap" : ""}`}
         style={{
-          height: "96.5vh",
+          minHeight: "96.5vh",
         }}
       >
-        <div className={`Lato ${isTabletOrMobile ? "w-full" : "w-1"}`}>
+        <div className={`Lato ${isTabletOrMobile ? "w-full" : "w-4rem"}`}>
           <div
             className={`${
-              isTabletOrMobile ? "w-full py-2" : "w-4 py-5"
+              isTabletOrMobile ? "w-full py-2" : "w-full py-5"
             } h-full bg-gray-800 text-white flex-wrap `}
           >
             <div className="w-full flex justify-content-center  my-auto">
@@ -68,8 +68,8 @@ export default function Dashboard() {
         </div>
         <div
           className={`${
-            isTabletOrMobile ? "w-full flex-wrap" : "w-8"
-          } flex justify-content-start mt-5`}
+            isTabletOrMobile ? "w-full flex-wrap" : "w-full flex-wrap"
+          } flex py-4 gap-4 justify-content-center`}
         >
           {projects &&
             projects.map((project) => (

@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import defaultImage from "../../styles/DefaultProjectImage.jpg";
 import { useMediaQuery } from "react-responsive";
 import { supabaseStorageImagesLink } from "../../utils/utils";
+import { Icon } from "@iconify/react";
 export default function ProjectCard({ ...Project }: ProjectProps) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
@@ -26,15 +27,53 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
     </Link>
   );
   const footer = (
-    <div className="flex justify-content-between ">
+    <div className="flex justify-content-between flex-wrap">
       <Link to={`../project/${Project.id}/wiki`} className="no-underline">
         <Button
           label="Wiki"
           icon="pi pi-fw pi-file"
           iconPos="right"
+          className="p-button-outlined p-button-primary Lato w-full"
+        />
+      </Link>
+      {/* <Link to={`../project/${Project.id}/maps`} className="no-underline w-4">
+        <Button
+          // label="Maps"
+          icon="pi pi-fw pi-map"
+          iconPos="right"
           className="p-button-outlined p-button-primary Lato"
         />
       </Link>
+      <Link to={`../project/${Project.id}/boards`} className="no-underline w-4">
+        <Button
+          // label="Boards"
+          icon={() => (
+            <Icon
+              className="hover:text-primary cursor-pointer "
+              icon="mdi:draw"
+              fontSize={20}
+            />
+          )}
+          iconPos="right"
+          className="p-button-outlined p-button-primary Lato"
+        />
+      </Link>
+      <Link
+        to={`../project/${Project.id}/timelines`}
+        className="no-underline w-4"
+      >
+        <Button
+          icon={() => (
+            <Icon
+              className="cursor-pointer"
+              icon="mdi:chart-timeline-variant"
+              fontSize={22}
+            />
+          )}
+          iconPos="right"
+          className="p-button-outlined p-button-primary Lato"
+        />
+      </Link> */}
 
       <Link
         to={`/project/${Project.id}/settings/project-settings`}
@@ -44,7 +83,7 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
           label="Settings"
           icon="pi pi-fw pi-cog"
           iconPos="right"
-          className="p-button-outlined p-button-secondary Lato"
+          className="p-button-outlined p-button-secondary Lato w-full"
         />
       </Link>
     </div>
