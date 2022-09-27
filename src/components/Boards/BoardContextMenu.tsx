@@ -126,7 +126,7 @@ export default function BoardContextMenu({
       label: "Highlight connected nodes",
       command: () => {
         const incomers = nodes.incomers();
-        const outgoers = nodes.selected.outgoers();
+        const outgoers = nodes.outgoers();
 
         incomers.nodes().flashClass("incomingNodeHighlight", 1500);
         incomers.edges().flashClass("incomingEdgeHighlight", 1500);
