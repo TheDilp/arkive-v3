@@ -63,6 +63,15 @@ export default function DocumentUpdateDialog({
           onChange={(e) =>
             setDisplayDialog((prev) => ({ ...prev, title: e.target.value }))
           }
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              updateDocumentMutation.mutate({
+                id: displayDialog.id,
+                title: displayDialog.title,
+                parent: displayDialog.parent,
+              });
+            }
+          }}
           autoFocus={true}
         />
       </div>
