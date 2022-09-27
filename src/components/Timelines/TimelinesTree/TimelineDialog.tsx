@@ -1,31 +1,30 @@
 import { Button } from "primereact/button";
+import { Column } from "primereact/column";
+import { confirmDialog } from "primereact/confirmdialog";
+import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import React, { Dispatch, SetStateAction } from "react";
+import { SelectButton } from "primereact/selectbutton";
+import { TabPanel, TabView } from "primereact/tabview";
+import { Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
+import { TimelineAgeType } from "../../../types/TimelineAgeTypes";
 import {
   TimelineItemDisplayDialogProps,
   TimelineType,
 } from "../../../types/TimelineTypes";
 import {
   useCreateTimelineAge,
-  useGetTimelines,
+  useDeleteTimelineAge,
   useGetTimelineData,
+  useGetTimelines,
+  useSortTimelineAges,
   useUpdateTimeline,
   useUpdateTimelineAge,
-  useSortTimelineAges,
-  useDeleteTimelineAge,
 } from "../../../utils/customHooks";
 import { TimelineItemDisplayDialogDefault } from "../../../utils/defaultValues";
-import { SelectButton } from "primereact/selectbutton";
-import { TabPanel, TabView } from "primereact/tabview";
-import { v4 as uuid } from "uuid";
-import { DataTable } from "primereact/datatable";
-import { Column, ColumnEditorOptions } from "primereact/column";
-import { ColorPicker } from "primereact/colorpicker";
-import { TimelineAgeType } from "../../../types/TimelineAgeTypes";
-import { confirmDialog } from "primereact/confirmdialog";
 import {
   dataTableColorEditor,
   dataTableTextEditor,
@@ -124,22 +123,34 @@ export default function TimelineDialog({ eventData, setEventData }: Props) {
     <Dialog
       className="w-4"
       style={{
-        height: "40rem",
+        maxHeight: "40rem",
       }}
       header={`Update Timeline - ${eventData.title}`}
       modal={false}
       visible={eventData.show}
       onHide={() => setEventData(TimelineItemDisplayDialogDefault)}
     >
-      <TabView>
+      <TabView className="">
         <TabPanel header="Timeline Data">
-          <div className="w-full px-2 flex flex-wrap justify-content-center">
+          <div className="w-9 mx-auto px-2 flex flex-wrap justify-content-center">
             <InputText
               className="w-full"
               value={eventData.title}
               onChange={(e) =>
                 setEventData((prev) => ({ ...prev, title: e.target.value }))
               }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  updateTimelineMutation.mutate({
+                    id: eventData.id,
+                    title: eventData.title,
+                    parent: eventData.parent === "0" ? null : eventData.parent,
+                    defaultOrientation: eventData.defaultOrientation,
+                    defaultDetails: eventData.defaultDetails,
+                    project_id: project_id as string,
+                  });
+                }
+              }}
               placeholder="Timeline Title"
             />
 

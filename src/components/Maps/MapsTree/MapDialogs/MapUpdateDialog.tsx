@@ -66,6 +66,15 @@ export default function MapUpdateDialog({ mapData, setMapData }: Props) {
                   title: e.target.value,
                 }))
               }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  updateMapMutation.mutate({
+                    id: mapData.id,
+                    title: mapData.title,
+                    parent: mapData.parent === "0" ? null : mapData.parent,
+                  });
+                }
+              }}
               autoFocus={true}
             />
           </div>
