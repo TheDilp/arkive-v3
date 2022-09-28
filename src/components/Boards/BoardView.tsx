@@ -521,7 +521,9 @@ export default function BoardView({ public_view, setBoardId }: Props) {
 
   return (
     <div
-      className={`${isTabletOrMobile ? "w-full" : "w-10"} h-full`}
+      className={`${
+        isTabletOrMobile || public_view ? "w-full" : "w-10"
+      } h-full`}
       onDrop={async (e) => {
         if (!public_view) await handleOnDrop(e, board_id as string);
       }}
@@ -571,10 +573,10 @@ export default function BoardView({ public_view, setBoardId }: Props) {
                 cy.autolock(true);
                 cy.autounselectify(true);
               }
-              if (!ehRef.current) {
+              if (!ehRef.current && cyRef.current.edgehandles) {
                 ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
               }
-              if (!grRef.current) {
+              if (!grRef.current && cyRef.current.gridGuide) {
                 grRef.current = cyRef.current.gridGuide({
                   ...cytoscapeGridOptions,
                   // When in editor mode use the state
@@ -582,7 +584,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
                   drawGrid: boardState.drawGrid,
                 });
               }
-              if (!cbRef.current)
+              if (!cbRef.current && cyRef.current.clipboard)
                 cbRef.current = cyRef.current.clipboard({
                   afterCopy: function (t: any) {},
                   afterPaste: function (eles: any) {
