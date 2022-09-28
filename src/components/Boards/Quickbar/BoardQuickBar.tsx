@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { saveAs } from "file-saver";
+import { confirmDialog } from "primereact/confirmdialog";
 import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
@@ -128,6 +129,32 @@ export default function BoardQuickBar({
         `${boardTitle || "ArkiveBoard"}.json`
       );
     }
+  };
+
+  const confirmDelete = (selected: any) => {
+    confirmDialog({
+      message: (
+        <div>{`Are you sure you want to delete these nodes/edges?`}</div>
+      ),
+      header: `Delete nodes/edges`,
+      icon: "pi pi-exclamation-triangle",
+      acceptClassName: "p-button-outlined text-red-400",
+      accept: async () => {
+        if (selected.nodes()?.length > 0) {
+          deleteManyNodesMutation.mutate({
+            ids: selected.nodes().map((node: any) => node.data().id),
+            board_id: board_id as string,
+          });
+        }
+        if (selected.edges().length > 0) {
+          deleteManyEdgesMutation.mutate({
+            ids: selected.edges().map((edge: any) => edge.data().id),
+            board_id: board_id as string,
+          });
+        }
+      },
+      reject: () => {},
+    });
   };
 
   return (
@@ -417,18 +444,7 @@ export default function BoardQuickBar({
             toastWarn("No elements are selected.");
             return;
           }
-          if (selected.nodes()?.length > 0) {
-            deleteManyNodesMutation.mutate({
-              ids: selected.nodes().map((node: any) => node.data().id),
-              board_id: board_id as string,
-            });
-          }
-          if (selected.edges().length > 0) {
-            deleteManyEdgesMutation.mutate({
-              ids: selected.edges().map((edge: any) => edge.data().id),
-              board_id: board_id as string,
-            });
-          }
+          confirmDelete(selected);
         }}
       ></i>
 
