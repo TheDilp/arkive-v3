@@ -4,7 +4,7 @@ export default function LandingPageNav() {
       className="w-full sticky bg-gray-900 shadow-3 px-3 z-5 flex text-white justify-content-between align-items-start text-sm lg:text-xl lg:px-8"
       style={{ top: 1 }}
     >
-      <div className="flex align-items-center column-gap-4 lg:column-gap-5">
+      <div className="flex align-items-center column-gap-3 lg:column-gap-5">
         <div className="flex align-items-end">
           <img className="w-3rem h-3rem" src="Logo.png" alt="Arkive Logo" />
           <span className="text-sm">Alpha</span>

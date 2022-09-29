@@ -14,8 +14,9 @@ export default function Dashboard() {
     error,
     isLoading,
   } = useQuery("getAllProjects", async () => await getProjects());
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
-
+  const isPhone = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1224px)" });
+  const isLaptop = useMediaQuery({ query: "(max-width: 1440px)" });
   const createProjectMutation = useMutation(async () => await createProject(), {
     onSuccess: (data) => {
       if (data) {
@@ -36,27 +37,24 @@ export default function Dashboard() {
   if (!auth.user()) return <Navigate to="/auth" />;
   return (
     <div className="Home w-full flex flex-wrap align-content-start h-screen overflow-y-auto">
-      <div
-        className="w-full"
-        style={{
-          height: "3.5vh",
-        }}
-      >
+      <div className="w-full">
         <Navbar />
       </div>
       <div
-        className={`flex w-full ${isTabletOrMobile ? "flex-wrap" : ""}`}
+        className={`flex w-full ${
+          isTablet ? "flex-wrap" : ""
+        } align-content-start`}
         style={{
           minHeight: "96.5vh",
         }}
       >
-        <div className={`Lato ${isTabletOrMobile ? "w-full" : "w-4rem"}`}>
+        <div className={`Lato ${isTablet ? "w-full" : "w-4rem"} `}>
           <div
             className={`${
-              isTabletOrMobile ? "w-full py-2" : "w-full py-5"
+              isTablet ? "w-full py-2" : "w-full py-5"
             } h-full bg-gray-800 text-white flex-wrap `}
           >
-            <div className="w-full flex justify-content-center  my-auto">
+            <div className="w-full flex justify-content-center my-auto ">
               <Button
                 icon="pi pi-plus"
                 className="p-button-outlined p-button-rounded p-button-plain"
@@ -68,8 +66,10 @@ export default function Dashboard() {
         </div>
         <div
           className={`${
-            isTabletOrMobile ? "w-full flex-wrap" : "w-full flex-wrap"
-          } flex py-4 gap-4 justify-content-center`}
+            isPhone
+              ? "flex-column align-items-center px-6 "
+              : "flex-row flex-wrap pl-6"
+          } flex w-full py-4 gap-3 justify-content-start `}
         >
           {projects &&
             projects.map((project) => (

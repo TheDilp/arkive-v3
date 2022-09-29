@@ -1,13 +1,13 @@
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
+import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 import { ProjectProps } from "../../custom-types";
-import { Card } from "primereact/card";
-import { Button } from "primereact/button";
 import defaultImage from "../../styles/DefaultProjectImage.jpg";
-import { useMediaQuery } from "react-responsive";
 import { supabaseStorageImagesLink } from "../../utils/utils";
-import { Icon } from "@iconify/react";
 export default function ProjectCard({ ...Project }: ProjectProps) {
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+  const isPhone = useMediaQuery({ query: "(max-width: 768px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1224px)" });
 
   const header = (
     <Link
@@ -93,7 +93,7 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
       title={
         <div
           className={`${
-            isTabletOrMobile
+            isTablet
               ? "white-space-nowrap overflow-hidden  text-overflow-ellipsis"
               : ""
           }`}
@@ -102,7 +102,7 @@ export default function ProjectCard({ ...Project }: ProjectProps) {
         </div>
       }
       className={`text-center relative mx-2 h-25rem Merriweather flex flex-column justify-content-between ${
-        isTabletOrMobile ? "w-full" : "w-20rem"
+        isPhone ? "w-full" : "w-20rem"
       }`}
       header={header}
       footer={footer}
