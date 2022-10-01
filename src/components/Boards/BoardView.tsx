@@ -229,10 +229,10 @@ export default function BoardView({ public_view, setBoardId }: Props) {
             newEdges.push({ ...rest, id: uuid() });
           }
         }
-        await copyPasteMutation.mutateAsync({
-          nodes: newNodes,
-          edges: newEdges,
-        });
+        // await copyPasteMutation.mutateAsync({
+        //   nodes: newNodes,
+        //   edges: newEdges,
+        // });
         // await createManyNodesMutation.mutateAsync(newNodes);
         // await createManyEdgesMutation.mutateAsync(newEdges);
       }
