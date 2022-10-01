@@ -441,7 +441,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
       });
 
       // Event for copy-pasting nodes
-      document.addEventListener("keydown", copyPaste);
+      // document.addEventListener("keydown", copyPaste);
     }
     return () => {
       if (!public_view) {
@@ -477,7 +477,7 @@ export default function BoardView({ public_view, setBoardId }: Props) {
 
     return () => {
       if (setBoardId) setBoardId("");
-      document.removeEventListener("keydown", copyPaste);
+      // document.removeEventListener("keydown", copyPaste);
     };
   }, [board_id]);
 
