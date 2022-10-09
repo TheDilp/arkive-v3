@@ -18,16 +18,21 @@ type Props = {
 };
 
 export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
-  const { project_id } = useParams();
+  const { project_id, doc_id } = useParams();
   const { setId: setDocId } = useContext(ProjectContext);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
+
   return (
     <Link
       className={`${
         isLaptop ? "w-3" : isTabletOrMobile ? "w-4" : "w-1"
       } text-white no-underline px-2`}
-      to={`../${doc.folder ? "folder" : "doc"}/${doc.id}`}
+      to={`${
+        doc_id
+          ? `../${doc.folder ? "folder" : "doc"}/${doc.id}`
+          : `${doc.folder ? "folder" : "doc"}/${doc.id}`
+      }`}
       key={doc.id}
       onClick={() => setDocId(doc.id)}
       onContextMenu={(e) => {
@@ -70,7 +75,7 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
               <Icon icon="mdi:folder" className="w-full" fontSize={80} />
             </div>
           ) : (
-            <div className="p-0 text-center flex flex-wrap justify-content-center">
+            <div className="flex flex-wrap p-0 text-center justify-content-center">
               {doc.image?.link ? (
                 <div className="folderPageImageContainer">
                   <img
@@ -91,7 +96,7 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
               )}
             </div>
           )}
-          <h4 className="text-center my-0 white-space-nowrap overflow-hidden text-overflow-ellipsis">
+          <h4 className="my-0 overflow-hidden text-center white-space-nowrap text-overflow-ellipsis">
             {doc.title}
           </h4>
         </div>
