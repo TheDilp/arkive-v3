@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   DocItemDisplayDialogProps,
   DocumentProps,
@@ -22,7 +22,6 @@ export default function FolderPageItem({ doc, cm, setDisplayDialog }: Props) {
   const { setId: setDocId } = useContext(ProjectContext);
   const { isTabletOrMobile, isLaptop } = useContext(MediaQueryContext);
   const updateDocumentMutation = useUpdateDocument(project_id as string);
-
   return (
     <Link
       className={`${
