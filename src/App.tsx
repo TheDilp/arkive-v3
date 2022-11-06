@@ -1,23 +1,17 @@
-import { useEffect } from "react";
-import "./App.css";
-import { createFunction, getFunction } from "./utils/CRUD";
-import { createURLS, getURLS } from "./types/enums";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
+import "./App.css";
 import Dashboard from "./pages/Dashboard";
+
+import "primeicons/primeicons.css"; //icons
+import "primereact/resources/primereact.min.css"; //core css
+import "primereact/resources/themes/arya-blue/theme.css"; //theme
+import "primeflex/primeflex.css"; //theme
 
 const queryClient = new QueryClient();
 function App() {
-  useEffect(() => {
-    getFunction(getURLS.getAllProjects);
-    // createFunction(createURLS.createProject, { title: "TEK it up" });
-  }, []);
   return (
-    <main className="App">
+    <main className="App h-screen">
       <QueryClientProvider client={queryClient}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
