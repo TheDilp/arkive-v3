@@ -1,31 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
+import { v4 as uuid } from "uuid";
 import ProjectCard from "../components/ProjectCard";
-import { getURLS } from "../types/enums";
-import { ProjectType } from "../types/projectTypes";
-import { getFunction } from "../utils/CRUD";
+import { useCreateProject, useGetAllProjects } from "../CRUD/ProjectCRUD";
+import { trpc } from "../utils/trpcClient";
 
 type Props = {};
 
 export default function Dashboard({}: Props) {
-  const {
-    isLoading,
-    error,
-    data: projects,
-  } = useQuery({
-    queryKey: ["allProjects"],
-    queryFn: async (): Promise<ProjectType[]> => {
-      const res = await (await getFunction(getURLS.getAllProjects)).json();
-      return res.data;
-    },
-  });
+  const { isLoading, error, data: projects } = useGetAllProjects();
 
+  const createProjectMutation = useCreateProject();
   if (isLoading) return <span> "Loading..." </span>;
 
   if (error) return <span> "An error has occurred" </span>;
+
   return (
     <div className="Home w-full flex h-full flex-column overflow-y-auto">
-      <div className="w-full h-2rem bg-blue-500">Navbar</div>
+      <div className="w-full h-2rem bg-blue-500"></div>
       <div className={`flex w-full flex-grow-1 align-content-start`}>
         <div className={"w-4rem"}>
           <div
@@ -36,7 +27,12 @@ export default function Dashboard({}: Props) {
                 icon="pi pi-plus"
                 className="p-button-outlined p-button-rounded p-button-plain"
                 tooltip="New Project"
-                onClick={() => {}}
+                onClick={() =>
+                  createProjectMutation.mutate({
+                    id: uuid(),
+                    title: "New Project",
+                  })
+                }
               />
             </div>
           </div>

@@ -7,16 +7,44 @@ import "primeicons/primeicons.css"; //icons
 import "primereact/resources/primereact.min.css"; //core css
 import "primereact/resources/themes/arya-blue/theme.css"; //theme
 import "primeflex/primeflex.css"; //theme
+import { useState } from "react";
+import { trpc } from "./utils/trpcClient";
+import { httpBatchLink } from "@trpc/client";
 
-const queryClient = new QueryClient();
 function App() {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: "http://localhost:8080/trpc",
+          // optional
+          headers() {
+            return {};
+          },
+        }),
+      ],
+    })
+  );
   return (
     <main className="App h-screen">
-      <QueryClientProvider client={queryClient}>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-        </Routes>
-      </QueryClientProvider>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+          </Routes>
+        </QueryClientProvider>
+      </trpc.Provider>
     </main>
   );
 }

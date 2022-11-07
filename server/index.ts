@@ -1,9 +1,31 @@
-import fastify, { FastifyRequest } from "fastify";
+import fastify from "fastify";
 import cors from "@fastify/cors";
 import { PrismaClient } from "@prisma/client";
+import { initTRPC } from "@trpc/server";
+import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
+import { createContext } from "./context";
+import { projectsRouter } from "./routers/ProjectRouter";
 
-const prisma = new PrismaClient();
-const server = fastify();
+const t = initTRPC.create();
+export const middleware = t.middleware;
+export const router = t.router;
+export const publicProcedure = t.procedure;
+
+export const prisma = new PrismaClient();
+
+const appRouter = router({
+  project: projectsRouter, // put procedures under "user" namespace
+});
+
+const server = fastify({
+  maxParamLength: 5000,
+});
+
+server.register(fastifyTRPCPlugin, {
+  prefix: "/trpc",
+  trpcOptions: { router: appRouter, createContext },
+});
+
 server.register(cors, {
   origin: (origin, cb) => {
     const hostname = new URL(origin).hostname;
@@ -16,18 +38,6 @@ server.register(cors, {
     cb(new Error("Not allowed"), false);
   },
 });
-server.get("/getAllProjects", async (request, reply) => {
-  const allProjects = await prisma.projects.findMany();
-  return { data: allProjects };
-});
-
-server.post(
-  "/createProject",
-  async (req: FastifyRequest<{ Body: string }>, rep) => {
-    const newProject = prisma.projects.create({ data: JSON.parse(req.body) });
-    return newProject;
-  }
-);
 
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {
@@ -36,3 +46,5 @@ server.listen({ port: 8080 }, (err, address) => {
   }
   console.log(`Server listening at ${address}`);
 });
+
+export type AppRouter = typeof appRouter;

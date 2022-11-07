@@ -7,4 +7,5 @@ export enum getURLS {
 
 export enum createURLS {
   createProject = "createProject",
+  createDocument = "createDocument",
 }

@@ -8,7 +8,27 @@ datasource db {
 }
 
 model projects {
-  id    String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title String @default("New Project")
+  id        String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title     String      @default("New Project")
+  documents documents[]
 }
 
+model documents {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title       String   @default("New Document")
+  content     Json?
+  categories  String[] @default([])
+  icon        String?
+  parent      String?  @db.Uuid
+  expanded    Boolean  @default(false)
+  folder      Boolean  @default(false)
+  public      Boolean  @default(false)
+  sort        BigInt   @default(0)
+  template    Boolean  @default(false)
+  properties  Json?
+  alter_names String[] @default([])
+
+  // Relations
+  project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  project_id String   @db.Uuid
+}

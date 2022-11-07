@@ -3,17 +3,21 @@ lockfileVersion: 5.4
 specifiers:
   '@fastify/cors': ^8.1.1
   '@prisma/client': ^4.5.0
+  '@trpc/server': 10.0.0-rc.6
   '@types/node': ^18.11.9
   fastify: ^4.9.2
   nodemon: ^2.0.20
   prisma: ^4.5.0
   ts-node: ^10.9.1
   typescript: ^4.8.4
+  zod: ^3.19.1
 
 dependencies:
   '@fastify/cors': 8.1.1
   '@prisma/client': 4.5.0_prisma@4.5.0
+  '@trpc/server': 10.0.0-rc.6
   fastify: 4.9.2
+  zod: 3.19.1
 
 devDependencies:
   '@types/node': 18.11.9
@@ -97,6 +101,10 @@ packages:
   /@prisma/engines/4.5.0:
     resolution: {integrity: sha512-4t9ir2SbQQr/wMCNU4YpHWp5hU14J2m3wHUZnGJPpmBF8YtkisxyVyQsKd1e6FyLTaGq8LOLhm6VLYHKqKNm+g==}
     requiresBuild: true
+
+  /@trpc/server/10.0.0-rc.6:
+    resolution: {integrity: sha512-8JAIX2SSTEwpdp+CRoPGsrj9A9qee0ltqa1fPXlKOtzQKbxDjGoqy6kVVh25YUJ8GJrXf4LhV8pZGkyZOOX6ow==}
+    dev: false
 
   /@tsconfig/node10/1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -770,3 +778,7 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
     dev: true
+
+  /zod/3.19.1:
+    resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
+    dev: false
