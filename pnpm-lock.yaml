@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@iconify/react': ^4.0.0
   '@tanstack/react-query': ^4.14.3
   '@trpc/client': 10.0.0-rc.6
   '@trpc/react-query': 10.0.0-rc.6
@@ -20,6 +21,7 @@ specifiers:
   vite: ^3.2.0
 
 dependencies:
+  '@iconify/react': 4.0.0_react@18.2.0
   '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
   '@trpc/client': 10.0.0-rc.6_@trpc+server@10.0.0-rc.6
   '@trpc/react-query': 10.0.0-rc.6_addjqbmofwdxq7kt773dpn3oaq
@@ -333,6 +335,19 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@iconify/react/4.0.0_react@18.2.0:
+    resolution: {integrity: sha512-YE+z5PCegYyuJtLR6KBbJNlssmuVgRyFyRxcgxSPVkN3Gsm7npSzrUh+gWlBxrNb5g4Q6Nnb1gczPBNcwtUpng==}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      '@iconify/types': 2.0.0
+      react: 18.2.0
+    dev: false
+
+  /@iconify/types/2.0.0:
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
+    dev: false
 
   /@jridgewell/gen-mapping/0.1.1:
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}

@@ -10,6 +10,9 @@ import "primeflex/primeflex.css"; //theme
 import { useState } from "react";
 import { trpc } from "./utils/trpcClient";
 import { httpBatchLink } from "@trpc/client";
+import Navbar from "./components/Nav/Navbar";
+import Layout from "./components/Layout/Layout";
+import Wiki from "./pages/Wiki/Wiki";
 
 function App() {
   const [queryClient] = useState(
@@ -40,8 +43,12 @@ function App() {
     <main className="App h-screen">
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
+          <Navbar />
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/project/:project_id/" element={<Layout />}>
+              <Route path="wiki" element={<Wiki />} />
+            </Route>
           </Routes>
         </QueryClientProvider>
       </trpc.Provider>

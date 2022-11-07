@@ -2,7 +2,6 @@ import { Button } from "primereact/button";
 import { v4 as uuid } from "uuid";
 import ProjectCard from "../components/ProjectCard";
 import { useCreateProject, useGetAllProjects } from "../CRUD/ProjectCRUD";
-import { trpc } from "../utils/trpcClient";
 
 type Props = {};
 
@@ -16,7 +15,6 @@ export default function Dashboard({}: Props) {
 
   return (
     <div className="Home w-full flex h-full flex-column overflow-y-auto">
-      <div className="w-full h-2rem bg-blue-500"></div>
       <div className={`flex w-full flex-grow-1 align-content-start`}>
         <div className={"w-4rem"}>
           <div
