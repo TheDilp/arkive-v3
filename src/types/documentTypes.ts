@@ -2,7 +2,7 @@ export type DocumentType = {
   id: string;
   project_id: string;
   title: string;
-  content: object | null;
+  content: any;
   categories: string[];
   icon: string;
   parent: string | null;
@@ -11,6 +11,6 @@ export type DocumentType = {
   public: boolean;
   template: boolean;
   sort: number;
-  properties?: object;
+  properties: any;
   alter_names: string[];
 };

@@ -1,32 +1,41 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ProjectType } from "../types/projectTypes";
-import { trpc } from "../utils/trpcClient";
 
 export const useGetAllProjects = () => {
-  return trpc.project.getAllProjects.useQuery();
+  return useQuery(
+    ["allProjects"],
+    async () =>
+      await (
+        await fetch("http://localhost:8080/getAllProjects", { method: "GET" })
+      ).json()
+  );
 };
 
 export const useCreateProject = () => {
-  const utils = trpc.useContext();
-  return trpc.project.createProject.useMutation({
-    onMutate: (newProject: ProjectType) => {
-      const previousProjects = utils.project.getAllProjects.getData();
+  const queryClient = useQueryClient();
+  return useMutation(
+    async () =>
+      await fetch("http://localhost:8080/createProject", { method: "POST" }),
+    {
+      onMutate: (newProject: ProjectType) => {
+        const oldProjects = queryClient.getQueryData(["allProjects"]);
 
-      utils.project.getAllProjects.setData(
-        undefined,
-        (old: ProjectType[] | undefined) =>
-          old ? [...old, newProject] : [newProject]
-      );
+        queryClient.setQueryData(
+          ["allProjects"],
+          (old: ProjectType[] | undefined) => {
+            if (!old) return [];
+            return [...old, newProject];
+          }
+        );
 
-      return { previousProjects, newProject };
-    },
-    onError: (error, variables, rollback) => {
-      utils.project.getAllProjects.setData(
-        undefined,
-        rollback?.previousProjects
-      );
-    },
-  });
+        return { oldProjects };
+      },
+      onError: (_, variables, context) => {
+        queryClient.setQueryData(["allProjects"], context?.oldProjects);
+      },
+    }
+  );
 };
 export const useGetSingleProject = (id: string) => {
-  return trpc.project.getSingleProject.useQuery(id);
+  return [];
 };

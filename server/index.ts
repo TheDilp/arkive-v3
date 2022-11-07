@@ -1,9 +1,7 @@
-import fastify from "fastify";
+import fastify, { FastifyRequest } from "fastify";
 import cors from "@fastify/cors";
 import { PrismaClient } from "@prisma/client";
 import { initTRPC } from "@trpc/server";
-import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
-import { createContext } from "./context";
 import { projectsRouter } from "./routers/ProjectRouter";
 import { documentsRouter } from "./routers/DocumentRouter";
 
@@ -22,11 +20,6 @@ const server = fastify({
   maxParamLength: 5000,
 });
 
-server.register(fastifyTRPCPlugin, {
-  prefix: "/trpc",
-  trpcOptions: { router: appRouter, createContext },
-});
-
 server.register(cors, {
   origin: (origin, cb) => {
     const hostname = new URL(origin).hostname;
@@ -38,6 +31,16 @@ server.register(cors, {
     // Generate an error on other origins, disabling access
     cb(new Error("Not allowed"), false);
   },
+});
+
+server.get("/getAllProjects", async () => {
+  const data = await prisma.projects.findMany({});
+  return data;
+});
+
+server.post("/createProject", async () => {
+  const newProject = await prisma.projects.create({ data: {} });
+  return newProject;
 });
 
 server.listen({ port: 8080 }, (err, address) => {
