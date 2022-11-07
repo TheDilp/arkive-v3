@@ -11,6 +11,6 @@ export type DocumentType = {
   public: boolean;
   template: boolean;
   sort: number;
-  properties?: JSON;
+  properties?: object;
   alter_names: string[];
 };

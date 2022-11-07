@@ -1,5 +1,5 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { TreeDataType } from "../../types/treeTypes";
@@ -13,10 +13,24 @@ type Props = {
 
 export default function BaseTree({ type }: Props) {
   const { project_id } = useParams();
-
+  const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
   const { isError, isLoading, data } = useGetSingleProject(
     project_id as string
   );
+
+  useLayoutEffect(() => {
+    if (data && data?.[type]) {
+      setTreeData(
+        data[type].map((item) => ({
+          id: item.id,
+          parent: item.parent || "0",
+          text: item.title,
+          droppable: item.folder,
+          data: item,
+        }))
+      );
+    }
+  }, [data]);
 
   if (isError) return <span>ERROR!!!</span>;
   if (isLoading) return <span>LOADING</span>;
@@ -31,13 +45,7 @@ export default function BaseTree({ type }: Props) {
           placeholder: "relative",
           listItem: "listitem",
         }}
-        tree={data[type].map((item) => ({
-          id: item.id,
-          parent: item.parent || "0",
-          text: item.title,
-          droppable: item.folder,
-          data: item,
-        }))}
+        tree={treeData}
         rootId={"0"}
         sort={false}
         insertDroppableFirst={false}

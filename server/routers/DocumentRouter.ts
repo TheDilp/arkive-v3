@@ -12,6 +12,7 @@ export const documentsRouter = t.router({
       z.object({
         id: z.string(),
         title: z.string(),
+        icon: z.string().nullish(),
         parent: z.string().nullish(),
         project_id: z.string(),
       })
