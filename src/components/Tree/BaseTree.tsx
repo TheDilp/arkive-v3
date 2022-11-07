@@ -1,9 +1,10 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { TreeDataType } from "../../types/treeTypes";
 import { getDepth, handleDrop } from "../../utils/tree";
+import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
 
@@ -11,8 +12,59 @@ type Props = {
   type: "documents" | "maps" | "boards" | "timelines";
 };
 
+const docItems = [
+  {
+    label: "Edit Document",
+    icon: "pi pi-fw pi-pencil",
+    command: () => {},
+  },
+
+  {
+    label: "Change Type",
+    icon: "pi pi-fw pi-sync",
+    items: [
+      {
+        label: "Document",
+        icon: "pi pi-fw pi-file",
+        command: () => {},
+      },
+      {
+        label: "Folder",
+        icon: "pi pi-fw pi-folder",
+        command: () => {},
+      },
+    ],
+  },
+  {
+    label: "Covert to Template",
+    icon: "pi pi-fw pi-copy",
+    command: () => {},
+  },
+  {
+    label: "Export JSON",
+    icon: "pi pi-fw pi-download",
+    command: () => {},
+  },
+  { separator: true },
+  {
+    label: "View Public Document",
+    icon: "pi pi-fw pi-external-link",
+    command: () => {},
+  },
+  {
+    label: "Copy Public URL",
+    icon: "pi pi-fw pi-link",
+    command: () => {},
+  },
+  {
+    label: "Delete Document",
+    icon: "pi pi-fw pi-trash",
+  },
+];
+
 export default function BaseTree({ type }: Props) {
   const { project_id } = useParams();
+  const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
   const { isError, isLoading, data } = useGetSingleProject(
     project_id as string
@@ -35,9 +87,9 @@ export default function BaseTree({ type }: Props) {
   if (isError) return <span>ERROR!!!</span>;
   if (isLoading) return <span>LOADING</span>;
 
-  //! REMOVE TYPE CHECK WHEN OTHER ITEMS ARE IMPLEMENTED
-  if (data && type === "documents")
-    return (
+  return (
+    <>
+      <ContextMenu items={docItems} cm={cm} />
       <Tree
         classes={{
           root: "w-full projectTreeRoot pr-4 pl-0 h-screen overflow-y-auto",
@@ -63,7 +115,7 @@ export default function BaseTree({ type }: Props) {
             depth={depth}
             isOpen={isOpen}
             onToggle={onToggle}
-            // cm={cm}
+            cm={cm}
           />
         )}
         dragPreviewRender={(monitorProps) => (
@@ -97,7 +149,6 @@ export default function BaseTree({ type }: Props) {
         // @ts-ignore
         onDrop={(tree, options) => handleDrop(tree, setTreeData)}
       />
-    );
-
-  return null;
+    </>
+  );
 }

@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
+import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TreeDataType } from "../../types/treeTypes";
 type Props = {
@@ -7,10 +8,10 @@ type Props = {
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
-  //   cm: any;
+  cm: MutableRefObject<any>;
 };
 
-export default function TreeItem({ node, depth, isOpen, onToggle }: Props) {
+export default function TreeItem({ node, depth, isOpen, onToggle, cm }: Props) {
   const { project_id } = useParams();
   const navigate = useNavigate();
   return (
@@ -21,14 +22,14 @@ export default function TreeItem({ node, depth, isOpen, onToggle }: Props) {
         // Navigate if not a folder
         if (!node.droppable) {
           //   setDocId(node.id as string);
-          navigate(`doc/${node.id}`);
+          navigate(`./wiki/doc/${node.id}`);
         } else {
           //   setDocId(node.id as string);
           navigate(`folder/${node.id}`);
         }
       }}
       onContextMenu={(e) => {
-        // cm.current.show(e);
+        cm.current.show(e);
         // setDisplayDialog({
         //   id: node.id as string,
         //   title: node.text,

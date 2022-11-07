@@ -49,7 +49,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/project/:project_id/" element={<Layout />}>
-                <Route path="wiki" element={<Wiki />} />
+                <Route path="wiki/*" element={<Wiki />}>
+                  <Route path="doc/:doc_id" element={<div>TEST</div>}></Route>
+                </Route>
               </Route>
             </Routes>
           </DndProvider>
