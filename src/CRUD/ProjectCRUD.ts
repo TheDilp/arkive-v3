@@ -27,3 +27,6 @@ export const useCreateProject = () => {
     },
   });
 };
+export const useGetSingleProject = (id: string) => {
+  return trpc.project.getSingleProject.useQuery(id);
+};

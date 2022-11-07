@@ -13,6 +13,8 @@ import { httpBatchLink } from "@trpc/client";
 import Navbar from "./components/Nav/Navbar";
 import Layout from "./components/Layout/Layout";
 import Wiki from "./pages/Wiki/Wiki";
+import { DndProvider } from "react-dnd";
+import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 
 function App() {
   const [queryClient] = useState(
@@ -43,13 +45,15 @@ function App() {
     <main className="flex flex-column h-screen">
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/project/:project_id/" element={<Layout />}>
-              <Route path="wiki" element={<Wiki />} />
-            </Route>
-          </Routes>
+          <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/project/:project_id/" element={<Layout />}>
+                <Route path="wiki" element={<Wiki />} />
+              </Route>
+            </Routes>
+          </DndProvider>
         </QueryClientProvider>
       </trpc.Provider>
     </main>

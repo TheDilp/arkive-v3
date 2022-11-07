@@ -8,6 +8,17 @@ export const projectsRouter = t.router({
     const data = await prisma.projects.findMany({});
     return data;
   }),
+  getSingleProject: t.procedure.input(z.string()).query(async (req) => {
+    const singleProject = await prisma.projects.findUnique({
+      where: {
+        id: req.input,
+      },
+      include: {
+        documents: true,
+      },
+    });
+    return singleProject;
+  }),
   createProject: t.procedure
     .input(z.object({ id: z.string(), title: z.string() }))
     .mutation(async (req) => {
