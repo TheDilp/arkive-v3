@@ -6,7 +6,7 @@ type Props = {};
 
 export default function Layout({}: Props) {
   return (
-    <div>
+    <div className="flex flex-grow-1">
       <Sidebar />
       <Outlet />
     </div>

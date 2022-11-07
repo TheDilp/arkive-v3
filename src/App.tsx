@@ -40,7 +40,7 @@ function App() {
     })
   );
   return (
-    <main className="App h-screen">
+    <main className="flex flex-column h-screen">
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <Navbar />

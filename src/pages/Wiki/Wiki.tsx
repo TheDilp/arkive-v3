@@ -5,7 +5,8 @@ type Props = {};
 
 export default function Wiki({}: Props) {
   return (
-    <div>
+    <div className="w-full h-full flex flex-col bg-red-500 flex-grow-1">
+      kajslk
       <Outlet />
     </div>
   );
