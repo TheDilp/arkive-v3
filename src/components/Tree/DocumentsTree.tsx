@@ -29,7 +29,7 @@ const items = [
 
 export default function DocumentsTree({}: Props) {
   const { project_id } = useParams();
-  const createDocumentMutation = useCreateDocument();
+  // const createDocumentMutation = useCreateDocument();
   return (
     <div className="flex flex-column">
       <SplitButton
@@ -39,11 +39,11 @@ export default function DocumentsTree({}: Props) {
         model={items}
         onClick={() => {
           let id = uuid();
-          createDocumentMutation.mutate({
-            id,
-            title: "New Document",
-            project_id: project_id as string,
-          });
+          // createDocumentMutation.mutate({
+          //   id,
+          //   title: "New Document",
+          //   project_id: project_id as string,
+          // });
         }}
       />
       <BaseTree type="documents" />

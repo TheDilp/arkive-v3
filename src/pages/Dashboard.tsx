@@ -2,6 +2,7 @@ import { Button } from "primereact/button";
 import { v4 as uuid } from "uuid";
 import ProjectCard from "../components/ProjectCard";
 import { useCreateProject, useGetAllProjects } from "../CRUD/ProjectCRUD";
+import { ProjectType } from "../types/projectTypes";
 
 type Props = {};
 
@@ -41,7 +42,7 @@ export default function Dashboard({}: Props) {
           }
         >
           {projects &&
-            projects.map((project) => (
+            projects.map((project: ProjectType) => (
               <ProjectCard key={project.id} {...project} />
             ))}
         </div>

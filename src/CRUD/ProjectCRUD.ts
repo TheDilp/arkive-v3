@@ -37,5 +37,13 @@ export const useCreateProject = () => {
   );
 };
 export const useGetSingleProject = (id: string) => {
-  return [];
+  return useQuery(
+    ["singleProject", id],
+    async () =>
+      await (
+        await fetch(`http://localhost:8080/getSingleProject/${id}`, {
+          method: "GET",
+        })
+      ).json()
+  );
 };

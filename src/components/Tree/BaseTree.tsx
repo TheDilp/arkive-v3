@@ -69,7 +69,7 @@ export default function BaseTree({ type }: Props) {
   const { isError, isLoading, data } = useGetSingleProject(
     project_id as string
   );
-
+  console.log(data);
   useLayoutEffect(() => {
     if (data && data?.[type]) {
       setTreeData(
