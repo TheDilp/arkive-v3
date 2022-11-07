@@ -5,6 +5,7 @@ import { initTRPC } from "@trpc/server";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import { createContext } from "./context";
 import { projectsRouter } from "./routers/ProjectRouter";
+import { documentsRouter } from "./routers/DocumentRouter";
 
 const t = initTRPC.create();
 export const middleware = t.middleware;
@@ -14,9 +15,9 @@ export const publicProcedure = t.procedure;
 export const prisma = new PrismaClient();
 
 const appRouter = router({
-  project: projectsRouter, // put procedures under "user" namespace
+  document: documentsRouter,
+  project: projectsRouter,
 });
-
 const server = fastify({
   maxParamLength: 5000,
 });

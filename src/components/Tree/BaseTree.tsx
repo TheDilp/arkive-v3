@@ -2,7 +2,6 @@ import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
-import { DocumentType } from "../../types/documentTypes";
 import { TreeDataType } from "../../types/treeTypes";
 import { getDepth, handleDrop } from "../../utils/tree";
 import DragPreview from "../Sidebar/DragPreview";
@@ -14,21 +13,31 @@ type Props = {
 
 export default function BaseTree({ type }: Props) {
   const { project_id } = useParams();
-  const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
 
-  const { data } = useGetSingleProject(project_id as string);
+  const { isError, isLoading, data } = useGetSingleProject(
+    project_id as string
+  );
+
+  if (isError) return <span>ERROR!!!</span>;
+  if (isLoading) return <span>LOADING</span>;
 
   //! REMOVE TYPE CHECK WHEN OTHER ITEMS ARE IMPLEMENTED
   if (data && type === "documents")
     return (
       <Tree
         classes={{
-          root: "w-full projectTreeRoot pr-4 pl-0  overflow-y-auto",
+          root: "w-full projectTreeRoot pr-4 pl-0 h-screen overflow-y-auto",
           container: "list-none",
           placeholder: "relative",
           listItem: "listitem",
         }}
-        tree={treeData}
+        tree={data[type].map((item) => ({
+          id: item.id,
+          parent: item.parent || "0",
+          text: item.title,
+          droppable: item.folder,
+          data: item,
+        }))}
         rootId={"0"}
         sort={false}
         insertDroppableFirst={false}
@@ -37,7 +46,7 @@ export default function BaseTree({ type }: Props) {
           false
         }
         render={(
-          node: NodeModel<DocumentType>,
+          node: NodeModel<TreeDataType>,
           { depth, isOpen, onToggle }
         ) => (
           <TreeItem
@@ -70,7 +79,7 @@ export default function BaseTree({ type }: Props) {
         )}
         dropTargetOffset={10}
         canDrop={(tree, { dragSource, dropTargetId }) => {
-          const depth = getDepth(treeData, dropTargetId);
+          const depth = getDepth(data[type], dropTargetId);
           // Don't allow nesting documents beyond this depth
           if (depth > 3) return false;
           if (dragSource?.parent === dropTargetId) {

@@ -1,12 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
 import Dashboard from "./pages/Dashboard";
-
 import "primeicons/primeicons.css"; //icons
 import "primereact/resources/primereact.min.css"; //core css
 import "primereact/resources/themes/arya-blue/theme.css"; //theme
 import "primeflex/primeflex.css"; //theme
+import "./App.css";
 import { useState } from "react";
 import { trpc } from "./utils/trpcClient";
 import { httpBatchLink } from "@trpc/client";

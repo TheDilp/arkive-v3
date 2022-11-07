@@ -1,0 +1,13 @@
+.wikiTabs .p-tabview-nav li {
+  width: 100%;
+  padding: 0 !important;
+}
+
+.wikiTabs .p-tabview-nav li a {
+  border-radius: 0 !important;
+}
+
+.wikiTabs .p-tabview-nav span {
+  width: 100% !important;
+  text-align: center !important;
+}

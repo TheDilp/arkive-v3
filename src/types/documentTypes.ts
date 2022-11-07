@@ -1,10 +1,11 @@
 export type DocumentType = {
   id: string;
+  project_id: string;
   title: string;
-  content: JSON | null;
+  content: object | null;
   categories: string[];
   icon: string;
-  parent: string | ParentType;
+  parent: string | null;
   expanded: boolean;
   folder: boolean;
   public: boolean;
@@ -12,9 +13,4 @@ export type DocumentType = {
   sort: number;
   properties?: JSON;
   alter_names: string[];
-};
-
-export type ParentType = {
-  id: string;
-  title: string;
 };

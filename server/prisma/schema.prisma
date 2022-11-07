@@ -23,7 +23,7 @@ model documents {
   expanded    Boolean  @default(false)
   folder      Boolean  @default(false)
   public      Boolean  @default(false)
-  sort        BigInt   @default(0)
+  sort        Int      @default(0)
   template    Boolean  @default(false)
   properties  Json?
   alter_names String[] @default([])
