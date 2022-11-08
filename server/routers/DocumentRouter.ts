@@ -95,6 +95,22 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
       return newDocument;
     }
   );
+  server.post(
+    "/updateDocument/:id",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>
+    ) => {
+      const newDocument = await prisma.documents.update({
+        where: { id: req.params.id },
+        data: JSON.parse(req.body),
+      });
+      console.log(newDocument);
+      return newDocument;
+    }
+  );
 
   done();
 };

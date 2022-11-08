@@ -3,9 +3,9 @@ import { useAtom } from "jotai";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { documentTreeContextAtom } from "../../clientstate/AtomsSidebar";
+import { useUpdateDocument } from "../../CRUD/DocumentCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
-import { TreeDataType } from "../../types/treeTypes";
-import { contextMenuItems } from "../../utils/contextMenu";
+import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
@@ -16,6 +16,123 @@ type Props = {
 };
 
 export default function BaseTree({ type }: Props) {
+  const updateDocumentMutation = useUpdateDocument();
+
+  const rootItems = [
+    {
+      label: "New Document",
+      icon: "pi pi-fw pi-file",
+      command: () => {},
+    },
+    {
+      label: "New Folder",
+      icon: "pi pi-fw pi-folder",
+      command: () => {},
+    },
+  ];
+
+  function contextMenuItems(cmType: SidebarTreeItemType) {
+    const docItems = [
+      {
+        label: "Edit Document",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {},
+      },
+
+      {
+        label: "Change Type",
+        icon: "pi pi-fw pi-sync",
+        items: [
+          {
+            label: "Folder",
+            icon: "pi pi-fw pi-folder",
+            command: () => {
+              if (cmType.id)
+                updateDocumentMutation.mutate({ id: cmType.id, folder: true });
+            },
+          },
+        ],
+      },
+      {
+        label: "Covert to Template",
+        icon: "pi pi-fw pi-copy",
+        command: () => {},
+      },
+      {
+        label: "Export JSON",
+        icon: "pi pi-fw pi-download",
+        command: () => {},
+      },
+      { separator: true },
+      {
+        label: "View Public Document",
+        icon: "pi pi-fw pi-external-link",
+        command: () => {},
+      },
+      {
+        label: "Copy Public URL",
+        icon: "pi pi-fw pi-link",
+        command: () => {},
+      },
+      {
+        label: "Delete Document",
+        icon: "pi pi-fw pi-trash",
+      },
+    ];
+    const folderItems = [
+      {
+        label: "Edit Folder",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {},
+      },
+
+      {
+        label: "Change Type",
+        icon: "pi pi-fw, pi-sync",
+        items: [
+          {
+            label: "Document",
+            icon: "pi pi-fw pi-file",
+            command: () => {
+              if (cmType.id)
+                updateDocumentMutation.mutate({ id: cmType.id, folder: false });
+            },
+          },
+          {
+            label: "Folder",
+            icon: "pi pi-fw pi-folder",
+            command: () => {},
+          },
+        ],
+      },
+      {
+        label: "Insert Into Folder",
+        icon: "pi pi-fw pi-plus",
+        items: [
+          {
+            label: "Insert Document",
+            icon: "pi pi-fw pi-file",
+            command: () => {},
+          },
+          {
+            label: "Insert Folder",
+            icon: "pi pi-fw pi-folder",
+            command: () => {},
+          },
+        ],
+      },
+      { separator: true },
+      {
+        label: "Delete Folder",
+        icon: "pi pi-fw pi-trash",
+      },
+    ];
+    if (cmType.type === "document") return docItems;
+    if (cmType.type === "doc_folder") return folderItems;
+    if (cmType.type === "template") return [];
+    return [];
+  }
+
   const { project_id } = useParams();
   const [cmType] = useAtom(documentTreeContextAtom);
   const cm = useRef();
@@ -38,7 +155,7 @@ export default function BaseTree({ type }: Props) {
   }, [data]);
 
   if (isError) return <span>ERROR!!!</span>;
-  if (isLoading) return <span>LOADING</span>;
+  if (isLoading) return null;
 
   return (
     <>

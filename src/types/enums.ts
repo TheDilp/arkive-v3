@@ -10,3 +10,8 @@ export enum createURLS {
   createProject = "createProject",
   createDocument = "createDocument",
 }
+
+export enum updateURLs {
+  updateProject = "updateProject/",
+  updateDocument = "updateDocument/",
+}

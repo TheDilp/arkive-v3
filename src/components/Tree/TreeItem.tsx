@@ -40,9 +40,11 @@ export default function TreeItem({
         }
       }}
       onContextMenu={(e) => {
-        if (node.droppable) setText("doc_folder");
-        else if (node.data?.template) setText("template");
-        else setText("document");
+        if (node.droppable)
+          setText({ id: node.id as string, type: "doc_folder" });
+        else if (node.data?.template)
+          setText({ id: node.id as string, type: "template" });
+        else setText({ id: node.id as string, type: "document" });
         cm.current.show(e);
         // setDisplayDialog({
         //   id: node.id as string,
