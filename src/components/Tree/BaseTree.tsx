@@ -80,7 +80,7 @@ export default function BaseTree({ type }: Props) {
       {
         label: "Edit Folder",
         icon: "pi pi-fw pi-pencil",
-        command: () => {},
+        command: () => setDialog({ id: cmType.id, type: "documents" }),
       },
 
       {
