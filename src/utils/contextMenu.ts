@@ -49,7 +49,7 @@ const docItems = [
 ];
 
 export function contextMenuItems(
-  cmType: "document" | "template" | "doc_folder"
+  cmType: "document" | "template" | "doc_folder" | null
 ) {
   if (cmType === "document") return docItems;
   if (cmType === "doc_folder") return [];

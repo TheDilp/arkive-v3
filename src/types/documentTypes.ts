@@ -14,3 +14,8 @@ export type DocumentType = {
   properties: any;
   alter_names: string[];
 };
+
+export type DocumentCreateType = {
+  project_id: string;
+  title?: string;
+};

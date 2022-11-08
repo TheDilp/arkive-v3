@@ -22,7 +22,7 @@ export default function TreeItem({
   cm,
   type,
 }: Props) {
-  const { project_id } = useParams();
+  const { item_id } = useParams();
   const navigate = useNavigate();
   const [text, setText] = useAtom(documentTreeContextAtom);
   return (
@@ -82,7 +82,7 @@ export default function TreeItem({
           <Icon
             icon={node.data?.icon as string}
             inline={true}
-            className="mr-1 hover:bg-blue-400 border-circle selectableIcon"
+            className="hover:bg-blue-400 border-circle selectableIcon"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -99,7 +99,7 @@ export default function TreeItem({
         )}
       </span>
 
-      <div className={` Lato w-full`}>
+      <div className={` Lato w-full ${node.id === item_id && "text-blue-400"}`}>
         <div className="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis">
           {node.text}
         </div>

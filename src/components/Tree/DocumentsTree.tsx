@@ -1,6 +1,7 @@
 import { SplitButton } from "primereact/splitbutton";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+import { useCreateDocument } from "../../CRUD/DocumentCRUD";
 import BaseTree from "./BaseTree";
 
 type Props = {};
@@ -25,7 +26,7 @@ const items = [
 
 export default function DocumentsTree({}: Props) {
   const { project_id } = useParams();
-  // const createDocumentMutation = useCreateDocument();
+  const createDocumentMutation = useCreateDocument();
   return (
     <div className="flex flex-column">
       <SplitButton
@@ -34,12 +35,10 @@ export default function DocumentsTree({}: Props) {
         icon="pi pi-bolt"
         model={items}
         onClick={() => {
-          let id = uuid();
-          // createDocumentMutation.mutate({
-          //   id,
-          //   title: "New Document",
-          //   project_id: project_id as string,
-          // });
+          createDocumentMutation.mutate({
+            title: "New Document",
+            project_id: project_id as string,
+          });
         }}
       />
       <BaseTree type="documents" />

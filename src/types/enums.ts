@@ -3,6 +3,7 @@ export enum baseURLS {
 }
 export enum getURLS {
   getAllProjects = "getAllProjects",
+  getAllDocuments = "getAllDocuments/",
 }
 
 export enum createURLS {
