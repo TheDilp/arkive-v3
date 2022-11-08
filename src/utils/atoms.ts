@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { DocumentType } from "../types/documentTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 
 export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({

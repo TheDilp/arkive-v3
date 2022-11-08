@@ -8,10 +8,12 @@ import { InputText } from "primereact/inputtext";
 import { DocumentType } from "../../types/documentTypes";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { useState } from "react";
+import { useUpdateDocument } from "../../CRUD/DocumentCRUD";
 type Props = {};
 
 const DialogContent = {
-  documents: (allItems: DocumentType[], item: DocumentType) => (
+  documents: (allItems: DocumentType[] | undefined, item: DocumentType) => (
     <RenameDocument allItems={allItems} item={item} />
   ),
 };
@@ -49,35 +51,38 @@ function RenameDocument({
   allItems,
   item,
 }: {
-  allItems: DocumentType[];
+  allItems: DocumentType[] | undefined;
   item: DocumentType;
 }) {
+  const updateDocumentMutation = useUpdateDocument();
+  const [localItem, setLocalItem] = useState(item);
   return (
     <div className="my-2">
       <InputText
         className="w-full"
-        value={item.title}
-        onChange={(e) => {}}
-        //   setDisplayDialog((prev) => ({ ...prev, title: e.target.value }))
+        value={localItem.title}
+        onChange={(e) =>
+          setLocalItem((prev) => ({ ...prev, title: e.target.value }))
+        }
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            // updateDocumentMutation.mutate({
-            //   id: displayDialog.id,
-            //   title: displayDialog.title,
-            //   parent: displayDialog.parent,
-            // });
+            updateDocumentMutation.mutate({
+              id: item.id,
+              title: localItem.title,
+              parent: localItem.parent,
+            });
           }
         }}
         autoFocus={true}
       />
-      {!item.template && (
+      {!localItem.template && (
         <div className="my-2">
           <Dropdown
             className="w-full"
             placeholder="Document Folder"
             optionLabel="title"
             optionValue="id"
-            value={item.parent}
+            value={localItem.parent}
             filter
             onChange={
               (e) => {}
@@ -109,14 +114,13 @@ function RenameDocument({
           icon="pi pi-fw pi-save"
           iconPos="right"
           type="submit"
-          onClick={() => {
-            // updateDocumentMutation.mutate({
-            //   id: displayDialog.id,
-            //   title: displayDialog.title,
-            //   parent: displayDialog.parent,
-            // });
-            // setDisplayDialog(DocItemDisplayDialogDefault);
-          }}
+          onClick={() =>
+            updateDocumentMutation.mutate({
+              id: item.id,
+              title: localItem.title,
+              parent: localItem.parent,
+            })
+          }
         />
       </div>
     </div>
