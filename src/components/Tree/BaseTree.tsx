@@ -23,7 +23,7 @@ type Props = {
 export default function BaseTree({ type }: Props) {
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
-  const [dialog, setDialog] = useAtom(DialogAtom);
+  const [_, setDialog] = useAtom(DialogAtom);
 
   const rootItems = [
     {
@@ -187,7 +187,7 @@ export default function BaseTree({ type }: Props) {
             droppable={monitorProps.item.droppable}
           />
         )}
-        placeholderRender={(node, { depth }) => (
+        placeholderRender={(_, { depth }) => (
           <div
             style={{
               top: 0,

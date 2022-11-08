@@ -44,6 +44,9 @@ export const useGetSingleProject = (id: string) => {
         await fetch(`http://localhost:8080/getSingleProject/${id}`, {
           method: "GET",
         })
-      ).json()
+      ).json(),
+    {
+      staleTime: 60 * 5 * 1000,
+    }
   );
 };

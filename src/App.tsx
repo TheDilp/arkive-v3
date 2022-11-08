@@ -11,6 +11,7 @@ import Layout from "./components/Layout/Layout";
 import Wiki from "./pages/Wiki/Wiki";
 import { DndProvider } from "react-dnd";
 import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
+import Editor from "./components/Editor/Editor";
 
 function App() {
   const queryClient = new QueryClient({
@@ -31,7 +32,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/project/:project_id/" element={<Layout />}>
               <Route path="wiki/*" element={<Wiki />}>
-                <Route path="doc/:item_id" element={<div>TEST</div>}></Route>
+                <Route path="doc/:item_id" element={<Editor />}></Route>
               </Route>
             </Route>
           </Routes>
