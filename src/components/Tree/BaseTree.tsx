@@ -203,8 +203,15 @@ export default function BaseTree({ type }: Props) {
             return true;
           }
         }}
-        // @ts-ignore
-        onDrop={(tree, options) => handleDrop(tree, setTreeData)}
+        onDrop={(tree, options) => {
+          handleDrop(tree, setTreeData);
+          const { dragSourceId, dropTargetId } = options;
+          if (type === "documents")
+            updateDocumentMutation.mutate({
+              id: dragSourceId as string,
+              parent: dropTargetId as string,
+            });
+        }}
       />
     </>
   );

@@ -7,7 +7,9 @@ export default function Layout({}: Props) {
   return (
     <div className="flex flex-grow-1">
       <Sidebar />
-      <Outlet />
+      <div className="outletWrapper">
+        <Outlet />
+      </div>
     </div>
   );
 }

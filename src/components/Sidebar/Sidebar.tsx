@@ -13,7 +13,7 @@ export default function Sidebar({}: Props) {
           panelContainerClassName="mt-2 p-0"
           renderActiveOnly={true}
         >
-          <TabPanel header="Documents" className="p-2 surface-50">
+          <TabPanel header="Documents" className="p-2 surface-50 max-w-full">
             <DocumentsTree />
           </TabPanel>
           <TabPanel header="Templates" className="surface-50"></TabPanel>

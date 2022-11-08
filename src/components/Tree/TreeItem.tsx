@@ -27,8 +27,8 @@ export default function TreeItem({
   const [text, setText] = useAtom(SidebarTreeContextAtom);
   return (
     <div
-      style={{ marginInlineStart: depth * 10 }}
-      className="text-md hover:bg-blue-700 py-1 cursor-pointer pl-2 flex align-items-center white-space-normal "
+      style={{ marginInlineStart: depth }}
+      className="max-w-20rem text-md hover:bg-blue-700 py-1 cursor-pointer flex align-items-center white-space-normal "
       onClick={() => {
         // Navigate if not a folder
         if (!node.droppable) {

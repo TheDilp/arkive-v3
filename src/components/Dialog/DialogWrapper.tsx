@@ -57,7 +57,6 @@ function RenameDocument({
 }) {
   const updateDocumentMutation = useUpdateDocument();
   const [localItem, setLocalItem] = useState(item);
-  console.log(allItems);
   return (
     <div className="my-2">
       <InputText
