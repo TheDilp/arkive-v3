@@ -10,6 +10,7 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useUpdateDocument } from "../../CRUD/DocumentCRUD";
+import { recursiveDescendantFilter } from "../../utils/recursive";
 type Props = {};
 
 const DialogContent = {
@@ -56,6 +57,7 @@ function RenameDocument({
 }) {
   const updateDocumentMutation = useUpdateDocument();
   const [localItem, setLocalItem] = useState(item);
+  console.log(allItems);
   return (
     <div className="my-2">
       <InputText
@@ -84,25 +86,16 @@ function RenameDocument({
             optionValue="id"
             value={localItem.parent}
             filter
-            onChange={
-              (e) => {}
-              // setDisplayDialog((prev) => ({ ...prev, parent: e.value }))
-            }
+            onChange={(e) => {
+              setLocalItem((prev) => ({ ...prev, parent: e.value }));
+            }}
             options={
               allItems
-                ? [
-                    { title: "Root", id: null },
-                    ...allItems.filter((doc, idx, array) => {
-                      if (!doc.folder || doc.id === item.id) return false;
-                      //   return recursiveDescendantFilter(
-                      //     doc,
-                      //     idx,
-                      //     array,
-                      //     item.id
-                      //   );
-                    }),
-                  ]
-                : []
+                ? allItems.filter((doc, idx, array) => {
+                    if (!doc.folder || doc.id === item.id) return false;
+                    return recursiveDescendantFilter(doc, idx, array, item.id);
+                  })
+                : [{ title: "Root", id: null }]
             }
           />
         </div>
