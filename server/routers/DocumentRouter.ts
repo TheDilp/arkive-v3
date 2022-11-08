@@ -107,7 +107,19 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         where: { id: req.params.id },
         data: JSON.parse(req.body),
       });
-      console.log(newDocument);
+      return newDocument;
+    }
+  );
+  server.delete(
+    "/deleteDocument/:id",
+    async (
+      req: FastifyRequest<{
+        Params: { id: string };
+      }>
+    ) => {
+      const newDocument = await prisma.documents.delete({
+        where: { id: req.params.id },
+      });
       return newDocument;
     }
   );

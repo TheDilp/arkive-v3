@@ -3,7 +3,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { documentTreeContextAtom } from "../../clientstate/AtomsSidebar";
+import { SidebarTreeContextAtom } from "../../utils/atoms";
 import { TreeDataType } from "../../types/treeTypes";
 type Props = {
   node: NodeModel<TreeDataType>;
@@ -24,7 +24,7 @@ export default function TreeItem({
 }: Props) {
   const { item_id } = useParams();
   const navigate = useNavigate();
-  const [text, setText] = useAtom(documentTreeContextAtom);
+  const [text, setText] = useAtom(SidebarTreeContextAtom);
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}

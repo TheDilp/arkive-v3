@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DocumentCreateType, DocumentType } from "../types/documentTypes";
-import { baseURLS, createURLS, updateURLs } from "../types/enums";
+import { baseURLS, createURLS, deleteURLs, updateURLs } from "../types/enums";
 import { ProjectType } from "../types/projectTypes";
 
 export const useCreateDocument = () => {
@@ -55,6 +55,31 @@ export const useUpdateDocument = () => {
                   if (doc.id === variables.id) return { ...doc, ...variables };
                   return doc;
                 }),
+              };
+          }
+        );
+      },
+    }
+  );
+};
+
+export const useDeleteDocument = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (id: string) =>
+      await fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
+        method: "DELETE",
+      }),
+    {
+      onSuccess: async (data, id) => {
+        let newData: DocumentType = await data.json();
+        queryClient.setQueryData(
+          ["singleProject", newData.project_id],
+          (old: ProjectType | undefined) => {
+            if (old)
+              return {
+                ...old,
+                documents: old.documents?.filter((doc) => doc.id !== id),
               };
           }
         );

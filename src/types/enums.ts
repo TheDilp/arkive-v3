@@ -15,3 +15,7 @@ export enum updateURLs {
   updateProject = "updateProject/",
   updateDocument = "updateDocument/",
 }
+
+export enum deleteURLs {
+  deleteDocument = "deleteDocument/",
+}

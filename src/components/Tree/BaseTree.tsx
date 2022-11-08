@@ -2,8 +2,8 @@ import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { documentTreeContextAtom } from "../../clientstate/AtomsSidebar";
-import { useUpdateDocument } from "../../CRUD/DocumentCRUD";
+import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
+import { useDeleteDocument, useUpdateDocument } from "../../CRUD/DocumentCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { getDepth, handleDrop } from "../../utils/tree";
@@ -17,6 +17,8 @@ type Props = {
 
 export default function BaseTree({ type }: Props) {
   const updateDocumentMutation = useUpdateDocument();
+  const deleteDocumentMutation = useDeleteDocument();
+  const [dialog, setDialog] = useAtom(DialogAtom);
 
   const rootItems = [
     {
@@ -36,22 +38,16 @@ export default function BaseTree({ type }: Props) {
       {
         label: "Edit Document",
         icon: "pi pi-fw pi-pencil",
-        command: () => {},
+        command: () => setDialog({ id: cmType.id, type: "documents" }),
       },
 
       {
-        label: "Change Type",
-        icon: "pi pi-fw pi-sync",
-        items: [
-          {
-            label: "Folder",
-            icon: "pi pi-fw pi-folder",
-            command: () => {
-              if (cmType.id)
-                updateDocumentMutation.mutate({ id: cmType.id, folder: true });
-            },
-          },
-        ],
+        label: "Change To Folder",
+        icon: "pi pi-fw pi-folder",
+        command: () => {
+          if (cmType.id)
+            updateDocumentMutation.mutate({ id: cmType.id, folder: true });
+        },
       },
       {
         label: "Covert to Template",
@@ -77,6 +73,7 @@ export default function BaseTree({ type }: Props) {
       {
         label: "Delete Document",
         icon: "pi pi-fw pi-trash",
+        command: () => cmType.id && deleteDocumentMutation.mutate(cmType.id),
       },
     ];
     const folderItems = [
@@ -87,23 +84,12 @@ export default function BaseTree({ type }: Props) {
       },
 
       {
-        label: "Change Type",
-        icon: "pi pi-fw, pi-sync",
-        items: [
-          {
-            label: "Document",
-            icon: "pi pi-fw pi-file",
-            command: () => {
-              if (cmType.id)
-                updateDocumentMutation.mutate({ id: cmType.id, folder: false });
-            },
-          },
-          {
-            label: "Folder",
-            icon: "pi pi-fw pi-folder",
-            command: () => {},
-          },
-        ],
+        label: "Change To File",
+        icon: "pi pi-fw, pi-file",
+        command: () => {
+          if (cmType.id)
+            updateDocumentMutation.mutate({ id: cmType.id, folder: false });
+        },
       },
       {
         label: "Insert Into Folder",
@@ -125,6 +111,7 @@ export default function BaseTree({ type }: Props) {
       {
         label: "Delete Folder",
         icon: "pi pi-fw pi-trash",
+        command: () => cmType.id && deleteDocumentMutation.mutate(cmType.id),
       },
     ];
     if (cmType.type === "document") return docItems;
@@ -134,7 +121,7 @@ export default function BaseTree({ type }: Props) {
   }
 
   const { project_id } = useParams();
-  const [cmType] = useAtom(documentTreeContextAtom);
+  const [cmType] = useAtom(SidebarTreeContextAtom);
   const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
   const { isError, isLoading, data } = useGetSingleProject(
