@@ -1,30 +1,30 @@
-import { initTRPC } from "@trpc/server";
+import { FastifyInstance, FastifyRequest } from "fastify";
 import { prisma } from "..";
-import { z } from "zod";
-export const t = initTRPC.create();
 
-export const projectsRouter = t.router({
-  getAllProjects: t.procedure.query(async () => {
+export const projectRouter = (server: FastifyInstance, _: any, done: any) => {
+  server.get("/getAllProjects", async () => {
     const data = await prisma.projects.findMany({});
     return data;
-  }),
-  getSingleProject: t.procedure.input(z.string()).query(async (req) => {
-    const singleProject = await prisma.projects.findUnique({
-      where: {
-        id: req.input,
-      },
-      include: {
-        documents: true,
-      },
-    });
-    return singleProject;
-  }),
-  createProject: t.procedure
-    .input(z.object({ id: z.string(), title: z.string() }))
-    .mutation(async (req) => {
-      const newProject = await prisma.projects.create({ data: req.input });
-      return newProject;
-    }),
-});
+  });
+  server.get(
+    "/getSingleProject/:id",
+    async (req: FastifyRequest<{ Params: { id: string } }>) => {
+      const singleProject = await prisma.projects.findUnique({
+        where: {
+          id: req.params.id,
+        },
+        include: {
+          documents: true,
+        },
+      });
+      return singleProject;
+    }
+  );
 
-export type ProjectsRouter = typeof projectsRouter;
+  server.post("/createProject", async () => {
+    const newProject = await prisma.projects.create({ data: {} });
+    return newProject;
+  });
+
+  done();
+};

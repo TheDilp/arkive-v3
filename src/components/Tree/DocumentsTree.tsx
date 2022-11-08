@@ -1,11 +1,7 @@
-import React from "react";
-import BaseTree from "./BaseTree";
 import { SplitButton } from "primereact/splitbutton";
-import { v4 as uuid } from "uuid";
-import { trpc } from "../../utils/trpcClient";
-import { useCreateDocument } from "../../CRUD/DocumentCRUD";
 import { useParams } from "react-router-dom";
-import { DefaultDocument } from "../../utils/DefaultValues/DocumentDefaults";
+import { v4 as uuid } from "uuid";
+import BaseTree from "./BaseTree";
 
 type Props = {};
 

@@ -4,13 +4,11 @@ specifiers:
   '@iconify/react': ^4.0.0
   '@minoru/react-dnd-treeview': ^3.3.0
   '@tanstack/react-query': ^4.14.3
-  '@trpc/client': 10.0.0-rc.6
-  '@trpc/react-query': 10.0.0-rc.6
-  '@trpc/server': 10.0.0-rc.6
   '@types/react': ^18.0.22
   '@types/react-dom': ^18.0.7
   '@types/uuid': ^8.3.4
   '@vitejs/plugin-react': ^2.2.0
+  jotai: ^1.9.1
   primeflex: ^3.2.1
   primeicons: ^6.0.1
   primereact: ^8.7.1
@@ -26,9 +24,7 @@ dependencies:
   '@iconify/react': 4.0.0_react@18.2.0
   '@minoru/react-dnd-treeview': 3.3.0_b57ckgxx77373rey5kttpzfpiu
   '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
-  '@trpc/client': 10.0.0-rc.6_@trpc+server@10.0.0-rc.6
-  '@trpc/react-query': 10.0.0-rc.6_addjqbmofwdxq7kt773dpn3oaq
-  '@trpc/server': 10.0.0-rc.6
+  jotai: 1.9.1_react@18.2.0
   primeflex: 3.2.1
   primeicons: 6.0.1
   primereact: 8.7.1_esim4yelhr35vesnk67vhutmai
@@ -445,34 +441,6 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
-  /@trpc/client/10.0.0-rc.6_@trpc+server@10.0.0-rc.6:
-    resolution: {integrity: sha512-/vyi0b9R+DOJgvYFFYSveRwIX4Ttu01Af0ORzZGsDHYZGB7lfSqHfQhizf+AHfEpQXQsJYy5ZFOt6RtvF6LuKg==}
-    peerDependencies:
-      '@trpc/server': 10.0.0-rc.6
-    dependencies:
-      '@trpc/server': 10.0.0-rc.6
-    dev: false
-
-  /@trpc/react-query/10.0.0-rc.6_addjqbmofwdxq7kt773dpn3oaq:
-    resolution: {integrity: sha512-OHkoZLDz86Q7wez7ayLAZiWATePi+QkwavyNu/x6c0f/dC8n7CUIZAhAjUN4SuZYEeZxbW351QtPIQwODT2XVA==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.3.8
-      '@trpc/client': 10.0.0-rc.6
-      '@trpc/server': 10.0.0-rc.6
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
-      '@trpc/client': 10.0.0-rc.6_@trpc+server@10.0.0-rc.6
-      '@trpc/server': 10.0.0-rc.6
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@trpc/server/10.0.0-rc.6:
-    resolution: {integrity: sha512-8JAIX2SSTEwpdp+CRoPGsrj9A9qee0ltqa1fPXlKOtzQKbxDjGoqy6kVVh25YUJ8GJrXf4LhV8pZGkyZOOX6ow==}
-    dev: false
-
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
@@ -872,6 +840,40 @@ packages:
     dependencies:
       has: 1.0.3
     dev: true
+
+  /jotai/1.9.1_react@18.2.0:
+    resolution: {integrity: sha512-rDmmDL6owX4Kg5fAV0arjGVJmT1VYnkROwAx/PgpMkYCzvHEtABm8qnq/Ki5o5/GFGbvdfE11VNP1brDWP7+9w==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      '@babel/template': '*'
+      immer: '*'
+      jotai-tanstack-query: '*'
+      jotai-urql: '*'
+      optics-ts: '*'
+      react: '>=16.8'
+      valtio: '*'
+      xstate: '*'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      immer:
+        optional: true
+      jotai-tanstack-query:
+        optional: true
+      jotai-urql:
+        optional: true
+      optics-ts:
+        optional: true
+      valtio:
+        optional: true
+      xstate:
+        optional: true
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}

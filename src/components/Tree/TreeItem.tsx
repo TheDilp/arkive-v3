@@ -1,7 +1,9 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
+import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { documentTreeContextAtom } from "../../clientstate/AtomsSidebar";
 import { TreeDataType } from "../../types/treeTypes";
 type Props = {
   node: NodeModel<TreeDataType>;
@@ -9,11 +11,20 @@ type Props = {
   isOpen: boolean;
   onToggle: () => void;
   cm: MutableRefObject<any>;
+  type: "document" | "map" | "board" | "timeline";
 };
 
-export default function TreeItem({ node, depth, isOpen, onToggle, cm }: Props) {
+export default function TreeItem({
+  node,
+  depth,
+  isOpen,
+  onToggle,
+  cm,
+  type,
+}: Props) {
   const { project_id } = useParams();
   const navigate = useNavigate();
+  const [text, setText] = useAtom(documentTreeContextAtom);
   return (
     <div
       style={{ marginInlineStart: depth * 10 }}
@@ -29,6 +40,9 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm }: Props) {
         }
       }}
       onContextMenu={(e) => {
+        if (node.droppable) setText("doc_folder");
+        else if (node.data?.template) setText("template");
+        else setText("document");
         cm.current.show(e);
         // setDisplayDialog({
         //   id: node.id as string,

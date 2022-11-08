@@ -1,8 +1,11 @@
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import { useAtom } from "jotai";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { documentTreeContextAtom } from "../../clientstate/AtomsSidebar";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { TreeDataType } from "../../types/treeTypes";
+import { contextMenuItems } from "../../utils/contextMenu";
 import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
@@ -12,64 +15,14 @@ type Props = {
   type: "documents" | "maps" | "boards" | "timelines";
 };
 
-const docItems = [
-  {
-    label: "Edit Document",
-    icon: "pi pi-fw pi-pencil",
-    command: () => {},
-  },
-
-  {
-    label: "Change Type",
-    icon: "pi pi-fw pi-sync",
-    items: [
-      {
-        label: "Document",
-        icon: "pi pi-fw pi-file",
-        command: () => {},
-      },
-      {
-        label: "Folder",
-        icon: "pi pi-fw pi-folder",
-        command: () => {},
-      },
-    ],
-  },
-  {
-    label: "Covert to Template",
-    icon: "pi pi-fw pi-copy",
-    command: () => {},
-  },
-  {
-    label: "Export JSON",
-    icon: "pi pi-fw pi-download",
-    command: () => {},
-  },
-  { separator: true },
-  {
-    label: "View Public Document",
-    icon: "pi pi-fw pi-external-link",
-    command: () => {},
-  },
-  {
-    label: "Copy Public URL",
-    icon: "pi pi-fw pi-link",
-    command: () => {},
-  },
-  {
-    label: "Delete Document",
-    icon: "pi pi-fw pi-trash",
-  },
-];
-
 export default function BaseTree({ type }: Props) {
   const { project_id } = useParams();
+  const [cmType] = useAtom(documentTreeContextAtom);
   const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
   const { isError, isLoading, data } = useGetSingleProject(
     project_id as string
   );
-  console.log(data);
   useLayoutEffect(() => {
     if (data && data?.[type]) {
       setTreeData(
@@ -89,10 +42,10 @@ export default function BaseTree({ type }: Props) {
 
   return (
     <>
-      <ContextMenu items={docItems} cm={cm} />
+      <ContextMenu items={contextMenuItems(cmType)} cm={cm} />
       <Tree
         classes={{
-          root: "w-full projectTreeRoot pr-4 pl-0 h-screen overflow-y-auto",
+          root: "w-full projectTreeRoot pr-4 pl-0 overflow-y-auto",
           container: "list-none",
           placeholder: "relative",
           listItem: "listitem",
