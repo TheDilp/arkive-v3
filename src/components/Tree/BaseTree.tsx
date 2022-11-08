@@ -3,20 +3,25 @@ import { useAtom } from "jotai";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
-import { useDeleteDocument, useUpdateDocument } from "../../CRUD/DocumentCRUD";
+import {
+  useDeleteDocument,
+  useUpdateDocument,
+  useUpdateMutation,
+} from "../../CRUD/DocumentCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
+import { AvailableItemTypes } from "../../types/generalTypes";
 
 type Props = {
-  type: "documents" | "maps" | "boards" | "timelines";
+  type: AvailableItemTypes;
 };
 
 export default function BaseTree({ type }: Props) {
-  const updateDocumentMutation = useUpdateDocument();
+  const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
   const [dialog, setDialog] = useAtom(DialogAtom);
 
@@ -46,7 +51,7 @@ export default function BaseTree({ type }: Props) {
         icon: "pi pi-fw pi-folder",
         command: () => {
           if (cmType.id)
-            updateDocumentMutation.mutate({ id: cmType.id, folder: true });
+            updateDocumentMutation?.mutate({ id: cmType.id, folder: true });
         },
       },
       {
@@ -88,7 +93,7 @@ export default function BaseTree({ type }: Props) {
         icon: "pi pi-fw, pi-file",
         command: () => {
           if (cmType.id)
-            updateDocumentMutation.mutate({ id: cmType.id, folder: false });
+            updateDocumentMutation?.mutate({ id: cmType.id, folder: false });
         },
       },
       {
@@ -172,6 +177,7 @@ export default function BaseTree({ type }: Props) {
             depth={depth}
             isOpen={isOpen}
             onToggle={onToggle}
+            type={type}
             cm={cm}
           />
         )}
@@ -207,7 +213,7 @@ export default function BaseTree({ type }: Props) {
           handleDrop(tree, setTreeData);
           const { dragSourceId, dropTargetId } = options;
           if (type === "documents")
-            updateDocumentMutation.mutate({
+            updateDocumentMutation?.mutate({
               id: dragSourceId as string,
               parent: dropTargetId as string,
             });

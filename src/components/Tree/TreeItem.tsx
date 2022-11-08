@@ -5,13 +5,15 @@ import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SidebarTreeContextAtom } from "../../utils/atoms";
 import { TreeDataType } from "../../types/treeTypes";
+import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { AvailableItemTypes } from "../../types/generalTypes";
 type Props = {
   node: NodeModel<TreeDataType>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
   cm: MutableRefObject<any>;
-  type: "document" | "map" | "board" | "timeline";
+  type: AvailableItemTypes;
 };
 
 export default function TreeItem({
@@ -25,6 +27,7 @@ export default function TreeItem({
   const { item_id } = useParams();
   const navigate = useNavigate();
   const [text, setText] = useAtom(SidebarTreeContextAtom);
+  const updateMutation = useUpdateMutation(type);
   return (
     <div
       style={{ marginInlineStart: depth }}
@@ -62,10 +65,12 @@ export default function TreeItem({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            // updateDocumentMutation.mutate({
-            //   id: node.id as string,
-            //   expanded: !isOpen,
-            // });
+            console.log(updateMutation, type);
+            updateMutation?.mutate({
+              id: node.id as string,
+              expanded: !isOpen,
+            });
+
             onToggle();
           }}
         >

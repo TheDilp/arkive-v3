@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { DocumentType } from "../types/documentTypes";
+import { AvailableItemTypes } from "../types/generalTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 
 export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
@@ -9,5 +9,5 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
 
 export const DialogAtom = atom<{
   id: null | string;
-  type: null | "documents" | "maps" | "boards" | "timelines";
+  type: null | AvailableItemTypes;
 }>({ id: null, type: null });

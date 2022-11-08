@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DocumentCreateType, DocumentType } from "../types/documentTypes";
 import { baseURLS, createURLS, deleteURLs, updateURLs } from "../types/enums";
+import { AvailableItemTypes } from "../types/generalTypes";
 import { ProjectType } from "../types/projectTypes";
 
 export const useCreateDocument = () => {
@@ -31,9 +32,36 @@ export const useCreateDocument = () => {
   );
 };
 
-export const useUpdateDocument = () => {
+export const useUpdateDocument = () => {};
+
+export const useDeleteDocument = () => {
   const queryClient = useQueryClient();
   return useMutation(
+    async (id: string) =>
+      await fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
+        method: "DELETE",
+      }),
+    {
+      onSuccess: async (data, id) => {
+        let newData: DocumentType = await data.json();
+        queryClient.setQueryData(
+          ["singleProject", newData.project_id],
+          (old: ProjectType | undefined) => {
+            if (old)
+              return {
+                ...old,
+                documents: old.documents?.filter((doc) => doc.id !== id),
+              };
+          }
+        );
+      },
+    }
+  );
+};
+
+export const useUpdateMutation = (type: AvailableItemTypes) => {
+  const queryClient = useQueryClient();
+  const updateDocumentMutation = useMutation(
     async (updateDocumentValues: Partial<DocumentType>) =>
       await fetch(
         `${baseURLS.baseServer}${updateURLs.updateDocument}${updateDocumentValues.id}`,
@@ -61,29 +89,6 @@ export const useUpdateDocument = () => {
       },
     }
   );
-};
 
-export const useDeleteDocument = () => {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (id: string) =>
-      await fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
-        method: "DELETE",
-      }),
-    {
-      onSuccess: async (data, id) => {
-        let newData: DocumentType = await data.json();
-        queryClient.setQueryData(
-          ["singleProject", newData.project_id],
-          (old: ProjectType | undefined) => {
-            if (old)
-              return {
-                ...old,
-                documents: old.documents?.filter((doc) => doc.id !== id),
-              };
-          }
-        );
-      },
-    }
-  );
+  if (type === "documents") return updateDocumentMutation;
 };

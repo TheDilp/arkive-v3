@@ -9,7 +9,7 @@ import { DocumentType } from "../../types/documentTypes";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
-import { useUpdateDocument } from "../../CRUD/DocumentCRUD";
+import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { recursiveDescendantFilter } from "../../utils/recursive";
 type Props = {};
 
@@ -55,7 +55,7 @@ function RenameDocument({
   allItems: DocumentType[] | undefined;
   item: DocumentType;
 }) {
-  const updateDocumentMutation = useUpdateDocument();
+  const updateDocumentMutation = useUpdateMutation("documents");
   const [localItem, setLocalItem] = useState(item);
   return (
     <div className="my-2">
@@ -67,7 +67,7 @@ function RenameDocument({
         }
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            updateDocumentMutation.mutate({
+            updateDocumentMutation?.mutate({
               id: item.id,
               title: localItem.title,
               parent: localItem.parent,
@@ -107,7 +107,7 @@ function RenameDocument({
           iconPos="right"
           type="submit"
           onClick={() =>
-            updateDocumentMutation.mutate({
+            updateDocumentMutation?.mutate({
               id: item.id,
               title: localItem.title,
               parent: localItem.parent,
