@@ -3,6 +3,7 @@ import { Remirror, useRemirror } from "@remirror/react";
 import { Navigate, useParams } from "react-router-dom";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
+import "remirror/styles/all.css";
 type Props = {};
 
 export default function Editor({}: Props) {
@@ -14,7 +15,8 @@ export default function Editor({}: Props) {
   );
 
   const { manager, state } = useRemirror({
-    extensions: () => DefaultEditorExtensions,
+    // @ts-ignore
+    extensions: DefaultEditorExtensions(),
     selection: "start",
   });
 

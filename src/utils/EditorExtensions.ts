@@ -12,13 +12,14 @@ import {
   ImageExtension,
   ItalicExtension,
   LinkExtension,
+  MarkdownExtension,
   NodeFormattingExtension,
   OrderedListExtension,
   TaskListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
 
-export const DefaultEditorExtensions = [
+export const DefaultEditorExtensions = () => [
   new PlaceholderExtension({
     placeholder: "Write something awesome! 📜",
   }),
@@ -44,6 +45,7 @@ export const DefaultEditorExtensions = [
   new CalloutExtension(),
   new NodeFormattingExtension(),
   new HardBreakExtension(),
+  new MarkdownExtension(),
   //   new SecretExtension({
   //     extraAttributes: {
   //       class: "secretBlock",

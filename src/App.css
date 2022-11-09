@@ -20,3 +20,35 @@
 .editor:focus {
   outline: none;
 }
+
+.editor :is(h1, h2, h3, h4, h5, h6) {
+  @apply font-bold;
+}
+.editor h1 {
+  @apply text-2xl;
+}
+.editor h2 {
+  @apply text-xl;
+}
+.editor h3 {
+  @apply text-lg;
+}
+.editor h4 {
+  @apply text-base;
+}
+.editor h5 {
+  @apply text-sm;
+}
+.editor h6 {
+  @apply text-xs;
+}
+.editor :is(ol, ul) {
+  @apply pl-3;
+}
+.editor ol {
+  @apply list-decimal;
+}
+
+.editor ul {
+  @apply list-disc;
+}

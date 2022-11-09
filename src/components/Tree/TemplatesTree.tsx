@@ -7,7 +7,7 @@ type Props = {};
 
 const items = [
   {
-    label: "Create Document",
+    label: "Create Template",
     icon: "pi pi-file",
     command: () => {},
   },
