@@ -171,7 +171,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="flex py-2 pl-2 shadow bg-zinc-800 flex-nowrap">
+    <div className="flex py-2 pl-2 border-b shadow border-zinc-600 bg-zinc-800 flex-nowrap">
       <div className="flex align-items-center">
         <i
           className="mr-3 cursor-pointer pi pi-home hover:text-primary"
