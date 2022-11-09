@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DocumentCreateType, DocumentType } from "../types/documentTypes";
-import { baseURLS, createURLS, deleteURLs, updateURLs } from "../types/enums";
+import {
+  baseURLS,
+  createURLS,
+  deleteURLs,
+  updateURLs,
+} from "../types/CRUDenums";
 import { AvailableItemTypes } from "../types/generalTypes";
 import { ProjectType } from "../types/projectTypes";
 

@@ -1,13 +1,14 @@
-import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Link } from "react-router-dom";
 import defaultImage from "../assets/DefaultProjectImage.jpg";
+import { VariantsENUM } from "../types/ComponentEnums";
 import { ProjectType } from "../types/projectTypes";
+import Button from "./Button/Button";
 export default function ProjectCard({ ...Project }: ProjectType) {
   const header = (
     <Link
       to={`/project/${Project.id}/wiki`}
-      className="no-underline relative h-15rem"
+      className="relative no-underline h-15rem"
     >
       <img
         alt="Card"
@@ -18,16 +19,21 @@ export default function ProjectCard({ ...Project }: ProjectType) {
     </Link>
   );
   const footer = (
-    <div className="flex justify-content-between flex-wrap">
+    <div className="flex flex-wrap justify-content-between">
       <Link to={`../project/${Project.id}/wiki`} className="no-underline">
-        <Button
+        {/* <Button
           label="Wiki"
           icon="pi pi-fw pi-file"
           iconPos="right"
-          className="p-button-outlined p-button-primary Lato w-full"
+          className="w-full p-button-outlined p-button-primary Lato"
+        /> */}
+        <Button
+          icon="mdi:book-open-blank-variant"
+          title="Wiki"
+          variant={VariantsENUM.primary}
         />
       </Link>
-      {/* <Link to={`../project/${Project.id}/maps`} className="no-underline w-4">
+      {/* <Link to={`../project/${Project.id}/maps`} className="w-4 no-underline">
         <Button
           // label="Maps"
           icon="pi pi-fw pi-map"
@@ -35,12 +41,12 @@ export default function ProjectCard({ ...Project }: ProjectType) {
           className="p-button-outlined p-button-primary Lato"
         />
       </Link>
-      <Link to={`../project/${Project.id}/boards`} className="no-underline w-4">
+      <Link to={`../project/${Project.id}/boards`} className="w-4 no-underline">
         <Button
           // label="Boards"
           icon={() => (
             <Icon
-              className="hover:text-primary cursor-pointer "
+              className="cursor-pointer hover:text-primary "
               icon="mdi:draw"
               fontSize={20}
             />
@@ -51,7 +57,7 @@ export default function ProjectCard({ ...Project }: ProjectType) {
       </Link>
       <Link
         to={`../project/${Project.id}/timelines`}
-        className="no-underline w-4"
+        className="w-4 no-underline"
       >
         <Button
           icon={() => (
@@ -71,10 +77,9 @@ export default function ProjectCard({ ...Project }: ProjectType) {
         className="no-underline"
       >
         <Button
-          label="Settings"
-          icon="pi pi-fw pi-cog"
-          iconPos="right"
-          className="p-button-outlined p-button-secondary Lato w-full"
+          title="Settings"
+          icon="mdi:cog-outline"
+          variant={VariantsENUM.secondary}
         />
       </Link>
     </div>
