@@ -145,9 +145,31 @@ export default function BaseTree({ type, templates }: Props) {
           cmType.data?.id && deleteDocumentMutation.mutate(cmType.data.id),
       },
     ];
+    const templateItems = [
+      {
+        label: "Edit Document",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDialog({ id: cmType.data.id, type: "documents" });
+        },
+      },
+
+      {
+        label: "Create Doc From Template",
+        icon: "pi pi-fw pi-copy",
+        command: () => {},
+      },
+      { separator: true },
+      {
+        label: "Delete Document",
+        icon: "pi pi-fw pi-trash",
+        // command: confirmdelete,
+      },
+    ];
     if (cmType.type === "document") return docItems;
     if (cmType.type === "doc_folder") return folderItems;
-    if (cmType.type === "template") return [];
+    if (cmType.type === "template") return templateItems;
     return [];
   }
 
