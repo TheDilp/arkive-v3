@@ -14,7 +14,6 @@ specifiers:
   concurrently: ^7.5.0
   jotai: ^1.9.1
   postcss: ^8.4.18
-  primeflex: ^3.2.1
   primeicons: ^6.0.1
   primereact: ^8.7.1
   react: ^18.2.0
@@ -35,7 +34,6 @@ dependencies:
   '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
   concurrently: 7.5.0
   jotai: 1.9.1_react@18.2.0
-  primeflex: 3.2.1
   primeicons: 6.0.1
   primereact: 8.7.1_esim4yelhr35vesnk67vhutmai
   react: 18.2.0
@@ -3850,10 +3848,6 @@ packages:
     dependencies:
       is-finite: 1.0.2
       parse-exponential: 1.0.1
-    dev: false
-
-  /primeflex/3.2.1:
-    resolution: {integrity: sha512-sGDJ4mh2fG19xa1yc4IPGSQ8MUMyu5nU+tYnl27AFuFHhX8XwEA7fWCtWyBbclclVhXtre+Kf9WobWPnfxWAEQ==}
     dev: false
 
   /primeicons/6.0.1:

@@ -28,7 +28,7 @@ export default function DocumentsTree({}: Props) {
   const { project_id } = useParams();
   const createDocumentMutation = useCreateDocument();
   return (
-    <div className="flex flex-column">
+    <div className="flex flex-col">
       <SplitButton
         className="p-button-outlined"
         label="Quick Create"

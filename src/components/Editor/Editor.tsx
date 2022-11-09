@@ -20,7 +20,7 @@ export default function Editor({}: Props) {
 
   if (!currentDocument) return null;
   return (
-    <div className="w-full flex flex-column flex-grow-1">
+    <div className="w-full flex  flex-grow-1">
       <h1 className="w-full mt-2 mb-0 text-4xl flex justify-content-center Merriweather">
         <Icon className="mr-2" fontSize={40} icon={currentDocument.icon} />
         {currentDocument.title}

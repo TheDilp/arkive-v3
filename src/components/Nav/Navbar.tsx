@@ -14,10 +14,10 @@ export default function Navbar() {
 
   const start = () => {
     return (
-      <div className="flex flex-nowrap py-2 align-items-start pl-2">
-        <div className="flex align-items-center">
+      <div className="flex items-start py-2 pl-2 flex-nowrap">
+        <div className="flex items-center">
           <i
-            className="pi pi-home mr-3 cursor-pointer hover:text-primary"
+            className="mr-3 cursor-pointer pi pi-home hover:text-primary"
             onClick={() => navigate("/home")}
           ></i>
           {project_id && (
@@ -53,20 +53,20 @@ export default function Navbar() {
                 autoHide
               /> */}
               <i
-                className="pi pi-book mr-3 hover:text-primary cursor-pointer wikiIcon"
+                className="mr-3 cursor-pointer pi pi-book hover:text-primary wikiIcon"
                 onClick={async () => {
                   navigate("./wiki");
                 }}
               ></i>
               <i
-                className="pi pi-map hover:text-primary cursor-pointer mapsIcon"
+                className="cursor-pointer pi pi-map hover:text-primary mapsIcon"
                 onClick={async () => {
                   navigate("./maps");
                 }}
               ></i>
-              <span className="boardsIcon ml-2 pl-1 mr-2">
+              <span className="ml-2 mr-2 pl-1 boardsIcon">
                 <Icon
-                  className="hover:text-primary cursor-pointer "
+                  className="cursor-pointer hover:text-primary "
                   icon="mdi:draw"
                   fontSize={20}
                   onClick={async () => {
@@ -74,9 +74,9 @@ export default function Navbar() {
                   }}
                 />
               </span>
-              <span className="timelineIcon mr-2">
+              <span className="mr-2 timelineIcon">
                 <Icon
-                  className="hover:text-primary cursor-pointer"
+                  className="cursor-pointer hover:text-primary"
                   icon="mdi:chart-timeline-variant"
                   fontSize={22}
                   onClick={async () => {
@@ -86,7 +86,7 @@ export default function Navbar() {
               </span>
               <span className="">
                 <i
-                  className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
+                  className="cursor-pointer pi pi-image hover:text-primary filebrowserIcon"
                   onClick={async () => {
                     navigate("./filebrowser");
                   }}
@@ -102,7 +102,7 @@ export default function Navbar() {
   };
   const end = () => {
     return (
-      <div className="flex flex-nowrap pr-2 py-2 align-items-center">
+      <div className="flex items-center py-2 pr-2 flex-nowrap">
         {/* <Tooltip
           target=".settingsIcon"
           content="Project Settings"
@@ -117,24 +117,24 @@ export default function Navbar() {
         {project_id && (
           <>
             <i
-              className="pi pi-search z-2 mr-3 cursor-pointer hover:text-primary"
+              className="mr-3 cursor-pointer pi pi-search z-2 hover:text-primary"
               onClick={() => setSearch("")}
             ></i>
             <i
-              className="pi pi-upload mr-3 cursor-pointer hover:text-primary quickUpload"
+              className="mr-3 cursor-pointer pi pi-upload hover:text-primary quickUpload"
               onClick={() => setUploadDialog(true)}
             ></i>
           </>
         )}
         {/* {project_id && <NavSettingsButton />} */}
         <i
-          className="pi pi-user mr-3 cursor-pointer hover:text-primary"
+          className="mr-3 cursor-pointer pi pi-user hover:text-primary"
           onClick={async () => {
             navigate("/profile");
           }}
         ></i>
         <i
-          className="pi pi-sign-out cursor-pointer hover:text-primary"
+          className="cursor-pointer pi pi-sign-out hover:text-primary"
           onClick={async () => {
             navigate("/auth");
           }}
@@ -171,10 +171,10 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="flex flex-nowrap py-2 bg-gray-800 shadow pl-2">
+    <div className="flex py-2 pl-2 shadow bg-zinc-700 flex-nowrap">
       <div className="flex align-items-center">
         <i
-          className="pi pi-home mr-3 cursor-pointer hover:text-primary"
+          className="mr-3 cursor-pointer pi pi-home hover:text-primary"
           onClick={() => navigate("/home")}
         ></i>
         {project_id && (
@@ -210,20 +210,20 @@ export default function Navbar() {
                 autoHide
               /> */}
             <i
-              className="pi pi-book mr-3 hover:text-primary cursor-pointer wikiIcon"
+              className="mr-3 cursor-pointer pi pi-book hover:text-primary wikiIcon"
               onClick={async () => {
                 navigate("./wiki");
               }}
             ></i>
             <i
-              className="pi pi-map hover:text-primary cursor-pointer mapsIcon"
+              className="cursor-pointer pi pi-map hover:text-primary mapsIcon"
               onClick={async () => {
                 navigate("./maps");
               }}
             ></i>
-            <span className="boardsIcon ml-2 pl-1 mr-2">
+            <span className="ml-2 mr-2 pl-1 boardsIcon">
               <Icon
-                className="hover:text-primary cursor-pointer "
+                className="cursor-pointer hover:text-primary "
                 icon="mdi:draw"
                 fontSize={20}
                 onClick={async () => {
@@ -231,9 +231,9 @@ export default function Navbar() {
                 }}
               />
             </span>
-            <span className="timelineIcon mr-2">
+            <span className="mr-2 timelineIcon">
               <Icon
-                className="hover:text-primary cursor-pointer"
+                className="cursor-pointer hover:text-primary"
                 icon="mdi:chart-timeline-variant"
                 fontSize={22}
                 onClick={async () => {
@@ -243,7 +243,7 @@ export default function Navbar() {
             </span>
             <span className="">
               <i
-                className="pi pi-image hover:text-primary cursor-pointer filebrowserIcon"
+                className="cursor-pointer pi pi-image hover:text-primary filebrowserIcon"
                 onClick={async () => {
                   navigate("./filebrowser");
                 }}

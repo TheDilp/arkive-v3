@@ -4,7 +4,6 @@ import Dashboard from "./pages/Dashboard";
 import "primeicons/primeicons.css"; //icons
 import "primereact/resources/primereact.min.css"; //core css
 import "primereact/resources/themes/arya-blue/theme.css"; //theme
-import "primeflex/primeflex.css"; //theme
 import "./App.css";
 import Navbar from "./components/Nav/Navbar";
 import Layout from "./components/Layout/Layout";
@@ -24,7 +23,7 @@ function App() {
   });
 
   return (
-    <main className="flex flex-column h-screen">
+    <main className="h-screen flex flex-col">
       <QueryClientProvider client={queryClient}>
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
           <Navbar />
