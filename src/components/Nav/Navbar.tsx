@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 // import NavbarTitle from "./NavbarTitle";
 // import NavSettingsButton from "./NavSettingsButton";
 // import Quickupload from "./Quickupload";
@@ -11,7 +12,7 @@ export default function Navbar() {
   const { project_id } = useParams();
   const [uploadDialog, setUploadDialog] = useState(false);
   const [search, setSearch] = useState<string | null>(null);
-
+  const projectData = useGetSingleProject(project_id as string);
   const start = () => {
     return (
       <div className="flex items-start py-2 pl-2 flex-nowrap">
@@ -172,10 +173,10 @@ export default function Navbar() {
 
   return (
     <div className="flex py-2 pl-2 border-b shadow border-zinc-600 bg-zinc-800 flex-nowrap">
-      <div className="flex align-items-center">
+      <div className="flex items-center">
         <i
           className="mr-3 cursor-pointer pi pi-home hover:text-primary"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/")}
         ></i>
         {project_id && (
           <>
@@ -253,7 +254,18 @@ export default function Navbar() {
         )}
       </div>
       {/* Use project title only if in project */}
-      {/* {project_id && <NavbarTitle />} */}
+      {project_id && (
+        <div
+          className="w-full flex fixed overflow-hidden pointer-events-none h-2rem align-items-start"
+          style={{
+            top: "0.25rem",
+          }}
+        >
+          <h2 className="mx-auto my-0 text-3xl font-Merriweather">
+            {projectData?.data?.title}
+          </h2>
+        </div>
+      )}
     </div>
   );
 }

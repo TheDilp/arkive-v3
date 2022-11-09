@@ -26,7 +26,6 @@ function App() {
     <main className="h-screen flex flex-col">
       <QueryClientProvider client={queryClient}>
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-          <Navbar />
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/project/:project_id/" element={<Layout />}>

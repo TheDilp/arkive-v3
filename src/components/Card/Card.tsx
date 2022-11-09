@@ -12,7 +12,7 @@ type Props = {
 
 export default function ProjectCard({ id, image, title }: Props) {
   return (
-    <div className="flex flex-col bg-zinc-800 gap-y-4">
+    <div className="flex flex-col rounded bg-zinc-800 gap-y-2">
       <Link to={`../project/${id}/wiki`} className="relative no-underline">
         <img
           alt="Card"
@@ -21,10 +21,10 @@ export default function ProjectCard({ id, image, title }: Props) {
           className="w-full cursor-pointer h-60"
         />
       </Link>
-      <h2 className="mt-6 text-2xl font-bold text-center uppercase font-Lato">
+      <h2 className="my-4 text-2xl font-bold text-center uppercase font-Lato">
         {title}
       </h2>
-      <div className="flex flex-wrap justify-between px-2 pb-2">
+      <div className="flex flex-wrap justify-between px-6 pb-4">
         <Link to={`../project/${id}/wiki`} className="no-underline">
           {/* <Button
           label="Wiki"
