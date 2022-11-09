@@ -31,7 +31,7 @@ export default function TreeItem({
   return (
     <div
       style={{ marginInlineStart: depth }}
-      className="flex items-center py-1 cursor-pointer max-w-20rem text-md hover:bg-blue-700 gap-x-1 "
+      className="flex items-center py-1 cursor-pointer max-w-20rem text-md hover:bg-sky-700 gap-x-1 "
       onClick={() => {
         // Navigate if not a folder
         if (!node.droppable) {
@@ -89,7 +89,7 @@ export default function TreeItem({
           <Icon
             icon={node.data?.icon as string}
             inline={true}
-            className="hover:bg-blue-400 border-circle selectableIcon"
+            className="rounded-full hover:bg-sky-400 selectableIcon"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();

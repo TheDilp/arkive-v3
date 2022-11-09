@@ -154,7 +154,7 @@ export default function BaseTree({ type }: Props) {
       <ContextMenu items={contextMenuItems(cmType)} cm={cm} />
       <Tree
         classes={{
-          root: "w-full projectTreeRoot pr-4 pl-0 overflow-y-auto",
+          root: "w-full mt-1 pl-0 overflow-y-auto",
           container: "list-none",
           placeholder: "relative",
           listItem: "listitem",
