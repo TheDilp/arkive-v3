@@ -35,29 +35,21 @@ export default function TreeItem({
       onClick={() => {
         // Navigate if not a folder
         if (!node.droppable) {
-          //   setDocId(node.id as string);
           navigate(`./wiki/doc/${node.id}`);
         } else {
-          //   setDocId(node.id as string);
           navigate(`folder/${node.id}`);
         }
       }}
       onContextMenu={(e) => {
         if (node.droppable)
-          setText({ id: node.id as string, type: "doc_folder" });
+          setText({
+            data: node.data,
+            type: "doc_folder",
+          });
         else if (node.data?.template)
-          setText({ id: node.id as string, type: "template" });
-        else setText({ id: node.id as string, type: "document" });
+          setText({ data: node.data, type: "template" });
+        else setText({ data: node.data, type: "document" });
         cm.current.show(e);
-        // setDisplayDialog({
-        //   id: node.id as string,
-        //   title: node.text,
-        //   show: false,
-        //   folder: node.data?.folder || false,
-        //   depth,
-        //   template: node.data?.template || false,
-        //   parent: node.data?.parent?.id || node.data?.parent || null,
-        // });
       }}
     >
       {node.droppable && (
@@ -65,7 +57,6 @@ export default function TreeItem({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log(updateMutation, type);
             updateMutation?.mutate({
               id: node.id as string,
               expanded: !isOpen,
@@ -93,20 +84,12 @@ export default function TreeItem({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-
-              //   setIconSelect({
-              //     id: node.id as string,
-              //     icon: "bxs:folder",
-              //     show: true,
-              //     top: e.clientY,
-              //     left: e.clientX,
-              //   });
             }}
           />
         )}
       </span>
 
-      <div className={` Lato w-full ${node.id === item_id && "text-blue-400"}`}>
+      <div className={`Lato w-full ${node.id === item_id && "text-sky-400"}`}>
         <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
           {node.text}
         </div>

@@ -15,7 +15,6 @@ export type DocumentType = {
   alter_names: string[];
 };
 
-export type DocumentCreateType = {
+export type DocumentCreateType = Partial<Omit<DocumentType, "project_id">> & {
   project_id: string;
-  title?: string;
 };

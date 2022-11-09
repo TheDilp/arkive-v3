@@ -58,6 +58,7 @@
 
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { prisma } from "..";
+import { removeNull } from "../utils/transform";
 
 export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get(
@@ -88,11 +89,15 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         Body: string;
       }>
     ) => {
-      const newDocument = await prisma.documents.create({
-        data: JSON.parse(req.body),
-      });
+      try {
+        const newDocument = await prisma.documents.create({
+          data: removeNull(JSON.parse(req.body)) as any,
+        });
 
-      return newDocument;
+        return newDocument;
+      } catch (error) {
+        console.log(error);
+      }
     }
   );
   server.post(

@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
 import {
+  useCreateDocument,
   useDeleteDocument,
   useUpdateDocument,
   useUpdateMutation,
@@ -15,12 +16,14 @@ import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
 import { AvailableItemTypes } from "../../types/generalTypes";
+import { v4 as uuid } from "uuid";
 
 type Props = {
   type: AvailableItemTypes;
 };
 
 export default function BaseTree({ type }: Props) {
+  const createDocumentMutation = useCreateDocument();
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
   const [_, setDialog] = useAtom(DialogAtom);
@@ -43,21 +46,36 @@ export default function BaseTree({ type }: Props) {
       {
         label: "Edit Document",
         icon: "pi pi-fw pi-pencil",
-        command: () => setDialog({ id: cmType.id, type: "documents" }),
+        command: () => {
+          if (cmType.data?.id)
+            setDialog({ id: cmType.data.id, type: "documents" });
+        },
       },
 
       {
         label: "Change To Folder",
         icon: "pi pi-fw pi-folder",
         command: () => {
-          if (cmType.id)
-            updateDocumentMutation?.mutate({ id: cmType.id, folder: true });
+          if (cmType.data?.id)
+            updateDocumentMutation?.mutate({
+              id: cmType.data.id,
+              folder: true,
+            });
         },
       },
       {
         label: "Covert to Template",
         icon: "pi pi-fw pi-copy",
-        command: () => {},
+        command: () => {
+          if (cmType.data) {
+            createDocumentMutation.mutate({
+              ...cmType.data,
+              project_id: project_id as string,
+              id: uuid(),
+              template: true,
+            });
+          }
+        },
       },
       {
         label: "Export JSON",
@@ -78,22 +96,29 @@ export default function BaseTree({ type }: Props) {
       {
         label: "Delete Document",
         icon: "pi pi-fw pi-trash",
-        command: () => cmType.id && deleteDocumentMutation.mutate(cmType.id),
+        command: () =>
+          cmType.data?.id && deleteDocumentMutation.mutate(cmType.data.id),
       },
     ];
     const folderItems = [
       {
         label: "Edit Folder",
         icon: "pi pi-fw pi-pencil",
-        command: () => setDialog({ id: cmType.id, type: "documents" }),
+        command: () => {
+          if (cmType.data?.id)
+            setDialog({ id: cmType.data.id, type: "documents" });
+        },
       },
 
       {
         label: "Change To File",
         icon: "pi pi-fw, pi-file",
         command: () => {
-          if (cmType.id)
-            updateDocumentMutation?.mutate({ id: cmType.id, folder: false });
+          if (cmType.data?.id)
+            updateDocumentMutation?.mutate({
+              id: cmType.data.id,
+              folder: false,
+            });
         },
       },
       {
@@ -116,7 +141,8 @@ export default function BaseTree({ type }: Props) {
       {
         label: "Delete Folder",
         icon: "pi pi-fw pi-trash",
-        command: () => cmType.id && deleteDocumentMutation.mutate(cmType.id),
+        command: () =>
+          cmType.data?.id && deleteDocumentMutation.mutate(cmType.data.id),
       },
     ];
     if (cmType.type === "document") return docItems;
@@ -135,13 +161,15 @@ export default function BaseTree({ type }: Props) {
   useLayoutEffect(() => {
     if (data && data?.[type]) {
       setTreeData(
-        data[type].map((item) => ({
-          id: item.id,
-          parent: item.parent || "0",
-          text: item.title,
-          droppable: item.folder,
-          data: item,
-        }))
+        data[type]
+          .filter((item) => !item?.template)
+          .map((item) => ({
+            id: item.id,
+            parent: item.parent || "0",
+            text: item.title,
+            droppable: item.folder,
+            data: item,
+          }))
       );
     }
   }, [data]);

@@ -3,7 +3,7 @@ import { AvailableItemTypes } from "../types/generalTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 
 export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
-  id: null,
+  data: null,
   type: null,
 });
 
