@@ -2,28 +2,27 @@ import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
+import { v4 as uuid } from "uuid";
 import {
-  useCreateDocument,
+  useCreateMutation,
   useDeleteDocument,
-  useUpdateDocument,
   useUpdateMutation,
 } from "../../CRUD/DocumentCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
+import { AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
+import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
-import { AvailableItemTypes } from "../../types/generalTypes";
-import { v4 as uuid } from "uuid";
 
 type Props = {
   type: AvailableItemTypes;
 };
 
 export default function BaseTree({ type }: Props) {
-  const createDocumentMutation = useCreateDocument();
+  const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
   const [_, setDialog] = useAtom(DialogAtom);
@@ -68,7 +67,7 @@ export default function BaseTree({ type }: Props) {
         icon: "pi pi-fw pi-copy",
         command: () => {
           if (cmType.data) {
-            createDocumentMutation.mutate({
+            createDocumentMutation?.mutate({
               ...cmType.data,
               project_id: project_id as string,
               id: uuid(),

@@ -9,9 +9,9 @@ import {
 import { AvailableItemTypes } from "../types/generalTypes";
 import { ProjectType } from "../types/projectTypes";
 
-export const useCreateDocument = () => {
+export const useCreateMutation = (type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
-  return useMutation(
+  const createDocumentMutation = useMutation(
     async (newDocument: DocumentCreateType) =>
       await fetch(`${baseURLS.baseServer}${createURLS.createDocument}`, {
         method: "POST",
@@ -35,9 +35,9 @@ export const useCreateDocument = () => {
       },
     }
   );
-};
 
-export const useUpdateDocument = () => {};
+  if (type === "documents") return createDocumentMutation;
+};
 
 export const useDeleteDocument = () => {
   const queryClient = useQueryClient();
