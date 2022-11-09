@@ -5,7 +5,7 @@ type Props = {};
 
 export default function Wiki({}: Props) {
   return (
-    <div className="w-full h-full flex flex-grow-1">
+    <div className="w-full h-full flex flex-1">
       <DialogWrapper />
       <Outlet />
     </div>

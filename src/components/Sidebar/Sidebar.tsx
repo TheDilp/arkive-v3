@@ -1,5 +1,6 @@
-import { TabPanel, TabView } from "primereact/tabview";
 import { useLocation } from "react-router-dom";
+import TabsList from "../Tab/Tabs";
+import { Tab } from "@headlessui/react";
 import DocumentsTree from "../Tree/DocumentsTree";
 type Props = {};
 
@@ -7,17 +8,14 @@ export default function Sidebar({}: Props) {
   const { pathname } = useLocation();
   if (pathname.includes("wiki"))
     return (
-      <div className="bg-gray-800 w-2 flex flex-col">
-        <TabView
-          className="w-full p-0 wikiTabs"
-          panelContainerClassName="mt-2 p-0"
-          renderActiveOnly={true}
-        >
-          <TabPanel header="Documents" className="p-2 surface-50 max-w-full">
+      <div className="w-1/6 flex flex-col bg-zinc-800">
+        <Tab.Group>
+          <TabsList tabs={["Documents", "Templates"]} />
+          <Tab.Panel className="max-w-full p-2 surface-50">
             <DocumentsTree />
-          </TabPanel>
-          <TabPanel header="Templates" className="surface-50"></TabPanel>
-        </TabView>
+          </Tab.Panel>
+          <Tab.Panel className="surface-50">TEMPLATES HERE</Tab.Panel>
+        </Tab.Group>
       </div>
     );
 

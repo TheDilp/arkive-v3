@@ -31,7 +31,7 @@ export default function TreeItem({
   return (
     <div
       style={{ marginInlineStart: depth }}
-      className="max-w-20rem text-md hover:bg-blue-700 py-1 cursor-pointer flex align-items-center white-space-normal "
+      className="flex items-center py-1 cursor-pointer max-w-20rem text-md hover:bg-blue-700 gap-x-1 "
       onClick={() => {
         // Navigate if not a folder
         if (!node.droppable) {
@@ -107,7 +107,7 @@ export default function TreeItem({
       </span>
 
       <div className={` Lato w-full ${node.id === item_id && "text-blue-400"}`}>
-        <div className="w-full white-space-nowrap overflow-hidden text-overflow-ellipsis">
+        <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
           {node.text}
         </div>
       </div>

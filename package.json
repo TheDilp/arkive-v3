@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.4",
     "@iconify/react": "^4.0.0",
     "@minoru/react-dnd-treeview": "^3.3.0",
     "@remirror/pm": "^2.0.1",

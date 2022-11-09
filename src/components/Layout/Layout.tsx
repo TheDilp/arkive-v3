@@ -8,9 +8,9 @@ export default function Layout({}: Props) {
   const { project_id } = useParams();
   const data = useGetSingleProject(project_id as string);
   return (
-    <div className="flex flex-grow-1">
+    <div className="flex flex-1">
       <Sidebar />
-      <div className="outletWrapper w-full">
+      <div className="w-full outletWrapper">
         <Outlet />
       </div>
     </div>
