@@ -19,9 +19,10 @@ import TreeItem from "./TreeItem";
 
 type Props = {
   type: AvailableItemTypes;
+  templates?: boolean;
 };
 
-export default function BaseTree({ type }: Props) {
+export default function BaseTree({ type, templates }: Props) {
   const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
@@ -161,7 +162,7 @@ export default function BaseTree({ type }: Props) {
     if (data && data?.[type]) {
       setTreeData(
         data[type]
-          .filter((item) => !item?.template)
+          .filter((item) => (templates ? item?.template : !item?.template))
           .map((item) => ({
             id: item.id,
             parent: item.parent || "0",

@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import TabsList from "../Tab/Tabs";
 import { Tab } from "@headlessui/react";
 import DocumentsTree from "../Tree/DocumentsTree";
+import TemplatesTree from "../Tree/TemplatesTree";
 type Props = {};
 
 export default function Sidebar({}: Props) {
@@ -14,7 +15,9 @@ export default function Sidebar({}: Props) {
           <Tab.Panel className="max-w-full p-2 surface-50">
             <DocumentsTree />
           </Tab.Panel>
-          <Tab.Panel className="surface-50">TEMPLATES HERE</Tab.Panel>
+          <Tab.Panel className="max-w-full p-2 surface-50">
+            <TemplatesTree />
+          </Tab.Panel>
         </Tab.Group>
       </div>
     );
