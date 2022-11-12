@@ -31,7 +31,7 @@ export default function TreeItem({
   const updateMutation = useUpdateMutation(type);
   return (
     <div
-      style={{ marginInlineStart: depth }}
+      style={{ marginInlineStart: depth * 40 }}
       className="flex items-center py-1 cursor-pointer group max-w-20rem text-md hover:bg-sky-700 gap-x-1 "
       onClick={() => {
         // Navigate if not a folder
