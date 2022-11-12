@@ -93,16 +93,13 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
       onSuccess: async (data, variables) => {
         const newData: DocumentType = await data.json();
         queryClient.setQueryData(
-          ["singleProject", newData.project_id],
-          (old: ProjectType | undefined) => {
+          ["allDocuments", newData.project_id],
+          (old: DocumentType[] | undefined) => {
             if (old)
-              return {
-                ...old,
-                documents: old.documents?.map((doc) => {
-                  if (doc.id === variables.id) return { ...doc, ...variables };
-                  return doc;
-                }),
-              };
+              return old.map((doc) => {
+                if (doc.id === variables.id) return { ...doc, ...variables };
+                return doc;
+              });
           },
         );
       },

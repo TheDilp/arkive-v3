@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { DrawerAtom } from "../../../utils/atoms";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
-
+import { buttonLabelWithIcon } from "../../../utils/transform";
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -59,7 +59,9 @@ export default function DrawerDocumentContent() {
       <InputText
         className="w-full"
         value={localItem?.title || ""}
-        onChange={(e) => setLocalItem((prev) => ({ ...prev, title: "TEST" }))}
+        onChange={(e) =>
+          setLocalItem((prev) => ({ ...prev, title: e.target.value }))
+        }
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             if (document)
@@ -95,12 +97,10 @@ export default function DrawerDocumentContent() {
       <div className="w-full flex">
         <Button
           className="ml-auto p-button-outlined p-button-success"
-          label="Save"
-          icon="pi pi-fw pi-save"
-          iconPos="right"
           type="submit"
-          onClick={() => CreateUpdateDocument(localItem)}
-        />
+          onClick={() => CreateUpdateDocument(localItem)}>
+          {buttonLabelWithIcon("Save", "mdi:content-save")}
+        </Button>
       </div>
     </div>
   );

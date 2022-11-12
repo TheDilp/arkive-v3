@@ -12,7 +12,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         },
       });
       return data;
-    }
+    },
   );
 
   server.get(
@@ -21,7 +21,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
       return await prisma.documents.findUnique({
         where: { id: req.params.id },
       });
-    }
+    },
   );
 
   server.post(
@@ -29,7 +29,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
     async (
       req: FastifyRequest<{
         Body: string;
-      }>
+      }>,
     ) => {
       try {
         const newDocument = await prisma.documents.create({
@@ -40,29 +40,29 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
       } catch (error) {
         console.log(error);
       }
-    }
+    },
   );
   server.post(
-    "/updatedocuments/:id",
+    "/updatedocument/:id",
     async (
       req: FastifyRequest<{
         Body: string;
         Params: { id: string };
-      }>
+      }>,
     ) => {
       const newDocument = await prisma.documents.update({
         where: { id: req.params.id },
         data: JSON.parse(req.body),
       });
       return newDocument;
-    }
+    },
   );
   server.delete(
     "/deletedocument/:id",
     async (
       req: FastifyRequest<{
         Params: { id: string };
-      }>
+      }>,
     ) => {
       await prisma.documents.deleteMany({
         where: {
@@ -73,7 +73,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         where: { id: req.params.id },
       });
       return newDocument;
-    }
+    },
   );
 
   done();

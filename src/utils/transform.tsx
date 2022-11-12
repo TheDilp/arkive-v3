@@ -7,6 +7,6 @@ export const buttonLabelWithIcon = (
 ) => (
   <div className="flex items-center gap-x-1">
     <span>{title}</span>
-    <Icon icon={icon} fontSize={size || 16} />
+    <Icon icon={icon} fontSize={size || 20} />
   </div>
 );
