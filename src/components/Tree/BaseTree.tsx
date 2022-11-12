@@ -16,6 +16,7 @@ import { v4 as uuid } from "uuid";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
+import { InputText } from "primereact/inputtext";
 
 type Props = {
   data: DocumentType[];
@@ -178,26 +179,54 @@ export default function BaseTree({ data, type, templates }: Props) {
   const [cmType] = useAtom(SidebarTreeContextAtom);
   const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
+  const [filter, setFilter] = useState("");
 
   useLayoutEffect(() => {
     if (data) {
-      setTreeData(
-        data
-          .filter((item) => (templates ? item?.template : !item?.template))
-          .map((item) => ({
-            data: item,
-            droppable: item.folder,
-            id: item.id,
-            parent: item.parent || "0",
-            text: item.title,
-          })),
-      );
+      if (filter) {
+        const timeout = setTimeout(() => {
+          setTreeData(
+            data
+              .filter((item) => (templates ? item?.template : !item?.template))
+              .filter((item) =>
+                item.title.toLowerCase().includes(filter.toLowerCase()),
+              )
+              .map((item) => ({
+                data: item,
+                droppable: item.folder,
+                id: item.id,
+                parent: "0",
+                text: item.title,
+              })),
+          );
+        }, 300);
+        return () => {
+          clearTimeout(timeout);
+        };
+      } else {
+        setTreeData(
+          data
+            .filter((item) => (templates ? item?.template : !item?.template))
+            .map((item) => ({
+              data: item,
+              droppable: item.folder,
+              id: item.id,
+              parent: item.parent || "0",
+              text: item.title,
+            })),
+        );
+      }
     }
-  }, [data]);
+  }, [data, filter]);
 
   return (
     <>
       <ContextMenu items={contextMenuItems(cmType)} cm={cm} />
+      <InputText
+        placeholder="Filter by Title"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+      />
       <Tree
         classes={{
           container: "list-none",

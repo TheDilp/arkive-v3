@@ -1,26 +1,23 @@
+import { Icon } from "@iconify/react";
+import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { recursiveDescendantFilter } from "../../../utils/recursive";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   useCreateMutation,
   useGetAllDocuments,
   useUpdateMutation,
 } from "../../../CRUD/DocumentCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
-import { useParams } from "react-router-dom";
-import { useAtom } from "jotai";
+import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/atoms";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
+import { recursiveDescendantFilter } from "../../../utils/recursive";
 import { buttonLabelWithIcon } from "../../../utils/transform";
-import { Icon } from "@iconify/react";
 import { IconSelect } from "../../IconSelect/IconSelect";
-import IconSelectList from "../../IconSelect/IconSelectList";
-import { toaster } from "../../../utils/toast";
-import { v4 } from "uuid";
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);

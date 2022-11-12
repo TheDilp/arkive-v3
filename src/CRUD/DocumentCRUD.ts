@@ -12,7 +12,7 @@ import { ProjectType } from "../types/projectTypes";
 import { toaster } from "../utils/toast";
 
 export const useGetAllDocuments = (project_id: string) => {
-  return useQuery(
+  return useQuery<DocumentType[]>(
     ["allDocuments", project_id],
     async () =>
       await (
