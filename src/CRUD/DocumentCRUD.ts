@@ -22,6 +22,9 @@ export const useGetAllDocuments = (project_id: string) => {
           },
         )
       ).json(),
+    {
+      staleTime: 5 * 60 * 1000,
+    },
   );
 };
 

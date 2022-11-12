@@ -1,16 +1,17 @@
 import { Dispatch } from "react";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { SetStateAction } from "jotai";
+import { SetStateAction, useAtom } from "jotai";
+import { DrawerAtom } from "../../utils/atoms";
+import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 
-type Props = {
-  visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>;
-};
-
-export default function Drawer({ visible, setVisible }: Props) {
+export default function Drawer() {
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
   return (
-    <PrimeDrawer className="p-sidebar-lg" visible={visible} onHide={() => setVisible(false)}>
-      Drawer
+    <PrimeDrawer
+      className="p-sidebar-sm"
+      visible={drawer.id !== null}
+      onHide={() => setDrawer({ id: null, type: null, drawerSize: "sm" })}>
+      {drawer.type === "documents" ? <DrawerDocumentContent /> : null}
     </PrimeDrawer>
   );
 }

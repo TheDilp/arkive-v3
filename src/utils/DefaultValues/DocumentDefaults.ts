@@ -1,14 +1,16 @@
-import { DocumentType } from "../../types/documentTypes";
+import { DefaultDocumentType, DocumentType } from "../../types/documentTypes";
 
-export const DefaultDocument: Omit<DocumentType, "id" | "project_id"> = {
+export const DefaultDocument: DefaultDocumentType = {
   title: "New Document",
-  content: null,
+  project_id: "",
+  content: undefined,
   folder: false,
   template: false,
   public: false,
   expanded: false,
   categories: [],
-  parent: null,
+  parent: undefined,
+  properties: [],
   alter_names: [],
   icon: "mdi:file",
   sort: 0,

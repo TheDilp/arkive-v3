@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import DialogWrapper from "../../components/Dialog/DialogWrapper";
 
 export default function Wiki() {
   return (

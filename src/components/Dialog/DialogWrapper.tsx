@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { Dialog } from "primereact/dialog";
 import { useParams } from "react-router-dom";
 import { ProjectType } from "../../types/projectTypes";
-import { DialogAtom } from "../../utils/atoms";
+import { DrawerAtom } from "../../utils/atoms";
 import { InputText } from "primereact/inputtext";
 import { DocumentType } from "../../types/documentTypes";
 import { Button } from "primereact/button";
@@ -22,7 +22,7 @@ const DialogContent = {
 export default function DialogWrapper({}: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const [dialog, setDialog] = useAtom(DialogAtom);
+  const [dialog, setDialog] = useAtom(DrawerAtom);
   const projectData = queryClient.getQueryData<ProjectType>([
     "singleProject",
     project_id,
@@ -31,15 +31,14 @@ export default function DialogWrapper({}: Props) {
   if (projectData)
     if (dialog.type === "documents") {
       const item = projectData[dialog.type]?.find(
-        (item) => item.id === dialog.id
+        (item) => item.id === dialog.id,
       );
       if (item)
         return (
           <Dialog
             header={`Edit ${item.title}`}
             visible={dialog.id !== null}
-            onHide={() => setDialog({ id: null, type: null })}
-          >
+            onHide={() => setDialog({ id: null, type: null })}>
             {DialogContent[dialog.type](projectData[dialog.type], item)}
           </Dialog>
         );

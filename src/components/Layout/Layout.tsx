@@ -2,6 +2,7 @@ import { Outlet, useParams } from "react-router-dom";
 import Navbar from "../Nav/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
+import Drawer from "../Drawer/Drawer";
 
 export default function Layout() {
   const { project_id } = useParams();
@@ -12,6 +13,7 @@ export default function Layout() {
         <Navbar />
       </div>
       <div className="flex flex-1">
+        <Drawer />
         <Sidebar />
         <div className="w-full outletWrapper">
           <Outlet />

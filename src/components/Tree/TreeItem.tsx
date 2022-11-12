@@ -31,7 +31,7 @@ export default function TreeItem({
   return (
     <div
       style={{ marginInlineStart: depth }}
-      className="flex items-center py-1 cursor-pointer max-w-20rem text-md hover:bg-sky-700 gap-x-1 "
+      className="flex items-center py-1 cursor-pointer group max-w-20rem text-md hover:bg-sky-700 gap-x-1 "
       onClick={() => {
         // Navigate if not a folder
         if (!node.droppable) {
@@ -50,8 +50,7 @@ export default function TreeItem({
           setText({ data: node.data, type: "template" });
         else setText({ data: node.data, type: "document" });
         cm.current.show(e);
-      }}
-    >
+      }}>
       {node.droppable && (
         <span
           onClick={(e) => {
@@ -63,8 +62,7 @@ export default function TreeItem({
             });
 
             onToggle();
-          }}
-        >
+          }}>
           {isOpen ? (
             <Icon icon="akar-icons:chevron-down" />
           ) : (
@@ -89,9 +87,16 @@ export default function TreeItem({
         )}
       </span>
 
-      <div className={`Lato w-full ${node.id === item_id && "text-sky-400"}`}>
+      <div
+        className={`font-Lato flex items-center w-full ${
+          node.id === item_id && "text-sky-400"
+        }`}>
         <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
           {node.text}
+        </div>
+        <div className="flex items-center opacity-0 group-hover:opacity-100">
+          <Icon icon="material-symbols:edit-outline" color="white" />
+          <Icon icon="ic:outline-delete" color="white" />
         </div>
       </div>
     </div>

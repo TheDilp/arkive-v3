@@ -7,7 +7,8 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
   type: null,
 });
 
-export const DialogAtom = atom<{
+export const DrawerAtom = atom<{
   id: null | string;
   type: null | AvailableItemTypes;
-}>({ id: null, type: null });
+  drawerSize: "sm" | "md" | "lg";
+}>({ id: null, type: null, drawerSize: "sm" });

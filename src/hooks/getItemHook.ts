@@ -1,16 +1,25 @@
-import { useGetSingleProject } from "../CRUD/ProjectCRUD";
+import { useQueryClient } from "@tanstack/react-query";
+import { DocumentType } from "../types/documentTypes";
 import { AvailableItemTypes } from "../types/generalTypes";
 
 export function useGetItem(
   project_id: string,
-  id: string,
-  type: AvailableItemTypes
+  id: null | string,
+  type: AvailableItemTypes,
 ) {
-  const { data } = useGetSingleProject(project_id as string);
-
-  if (data) {
-    const item = data[type]?.find((item) => item.id === id);
-    if (item) return item;
+  const queryClient = useQueryClient();
+  if (!id) return null;
+  if (type === "documents") {
+    const data = queryClient.getQueryData<DocumentType[]>([
+      "allDocuments",
+      project_id,
+    ]);
+    if (data) {
+      const item = data.find((item) => item.id === id);
+      if (item) return item;
+      return null;
+    }
+    return null;
   }
   return null;
 }

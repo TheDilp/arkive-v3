@@ -1,4 +1,4 @@
-import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
+import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import {
@@ -27,7 +27,7 @@ export default function BaseTree({ data, type, templates }: Props) {
   const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
-  const [dialog, setDialog] = useAtom(DialogAtom);
+  const [dialog, setDialog] = useAtom(DrawerAtom);
 
   const rootItems = [
     {
