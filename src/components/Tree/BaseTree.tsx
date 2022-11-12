@@ -19,6 +19,7 @@ import TreeItem from "./TreeItem";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { useGetAllTags } from "../../CRUD/queries";
+import { toaster } from "../../utils/toast";
 
 type Props = {
   data: DocumentType[];
@@ -65,11 +66,12 @@ export default function BaseTree({ data, type, templates }: Props) {
         label: "Change To Folder",
         icon: "pi pi-fw pi-folder",
         command: () => {
-          if (cmType.data?.id)
+          if (cmType.data?.id) {
             updateDocumentMutation?.mutate({
               id: cmType.data.id,
               folder: true,
             });
+          }
         },
       },
       {
@@ -128,11 +130,19 @@ export default function BaseTree({ data, type, templates }: Props) {
         label: "Change To File",
         icon: "pi pi-fw, pi-file",
         command: () => {
-          if (cmType.data?.id)
+          if (cmType.data?.id) {
+            if (data.some((item) => item.parent === cmType.data?.id)) {
+              toaster(
+                "error",
+                "Cannot convert to file if folder contains files.",
+              );
+              return;
+            }
             updateDocumentMutation?.mutate({
               id: cmType.data.id,
               folder: false,
             });
+          }
         },
       },
       {
@@ -308,7 +318,7 @@ export default function BaseTree({ data, type, templates }: Props) {
         canDrop={(tree, { dragSource, dropTargetId }) => {
           const depth = getDepth(tree, dropTargetId);
           // Don't allow nesting documents beyond this depth
-          if (depth > 3) return false;
+          if (depth > 5) return false;
           if (dragSource?.parent === dropTargetId) {
             return true;
           }

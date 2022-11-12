@@ -36,7 +36,7 @@ export default function TreeItem({
       className="flex items-center py-1 cursor-pointer group max-w-20rem text-md hover:bg-sky-700 gap-x-1 "
       onClick={() => {
         // Navigate if not a folder
-        if (!node.droppable) {
+        if (!node.data?.folder) {
           navigate(`./wiki/doc/${node.id}`);
         } else {
           navigate(`folder/${node.id}`);
@@ -77,7 +77,7 @@ export default function TreeItem({
         onClick={(e) => {
           e.stopPropagation();
         }}>
-        {node.droppable ? (
+        {node.data?.folder ? (
           <Icon icon="bxs:folder" inline={true} className="mr-1" />
         ) : (
           <IconSelect
