@@ -101,7 +101,11 @@ export default function TreeItem({
             color="white"
             onClick={(e) => {
               e.stopPropagation();
-              setDrawer({ id: node.id as string, type: "documents" });
+              setDrawer({
+                id: node.id as string,
+                type: "documents",
+                show: true,
+              });
             }}
           />
           <Icon icon="ic:outline-delete" color="white" />

@@ -1,9 +1,6 @@
 import { Button } from "primereact/button";
-import {
-  DefaultDocumentType,
-  DocumentCreateType,
-  DocumentType,
-} from "../../../types/documentTypes";
+import { Checkbox } from "primereact/checkbox";
+import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { recursiveDescendantFilter } from "../../../utils/recursive";
@@ -19,6 +16,7 @@ import { useAtom } from "jotai";
 import { DrawerAtom } from "../../../utils/atoms";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { Icon } from "@iconify/react";
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -32,8 +30,7 @@ export default function DrawerDocumentContent() {
     if (document)
       updateDocumentMutation?.mutate({
         id: document.id,
-        parent: localItem.parent,
-        title: localItem.title,
+        ...newData,
       });
     else
       createDocumentMutation?.mutate({
@@ -92,12 +89,27 @@ export default function DrawerDocumentContent() {
               }}
               options={
                 allDocuments
-                  ? allDocuments.filter(DropdownFilter)
+                  ? [
+                      { id: null, title: "Root" },
+                      ...allDocuments.filter(DropdownFilter),
+                    ]
                   : [{ id: null, title: "Root" }]
               }
             />
           </div>
         )}
+        <div className="flex items-center justify-between">
+          <label htmlFor="cb1" className="p-checkbox-label">
+            Is Folder?
+          </label>
+          <Checkbox
+            onChange={(e) =>
+              setLocalItem((prev) => ({ ...prev, folder: e.checked }))
+            }
+            icon={<Icon icon="mdi:check" className="pointer-events-none" />}
+            checked={localItem.folder}
+          />
+        </div>
       </div>
 
       <div className="w-full flex">

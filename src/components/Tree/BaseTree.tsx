@@ -49,7 +49,7 @@ export default function BaseTree({ data, type, templates }: Props) {
         icon: "pi pi-fw pi-pencil",
         command: () => {
           if (cmType.data?.id)
-            setDialog({ id: cmType.data.id, type: "documents" });
+            setDialog({ id: cmType.data.id, type: "documents", show: true });
         },
       },
 

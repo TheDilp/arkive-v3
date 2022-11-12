@@ -1,4 +1,4 @@
-import { DefaultDocumentType, DocumentType } from "../../types/documentTypes";
+import { DefaultDocumentType } from "../../types/documentTypes";
 import { DrawerAtomType } from "../atoms";
 
 export const DefaultDrawer: DrawerAtomType = {
@@ -7,6 +7,7 @@ export const DefaultDrawer: DrawerAtomType = {
   drawerSize: "sm",
   position: "left",
   fullscreen: false,
+  show: false,
 };
 
 export const DefaultDocument: DefaultDocumentType = {

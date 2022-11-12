@@ -15,7 +15,7 @@ export default function Drawer() {
     <PrimeDrawer
       className="p-sidebar-sm"
       dismissable={false}
-      visible={drawer.id !== null}
+      visible={drawer.show}
       onHide={handleClose}
       showCloseIcon={false}
       icons={() => (
