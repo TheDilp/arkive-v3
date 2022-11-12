@@ -22,7 +22,7 @@ export default function Dashboard() {
                 icon={<Icon icon="mdi:plus" fontSize={24} />}
                 className="p-button-outlined p-button-rounded p-button-plain"
                 tooltip="New Project"
-                onClick={() => createProjectMutation.mutate}
+                onClick={() => createProjectMutation.mutate()}
               />
             </div>
           </div>
