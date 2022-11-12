@@ -9,12 +9,16 @@ import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   function handleClose() {
-    setDrawer(DefaultDrawer);
+    setDrawer((prev) => ({ ...prev, show: false }));
+    setTimeout(() => {
+      setDrawer(DefaultDrawer);
+    }, 500);
   }
   return (
     <PrimeDrawer
       className="p-sidebar-sm"
       dismissable={false}
+      position={drawer.position}
       visible={drawer.show}
       onHide={handleClose}
       showCloseIcon={false}

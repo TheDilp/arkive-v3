@@ -12,10 +12,12 @@ export default function Layout() {
       <div className="w-full">
         <Navbar />
       </div>
-      <div className="flex flex-1">
+      <div className="w-full flex flex-1">
         <Drawer />
-        <Sidebar />
-        <div className="w-full outletWrapper">
+        <div className="w-1/6 flex flex-col max-w-[20%]">
+          <Sidebar />
+        </div>
+        <div className="w-5/6 outletWrapper">
           <Outlet />
         </div>
       </div>

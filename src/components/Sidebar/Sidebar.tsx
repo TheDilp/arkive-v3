@@ -9,7 +9,7 @@ export default function Sidebar({}: Props) {
   const { pathname } = useLocation();
   if (pathname.includes("wiki"))
     return (
-      <div className="w-1/5 max-w-[20%] flex flex-col bg-zinc-800">
+      <div className="flex flex-col flex-1 bg-zinc-800">
         <Tab.Group>
           <TabsList tabs={["Documents", "Templates"]} />
           <Tab.Panel className="max-w-full p-2 surface-50">

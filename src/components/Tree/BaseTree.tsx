@@ -30,7 +30,7 @@ export default function BaseTree({ data, type, templates }: Props) {
   const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
-  const [dialog, setDialog] = useAtom(DrawerAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const rootItems = [
     {
@@ -52,7 +52,12 @@ export default function BaseTree({ data, type, templates }: Props) {
         icon: "pi pi-fw pi-pencil",
         command: () => {
           if (cmType.data?.id)
-            setDialog({ id: cmType.data.id, type: "documents", show: true });
+            setDrawer({
+              id: cmType.data.id,
+              position: "right",
+              type: "documents",
+              show: true,
+            });
         },
       },
 
@@ -110,7 +115,12 @@ export default function BaseTree({ data, type, templates }: Props) {
         icon: "pi pi-fw pi-pencil",
         command: () => {
           if (cmType.data?.id)
-            setDialog({ id: cmType.data.id, type: "documents" });
+            setDrawer({
+              id: cmType.data.id,
+              position: "right",
+              type: "documents",
+              show: true,
+            });
         },
       },
 
@@ -155,7 +165,7 @@ export default function BaseTree({ data, type, templates }: Props) {
         icon: "pi pi-fw pi-pencil",
         command: () => {
           if (cmType.data?.id)
-            setDialog({ id: cmType.data.id, type: "documents" });
+            setDrawer({ id: cmType.data.id, type: "documents" });
         },
       },
 
