@@ -55,45 +55,51 @@ export default function DrawerDocumentContent() {
     document ?? DefaultDocument,
   );
   return (
-    <div className="my-2">
-      <InputText
-        className="w-full"
-        value={localItem?.title || ""}
-        onChange={(e) =>
-          setLocalItem((prev) => ({ ...prev, title: e.target.value }))
-        }
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            if (document)
-              updateDocumentMutation?.mutate({
-                id: document.id,
-                parent: localItem.parent,
-                title: localItem.title,
-              });
+    <div className="flex flex-col my-2 gap-y-6">
+      <h2 className="text-2xl text-center">
+        {document ? `Edit ${document.title}` : "Create New Document"}
+      </h2>
+      <div className="flex flex-col">
+        <InputText
+          className="w-full"
+          value={localItem?.title || ""}
+          onChange={(e) =>
+            setLocalItem((prev) => ({ ...prev, title: e.target.value }))
           }
-        }}
-        autoFocus={true}
-      />
-      {!localItem?.template && (
-        <div className="my-2">
-          <Dropdown
-            className="w-full"
-            placeholder="Document Folder"
-            optionLabel="title"
-            optionValue="id"
-            value={localItem?.parent}
-            filter
-            onChange={(e) => {
-              setLocalItem((prev) => ({ ...prev, parent: e.value }));
-            }}
-            options={
-              allDocuments
-                ? allDocuments.filter(DropdownFilter)
-                : [{ id: null, title: "Root" }]
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              if (document)
+                updateDocumentMutation?.mutate({
+                  id: document.id,
+                  parent: localItem.parent,
+                  title: localItem.title,
+                });
             }
-          />
-        </div>
-      )}
+          }}
+          autoFocus={true}
+        />
+        {!localItem?.template && (
+          <div className="my-2">
+            <Dropdown
+              className="w-full"
+              placeholder="Document Folder"
+              optionLabel="title"
+              optionValue="id"
+              value={localItem?.parent}
+              filter
+              onChange={(e) => {
+                setLocalItem((prev) => ({ ...prev, parent: e.value }));
+              }}
+              options={
+                allDocuments
+                  ? allDocuments.filter(DropdownFilter)
+                  : [{ id: null, title: "Root" }]
+              }
+            />
+          </div>
+        )}
+      </div>
+
       <div className="w-full flex">
         <Button
           className="ml-auto p-button-outlined p-button-success"

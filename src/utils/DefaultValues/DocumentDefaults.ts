@@ -1,4 +1,13 @@
 import { DefaultDocumentType, DocumentType } from "../../types/documentTypes";
+import { DrawerAtomType } from "../atoms";
+
+export const DefaultDrawer: DrawerAtomType = {
+  id: null,
+  type: null,
+  drawerSize: "sm",
+  position: "left",
+  fullscreen: false,
+};
 
 export const DefaultDocument: DefaultDocumentType = {
   title: "New Document",
