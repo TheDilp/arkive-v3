@@ -53,19 +53,15 @@ export default function DrawerDocumentContent() {
       );
     }
   }
-  function DropdownFilter(
-    doc: DocumentType,
-    idx: number,
-    array: DocumentType[],
-  ) {
-    if (!doc.folder || !document || doc.id === document.id) return false;
-    return recursiveDescendantFilter(doc, idx, array, document.id);
-  }
 
   // Use item if editing or use a blank document (default values) if not to create new one
   const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(
     document ?? { ...DefaultDocument, project_id: project_id as string },
   );
+  function DropdownFilter(doc: DocumentType) {
+    if (!doc.folder || (document && doc.id === document.id)) return false;
+    return true;
+  }
   return (
     <div className="flex flex-col my-2 gap-y-8">
       <h2 className="text-2xl text-center">

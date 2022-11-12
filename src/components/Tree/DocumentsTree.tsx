@@ -43,8 +43,7 @@ export default function DocumentsTree() {
       <SplitButton
         className="p-button-outlined"
         label="Quick Create"
-        icon={<Icon icon="mdi:lightning-bolt-outline" fontSize={20} />}
-        dropdownIcon={<Icon icon="mdi:chevron-down" fontSize={24} />}
+        icon="pi pi-bolt"
         model={items}
         onClick={() => {
           createDocumentMutation?.mutate({
