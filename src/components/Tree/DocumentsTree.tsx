@@ -5,19 +5,19 @@ import BaseTree from "./BaseTree";
 
 const items = [
   {
-    label: "Create Document",
+    command: () => {},
     icon: "pi pi-file",
-    command: () => {},
+    label: "Create Document",
   },
   {
-    label: "Create Folder",
+    command: () => {},
     icon: "pi pi-folder",
-    command: () => {},
+    label: "Create Folder",
   },
   {
-    label: "Create from Template",
-    icon: "pi pi-copy",
     command: () => {},
+    icon: "pi pi-copy",
+    label: "Create from Template",
   },
 ];
 

@@ -27,18 +27,18 @@ export default function BaseTree({ data, type, templates }: Props) {
   const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
-  const [_, setDialog] = useAtom(DialogAtom);
+  const [dialog, setDialog] = useAtom(DialogAtom);
 
   const rootItems = [
     {
-      label: "New Document",
-      icon: "pi pi-fw pi-file",
       command: () => {},
+      icon: "pi pi-fw pi-file",
+      label: "New Document",
     },
     {
-      label: "New Folder",
-      icon: "pi pi-fw pi-folder",
       command: () => {},
+      icon: "pi pi-fw pi-folder",
+      label: "New Folder",
     },
   ];
 
