@@ -19,6 +19,8 @@ import { buttonLabelWithIcon } from "../../../utils/transform";
 import { Icon } from "@iconify/react";
 import { IconSelect } from "../../IconSelect/IconSelect";
 import IconSelectList from "../../IconSelect/IconSelectList";
+import { toaster } from "../../../utils/toast";
+import { v4 } from "uuid";
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -29,16 +31,17 @@ export default function DrawerDocumentContent() {
   const updateDocumentMutation = useUpdateMutation("documents");
 
   function CreateUpdateDocument(newData: DocumentCreateType) {
-    if (document)
+    if (document) {
       updateDocumentMutation?.mutate({
         id: document.id,
         ...newData,
       });
-    else
+    } else {
       createDocumentMutation?.mutate({
         ...DefaultDocument,
         ...newData,
       });
+    }
   }
   function DropdownFilter(
     doc: DocumentType,
@@ -51,7 +54,7 @@ export default function DrawerDocumentContent() {
 
   // Use item if editing or use a blank document (default values) if not to create new one
   const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(
-    document ?? DefaultDocument,
+    document ?? { ...DefaultDocument, project_id: project_id as string },
   );
   return (
     <div className="flex flex-col my-2 gap-y-8">

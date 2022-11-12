@@ -12,7 +12,6 @@ export const DefaultDrawer: DrawerAtomType = {
 
 export const DefaultDocument: DefaultDocumentType = {
   title: "New Document",
-  project_id: "",
   content: undefined,
   folder: false,
   template: false,

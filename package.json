@@ -27,6 +27,7 @@
     "react-dom": "^18.2.0",
     "react-merge-refs": "^2.0.1",
     "react-router-dom": "^6.4.3",
+    "react-toastify": "^9.1.1",
     "react-virtual": "^2.10.4",
     "remirror": "^2.0.15",
     "uuid": "^9.0.0"

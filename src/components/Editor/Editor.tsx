@@ -22,7 +22,7 @@ export default function Editor() {
   if (!currentDocument) return <Navigate to="../" />;
   return (
     <div className="w-full h-full flex flex-col content-start flex-1">
-      <h1 className="w-full h-10 flex items-center justify-center mb-0 text-3xl font-Merriweather">
+      <h1 className="w-full h-10 flex items-center justify-center mb-0 text-3xl border-b font-Merriweather border-zinc-700">
         <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
         {currentDocument.title}
         {currentDocument.template ? "[TEMPLATE]" : ""}

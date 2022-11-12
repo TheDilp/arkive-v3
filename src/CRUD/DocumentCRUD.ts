@@ -9,6 +9,7 @@ import { DocumentCreateType, DocumentType } from "../types/documentTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AvailableItemTypes } from "../types/generalTypes";
 import { ProjectType } from "../types/projectTypes";
+import { toaster } from "../utils/toast";
 
 export const useGetAllDocuments = (project_id: string) => {
   return useQuery(
@@ -37,6 +38,10 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
         method: "POST",
       }),
     {
+      onError: (a, b) => {
+        console.log(b);
+        toaster("error", "There was an error creating this document.");
+      },
       onSuccess: async (data, variables) => {
         const newData: DocumentType = await data.json();
         queryClient.setQueryData(
@@ -46,6 +51,7 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
             else return [newData];
           },
         );
+        toaster("success", "Your document was successfully created.");
       },
     },
   );
@@ -90,6 +96,8 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
         },
       ),
     {
+      onError: () =>
+        toaster("error", "There was an error updating your document."),
       onSuccess: async (data, variables) => {
         const newData: DocumentType = await data.json();
         queryClient.setQueryData(
@@ -102,6 +110,7 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
               });
           },
         );
+        toaster("success", "Your document was successfully updated.");
       },
     },
   );
