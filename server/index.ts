@@ -2,6 +2,7 @@ import cors from "@fastify/cors";
 import { PrismaClient } from "@prisma/client";
 import fastify from "fastify";
 import { documentRouter } from "./routers/DocumentRouter";
+import { getRouter } from "./routers/GetRouter";
 import { projectRouter } from "./routers/ProjectRouter";
 
 export const prisma = new PrismaClient();
@@ -23,6 +24,7 @@ server.register(cors, {
   },
 });
 server.register(projectRouter);
+server.register(getRouter);
 server.register(documentRouter);
 
 server.listen({ port: 8080 }, (err, address) => {

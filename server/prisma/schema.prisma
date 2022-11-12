@@ -11,6 +11,8 @@ model projects {
   id        String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   title     String      @default("New Project")
   documents documents[]
+  maps      maps[]
+  boards    boards[]
 }
 
 model documents {
@@ -31,4 +33,88 @@ model documents {
   // Relations
   project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
   project_id String   @db.Uuid
+  nodes      nodes[]
+}
+
+model maps {
+  id        String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title     String  @default("New Document")
+  folder    Boolean @default(false)
+  public    Boolean @default(false)
+  expanded  Boolean @default(false)
+  sort      Int     @default(0)
+  parent    String? @db.Uuid
+  map_image String  @db.Uuid
+
+  project    projects @relation(fields: [project_id], references: [id])
+  project_id String   @db.Uuid
+}
+
+model boards {
+  id               String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title            String  @default("New Document")
+  folder           Boolean @default(false)
+  public           Boolean @default(false)
+  expanded         Boolean @default(false)
+  sort             Int     @default(0)
+  parent           String? @db.Uuid
+  defaultNodeColor String  @default("#595959")
+  defaultEdgeColor String  @default("#595959")
+
+  project    projects @relation(fields: [project_id], references: [id])
+  project_id String   @db.Uuid
+  nodes      nodes[]
+  edges      edges[]
+}
+
+model nodes {
+  id                String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label             String?
+  width             Int     @default(50)
+  height            Int     @default(50)
+  x                 Float   @default(0)
+  y                 Float   @default(0)
+  type              String  @default("rectangle")
+  fontSize          Int     @default(16)
+  fontColor         String  @default("#ffffff")
+  fontFamily        String  @default("Lato")
+  textVAlign        String  @default("center")
+  textHAlign        String  @default("center")
+  backgroundColor   String  @default("#595959")
+  backgroundOpacity Float   @default(1)
+
+  locked   Boolean @default(false)
+  template Boolean @default(false)
+  zIndex   Int     @default(1)
+
+  board        boards     @relation(fields: [boards_id], references: [id])
+  document     documents? @relation(fields: [doc_id], references: [id])
+  doc_id       String?    @db.Uuid
+  boards_id    String     @db.Uuid
+  edges_source edges[]    @relation("edges_source")
+  edges_target edges[]    @relation("edges_target")
+}
+
+model edges {
+  id                    String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                 String?
+  curveStyle            String  @default("straight")
+  lineStyle             String  @default("solid")
+  lineColor             String  @default("#595959")
+  controlPointDistances Int     @default(-100)
+  controlPointWeight    Float   @default(0.5)
+  taxiDirection         String  @default("auto")
+  taxiTurn              Int     @default(50)
+  targetArrowShape      String  @default("triangle")
+  fontSize              Int     @default(16)
+  fontColor             String  @default("#ffffff")
+  fontFamily            String  @default("Lato")
+  zIndex                Int     @default(1)
+
+  board     boards @relation(fields: [board_id], references: [id])
+  source    nodes  @relation("edges_source", fields: [source_id], references: [id])
+  target    nodes  @relation("edges_target", fields: [target_id], references: [id])
+  source_id String @db.Uuid
+  target_id String @db.Uuid
+  board_id  String @db.Uuid
 }
