@@ -11,6 +11,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@floating-ui/react-dom": "^1.0.0",
+    "@floating-ui/react-dom-interactions": "^0.10.3",
     "@headlessui/react": "^1.7.4",
     "@iconify/react": "^4.0.0",
     "@minoru/react-dnd-treeview": "^3.3.0",
@@ -23,7 +25,9 @@
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-merge-refs": "^2.0.1",
     "react-router-dom": "^6.4.3",
+    "react-virtual": "^2.10.4",
     "remirror": "^2.0.15",
     "uuid": "^9.0.0"
   },

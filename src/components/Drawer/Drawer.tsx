@@ -25,10 +25,10 @@ export default function Drawer() {
               className="pointer-events-none"
               icon="mdi:close"
               fontSize={26}
-              onClick={handleClose}
             />
           }
           className="p-0 w-fit p-button-text p-button-rounded p-button-secondary hover:bg-transparent"
+          onClick={handleClose}
         />
       )}>
       {drawer.type === "documents" ? <DrawerDocumentContent /> : null}

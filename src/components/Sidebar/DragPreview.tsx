@@ -1,3 +1,5 @@
+import { Icon } from "@iconify/react";
+
 type Props = {
   text: string;
   droppable?: boolean;
@@ -5,8 +7,8 @@ type Props = {
 
 export default function DragPreview({ text, droppable }: Props) {
   return (
-    <div className="bg-blue-800 Lato relative w-10rem h-1rem py-3 border-round flex justify-content-center align-items-center">
-      <i className={`pi pi-fw ${droppable ? "pi-folder" : "pi-file"}`}></i>{" "}
+    <div className="w-40 h-4 flex items-center justify-center py-3 relative truncate bg-blue-500 font-Lato border-round">
+      <Icon icon={`mdi:${droppable ? "folder" : "file"}`} />
       {text}
     </div>
   );

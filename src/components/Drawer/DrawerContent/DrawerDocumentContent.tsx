@@ -17,6 +17,8 @@ import { DrawerAtom } from "../../../utils/atoms";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { Icon } from "@iconify/react";
+import { IconSelect } from "../../IconSelect/IconSelect";
+import IconSelectList from "../../IconSelect/IconSelectList";
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -52,11 +54,11 @@ export default function DrawerDocumentContent() {
     document ?? DefaultDocument,
   );
   return (
-    <div className="flex flex-col my-2 gap-y-6">
+    <div className="flex flex-col my-2 gap-y-8">
       <h2 className="text-2xl text-center">
         {document ? `Edit ${document.title}` : "Create New Document"}
       </h2>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-y-2">
         <InputText
           className="w-full"
           value={localItem?.title || ""}
@@ -109,6 +111,26 @@ export default function DrawerDocumentContent() {
             icon={<Icon icon="mdi:check" className="pointer-events-none" />}
             checked={localItem.folder}
           />
+        </div>
+        <div className="flex items-center justify-between">
+          <label htmlFor="cb1" className="p-checkbox-label">
+            Icon
+          </label>
+          <IconSelect
+            render={({ close }) => (
+              <IconSelectList
+                close={close}
+                setIcon={(newIcon: string) =>
+                  setLocalItem((prev) => ({ ...prev, icon: newIcon }))
+                }
+              />
+            )}>
+            <Icon
+              className="cursor-pointer"
+              icon={localItem.icon || "mdi:file"}
+              fontSize={20}
+            />
+          </IconSelect>
         </div>
       </div>
 
