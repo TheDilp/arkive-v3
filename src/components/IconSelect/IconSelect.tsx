@@ -14,18 +14,16 @@ import {
 } from "@floating-ui/react-dom-interactions";
 import { mergeRefs } from "react-merge-refs";
 import { v4 } from "uuid";
+import IconSelectList from "./IconSelectList";
+import { IconSelectMenuType } from "../../types/generalTypes";
 
 interface Props {
-  render: (data: {
-    close: () => void;
-    labelId: string;
-    descriptionId: string;
-  }) => React.ReactNode;
   placement?: Placement;
   children: JSX.Element;
+  setIcon: (newIcon: string) => void;
 }
 
-export const IconSelect = ({ children, render, placement }: Props) => {
+export const IconSelect = ({ children, setIcon, placement }: Props) => {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, strategy, context } = useFloating({
@@ -72,13 +70,7 @@ export const IconSelect = ({ children, render, placement }: Props) => {
             aria-labelledby={labelId}
             aria-describedby={descriptionId}
             {...getFloatingProps()}>
-            {render({
-              labelId,
-              descriptionId,
-              close: () => {
-                setOpen(false);
-              },
-            })}
+            <IconSelectList close={() => setOpen(false)} setIcon={setIcon} />
           </div>
         </FloatingFocusManager>
       )}

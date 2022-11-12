@@ -7,6 +7,7 @@ import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/atoms";
 import { TreeDataType } from "../../types/treeTypes";
 import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { AvailableItemTypes } from "../../types/generalTypes";
+import { IconSelect } from "../IconSelect/IconSelect";
 type Props = {
   node: NodeModel<TreeDataType>;
   depth: number;
@@ -72,19 +73,23 @@ export default function TreeItem({
         </span>
       )}
 
-      <span>
+      <span
+        onClick={(e) => {
+          e.stopPropagation();
+        }}>
         {node.droppable ? (
           <Icon icon="bxs:folder" inline={true} className="mr-1" />
         ) : (
-          <Icon
-            icon={node.data?.icon as string}
-            inline={true}
-            className="rounded-full hover:bg-sky-400 selectableIcon"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          />
+          <IconSelect
+            setIcon={(newIcon) =>
+              updateMutation?.mutate({ id: node.id as string, icon: newIcon })
+            }>
+            <Icon
+              icon={node.data?.icon as string}
+              inline={true}
+              className="rounded-full hover:bg-sky-400 selectableIcon"
+            />
+          </IconSelect>
         )}
       </span>
 

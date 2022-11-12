@@ -117,14 +117,9 @@ export default function DrawerDocumentContent() {
             Icon
           </label>
           <IconSelect
-            render={({ close }) => (
-              <IconSelectList
-                close={close}
-                setIcon={(newIcon: string) =>
-                  setLocalItem((prev) => ({ ...prev, icon: newIcon }))
-                }
-              />
-            )}>
+            setIcon={(newIcon: string) =>
+              setLocalItem((prev) => ({ ...prev, icon: newIcon }))
+            }>
             <Icon
               className="cursor-pointer"
               icon={localItem.icon || "mdi:file"}
