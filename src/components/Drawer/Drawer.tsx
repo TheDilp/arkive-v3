@@ -20,7 +20,14 @@ export default function Drawer() {
       showCloseIcon={false}
       icons={() => (
         <Button
-          icon={<Icon icon="mdi:close" fontSize={26} onClick={handleClose} />}
+          icon={
+            <Icon
+              className="pointer-events-none"
+              icon="mdi:close"
+              fontSize={26}
+              onClick={handleClose}
+            />
+          }
           className="p-0 w-fit p-button-text p-button-rounded p-button-secondary hover:bg-transparent"
         />
       )}>
