@@ -2,12 +2,28 @@ import {
   baseURLS,
   createURLS,
   deleteURLs,
+  getURLS,
   updateURLs,
 } from "../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../types/documentTypes";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AvailableItemTypes } from "../types/generalTypes";
 import { ProjectType } from "../types/projectTypes";
+
+export const useGetAllDocuments = (project_id: string) => {
+  return useQuery(
+    ["allDocuments", project_id],
+    async () =>
+      await (
+        await fetch(
+          `${baseURLS.baseServer}${getURLS.getAllDocuments}${project_id}`,
+          {
+            method: "GET",
+          },
+        )
+      ).json(),
+  );
+};
 
 export const useCreateMutation = (type: AvailableItemTypes) => {
   const queryClient = useQueryClient();

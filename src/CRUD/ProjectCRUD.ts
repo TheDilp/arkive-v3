@@ -40,7 +40,7 @@ export const useGetSingleProject = (id: string) => {
     ["singleProject", id],
     async () =>
       await (
-        await fetch(`http://localhost:8080/getSingleProject/${id}`, {
+        await fetch(`${baseURLS.baseServer}${getURLS.getSingeProject}/${id}`, {
           method: "GET",
         })
       ).json(),

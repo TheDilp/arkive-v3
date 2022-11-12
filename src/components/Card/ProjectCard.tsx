@@ -1,9 +1,9 @@
 import { Button } from "primereact/button";
+import { buttonLabelWithIcon } from "../../utils/transform";
 import { Card } from "primereact/card";
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { Link } from "react-router-dom";
 import { ProjectType } from "../../types/projectTypes";
-import { buttonLabelWithIcon } from "../../utils/transform";
 export default function ProjectCard({ ...Project }: ProjectType) {
   const header = (
     <Link

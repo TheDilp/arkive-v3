@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import { useCreateMutation } from "../../CRUD/DocumentCRUD";
 import BaseTree from "./BaseTree";
 
-type Props = {};
-
 const items = [
   {
     label: "Create Document",
@@ -23,7 +21,7 @@ const items = [
   },
 ];
 
-export default function DocumentsTree({}: Props) {
+export default function DocumentsTree() {
   const { project_id } = useParams();
   const createDocumentMutation = useCreateMutation("documents");
   return (

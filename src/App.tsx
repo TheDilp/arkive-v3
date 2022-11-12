@@ -1,16 +1,14 @@
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/arya-blue/theme.css";
+import "./App.css";
+import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
-import "primeicons/primeicons.css"; //icons
-import "primereact/resources/primereact.min.css"; //core css
-import "primereact/resources/themes/arya-blue/theme.css"; //theme
-import "./App.css";
-import Navbar from "./components/Nav/Navbar";
+import { DndProvider } from "react-dnd";
+import Editor from "./components/Editor/Editor";
 import Layout from "./components/Layout/Layout";
 import Wiki from "./pages/Wiki/Wiki";
-import { DndProvider } from "react-dnd";
-import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
-import Editor from "./components/Editor/Editor";
 
 function App() {
   const queryClient = new QueryClient({

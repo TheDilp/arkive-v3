@@ -2,7 +2,11 @@ export enum baseURLS {
   baseServer = "http://localhost:8080/",
 }
 export enum getURLS {
+  //  Projects
   getAllProjects = "getallprojects",
+  getSingeProject = "getsingleproject",
+
+  // Documents
   getAllDocuments = "getalldocuments/",
 }
 
