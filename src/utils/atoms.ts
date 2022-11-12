@@ -10,5 +10,5 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
 export const DrawerAtom = atom<{
   id: null | string;
   type: null | AvailableItemTypes;
-  drawerSize: "sm" | "md" | "lg";
+  drawerSize?: "sm" | "md" | "lg";
 }>({ id: null, type: null, drawerSize: "sm" });

@@ -3,7 +3,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { SidebarTreeContextAtom } from "../../utils/atoms";
+import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/atoms";
 import { TreeDataType } from "../../types/treeTypes";
 import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -27,6 +27,7 @@ export default function TreeItem({
   const { item_id } = useParams();
   const navigate = useNavigate();
   const [text, setText] = useAtom(SidebarTreeContextAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateMutation = useUpdateMutation(type);
   return (
     <div
@@ -95,7 +96,14 @@ export default function TreeItem({
           {node.text}
         </div>
         <div className="flex items-center opacity-0 group-hover:opacity-100">
-          <Icon icon="material-symbols:edit-outline" color="white" />
+          <Icon
+            icon="material-symbols:edit-outline"
+            color="white"
+            onClick={(e) => {
+              e.stopPropagation();
+              setDrawer({ id: node.id as string, type: "documents" });
+            }}
+          />
           <Icon icon="ic:outline-delete" color="white" />
         </div>
       </div>
