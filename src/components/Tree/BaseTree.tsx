@@ -194,7 +194,6 @@ export default function BaseTree({ data, type, templates }: Props) {
             data
               .filter(
                 (doc: DocumentType) =>
-                  !doc.folder &&
                   !doc.template &&
                   doc.title.toLowerCase().includes(filter.toLowerCase()) &&
                   selectedTags.every((tag) => doc.tags.includes(tag)),
@@ -223,7 +222,7 @@ export default function BaseTree({ data, type, templates }: Props) {
         );
       }
     }
-  }, [data, filter]);
+  }, [data, filter, selectedTags]);
 
   return (
     <>

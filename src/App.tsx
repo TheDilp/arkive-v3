@@ -1,5 +1,6 @@
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/arya-blue/theme.css";
+import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
