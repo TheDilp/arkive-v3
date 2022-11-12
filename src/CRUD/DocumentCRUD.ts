@@ -1,11 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { DocumentCreateType, DocumentType } from "../types/documentTypes";
 import {
   baseURLS,
   createURLS,
   deleteURLs,
   updateURLs,
 } from "../types/CRUDenums";
+import { DocumentCreateType, DocumentType } from "../types/documentTypes";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AvailableItemTypes } from "../types/generalTypes";
 import { ProjectType } from "../types/projectTypes";
 
@@ -14,12 +14,12 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
   const createDocumentMutation = useMutation(
     async (newDocument: DocumentCreateType) =>
       await fetch(`${baseURLS.baseServer}${createURLS.createDocument}`, {
-        method: "POST",
         body: JSON.stringify(newDocument),
+        method: "POST",
       }),
     {
       onSuccess: async (data, variables) => {
-        let newData: DocumentType = await data.json();
+        const newData: DocumentType = await data.json();
         queryClient.setQueryData(
           ["singleProject", variables.project_id],
           (old: ProjectType | undefined) => {
@@ -30,10 +30,10 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
                   ? [...old.documents, newData]
                   : [newData],
               };
-          }
+          },
         );
       },
-    }
+    },
   );
 
   if (type === "documents") return createDocumentMutation;
@@ -48,7 +48,7 @@ export const useDeleteDocument = () => {
       }),
     {
       onSuccess: async (data, id) => {
-        let newData: DocumentType = await data.json();
+        const newData: DocumentType = await data.json();
         queryClient.setQueryData(
           ["singleProject", newData.project_id],
           (old: ProjectType | undefined) => {
@@ -57,10 +57,10 @@ export const useDeleteDocument = () => {
                 ...old,
                 documents: old.documents?.filter((doc) => doc.id !== id),
               };
-          }
+          },
         );
       },
-    }
+    },
   );
 };
 
@@ -71,13 +71,13 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
       await fetch(
         `${baseURLS.baseServer}${updateURLs.updateDocument}${updateDocumentValues.id}`,
         {
-          method: "POST",
           body: JSON.stringify(updateDocumentValues),
-        }
+          method: "POST",
+        },
       ),
     {
       onSuccess: async (data, variables) => {
-        let newData: DocumentType = await data.json();
+        const newData: DocumentType = await data.json();
         queryClient.setQueryData(
           ["singleProject", newData.project_id],
           (old: ProjectType | undefined) => {
@@ -89,10 +89,10 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
                   return doc;
                 }),
               };
-          }
+          },
         );
       },
-    }
+    },
   );
 
   if (type === "documents") return updateDocumentMutation;

@@ -2,20 +2,20 @@ export enum baseURLS {
   baseServer = "http://localhost:8080/",
 }
 export enum getURLS {
-  getAllProjects = "getAllProjects",
-  getAllDocuments = "getAllDocuments/",
+  getAllProjects = "getallprojects",
+  getAllDocuments = "getalldocuments/",
 }
 
 export enum createURLS {
-  createProject = "createProject",
-  createDocument = "createDocument",
+  createProject = "createproject",
+  createDocument = "createdocument",
 }
 
 export enum updateURLs {
-  updateProject = "updateProject/",
-  updateDocument = "updateDocument/",
+  updateProject = "updateproject/",
+  updateDocument = "updatedocument/",
 }
 
 export enum deleteURLs {
-  deleteDocument = "deleteDocument/",
+  deleteDocument = "deletedocument/",
 }
