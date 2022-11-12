@@ -4,14 +4,13 @@ import { Navigate, useParams } from "react-router-dom";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import "remirror/styles/all.css";
-type Props = {};
 
-export default function Editor({}: Props) {
+export default function Editor() {
   const { project_id, item_id } = useParams();
   const currentDocument = useGetItem(
     project_id as string,
     item_id as string,
-    "documents"
+    "documents",
   );
 
   const { manager, state } = useRemirror({
@@ -23,8 +22,8 @@ export default function Editor({}: Props) {
   if (!currentDocument) return <Navigate to="../" />;
   return (
     <div className="w-full h-full flex flex-col content-start flex-1">
-      <h1 className="w-full flex justify-center mt-2 mb-0 text-4xl h-min font-Merriweather">
-        <Icon className="mr-2" fontSize={40} icon={currentDocument.icon} />
+      <h1 className="w-full h-10 flex items-center justify-center mb-0 text-3xl font-Merriweather">
+        <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
         {currentDocument.title}
         {currentDocument.template ? "[TEMPLATE]" : ""}
       </h1>
@@ -36,7 +35,7 @@ export default function Editor({}: Props) {
             initialContent={state}
           />
         </div>
-        <div className="w-1/6 flex flex-col bg-gray-600"></div>
+        <div className="w-1/6 flex flex-col bg-zinc-800"></div>
       </div>
     </div>
   );

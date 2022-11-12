@@ -6,7 +6,7 @@ type Props = {
 
 export default function TabsList({ tabs }: Props) {
   return (
-    <Tab.List className="flex border-b border-gray-700">
+    <Tab.List className="h-10 flex border-b border-gray-700">
       {tabs.map((tab) => (
         <Tab key={tab} className="flex flex-1 border-none outline-none">
           {({ selected }) => (

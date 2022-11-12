@@ -92,7 +92,7 @@ export default function Navbar() {
             />
             <Icon
               className="cursor-pointer hover:text-blue-300 "
-              icon="mdi:map"
+              icon="mdi:map-marker"
               fontSize={20}
               onClick={async () => {
                 navigate("./maps");
