@@ -37,15 +37,10 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
       onSuccess: async (data, variables) => {
         const newData: DocumentType = await data.json();
         queryClient.setQueryData(
-          ["singleProject", variables.project_id],
-          (old: ProjectType | undefined) => {
-            if (old)
-              return {
-                ...old,
-                documents: old.documents
-                  ? [...old.documents, newData]
-                  : [newData],
-              };
+          ["allDocuments", variables.project_id],
+          (old: DocumentType[] | undefined) => {
+            if (old) return [...old, newData];
+            else return [newData];
           },
         );
       },

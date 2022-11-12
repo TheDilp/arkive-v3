@@ -1,6 +1,6 @@
 import { SplitButton } from "primereact/splitbutton";
 import { useParams } from "react-router-dom";
-import { useCreateMutation } from "../../CRUD/DocumentCRUD";
+import { useCreateMutation, useGetAllDocuments } from "../../CRUD/DocumentCRUD";
 import BaseTree from "./BaseTree";
 
 const items = [
@@ -24,6 +24,9 @@ const items = [
 export default function DocumentsTree() {
   const { project_id } = useParams();
   const createDocumentMutation = useCreateMutation("documents");
+  const { data, isLoading, error } = useGetAllDocuments(project_id as string);
+  if (isLoading) return "Loading";
+  if (error) return "error";
   return (
     <div className="flex flex-col">
       <SplitButton
@@ -33,12 +36,12 @@ export default function DocumentsTree() {
         model={items}
         onClick={() => {
           createDocumentMutation?.mutate({
-            title: "New Document",
             project_id: project_id as string,
+            title: "New Document",
           });
         }}
       />
-      <BaseTree type="documents" />
+      <BaseTree data={data} type="documents" />
     </div>
   );
 }

@@ -1,28 +1,29 @@
+import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
+import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useAtom } from "jotai";
-import { useLayoutEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import {
   useCreateMutation,
   useDeleteDocument,
   useUpdateMutation,
 } from "../../CRUD/DocumentCRUD";
-import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
-import { AvailableItemTypes } from "../../types/generalTypes";
+import { useLayoutEffect, useRef, useState } from "react";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
-import { DialogAtom, SidebarTreeContextAtom } from "../../utils/atoms";
-import { getDepth, handleDrop } from "../../utils/tree";
+import { AvailableItemTypes } from "../../types/generalTypes";
+import { DocumentType } from "../../types/documentTypes";
+import { useAtom } from "jotai";
+import { useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
 
 type Props = {
+  data: DocumentType[];
   type: AvailableItemTypes;
   templates?: boolean;
 };
 
-export default function BaseTree({ type, templates }: Props) {
+export default function BaseTree({ data, type, templates }: Props) {
   const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteDocument();
@@ -177,52 +178,45 @@ export default function BaseTree({ type, templates }: Props) {
   const [cmType] = useAtom(SidebarTreeContextAtom);
   const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
-  const { isError, isLoading, data } = useGetSingleProject(
-    project_id as string
-  );
+
   useLayoutEffect(() => {
-    if (data && data?.[type]) {
+    if (data) {
       setTreeData(
-        data[type]
+        data
           .filter((item) => (templates ? item?.template : !item?.template))
           .map((item) => ({
+            data: item,
+            droppable: item.folder,
             id: item.id,
             parent: item.parent || "0",
             text: item.title,
-            droppable: item.folder,
-            data: item,
-          }))
+          })),
       );
     }
   }, [data]);
-
-  if (isError) return <span>ERROR!!!</span>;
-  if (isLoading) return null;
 
   return (
     <>
       <ContextMenu items={contextMenuItems(cmType)} cm={cm} />
       <Tree
         classes={{
-          root: "w-full mt-1 pl-0 overflow-y-auto",
           container: "list-none",
-          placeholder: "relative",
           listItem: "listitem",
+          placeholder: "relative",
+          root: "w-full mt-1 pl-0 overflow-y-auto",
         }}
         tree={treeData}
         rootId={"0"}
         sort={false}
         insertDroppableFirst={false}
         initialOpen={
-          data[type]?.filter((doc) => doc.expanded).map((doc) => doc.id) ||
-          false
+          data?.filter((item) => item.expanded).map((doc) => doc.id) || false
         }
         render={(
           node: NodeModel<TreeDataType>,
-          { depth, isOpen, onToggle }
+          { depth, isOpen, onToggle },
         ) => (
           <TreeItem
-            // @ts-ignore
             node={node}
             depth={depth}
             isOpen={isOpen}
@@ -240,19 +234,18 @@ export default function BaseTree({ type, templates }: Props) {
         placeholderRender={(_, { depth }) => (
           <div
             style={{
-              top: 0,
-              right: 0,
-              left: depth * 24,
               backgroundColor: "#1967d2",
               height: "2px",
+              left: depth * 24,
               position: "absolute",
+              right: 0,
+              top: 0,
               transform: "translateY(-50%)",
-            }}
-          ></div>
+            }}></div>
         )}
         dropTargetOffset={10}
         canDrop={(tree, { dragSource, dropTargetId }) => {
-          const depth = getDepth(data[type], dropTargetId);
+          const depth = getDepth(tree, dropTargetId);
           // Don't allow nesting documents beyond this depth
           if (depth > 3) return false;
           if (dragSource?.parent === dropTargetId) {

@@ -1,11 +1,9 @@
 import { Outlet, useParams } from "react-router-dom";
-import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import Navbar from "../Nav/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
+import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 
-type Props = {};
-
-export default function Layout({}: Props) {
+export default function Layout() {
   const { project_id } = useParams();
   const data = useGetSingleProject(project_id as string);
   return (
