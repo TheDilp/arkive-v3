@@ -35,8 +35,9 @@ export default function DocumentsTree() {
     },
   ];
 
-  if (isLoading) return "Loading";
-  if (error) return "error";
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error </div>;
+
   return (
     <div className="flex flex-col">
       <SplitButton
