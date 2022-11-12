@@ -319,7 +319,7 @@ export default function BaseTree({ data, type, templates }: Props) {
           if (type === "documents")
             updateDocumentMutation?.mutate({
               id: dragSourceId as string,
-              parent: dropTargetId as string,
+              parent: dropTargetId === "0" ? null : (dropTargetId as string),
             });
         }}
       />

@@ -7,7 +7,7 @@ export type DocumentType = {
   content: undefined | RemirrorJSON;
   tags: string[];
   icon: string;
-  parent: string | undefined;
+  parent: string | null;
   expanded: boolean;
   folder: boolean;
   public: boolean;

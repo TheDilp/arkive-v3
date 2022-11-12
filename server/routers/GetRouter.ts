@@ -18,7 +18,6 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
             project_id: req.params.project_id,
           },
         });
-        console.log(data);
         return data;
       } catch (error) {
         console.log(error);

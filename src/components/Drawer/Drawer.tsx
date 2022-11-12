@@ -21,6 +21,7 @@ export default function Drawer() {
       position={drawer.position}
       visible={drawer.show}
       onHide={handleClose}
+      modal={false}
       showCloseIcon={false}
       icons={() => (
         <Button

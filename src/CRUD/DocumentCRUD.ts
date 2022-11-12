@@ -87,14 +87,16 @@ export const useDeleteDocument = () => {
 export const useUpdateMutation = (type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
   const updateDocumentMutation = useMutation(
-    async (updateDocumentValues: Partial<DocumentType>) =>
-      await fetch(
+    async (updateDocumentValues: Partial<DocumentType>) => {
+      console.log(updateDocumentValues);
+      return await fetch(
         `${baseURLS.baseServer}${updateURLs.updateDocument}${updateDocumentValues.id}`,
         {
           body: JSON.stringify(updateDocumentValues),
           method: "POST",
         },
-      ),
+      );
+    },
     {
       onError: () =>
         toaster("error", "There was an error updating your document."),
