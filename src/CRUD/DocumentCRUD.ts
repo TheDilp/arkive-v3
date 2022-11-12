@@ -110,7 +110,6 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
               });
           },
         );
-        toaster("success", "Your document was successfully updated.");
       },
     },
   );

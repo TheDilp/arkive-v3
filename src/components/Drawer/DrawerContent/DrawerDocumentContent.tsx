@@ -16,6 +16,7 @@ import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/atoms";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { recursiveDescendantFilter } from "../../../utils/recursive";
+import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { IconSelect } from "../../IconSelect/IconSelect";
 export default function DrawerDocumentContent() {
@@ -29,15 +30,27 @@ export default function DrawerDocumentContent() {
 
   function CreateUpdateDocument(newData: DocumentCreateType) {
     if (document) {
-      updateDocumentMutation?.mutate({
-        id: document.id,
-        ...newData,
-      });
+      updateDocumentMutation?.mutate(
+        {
+          id: document.id,
+          ...newData,
+        },
+        {
+          onSuccess: () =>
+            toaster("success", "Your document was successfully updated."),
+        },
+      );
     } else {
-      createDocumentMutation?.mutate({
-        ...DefaultDocument,
-        ...newData,
-      });
+      createDocumentMutation?.mutate(
+        {
+          ...DefaultDocument,
+          ...newData,
+        },
+        {
+          onSuccess: () =>
+            toaster("success", "Your document was successfully updated."),
+        },
+      );
     }
   }
   function DropdownFilter(
