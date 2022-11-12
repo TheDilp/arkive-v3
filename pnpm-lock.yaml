@@ -21,7 +21,6 @@ specifiers:
   eslint-plugin-react: ^7.31.10
   jotai: ^1.9.1
   postcss: ^8.4.18
-  primeicons: ^6.0.1
   primereact: ^8.7.1
   react: ^18.2.0
   react-dnd: ^16.0.1
@@ -42,8 +41,7 @@ dependencies:
   '@tanstack/react-query': 4.14.3_biqbaboplfbrettd7655fr4n2y
   concurrently: 7.5.0
   jotai: 1.9.1_react@18.2.0
-  primeicons: 6.0.1
-  primereact: 8.7.1_esim4yelhr35vesnk67vhutmai
+  primereact: 8.7.1_2zx2umvpluuhvlq44va5bta2da
   react: 18.2.0
   react-dnd: 16.0.1_fan5qbzahqtxlm5dzefqlqx5ia
   react-dom: 18.2.0_react@18.2.0
@@ -4559,11 +4557,7 @@ packages:
       fast-diff: 1.2.0
     dev: true
 
-  /primeicons/6.0.1:
-    resolution: {integrity: sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==}
-    dev: false
-
-  /primereact/8.7.1_esim4yelhr35vesnk67vhutmai:
+  /primereact/8.7.1_2zx2umvpluuhvlq44va5bta2da:
     resolution: {integrity: sha512-2uv3t9LjcT9f4j2DgDIK0xa+lP8ysmQuD9DbBJwnfuyz362P0w2mmcDfp4UksiD1ld6oF0u3XAWVNZclaPJUjg==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
@@ -4576,7 +4570,6 @@ packages:
     dependencies:
       '@types/react': 18.0.25
       '@types/react-transition-group': 4.4.5
-      primeicons: 6.0.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y

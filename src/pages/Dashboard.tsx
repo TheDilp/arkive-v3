@@ -1,8 +1,8 @@
 import { useCreateProject, useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { Button } from "primereact/button";
+import { Icon } from "@iconify/react";
 import ProjectCard from "../components/Card/ProjectCard";
 import { ProjectType } from "../types/projectTypes";
-import { v4 as uuid } from "uuid";
 
 export default function Dashboard() {
   const { isLoading, error, data: projects } = useGetAllProjects();
@@ -19,15 +19,10 @@ export default function Dashboard() {
           <div className="w-full h-full flex-wrap py-5 text-white bg-zinc-800">
             <div className="w-full flex justify-center my-auto ">
               <Button
-                icon="pi pi-plus"
+                icon={<Icon icon="mdi:plus" fontSize={24} />}
                 className="p-button-outlined p-button-rounded p-button-plain"
                 tooltip="New Project"
-                onClick={() =>
-                  createProjectMutation.mutate({
-                    id: uuid(),
-                    title: "New Project",
-                  })
-                }
+                onClick={() => createProjectMutation.mutate}
               />
             </div>
           </div>

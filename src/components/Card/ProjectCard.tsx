@@ -3,6 +3,7 @@ import { Card } from "primereact/card";
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { Link } from "react-router-dom";
 import { ProjectType } from "../../types/projectTypes";
+import { buttonLabelWithIcon } from "../../utils/transform";
 export default function ProjectCard({ ...Project }: ProjectType) {
   const header = (
     <Link
@@ -19,12 +20,9 @@ export default function ProjectCard({ ...Project }: ProjectType) {
   const footer = (
     <div className="flex flex-wrap justify-between">
       <Link to={`../project/${Project.id}/wiki`} className="no-underline">
-        <Button
-          label="Wiki"
-          icon="pi pi-fw pi-file"
-          iconPos="right"
-          className="w-full p-button-outlined p-button-primary Lato"
-        />
+        <Button className="w-full p-button-outlined p-button-primary font-Lato">
+          {buttonLabelWithIcon("Wiki", "mdi:files")}
+        </Button>
       </Link>
       {/* <Link to={`../project/${Project.id}/maps`} className="w-4 no-underline">
         <Button
@@ -68,18 +66,15 @@ export default function ProjectCard({ ...Project }: ProjectType) {
       <Link
         to={`/project/${Project.id}/settings/project-settings`}
         className="no-underline">
-        <Button
-          label="Settings"
-          icon="pi pi-fw pi-cog"
-          iconPos="right"
-          className="w-full p-button-outlined p-button-secondary Lato"
-        />
+        <Button className="w-full p-button-outlined p-button-secondary font-Lato">
+          {buttonLabelWithIcon("Settings", "mdi:cog")}
+        </Button>
       </Link>
     </div>
   );
   return (
     <Card
-      title={<div>{Project.title}</div>}
+      title={<div className="font-Merriweather">{Project.title}</div>}
       className="flex flex-col justify-between mx-2 text-center h-25rem Merriweather w-80"
       header={header}
       footer={footer}></Card>
