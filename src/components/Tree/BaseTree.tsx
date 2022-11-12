@@ -17,6 +17,8 @@ import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
 import { InputText } from "primereact/inputtext";
+import { MultiSelect } from "primereact/multiselect";
+import { useGetAllTags } from "../../CRUD/queries";
 
 type Props = {
   data: DocumentType[];
@@ -177,32 +179,36 @@ export default function BaseTree({ data, type, templates }: Props) {
 
   const { project_id } = useParams();
   const [cmType] = useAtom(SidebarTreeContextAtom);
+  const { data: tags } = useGetAllTags(project_id as string);
+
   const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
   const [filter, setFilter] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useLayoutEffect(() => {
     if (data) {
-      if (filter) {
+      if (filter || selectedTags.length > 0) {
         const timeout = setTimeout(() => {
           setTreeData(
             data
-              .filter((item) => (templates ? item?.template : !item?.template))
-              .filter((item) =>
-                item.title.toLowerCase().includes(filter.toLowerCase()),
+              .filter(
+                (doc: DocumentType) =>
+                  !doc.folder &&
+                  !doc.template &&
+                  doc.title.toLowerCase().includes(filter.toLowerCase()) &&
+                  selectedTags.every((tag) => doc.tags.includes(tag)),
               )
-              .map((item) => ({
-                data: item,
-                droppable: item.folder,
-                id: item.id,
+              .map((doc: DocumentType) => ({
+                id: doc.id,
+                text: doc.title,
+                droppable: doc.folder,
                 parent: "0",
-                text: item.title,
+                data: doc,
               })),
           );
         }, 300);
-        return () => {
-          clearTimeout(timeout);
-        };
+        return () => clearTimeout(timeout);
       } else {
         setTreeData(
           data
@@ -223,9 +229,26 @@ export default function BaseTree({ data, type, templates }: Props) {
     <>
       <ContextMenu items={contextMenuItems(cmType)} cm={cm} />
       <InputText
+        className="mt-1 p-1"
         placeholder="Filter by Title"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
+      />
+      <MultiSelect
+        value={selectedTags}
+        options={tags ?? []}
+        placeholder="Filter by Tags"
+        className="w-full p-0"
+        showClear={true}
+        display="chip"
+        filter
+        onChange={(e) => {
+          if (e.value === null) {
+            setSelectedTags([]);
+          } else {
+            setSelectedTags(e.value);
+          }
+        }}
       />
       <Tree
         classes={{

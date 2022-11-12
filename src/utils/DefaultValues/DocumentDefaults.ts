@@ -17,7 +17,7 @@ export const DefaultDocument: DefaultDocumentType = {
   template: false,
   public: false,
   expanded: false,
-  categories: [],
+  tags: [],
   parent: undefined,
   properties: [],
   alter_names: [],

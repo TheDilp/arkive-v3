@@ -1,8 +1,8 @@
 import { Outlet, useParams } from "react-router-dom";
-import Navbar from "../Nav/Navbar";
-import Sidebar from "../Sidebar/Sidebar";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import Drawer from "../Drawer/Drawer";
+import Navbar from "../Nav/Navbar";
+import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
   const { project_id } = useParams();

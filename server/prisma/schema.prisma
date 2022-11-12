@@ -19,7 +19,7 @@ model documents {
   id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   title       String   @default("New Document")
   content     Json?
-  categories  String[] @default([])
+  tags        String[] @default([])
   icon        String?  @default("mdi:file")
   parent      String?  @db.Uuid
   expanded    Boolean  @default(false)

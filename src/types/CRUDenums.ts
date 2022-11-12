@@ -8,6 +8,9 @@ export enum getURLS {
 
   // Documents
   getAllDocuments = "getalldocuments/",
+
+  // Misc
+  getAllTags = "alltags/",
 }
 
 export enum createURLS {

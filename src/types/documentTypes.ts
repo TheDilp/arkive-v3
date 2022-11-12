@@ -5,7 +5,7 @@ export type DocumentType = {
   project_id: string;
   title: string;
   content: undefined | RemirrorJSON;
-  categories: string[];
+  tags: string[];
   icon: string;
   parent: string | undefined;
   expanded: boolean;
