@@ -41,16 +41,10 @@ export default function DrawerDocumentContent() {
         },
       );
     } else {
-      createDocumentMutation?.mutate(
-        {
-          ...DefaultDocument,
-          ...newData,
-        },
-        {
-          onSuccess: () =>
-            toaster("success", "Your document was successfully updated."),
-        },
-      );
+      createDocumentMutation?.mutate({
+        ...DefaultDocument,
+        ...newData,
+      });
     }
   }
 
