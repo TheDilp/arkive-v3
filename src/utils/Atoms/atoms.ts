@@ -10,6 +10,7 @@ export type DrawerAtomType = {
   position?: "left" | "right" | "top" | "bottom";
   modal?: boolean;
   fullscreen?: boolean;
+  templates?: boolean;
   show: boolean;
 };
 

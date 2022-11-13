@@ -6,6 +6,7 @@ import { SetStateAction } from "react";
 import { DrawerAtom, DrawerAtomType } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
 import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
+import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent";
 
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -32,7 +33,12 @@ export default function Drawer() {
           onClick={() => handleCloseDrawer(setDrawer)}
         />
       )}>
-      {drawer.type === "documents" ? <DrawerDocumentContent /> : null}
+      {drawer.type === "documents" && !drawer.templates ? (
+        <DrawerDocumentContent />
+      ) : null}
+      {drawer.type === "documents" && drawer.templates ? (
+        <DrawerFromTemplateContent />
+      ) : null}
     </PrimeDrawer>
   );
 }

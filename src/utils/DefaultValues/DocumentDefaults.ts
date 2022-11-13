@@ -7,6 +7,7 @@ export const DefaultDrawer: DrawerAtomType = {
   drawerSize: "sm",
   position: "left",
   fullscreen: false,
+  templates: false,
   modal: false,
   show: false,
 };

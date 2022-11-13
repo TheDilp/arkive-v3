@@ -16,10 +16,7 @@ import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
-import {
-  DefaultDocument,
-  DefaultDrawer,
-} from "../../../utils/DefaultValues/DocumentDefaults";
+import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { IconSelect } from "../../IconSelect/IconSelect";

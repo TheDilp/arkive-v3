@@ -8,7 +8,6 @@ import {
 import { DocumentCreateType, DocumentType } from "../types/documentTypes";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AvailableItemTypes } from "../types/generalTypes";
-import { ProjectType } from "../types/projectTypes";
 import { toaster } from "../utils/toast";
 
 export const useGetAllDocuments = (project_id: string) => {

@@ -1,9 +1,17 @@
 import { Icon } from "@iconify/react";
-import { Remirror, useRemirror } from "@remirror/react";
+import {
+  EditorComponent,
+  OnChangeJSON,
+  Remirror,
+  useRemirror,
+} from "@remirror/react";
+import { useCallback } from "react";
 import { Navigate, useParams } from "react-router-dom";
+import { RemirrorJSON } from "remirror";
+import "remirror/styles/all.css";
+import { useDebouncedCallback } from "use-debounce";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
-import "remirror/styles/all.css";
 
 export default function Editor() {
   const { project_id, item_id } = useParams();
@@ -19,6 +27,23 @@ export default function Editor() {
     selection: "start",
   });
 
+  const debounced = useDebouncedCallback(
+    (content: RemirrorJSON, doc_id: string) => {
+      console.log(content);
+      // saveContentMutation.mutate({
+      //   id: doc_id,
+      //   // @ts-ignore
+      //   content,
+      // });
+    },
+    // delay in ms
+    850,
+  );
+
+  const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {
+    debounced(content, doc_id);
+  }, []);
+
   if (!currentDocument) return <Navigate to="../" />;
   return (
     <div className="w-full h-full flex flex-col content-start flex-1">
@@ -30,10 +55,16 @@ export default function Editor() {
       <div className="w-full flex flex-1">
         <div className="w-5/6 flex flex-col flex-1">
           <Remirror
-            classNames={["editor", "w-full", "h-full"]}
+            classNames={["editor", "w-full", "h-full", "font-Lato"]}
             manager={manager}
-            initialContent={state}
-          />
+            initialContent={state}>
+            <OnChangeJSON
+              onChange={(content: RemirrorJSON) => {
+                onChange(content, item_id as string);
+              }}
+            />
+            <EditorComponent />
+          </Remirror>
         </div>
         <div className="w-1/6 flex flex-col bg-zinc-800"></div>
       </div>

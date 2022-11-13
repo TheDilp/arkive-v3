@@ -25,7 +25,15 @@ export default function DocumentsTree() {
       label: "Create Document",
     },
     {
-      command: () => {},
+      command: () => {
+        setDrawer({
+          ...DefaultDrawer,
+          position: "right",
+          type: "documents",
+          templates: true,
+          show: true,
+        });
+      },
       icon: "pi pi-copy",
       label: "Create from Template",
     },

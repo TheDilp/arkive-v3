@@ -31,6 +31,7 @@
     "react-toastify": "^9.1.1",
     "react-virtual": "^2.10.4",
     "remirror": "^2.0.15",
+    "use-debounce": "^8.0.4",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
