@@ -25,10 +25,9 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 type Props = {
   data: DocumentType[];
   type: AvailableItemTypes;
-  templates?: boolean;
 };
 
-export default function BaseTree({ data, type, templates }: Props) {
+export default function BaseTree({ data, type }: Props) {
   const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
   const deleteDocumentMutation = useDeleteMutation(type);
@@ -83,6 +82,7 @@ export default function BaseTree({ data, type, templates }: Props) {
             createDocumentMutation?.mutate({
               ...cmType.data,
               project_id: project_id as string,
+              parent: null,
               id: uuid(),
               template: true,
             });
@@ -215,7 +215,6 @@ export default function BaseTree({ data, type, templates }: Props) {
             data
               .filter(
                 (doc: DocumentType) =>
-                  !doc.template &&
                   doc.title.toLowerCase().includes(filter.toLowerCase()) &&
                   selectedTags.every((tag) => doc.tags.includes(tag)),
               )
@@ -230,16 +229,23 @@ export default function BaseTree({ data, type, templates }: Props) {
         }, 300);
         return () => clearTimeout(timeout);
       } else {
+        console.log(
+          data.map((item) => ({
+            data: item,
+            droppable: item.folder,
+            id: item.id,
+            parent: item.parent || "0",
+            text: item.title,
+          })),
+        );
         setTreeData(
-          data
-            .filter((item) => (templates ? item?.template : !item?.template))
-            .map((item) => ({
-              data: item,
-              droppable: item.folder,
-              id: item.id,
-              parent: item.parent || "0",
-              text: item.title,
-            })),
+          data.map((item) => ({
+            data: item,
+            droppable: item.folder,
+            id: item.id,
+            parent: item.parent || "0",
+            text: item.title,
+          })),
         );
       }
     }

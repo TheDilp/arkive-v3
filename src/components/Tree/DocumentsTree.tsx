@@ -26,11 +26,6 @@ export default function DocumentsTree() {
     },
     {
       command: () => {},
-      icon: "pi pi-folder",
-      label: "Create Folder",
-    },
-    {
-      command: () => {},
       icon: "pi pi-copy",
       label: "Create from Template",
     },
@@ -54,7 +49,9 @@ export default function DocumentsTree() {
         }}
       />
 
-      {data ? <BaseTree data={data} type="documents" /> : null}
+      {data ? (
+        <BaseTree data={data.filter((doc) => !doc.template)} type="documents" />
+      ) : null}
     </div>
   );
 }

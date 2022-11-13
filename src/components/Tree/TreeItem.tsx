@@ -101,7 +101,7 @@ export default function TreeItem({
           node.id === item_id && "text-sky-400"
         }`}>
         <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
-          {node.text}
+          {node.text} {node.data?.template ? "[TEMPLATE]" : null}
         </div>
         <div className="flex items-center opacity-0 group-hover:opacity-100">
           <Icon

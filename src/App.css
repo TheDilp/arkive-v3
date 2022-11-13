@@ -57,3 +57,25 @@
 .editor ul {
   @apply list-disc;
 }
+
+::-webkit-scrollbar {
+  width: 0.25rem;
+  height: 0.25rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  z-index: 0;
+  background: #888;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  z-index: 0;
+  background: #f1f1f1;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

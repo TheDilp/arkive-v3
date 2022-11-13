@@ -1,6 +1,6 @@
 import { SplitButton } from "primereact/splitbutton";
 import { useParams } from "react-router-dom";
-import { useCreateMutation } from "../../CRUD/DocumentCRUD";
+import { useCreateMutation, useGetAllDocuments } from "../../CRUD/DocumentCRUD";
 import BaseTree from "./BaseTree";
 
 type Props = {};
@@ -9,11 +9,6 @@ const items = [
   {
     label: "Create Template",
     icon: "pi pi-file",
-    command: () => {},
-  },
-  {
-    label: "Create Folder",
-    icon: "pi pi-folder",
     command: () => {},
   },
   {
@@ -26,6 +21,9 @@ const items = [
 export default function TemplatesTree({}: Props) {
   const { project_id } = useParams();
   const createDocumentMutation = useCreateMutation("documents");
+  const { data, isLoading, error } = useGetAllDocuments(project_id as string);
+  if (isLoading || error) return "Loading...";
+
   return (
     <div className="flex flex-col">
       <SplitButton
@@ -40,7 +38,9 @@ export default function TemplatesTree({}: Props) {
           });
         }}
       />
-      <BaseTree type="documents" templates />
+      {data ? (
+        <BaseTree data={data.filter((doc) => doc.template)} type="documents" />
+      ) : null}
     </div>
   );
 }
