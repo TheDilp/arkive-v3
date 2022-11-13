@@ -229,15 +229,6 @@ export default function BaseTree({ data, type }: Props) {
         }, 300);
         return () => clearTimeout(timeout);
       } else {
-        console.log(
-          data.map((item) => ({
-            data: item,
-            droppable: item.folder,
-            id: item.id,
-            parent: item.parent || "0",
-            text: item.title,
-          })),
-        );
         setTreeData(
           data.map((item) => ({
             data: item,

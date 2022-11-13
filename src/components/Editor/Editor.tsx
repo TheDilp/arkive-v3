@@ -5,12 +5,14 @@ import {
   Remirror,
   useRemirror,
 } from "@remirror/react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import "remirror/styles/all.css";
 import { useDebouncedCallback } from "use-debounce";
+import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
+import { DefaultEditorContent } from "../../utils/DefaultValues/DocumentDefaults";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 
 export default function Editor() {
@@ -20,29 +22,36 @@ export default function Editor() {
     item_id as string,
     "documents",
   );
+  const updateDocumentMutation = useUpdateMutation("documents");
 
   const { manager, state } = useRemirror({
     // @ts-ignore
     extensions: DefaultEditorExtensions(),
+    content: currentDocument?.content,
     selection: "start",
   });
 
   const debounced = useDebouncedCallback(
-    (content: RemirrorJSON, doc_id: string) => {
-      console.log(content);
-      // saveContentMutation.mutate({
-      //   id: doc_id,
-      //   // @ts-ignore
-      //   content,
-      // });
+    (content: RemirrorJSON, id: string) => {
+      updateDocumentMutation?.mutate({
+        id,
+        content,
+      });
     },
-    // delay in ms
     850,
   );
-
   const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {
     debounced(content, doc_id);
   }, []);
+
+  useEffect(() => {
+    // Board previews in the editor crash without this, needs to wait 1ms to mount editor first
+    manager.view.updateState(
+      manager.createState({
+        content: currentDocument?.content || undefined,
+      }),
+    );
+  }, [item_id]);
 
   if (!currentDocument) return <Navigate to="../" />;
   return (
