@@ -62,6 +62,9 @@
 }
 
 /* Mentions */
+.remirror-mention-atom {
+  @apply p-0 !important;
+}
 .remirror-suggest-atom.suggest-at {
   @apply text-white;
 }

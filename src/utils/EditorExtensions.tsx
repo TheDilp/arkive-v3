@@ -105,14 +105,18 @@ export type TestMap = Partial<Record<string, string | ComponentType<any>>>;
 
 export const typeMap: MarkMap = {
   blockquote: "blockquote",
-  bulletList: "ul",
+  bulletList: (props) => {
+    console.log(props);
+    return <div>{props.children}</div>;
+  },
   callout: Callout,
   doc: Doc,
   hardBreak: "br",
   heading: Heading,
   horizontalRule: "hr",
   mentionAtom: (props) => {
-    return <DocumentMention {...props.node.attrs} disableTooltip />;
+    console.log(props);
+    return <MentionReactComponent {...props.node.attrs} disableTooltip />;
   },
   image: "img",
   listItem: "li",

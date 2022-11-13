@@ -17,9 +17,9 @@ export default function Layout() {
         <div className="w-1/6 flex flex-col max-w-[20%]">
           <Sidebar />
         </div>
-        <div className="w-5/6 outletWrapper">
-          <Outlet />
-        </div>
+        {/* <div className="w-5/6 outletWrapper"> */}
+        <Outlet />
+        {/* </div> */}
       </div>
     </div>
   );

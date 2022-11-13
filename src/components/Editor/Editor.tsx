@@ -5,19 +5,18 @@ import {
   Remirror,
   useRemirror,
 } from "@remirror/react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
-import { MentionAtomExtension } from "remirror/dist-types/extensions";
 import "remirror/styles/all.css";
 import { useDebouncedCallback } from "use-debounce";
 import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
+import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
-import MentionReactComponent from "../Mention/MentionReactComponent";
 
-export default function Editor() {
+export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
   const currentDocument = useGetItem(
     project_id as string,
@@ -29,8 +28,15 @@ export default function Editor() {
   const { manager, state } = useRemirror({
     // @ts-ignore
     extensions: DefaultEditorExtensions(),
-    content: currentDocument?.content,
+    content:
+      editable === false ? content || undefined : currentDocument?.content,
     selection: "start",
+    extraAttributes: [
+      {
+        identifiers: ["ul", "ol"],
+        attributes: { closed: { default: null } },
+      },
+    ],
   });
 
   const debounced = useDebouncedCallback(
@@ -50,7 +56,10 @@ export default function Editor() {
     if (currentDocument) {
       manager.view.updateState(
         manager.createState({
-          content: currentDocument?.content || undefined,
+          content:
+            editable === false
+              ? content || undefined
+              : currentDocument?.content || undefined,
         }),
       );
     }
@@ -65,8 +74,9 @@ export default function Editor() {
         {currentDocument.template ? "[TEMPLATE]" : ""}
       </h1>
       <div className="w-full flex flex-1">
-        <div className="w-5/6 flex flex-col flex-1">
+        <div className="w-5/6 flex flex-col flex-1 ">
           <Remirror
+            editable={editable || true}
             classNames={["editor", "w-full", "h-full", "font-Lato"]}
             manager={manager}
             initialContent={state}>
@@ -79,7 +89,6 @@ export default function Editor() {
             <MentionDropdownComponent />
           </Remirror>
         </div>
-        <div className="w-1/6 flex flex-col bg-zinc-800"></div>
       </div>
     </div>
   );
