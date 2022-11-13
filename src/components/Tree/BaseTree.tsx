@@ -21,6 +21,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { useGetAllTags } from "../../CRUD/queries";
 import { toaster } from "../../utils/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
 
 type Props = {
   data: DocumentType[];
@@ -176,7 +177,12 @@ export default function BaseTree({ data, type }: Props) {
         icon: "pi pi-fw pi-pencil",
         command: () => {
           if (cmType.data?.id)
-            setDrawer({ id: cmType.data.id, type: "documents" });
+            setDrawer({
+              id: cmType.data.id,
+              position: "right",
+              type: "documents",
+              show: true,
+            });
         },
       },
 

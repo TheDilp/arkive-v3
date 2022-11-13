@@ -61,7 +61,9 @@ export default function DrawerDocumentContent() {
   return (
     <div className="flex flex-col my-2 gap-y-8">
       <h2 className="text-2xl text-center">
-        {document ? `Edit ${document.title}` : "Create New Document"}
+        {document
+          ? `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}`
+          : "Create New Document"}
       </h2>
       <div className="flex flex-col gap-y-2">
         <InputText
