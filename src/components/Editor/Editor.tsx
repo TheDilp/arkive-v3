@@ -12,7 +12,6 @@ import "remirror/styles/all.css";
 import { useDebouncedCallback } from "use-debounce";
 import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
-import { DefaultEditorContent } from "../../utils/DefaultValues/DocumentDefaults";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 
 export default function Editor() {

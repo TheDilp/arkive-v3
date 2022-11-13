@@ -26,18 +26,3 @@ export const DefaultDocument: DefaultDocumentType = {
   icon: "mdi:file",
   sort: 0,
 };
-
-export const DefaultEditorContent = {
-  type: "doc",
-  content: [
-    {
-      type: "paragraph",
-      content: [
-        {
-          type: "text",
-          text: "",
-        },
-      ],
-    },
-  ],
-};
