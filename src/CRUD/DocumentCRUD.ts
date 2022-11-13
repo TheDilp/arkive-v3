@@ -58,31 +58,6 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
   if (type === "documents") return createDocumentMutation;
 };
 
-export const useDeleteDocument = () => {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (id: string) =>
-      await fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
-        method: "DELETE",
-      }),
-    {
-      onSuccess: async (data, id) => {
-        const newData: DocumentType = await data.json();
-        queryClient.setQueryData(
-          ["singleProject", newData.project_id],
-          (old: ProjectType | undefined) => {
-            if (old)
-              return {
-                ...old,
-                documents: old.documents?.filter((doc) => doc.id !== id),
-              };
-          },
-        );
-      },
-    },
-  );
-};
-
 export const useUpdateMutation = (type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
   const updateDocumentMutation = useMutation(
@@ -115,4 +90,27 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
   );
 
   if (type === "documents") return updateDocumentMutation;
+};
+
+export const useDeleteMutation = (type: AvailableItemTypes) => {
+  const queryClient = useQueryClient();
+
+  const deleteDocumentMutation = useMutation(
+    async (id: string) =>
+      await fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
+        method: "DELETE",
+      }),
+    {
+      onSuccess: async (data, id) => {
+        const newData: DocumentType = await data.json();
+        queryClient.setQueryData(
+          ["allDocuments", newData.project_id],
+          (old: DocumentType[] | undefined) => {
+            if (old) return old.filter((doc) => doc.id !== id);
+          },
+        );
+      },
+    },
+  );
+  if (type === "documents") return deleteDocumentMutation;
 };

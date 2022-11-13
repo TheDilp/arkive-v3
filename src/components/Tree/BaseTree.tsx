@@ -3,7 +3,7 @@ import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import {
   useCreateMutation,
-  useDeleteDocument,
+  useDeleteMutation,
   useUpdateMutation,
 } from "../../CRUD/DocumentCRUD";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -20,6 +20,7 @@ import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { useGetAllTags } from "../../CRUD/queries";
 import { toaster } from "../../utils/toast";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 type Props = {
   data: DocumentType[];
@@ -30,7 +31,7 @@ type Props = {
 export default function BaseTree({ data, type, templates }: Props) {
   const createDocumentMutation = useCreateMutation(type);
   const updateDocumentMutation = useUpdateMutation(type);
-  const deleteDocumentMutation = useDeleteDocument();
+  const deleteDocumentMutation = useDeleteMutation(type);
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const rootItems = [
@@ -108,7 +109,7 @@ export default function BaseTree({ data, type, templates }: Props) {
         label: "Delete Document",
         icon: "pi pi-fw pi-trash",
         command: () =>
-          cmType.data?.id && deleteDocumentMutation.mutate(cmType.data.id),
+          cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
       },
     ];
     const folderItems = [
@@ -166,7 +167,7 @@ export default function BaseTree({ data, type, templates }: Props) {
         label: "Delete Folder",
         icon: "pi pi-fw pi-trash",
         command: () =>
-          cmType.data?.id && deleteDocumentMutation.mutate(cmType.data.id),
+          cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
       },
     ];
     const templateItems = [
@@ -246,6 +247,7 @@ export default function BaseTree({ data, type, templates }: Props) {
 
   return (
     <>
+      <ConfirmDialog />
       <ContextMenu items={contextMenuItems(cmType)} cm={cm} />
       <InputText
         className="mt-1 p-1"

@@ -5,9 +5,11 @@ import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { TreeDataType } from "../../types/treeTypes";
-import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useDeleteMutation, useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { IconSelect } from "../IconSelect/IconSelect";
+import { deleteItem } from "../../utils/Confirms/Confirm";
+import { toaster } from "../../utils/toast";
 type Props = {
   node: NodeModel<TreeDataType>;
   depth: number;
@@ -30,6 +32,7 @@ export default function TreeItem({
   const [text, setText] = useAtom(SidebarTreeContextAtom);
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateMutation = useUpdateMutation(type);
+  const deleteMutation = useDeleteMutation(type);
   return (
     <div
       style={{ marginInlineStart: depth * 40 }}
@@ -114,7 +117,18 @@ export default function TreeItem({
               });
             }}
           />
-          <Icon icon="ic:outline-delete" color="white" />
+          <Icon
+            icon="ic:outline-delete"
+            color="white"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteItem(
+                "Are you sure you want to delete this item?",
+                () => deleteMutation?.mutate(node.id as string),
+                () => toaster("info", "Item not deleted."),
+              );
+            }}
+          />
         </div>
       </div>
     </div>

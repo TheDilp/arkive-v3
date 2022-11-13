@@ -8,17 +8,22 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   useCreateMutation,
+  useDeleteMutation,
   useGetAllDocuments,
   useUpdateMutation,
 } from "../../../CRUD/DocumentCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
-import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
-import { recursiveDescendantFilter } from "../../../utils/recursive";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
+import {
+  DefaultDocument,
+  DefaultDrawer,
+} from "../../../utils/DefaultValues/DocumentDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { IconSelect } from "../../IconSelect/IconSelect";
+import { handleCloseDrawer } from "../Drawer";
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -27,7 +32,7 @@ export default function DrawerDocumentContent() {
   const document = useGetItem(project_id as string, drawer?.id, "documents");
   const createDocumentMutation = useCreateMutation("documents");
   const updateDocumentMutation = useUpdateMutation("documents");
-
+  const deleteDocumentMutation = useDeleteMutation("documents");
   function CreateUpdateDocument(newData: DocumentCreateType) {
     if (document) {
       updateDocumentMutation?.mutate(
@@ -132,7 +137,27 @@ export default function DrawerDocumentContent() {
         </div>
       </div>
 
-      <div className="w-full flex">
+      <div className="w-full flex justify-between">
+        {document ? (
+          <Button
+            className=" p-button-outlined p-button-danger"
+            type="submit"
+            onClick={() => {
+              if (document)
+                deleteItem(
+                  document.folder
+                    ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
+                    : "Are you sure you want to delete this document?",
+                  () => {
+                    deleteDocumentMutation?.mutate(document.id);
+                    handleCloseDrawer(setDrawer);
+                  },
+                  () => toaster("info", "Item not deleted."),
+                );
+            }}>
+            {buttonLabelWithIcon("Delete", "mdi:trash")}
+          </Button>
+        ) : null}
         <Button
           className="ml-auto p-button-outlined p-button-success"
           type="submit"
