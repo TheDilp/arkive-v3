@@ -5,14 +5,17 @@ import {
   Remirror,
   useRemirror,
 } from "@remirror/react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
+import { MentionAtomExtension } from "remirror/dist-types/extensions";
 import "remirror/styles/all.css";
 import { useDebouncedCallback } from "use-debounce";
 import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
+import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
+import MentionReactComponent from "../Mention/MentionReactComponent";
 
 export default function Editor() {
   const { project_id, item_id } = useParams();
@@ -44,12 +47,13 @@ export default function Editor() {
   }, []);
 
   useEffect(() => {
-    // Board previews in the editor crash without this, needs to wait 1ms to mount editor first
-    manager.view.updateState(
-      manager.createState({
-        content: currentDocument?.content || undefined,
-      }),
-    );
+    if (currentDocument) {
+      manager.view.updateState(
+        manager.createState({
+          content: currentDocument?.content || undefined,
+        }),
+      );
+    }
   }, [item_id]);
 
   if (!currentDocument) return <Navigate to="../" />;
@@ -72,6 +76,7 @@ export default function Editor() {
               }}
             />
             <EditorComponent />
+            <MentionDropdownComponent />
           </Remirror>
         </div>
         <div className="w-1/6 flex flex-col bg-zinc-800"></div>
