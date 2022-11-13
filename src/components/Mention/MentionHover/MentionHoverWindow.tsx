@@ -17,7 +17,8 @@ import {
   NodeFormattingExtension,
   OrderedListExtension,
   TaskListExtension,
-  UnderlineExtension, TableExtension
+  UnderlineExtension,
+  TableExtension,
 } from "remirror/extensions";
 import "remirror/styles/all.css";
 import "../../../../../../styles/Editor.css";
@@ -59,7 +60,7 @@ export default function LinkHoverWindow({
   });
   CustomMentionExtension.ReactComponent = useMemo(
     () => MentionReactComponent,
-    []
+    [],
   );
 
   const { manager, state } = useRemirror({
@@ -76,7 +77,7 @@ export default function LinkHoverWindow({
       new LinkExtension({
         autoLink: true,
         defaultTarget: "_blank",
-        selectTextOnClick: true
+        selectTextOnClick: true,
       }),
       new ImageExtension({
         enableResizing: true,
@@ -106,17 +107,20 @@ export default function LinkHoverWindow({
   // ======================================================
 
   return (
-    <div className={`editorContainer w-full ${classes || "h-20rem"}`} style={{ zIndex: 999 }}>
+    <div
+      className={`editorContainer w-full ${classes || "h-20rem"}`}
+      style={{ zIndex: 999 }}>
       {content ? (
         <ThemeProvider>
           <Remirror
             manager={manager}
             initialContent={state}
             classNames={[
-              `text-white Lato viewOnlyEditor w-full ${classes || "h-20rem"}`,
+              `text-white font-Lato viewOnlyEditor w-full ${
+                classes || "h-20rem"
+              }`,
             ]}
-            editable={false}
-          >
+            editable={false}>
             <LinkHoverEditor content={content} />
           </Remirror>
         </ThemeProvider>

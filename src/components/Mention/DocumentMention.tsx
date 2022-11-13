@@ -19,7 +19,7 @@ export default function DocumentMention({
   return nodeId ? (
     <Tooltip label={"TEST"}>
       <Link
-        className="Lato text-white fontWeight700 text-base"
+        className="font-Lato text-white fontWeight700 text-base"
         id={`link-${nodeId}`}
         to={`../doc/${nodeId}`}>
         {title || nodeLabel}
@@ -27,7 +27,7 @@ export default function DocumentMention({
     </Tooltip>
   ) : (
     <span
-      className="Lato text-white underline cursor-pointer"
+      className="font-Lato text-white underline cursor-pointer"
       onClick={() => {
         toaster("warning", "Document not found.");
       }}>

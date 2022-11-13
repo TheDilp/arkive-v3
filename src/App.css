@@ -23,7 +23,7 @@
   @apply flex-col flex-1;
 }
 .editor {
-  padding: 1rem;
+  @apply p-4 font-Lato;
 }
 .editor:focus {
   outline: none;
@@ -59,6 +59,23 @@
 
 .editor ul {
   @apply list-disc;
+}
+
+/* Mentions */
+.remirror-suggest-atom.suggest-at {
+  @apply text-white;
+}
+.remirror-mention-atom-popup-item.remirror-mention-atom-popup-highlight {
+  @apply bg-blue-400;
+}
+.remirror-mention-atom-popup-item.remirror-mention-atom-popup-highlight
+  .remirror-mention-atom-popup-name,
+.remirror-mention-atom-popup-item.remirror-mention-atom-popup-hovered
+  .remirror-mention-atom-popup-name {
+  @apply text-white;
+}
+.remirror-mention-atom-popup-item.remirror-mention-atom-popup-hovered {
+  @apply bg-blue-200 cursor-pointer;
 }
 
 ::-webkit-scrollbar {
