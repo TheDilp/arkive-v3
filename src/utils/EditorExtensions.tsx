@@ -1,4 +1,14 @@
-import { PlaceholderExtension } from "@remirror/react";
+import {
+  Callout,
+  createLinkHandler,
+  Doc,
+  Heading,
+  MarkMap,
+  PlaceholderExtension,
+  TextHandler,
+} from "@remirror/react";
+import { ComponentType, FC } from "react";
+import { RemirrorJSON } from "remirror";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -19,6 +29,7 @@ import {
   TaskListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
+import DocumentMention from "../components/Mention/DocumentMention";
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
 
 export const DefaultEditorExtensions = () => {
@@ -68,7 +79,7 @@ export const DefaultEditorExtensions = () => {
     }),
     new HorizontalRuleExtension(),
     new CalloutExtension(),
-    new NodeFormattingExtension(),
+    // new NodeFormattingExtension(),
     new HardBreakExtension(),
     new MarkdownExtension(),
     CustomMentionExtension,
@@ -88,4 +99,32 @@ export const DefaultEditorExtensions = () => {
     new DropCursorExtension(),
     //   new TableExtension(),
   ];
+};
+
+export type TestMap = Partial<Record<string, string | ComponentType<any>>>;
+
+export const typeMap: MarkMap = {
+  blockquote: "blockquote",
+  bulletList: "ul",
+  callout: Callout,
+  doc: Doc,
+  hardBreak: "br",
+  heading: Heading,
+  horizontalRule: "hr",
+  mentionAtom: (props) => {
+    return <DocumentMention {...props.node.attrs} disableTooltip />;
+  },
+  image: "img",
+  listItem: "li",
+  paragraph: "p",
+  orderedList: "ol",
+  text: TextHandler,
+};
+
+export const markMap: MarkMap = {
+  italic: "em",
+  bold: "strong",
+  code: "code",
+  link: createLinkHandler({ target: "_blank" }),
+  underline: "u",
 };

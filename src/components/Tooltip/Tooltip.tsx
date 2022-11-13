@@ -15,11 +15,11 @@ import { cloneElement, useState } from "react";
 
 interface Props {
   label: string | JSX.Element;
-  placement?: Placement;
   children: JSX.Element;
+  disabled?: boolean;
 }
 
-export const Tooltip = ({ children, label }: Props) => {
+export const Tooltip = ({ children, label, disabled }: Props) => {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, context } = useFloating({
@@ -47,7 +47,7 @@ export const Tooltip = ({ children, label }: Props) => {
         children,
         getReferenceProps({ ref: reference, ...children.props }),
       )}
-      {open && (
+      {!disabled && open && (
         <div
           {...getFloatingProps({
             ref: floating,

@@ -18,7 +18,6 @@ export default function MentionReactComponent({ node }: Props) {
 
   let { id: nodeId, name: nodeName, label: nodeLabel } = node.attrs;
 
-  console.log(node);
   if (nodeName === "at") {
     const docs: DocumentType[] | undefined = queryClient.getQueryData([
       "allDocuments",
@@ -49,8 +48,8 @@ export default function MentionReactComponent({ node }: Props) {
         <DocumentMention
           title={title}
           content={docItem.content}
-          nodeId={id}
-          nodeLabel={nodeLabel}
+          id={id}
+          label={nodeLabel}
         />
       );
     } else {
@@ -58,8 +57,8 @@ export default function MentionReactComponent({ node }: Props) {
         <DocumentMention
           title={nodeLabel}
           content={undefined}
-          nodeId={undefined}
-          nodeLabel={nodeLabel}
+          id={undefined}
+          label={nodeLabel}
         />
       );
     }
