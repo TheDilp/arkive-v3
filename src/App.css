@@ -19,6 +19,9 @@
 }
 
 /* Editor */
+.remirror-editor-wrapper {
+  @apply flex-col flex-1;
+}
 .editor {
   padding: 1rem;
 }

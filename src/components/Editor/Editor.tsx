@@ -28,9 +28,9 @@ export default function Editor() {
         {currentDocument.template ? "[TEMPLATE]" : ""}
       </h1>
       <div className="w-full flex flex-1">
-        <div className="w-5/6 flex flex-col">
+        <div className="w-5/6 flex flex-col flex-1">
           <Remirror
-            classNames={["editor", "w-full", "bg-gray-700"]}
+            classNames={["editor", "w-full", "h-full"]}
             manager={manager}
             initialContent={state}
           />
