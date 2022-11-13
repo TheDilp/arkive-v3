@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { Dialog } from "primereact/dialog";
 import { useParams } from "react-router-dom";
 import { ProjectType } from "../../types/projectTypes";
-import { DrawerAtom } from "../../utils/atoms";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { InputText } from "primereact/inputtext";
 import { DocumentType } from "../../types/documentTypes";
 import { Button } from "primereact/button";

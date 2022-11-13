@@ -38,8 +38,7 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
         method: "POST",
       }),
     {
-      onError: (a, b) => {
-        console.log(b);
+      onError: () => {
         toaster("error", "There was an error creating this document.");
       },
       onSuccess: async (data, variables) => {
@@ -88,7 +87,6 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
   const updateDocumentMutation = useMutation(
     async (updateDocumentValues: Partial<DocumentType>) => {
-      console.log(updateDocumentValues);
       return await fetch(
         `${baseURLS.baseServer}${updateURLs.updateDocument}${updateDocumentValues.id}`,
         {

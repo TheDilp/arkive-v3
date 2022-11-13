@@ -1,5 +1,5 @@
 import { DefaultDocumentType } from "../../types/documentTypes";
-import { DrawerAtomType } from "../atoms";
+import { DrawerAtomType } from "../Atoms/atoms";
 
 export const DefaultDrawer: DrawerAtomType = {
   id: null,
@@ -7,6 +7,7 @@ export const DefaultDrawer: DrawerAtomType = {
   drawerSize: "sm",
   position: "left",
   fullscreen: false,
+  modal: false,
   show: false,
 };
 
@@ -18,7 +19,7 @@ export const DefaultDocument: DefaultDocumentType = {
   public: false,
   expanded: false,
   tags: [],
-  parent: undefined,
+  parent: null,
   properties: [],
   alter_names: [],
   icon: "mdi:file",

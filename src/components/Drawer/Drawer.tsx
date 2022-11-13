@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { DrawerAtom } from "../../utils/atoms";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
 import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 

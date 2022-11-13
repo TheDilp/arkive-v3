@@ -1,4 +1,4 @@
-import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/atoms";
+import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import {

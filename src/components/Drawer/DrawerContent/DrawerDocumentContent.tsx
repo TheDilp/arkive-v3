@@ -13,7 +13,7 @@ import {
 } from "../../../CRUD/DocumentCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
-import { DrawerAtom } from "../../../utils/atoms";
+import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { recursiveDescendantFilter } from "../../../utils/recursive";
 import { toaster } from "../../../utils/toast";
@@ -142,7 +142,17 @@ export default function DrawerDocumentContent() {
         <Button
           className="ml-auto p-button-outlined p-button-success"
           type="submit"
-          onClick={() => CreateUpdateDocument(localItem)}>
+          onClick={() => {
+            if (allDocuments?.some((item) => item.parent === localItem.id)) {
+              toaster(
+                "error",
+                "Cannot convert to file if folder contains files.",
+              );
+              return;
+            }
+
+            CreateUpdateDocument(localItem);
+          }}>
           {buttonLabelWithIcon("Save", "mdi:content-save")}
         </Button>
       </div>

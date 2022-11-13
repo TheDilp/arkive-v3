@@ -1,12 +1,8 @@
-import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
-import { InputText } from "primereact/inputtext";
 import { SplitButton } from "primereact/splitbutton";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCreateMutation, useGetAllDocuments } from "../../CRUD/DocumentCRUD";
-import { DocumentType } from "../../types/documentTypes";
-import { DrawerAtom } from "../../utils/atoms";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
 import BaseTree from "./BaseTree";
 
@@ -19,7 +15,12 @@ export default function DocumentsTree() {
   const items = [
     {
       command: () =>
-        setDrawer({ ...DefaultDrawer, type: "documents", show: true }),
+        setDrawer({
+          ...DefaultDrawer,
+          type: "documents",
+          position: "right",
+          show: true,
+        }),
       icon: "pi pi-file",
       label: "Create Document",
     },

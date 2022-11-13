@@ -3,7 +3,7 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/atoms";
+import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { TreeDataType } from "../../types/treeTypes";
 import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -108,6 +108,7 @@ export default function TreeItem({
               e.stopPropagation();
               setDrawer({
                 id: node.id as string,
+                position: "right",
                 type: "documents",
                 show: true,
               });
