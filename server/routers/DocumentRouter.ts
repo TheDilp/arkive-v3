@@ -3,26 +3,20 @@ import { prisma } from "..";
 import { removeNull } from "../utils/transform";
 
 export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
-  server.get(
-    "/getalldocuments/:project_id",
-    async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
-      const data = await prisma.documents.findMany({
-        where: {
-          project_id: req.params.project_id,
-        },
-      });
-      return data;
-    },
-  );
+  server.get("/getalldocuments/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
+    const data = await prisma.documents.findMany({
+      where: {
+        project_id: req.params.project_id,
+      },
+    });
+    return data;
+  });
 
-  server.get(
-    "/getsingledocument/:id",
-    async (req: FastifyRequest<{ Params: { id: string } }>) => {
-      return await prisma.documents.findUnique({
-        where: { id: req.params.id },
-      });
-    },
-  );
+  server.get("/getsingledocument/:id", async (req: FastifyRequest<{ Params: { id: string } }>) => {
+    return await prisma.documents.findUnique({
+      where: { id: req.params.id },
+    });
+  });
 
   server.post(
     "/createdocument",
@@ -52,8 +46,8 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
     ) => {
       try {
         const newDocument = await prisma.documents.update({
-          where: { id: req.params.id },
           data: removeNull(JSON.parse(req.body)) as any,
+          where: { id: req.params.id },
         });
         return newDocument;
       } catch (error) {

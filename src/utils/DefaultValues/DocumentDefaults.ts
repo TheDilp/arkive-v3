@@ -2,27 +2,27 @@ import { DefaultDocumentType } from "../../types/documentTypes";
 import { DrawerAtomType } from "../Atoms/atoms";
 
 export const DefaultDrawer: DrawerAtomType = {
-  id: null,
-  type: null,
   drawerSize: "sm",
-  position: "left",
+  exceptions: {},
   fullscreen: false,
-  templates: false,
+  id: null,
   modal: false,
+  position: "left",
   show: false,
+  type: null,
 };
 
 export const DefaultDocument: DefaultDocumentType = {
-  title: "New Document",
+  alter_names: [],
   content: undefined,
-  folder: false,
-  template: false,
-  public: false,
   expanded: false,
-  tags: [],
+  folder: false,
+  icon: "mdi:file",
   parent: null,
   properties: [],
-  alter_names: [],
-  icon: "mdi:file",
+  public: false,
   sort: 0,
+  tags: [],
+  template: false,
+  title: "New Document",
 };

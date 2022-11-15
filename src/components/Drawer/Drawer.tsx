@@ -22,30 +22,18 @@ export default function Drawer() {
       showCloseIcon={false}
       icons={() => (
         <Button
-          icon={
-            <Icon
-              className="pointer-events-none"
-              icon="mdi:close"
-              fontSize={26}
-            />
-          }
+          icon={<Icon className="pointer-events-none" icon="mdi:close" fontSize={26} />}
           className="p-0 w-fit p-button-text p-button-rounded p-button-secondary hover:bg-transparent"
           onClick={() => handleCloseDrawer(setDrawer)}
         />
       )}>
-      {drawer.type === "documents" && !drawer.templates ? (
-        <DrawerDocumentContent />
-      ) : null}
-      {drawer.type === "documents" && drawer.templates ? (
-        <DrawerFromTemplateContent />
-      ) : null}
+      {drawer.type === "documents" && !drawer.exceptions?.fromTemplate ? <DrawerDocumentContent /> : null}
+      {drawer.type === "documents" && drawer.exceptions?.fromTemplate ? <DrawerFromTemplateContent /> : null}
     </PrimeDrawer>
   );
 }
 
-export function handleCloseDrawer(
-  setDrawer: (update: SetStateAction<DrawerAtomType>) => void,
-) {
+export function handleCloseDrawer(setDrawer: (update: SetStateAction<DrawerAtomType>) => void) {
   setDrawer((prev) => ({ ...prev, show: false }));
   setTimeout(() => {
     setDrawer(DefaultDrawer);

@@ -1,26 +1,35 @@
+import { useAtom } from "jotai";
 import { SplitButton } from "primereact/splitbutton";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useCreateMutation, useGetAllDocuments } from "../../CRUD/DocumentCRUD";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
 import BaseTree from "./BaseTree";
 
-type Props = {};
-
-const items = [
-  {
-    label: "Create Template",
-    icon: "pi pi-file",
-    command: () => {},
-  },
-  {
-    label: "Create from Template",
-    icon: "pi pi-copy",
-    command: () => {},
-  },
-];
-
-export default function TemplatesTree({}: Props) {
+export default function TemplatesTree() {
   const { project_id } = useParams();
   const createDocumentMutation = useCreateMutation("documents");
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const items = useMemo(
+    () => [
+      {
+        command: () =>
+          setDrawer({
+            ...DefaultDrawer,
+            exceptions: {
+              createTemplate: true,
+            },
+            position: "right",
+            show: true,
+            type: "documents",
+          }),
+        icon: "pi pi-file",
+        label: "Create Template",
+      },
+    ],
+    [],
+  );
   const { data, isLoading, error } = useGetAllDocuments(project_id as string);
   if (isLoading || error) return "Loading...";
 
@@ -33,14 +42,13 @@ export default function TemplatesTree({}: Props) {
         model={items}
         onClick={() => {
           createDocumentMutation?.mutate({
-            title: "New Document",
             project_id: project_id as string,
+            template: true,
+            title: "New Template",
           });
         }}
       />
-      {data ? (
-        <BaseTree data={data.filter((doc) => doc.template)} type="documents" />
-      ) : null}
+      {data ? <BaseTree data={data.filter((doc) => doc.template)} type="documents" /> : null}
     </div>
   );
 }

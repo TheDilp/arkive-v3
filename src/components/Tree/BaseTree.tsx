@@ -1,11 +1,7 @@
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import {
-  useCreateMutation,
-  useDeleteMutation,
-  useUpdateMutation,
-} from "../../CRUD/DocumentCRUD";
+import { useCreateMutation, useDeleteMutation, useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { useLayoutEffect, useRef, useState } from "react";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -50,15 +46,16 @@ export default function BaseTree({ data, type }: Props) {
   function contextMenuItems(cmType: SidebarTreeItemType) {
     const docItems = [
       {
-        label: "Edit Document",
         icon: "pi pi-fw pi-pencil",
+        label: "Edit Document",
         command: () => {
           if (cmType.data?.id)
             setDrawer({
+              ...DefaultDrawer,
               id: cmType.data.id,
               position: "right",
-              type: "documents",
               show: true,
+              type: "documents",
             });
         },
       },
@@ -76,14 +73,14 @@ export default function BaseTree({ data, type }: Props) {
         },
       },
       {
-        label: "Covert to Template",
         icon: "pi pi-fw pi-copy",
+        label: "Covert to Template",
         command: () => {
           if (cmType.data) {
             createDocumentMutation?.mutate({
               ...cmType.data,
-              project_id: project_id as string,
               parent: null,
+              project_id: project_id as string,
               id: uuid(),
               template: true,
             });
@@ -91,39 +88,38 @@ export default function BaseTree({ data, type }: Props) {
         },
       },
       {
-        label: "Export JSON",
         icon: "pi pi-fw pi-download",
+        label: "Export JSON",
         command: () => {},
       },
       { separator: true },
       {
-        label: "View Public Document",
         icon: "pi pi-fw pi-external-link",
+        label: "View Public Document",
         command: () => {},
       },
       {
-        label: "Copy Public URL",
         icon: "pi pi-fw pi-link",
+        label: "Copy Public URL",
         command: () => {},
       },
       {
-        label: "Delete Document",
         icon: "pi pi-fw pi-trash",
-        command: () =>
-          cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
+        label: "Delete Document",
+        command: () => cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
       },
     ];
     const folderItems = [
       {
-        label: "Edit Folder",
         icon: "pi pi-fw pi-pencil",
+        label: "Edit Folder",
         command: () => {
           if (cmType.data?.id)
             setDrawer({
               id: cmType.data.id,
               position: "right",
-              type: "documents",
               show: true,
+              type: "documents",
             });
         },
       },
@@ -134,10 +130,7 @@ export default function BaseTree({ data, type }: Props) {
         command: () => {
           if (cmType.data?.id) {
             if (data.some((item) => item.parent === cmType.data?.id)) {
-              toaster(
-                "error",
-                "Cannot convert to file if folder contains files.",
-              );
+              toaster("error", "Cannot convert to file if folder contains files.");
               return;
             }
             updateDocumentMutation?.mutate({
@@ -167,8 +160,7 @@ export default function BaseTree({ data, type }: Props) {
       {
         label: "Delete Folder",
         icon: "pi pi-fw pi-trash",
-        command: () =>
-          cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
+        command: () => cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
       },
     ];
     const templateItems = [
@@ -285,27 +277,12 @@ export default function BaseTree({ data, type }: Props) {
         rootId={"0"}
         sort={false}
         insertDroppableFirst={false}
-        initialOpen={
-          data?.filter((item) => item.expanded).map((doc) => doc.id) || false
-        }
-        render={(
-          node: NodeModel<TreeDataType>,
-          { depth, isOpen, onToggle },
-        ) => (
-          <TreeItem
-            node={node}
-            depth={depth}
-            isOpen={isOpen}
-            onToggle={onToggle}
-            type={type}
-            cm={cm}
-          />
+        initialOpen={data?.filter((item) => item.expanded).map((doc) => doc.id) || false}
+        render={(node: NodeModel<TreeDataType>, { depth, isOpen, onToggle }) => (
+          <TreeItem node={node} depth={depth} isOpen={isOpen} onToggle={onToggle} type={type} cm={cm} />
         )}
         dragPreviewRender={(monitorProps) => (
-          <DragPreview
-            text={monitorProps.item.text}
-            droppable={monitorProps.item.droppable}
-          />
+          <DragPreview text={monitorProps.item.text} droppable={monitorProps.item.droppable} />
         )}
         placeholderRender={(_, { depth }) => (
           <div

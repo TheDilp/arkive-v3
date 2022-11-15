@@ -51,7 +51,11 @@ export default function DrawerDocumentContent() {
 
   // Use item if editing or use a blank document (default values) if not to create new one
   const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(
-    document ?? { ...DefaultDocument, project_id: project_id as string },
+    document ?? {
+      ...DefaultDocument,
+      project_id: project_id as string,
+      template: drawer.exceptions?.createTemplate || false,
+    },
   );
   function DropdownFilter(doc: DocumentType) {
     if (!doc.folder || (document && doc.id === document.id)) return false;
