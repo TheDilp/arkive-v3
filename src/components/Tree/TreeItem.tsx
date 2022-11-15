@@ -19,14 +19,7 @@ type Props = {
   type: AvailableItemTypes;
 };
 
-export default function TreeItem({
-  node,
-  depth,
-  isOpen,
-  onToggle,
-  cm,
-  type,
-}: Props) {
+export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Props) {
   const { item_id } = useParams();
   const navigate = useNavigate();
   const [text, setText] = useAtom(SidebarTreeContextAtom);
@@ -51,8 +44,7 @@ export default function TreeItem({
             data: node.data,
             type: "doc_folder",
           });
-        else if (node.data?.template)
-          setText({ data: node.data, type: "template" });
+        else if (node.data?.template) setText({ data: node.data, type: "template" });
         else setText({ data: node.data, type: "document" });
         cm.current.show(e);
       }}>
@@ -62,17 +54,13 @@ export default function TreeItem({
             e.preventDefault();
             e.stopPropagation();
             updateMutation?.mutate({
-              id: node.id as string,
               expanded: !isOpen,
+              id: node.id as string,
             });
 
             onToggle();
           }}>
-          {isOpen ? (
-            <Icon icon="akar-icons:chevron-down" />
-          ) : (
-            <Icon icon="akar-icons:chevron-right" />
-          )}
+          {isOpen ? <Icon icon="akar-icons:chevron-down" /> : <Icon icon="akar-icons:chevron-right" />}
         </span>
       )}
 
@@ -83,10 +71,7 @@ export default function TreeItem({
         {node.data?.folder ? (
           <Icon icon="bxs:folder" inline={true} className="mr-1" />
         ) : (
-          <IconSelect
-            setIcon={(newIcon) =>
-              updateMutation?.mutate({ id: node.id as string, icon: newIcon })
-            }>
+          <IconSelect setIcon={(newIcon) => updateMutation?.mutate({ icon: newIcon, id: node.id as string })}>
             <Icon
               icon={node.data?.icon as string}
               inline={true}
@@ -96,12 +81,9 @@ export default function TreeItem({
         )}
       </span>
 
-      <div
-        className={`font-Lato flex items-center w-full ${
-          node.id === item_id && "text-sky-400"
-        }`}>
+      <div className={`font-Lato flex items-center w-full ${node.id === item_id && "text-sky-400"}`}>
         <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
-          {node.text} {node.data?.template ? "[TEMPLATE]" : null}
+          {node.text} {node.data?.template && !node.droppable ? "[TEMPLATE]" : null}
         </div>
         <div className="flex items-center opacity-0 group-hover:opacity-100">
           <Icon
@@ -110,10 +92,11 @@ export default function TreeItem({
             onClick={(e) => {
               e.stopPropagation();
               setDrawer({
+                exceptions: {},
                 id: node.id as string,
                 position: "right",
-                type: "documents",
                 show: true,
+                type: "documents",
               });
             }}
           />
