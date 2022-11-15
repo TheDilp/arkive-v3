@@ -38,8 +38,7 @@ export default function DrawerDocumentContent() {
           ...newData,
         },
         {
-          onSuccess: () =>
-            toaster("success", "Your document was successfully updated."),
+          onSuccess: () => toaster("success", "Your document was successfully updated."),
         },
       );
     } else {
@@ -61,16 +60,17 @@ export default function DrawerDocumentContent() {
   return (
     <div className="flex flex-col my-2 gap-y-8">
       <h2 className="text-2xl text-center">
-        {document
-          ? `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}`
-          : "Create New Document"}
+        {document ? `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}` : "Create New Document"}
       </h2>
       <div className="flex flex-col gap-y-2">
         <InputText
           className="w-full"
           value={localItem?.title || ""}
           onChange={(e) =>
-            setLocalItem((prev) => ({ ...prev, title: e.target.value }))
+            setLocalItem((prev) => ({
+              ...prev,
+              title: e.target.value,
+            }))
           }
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -94,14 +94,14 @@ export default function DrawerDocumentContent() {
               value={localItem?.parent}
               filter
               onChange={(e) => {
-                setLocalItem((prev) => ({ ...prev, parent: e.value }));
+                setLocalItem((prev) => ({
+                  ...prev,
+                  parent: e.value,
+                }));
               }}
               options={
                 allDocuments
-                  ? [
-                      { id: null, title: "Root" },
-                      ...allDocuments.filter(DropdownFilter),
-                    ]
+                  ? [{ id: null, title: "Root" }, ...allDocuments.filter(DropdownFilter)]
                   : [{ id: null, title: "Root" }]
               }
             />
@@ -113,7 +113,10 @@ export default function DrawerDocumentContent() {
           </label>
           <Checkbox
             onChange={(e) =>
-              setLocalItem((prev) => ({ ...prev, folder: e.checked }))
+              setLocalItem((prev) => ({
+                ...prev,
+                folder: e.checked,
+              }))
             }
             icon={<Icon icon="mdi:check" className="pointer-events-none" />}
             checked={localItem.folder}
@@ -123,15 +126,8 @@ export default function DrawerDocumentContent() {
           <label htmlFor="cb1" className="p-checkbox-label">
             Icon
           </label>
-          <IconSelect
-            setIcon={(newIcon: string) =>
-              setLocalItem((prev) => ({ ...prev, icon: newIcon }))
-            }>
-            <Icon
-              className="cursor-pointer"
-              icon={localItem.icon || "mdi:file"}
-              fontSize={20}
-            />
+          <IconSelect setIcon={(newIcon: string) => setLocalItem((prev) => ({ ...prev, icon: newIcon }))}>
+            <Icon className="cursor-pointer" icon={localItem.icon || "mdi:file"} fontSize={20} />
           </IconSelect>
         </div>
       </div>
@@ -162,10 +158,7 @@ export default function DrawerDocumentContent() {
           type="submit"
           onClick={() => {
             if (allDocuments?.some((item) => item.parent === localItem.id)) {
-              toaster(
-                "error",
-                "Cannot convert to file if folder contains files.",
-              );
+              toaster("error", "Cannot convert to file if folder contains files.");
               return;
             }
 
