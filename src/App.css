@@ -78,6 +78,27 @@
 }
 
 /* Mentions */
+
+.remirror-mention-atom-popup-wrapper {
+  @apply p-0 bg-zinc-700 !important;
+}
+
+.remirror-mention-atom-popup-item {
+  @apply text-white bg-zinc-700;
+}
+
+.remirror-mention-atom-popup-highlight {
+  @apply bg-zinc-500;
+}
+
+.remirror-mention-atom-popup-name {
+  color: white !important;
+}
+
+.remirror-suggest-atom {
+  color: white !important;
+}
+
 .remirror-mention-atom {
   @apply p-0 !important;
 }

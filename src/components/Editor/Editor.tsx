@@ -72,9 +72,11 @@ export default function Editor({ content, editable }: EditorType) {
           </div>
         </div>
       </div>
-      <div className="w-1/6 flex flex-col bg-zinc-800">
-        <TagsAutocomplete />
-      </div>
+      {editable ? (
+        <div className="w-1/6 flex flex-col bg-zinc-800">
+          <TagsAutocomplete />
+        </div>
+      ) : null}
     </div>
   );
 }

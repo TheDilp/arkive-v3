@@ -32,7 +32,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/project/:project_id/" element={<Layout />}>
               <Route path="wiki/*" element={<Wiki />}>
-                <Route path="doc/:item_id" element={<Editor />}></Route>
+                <Route path="doc/:item_id" element={<Editor editable={true} />}></Route>
               </Route>
             </Route>
           </Routes>
