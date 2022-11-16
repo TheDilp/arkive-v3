@@ -47,31 +47,33 @@ export default function Editor({ content, editable }: EditorType) {
 
   if (!currentDocument) return <Navigate to="../" />;
   return (
-    <div className="w-full h-full flex flex-col content-start flex-1">
-      <h1 className="w-full h-10 flex items-center justify-center mb-0 pr-20 text-2xl border-b font-Merriweather border-zinc-700">
-        <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
-        {currentDocument.title}
-        {currentDocument.template ? "[TEMPLATE]" : ""}
-      </h1>
-      <div className="w-full flex flex-1">
-        <div className="w-5/6 flex flex-col flex-1 ">
-          <Remirror
-            editable={editable || true}
-            classNames={["editor", "w-full", "h-full", "font-Lato"]}
-            manager={manager}
-            initialContent={state}>
-            <OnChangeJSON
-              onChange={(content: RemirrorJSON) => {
-                onChange(content, item_id as string);
-              }}
-            />
-            <EditorComponent />
-            <MentionDropdownComponent />
-          </Remirror>
+    <div className="h-full flex">
+      <div className="w-5/6 h-full flex flex-col content-start flex-1">
+        <h1 className="w-full h-10 flex items-center justify-center mb-0 pr-20 text-2xl border-b font-Merriweather border-zinc-700">
+          <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
+          {currentDocument.title}
+          {currentDocument.template ? "[TEMPLATE]" : ""}
+        </h1>
+        <div className="w-full flex flex-1">
+          <div className="flex flex-col flex-1">
+            <Remirror
+              editable={editable || true}
+              classNames={["editor", "w-full", "h-full", "font-Lato"]}
+              manager={manager}
+              initialContent={state}>
+              <OnChangeJSON
+                onChange={(content: RemirrorJSON) => {
+                  onChange(content, item_id as string);
+                }}
+              />
+              <EditorComponent />
+              <MentionDropdownComponent />
+            </Remirror>
+          </div>
         </div>
-        <div className="w-1/6 flex flex-col bg-zinc-800">
-          <TagsAutocomplete />
-        </div>
+      </div>
+      <div className="w-1/6 flex flex-col bg-zinc-800">
+        <TagsAutocomplete />
       </div>
     </div>
   );

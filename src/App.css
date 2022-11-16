@@ -61,7 +61,7 @@
   @apply list-disc;
 }
 .p-chips-multiple-container {
-  @apply max-w-full !important;
+  @apply max-w-full border-t-0 rounded-none !important;
 }
 .p-chips-token,
 .p-autocomplete-token {
