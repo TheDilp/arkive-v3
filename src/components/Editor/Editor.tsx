@@ -1,10 +1,5 @@
 import { Icon } from "@iconify/react";
-import {
-  EditorComponent,
-  OnChangeJSON,
-  Remirror,
-  useRemirror,
-} from "@remirror/react";
+import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
 import { useCallback, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
@@ -15,39 +10,27 @@ import { useGetItem } from "../../hooks/getItemHook";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
+import PropertiesBar from "../PropertiesBar/PropertiesBar";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
-  const currentDocument = useGetItem(
-    project_id as string,
-    item_id as string,
-    "documents",
-  );
+  const currentDocument = useGetItem(project_id as string, item_id as string, "documents");
   const updateDocumentMutation = useUpdateMutation("documents");
 
   const { manager, state } = useRemirror({
+    content: editable === false ? content || undefined : currentDocument?.content,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     extensions: DefaultEditorExtensions(),
-    content:
-      editable === false ? content || undefined : currentDocument?.content,
     selection: "start",
-    extraAttributes: [
-      {
-        identifiers: ["ul", "ol"],
-        attributes: { closed: { default: null } },
-      },
-    ],
   });
 
-  const debounced = useDebouncedCallback(
-    (content: RemirrorJSON, id: string) => {
-      updateDocumentMutation?.mutate({
-        id,
-        content,
-      });
-    },
-    850,
-  );
+  const debounced = useDebouncedCallback((content: RemirrorJSON, id: string) => {
+    updateDocumentMutation?.mutate({
+      content,
+      id,
+    });
+  }, 850);
   const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {
     debounced(content, doc_id);
   }, []);
@@ -56,10 +39,7 @@ export default function Editor({ content, editable }: EditorType) {
     if (currentDocument) {
       manager.view.updateState(
         manager.createState({
-          content:
-            editable === false
-              ? content || undefined
-              : currentDocument?.content || undefined,
+          content: editable === false ? content || undefined : currentDocument?.content || undefined,
         }),
       );
     }
@@ -68,7 +48,7 @@ export default function Editor({ content, editable }: EditorType) {
   if (!currentDocument) return <Navigate to="../" />;
   return (
     <div className="w-full h-full flex flex-col content-start flex-1">
-      <h1 className="w-full h-10 flex items-center justify-center mb-0 pr-20 text-3xl border-b font-Merriweather border-zinc-700">
+      <h1 className="w-full h-10 flex items-center justify-center mb-0 pr-20 text-2xl border-b font-Merriweather border-zinc-700">
         <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
         {currentDocument.title}
         {currentDocument.template ? "[TEMPLATE]" : ""}
@@ -88,6 +68,10 @@ export default function Editor({ content, editable }: EditorType) {
             <EditorComponent />
             <MentionDropdownComponent />
           </Remirror>
+        </div>
+        <div className="w-1/6 flex flex-col bg-zinc-800">
+          <div className="h-10 border-b border-zinc-600"></div>
+          <PropertiesBar />
         </div>
       </div>
     </div>

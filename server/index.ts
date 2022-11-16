@@ -7,9 +7,7 @@ import { projectRouter } from "./routers/ProjectRouter";
 
 export const prisma = new PrismaClient();
 
-const server = fastify({
-  maxParamLength: 5000,
-});
+const server = fastify();
 
 server.register(cors, {
   origin: (origin, cb) => {
@@ -27,7 +25,7 @@ server.register(projectRouter);
 server.register(getRouter);
 server.register(documentRouter);
 
-server.listen({ port: 8080 }, (err, address) => {
+server.listen({ port: 5174 }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);

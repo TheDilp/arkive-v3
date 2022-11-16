@@ -32,12 +32,12 @@ export default function BaseTree({ data, type }: Props) {
 
   const rootItems = [
     {
-      command: () => {},
+      // command: () => {},
       icon: "pi pi-fw pi-file",
       label: "New Document",
     },
     {
-      command: () => {},
+      // command: () => {},
       icon: "pi pi-fw pi-folder",
       label: "New Folder",
     },
@@ -46,8 +46,6 @@ export default function BaseTree({ data, type }: Props) {
   function contextMenuItems(cmType: SidebarTreeItemType) {
     const docItems = [
       {
-        icon: "pi pi-fw pi-pencil",
-        label: "Edit Document",
         command: () => {
           if (cmType.data?.id)
             setDrawer({
@@ -58,75 +56,76 @@ export default function BaseTree({ data, type }: Props) {
               type: "documents",
             });
         },
+        icon: "pi pi-fw pi-pencil",
+        label: "Edit Document",
       },
 
       {
-        label: "Change To Folder",
-        icon: "pi pi-fw pi-folder",
         command: () => {
           if (cmType.data?.id) {
             updateDocumentMutation?.mutate({
-              id: cmType.data.id,
               folder: true,
+              id: cmType.data.id,
             });
           }
         },
+        icon: "pi pi-fw pi-folder",
+        label: "Change To Folder",
       },
       {
-        icon: "pi pi-fw pi-copy",
-        label: "Covert to Template",
         command: () => {
           if (cmType.data) {
             createDocumentMutation?.mutate({
               ...cmType.data,
+              id: uuid(),
               parent: null,
               project_id: project_id as string,
-              id: uuid(),
               template: true,
             });
           }
         },
+        icon: "pi pi-fw pi-copy",
+        label: "Covert to Template",
       },
       {
         icon: "pi pi-fw pi-download",
         label: "Export JSON",
-        command: () => {},
+        // command: () => {},
       },
       { separator: true },
       {
         icon: "pi pi-fw pi-external-link",
         label: "View Public Document",
-        command: () => {},
+        // command: () => {},
       },
       {
         icon: "pi pi-fw pi-link",
         label: "Copy Public URL",
-        command: () => {},
+        // command: () => {},
       },
       {
+        command: () => cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
         icon: "pi pi-fw pi-trash",
         label: "Delete Document",
-        command: () => cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
       },
     ];
     const folderItems = [
       {
-        icon: "pi pi-fw pi-pencil",
-        label: "Edit Folder",
         command: () => {
           if (cmType.data?.id)
             setDrawer({
+              exceptions: {},
               id: cmType.data.id,
               position: "right",
               show: true,
               type: "documents",
             });
         },
+        icon: "pi pi-fw pi-pencil",
+        label: "Edit Folder",
       },
 
       {
-        label: "Change To File",
-        icon: "pi pi-fw, pi-file",
         command: () => {
           if (cmType.data?.id) {
             if (data.some((item) => item.parent === cmType.data?.id)) {
@@ -134,59 +133,62 @@ export default function BaseTree({ data, type }: Props) {
               return;
             }
             updateDocumentMutation?.mutate({
-              id: cmType.data.id,
               folder: false,
+              id: cmType.data.id,
             });
           }
         },
+        icon: "pi pi-fw, pi-file",
+        label: "Change To File",
       },
       {
-        label: "Insert Into Folder",
         icon: "pi pi-fw pi-plus",
         items: [
           {
-            label: "Insert Document",
+            // command: () => {},
             icon: "pi pi-fw pi-file",
-            command: () => {},
+            label: "Insert Document",
           },
           {
-            label: "Insert Folder",
+            // command: () => {},
             icon: "pi pi-fw pi-folder",
-            command: () => {},
+            label: "Insert Folder",
           },
         ],
+        label: "Insert Into Folder",
       },
       { separator: true },
       {
-        label: "Delete Folder",
-        icon: "pi pi-fw pi-trash",
         command: () => cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
+        icon: "pi pi-fw pi-trash",
+        label: "Delete Folder",
       },
     ];
     const templateItems = [
       {
-        label: "Edit Document",
-        icon: "pi pi-fw pi-pencil",
         command: () => {
           if (cmType.data?.id)
             setDrawer({
+              exceptions: {},
               id: cmType.data.id,
               position: "right",
-              type: "documents",
               show: true,
+              type: "documents",
             });
         },
+        icon: "pi pi-fw pi-pencil",
+        label: "Edit Document",
       },
 
       {
-        label: "Create Doc From Template",
         icon: "pi pi-fw pi-copy",
-        command: () => {},
+        label: "Create Doc From Template",
+        // command: () => {},
       },
       { separator: true },
       {
-        label: "Delete Document",
         icon: "pi pi-fw pi-trash",
+        label: "Delete Document",
         // command: confirmdelete,
       },
     ];
@@ -217,11 +219,11 @@ export default function BaseTree({ data, type }: Props) {
                   selectedTags.every((tag) => doc.tags.includes(tag)),
               )
               .map((doc: DocumentType) => ({
-                id: doc.id,
-                text: doc.title,
-                droppable: doc.folder,
-                parent: "0",
                 data: doc,
+                droppable: doc.folder,
+                id: doc.id,
+                parent: "0",
+                text: doc.title,
               })),
           );
         }, 300);
