@@ -60,6 +60,22 @@
 .editor ul {
   @apply list-disc;
 }
+.p-chips-multiple-container {
+  @apply max-w-full !important;
+}
+.p-chips-token,
+.p-autocomplete-token {
+  @apply my-0.5 !important;
+}
+.p-chips-token-label {
+  @apply truncate;
+}
+.alterNamesChips .p-chips-token {
+  @apply bg-orange-600 max-w-full !important;
+}
+.documentTagsAutocomplete .p-autocomplete-token {
+  @apply bg-blue-500 !important;
+}
 
 /* Mentions */
 .remirror-mention-atom {
@@ -71,10 +87,8 @@
 .remirror-mention-atom-popup-item.remirror-mention-atom-popup-highlight {
   @apply bg-blue-400;
 }
-.remirror-mention-atom-popup-item.remirror-mention-atom-popup-highlight
-  .remirror-mention-atom-popup-name,
-.remirror-mention-atom-popup-item.remirror-mention-atom-popup-hovered
-  .remirror-mention-atom-popup-name {
+.remirror-mention-atom-popup-item.remirror-mention-atom-popup-highlight .remirror-mention-atom-popup-name,
+.remirror-mention-atom-popup-item.remirror-mention-atom-popup-hovered .remirror-mention-atom-popup-name {
   @apply text-white;
 }
 .remirror-mention-atom-popup-item.remirror-mention-atom-popup-hovered {

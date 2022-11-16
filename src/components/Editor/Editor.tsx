@@ -10,7 +10,7 @@ import { useGetItem } from "../../hooks/getItemHook";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
-import PropertiesBar from "../PropertiesBar/PropertiesBar";
+import TagsAutocomplete from "../PropertiesBar/PropertiesBar";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
@@ -70,8 +70,7 @@ export default function Editor({ content, editable }: EditorType) {
           </Remirror>
         </div>
         <div className="w-1/6 flex flex-col bg-zinc-800">
-          <div className="h-10 border-b border-zinc-600"></div>
-          <PropertiesBar />
+          <TagsAutocomplete />
         </div>
       </div>
     </div>
