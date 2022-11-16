@@ -31,7 +31,7 @@ export default function TemplatesTree() {
     [],
   );
   const { data, isLoading, error } = useGetAllDocuments(project_id as string);
-  if (isLoading || error) return "Loading...";
+  if (isLoading || error) return <span>Loading...</span>;
 
   return (
     <div className="flex flex-col">

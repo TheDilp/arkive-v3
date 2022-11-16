@@ -10,7 +10,6 @@ import Dashboard from "./pages/Dashboard";
 import { DndProvider } from "react-dnd";
 import Editor from "./components/Editor/Editor";
 import Layout from "./components/Layout/Layout";
-import Wiki from "./pages/Wiki/Wiki";
 import { ToastContainer } from "react-toastify";
 
 function App() {
@@ -31,9 +30,19 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/project/:project_id/" element={<Layout />}>
-              <Route path="wiki/*" element={<Wiki />}>
+              <Route path="wiki/*">
                 <Route path="doc/:item_id" element={<Editor editable={true} />}></Route>
               </Route>
+              <Route path="maps/*">
+                <Route path=":id" element={<div>MAP</div>}></Route>
+              </Route>
+              <Route path="boards/*">
+                <Route path=":id" element={<div>BOARD</div>}></Route>
+              </Route>
+              <Route path="timelines/*">
+                <Route path=":id" element={<div>TIMELINE</div>}></Route>
+              </Route>
+              <Route path="settings" element={<div>SETTINGS</div>}></Route>
             </Route>
           </Routes>
         </DndProvider>

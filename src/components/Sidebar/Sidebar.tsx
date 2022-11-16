@@ -3,9 +3,8 @@ import TabsList from "../Tab/Tabs";
 import { Tab } from "@headlessui/react";
 import DocumentsTree from "../Tree/DocumentsTree";
 import TemplatesTree from "../Tree/TemplatesTree";
-type Props = {};
 
-export default function Sidebar({}: Props) {
+export default function Sidebar() {
   const { pathname } = useLocation();
   if (pathname.includes("wiki"))
     return (
@@ -21,6 +20,9 @@ export default function Sidebar({}: Props) {
         </Tab.Group>
       </div>
     );
+  if (pathname.includes("maps")) return <div className="flex flex-col flex-1 bg-zinc-800">MAPS</div>;
+  if (pathname.includes("boards")) return <div className="flex flex-col flex-1 bg-zinc-800">BOARDS</div>;
+  if (pathname.includes("timelines")) return <div className="flex flex-col flex-1 bg-zinc-800">TIMELINES</div>;
 
   return null;
 }

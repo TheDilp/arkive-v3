@@ -18,7 +18,11 @@ export default function Layout() {
           <Sidebar />
         </div>
         {/* <div className="w-5/6 outletWrapper"> */}
-        <Outlet />
+        <div className="h-full flex flex-1">
+          <div className="flex-1">
+            <Outlet />
+          </div>
+        </div>
         {/* </div> */}
       </div>
     </div>
