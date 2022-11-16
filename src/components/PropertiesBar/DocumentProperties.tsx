@@ -84,15 +84,17 @@ export default function TagsAutocomplete() {
       />
       <Accordion>
         <AccordionTab header="Options">
-          <div className="w-full flex items-center justify-between flex-nowrap">
-            <label className="mx-2">Public:</label>
-            <Checkbox
-              checked={currentDocument?.public}
-              tooltip="If checked, anyone can access the content via a public page"
-              tooltipOptions={{ position: "left", showDelay: 500 }}
-              onChange={(e) => handlePublicChange(e.checked)}
-            />
-          </div>
+          {!currentDocument?.template ? (
+            <div className="w-full flex items-center justify-between flex-nowrap">
+              <label className="mx-2">Public:</label>
+              <Checkbox
+                checked={currentDocument?.public}
+                tooltip="If checked, anyone can access the content via a public page"
+                tooltipOptions={{ position: "left", showDelay: 500 }}
+                onChange={(e) => handlePublicChange(e.checked)}
+              />
+            </div>
+          ) : null}
         </AccordionTab>
       </Accordion>
     </span>
