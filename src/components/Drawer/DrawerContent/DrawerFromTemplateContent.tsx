@@ -4,10 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import {
-  useCreateMutation,
-  useGetAllDocuments,
-} from "../../../CRUD/DocumentCRUD";
+import { useCreateMutation, useGetAllDocuments } from "../../../CRUD/DocumentCRUD";
 import { DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -26,9 +23,7 @@ export default function DrawerFromTemplateContent() {
   }
   return (
     <div className="flex flex-col my-2 gap-y-8">
-      <h2 className="text-2xl text-center">
-        {document ? `Edit ${document.title}` : "Create New Document"}
-      </h2>
+      <h2 className="text-2xl text-center">{document ? `Edit ${document.title}` : "Create New Document"}</h2>
       <div className="flex flex-col gap-y-2">
         <div className="my-2">
           <Dropdown
@@ -41,9 +36,7 @@ export default function DrawerFromTemplateContent() {
             onChange={(e) => {
               setSelectedTemplate(e.value as string);
             }}
-            options={
-              allDocuments ? [...allDocuments.filter(DropdownFilter)] : []
-            }
+            options={allDocuments ? [...allDocuments.filter(DropdownFilter)] : []}
           />
         </div>
 
@@ -52,14 +45,12 @@ export default function DrawerFromTemplateContent() {
             className="ml-auto p-button-outlined p-button-success"
             type="submit"
             onClick={() => {
-              const template = allDocuments?.find(
-                (doc) => doc.id === selectedTemplate,
-              );
+              const template = allDocuments?.find((doc) => doc.id === selectedTemplate);
               createDocumentMutation?.mutate({
                 ...template,
-                template: false,
-                project_id: project_id as string,
                 id: v4(),
+                project_id: project_id as string,
+                template: false,
               });
             }}>
             {buttonLabelWithIcon("Save", "mdi:content-save")}

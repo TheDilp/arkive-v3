@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   useCreateMutation,
@@ -34,8 +34,10 @@ export default function DrawerDocumentContent() {
     if (document) {
       updateDocumentMutation?.mutate(
         {
+          folder: newData.folder,
+          icon: newData.icon,
           id: document.id,
-          ...newData,
+          title: newData.title,
         },
         {
           onSuccess: () => toaster("success", "Your document was successfully updated."),
@@ -57,6 +59,19 @@ export default function DrawerDocumentContent() {
       template: drawer.exceptions?.createTemplate || false,
     },
   );
+
+  useEffect(() => {
+    if (document) {
+      setLocalItem(document);
+    } else {
+      setLocalItem({
+        ...DefaultDocument,
+        project_id: project_id as string,
+        template: drawer.exceptions?.createTemplate || false,
+      });
+    }
+  }, [document]);
+
   function DropdownFilter(doc: DocumentType) {
     if (!doc.folder || (document && doc.id === document.id)) return false;
     return true;
