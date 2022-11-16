@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import TagsAutocomplete from "../../components/PropertiesBar/PropertiesBar";
+import TagsAutocomplete from "../../components/PropertiesBar/DocumentProperties";
 
 export default function Wiki() {
   return (

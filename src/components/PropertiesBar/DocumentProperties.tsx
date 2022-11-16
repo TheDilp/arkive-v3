@@ -1,10 +1,12 @@
 import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Chips } from "primereact/chips";
+import { Accordion, AccordionTab } from "primereact/accordion";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { useGetAllTags } from "../../CRUD/queries";
 import { useGetItem } from "../../hooks/getItemHook";
+import { Checkbox } from "primereact/checkbox";
 
 export default function TagsAutocomplete() {
   const { project_id, item_id } = useParams();
@@ -41,6 +43,14 @@ export default function TagsAutocomplete() {
     }
   };
 
+  const handlePublicChange = (checked: boolean) => {
+    if (currentDocument)
+      updateDocumentMutation?.mutate({
+        id: currentDocument.id as string,
+        public: checked,
+      });
+  };
+
   return (
     <span className="overflow-hidden p-fluid propertiesBar">
       <Chips
@@ -72,6 +82,19 @@ export default function TagsAutocomplete() {
           }
         }}
       />
+      <Accordion>
+        <AccordionTab header="Options">
+          <div className="w-full flex items-center justify-between flex-nowrap">
+            <label className="mx-2">Public:</label>
+            <Checkbox
+              checked={currentDocument?.public}
+              tooltip="If checked, anyone can access the content via a public page"
+              tooltipOptions={{ position: "left", showDelay: 500 }}
+              onChange={(e) => handlePublicChange(e.checked)}
+            />
+          </div>
+        </AccordionTab>
+      </Accordion>
     </span>
   );
 }

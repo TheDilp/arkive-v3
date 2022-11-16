@@ -10,7 +10,7 @@ import { useGetItem } from "../../hooks/getItemHook";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
-import TagsAutocomplete from "../PropertiesBar/PropertiesBar";
+import TagsAutocomplete from "../PropertiesBar/DocumentProperties";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
