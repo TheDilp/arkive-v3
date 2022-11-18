@@ -56,7 +56,7 @@ export default function TagsAutocomplete() {
       <Chips
         value={currentDocument?.alter_names}
         allowDuplicate={false}
-        className="w-full max-w-full overflow-x-scroll max-h-40 alterNamesChips"
+        className="w-full max-w-full box-border border-b border-l border-zinc-600 max-h-40 alterNamesChips"
         placeholder="Alternative names (5 max)"
         max={5}
         onChange={(e) => {
@@ -65,7 +65,7 @@ export default function TagsAutocomplete() {
         }}
       />
       <AutoComplete
-        className="max-h-40 documentTagsAutocomplete"
+        className="border-t max-h-40 border-zinc-600 documentTagsAutocomplete"
         value={currentDocument?.tags}
         suggestions={tags.suggestions}
         completeMethod={filterTags}
