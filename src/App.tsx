@@ -23,7 +23,7 @@ function App() {
   });
 
   return (
-    <main className="h-screen flex flex-col">
+    <main className="h-screen flex flex-col overflow-hidden">
       <ToastContainer autoClose={3000} newestOnTop pauseOnHover theme="dark" />
       <QueryClientProvider client={queryClient}>
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
