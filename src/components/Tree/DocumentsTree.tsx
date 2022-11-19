@@ -47,7 +47,7 @@ export default function DocumentsTree() {
   if (error) return <div>Error </div>;
 
   return (
-    <div className="flex flex-col">
+    <>
       <SplitButton
         className="p-button-outlined"
         label="Quick Create"
@@ -62,6 +62,6 @@ export default function DocumentsTree() {
       />
 
       {data ? <BaseTree data={data.filter((doc) => !doc.template)} type="documents" /> : null}
-    </div>
+    </>
   );
 }

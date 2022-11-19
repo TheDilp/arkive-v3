@@ -11,10 +11,10 @@ export default function Sidebar() {
       <div className="flex flex-col flex-1 bg-zinc-800">
         <Tab.Group>
           <TabsList tabs={["Documents", "Templates"]} />
-          <Tab.Panel className="max-w-full p-2 surface-50">
+          <Tab.Panel className="max-w-full flex flex-col flex-1 p-2">
             <DocumentsTree />
           </Tab.Panel>
-          <Tab.Panel className="max-w-full p-2 surface-50">
+          <Tab.Panel className="max-w-full flex flex-col flex-1 p-2">
             <TemplatesTree />
           </Tab.Panel>
         </Tab.Group>

@@ -55,6 +55,13 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
       }
     },
   );
+  server.post("/sortdocuments", async (req: FastifyRequest<{ Body: string }>) => {
+    const indexes: { id: string; parent: string; sort: number }[] = JSON.parse(req.body);
+    const updates = indexes.map((idx) =>
+      prisma.documents.update({ data: { parent: idx.parent, sort: idx.sort }, where: { id: idx.id } }),
+    );
+    await prisma.$transaction(updates);
+  });
   server.delete(
     "/deletedocument/:id",
     async (

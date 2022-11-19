@@ -13,19 +13,14 @@ type Props = {
 
 export default function MentionReactComponent({ node }: Props) {
   const queryClient = useQueryClient();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+
   const { project_id } = useParams();
   if (node?.attrs) {
-    const { id, name, label } = node?.attrs;
+    const { id, name, label } = node.attrs;
 
     if (name === "at") {
-      const docs: DocumentType[] | undefined = queryClient.getQueryData([
-        "allDocuments",
-        project_id,
-      ]);
-      let docItem = docs
-        ? docs.find((doc) => doc.id === id.replace(/^alter-\d /g, ""))
-        : undefined;
+      const docs: DocumentType[] | undefined = queryClient.getQueryData(["allDocuments", project_id]);
+      const docItem = docs ? docs.find((doc) => doc.id === id.replace(/^alter-\d /g, "")) : undefined;
 
       if (docItem) {
         let title = "";
@@ -44,24 +39,9 @@ export default function MentionReactComponent({ node }: Props) {
         else {
           title = docItem.title;
         }
-        console.log(docItem);
-        return (
-          <DocumentMention
-            title={title}
-            content={docItem.content}
-            id={docId}
-            label={label}
-          />
-        );
+        return <DocumentMention title={title} content={docItem.content} id={docId} label={label} />;
       } else {
-        return (
-          <DocumentMention
-            title={label}
-            content={undefined}
-            id={undefined}
-            label={label}
-          />
-        );
+        return <DocumentMention title={label} content={undefined} id={undefined} label={label} />;
       }
     }
     //   else if (nodeName === "hash") {

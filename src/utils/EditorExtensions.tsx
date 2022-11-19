@@ -1,12 +1,4 @@
-import {
-  Callout,
-  createLinkHandler,
-  Doc,
-  Heading,
-  MarkMap,
-  PlaceholderExtension,
-  TextHandler,
-} from "@remirror/react";
+import { Callout, createLinkHandler, Doc, Heading, MarkMap, PlaceholderExtension, TextHandler } from "@remirror/react";
 import { ComponentType, FC } from "react";
 import { RemirrorJSON } from "remirror";
 import {
@@ -36,9 +28,9 @@ export const DefaultEditorExtensions = () => {
   const CustomMentionExtension = new MentionAtomExtension({
     matchers: [
       {
-        name: "at",
-        char: "@",
         appendText: "",
+        char: "@",
+        name: "at",
       },
       // {
       //   name: "hash",
@@ -114,21 +106,21 @@ export const typeMap: MarkMap = {
   hardBreak: "br",
   heading: Heading,
   horizontalRule: "hr",
+  image: "img",
+  listItem: "li",
   mentionAtom: (props) => {
     console.log(props);
     return <MentionReactComponent {...props.node.attrs} disableTooltip />;
   },
-  image: "img",
-  listItem: "li",
-  paragraph: "p",
   orderedList: "ol",
+  paragraph: "p",
   text: TextHandler,
 };
 
 export const markMap: MarkMap = {
-  italic: "em",
   bold: "strong",
   code: "code",
+  italic: "em",
   link: createLinkHandler({ target: "_blank" }),
   underline: "u",
 };

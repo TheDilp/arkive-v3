@@ -1,5 +1,5 @@
 export enum baseURLS {
-  baseServer = "http://localhost:8080/",
+  baseServer = "http://localhost:5174/",
 }
 export enum getURLS {
   //  Projects
@@ -21,6 +21,8 @@ export enum createURLS {
 export enum updateURLs {
   updateProject = "updateproject/",
   updateDocument = "updatedocument/",
+
+  sortDocuments = "sortdocuments",
 }
 
 export enum deleteURLs {

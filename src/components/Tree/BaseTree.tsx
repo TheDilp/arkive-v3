@@ -1,7 +1,7 @@
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useCreateMutation, useDeleteMutation, useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useCreateMutation, useDeleteMutation, useSortMutation, useUpdateMutation } from "../../CRUD/DocumentCRUD";
 import { useLayoutEffect, useRef, useState } from "react";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -25,9 +25,10 @@ type Props = {
 };
 
 export default function BaseTree({ data, type }: Props) {
-  const createDocumentMutation = useCreateMutation(type);
-  const updateDocumentMutation = useUpdateMutation(type);
-  const deleteDocumentMutation = useDeleteMutation(type);
+  const createItemMutation = useCreateMutation(type);
+  const updateItemMutation = useUpdateMutation(type);
+  const deleteItemMutation = useDeleteMutation(type);
+  const sortItemMutation = useSortMutation(type);
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const rootItems = [
@@ -63,7 +64,7 @@ export default function BaseTree({ data, type }: Props) {
       {
         command: () => {
           if (cmType.data?.id) {
-            updateDocumentMutation?.mutate({
+            updateItemMutation?.mutate({
               folder: true,
               id: cmType.data.id,
             });
@@ -75,7 +76,7 @@ export default function BaseTree({ data, type }: Props) {
       {
         command: () => {
           if (cmType.data) {
-            createDocumentMutation?.mutate({
+            createItemMutation?.mutate({
               ...cmType.data,
               id: uuid(),
               parent: null,
@@ -104,7 +105,7 @@ export default function BaseTree({ data, type }: Props) {
         // command: () => {},
       },
       {
-        command: () => cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
+        command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
         icon: "pi pi-fw pi-trash",
         label: "Delete Document",
       },
@@ -132,7 +133,7 @@ export default function BaseTree({ data, type }: Props) {
               toaster("error", "Cannot convert to file if folder contains files.");
               return;
             }
-            updateDocumentMutation?.mutate({
+            updateItemMutation?.mutate({
               folder: false,
               id: cmType.data.id,
             });
@@ -159,7 +160,7 @@ export default function BaseTree({ data, type }: Props) {
       },
       { separator: true },
       {
-        command: () => cmType.data?.id && deleteDocumentMutation?.mutate(cmType.data.id),
+        command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
         icon: "pi pi-fw pi-trash",
         label: "Delete Folder",
       },
@@ -230,13 +231,15 @@ export default function BaseTree({ data, type }: Props) {
         return () => clearTimeout(timeout);
       } else {
         setTreeData(
-          data.map((item) => ({
-            data: item,
-            droppable: item.folder,
-            id: item.id,
-            parent: item.parent || "0",
-            text: item.title,
-          })),
+          data
+            .map((item) => ({
+              data: item,
+              droppable: item.folder,
+              id: item.id,
+              parent: item.parent || "0",
+              text: item.title,
+            }))
+            .sort((a, b) => a.data.sort - b.data.sort),
         );
       }
     }
@@ -270,10 +273,10 @@ export default function BaseTree({ data, type }: Props) {
       />
       <Tree
         classes={{
-          container: "list-none",
+          container: "list-none  flex-1",
           listItem: "listitem",
           placeholder: "relative",
-          root: "w-full mt-1 pl-0 overflow-y-auto",
+          root: "w-full mt-1 pl-0 overflow-y-auto flex flex-col flex-1",
         }}
         tree={treeData}
         rootId={"0"}
@@ -308,10 +311,10 @@ export default function BaseTree({ data, type }: Props) {
           }
         }}
         onDrop={(tree, options) => {
-          handleDrop(tree, setTreeData);
           const { dragSourceId, dropTargetId } = options;
+          handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
           if (type === "documents")
-            updateDocumentMutation?.mutate({
+            updateItemMutation?.mutate({
               id: dragSourceId as string,
               parent: dropTargetId === "0" ? null : (dropTargetId as string),
             });
