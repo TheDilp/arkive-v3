@@ -119,6 +119,11 @@
   @apply bg-blue-200 cursor-pointer;
 }
 
+/* Properties Panel */
+.p-accordion-header-link {
+  @apply focus:shadow-none !important;
+}
+
 ::-webkit-scrollbar {
   width: 0.25rem;
   height: 0.25rem;
