@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import TabsList from "../Tab/Tabs";
-import { Tab } from "@headlessui/react";
+import { TabView, TabPanel } from "primereact/tabview";
 import DocumentsTree from "../Tree/DocumentsTree";
 import TemplatesTree from "../Tree/TemplatesTree";
 
@@ -9,15 +9,14 @@ export default function Sidebar() {
   if (pathname.includes("wiki"))
     return (
       <div className="flex flex-col flex-1 bg-zinc-800">
-        <Tab.Group>
-          <TabsList tabs={["Documents", "Templates"]} />
-          <Tab.Panel className="max-w-full flex flex-col flex-1 p-2">
+        <TabView renderActiveOnly className="flex flex-col flex-1">
+          <TabPanel className="w-full flex flex-col flex-1" header="Documents">
             <DocumentsTree />
-          </Tab.Panel>
-          <Tab.Panel className="max-w-full flex flex-col flex-1 p-2">
+          </TabPanel>
+          <TabPanel className="w-full flex flex-col flex-1" header="Templates">
             <TemplatesTree />
-          </Tab.Panel>
-        </Tab.Group>
+          </TabPanel>
+        </TabView>
       </div>
     );
   if (pathname.includes("maps")) return <div className="flex flex-col flex-1 bg-zinc-800">MAPS</div>;

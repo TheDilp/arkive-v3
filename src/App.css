@@ -17,13 +17,18 @@
   width: 100% !important;
   text-align: center !important;
 }
-
+.p-tabview-nav-link {
+  @apply w-full flex justify-center text-center rounded-none !important;
+}
+.p-tabview-panels {
+  @apply flex-1 !important;
+}
 /* Editor */
 .remirror-editor-wrapper {
   @apply flex-col flex-1;
 }
 .remirror-editor.ProseMirror {
-  @apply overflow-y-hidden !important;
+  @apply overflow-y-auto !important;
 }
 .editor {
   @apply p-4 font-Lato;
