@@ -13,7 +13,6 @@
   "dependencies": {
     "@floating-ui/react-dom": "^1.0.0",
     "@floating-ui/react-dom-interactions": "^0.10.3",
-    "@headlessui/react": "^1.7.4",
     "@iconify/react": "^4.0.0",
     "@minoru/react-dnd-treeview": "^3.3.0",
     "@remirror/pm": "^2.0.1",

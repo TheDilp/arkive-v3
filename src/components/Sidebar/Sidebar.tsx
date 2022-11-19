@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import TabsList from "../Tab/Tabs";
 import { TabView, TabPanel } from "primereact/tabview";
 import DocumentsTree from "../Tree/DocumentsTree";
 import TemplatesTree from "../Tree/TemplatesTree";
