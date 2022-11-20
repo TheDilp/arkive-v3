@@ -46,7 +46,7 @@ export default function Breadcrumbs() {
           {
             template: (
               <Link
-                className="text-white fontWeight700"
+                className="font-bold text-white"
                 to={`/project/${project_id}/wiki/${currentDocument.folder ? "folder" : "doc"}/${currentDocument.id}`}>
                 {currentDocument.title}
               </Link>
@@ -70,7 +70,7 @@ export default function Breadcrumbs() {
           height: "21px",
         },
       }}
-      className="w-full border-none border-bottom-2 border-noround z-5 bg-transparent"
+      className="w-full font-bold bg-transparent border-none border-bottom-2 border-noround z-5"
       style={{
         height: "50px",
       }}
