@@ -28,7 +28,7 @@ export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
     ) => {
       const files = req.body;
       const { type, project_id } = req.params;
-      const dir = `./assets/images/${project_id}`;
+      const dir = `./assets/${type}/${project_id}`;
       if (!existsSync(dir)) {
         //check if folder already exists
         mkdirSync(dir); //creating folder
