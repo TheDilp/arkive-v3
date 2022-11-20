@@ -17,8 +17,8 @@ import { MultiSelect } from "primereact/multiselect";
 import { useGetAllTags } from "../../CRUD/queries";
 import { toaster } from "../../utils/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
-import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
 import { MapType } from "../../types/mapTypes";
+import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
   data: (DocumentType | MapType)[];

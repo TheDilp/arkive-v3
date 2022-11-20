@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useCreateMutation, useGetAllDocuments } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
-import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
+import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
 
 export default function DocumentsTree() {

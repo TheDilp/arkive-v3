@@ -1,15 +1,17 @@
 import { Icon } from "@iconify/react";
+import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
+import { DialogAtom } from "../../utils/Atoms/atoms";
+import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { project_id } = useParams();
-  const [uploadDialog, setUploadDialog] = useState(false);
+  const [dialog, setDialog] = useAtom(DialogAtom);
   const [search, setSearch] = useState<string | null>(null);
   const projectData = useGetSingleProject(project_id as string);
-
   function navbarShortcuts(e) {
     if (e.ctrlKey && project_id) {
       if (e.key === "1") {
@@ -116,7 +118,13 @@ export default function Navbar() {
               }}
             />
 
-            <span className="ml-auto">
+            <span className="flex items-center ml-auto gap-x-2">
+              <Icon
+                className="cursor-pointer hover:text-blue-300"
+                icon="ion:upload"
+                fontSize={20}
+                onClick={async () => setDialog({ ...DefaultDialog, position: "top", show: true })}
+              />
               <Icon
                 className="cursor-pointer hover:text-blue-300"
                 icon="ion:images"
@@ -136,9 +144,7 @@ export default function Navbar() {
           style={{
             top: "0.25rem",
           }}>
-          <h2 className="mx-auto my-0 text-3xl font-Merriweather">
-            {projectData?.data?.title}
-          </h2>
+          <h2 className="mx-auto my-0 text-3xl font-Merriweather">{projectData?.data?.title}</h2>
         </div>
       )}
     </div>

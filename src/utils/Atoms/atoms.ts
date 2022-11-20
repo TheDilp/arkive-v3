@@ -1,19 +1,15 @@
 import { atom } from "jotai";
+import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
-import { DefaultDrawer } from "../DefaultValues/DocumentDefaults";
+import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
 
-export type DrawerAtomType = {
+export type DialogAtomType = {
   id: null | string;
   type: null | AvailableItemTypes;
-  drawerSize?: "sm" | "md" | "lg";
   position?: "left" | "right" | "top" | "bottom";
   modal?: boolean;
   fullscreen?: boolean;
-  exceptions: {
-    fromTemplate?: boolean;
-    createTemplate?: boolean;
-  };
   show: boolean;
 };
 
@@ -23,3 +19,5 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
 });
 
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
+
+export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
