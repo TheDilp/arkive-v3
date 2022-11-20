@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { TabView, TabPanel } from "primereact/tabview";
 import DocumentsTree from "../Tree/DocumentsTree";
 import TemplatesTree from "../Tree/TemplatesTree";
-
+import MapsTree from "../Tree/MapsTree";
 export default function Sidebar() {
   const { pathname } = useLocation();
   if (pathname.includes("wiki"))
@@ -18,7 +18,12 @@ export default function Sidebar() {
         </TabView>
       </div>
     );
-  if (pathname.includes("maps")) return <div className="flex flex-col flex-1 bg-zinc-800">MAPS</div>;
+  if (pathname.includes("maps"))
+    return (
+      <div className="flex flex-col flex-1 p-4 bg-zinc-800">
+        <MapsTree />
+      </div>
+    );
   if (pathname.includes("boards")) return <div className="flex flex-col flex-1 bg-zinc-800">BOARDS</div>;
   if (pathname.includes("timelines")) return <div className="flex flex-col flex-1 bg-zinc-800">TIMELINES</div>;
 

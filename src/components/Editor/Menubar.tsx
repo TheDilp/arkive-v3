@@ -5,7 +5,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { findParentNode, RemirrorJSON } from "remirror";
-import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { toaster } from "../../utils/toast";
 
 export default function MenuBar({ saving }: { saving: number | boolean }) {

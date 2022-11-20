@@ -1,7 +1,7 @@
 import { BreadCrumb } from "primereact/breadcrumb";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useGetAllDocuments } from "../../CRUD/DocumentCRUD";
+import { useGetAllDocuments } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DocumentType } from "../../types/documentTypes";
 import { BreadcrumbsType } from "../../types/generalTypes";

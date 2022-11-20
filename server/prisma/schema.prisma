@@ -37,22 +37,40 @@ model documents {
 }
 
 model maps {
-  id        String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title     String  @default("New Document")
-  folder    Boolean @default(false)
-  public    Boolean @default(false)
-  expanded  Boolean @default(false)
-  sort      Int     @default(0)
-  parent    String? @db.Uuid
-  map_image String  @db.Uuid
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title     String   @default("New Map")
+  folder    Boolean  @default(false)
+  public    Boolean  @default(false)
+  expanded  Boolean  @default(false)
+  sort      Int      @default(0)
+  tags      String[] @default([])
+  parent    String?  @db.Uuid
+  map_image String?  @db.Uuid
 
   project    projects @relation(fields: [project_id], references: [id])
   project_id String   @db.Uuid
+
+  map_pins map_pins[]
+}
+
+model map_pins {
+  id              String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  map_id          String  @db.Uuid
+  lat             Float
+  lng             Float
+  color           String  @default("#ffffff")
+  backgroundColor String  @default("#000000")
+  icon            String
+  public          Boolean @default(true)
+  text            String?
+  map_link        String? @db.Uuid
+  doc_id          String? @db.Uuid
+  maps            maps?   @relation(fields: [map_id], references: [id])
 }
 
 model boards {
   id               String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title            String  @default("New Document")
+  title            String  @default("New Board")
   folder           Boolean @default(false)
   public           Boolean @default(false)
   expanded         Boolean @default(false)

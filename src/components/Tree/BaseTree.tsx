@@ -1,7 +1,7 @@
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useCreateMutation, useDeleteMutation, useSortMutation, useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useCreateMutation, useDeleteMutation, useSortMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { useLayoutEffect, useRef, useState } from "react";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -18,9 +18,10 @@ import { useGetAllTags } from "../../CRUD/queries";
 import { toaster } from "../../utils/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
+import { MapType } from "../../types/mapTypes";
 
 type Props = {
-  data: DocumentType[];
+  data: (DocumentType | MapType)[];
   type: AvailableItemTypes;
 };
 
@@ -215,11 +216,11 @@ export default function BaseTree({ data, type }: Props) {
           setTreeData(
             data
               .filter(
-                (doc: DocumentType) =>
-                  doc.title.toLowerCase().includes(filter.toLowerCase()) &&
-                  selectedTags.every((tag) => doc.tags.includes(tag)),
+                (items: DocumentType | MapType) =>
+                  items.title.toLowerCase().includes(filter.toLowerCase()) &&
+                  selectedTags.every((tag) => items.tags.includes(tag)),
               )
-              .map((doc: DocumentType) => ({
+              .map((doc: DocumentType | MapType) => ({
                 data: doc,
                 droppable: doc.folder,
                 id: doc.id,
@@ -232,7 +233,7 @@ export default function BaseTree({ data, type }: Props) {
       } else {
         setTreeData(
           data
-            .map((item) => ({
+            .map((item: DocumentType | MapType) => ({
               data: item,
               droppable: item.folder,
               id: item.id,
@@ -273,7 +274,7 @@ export default function BaseTree({ data, type }: Props) {
       />
       <Tree
         classes={{
-          container: "list-none  flex-1",
+          container: "list-none flex-1",
           listItem: "listitem",
           placeholder: "relative",
           root: "w-full mt-1 pl-0 overflow-y-auto flex flex-col flex-1",

@@ -1,6 +1,7 @@
 import { DocumentType } from "./documentTypes";
+import { MapType } from "./mapTypes";
 
-export type TreeDataType = DocumentType;
+export type TreeDataType = DocumentType | MapType;
 
 export type SidebarTreeItemType = {
   data?: null | Partial<DocumentType>;

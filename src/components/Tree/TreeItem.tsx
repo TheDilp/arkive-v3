@@ -5,7 +5,7 @@ import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { TreeDataType } from "../../types/treeTypes";
-import { useDeleteMutation, useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useDeleteMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { IconSelect } from "../IconSelect/IconSelect";
 import { deleteItem } from "../../utils/Confirms/Confirm";

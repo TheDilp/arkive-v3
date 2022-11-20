@@ -1,9 +1,10 @@
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../types/documentTypes";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AvailableItemTypes } from "../types/generalTypes";
 import { toaster } from "../utils/toast";
 import { SortIndexes } from "../types/treeTypes";
+import { MapCreateType, MapType } from "../types/mapTypes";
 
 export const useGetAllDocuments = (project_id: string) => {
   return useQuery<DocumentType[]>(
@@ -19,31 +20,74 @@ export const useGetAllDocuments = (project_id: string) => {
     },
   );
 };
-
-export const useCreateMutation = (type: AvailableItemTypes) => {
-  const queryClient = useQueryClient();
-  const createDocumentMutation = useMutation(
-    async (newDocument: DocumentCreateType) =>
-      await fetch(`${baseURLS.baseServer}${createURLS.createDocument}`, {
-        body: JSON.stringify(newDocument),
-        method: "POST",
-      }),
+export const useGetAllMaps = (project_id: string) => {
+  return useQuery<MapType[]>(
+    ["allMaps", project_id],
+    async () =>
+      await (
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllMaps}${project_id}`, {
+          method: "GET",
+        })
+      ).json(),
     {
-      onError: () => {
-        toaster("error", "There was an error creating this document.");
-      },
-      onSuccess: async (data, variables) => {
-        const newData: DocumentType = await data.json();
-        queryClient.setQueryData(["allDocuments", variables.project_id], (old: DocumentType[] | undefined) => {
-          if (old) return [...old, newData];
-          else return [newData];
-        });
-        toaster("success", "Your document was successfully created.");
-      },
+      staleTime: 5 * 60 * 1000,
     },
   );
+};
 
-  if (type === "documents") return createDocumentMutation;
+export const useCreateMutation = (
+  type: AvailableItemTypes,
+): UseMutationResult<Response, unknown, DocumentCreateType | MapCreateType, unknown> | null => {
+  const queryClient = useQueryClient();
+  if (type === "documents") {
+    const createDocumentMutation = useMutation(
+      async (newDocument: DocumentCreateType) =>
+        await fetch(`${baseURLS.baseServer}${createURLS.createDocument}`, {
+          body: JSON.stringify(newDocument),
+          method: "POST",
+        }),
+      {
+        onError: () => {
+          toaster("error", "There was an error creating this document.");
+        },
+        onSuccess: async (data, variables) => {
+          const newData: DocumentType = await data.json();
+          queryClient.setQueryData(["allDocuments", variables.project_id], (old: DocumentType[] | undefined) => {
+            if (old) return [...old, newData];
+            else return [newData];
+          });
+          toaster("success", "Your document was successfully created.");
+        },
+      },
+    );
+
+    return createDocumentMutation;
+  }
+  if (type === "maps") {
+    const createMapMutation = useMutation(
+      async (newMap: MapCreateType) =>
+        await fetch(`${baseURLS.baseServer}${createURLS.createMap}`, {
+          body: JSON.stringify(newMap),
+          method: "POST",
+        }),
+      {
+        onError: () => {
+          toaster("error", "There was an error creating this map.");
+        },
+        onSuccess: async (data, variables) => {
+          const newData: MapType = await data.json();
+          queryClient.setQueryData(["allMaps", variables.project_id], (old: MapType[] | undefined) => {
+            if (old) return [...old, newData];
+            else return [newData];
+          });
+          toaster("success", "Your map was successfully created.");
+        },
+      },
+    );
+
+    return createMapMutation;
+  }
+  return null;
 };
 
 export const useUpdateMutation = (type: AvailableItemTypes) => {

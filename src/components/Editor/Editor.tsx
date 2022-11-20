@@ -6,7 +6,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import "remirror/styles/all.css";
 import { useDebouncedCallback } from "use-debounce";
-import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";

@@ -3,7 +3,7 @@ import { Chips } from "primereact/chips";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/queries";
 import { useGetItem } from "../../hooks/getItemHook";
 import { Checkbox } from "primereact/checkbox";

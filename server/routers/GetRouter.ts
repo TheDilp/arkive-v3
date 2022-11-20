@@ -12,6 +12,7 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
       }>,
     ) => {
       try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         const data = await prisma[req.params.type].findMany({
           where: {
@@ -24,27 +25,24 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
       }
     },
   );
-  server.get(
-    "/alltags/:project_id",
-    async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
-      try {
-        const data = await prisma.documents.findMany({
-          where: {
-            project_id: req.params.project_id,
-          },
-          select: {
-            tags: true,
-          },
-        });
-        return data
-          .map((obj) => obj.tags)
-          .flat()
-          .filter(onlyUniqueStrings);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  );
+  server.get("/alltags/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
+    try {
+      const data = await prisma.documents.findMany({
+        select: {
+          tags: true,
+        },
+        where: {
+          project_id: req.params.project_id,
+        },
+      });
+      return data
+        .map((obj: { tags: string[] }) => obj.tags)
+        .flat()
+        .filter(onlyUniqueStrings);
+    } catch (error) {
+      console.log(error);
+    }
+  });
   // server.get(
   //   "/getSingleDocument/:id",
   //   async (req: FastifyRequest<{ Params: { id: string } }>) => {

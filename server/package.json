@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^8.1.1",
-    "@prisma/client": "^4.5.0",
+    "@prisma/client": "^4.6.1",
     "fastify": "^4.9.2"
   },
   "devDependencies": {

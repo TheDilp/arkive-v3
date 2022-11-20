@@ -1,6 +1,6 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { UseMutationResult } from "@tanstack/react-query";
-import { useSortMutation } from "../CRUD/DocumentCRUD";
+import { useSortMutation } from "../CRUD/ItemsCRUD";
 import { SortIndexes, TreeDataType } from "../types/treeTypes";
 
 export const getDepth = (tree: NodeModel[], id: number | string, depth = 0): number => {

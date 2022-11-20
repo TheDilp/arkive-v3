@@ -6,12 +6,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  useCreateMutation,
-  useDeleteMutation,
-  useGetAllDocuments,
-  useUpdateMutation,
-} from "../../../CRUD/DocumentCRUD";
+import { useCreateMutation, useDeleteMutation, useGetAllDocuments, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";

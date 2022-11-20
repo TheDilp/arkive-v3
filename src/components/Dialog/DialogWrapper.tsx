@@ -9,7 +9,7 @@ import { DocumentType } from "../../types/documentTypes";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
-import { useUpdateMutation } from "../../CRUD/DocumentCRUD";
+import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { recursiveDescendantFilter } from "../../utils/recursive";
 type Props = {};
 
@@ -23,16 +23,11 @@ export default function DialogWrapper({}: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const [dialog, setDialog] = useAtom(DrawerAtom);
-  const projectData = queryClient.getQueryData<ProjectType>([
-    "singleProject",
-    project_id,
-  ]);
+  const projectData = queryClient.getQueryData<ProjectType>(["singleProject", project_id]);
   //! REPLACE WITH JUST if dialog.type later
   if (projectData)
     if (dialog.type === "documents") {
-      const item = projectData[dialog.type]?.find(
-        (item) => item.id === dialog.id,
-      );
+      const item = projectData[dialog.type]?.find((item) => item.id === dialog.id);
       if (item)
         return (
           <Dialog
@@ -47,13 +42,7 @@ export default function DialogWrapper({}: Props) {
   return null;
 }
 
-function RenameDocument({
-  allItems,
-  item,
-}: {
-  allItems: DocumentType[] | undefined;
-  item: DocumentType;
-}) {
+function RenameDocument({ allItems, item }: { allItems: DocumentType[] | undefined; item: DocumentType }) {
   const updateDocumentMutation = useUpdateMutation("documents");
   const [localItem, setLocalItem] = useState(item);
   return (
@@ -61,9 +50,7 @@ function RenameDocument({
       <InputText
         className="w-full"
         value={localItem.title}
-        onChange={(e) =>
-          setLocalItem((prev) => ({ ...prev, title: e.target.value }))
-        }
+        onChange={(e) => setLocalItem((prev) => ({ ...prev, title: e.target.value }))}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             updateDocumentMutation?.mutate({

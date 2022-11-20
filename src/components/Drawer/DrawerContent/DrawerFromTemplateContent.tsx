@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { useCreateMutation, useGetAllDocuments } from "../../../CRUD/DocumentCRUD";
+import { useCreateMutation, useGetAllDocuments } from "../../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { buttonLabelWithIcon } from "../../../utils/transform";
