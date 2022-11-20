@@ -245,9 +245,6 @@ export default function BaseTree({ data, type }: Props) {
       }
     }
   }, [data, filter, selectedTags]);
-  useEffect(() => {
-    if (type) refetchTags();
-  }, [type]);
 
   return (
     <>
