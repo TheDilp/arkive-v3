@@ -11,3 +11,4 @@ export type EditorType = {
   content?: RemirrorJSON | undefined;
   editable?: boolean;
 };
+export type BreadcrumbsType = { template: React.ReactNode }[];

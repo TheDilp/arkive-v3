@@ -14,6 +14,7 @@ import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
 import TagsAutocomplete from "../PropertiesBar/DocumentProperties";
 import { Dropdown } from "primereact/dropdown";
 import Menubar from "./Menubar";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
@@ -57,6 +58,7 @@ export default function Editor({ content, editable }: EditorType) {
           {currentDocument.title}
           {currentDocument.template ? "[TEMPLATE]" : ""}
         </h1>
+        <Breadcrumbs />
         <Remirror
           editable={editable || true}
           classNames={[
