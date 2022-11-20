@@ -13,6 +13,7 @@ import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
 import TagsAutocomplete from "../PropertiesBar/DocumentProperties";
 import { Dropdown } from "primereact/dropdown";
+import Menubar from "./Menubar";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
@@ -56,26 +57,6 @@ export default function Editor({ content, editable }: EditorType) {
           {currentDocument.title}
           {currentDocument.template ? "[TEMPLATE]" : ""}
         </h1>
-        <ul className="flex items-center py-0 sticky top-0 gap-x-1 bg-zinc-800">
-          <li>
-            <Button className="p-button-text" label="B" />
-          </li>
-
-          <li>
-            <Button className="p-button-text" label="I" />
-          </li>
-
-          <li>
-            <Button className="p-button-text" label="U" />
-          </li>
-
-          <li>
-            <Dropdown />
-          </li>
-          <li>
-            <Icon icon={"mdi:format-heading-hash"} fontSize={24} />
-          </li>
-        </ul>
         <Remirror
           editable={editable || true}
           classNames={[
@@ -92,6 +73,7 @@ export default function Editor({ content, editable }: EditorType) {
               onChange(content, item_id as string);
             }}
           />
+          <Menubar saving={false} />
           <EditorComponent />
           <MentionDropdownComponent />
         </Remirror>
