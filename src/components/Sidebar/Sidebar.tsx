@@ -7,12 +7,12 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   if (pathname.includes("wiki"))
     return (
-      <div className="flex flex-col flex-1 bg-zinc-800">
+      <div className="flex flex-col flex-1">
         <TabView renderActiveOnly className="flex flex-col flex-1">
-          <TabPanel className="w-full flex flex-col flex-1" header="Documents">
+          <TabPanel className="w-full h-full flex flex-col flex-1" header="Documents">
             <DocumentsTree />
           </TabPanel>
-          <TabPanel className="w-full flex flex-col flex-1" header="Templates">
+          <TabPanel className="w-full h-full flex flex-col flex-1" header="Templates">
             <TemplatesTree />
           </TabPanel>
         </TabView>
@@ -20,7 +20,7 @@ export default function Sidebar() {
     );
   if (pathname.includes("maps"))
     return (
-      <div className="flex flex-col flex-1 p-4 bg-zinc-800">
+      <div className="h-full flex flex-col flex-1 p-4 bg-zinc-800">
         <MapsTree />
       </div>
     );

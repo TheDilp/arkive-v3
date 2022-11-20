@@ -165,7 +165,9 @@ export const useDeleteMutation = (type: AvailableItemTypes) => {
   if (type === "documents") return deleteDocumentMutation;
 };
 
-export const useSortMutation = (type: AvailableItemTypes) => {
+export const useSortMutation = (
+  type: AvailableItemTypes,
+): UseMutationResult<Response, unknown, SortIndexes, unknown> | undefined => {
   const sortDocumentMutation = useMutation(
     async (updateDocumentValues: SortIndexes) => {
       return await fetch(`${baseURLS.baseServer}${updateURLs.sortDocuments}`, {
@@ -177,6 +179,20 @@ export const useSortMutation = (type: AvailableItemTypes) => {
       onError: () => toaster("error", "There was an error updating your documents."),
     },
   );
+  const sortMapsMutation = useMutation(
+    async (updateMapValues: SortIndexes) => {
+      return await fetch(`${baseURLS.baseServer}${updateURLs.sortMaps}`, {
+        body: JSON.stringify(updateMapValues),
+        method: "POST",
+      });
+    },
+    {
+      onError: () => toaster("error", "There was an error updating your documents."),
+    },
+  );
 
   if (type === "documents") return sortDocumentMutation;
+  if (type === "maps") return sortMapsMutation;
+
+  return undefined;
 };

@@ -47,7 +47,7 @@ export default function MapsTree() {
   if (error) return <div>Error </div>;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1">
       <div className="flex items-center justify-between pb-2 border-b border-zinc-600">
         <Button
           className="p-button-outlined p-button-secondary"

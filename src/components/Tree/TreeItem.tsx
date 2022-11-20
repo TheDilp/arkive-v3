@@ -26,14 +26,17 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateMutation = useUpdateMutation(type);
   const deleteMutation = useDeleteMutation(type);
+  if (!node.data) return null;
   return (
     <div
       style={{ marginInlineStart: depth * 40 }}
-      className="flex items-center py-1 cursor-pointer group max-w-20rem text-md hover:bg-sky-700 gap-x-1 "
+      className="flex items-center py-1 cursor-pointer group max-w-20rem text-md hover:bg-sky-700 gap-x-1"
       onClick={() => {
         // Navigate if not a folder
         if (!node.data?.folder) {
-          navigate(`./wiki/doc/${node.id}`);
+          if (type === "documents") navigate(`./wiki/doc/${node.id}`);
+          if (type === "maps") navigate(`./maps/${node.id}`);
+          if (type === "boards") navigate(`./boards/${node.id}`);
         } else {
           navigate(`folder/${node.id}`);
         }
@@ -44,8 +47,9 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
             data: node.data,
             type: "doc_folder",
           });
-        else if (node.data?.template) setText({ data: node.data, type: "template" });
-        else setText({ data: node.data, type: "document" });
+        else if (node.data && "template" in node.data && node.data?.template) {
+          setText({ data: node.data, type: "template" });
+        } else setText({ data: node.data, type: "document" });
         cm.current.show(e);
       }}>
       {node.droppable && (
@@ -73,7 +77,13 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         ) : (
           <IconSelect setIcon={(newIcon) => updateMutation?.mutate({ icon: newIcon, id: node.id as string })}>
             <Icon
-              icon={node.data?.icon as string}
+              icon={
+                ("icon" in node.data && (node.data?.icon as string)) ||
+                (type === "maps" && "mdi:map") ||
+                (type === "boards" && "mdi:draw") ||
+                (type === "timelines" && "mdi:file") ||
+                "mdi:file"
+              }
               inline={true}
               className="rounded-full hover:bg-sky-400 selectableIcon"
             />
@@ -83,7 +93,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
 
       <div className={`font-Lato flex items-center w-full ${node.id === item_id && "text-sky-400"}`}>
         <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
-          {node.text} {node.data?.template && !node.droppable ? "[TEMPLATE]" : null}
+          {node.text} {"template" in node.data && node.data?.template && !node.droppable ? "[TEMPLATE]" : null}
         </div>
         <div className="flex items-center opacity-0 group-hover:opacity-100">
           <Icon

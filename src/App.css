@@ -4,6 +4,7 @@
   padding: 0 !important;
 }
 /* Sidebar */
+
 .wikiTabs .p-tabview-nav li {
   width: 100%;
   padding: 0 !important;
@@ -65,7 +66,7 @@
     @apply list-disc;
   }
   blockquote {
-    @apply border-0 p-0;
+    @apply p-0 border-0;
   }
   blockquote > * {
     @apply text-zinc-300 font-normal text-2xl font-Merriweather border-l-[3px] pl-2 !important;

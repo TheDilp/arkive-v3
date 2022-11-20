@@ -30,6 +30,7 @@ export enum updateURLs {
   updateDocument = "updatedocument/",
 
   sortDocuments = "sortdocuments",
+  sortMaps = "sortmaps",
 }
 
 export enum deleteURLs {
