@@ -1,12 +1,13 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import Navbar from "../Nav/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
-  const { project_id } = useParams();
   return (
     <div className="flex flex-col flex-1">
+      <DialogWrapper />
       <div className="w-full">
         <Navbar />
       </div>

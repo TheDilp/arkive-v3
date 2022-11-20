@@ -11,8 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^8.1.1",
+    "@fastify/static": "^6.5.0",
     "@prisma/client": "^4.6.1",
-    "fastify": "^4.9.2"
+    "fastify": "^4.9.2",
+    "fastify-file-upload": "^4.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

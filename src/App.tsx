@@ -27,7 +27,6 @@ function App() {
     <main className="h-screen flex flex-col overflow-hidden">
       <ToastContainer autoClose={3000} newestOnTop pauseOnHover theme="dark" />
       <QueryClientProvider client={queryClient}>
-        <DialogWrapper />
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
           <Routes>
             <Route path="/" element={<Dashboard />} />

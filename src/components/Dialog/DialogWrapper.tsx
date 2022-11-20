@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { useParams } from "react-router-dom";
+import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
@@ -18,7 +19,14 @@ export default function DialogWrapper() {
         customUpload
         onUpload={(e) => console.log(e)}
         uploadHandler={async (e) => {
-          console.log(e);
+          const fd = new FormData();
+          e.files.forEach((file) => {
+            fd.append(file.name, file);
+          });
+          fetch(`${baseURLS.baseServer}${createURLS.uploadImage}${project_id}`, {
+            body: fd,
+            method: "POST",
+          });
         }}
         multiple
         accept="image/*"

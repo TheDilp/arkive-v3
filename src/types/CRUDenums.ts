@@ -10,6 +10,8 @@ export enum getURLS {
   getAllDocuments = "getalldocuments/",
   // Maps
   getAllMaps = "getallmaps/",
+  // Images
+  getAllImages = "getallimages/",
   // Misc
   getAllTags = "alltags/",
 }
@@ -18,6 +20,8 @@ export enum createURLS {
   createProject = "createproject",
   createDocument = "createdocument",
   createMap = "createmap",
+  uploadImage = "uploadimage/images/",
+  uploadMap = "uploadimage/maps/",
 }
 
 export enum updateURLs {

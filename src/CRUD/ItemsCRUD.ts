@@ -5,7 +5,7 @@ import { AvailableItemTypes } from "../types/generalTypes";
 import { toaster } from "../utils/toast";
 import { SortIndexes } from "../types/treeTypes";
 import { MapCreateType, MapType } from "../types/mapTypes";
-
+console.log(`${baseURLS.baseServer}${getURLS.getAllImages}123445`);
 export const useGetAllDocuments = (project_id: string) => {
   return useQuery<DocumentType[]>(
     ["allDocuments", project_id],
@@ -26,6 +26,20 @@ export const useGetAllMaps = (project_id: string) => {
     async () =>
       await (
         await fetch(`${baseURLS.baseServer}${getURLS.getAllMaps}${project_id}`, {
+          method: "GET",
+        })
+      ).json(),
+    {
+      staleTime: 5 * 60 * 1000,
+    },
+  );
+};
+export const useGetAllImages = (project_id: string) => {
+  return useQuery<string[]>(
+    ["allImages", project_id],
+    async () =>
+      await (
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, {
           method: "GET",
         })
       ).json(),

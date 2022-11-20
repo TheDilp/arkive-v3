@@ -1,31 +1,32 @@
 import cors from "@fastify/cors";
 import { PrismaClient } from "@prisma/client";
 import fastify from "fastify";
+import fileupload from "fastify-file-upload";
+import fastifystatic from "@fastify/static";
 import { documentRouter } from "./routers/DocumentRouter";
 import { getRouter } from "./routers/GetRouter";
+import { imagesRouter } from "./routers/ImagesRouter";
 import { mapRouter } from "./routers/MapRouter";
 import { projectRouter } from "./routers/ProjectRouter";
+import path from "path";
 
 export const prisma = new PrismaClient();
 
 const server = fastify();
+server.register(fastifystatic, {
+  root: path.join(__dirname, "assets"),
+});
+
+server.register(fileupload);
 
 server.register(cors, {
-  origin: (origin, cb) => {
-    const hostname = new URL(origin).hostname;
-    if (hostname === "localhost" || hostname === "127.0.0.1") {
-      //  Request from localhost will pass
-      cb(null, true);
-      return;
-    }
-    // Generate an error on other origins, disabling access
-    cb(new Error("Not allowed"), false);
-  },
+  origin: true,
 });
 server.register(projectRouter);
 server.register(getRouter);
 server.register(documentRouter);
 server.register(mapRouter);
+server.register(imagesRouter);
 
 server.listen({ port: 5174 }, (err, address) => {
   if (err) {
