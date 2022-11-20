@@ -1,15 +1,13 @@
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
-import { SplitButton } from "primereact/splitbutton";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { v4 } from "uuid";
-import { useCreateMutation, useGetAllDocuments, useGetAllMaps } from "../../CRUD/ItemsCRUD";
+import { useCreateMutation, useGetAllMaps } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DocumentDefaults";
 import BaseTree from "./BaseTree";
 
-export default function DocumentsTree() {
+export default function MapsTree() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createMapMutation = useCreateMutation("maps");
@@ -56,11 +54,6 @@ export default function DocumentsTree() {
           label="New Folder"
           icon="pi pi-folder"
           onClick={() => {
-            console.log({
-              folder: true,
-              project_id: project_id as string,
-              title: "New Folder",
-            });
             createMapMutation?.mutate({
               folder: true,
               project_id: project_id as string,
@@ -73,9 +66,11 @@ export default function DocumentsTree() {
           label="New Map"
           icon="pi pi-map"
           onClick={() => {
-            createMapMutation?.mutate({
-              project_id: project_id as string,
-              title: "New Map",
+            setDrawer({
+              ...DefaultDrawer,
+              position: "right",
+              show: true,
+              type: "maps",
             });
           }}
         />
