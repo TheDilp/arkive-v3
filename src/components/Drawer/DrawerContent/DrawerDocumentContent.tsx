@@ -21,10 +21,11 @@ export default function DrawerDocumentContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const { data: allDocuments } = useGetAllDocuments(project_id as string);
-  const document = useGetItem(project_id as string, drawer?.id, "documents");
+  const document = useGetItem(project_id as string, drawer?.id, "documents") as DocumentType;
   const createDocumentMutation = useCreateMutation("documents");
   const updateDocumentMutation = useUpdateMutation("documents");
   const deleteDocumentMutation = useDeleteMutation("documents");
+
   function CreateUpdateDocument(newData: DocumentCreateType) {
     if (document) {
       updateDocumentMutation?.mutate(
@@ -132,7 +133,6 @@ export default function DrawerDocumentContent() {
                 folder: e.checked,
               }))
             }
-            icon={<Icon icon="mdi:check" className="pointer-events-none" />}
             checked={localItem.folder}
           />
         </div>

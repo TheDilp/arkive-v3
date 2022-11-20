@@ -48,6 +48,20 @@ export const useGetAllImages = (project_id: string) => {
     },
   );
 };
+export const useGetAllMapImages = (project_id: string) => {
+  return useQuery<string[]>(
+    ["allMapImages", project_id],
+    async () =>
+      await (
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, {
+          method: "GET",
+        })
+      ).json(),
+    {
+      staleTime: 5 * 60 * 1000,
+    },
+  );
+};
 
 export const useCreateMutation = (
   type: AvailableItemTypes,

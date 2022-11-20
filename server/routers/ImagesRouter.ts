@@ -4,7 +4,10 @@ import { existsSync, mkdirSync, readdir, readdirSync, writeFile } from "fs";
 export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getallimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
     const files = readdirSync(`./assets/images/${req.params.project_id}`);
-    console.log(files);
+    return files;
+  });
+  server.get("/getallmapimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
+    const files = readdirSync(`./assets/maps/${req.params.project_id}`);
     return files;
   });
   server.get(
@@ -14,7 +17,10 @@ export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
       reply,
     ) => {
       const { type, project_id, image_name } = req.params;
-      return reply.type("image/*").sendFile(`images/${project_id}/${image_name}`);
+      return reply
+        .type("image/*")
+        .headers({ "Cache-Control": "max-age=86400" })
+        .sendFile(`${type}/${project_id}/${image_name}`);
     },
   );
 

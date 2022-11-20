@@ -45,7 +45,7 @@ model maps {
   sort      Int      @default(0)
   tags      String[] @default([])
   parent    String?  @db.Uuid
-  map_image String?  @db.Uuid
+  map_image String?
 
   project    projects @relation(fields: [project_id], references: [id])
   project_id String   @db.Uuid

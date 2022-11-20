@@ -62,7 +62,7 @@ export default function MapsTree() {
           }}
         />
         <Button
-          className="p-button-outlined p-button-success"
+          className="p-button-outlined"
           label="New Map"
           icon="pi pi-map"
           onClick={() => {

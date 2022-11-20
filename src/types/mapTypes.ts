@@ -11,11 +11,8 @@ export type MapType = {
   map_image?: string;
 };
 
-export type MapCreateType = {
+export type MapCreateType = Partial<Omit<MapType, "project_id">> & {
   project_id: string;
-  title?: string;
-  parent?: string;
-  map_image?: string;
 };
 
 export type DefaultMapType = Omit<MapType, "id" | "project_id">;
