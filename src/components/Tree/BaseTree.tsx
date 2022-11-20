@@ -2,7 +2,7 @@ import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useCreateMutation, useDeleteMutation, useSortMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { DocumentType } from "../../types/documentTypes";
@@ -202,7 +202,7 @@ export default function BaseTree({ data, type }: Props) {
 
   const { project_id } = useParams();
   const [cmType] = useAtom(SidebarTreeContextAtom);
-  const { data: tags } = useGetAllTags(project_id as string);
+  const { data: tags, refetch: refetchTags } = useGetAllTags(project_id as string, type);
 
   const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
@@ -245,6 +245,9 @@ export default function BaseTree({ data, type }: Props) {
       }
     }
   }, [data, filter, selectedTags]);
+  useEffect(() => {
+    if (type) refetchTags();
+  }, [type]);
 
   return (
     <>
