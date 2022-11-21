@@ -20,16 +20,17 @@ import { IconSelectMenuType } from "../../types/generalTypes";
 interface Props {
   placement?: Placement;
   children: JSX.Element;
+  disabled?: boolean;
   setIcon: (newIcon: string) => void;
 }
 
-export const IconSelect = ({ children, setIcon, placement }: Props) => {
+export const IconSelect = ({ children, setIcon, placement, disabled }: Props) => {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, strategy, context } = useFloating({
-    open,
-    onOpenChange: setOpen,
     middleware: [offset(5), flip(), shift()],
+    onOpenChange: setOpen,
+    open,
     placement,
     whileElementsMounted: autoUpdate,
   });
@@ -39,33 +40,28 @@ export const IconSelect = ({ children, setIcon, placement }: Props) => {
   const descriptionId = `${id}-description`;
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
-    useClick(context),
+    useClick(context, {
+      enabled: !disabled,
+    }),
     useRole(context),
     useDismiss(context),
   ]);
 
   // Preserve the consumer's ref
-  const ref = useMemo(
-    () => mergeRefs([reference, (children as any).ref]),
-    [reference, children],
-  );
+  const ref = useMemo(() => mergeRefs([reference, (children as any).ref]), [reference, children]);
 
   return (
     <>
       {cloneElement(children, getReferenceProps({ ref, ...children.props }))}
       {open && (
-        <FloatingFocusManager
-          context={context}
-          modal={false}
-          order={["reference", "content"]}
-          returnFocus={false}>
+        <FloatingFocusManager context={context} modal={false} order={["reference", "content"]} returnFocus={false}>
           <div
             ref={floating}
             className="p-0 z-50 rounded"
             style={{
+              left: x ?? 0,
               position: strategy,
               top: y ?? 0,
-              left: x ?? 0,
             }}
             aria-labelledby={labelId}
             aria-describedby={descriptionId}

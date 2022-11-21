@@ -8,8 +8,8 @@ import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapType } from "../../types/mapTypes";
-import { DialogAtom } from "../../utils/Atoms/atoms";
-import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
   readOnly?: boolean;
@@ -22,14 +22,14 @@ export default function MapView({ readOnly }: Props) {
     [0, 0],
     [0, 0],
   ]);
-  const [dialog, setDialog] = useAtom(DialogAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
   const mapRef = useRef() as any;
   const imgRef = useRef() as any;
   const cm = useRef() as any;
   const items = [
     {
       command: () => {
-        setDialog({ ...DefaultDialog, show: true });
+        setDrawer({ ...DefaultDrawer, position: "left", show: true, type: "map_marker" });
       },
       icon: "pi pi-fw pi-map-marker",
       label: "New Token",

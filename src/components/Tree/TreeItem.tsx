@@ -75,7 +75,9 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         {node.data?.folder ? (
           <Icon icon="bxs:folder" inline={true} className="mr-1" />
         ) : (
-          <IconSelect setIcon={(newIcon) => updateMutation?.mutate({ icon: newIcon, id: node.id as string })}>
+          <IconSelect
+            disabled={type !== "documents"}
+            setIcon={(newIcon) => updateMutation?.mutate({ icon: newIcon, id: node.id as string })}>
             <Icon
               icon={
                 ("icon" in node.data && (node.data?.icon as string)) ||
@@ -85,7 +87,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
                 "mdi:file"
               }
               inline={true}
-              className="rounded-full hover:bg-sky-400 selectableIcon"
+              className={`rounded-full ${type === "documents" ? "hover:bg-sky-400" : ""}`}
             />
           </IconSelect>
         )}

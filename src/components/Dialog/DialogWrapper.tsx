@@ -2,35 +2,40 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
+import { SelectButton } from "primereact/selectbutton";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { SelectButton } from "primereact/selectbutton";
-import { useRef, useState } from "react";
 
 export default function DialogWrapper() {
   const queryClient = useQueryClient();
   const [dialog, setDialog] = useAtom(DialogAtom);
+  const [uploading, setUploading] = useState(false);
 
   return (
     <Dialog
       position={dialog.position}
       visible={dialog.show}
       modal={dialog.modal}
+      header={() => {
+        if (dialog.type === "files") return "Upload Files";
+        if (dialog.type === "map_marker") return "Map Marker";
+        if (uploading) "Uploading...";
+      }}
       onHide={() => {
         setDialog({ ...DefaultDialog, position: dialog.position });
       }}>
-      {dialog.type === "files" && <QuickUpload />}
+      {dialog.type === "files" && <QuickUploadDialog setUploading={setUploading} />}
     </Dialog>
   );
 }
 
-function QuickUpload() {
+function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAction<boolean>> }) {
   const { project_id } = useParams();
   const fileUploadRef = useRef<FileUpload>(null);
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>([]);
-  const [uploading, setUploading] = useState(false);
 
   const onTemplateSelect = (e: any) => {
     const _types = types;

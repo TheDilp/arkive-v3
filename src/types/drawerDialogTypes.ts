@@ -2,7 +2,7 @@ import { AvailableItemTypes } from "./generalTypes";
 
 export type DrawerAtomType = {
   id: null | string;
-  type: null | AvailableItemTypes;
+  type: null | AvailableItemTypes | "map_marker";
   drawerSize?: "sm" | "md" | "lg";
   position?: "left" | "right" | "top" | "bottom";
   modal?: boolean;

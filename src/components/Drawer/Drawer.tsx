@@ -9,6 +9,7 @@ import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent";
 import DrawerMapContent from "./DrawerContent/DrawerMapContent";
+import DrawerMapMarkerContent from "./DrawerContent/DrawerMapMarkerContent";
 
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -32,6 +33,7 @@ export default function Drawer() {
       {drawer.type === "documents" && !drawer.exceptions?.fromTemplate ? <DrawerDocumentContent /> : null}
       {drawer.type === "documents" && drawer.exceptions?.fromTemplate ? <DrawerFromTemplateContent /> : null}
       {drawer.type === "maps" ? <DrawerMapContent /> : null}
+      {drawer.type === "map_marker" ? <DrawerMapMarkerContent /> : null}
     </PrimeDrawer>
   );
 }
