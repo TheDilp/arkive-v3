@@ -45,8 +45,7 @@ export default function DrawerMapContent() {
         toaster("warning", "Maps must have a map image.");
         return;
       }
-
-      createMapMutation?.mutate({
+      createMapMutation.mutate({
         ...DefaultMap,
         ...newData,
       });

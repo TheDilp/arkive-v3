@@ -2,14 +2,21 @@ import { LatLngBoundsExpression, CRS } from "leaflet";
 import { useEffect, useRef, useState } from "react";
 
 import { ImageOverlay, MapContainer } from "react-leaflet";
+import { useParams } from "react-router-dom";
+import { useGetItem } from "../../hooks/getItemHook";
+import { baseURLS, getURLS } from "../../types/CRUDenums";
+import { MapType } from "../../types/mapTypes";
 
 type Props = {
   readOnly?: boolean;
 };
 
 export default function MapView({ readOnly }: Props) {
+  const { project_id, item_id } = useParams();
   const mapRef = useRef() as any;
   const imgRef = useRef() as any;
+
+  const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
 
   const [loading, setLoading] = useState(true);
   const [bounds, setBounds] = useState<number[][]>([
@@ -17,41 +24,41 @@ export default function MapView({ readOnly }: Props) {
     [0, 0],
   ]);
   useEffect(() => {
-    setLoading(true);
-    const img = new Image();
-    img.src =
-      "https://images.unsplash.com/photo-1668714298641-a221ceb27d0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
-    img.onload = () => {
-      setBounds([
-        [0, 0],
-        [img.height, img.width],
-      ]);
-      if (imgRef.current) {
-        // Timeout to ensure transition happens during fade animation
-        setTimeout(() => {
+    if (currentMap) {
+      console.log(currentMap);
+      setLoading(true);
+      const img = new Image();
+      img.src = `${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap.map_image}`;
+      img.onload = () => {
+        setBounds([
+          [0, 0],
+          [img.height, img.width],
+        ]);
+        if (imgRef.current) {
           imgRef.current.setBounds([
             [0, 0],
             [img.height, img.width],
           ]);
-        }, 250);
-      }
-      setLoading(false);
-    };
-  }, []);
+          mapRef.current.fitBounds(
+            [
+              [0, 0],
+              [img.height, img.width],
+            ],
+            {
+              animate: false,
+            },
+          );
+        }
+        setLoading(false);
+      };
+    }
+  }, [currentMap]);
   useEffect(() => {
     //  Wait for map to finish loading
-    setTimeout(() => {
-      mapRef.current?.flyToBounds(bounds);
-    }, 350);
   }, [bounds]);
   return (
-    <div className="w-full flex flex-col flex-1 ">
-      <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
-        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-        crossOrigin=""
-      />
+    <div className="w-full flex flex-col flex-1">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
       <MapContainer
         ref={mapRef}
         className="w-full h-full flex-1 outline-none bg-zinc-900"
@@ -82,9 +89,7 @@ export default function MapView({ readOnly }: Props) {
             [0, 0],
             [0, 0],
           ]}
-          url={
-            "https://images.unsplash.com/photo-1668714298641-a221ceb27d0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-          }
+          url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
         />
       </MapContainer>
     </div>
