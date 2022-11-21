@@ -12,7 +12,7 @@ export default function Navbar() {
   const [dialog, setDialog] = useAtom(DialogAtom);
   const [search, setSearch] = useState<string | null>(null);
   const projectData = useGetSingleProject(project_id as string);
-  function navbarShortcuts(e) {
+  function navbarShortcuts(e: KeyboardEvent) {
     if (e.ctrlKey && project_id) {
       if (e.key === "1") {
         e.preventDefault();
@@ -123,7 +123,7 @@ export default function Navbar() {
                 className="cursor-pointer hover:text-blue-300"
                 icon="ion:upload"
                 fontSize={20}
-                onClick={async () => setDialog({ ...DefaultDialog, position: "top", show: true })}
+                onClick={async () => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
               />
               <Icon
                 className="cursor-pointer hover:text-blue-300"

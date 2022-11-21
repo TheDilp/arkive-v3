@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { DialogPositionType } from "primereact/dialog";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
@@ -6,8 +7,8 @@ import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefau
 
 export type DialogAtomType = {
   id: null | string;
-  type: null | AvailableItemTypes;
-  position?: "left" | "right" | "top" | "bottom";
+  type: null | "files" | "map_marker";
+  position?: DialogPositionType;
   modal?: boolean;
   fullscreen?: boolean;
   show: boolean;

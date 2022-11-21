@@ -205,10 +205,11 @@ export default function BaseTree({ templates, type }: Props) {
     if (cmType.type === "document") return docItems;
     if (cmType.type === "doc_folder") return folderItems;
     if (cmType.type === "template") return templateItems;
+    if (cmType.type === "map") return rootItems;
     return [];
   }
 
-  const [cmType] = useAtom(SidebarTreeContextAtom);
+  const [contextMenu] = useAtom(SidebarTreeContextAtom);
   const { data: tags, refetch: refetchTags } = useGetAllTags(project_id as string, type);
 
   const cm = useRef();
@@ -266,7 +267,7 @@ export default function BaseTree({ templates, type }: Props) {
   return (
     <>
       <ConfirmDialog />
-      <ContextMenu items={contextMenuItems(cmType)} cm={cm} />
+      <ContextMenu items={contextMenuItems(contextMenu)} cm={cm} />
       <InputText
         className="mt-1 p-1"
         placeholder="Filter by Title"

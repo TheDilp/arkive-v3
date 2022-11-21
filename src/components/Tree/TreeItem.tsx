@@ -22,7 +22,7 @@ type Props = {
 export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Props) {
   const { item_id } = useParams();
   const navigate = useNavigate();
-  const [text, setText] = useAtom(SidebarTreeContextAtom);
+  const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateMutation = useUpdateMutation(type);
   const deleteMutation = useDeleteMutation(type);
@@ -43,13 +43,13 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
       }}
       onContextMenu={(e) => {
         if (node.droppable)
-          setText({
+          setContextMenu({
             data: node.data,
             type: "doc_folder",
           });
         else if (node.data && "template" in node.data && node.data?.template) {
-          setText({ data: node.data, type: "template" });
-        } else setText({ data: node.data, type: "document" });
+          setContextMenu({ data: node.data, type: "template" });
+        } else setContextMenu({ data: node.data, type: "document" });
         cm.current.show(e);
       }}>
       {node.droppable && (

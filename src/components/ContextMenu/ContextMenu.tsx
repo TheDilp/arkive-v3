@@ -9,7 +9,5 @@ type Props = {
 };
 
 export default function ContextMenu({ items, cm }: Props) {
-  return items ? (
-    <PrimeContextMenu model={items} ref={cm}></PrimeContextMenu>
-  ) : null;
+  return items ? <PrimeContextMenu model={items} ref={cm}></PrimeContextMenu> : null;
 }

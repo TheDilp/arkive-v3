@@ -13,3 +13,12 @@ export type DrawerAtomType = {
   };
   show: boolean;
 };
+
+export type DialogAtomType = {
+  id: null | string;
+  type: null | AvailableItemTypes;
+  position?: "left" | "right" | "top" | "bottom";
+  modal?: boolean;
+  fullscreen?: boolean;
+  show: boolean;
+};
