@@ -55,7 +55,7 @@ model maps {
 
 model map_pins {
   id              String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  map_id          String  @db.Uuid
+  parent          String  @db.Uuid
   lat             Float
   lng             Float
   color           String  @default("#ffffff")
@@ -65,7 +65,7 @@ model map_pins {
   text            String?
   map_link        String? @db.Uuid
   doc_id          String? @db.Uuid
-  maps            maps?   @relation(fields: [map_id], references: [id])
+  maps            maps?   @relation(fields: [parent], references: [id])
 }
 
 model boards {
@@ -105,10 +105,10 @@ model nodes {
   template Boolean @default(false)
   zIndex   Int     @default(1)
 
-  board        boards     @relation(fields: [boards_id], references: [id])
+  board        boards     @relation(fields: [parent], references: [id])
   document     documents? @relation(fields: [doc_id], references: [id])
   doc_id       String?    @db.Uuid
-  boards_id    String     @db.Uuid
+  parent       String     @db.Uuid
   edges_source edges[]    @relation("edges_source")
   edges_target edges[]    @relation("edges_target")
 }
@@ -129,10 +129,10 @@ model edges {
   fontFamily            String  @default("Lato")
   zIndex                Int     @default(1)
 
-  board     boards @relation(fields: [board_id], references: [id])
+  board     boards @relation(fields: [parent], references: [id])
   source    nodes  @relation("edges_source", fields: [source_id], references: [id])
   target    nodes  @relation("edges_target", fields: [target_id], references: [id])
   source_id String @db.Uuid
   target_id String @db.Uuid
-  board_id  String @db.Uuid
+  parent    String @db.Uuid
 }

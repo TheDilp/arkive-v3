@@ -1,10 +1,13 @@
 import { RemirrorJSON } from "remirror";
 import { DocumentType } from "./documentTypes";
-import { MapType } from "./mapTypes";
+import { MapPinType, MapType } from "./mapTypes";
 
 export type AvailableItemTypes = "documents" | "maps" | "boards" | "timelines";
+export type AvailableSubItemTypes = "map_pins";
+export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
 export type AllItemsType = DocumentType | MapType;
+export type AllSubItemsType = MapPinType;
 
 export type IconSelectMenuType = {
   setIcon: (newIcon: string) => void;

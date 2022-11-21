@@ -5,18 +5,15 @@ import { removeNull } from "../utils/transform";
 export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getallmaps/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
     const data = await prisma.maps.findMany({
+      include: {
+        map_pins: true,
+      },
       where: {
         project_id: req.params.project_id,
       },
     });
     return data;
   });
-
-  //   server.get("/getsingledocument/:id", async (req: FastifyRequest<{ Params: { id: string } }>) => {
-  //     return await prisma.documents.findUnique({
-  //       where: { id: req.params.id },
-  //     });
-  //   });
 
   server.post(
     "/createmap",
@@ -31,6 +28,24 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         });
 
         return newMap;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  );
+  server.post(
+    "/createmappin",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const newMapPin = await prisma.map_pins.create({
+          data: JSON.parse(req.body) as any,
+        });
+
+        return newMapPin;
       } catch (error) {
         console.log(error);
       }

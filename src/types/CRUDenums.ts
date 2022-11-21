@@ -22,6 +22,7 @@ export enum createURLS {
   createProject = "createproject",
   createDocument = "createdocument",
   createMap = "createmap",
+  createMapPin = "createmappin",
   uploadImage = "uploadimage/images/",
   uploadMap = "uploadimage/maps/",
 }
@@ -37,4 +38,8 @@ export enum updateURLs {
 
 export enum deleteURLs {
   deleteDocument = "deletedocument/",
+}
+
+export enum MainToSubType {
+  map_pins = "maps",
 }

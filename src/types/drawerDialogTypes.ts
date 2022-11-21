@@ -1,8 +1,8 @@
-import { AvailableItemTypes } from "./generalTypes";
+import { AllAvailableTypes, AvailableItemTypes } from "./generalTypes";
 
 export type DrawerAtomType = {
   id: null | string;
-  type: null | AvailableItemTypes | "map_marker";
+  type: null | AllAvailableTypes;
   drawerSize?: "sm" | "md" | "lg";
   position?: "left" | "right" | "top" | "bottom";
   modal?: boolean;
@@ -10,6 +10,9 @@ export type DrawerAtomType = {
   exceptions: {
     fromTemplate?: boolean;
     createTemplate?: boolean;
+  };
+  data?: {
+    [key: string]: any;
   };
   show: boolean;
 };

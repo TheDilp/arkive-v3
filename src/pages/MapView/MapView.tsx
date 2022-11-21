@@ -1,15 +1,16 @@
 import { useAtom } from "jotai";
 import { CRS, LatLngBoundsExpression } from "leaflet";
-import { useEffect, useRef, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
 
 import { ImageOverlay, MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
+import MapImage from "../../components/MapImage/MapImage";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapType } from "../../types/mapTypes";
-import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
-import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
   readOnly?: boolean;
@@ -28,8 +29,8 @@ export default function MapView({ readOnly }: Props) {
   const cm = useRef() as any;
   const items = [
     {
-      command: () => {
-        setDrawer({ ...DefaultDrawer, position: "left", show: true, type: "map_marker" });
+      command: (e: { originalEvent: BaseSyntheticEvent }) => {
+        setDrawer({ ...DefaultDrawer, data: drawer?.data, position: "left", show: true, type: "map_pins" });
       },
       icon: "pi pi-fw pi-map-marker",
       label: "New Token",
@@ -76,11 +77,7 @@ export default function MapView({ readOnly }: Props) {
   }, [bounds]);
 
   return (
-    <div
-      className="w-full flex flex-col flex-1"
-      onContextMenu={(e) => {
-        cm.current.show(e);
-      }}>
+    <div className="w-full flex flex-col flex-1">
       <ContextMenu cm={cm} items={items} />
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
       <MapContainer
@@ -97,6 +94,14 @@ export default function MapView({ readOnly }: Props) {
         crs={CRS.Simple}
         bounds={bounds as LatLngBoundsExpression}
         attributionControl={false}>
+        <MapImage
+          cm={cm}
+          map_pins={currentMap?.map_pins}
+          bounds={bounds as LatLngBoundsExpression}
+          imgRef={imgRef}
+          src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
+          readOnly={readOnly}
+        />
         <ImageOverlay
           ref={imgRef}
           bounds={[

@@ -5,29 +5,41 @@ import { ColorPicker } from "primereact/colorpicker";
 import { useState } from "react";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
-import { useGetAllItems } from "../../../CRUD/ItemsCRUD";
+import { useCreateSubItemMutation, useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { useParams } from "react-router-dom";
 import { DocumentType } from "../../../types/documentTypes";
 import { MapType } from "../../../types/mapTypes";
 import { Button } from "primereact/button";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { useAtom } from "jotai";
+import { DrawerAtom } from "../../../utils/Atoms/atoms";
 
-export default function DrawerMapMarkerContent() {
-  const { project_id } = useParams();
+export default function DrawerMapPinContent() {
+  const { project_id, item_id } = useParams();
+  const [drawer] = useAtom(DrawerAtom);
+  const createSubItemMutation = useCreateSubItemMutation(project_id as string, "map_pins");
   const { data: documents } = useGetAllItems(project_id as string, "documents");
   const { data: maps } = useGetAllItems(project_id as string, "maps");
   const [localItem, setLocalItem] = useState({
-    bgColor: "#000000",
+    backgroundColor: "#000000",
     color: "#ffffff",
     icon: "mdi:user",
+    lat: drawer?.data?.lat,
+    lng: drawer?.data?.lng,
+    parent: item_id,
     public: false,
-    title: "",
+    text: "",
   });
   return (
     <div className="w-full flex flex-col gap-y-5">
       <div className="flex flex-wrap items-center">
         <h4 className="w-full text-lg underline">Marker Text</h4>
-        <InputText className="w-full" placeholder="Marker Popup Text" />
+        <InputText
+          className="w-full"
+          placeholder="Marker Popup Text"
+          value={localItem.text}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, text: e.target.value }))}
+        />
       </div>
       <div className="flex flex-wrap items-center justify-between">
         <h4 className="w-full text-lg underline">Marker Icon</h4>
@@ -53,11 +65,11 @@ export default function DrawerMapMarkerContent() {
         <h4 className="w-full text-lg underline">Marker Background</h4>
 
         <ColorPicker
-          value={localItem.bgColor}
+          value={localItem.backgroundColor}
           onChange={(e) => setLocalItem((prev) => ({ ...prev, bgColor: `#${e.value}` as string }))}
         />
         <InputText
-          value={localItem.bgColor}
+          value={localItem.backgroundColor}
           onChange={(e) => setLocalItem((prev) => ({ ...prev, bgColor: e.target.value }))}
         />
       </div>
@@ -92,7 +104,7 @@ export default function DrawerMapMarkerContent() {
         className="ml-auto p-button-outlined p-button-success"
         type="submit"
         onClick={() => {
-          // CreateUpdateDocument(localItem);
+          createSubItemMutation.mutate(localItem);
         }}>
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>

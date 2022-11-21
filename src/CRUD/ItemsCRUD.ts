@@ -1,10 +1,11 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
-import { baseURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
+import { baseURLS, deleteURLs, getURLS, MainToSubType, updateURLs } from "../types/CRUDenums";
 import { DocumentType } from "../types/documentTypes";
-import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
+import { AllItemsType, AllSubItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { MapType } from "../types/mapTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { createURL, getURL, updateURL } from "../utils/CRUDUrls";
+import { DefaultDocument } from "../utils/DefaultValues/DocumentDefaults";
 import { toaster } from "../utils/toast";
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
   return useQuery<DocumentType[] | MapType[]>(
@@ -73,6 +74,39 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
           queryClient.setQueryData(["allItems", newData.project_id, type], (old: AllItemsType[] | undefined) => {
             if (old) return [...old, newData];
             else return [newData];
+          });
+      },
+    },
+  );
+};
+
+export const useCreateSubItemMutation = (project_id: string, subType: AvailableSubItemTypes) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (newSubItemValues: Partial<AllSubItemsType>) => {
+      const url = createURL(subType);
+      if (url)
+        return await fetch(url, {
+          body: JSON.stringify(newSubItemValues),
+          method: "POST",
+        });
+    },
+    {
+      onError: () => toaster("error", "There was an error creating this item."),
+      onSuccess: async (data) => {
+        const type = MainToSubType[subType];
+        const newData: AllSubItemsType = await data?.json();
+        if (newData)
+          queryClient.setQueryData(["allItems", project_id, type], (old: AllItemsType[] | undefined) => {
+            if (old) {
+              return old.map((item: AllItemsType) => {
+                if (item.id === newData.parent) {
+                  if ("map_pins" in item) return { ...item, map_pins: [...item.map_pins, newData] };
+                }
+                return item;
+              });
+            } else return [];
           });
       },
     },
