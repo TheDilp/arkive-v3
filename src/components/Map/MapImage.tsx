@@ -1,10 +1,11 @@
 import { useAtom } from "jotai";
 import { LatLngBoundsExpression } from "leaflet";
 import { MutableRefObject, useEffect, useState } from "react";
-import { ImageOverlay, LayersControl, useMapEvents } from "react-leaflet";
+import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
 import { MapPinType } from "../../types/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import MapPin from "./MapPin";
 
 type Props = {
   cm: MutableRefObject<any>;
@@ -51,7 +52,6 @@ export default function MapImage({ src, bounds, imgRef, cm, map_pins, readOnly }
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
-  console.log(map_pins);
   return (
     <div>
       <LayersControl position="topright">
@@ -60,10 +60,10 @@ export default function MapImage({ src, bounds, imgRef, cm, map_pins, readOnly }
         </LayersControl.BaseLayer>
 
         {/* Markers layer */}
-        {/* <LayersControl.Overlay name="Markers" checked={true}>
+        <LayersControl.Overlay name="Markers" checked={true}>
           <LayerGroup>
             {map_pins
-              .filter((map_pin: MapPinType) => {
+              ?.filter((map_pin: MapPinType) => {
                 if (readOnly) {
                   if (map_pin.public) {
                     if (markerFilter === "map") {
@@ -86,19 +86,12 @@ export default function MapImage({ src, bounds, imgRef, cm, map_pins, readOnly }
                   }
                 }
               })
-              .map((marker) => (
-                <MapMarker
-                  key={marker.id}
-                  markerData={marker}
-                  mcm={mcm}
-                  public_view={readOnly}
-                  setUpdateMarkerDialog={setUpdateMarkerDialog}
-                  setMarkerSidebar={setMarkerSidebar}
-                />
+              .map((pin) => (
+                <MapPin key={pin.id} pinData={pin} readOnly={readOnly} />
               ))}
           </LayerGroup>
         </LayersControl.Overlay>
-
+        {/*
      Other layers 
         <LayerGroup>
           {map_layers

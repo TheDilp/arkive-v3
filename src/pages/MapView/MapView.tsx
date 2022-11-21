@@ -5,7 +5,7 @@ import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
 import { ImageOverlay, MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
-import MapImage from "../../components/MapImage/MapImage";
+import MapImage from "../../components/Map/MapImage";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapType } from "../../types/mapTypes";

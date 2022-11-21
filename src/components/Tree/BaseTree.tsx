@@ -221,9 +221,14 @@ export default function BaseTree({ templates, type }: Props) {
     if (items) {
       if (filter || selectedTags.length > 0) {
         const timeout = setTimeout(() => {
+          let tempItems = [...items];
+          if (type === "documents" && templates)
+            tempItems = tempItems.filter((item) => "template" in item && item.template);
+          else if (type === "documents" && !templates)
+            tempItems = tempItems.filter((item) => "template" in item && !item.template);
+
           setTreeData(
-            items
-              .filter((item) => (templates && "template" in item ? item.template : false))
+            tempItems
               .filter(
                 (items: DocumentType | MapType) =>
                   items.title.toLowerCase().includes(filter.toLowerCase()) &&
@@ -241,13 +246,12 @@ export default function BaseTree({ templates, type }: Props) {
         }, 300);
         return () => clearTimeout(timeout);
       } else {
+        let tempItems = [...items];
+        if (type === "documents") {
+          tempItems = tempItems.filter((item) => (templates ? item.template : !item.template || !("template" in item)));
+        }
         setTreeData(
-          items
-            .filter((item) =>
-              templates && "template" in item
-                ? item.template
-                : ("template" in item && !item.template) || !("template" in item),
-            )
+          tempItems
             .map((item: DocumentType | MapType) => ({
               data: item,
               droppable: item.folder,

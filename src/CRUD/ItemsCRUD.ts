@@ -8,7 +8,7 @@ import { createURL, getURL, updateURL } from "../utils/CRUDUrls";
 import { DefaultDocument } from "../utils/DefaultValues/DocumentDefaults";
 import { toaster } from "../utils/toast";
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
-  return useQuery<DocumentType[] | MapType[]>(
+  return useQuery<(DocumentType | MapType)[]>(
     ["allItems", project_id, type],
     async () => {
       const url = getURL(project_id as string, type);
