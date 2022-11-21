@@ -195,3 +195,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Maps */
+.leaflet-container {
+  @apply bg-zinc-900 !important;
+}

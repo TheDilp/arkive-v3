@@ -18,7 +18,7 @@ export default function Layout() {
         </div>
         {/* <div className="w-5/6 outletWrapper"> */}
         <div className="h-full flex flex-1">
-          <div className="flex-1">
+          <div className="flex flex-col flex-1">
             <Outlet />
           </div>
         </div>

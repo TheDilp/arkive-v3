@@ -4,10 +4,10 @@ import { DocumentCreateType, DocumentType } from "../types/documentTypes";
 import { AvailableItemTypes } from "../types/generalTypes";
 import { MapCreateType, MapType } from "../types/mapTypes";
 import { SortIndexes } from "../types/treeTypes";
-import { getURL } from "../utils/query";
+import { getURL, updateURL } from "../utils/CRUDUrls";
 import { toaster } from "../utils/toast";
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
-  return useQuery<(DocumentType | MapType)[]>(
+  return useQuery<DocumentType[] | MapType[]>(
     ["allItems", project_id, type],
     async () => {
       const url = getURL(project_id as string, type);
@@ -113,29 +113,36 @@ export const useCreateMutation = (
 
 export const useUpdateMutation = (type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
-  const updateDocumentMutation = useMutation(
-    async (updateDocumentValues: Partial<DocumentType>) => {
-      return await fetch(`${baseURLS.baseServer}${updateURLs.updateDocument}${updateDocumentValues.id}`, {
-        body: JSON.stringify(updateDocumentValues),
-        method: "POST",
-      });
+
+  return useMutation(
+    async (updateItemValues: Partial<DocumentType>) => {
+      if (updateItemValues.id) {
+        const url = updateURL(updateItemValues.id, type);
+        if (url)
+          return await fetch(url, {
+            body: JSON.stringify(updateItemValues),
+            method: "POST",
+          });
+      }
     },
     {
-      onError: () => toaster("error", "There was an error updating your document."),
+      onError: () => toaster("error", "There was an error updating this item."),
       onSuccess: async (data, variables) => {
-        const newData: DocumentType = await data.json();
-        queryClient.setQueryData(["allDocuments", newData.project_id], (old: DocumentType[] | undefined) => {
-          if (old)
-            return old.map((doc) => {
-              if (doc.id === variables.id) return { ...doc, ...variables };
-              return doc;
-            });
-        });
+        const newData: DocumentType = await data?.json();
+        if (newData)
+          queryClient.setQueryData(
+            ["allItems", newData.project_id, type],
+            (old: DocumentType[] | MapType[] | undefined) => {
+              if (old)
+                return old.map((item) => {
+                  if (item.id === variables.id) return { ...item, ...variables };
+                  return item;
+                });
+            },
+          );
       },
     },
   );
-
-  if (type === "documents") return updateDocumentMutation;
 };
 
 export const useDeleteMutation = (type: AvailableItemTypes) => {

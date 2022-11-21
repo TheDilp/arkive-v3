@@ -40,6 +40,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         } else {
           navigate(`folder/${node.id}`);
         }
+        console.log(node.id, item_id);
       }}
       onContextMenu={(e) => {
         if (node.droppable)

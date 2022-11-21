@@ -28,6 +28,7 @@ export enum createURLS {
 export enum updateURLs {
   updateProject = "updateproject/",
   updateDocument = "updatedocument/",
+  updateMap = "updatemap/",
 
   sortDocuments = "sortdocuments",
   sortMaps = "sortmaps",

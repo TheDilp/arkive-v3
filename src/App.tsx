@@ -8,10 +8,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import { DndProvider } from "react-dnd";
-import Editor from "./components/Editor/Editor";
+import Editor from "./pages/Editor/Editor";
 import Layout from "./components/Layout/Layout";
 import { ToastContainer } from "react-toastify";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import MapView from "./pages/MapView/MapView";
 
 function App() {
   const queryClient = new QueryClient({
@@ -36,13 +37,13 @@ function App() {
                 <Route path="doc/:item_id" element={<Editor editable={true} />}></Route>
               </Route>
               <Route path="maps/*">
-                <Route path=":id" element={<div>MAP</div>}></Route>
+                <Route path=":item_id" element={<MapView />}></Route>
               </Route>
               <Route path="boards/*">
-                <Route path=":id" element={<div>BOARD</div>}></Route>
+                <Route path=":item_id" element={<div>BOARD</div>}></Route>
               </Route>
               <Route path="timelines/*">
-                <Route path=":id" element={<div>TIMELINE</div>}></Route>
+                <Route path=":item_id" element={<div>TIMELINE</div>}></Route>
               </Route>
               <Route path="settings" element={<div>SETTINGS</div>}></Route>
             </Route>

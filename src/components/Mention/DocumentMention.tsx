@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 import { markMap, typeMap } from "../../utils/EditorExtensions";
 import { toaster } from "../../utils/toast";
-import Editor from "../Editor/Editor";
+import Editor from "../../pages/Editor/Editor";
 import { Tooltip } from "../Tooltip/Tooltip";
 type Props = {
   title: string;

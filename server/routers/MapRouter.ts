@@ -36,25 +36,26 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       }
     },
   );
-  //   server.post(
-  //     "/updatedocument/:id",
-  //     async (
-  //       req: FastifyRequest<{
-  //         Body: string;
-  //         Params: { id: string };
-  //       }>,
-  //     ) => {
-  //       try {
-  //         const newDocument = await prisma.documents.update({
-  //           data: removeNull(JSON.parse(req.body)) as any,
-  //           where: { id: req.params.id },
-  //         });
-  //         return newDocument;
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     },
-  //   );
+  server.post(
+    "/updatemap/:id",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const updatedMap = await prisma.maps.update({
+          data: removeNull(JSON.parse(req.body)) as any,
+          where: { id: req.params.id },
+        });
+        return updatedMap;
+      } catch (error: any) {
+        console.log(error);
+        return new Error(error);
+      }
+    },
+  );
   server.post("/sortmaps", async (req: FastifyRequest<{ Body: string }>) => {
     const indexes: { id: string; parent: string; sort: number }[] = JSON.parse(req.body);
     const updates = indexes.map((idx) =>

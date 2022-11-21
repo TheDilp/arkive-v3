@@ -9,10 +9,10 @@ import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
-import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
-import MentionDropdownComponent from "../Mention/MentionDropdownComponent";
-import TagsAutocomplete from "../PropertiesBar/DocumentProperties";
-import Menubar from "./Menubar";
+import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
+import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
+import TagsAutocomplete from "../../components/PropertiesBar/DocumentProperties";
+import Menubar from "../../components/Editor/Menubar";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
@@ -92,4 +92,5 @@ export default function Editor({ content, editable }: EditorType) {
         ) : null}
       </div>
     );
+  return null;
 }
