@@ -66,11 +66,11 @@ export default function DrawerMapPinContent() {
 
         <ColorPicker
           value={localItem.backgroundColor}
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, bgColor: `#${e.value}` as string }))}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, backgroundColor: `#${e.value}` as string }))}
         />
         <InputText
           value={localItem.backgroundColor}
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, bgColor: e.target.value }))}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, backgroundColor: e.target.value }))}
         />
       </div>
       <div className="flex flex-wrap items-center justify-between">
