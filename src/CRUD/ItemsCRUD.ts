@@ -7,15 +7,21 @@ import { SortIndexes } from "../types/treeTypes";
 import { getURL } from "../utils/query";
 import { toaster } from "../utils/toast";
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
-  return useQuery<(DocumentType | MapType)[]>(["allItems", project_id, type], async () => {
-    const url = getURL(project_id as string, type);
-    if (url)
-      return await (
-        await fetch(url, {
-          method: "GET",
-        })
-      ).json();
-  });
+  return useQuery<(DocumentType | MapType)[]>(
+    ["allItems", project_id, type],
+    async () => {
+      const url = getURL(project_id as string, type);
+      if (url)
+        return await (
+          await fetch(url, {
+            method: "GET",
+          })
+        ).json();
+    },
+    {
+      staleTime: 5 * 60 * 1000,
+    },
+  );
 };
 
 export const useGetAllImages = (project_id: string) => {

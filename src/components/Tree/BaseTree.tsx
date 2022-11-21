@@ -28,9 +28,10 @@ import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
   type: AvailableItemTypes;
+  templates?: boolean;
 };
 
-export default function BaseTree({ type }: Props) {
+export default function BaseTree({ templates, type }: Props) {
   const { project_id } = useParams();
   const { data: items, isLoading, error } = useGetAllItems(project_id as string, type);
   const createItemMutation = useCreateMutation(type);
@@ -221,11 +222,13 @@ export default function BaseTree({ type }: Props) {
         const timeout = setTimeout(() => {
           setTreeData(
             items
+              .filter((item) => (templates && "template" in item ? item.template : false))
               .filter(
                 (items: DocumentType | MapType) =>
                   items.title.toLowerCase().includes(filter.toLowerCase()) &&
                   selectedTags.every((tag) => items.tags.includes(tag)),
               )
+
               .map((doc: DocumentType | MapType) => ({
                 data: doc,
                 droppable: doc.folder,
@@ -239,6 +242,11 @@ export default function BaseTree({ type }: Props) {
       } else {
         setTreeData(
           items
+            .filter((item) =>
+              templates && "template" in item
+                ? item.template
+                : ("template" in item && !item.template) || !("template" in item),
+            )
             .map((item: DocumentType | MapType) => ({
               data: item,
               droppable: item.folder,
