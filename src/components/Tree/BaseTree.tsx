@@ -1,7 +1,13 @@
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { getDepth, handleDrop } from "../../utils/tree";
 import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import { useCreateMutation, useDeleteMutation, useSortMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
+import {
+  useCreateMutation,
+  useDeleteMutation,
+  useGetAllItems,
+  useSortMutation,
+  useUpdateMutation,
+} from "../../CRUD/ItemsCRUD";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -21,11 +27,12 @@ import { MapType } from "../../types/mapTypes";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
-  data: (DocumentType | MapType)[];
   type: AvailableItemTypes;
 };
 
-export default function BaseTree({ data, type }: Props) {
+export default function BaseTree({ type }: Props) {
+  const { project_id } = useParams();
+  const { data: items, isLoading, error } = useGetAllItems(project_id as string, type);
   const createItemMutation = useCreateMutation(type);
   const updateItemMutation = useUpdateMutation(type);
   const deleteItemMutation = useDeleteMutation(type);
@@ -130,7 +137,7 @@ export default function BaseTree({ data, type }: Props) {
       {
         command: () => {
           if (cmType.data?.id) {
-            if (data.some((item) => item.parent === cmType.data?.id)) {
+            if (items?.some((item) => item.parent === cmType.data?.id)) {
               toaster("error", "Cannot convert to file if folder contains files.");
               return;
             }
@@ -200,7 +207,6 @@ export default function BaseTree({ data, type }: Props) {
     return [];
   }
 
-  const { project_id } = useParams();
   const [cmType] = useAtom(SidebarTreeContextAtom);
   const { data: tags, refetch: refetchTags } = useGetAllTags(project_id as string, type);
 
@@ -210,11 +216,11 @@ export default function BaseTree({ data, type }: Props) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useLayoutEffect(() => {
-    if (data) {
+    if (items) {
       if (filter || selectedTags.length > 0) {
         const timeout = setTimeout(() => {
           setTreeData(
-            data
+            items
               .filter(
                 (items: DocumentType | MapType) =>
                   items.title.toLowerCase().includes(filter.toLowerCase()) &&
@@ -232,7 +238,7 @@ export default function BaseTree({ data, type }: Props) {
         return () => clearTimeout(timeout);
       } else {
         setTreeData(
-          data
+          items
             .map((item: DocumentType | MapType) => ({
               data: item,
               droppable: item.folder,
@@ -244,7 +250,10 @@ export default function BaseTree({ data, type }: Props) {
         );
       }
     }
-  }, [data, filter, selectedTags]);
+  }, [items, filter, selectedTags]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error </div>;
 
   return (
     <>
@@ -283,7 +292,7 @@ export default function BaseTree({ data, type }: Props) {
         rootId={"0"}
         sort={false}
         insertDroppableFirst={false}
-        initialOpen={data?.filter((item) => item.expanded).map((doc) => doc.id) || false}
+        initialOpen={items?.filter((item) => item.expanded).map((doc) => doc.id) || false}
         render={(node: NodeModel<TreeDataType>, { depth, isOpen, onToggle }) => (
           <TreeItem node={node} depth={depth} isOpen={isOpen} onToggle={onToggle} type={type} cm={cm} />
         )}

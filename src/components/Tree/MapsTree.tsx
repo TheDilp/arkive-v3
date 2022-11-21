@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useCreateMutation, useGetAllMaps } from "../../CRUD/ItemsCRUD";
+import { useCreateMutation } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
@@ -11,7 +11,6 @@ export default function MapsTree() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createMapMutation = useCreateMutation("maps");
-  const { data, isLoading, error } = useGetAllMaps(project_id as string);
 
   const items = useMemo(
     () => [
@@ -43,9 +42,6 @@ export default function MapsTree() {
     [],
   );
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error </div>;
-
   return (
     <div className="flex flex-col flex-1">
       <div className="flex items-center justify-between pb-2 border-b border-zinc-600">
@@ -76,7 +72,7 @@ export default function MapsTree() {
         />
       </div>
 
-      {data ? <BaseTree data={data} type="maps" /> : null}
+      <BaseTree type="maps" />
     </div>
   );
 }

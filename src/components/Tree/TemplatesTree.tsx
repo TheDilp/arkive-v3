@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { SplitButton } from "primereact/splitbutton";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useCreateMutation, useGetAllDocuments } from "../../CRUD/ItemsCRUD";
+import { useCreateMutation } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
@@ -30,8 +30,6 @@ export default function TemplatesTree() {
     ],
     [],
   );
-  const { data, isLoading, error } = useGetAllDocuments(project_id as string);
-  if (isLoading || error) return <span>Loading...</span>;
 
   return (
     <div className="flex flex-col">
@@ -48,7 +46,7 @@ export default function TemplatesTree() {
           });
         }}
       />
-      {data ? <BaseTree data={data.filter((doc) => doc.template)} type="documents" /> : null}
+      <BaseTree type="documents" />
     </div>
   );
 }

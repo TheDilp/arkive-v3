@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
-import { useCreateMutation, useGetAllDocuments } from "../../../CRUD/ItemsCRUD";
+import { useCreateMutation, useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -13,7 +13,7 @@ export default function DrawerFromTemplateContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [selectedTemplate, setSelectedTemplate] = useState("");
-  const { data: allDocuments } = useGetAllDocuments(project_id as string);
+  const { data: allDocuments } = useGetAllItems(project_id as string, "documents");
   const createDocumentMutation = useCreateMutation("documents");
 
   function DropdownFilter(doc: DocumentType) {
@@ -36,7 +36,7 @@ export default function DrawerFromTemplateContent() {
             onChange={(e) => {
               setSelectedTemplate(e.value as string);
             }}
-            options={allDocuments ? [...allDocuments.filter(DropdownFilter)] : []}
+            options={allDocuments ? [...(allDocuments as DocumentType[]).filter(DropdownFilter)] : []}
           />
         </div>
 

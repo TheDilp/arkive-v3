@@ -11,7 +11,7 @@ import { DndProvider } from "react-dnd";
 import Editor from "./components/Editor/Editor";
 import Layout from "./components/Layout/Layout";
 import { ToastContainer } from "react-toastify";
-import DialogWrapper from "./components/Dialog/DialogWrapper";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   const queryClient = new QueryClient({
@@ -27,6 +27,7 @@ function App() {
     <main className="h-screen flex flex-col overflow-hidden">
       <ToastContainer autoClose={3000} newestOnTop pauseOnHover theme="dark" />
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
           <Routes>
             <Route path="/" element={<Dashboard />} />

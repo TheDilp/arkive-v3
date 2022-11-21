@@ -6,9 +6,10 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useCreateMutation, useDeleteMutation, useGetAllDocuments, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
+import { useCreateMutation, useDeleteMutation, useGetAllItems, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
+import { MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
@@ -20,7 +21,7 @@ export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
-  const { data: allDocuments } = useGetAllDocuments(project_id as string);
+  const { data: allDocuments } = useGetAllItems(project_id as string, "documents");
   const document = useGetItem(project_id as string, drawer?.id, "documents") as DocumentType;
   const createDocumentMutation = useCreateMutation("documents");
   const updateDocumentMutation = useUpdateMutation("documents");
@@ -68,8 +69,8 @@ export default function DrawerDocumentContent() {
     }
   }, [document]);
 
-  function DropdownFilter(doc: DocumentType) {
-    if (!doc.folder || (document && doc.id === document.id)) return false;
+  function DropdownFilter(item: DocumentType) {
+    if (!item.folder || (document && item.id === document.id)) return false;
     return true;
   }
   return (
@@ -116,7 +117,7 @@ export default function DrawerDocumentContent() {
               }}
               options={
                 allDocuments
-                  ? [{ id: null, title: "Root" }, ...allDocuments.filter(DropdownFilter)]
+                  ? [{ id: null, title: "Root" }, ...(allDocuments as DocumentType[]).filter(DropdownFilter)]
                   : [{ id: null, title: "Root" }]
               }
             />

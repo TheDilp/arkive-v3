@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -6,7 +5,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useCreateMutation, useGetAllMapImages, useGetAllMaps, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
+import { useCreateMutation, useGetAllMapImages, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { baseURLS } from "../../../types/CRUDenums";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
@@ -17,7 +16,7 @@ import { buttonLabelWithIcon } from "../../../utils/transform";
 
 export default function DrawerMapContent() {
   const { project_id } = useParams();
-  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [drawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const updateMapMutation = useUpdateMutation("maps");
   const createMapMutation = useCreateMutation("maps");
@@ -46,10 +45,7 @@ export default function DrawerMapContent() {
         toaster("warning", "Maps must have a map image.");
         return;
       }
-      console.log({
-        ...DefaultMap,
-        ...newData,
-      });
+
       createMapMutation?.mutate({
         ...DefaultMap,
         ...newData,

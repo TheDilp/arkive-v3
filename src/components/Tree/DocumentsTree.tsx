@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { SplitButton } from "primereact/splitbutton";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useCreateMutation, useGetAllDocuments } from "../../CRUD/ItemsCRUD";
+import { useCreateMutation } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
@@ -11,7 +11,6 @@ export default function DocumentsTree() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createDocumentMutation = useCreateMutation("documents");
-  const { data, isLoading, error } = useGetAllDocuments(project_id as string);
 
   const items = useMemo(
     () => [
@@ -43,9 +42,6 @@ export default function DocumentsTree() {
     [],
   );
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error </div>;
-
   return (
     <>
       <SplitButton
@@ -61,7 +57,7 @@ export default function DocumentsTree() {
         }}
       />
 
-      {data ? <BaseTree data={data.filter((doc) => !doc.template)} type="documents" /> : null}
+      <BaseTree type="documents" />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { BreadCrumb } from "primereact/breadcrumb";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useGetAllDocuments } from "../../CRUD/ItemsCRUD";
+import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DocumentType } from "../../types/documentTypes";
 import { BreadcrumbsType } from "../../types/generalTypes";
@@ -9,7 +9,7 @@ import { BreadcrumbsType } from "../../types/generalTypes";
 export default function Breadcrumbs() {
   const { project_id, item_id } = useParams();
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsType>([]);
-  const { data: documents } = useGetAllDocuments(project_id as string);
+  const { data: documents } = useGetAllItems(project_id as string, "documents");
   const currentDocument = useGetItem(project_id as string, item_id as string, "documents");
   const navigate = useNavigate();
   function recursiveFindParents(
@@ -54,7 +54,12 @@ export default function Breadcrumbs() {
           },
         ];
 
-        recursiveFindParents(currentDocument?.parent || null, documents, tempBreadcrumbs, setBreadcrumbs);
+        recursiveFindParents(
+          currentDocument?.parent || null,
+          documents as DocumentType[],
+          tempBreadcrumbs,
+          setBreadcrumbs,
+        );
       }
     }
   }, [item_id]);
