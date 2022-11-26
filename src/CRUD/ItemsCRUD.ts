@@ -101,7 +101,7 @@ export const useCreateSubItemMutation = (project_id: string, subType: AvailableS
       onSuccess: async (data) => {
         const type = "maps";
         const newData: AllSubItemsType = await data?.json();
-        queryClient.invalidateQueries(["allItems", project_id, type]);
+        // queryClient.invalidateQueries(["allItems", project_id, type]);
         if (newData)
           queryClient.setQueryData(["allItems", project_id, type], (old: AllItemsType[] | undefined) => {
             return old

@@ -5,6 +5,7 @@ import { AvailableItemTypes } from "../types/generalTypes";
 import { MapType } from "../types/mapTypes";
 
 export function useGetItem(project_id: string, id: null | string, type: AvailableItemTypes) {
+  console.log(type);
   const { data, isLoading, isError } = useQuery<(DocumentType | MapType)[]>(["allItems", project_id, type]);
   if (!id || !type || isLoading || isError) return null;
   if (data) {

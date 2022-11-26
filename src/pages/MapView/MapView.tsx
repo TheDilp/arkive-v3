@@ -1,12 +1,12 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { CRS, LatLngBoundsExpression } from "leaflet";
-import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImageOverlay, MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
-import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapPinType, MapType } from "../../types/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export default function MapView({ isReadOnly }: Props) {
+  const queryClient = useQueryClient();
   const { project_id, item_id } = useParams();
   const [mapPins, setMapPins] = useState<MapPinType[]>([]);
   const [bounds, setBounds] = useState<number[][]>([
@@ -41,7 +42,7 @@ export default function MapView({ isReadOnly }: Props) {
     },
   ];
 
-  const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
+  const currentMap = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"])?.find((map) => map.id === item_id);
 
   useEffect(() => {
     if (currentMap) {
