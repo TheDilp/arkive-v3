@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import DrawerMapPinContent from "../Drawer/DrawerContent/DrawerMapPinContent";
 
 function FileUploadItemTemplate(
   file: any,
@@ -144,7 +143,7 @@ export default function DialogWrapper() {
     <Dialog
       header={() => {
         if (dialog.type === "files") return "Upload Files";
-        if (dialog.type === "map_marker") return "Map Marker";
+        if (dialog.type === "map_pin") return "Map Marker";
         if (uploading) return "Uploading...";
         return null;
       }}
@@ -155,7 +154,6 @@ export default function DialogWrapper() {
       position={dialog.position}
       visible={dialog.show}>
       {dialog.type === "files" && <QuickUploadDialog setUploading={setUploading} />}
-      {dialog.type === "map_marker" && <DrawerMapPinContent />}
     </Dialog>
   );
 }

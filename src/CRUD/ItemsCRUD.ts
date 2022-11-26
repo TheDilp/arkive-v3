@@ -31,7 +31,7 @@ export const useGetAllImages = (project_id: string) => {
   return useQuery<string[]>(
     ["allImages", project_id],
     async () =>
-      await (
+      (
         await fetch(`${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, {
           method: "GET",
         })
@@ -45,7 +45,7 @@ export const useGetAllMapImages = (project_id: string) => {
   return useQuery<string[]>(
     ["allMapImages", project_id],
     async () =>
-      await (
+      (
         await fetch(`${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, {
           method: "GET",
         })
@@ -63,10 +63,12 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
     async (newItemValues: Partial<AllItemsType>) => {
       const url = createURL(type);
       if (url)
-        return await fetch(url, {
+        return fetch(url, {
           body: JSON.stringify(newItemValues),
           method: "POST",
         });
+
+      return null;
     },
     {
       onError: () => toaster("error", "There was an error creating this item."),
@@ -128,11 +130,12 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, type);
         if (url)
-          return await fetch(url, {
+          return fetch(url, {
             body: JSON.stringify(updateItemValues),
             method: "POST",
           });
       }
+      return null;
     },
     {
       onError: () => toaster("error", "There was an error updating this item."),
@@ -145,6 +148,8 @@ export const useUpdateMutation = (type: AvailableItemTypes) => {
                 if (item.id === variables.id) return { ...item, ...variables };
                 return item;
               });
+
+            return [];
           });
       },
     },
@@ -156,19 +161,23 @@ export const useDeleteMutation = (type: AvailableItemTypes) => {
 
   const deleteDocumentMutation = useMutation(
     async (id: string) =>
-      await fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
+      fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
         method: "DELETE",
       }),
+
     {
       onSuccess: async (data, id) => {
         const newData: DocumentType = await data.json();
         queryClient.setQueryData(["allDocuments", newData.project_id], (old: DocumentType[] | undefined) => {
           if (old) return old.filter((doc) => doc.id !== id);
+          return [];
         });
+        return [];
       },
     },
   );
   if (type === "documents") return deleteDocumentMutation;
+  return null;
 };
 
 export const useSortMutation = (
@@ -176,7 +185,7 @@ export const useSortMutation = (
 ): UseMutationResult<Response, unknown, SortIndexes, unknown> | undefined => {
   const sortDocumentMutation = useMutation(
     async (updateDocumentValues: SortIndexes) => {
-      return await fetch(`${baseURLS.baseServer}${updateURLs.sortDocuments}`, {
+      return fetch(`${baseURLS.baseServer}${updateURLs.sortDocuments}`, {
         body: JSON.stringify(updateDocumentValues),
         method: "POST",
       });
@@ -187,7 +196,7 @@ export const useSortMutation = (
   );
   const sortMapsMutation = useMutation(
     async (updateMapValues: SortIndexes) => {
-      return await fetch(`${baseURLS.baseServer}${updateURLs.sortMaps}`, {
+      return fetch(`${baseURLS.baseServer}${updateURLs.sortMaps}`, {
         body: JSON.stringify(updateMapValues),
         method: "POST",
       });
