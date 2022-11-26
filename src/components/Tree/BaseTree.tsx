@@ -234,7 +234,6 @@ export default function BaseTree({ templates, type }: Props) {
                   items.title.toLowerCase().includes(filter.toLowerCase()) &&
                   selectedTags.every((tag) => items.tags.includes(tag)),
               )
-
               .map((doc: DocumentType | MapType) => ({
                 data: doc,
                 droppable: doc.folder,
@@ -248,7 +247,9 @@ export default function BaseTree({ templates, type }: Props) {
       } else {
         let tempItems = [...items];
         if (type === "documents") {
-          tempItems = tempItems.filter((item) => (templates ? item.template : !item.template || !("template" in item)));
+          tempItems = tempItems.filter((item) =>
+            templates ? "template" in item && item.template : "template" in item && !item.template,
+          );
         }
         setTreeData(
           tempItems

@@ -1,24 +1,24 @@
 import { useAtom } from "jotai";
 import { CRS, LatLngBoundsExpression } from "leaflet";
 import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
-
 import { ImageOverlay, MapContainer } from "react-leaflet";
 import { useParams } from "react-router-dom";
+
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
-import { MapType } from "../../types/mapTypes";
+import { MapPinType, MapType } from "../../types/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
-  readOnly?: boolean;
+  isReadOnly?: boolean;
 };
 
-export default function MapView({ readOnly }: Props) {
+export default function MapView({ isReadOnly }: Props) {
   const { project_id, item_id } = useParams();
-  const [loading, setLoading] = useState(true);
+  const [mapPins, setMapPins] = useState<MapPinType[]>([]);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
@@ -29,7 +29,7 @@ export default function MapView({ readOnly }: Props) {
   const cm = useRef() as any;
   const items = [
     {
-      command: (e: { originalEvent: BaseSyntheticEvent }) => {
+      command: () => {
         setDrawer({ ...DefaultDrawer, data: drawer?.data, position: "left", show: true, type: "map_pins" });
       },
       icon: "pi pi-fw pi-map-marker",
@@ -45,7 +45,7 @@ export default function MapView({ readOnly }: Props) {
 
   useEffect(() => {
     if (currentMap) {
-      setLoading(true);
+      setMapPins(currentMap.map_pins);
       const img = new Image();
       img.src = `${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap.map_image}`;
       img.onload = () => {
@@ -68,39 +68,35 @@ export default function MapView({ readOnly }: Props) {
             },
           );
         }
-        setLoading(false);
       };
     }
-  }, [currentMap]);
+  }, [currentMap, project_id]);
   useEffect(() => {
     //  Wait for map to finish loading
   }, [bounds]);
-
   return (
     <div className="w-full flex flex-col flex-1">
       <ContextMenu cm={cm} items={items} />
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+      <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
       <MapContainer
         ref={mapRef}
-        className="w-full h-full flex-1 outline-none bg-zinc-900"
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //    @ts-ignore
-        center={[bounds[1][0] / 2, bounds[1][1] / 2]}
-        zoom={0}
-        minZoom={-3}
-        maxZoom={2}
-        scrollWheelZoom={true}
-        zoomSnap={0}
-        crs={CRS.Simple}
+        attributionControl={false}
         bounds={bounds as LatLngBoundsExpression}
-        attributionControl={false}>
+        center={[bounds[1][0] / 2, bounds[1][1] / 2]}
+        className="w-full h-full flex-1 outline-none bg-zinc-900"
+        crs={CRS.Simple}
+        maxZoom={2}
+        minZoom={-3}
+        scrollWheelZoom
+        zoom={0}
+        zoomSnap={0}>
         <MapImage
-          cm={cm}
-          map_pins={currentMap?.map_pins}
           bounds={bounds as LatLngBoundsExpression}
+          cm={cm}
           imgRef={imgRef}
+          isReadOnly={isReadOnly}
+          mapPins={mapPins}
           src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
-          readOnly={readOnly}
         />
         <ImageOverlay
           ref={imgRef}

@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import { DialogPositionType } from "primereact/dialog";
+
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
-import { AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
 
@@ -12,6 +12,9 @@ export type DialogAtomType = {
   modal?: boolean;
   fullscreen?: boolean;
   show: boolean;
+  data?: {
+    [key: string]: any;
+  };
 };
 
 export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({

@@ -1,8 +1,11 @@
 import { useAtom } from "jotai";
 import { LatLngBoundsExpression } from "leaflet";
-import { MutableRefObject, useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useLayoutEffect, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
-import { MapPinType } from "../../types/mapTypes";
+import { useParams } from "react-router-dom";
+
+import { useGetItem } from "../../hooks/getItemHook";
+import { MapPinType, MapType } from "../../types/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import MapPin from "./MapPin";
@@ -12,12 +15,15 @@ type Props = {
   src: string;
   bounds: LatLngBoundsExpression;
   imgRef: any;
-  readOnly?: boolean;
-  map_pins: MapPinType[];
+  isReadOnly?: boolean;
+  mapPins: MapPinType[];
   //   map_layers: MapLayerProps[];
 };
 
-export default function MapImage({ src, bounds, imgRef, cm, map_pins, readOnly }: Props) {
+export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, mapPins }: Props) {
+  const { project_id, item_id } = useParams();
+  const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
+  const [pins, setPins] = useState(currentMap?.map_pins);
   const handleKeyUp = (e: KeyboardEvent) => {
     if (!e.shiftKey && !e.altKey) {
       setMarkerFilter(false);
@@ -35,10 +41,11 @@ export default function MapImage({ src, bounds, imgRef, cm, map_pins, readOnly }
     }
   };
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
-  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [, setDrawer] = useAtom(DrawerAtom);
+  // eslint-disable-next-line no-unused-vars
   const map = useMapEvents({
     contextmenu(e: any) {
-      if (!readOnly) {
+      if (!isReadOnly) {
         cm.current.show(e.originalEvent);
         setDrawer({ ...DefaultDrawer, data: { ...e.latlng } });
       }
@@ -52,43 +59,45 @@ export default function MapImage({ src, bounds, imgRef, cm, map_pins, readOnly }
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+
+  useLayoutEffect(() => {
+    if (currentMap?.map_pins) setPins(currentMap.map_pins);
+  }, [currentMap?.map_pins]);
+
   return (
     <div>
       <LayersControl position="topright">
-        <LayersControl.BaseLayer name="Map" checked={true}>
-          <ImageOverlay url={src} bounds={bounds} ref={imgRef} />
+        <LayersControl.BaseLayer checked name="Map">
+          <ImageOverlay ref={imgRef} bounds={bounds} url={src} />
         </LayersControl.BaseLayer>
 
         {/* Markers layer */}
-        <LayersControl.Overlay name="Markers" checked={true}>
+        <LayersControl.Overlay checked name="Markers">
           <LayerGroup>
-            {map_pins
-              ?.filter((map_pin: MapPinType) => {
-                if (readOnly) {
-                  if (map_pin.public) {
-                    if (markerFilter === "map") {
-                      return false;
-                    } else if (markerFilter === "doc") {
-                      return map_pin.doc_id;
-                    } else {
+            {pins &&
+              pins
+                ?.filter((mapPin: MapPinType) => {
+                  if (isReadOnly) {
+                    if (mapPin.public) {
+                      if (markerFilter === "map") {
+                        return false;
+                      }
+                      if (markerFilter === "doc") {
+                        return mapPin.doc_id;
+                      }
                       return true;
                     }
-                  } else {
                     return false;
                   }
-                } else {
                   if (markerFilter === "map") {
-                    return map_pin.map_link;
-                  } else if (markerFilter === "doc") {
-                    return map_pin.doc_id;
-                  } else {
-                    return true;
+                    return mapPin.map_link;
                   }
-                }
-              })
-              .map((pin) => (
-                <MapPin key={pin.id} pinData={pin} readOnly={readOnly} />
-              ))}
+                  if (markerFilter === "doc") {
+                    return mapPin.doc_id;
+                  }
+                  return true;
+                })
+                .map((pin) => <MapPin key={pin.id} pinData={pin} readOnly={isReadOnly} />)}
           </LayerGroup>
         </LayersControl.Overlay>
         {/*

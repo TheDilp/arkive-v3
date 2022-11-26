@@ -2,7 +2,8 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
+
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -11,6 +12,24 @@ import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent
 import DrawerMapContent from "./DrawerContent/DrawerMapContent";
 import DrawerMapPinContent from "./DrawerContent/DrawerMapPinContent";
 
+export function handleCloseDrawer(setDrawer: Dispatch<SetStateAction<DrawerAtomType>>) {
+  setDrawer((prev) => ({ ...prev, show: false }));
+  setTimeout(() => {
+    setDrawer(DefaultDrawer);
+  }, 500);
+}
+
+// eslint-disable-next-line no-unused-vars
+function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void) {
+  return (
+    <Button
+      className="p-0 w-fit p-button-text p-button-rounded p-button-secondary hover:bg-transparent"
+      icon={<Icon className="pointer-events-none" fontSize={26} icon="mdi:close" />}
+      onClick={() => handleCloseDrawer(setDrawer)}
+    />
+  );
+}
+
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
@@ -18,29 +37,16 @@ export default function Drawer() {
     <PrimeDrawer
       className="p-sidebar-sm"
       dismissable={false}
-      position={drawer.position}
-      visible={drawer.show}
-      onHide={() => handleCloseDrawer(setDrawer)}
+      icons={() => DrawerIcons(setDrawer)}
       modal={false}
+      onHide={() => handleCloseDrawer(setDrawer)}
+      position={drawer.position}
       showCloseIcon={false}
-      icons={() => (
-        <Button
-          icon={<Icon className="pointer-events-none" icon="mdi:close" fontSize={26} />}
-          className="p-0 w-fit p-button-text p-button-rounded p-button-secondary hover:bg-transparent"
-          onClick={() => handleCloseDrawer(setDrawer)}
-        />
-      )}>
+      visible={drawer.show}>
       {drawer.type === "documents" && !drawer.exceptions?.fromTemplate ? <DrawerDocumentContent /> : null}
       {drawer.type === "documents" && drawer.exceptions?.fromTemplate ? <DrawerFromTemplateContent /> : null}
       {drawer.type === "maps" ? <DrawerMapContent /> : null}
       {drawer.type === "map_pins" ? <DrawerMapPinContent /> : null}
     </PrimeDrawer>
   );
-}
-
-export function handleCloseDrawer(setDrawer: (update: SetStateAction<DrawerAtomType>) => void) {
-  setDrawer((prev) => ({ ...prev, show: false }));
-  setTimeout(() => {
-    setDrawer(DefaultDrawer);
-  }, 500);
 }

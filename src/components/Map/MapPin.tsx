@@ -3,22 +3,11 @@ import { Dispatch, SetStateAction, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { MapPinType } from "../../types/mapTypes";
 
 export default function MapPin({ pinData: markerData, readOnly }: { pinData: MapPinType; readOnly?: boolean }) {
-  const {
-    id,
-    parent,
-    icon,
-    color,
-    backgroundColor,
-    text,
-    lat,
-    lng,
-    doc_id,
-    map_link,
-    public: markerPublic,
-  } = markerData;
+  const { id, parent, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, public: markerPublic } = markerData;
   const { project_id } = useParams();
   const navigate = useNavigate();
   //   const updateMarkerMutation = useUpdateMapMarker();
@@ -41,6 +30,7 @@ export default function MapPin({ pinData: markerData, readOnly }: { pinData: Map
     // },
     dragend(e: any) {
       if (!readOnly) {
+        // eslint-disable-next-line no-underscore-dangle
         setPosition(e.target._latlng);
         // updateMarkerMutation.mutate({
         //   id,
@@ -57,42 +47,41 @@ export default function MapPin({ pinData: markerData, readOnly }: { pinData: Map
     <Marker
       draggable={!readOnly}
       eventHandlers={eventHandlers}
-      position={position}
       icon={L.divIcon({
         className: "relative",
         html: ReactDOM.renderToString(
           <div className="relative">
             <div className="w-12 h-12 absolute">
               <div
-                style={{
-                  background: `url('https://api.iconify.design/mdi/${icon.replace(
-                    /.*:/g,
-                    "",
-                  )}.svg?color=%23${color.replace("#", "")}') no-repeat`,
-                  backgroundColor,
-                  backgroundPosition: "center",
-                  backgroundSize: "2rem",
-                  border: "white solid 3px",
-                  zIndex: 999999,
-                }}
                 className="w-full h-full p-4 fixed rounded-full"
                 onContextMenu={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                   //   if (!readOnly) {
                   //   }
-                }}></div>
+                }}
+                style={{
+                  background: `url('https://api.iconify.design/mdi/${icon.replace(/.*:/g, "")}.svg?color=%23${color.replace(
+                    "#",
+                    "",
+                  )}') no-repeat`,
+                  backgroundColor,
+                  backgroundPosition: "center",
+                  backgroundSize: "2rem",
+                  border: "white solid 3px",
+                  zIndex: 999999,
+                }}
+              />
             </div>
           </div>,
         ),
         iconAnchor: [30, 46],
         iconSize: [48, 48],
         tooltipAnchor: [-5, -20],
-      })}>
+      })}
+      position={position}>
       {text && (
-        <Tooltip
-          direction="top"
-          className="p-2 text-lg text-white bg-gray-800 border-gray-800 border-solid border-rounded-sm">
+        <Tooltip className="p-2 text-lg text-white bg-gray-800 border-gray-800 border-solid border-rounded-sm" direction="top">
           <div className="text-center Lato">{text}</div>
         </Tooltip>
       )}

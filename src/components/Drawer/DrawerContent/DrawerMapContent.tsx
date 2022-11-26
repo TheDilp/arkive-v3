@@ -51,7 +51,7 @@ export default function DrawerMapContent() {
       });
     }
   }
-
+  console.log(map_images);
   useEffect(() => {
     if (map) {
       setLocalItem(map);
@@ -87,7 +87,7 @@ export default function DrawerMapContent() {
       />
 
       <Dropdown
-        options={map_images}
+        options={map_images ? [map_images] : []}
         placeholder="Select map"
         valueTemplate={() => {
           return <div>{localItem?.map_image || "Select Map"}</div>;

@@ -4,11 +4,16 @@ import { existsSync, mkdirSync, readdir, readdirSync, writeFile } from "fs";
 export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getallimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
     const files = readdirSync(`./assets/images/${req.params.project_id}`);
-    return files;
+    if (files) return files;
+    return [];
   });
   server.get("/getallmapimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
-    const files = readdirSync(`./assets/maps/${req.params.project_id}`);
-    return files;
+    try {
+      const files = readdirSync(`./assets/maps/${req.params.project_id}`);
+      if (files) return files;
+    } catch (error) {
+      return [];
+    }
   });
   server.get(
     "/getimage/:type/:project_id/:image_name",

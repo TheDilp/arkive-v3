@@ -24,4 +24,7 @@ export type DialogAtomType = {
   modal?: boolean;
   fullscreen?: boolean;
   show: boolean;
+  data?: {
+    [key: string]: any;
+  };
 };

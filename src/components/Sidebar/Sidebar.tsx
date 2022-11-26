@@ -1,14 +1,16 @@
+import { TabPanel, TabView } from "primereact/tabview";
 import { useLocation } from "react-router-dom";
-import { TabView, TabPanel } from "primereact/tabview";
+
 import DocumentsTree from "../Tree/DocumentsTree";
-import TemplatesTree from "../Tree/TemplatesTree";
 import MapsTree from "../Tree/MapsTree";
+import TemplatesTree from "../Tree/TemplatesTree";
+
 export default function Sidebar() {
   const { pathname } = useLocation();
   if (pathname.includes("wiki"))
     return (
       <div className="flex flex-col flex-1">
-        <TabView renderActiveOnly className="flex flex-col flex-1">
+        <TabView className="flex flex-col flex-1" renderActiveOnly>
           <TabPanel className="w-full h-full flex flex-col flex-1" header="Documents">
             <DocumentsTree />
           </TabPanel>

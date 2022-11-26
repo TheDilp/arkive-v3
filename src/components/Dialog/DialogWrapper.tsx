@@ -1,34 +1,45 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { SelectButton } from "primereact/selectbutton";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerMapPinContent from "../Drawer/DrawerContent/DrawerMapPinContent";
 
-export default function DialogWrapper() {
-  const queryClient = useQueryClient();
-  const [dialog, setDialog] = useAtom(DialogAtom);
-  const [uploading, setUploading] = useState(false);
-
+function FileUploadItemTemplate(
+  file: any,
+  types: { name: string; type: "Image" | "Map" }[],
+  setTypes: Dispatch<
+    SetStateAction<
+      {
+        name: string;
+        type: "Image" | "Map";
+      }[]
+    >
+  >,
+) {
+  const { name, objectURL } = file;
   return (
-    <Dialog
-      position={dialog.position}
-      visible={dialog.show}
-      modal={dialog.modal}
-      header={() => {
-        if (dialog.type === "files") return "Upload Files";
-        if (dialog.type === "map_marker") return "Map Marker";
-        if (uploading) "Uploading...";
-      }}
-      onHide={() => {
-        setDialog({ ...DefaultDialog, position: dialog.position });
-      }}>
-      {dialog.type === "files" && <QuickUploadDialog setUploading={setUploading} />}
-    </Dialog>
+    <div className="w-full flex items-center justify-between">
+      <img alt="Error" className="w-12" src={objectURL} />
+      <p className="truncate">{name}</p>
+      <SelectButton
+        onChange={(e) => {
+          const allTypes = [...types];
+          const idx = allTypes.findIndex((t) => t.name === name);
+          if (idx !== -1) {
+            allTypes[idx].type = e.value;
+            setTypes(allTypes);
+          }
+        }}
+        options={["Image", "Map"]}
+        value={[...types].find((t) => t.name === name)?.type}
+      />
+    </div>
   );
 }
 
@@ -38,12 +49,12 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>([]);
 
   const onTemplateSelect = (e: any) => {
-    const _types = types;
-    const files = e.files;
-    for (let i = 0; i < files.length; i++) {
+    const allTypes = types;
+    const { files } = e;
+    for (let i = 0; i < files.length; i += 1) {
       types.push({ name: files[i].name, type: "Image" });
     }
-    setTypes(_types);
+    setTypes(allTypes);
   };
 
   const chooseOptions = {
@@ -74,24 +85,31 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
         }}>
         {chooseButton}
         <span>{uploadButton}</span>
-        <span
+        <button
           onClick={() => {
             fileUploadRef.current?.clear();
-          }}>
+          }}
+          type="button">
           {cancelButton}
-        </span>
+        </button>
       </div>
     );
   };
 
   return (
     <FileUpload
-      name="quickupload[]"
-      headerTemplate={headerTemplate}
       ref={fileUploadRef}
+      accept="image/*"
+      cancelOptions={cancelOptions}
+      chooseOptions={chooseOptions}
       customUpload
-      onUpload={(e) => console.log(e)}
+      emptyTemplate={<p className="text-center text-gray-400">Drag and Drop image files here!</p>}
+      headerTemplate={headerTemplate}
+      itemTemplate={(files: any) => FileUploadItemTemplate(files, types, setTypes)}
+      multiple
+      name="quickupload[]"
       onSelect={onTemplateSelect}
+      onUpload={(e) => console.log(e)}
       uploadHandler={async (e) => {
         setUploading(true);
         const imageFormData = new FormData();
@@ -113,32 +131,31 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
         setTypes([]);
         e.options.clear();
       }}
-      itemTemplate={(file: any) => {
-        return (
-          <div className="w-full flex items-center justify-between">
-            <img src={file.objectURL} className="w-12" alt="Error" />
-            <p className="truncate">{file.name}</p>
-            <SelectButton
-              value={types.find((t) => t.name === file.name)?.type}
-              options={["Image", "Map"]}
-              onChange={(e) => {
-                const _types = [...types];
-                const idx = _types.findIndex((t) => t.name === file.name);
-                if (idx !== -1) {
-                  _types[idx].type = e.value;
-                  setTypes(_types);
-                }
-              }}
-            />
-          </div>
-        );
-      }}
-      multiple
-      accept="image/*"
-      chooseOptions={chooseOptions}
       uploadOptions={uploadOptions}
-      cancelOptions={cancelOptions}
-      emptyTemplate={<p className="text-center text-gray-400">Drag and Drop image files here!</p>}
     />
+  );
+}
+
+export default function DialogWrapper() {
+  const [dialog, setDialog] = useAtom(DialogAtom);
+  const [uploading, setUploading] = useState(false);
+
+  return (
+    <Dialog
+      header={() => {
+        if (dialog.type === "files") return "Upload Files";
+        if (dialog.type === "map_marker") return "Map Marker";
+        if (uploading) return "Uploading...";
+        return null;
+      }}
+      modal={dialog.modal}
+      onHide={() => {
+        setDialog({ ...DefaultDialog, position: dialog.position });
+      }}
+      position={dialog.position}
+      visible={dialog.show}>
+      {dialog.type === "files" && <QuickUploadDialog setUploading={setUploading} />}
+      {dialog.type === "map_marker" && <DrawerMapPinContent />}
+    </Dialog>
   );
 }

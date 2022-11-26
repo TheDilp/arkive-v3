@@ -1,5 +1,4 @@
 import { DocumentType } from "./documentTypes";
-import { AvailableItemTypes } from "./generalTypes";
 import { MapType } from "./mapTypes";
 
 export type TreeDataType = DocumentType | MapType;
@@ -14,12 +13,3 @@ export type SortIndexes = {
   parent: string | null;
   sort: number;
 }[];
-
-export type DialogAtomType = {
-  id: null | string;
-  type: null | AvailableItemTypes;
-  position?: "left" | "right" | "top" | "bottom";
-  modal?: boolean;
-  fullscreen?: boolean;
-  show: boolean;
-};
