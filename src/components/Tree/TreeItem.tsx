@@ -3,13 +3,15 @@ import { NodeModel } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
-import { TreeDataType } from "../../types/treeTypes";
+
 import { useDeleteMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { AvailableItemTypes } from "../../types/generalTypes";
-import { IconSelect } from "../IconSelect/IconSelect";
+import { TreeDataType } from "../../types/treeTypes";
+import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { toaster } from "../../utils/toast";
+import { IconSelect } from "../IconSelect/IconSelect";
+
 type Props = {
   node: NodeModel<TreeDataType>;
   depth: number;
@@ -22,15 +24,14 @@ type Props = {
 export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Props) {
   const { item_id } = useParams();
   const navigate = useNavigate();
-  const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
-  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
+  const [, setDrawer] = useAtom(DrawerAtom);
   const updateMutation = useUpdateMutation(type);
   const deleteMutation = useDeleteMutation(type);
   if (!node.data) return null;
   return (
-    <div
-      style={{ marginInlineStart: depth * 40 }}
-      className="flex items-center py-1 cursor-pointer group max-w-20rem text-md hover:bg-sky-700 gap-x-1"
+    <button
+      className="text-md group inline-flex w-full cursor-pointer items-center gap-x-1 py-1 text-left hover:bg-sky-700"
       onClick={() => {
         // Navigate if not a folder
         if (!node.data?.folder) {
@@ -51,7 +52,8 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
           setContextMenu({ data: node.data, type: "template" });
         } else setContextMenu({ data: node.data, type: "document" });
         cm.current.show(e);
-      }}>
+      }}
+      type="button">
       {node.droppable && (
         <span
           onClick={(e) => {
@@ -71,14 +73,16 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
       <span
         onClick={(e) => {
           e.stopPropagation();
-        }}>
+        }}
+        style={{ marginInlineStart: depth * 40 }}>
         {node.data?.folder ? (
-          <Icon icon="bxs:folder" inline={true} className="mr-1" />
+          <Icon className="mr-1" icon="bxs:folder" inline />
         ) : (
           <IconSelect
             disabled={type !== "documents"}
             setIcon={(newIcon) => updateMutation?.mutate({ icon: newIcon, id: node.id as string })}>
             <Icon
+              className={`rounded-full ${type === "documents" ? "hover:bg-sky-400" : ""}`}
               icon={
                 ("icon" in node.data && (node.data?.icon as string)) ||
                 (type === "maps" && "mdi:map") ||
@@ -86,21 +90,20 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
                 (type === "timelines" && "mdi:file") ||
                 "mdi:file"
               }
-              inline={true}
-              className={`rounded-full ${type === "documents" ? "hover:bg-sky-400" : ""}`}
+              inline
             />
           </IconSelect>
         )}
       </span>
 
-      <div className={`font-Lato flex items-center w-full ${node.id === item_id && "text-sky-400"}`}>
-        <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
+      <div className={`flex w-full items-center font-Lato ${node.id === item_id && "text-sky-400"}`}>
+        <div className="white-space-nowrap text-overflow-ellipsis w-full overflow-hidden">
           {node.text} {"template" in node.data && node.data?.template && !node.droppable ? "[TEMPLATE]" : null}
         </div>
         <div className="flex items-center opacity-0 group-hover:opacity-100">
           <Icon
-            icon="material-symbols:edit-outline"
             color="white"
+            icon="material-symbols:edit-outline"
             onClick={(e) => {
               e.stopPropagation();
               setDrawer({
@@ -113,8 +116,8 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
             }}
           />
           <Icon
-            icon="ic:outline-delete"
             color="white"
+            icon="ic:outline-delete"
             onClick={(e) => {
               e.stopPropagation();
               deleteItem(
@@ -126,6 +129,6 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
           />
         </div>
       </div>
-    </div>
+    </button>
   );
 }

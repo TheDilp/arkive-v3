@@ -1,44 +1,43 @@
-import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
-import { getDepth, handleDrop } from "../../utils/tree";
-import { NodeModel, Tree } from "@minoru/react-dnd-treeview";
-import {
-  useCreateMutation,
-  useDeleteMutation,
-  useGetAllItems,
-  useSortMutation,
-  useUpdateMutation,
-} from "../../CRUD/ItemsCRUD";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
-import { AvailableItemTypes } from "../../types/generalTypes";
-import { DocumentType } from "../../types/documentTypes";
+import { DragLayerMonitorProps, NodeModel, Tree } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { InputText } from "primereact/inputtext";
+import { MultiSelect } from "primereact/multiselect";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+
+import { useCreateMutation, useDeleteMutation, useGetAllItems, useSortMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
+import { useGetAllTags } from "../../CRUD/queries";
+import { DocumentType } from "../../types/documentTypes";
+import { AvailableItemTypes } from "../../types/generalTypes";
+import { MapType } from "../../types/mapTypes";
+import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
+import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
+import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { toaster } from "../../utils/toast";
+import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
 import TreeItem from "./TreeItem";
-import { InputText } from "primereact/inputtext";
-import { MultiSelect } from "primereact/multiselect";
-import { useGetAllTags } from "../../CRUD/queries";
-import { toaster } from "../../utils/toast";
-import { ConfirmDialog } from "primereact/confirmdialog";
-import { MapType } from "../../types/mapTypes";
-import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
   type: AvailableItemTypes;
-  templates?: boolean;
+  isTemplates?: boolean;
 };
 
-export default function BaseTree({ templates, type }: Props) {
+function DragPreviewComponent(monitorProps: DragLayerMonitorProps<TreeDataType>) {
+  return <DragPreview monitorProps={monitorProps} />;
+}
+
+export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
   const { data: items, isLoading, error } = useGetAllItems(project_id as string, type);
   const createItemMutation = useCreateMutation(type);
   const updateItemMutation = useUpdateMutation(type);
   const deleteItemMutation = useDeleteMutation(type);
   const sortItemMutation = useSortMutation(type);
-  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [, setDrawer] = useAtom(DrawerAtom);
 
   const rootItems = [
     {
@@ -210,7 +209,7 @@ export default function BaseTree({ templates, type }: Props) {
   }
 
   const [contextMenu] = useAtom(SidebarTreeContextAtom);
-  const { data: tags, refetch: refetchTags } = useGetAllTags(project_id as string, type);
+  const { data: tags } = useGetAllTags(project_id as string, type);
 
   const cm = useRef();
   const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
@@ -222,9 +221,8 @@ export default function BaseTree({ templates, type }: Props) {
       if (filter || selectedTags.length > 0) {
         const timeout = setTimeout(() => {
           let tempItems = [...items];
-          if (type === "documents" && templates)
-            tempItems = tempItems.filter((item) => "template" in item && item.template);
-          else if (type === "documents" && !templates)
+          if (type === "documents" && isTemplates) tempItems = tempItems.filter((item) => "template" in item && item.template);
+          else if (type === "documents" && !isTemplates)
             tempItems = tempItems.filter((item) => "template" in item && !item.template);
 
           setTreeData(
@@ -244,25 +242,24 @@ export default function BaseTree({ templates, type }: Props) {
           );
         }, 300);
         return () => clearTimeout(timeout);
-      } else {
-        let tempItems = [...items];
-        if (type === "documents") {
-          tempItems = tempItems.filter((item) =>
-            templates ? "template" in item && item.template : "template" in item && !item.template,
-          );
-        }
-        setTreeData(
-          tempItems
-            .map((item: DocumentType | MapType) => ({
-              data: item,
-              droppable: item.folder,
-              id: item.id,
-              parent: item.parent || "0",
-              text: item.title,
-            }))
-            .sort((a, b) => a.data.sort - b.data.sort),
+      }
+      let tempItems = [...items];
+      if (type === "documents") {
+        tempItems = tempItems.filter((item) =>
+          isTemplates ? "template" in item && item.template : "template" in item && !item.template,
         );
       }
+      setTreeData(
+        tempItems
+          .map((item: DocumentType | MapType) => ({
+            data: item,
+            droppable: item.folder,
+            id: item.id,
+            parent: item.parent || "0",
+            text: item.title,
+          }))
+          .sort((a, b) => a.data.sort - b.data.sort),
+      );
     }
   }, [items, filter, selectedTags]);
 
@@ -272,19 +269,15 @@ export default function BaseTree({ templates, type }: Props) {
   return (
     <>
       <ConfirmDialog />
-      <ContextMenu items={contextMenuItems(contextMenu)} cm={cm} />
+      <ContextMenu cm={cm} items={contextMenuItems(contextMenu)} />
       <InputText
         className="mt-1 p-1"
+        onChange={(e) => setFilter(e.target.value)}
         placeholder="Filter by Title"
         value={filter}
-        onChange={(e) => setFilter(e.target.value)}
       />
       <MultiSelect
-        value={selectedTags}
-        options={tags ?? []}
-        placeholder="Filter by Tags"
         className="w-full p-0"
-        showClear={true}
         display="chip"
         filter
         onChange={(e) => {
@@ -294,25 +287,39 @@ export default function BaseTree({ templates, type }: Props) {
             setSelectedTags(e.value);
           }
         }}
+        options={tags ?? []}
+        placeholder="Filter by Tags"
+        showClear
+        value={selectedTags}
       />
       <Tree
+        canDrop={(tree, { dragSource, dropTargetId }) => {
+          const depth = getDepth(tree, dropTargetId);
+          // Don't allow nesting documents beyond this depth
+          if (depth > 5) return false;
+          if (dragSource?.parent === dropTargetId) {
+            return true;
+          }
+        }}
         classes={{
           container: "list-none flex-1 flex flex-col",
-          listItem: "listitem",
+          listItem: "w-full",
           placeholder: "relative",
           root: "w-full mt-1 pl-0 overflow-y-auto flex flex-col flex-1",
         }}
-        tree={treeData}
-        rootId={"0"}
-        sort={false}
-        insertDroppableFirst={false}
+        dragPreviewRender={DragPreviewComponent}
+        dropTargetOffset={10}
         initialOpen={items?.filter((item) => item.expanded).map((doc) => doc.id) || false}
-        render={(node: NodeModel<TreeDataType>, { depth, isOpen, onToggle }) => (
-          <TreeItem node={node} depth={depth} isOpen={isOpen} onToggle={onToggle} type={type} cm={cm} />
-        )}
-        dragPreviewRender={(monitorProps) => (
-          <DragPreview text={monitorProps.item.text} droppable={monitorProps.item.droppable} />
-        )}
+        insertDroppableFirst={false}
+        onDrop={(tree, options) => {
+          const { dragSourceId, dropTargetId } = options;
+          handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
+          if (type === "documents")
+            updateItemMutation?.mutate({
+              id: dragSourceId as string,
+              parent: dropTargetId === "0" ? null : (dropTargetId as string),
+            });
+        }}
         placeholderRender={(_, { depth }) => (
           <div
             style={{
@@ -323,26 +330,15 @@ export default function BaseTree({ templates, type }: Props) {
               right: 0,
               top: 0,
               transform: "translateY(-50%)",
-            }}></div>
+            }}
+          />
         )}
-        dropTargetOffset={10}
-        canDrop={(tree, { dragSource, dropTargetId }) => {
-          const depth = getDepth(tree, dropTargetId);
-          // Don't allow nesting documents beyond this depth
-          if (depth > 5) return false;
-          if (dragSource?.parent === dropTargetId) {
-            return true;
-          }
-        }}
-        onDrop={(tree, options) => {
-          const { dragSourceId, dropTargetId } = options;
-          handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
-          if (type === "documents")
-            updateItemMutation?.mutate({
-              id: dragSourceId as string,
-              parent: dropTargetId === "0" ? null : (dropTargetId as string),
-            });
-        }}
+        render={(node: NodeModel<TreeDataType>, { depth, isOpen, onToggle }) => (
+          <TreeItem cm={cm} depth={depth} isOpen={isOpen} node={node} onToggle={onToggle} type={type} />
+        )}
+        rootId="0"
+        sort={false}
+        tree={treeData}
       />
     </>
   );

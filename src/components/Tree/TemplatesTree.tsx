@@ -46,7 +46,7 @@ export default function TemplatesTree() {
           });
         }}
       />
-      <BaseTree templates type="documents" />
+      <BaseTree isTemplates type="documents" />
     </div>
   );
 }
