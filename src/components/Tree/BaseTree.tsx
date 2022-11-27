@@ -1,4 +1,4 @@
-import { DragLayerMonitorProps, NodeModel, Tree } from "@minoru/react-dnd-treeview";
+import { DragLayerMonitorProps, NodeModel, PlaceholderRenderParams, Tree } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
@@ -28,6 +28,22 @@ type Props = {
 
 function DragPreviewComponent(monitorProps: DragLayerMonitorProps<TreeDataType>) {
   return <DragPreview monitorProps={monitorProps} />;
+}
+function Placeholder(args: PlaceholderRenderParams) {
+  const { depth } = args;
+  return (
+    <div
+      style={{
+        backgroundColor: "#1967d2",
+        height: "2px",
+        left: depth * 24,
+        position: "absolute",
+        right: 0,
+        top: 0,
+        transform: "translateY(-50%)",
+      }}
+    />
+  );
 }
 
 export default function BaseTree({ isTemplates, type }: Props) {
@@ -228,9 +244,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
           setTreeData(
             tempItems
               .filter(
-                (items: DocumentType | MapType) =>
-                  items.title.toLowerCase().includes(filter.toLowerCase()) &&
-                  selectedTags.every((tag) => items.tags.includes(tag)),
+                (filterItems: DocumentType | MapType) =>
+                  filterItems.title.toLowerCase().includes(filter.toLowerCase()) &&
+                  selectedTags.every((tag) => filterItems.tags.includes(tag)),
               )
               .map((doc: DocumentType | MapType) => ({
                 data: doc,
@@ -261,6 +277,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
           .sort((a, b) => a.data.sort - b.data.sort),
       );
     }
+
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
 
   if (isLoading) return <div>Loading...</div>;
@@ -300,6 +319,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
           if (dragSource?.parent === dropTargetId) {
             return true;
           }
+          return false;
         }}
         classes={{
           container: "list-none flex-1 flex flex-col",
@@ -320,19 +340,8 @@ export default function BaseTree({ isTemplates, type }: Props) {
               parent: dropTargetId === "0" ? null : (dropTargetId as string),
             });
         }}
-        placeholderRender={(_, { depth }) => (
-          <div
-            style={{
-              backgroundColor: "#1967d2",
-              height: "2px",
-              left: depth * 24,
-              position: "absolute",
-              right: 0,
-              top: 0,
-              transform: "translateY(-50%)",
-            }}
-          />
-        )}
+        // @ts-ignore
+        placeholderRender={Placeholder}
         render={(node: NodeModel<TreeDataType>, { depth, isOpen, onToggle }) => (
           <TreeItem cm={cm} depth={depth} isOpen={isOpen} node={node} onToggle={onToggle} type={type} />
         )}
