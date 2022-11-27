@@ -65,7 +65,10 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
             });
 
             onToggle();
-          }}>
+          }}
+          onKeyDown={() => {}}
+          role="button"
+          tabIndex={-1}>
           {isOpen ? <Icon icon="akar-icons:chevron-down" /> : <Icon icon="akar-icons:chevron-right" />}
         </span>
       )}
@@ -74,7 +77,10 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         onClick={(e) => {
           e.stopPropagation();
         }}
-        style={{ marginInlineStart: depth * 40 }}>
+        onKeyDown={() => {}}
+        role="button"
+        style={{ marginInlineStart: depth * 40 }}
+        tabIndex={-1}>
         {node.data?.folder ? (
           <Icon className="mr-1" icon="bxs:folder" inline />
         ) : (
