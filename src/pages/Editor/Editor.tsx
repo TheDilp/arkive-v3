@@ -1,18 +1,20 @@
+import "remirror/styles/all.css";
+
 import { Icon } from "@iconify/react";
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
 import { useCallback, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
-import "remirror/styles/all.css";
 import { useDebouncedCallback } from "use-debounce";
+
+import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
+import Menubar from "../../components/Editor/Menubar";
+import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
+import DocumentProperties from "../../components/PropertiesBar/DocumentProperties";
 import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
-import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
-import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
-import TagsAutocomplete from "../../components/PropertiesBar/DocumentProperties";
-import Menubar from "../../components/Editor/Menubar";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
@@ -30,14 +32,15 @@ export default function Editor({ content, editable }: EditorType) {
     selection: "start",
   });
 
-  const debounced = useDebouncedCallback((content: RemirrorJSON, id: string) => {
+  const debounced = useDebouncedCallback((changedContent: RemirrorJSON, id: string) => {
     updateDocumentMutation?.mutate({
-      content,
+      content: changedContent,
       id,
     });
   }, 850);
-  const onChange = useCallback((content: RemirrorJSON, doc_id: string) => {
-    debounced(content, doc_id);
+  const onChange = useCallback((changedContent: RemirrorJSON, doc_id: string) => {
+    debounced(changedContent, doc_id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -45,49 +48,50 @@ export default function Editor({ content, editable }: EditorType) {
       manager.view.updateState(
         manager.createState({
           content:
-            editable === false
-              ? content || undefined
-              : ("content" in currentDocument && currentDocument?.content) || undefined,
+            editable === false ? content || undefined : ("content" in currentDocument && currentDocument?.content) || undefined,
         }),
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item_id]);
 
   if (!currentDocument) return <Navigate to="../" />;
   if ("content" in currentDocument)
     return (
-      <div className="w-full flex flex-1">
-        <div className={`${editable ? "w-5/6" : "w-full h-96"} flex flex-col content-start`}>
-          <h1 className="w-full h-10 flex items-center justify-center mb-0 pr-20 text-2xl border-b font-Merriweather border-zinc-700">
-            <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
-            {currentDocument.title}
-            {currentDocument?.template ? "[TEMPLATE]" : ""}
-          </h1>
-          <Breadcrumbs />
+      <div className="flex w-full flex-1">
+        <div className={`${editable ? "w-5/6" : "h-96 w-full"} relative flex flex-col content-start`}>
+          {editable ? (
+            <h1 className=" sticky top-0 z-20 mb-0 flex h-12 w-full items-center justify-center border-b-2 border-zinc-700 bg-[#1e1e1e] pr-20 font-Merriweather text-2xl">
+              <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
+              {currentDocument.title}
+              {currentDocument?.template ? "[TEMPLATE]" : ""}
+            </h1>
+          ) : null}
+          {editable ? <Breadcrumbs /> : null}
           <Remirror
-            editable={editable || true}
             classNames={[
               "editor",
               "w-full",
               "flex-1",
               "font-Lato",
-              `${editable ? "h-[calc(100vh-5rem)] overflow-y-auto" : "h-full"}`,
+              `${editable ? "h-[calc(100vh-10rem)] overflow-y-auto" : "h-full"}`,
             ]}
-            manager={manager}
-            initialContent={state}>
+            editable={editable || true}
+            initialContent={state}
+            manager={manager}>
             <OnChangeJSON
-              onChange={(content: RemirrorJSON) => {
-                onChange(content, item_id as string);
+              onChange={(changedContent: RemirrorJSON) => {
+                onChange(changedContent, item_id as string);
               }}
             />
-            <Menubar saving={false} />
+            {editable ? <Menubar saving={false} /> : null}
             <EditorComponent />
             <MentionDropdownComponent />
           </Remirror>
         </div>
         {editable ? (
-          <div className="w-1/6 flex flex-col bg-zinc-800">
-            <TagsAutocomplete />
+          <div className="flex w-1/6 flex-col bg-zinc-800">
+            <DocumentProperties />
           </div>
         ) : null}
       </div>

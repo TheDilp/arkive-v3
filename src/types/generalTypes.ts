@@ -1,4 +1,6 @@
+import React from "react";
 import { RemirrorJSON } from "remirror";
+
 import { DocumentType } from "./documentTypes";
 import { MapPinType, MapType } from "./mapTypes";
 

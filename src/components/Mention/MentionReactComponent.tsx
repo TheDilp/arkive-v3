@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+
 import { DocumentType } from "../../types/documentTypes";
 import DocumentMention from "./DocumentMention";
 // import { BoardType } from "../../../../../../types/BoardTypes";
@@ -19,15 +20,15 @@ export default function MentionReactComponent({ node }: Props) {
     const { id, name, label } = node.attrs;
 
     if (name === "at") {
-      const docs: DocumentType[] | undefined = queryClient.getQueryData(["allDocuments", project_id]);
+      const docs: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
       const docItem = docs ? docs.find((doc) => doc.id === id.replace(/^alter-\d /g, "")) : undefined;
 
       if (docItem) {
         let title = "";
         let docId: string = id;
 
-        //Detect if it's an alter_name by checking the id
-        //Extract the main documents ID from the node's id if it is
+        // Detect if it's an alter_name by checking the id
+        // Extract the main documents ID from the node's id if it is
         if (docId.startsWith("alter")) {
           docId = docId.replace(/^alter-\d /g, "");
         }
@@ -39,10 +40,9 @@ export default function MentionReactComponent({ node }: Props) {
         else {
           title = docItem.title;
         }
-        return <DocumentMention title={title} content={docItem.content} id={docId} label={label} />;
-      } else {
-        return <DocumentMention title={label} content={undefined} id={undefined} label={label} />;
+        return <DocumentMention content={docItem.content} id={docId} label={label} title={title} />;
       }
+      return <DocumentMention content={undefined} id={undefined} label={label} title={label} />;
     }
     //   else if (nodeName === "hash") {
     //     const maps: MapProps[] | undefined = queryClient.getQueryData<MapProps[]>(
@@ -81,10 +81,8 @@ export default function MentionReactComponent({ node }: Props) {
     //       <BoardMention nodeId={undefined} nodeLabel={nodeLabel} />;
     //     }
     //   }
-    else {
-      return <span>{label}</span>;
-    }
+
     return <span>{label}</span>;
   }
-  return <span></span>;
+  return <span />;
 }

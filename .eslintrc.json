@@ -17,6 +17,9 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "globals": {
+    "JSX": true
+  },
   "root": true,
   "plugins": ["prettier", "react", "react-hooks", "simple-import-sort", "import", "@typescript-eslint"],
   "rules": {

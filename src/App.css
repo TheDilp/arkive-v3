@@ -6,12 +6,15 @@
 /* Sidebar */
 
 .wikiTabs .p-tabview-nav li {
-  width: 100%;
-  padding: 0 !important;
+  @apply h-12 w-full p-0 !important;
 }
 
 .wikiTabs .p-tabview-nav li a {
-  border-radius: 0 !important;
+  @apply h-12 rounded-none !important;
+}
+
+.p-tabview-nav-link {
+  @apply h-12 rounded-none !important;
 }
 
 .wikiTabs .p-tabview-nav span {
@@ -19,10 +22,10 @@
   text-align: center !important;
 }
 .p-tabview-nav-link {
-  @apply w-full flex justify-center text-center rounded-none !important;
+  @apply flex w-full justify-center rounded-none text-center !important;
 }
 .p-tabview-panels {
-  @apply flex-1 !important;
+  @apply h-12 flex-1 !important;
 }
 /* Editor */
 .remirror-editor-wrapper {
@@ -69,7 +72,7 @@
     @apply p-0 border-0;
   }
   blockquote > * {
-    @apply text-zinc-300 font-normal text-2xl font-Merriweather border-l-[3px] pl-2 !important;
+    @apply border-l-[3px] pl-2 font-Merriweather text-2xl font-normal text-zinc-300 !important;
   }
 
   *[data-node-text-align="none"]:not(blockquote) {
@@ -110,11 +113,11 @@
   }
 }
 .remirror-editor .menuBar li button {
-  @apply text-white rounded-none w-[3rem] !important;
+  @apply w-[3rem] rounded-none text-white !important;
 }
 
 .p-chips-multiple-container {
-  @apply max-w-full border-t-0 rounded-none !important;
+  @apply max-w-full rounded-none border-t-0 !important;
 }
 .p-chips-token,
 .p-autocomplete-token {
@@ -124,7 +127,7 @@
   @apply truncate;
 }
 .alterNamesChips .p-chips-token {
-  @apply bg-orange-600 max-w-full !important;
+  @apply max-w-full bg-orange-600 !important;
 }
 .documentTagsAutocomplete .p-autocomplete-token {
   @apply bg-blue-500 !important;
@@ -133,7 +136,7 @@
 /* Mentions */
 
 .remirror-mention-atom-popup-wrapper {
-  @apply p-0 bg-zinc-700 !important;
+  @apply bg-zinc-700 p-0 !important;
 }
 
 .remirror-mention-atom-popup-item {

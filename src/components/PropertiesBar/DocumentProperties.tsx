@@ -1,17 +1,19 @@
-import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
-import { Chips } from "primereact/chips";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
+import { Checkbox } from "primereact/checkbox";
+import { Chips } from "primereact/chips";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/queries";
 import { useGetItem } from "../../hooks/getItemHook";
-import { Checkbox } from "primereact/checkbox";
+import { DocumentType } from "../../types/documentTypes";
 
-export default function TagsAutocomplete() {
+export default function DocumentProperties() {
   const { project_id, item_id } = useParams();
-  const currentDocument = useGetItem(project_id as string, item_id as string, "documents");
-  const { data: initialTags } = useGetAllTags(project_id as string);
+  const currentDocument = useGetItem(project_id as string, item_id as string, "documents") as DocumentType;
+  const { data: initialTags } = useGetAllTags(project_id as string, "documents");
 
   const [tags, setTags] = useState({ selected: currentDocument?.tags || [], suggestions: initialTags });
   const updateDocumentMutation = useUpdateMutation("documents");
@@ -54,26 +56,21 @@ export default function TagsAutocomplete() {
   return (
     <span className="overflow-hidden p-fluid propertiesBar">
       <Chips
-        value={currentDocument?.alter_names}
         allowDuplicate={false}
-        className="w-full max-w-full box-border border-b border-l border-zinc-600 max-h-40 alterNamesChips"
-        placeholder="Alternative names (5 max)"
+        className="alterNamesChips box-border max-h-40 min-h-[48px] w-full max-w-full border-l border-zinc-600"
         max={5}
         onChange={(e) => {
           const { value } = e;
           handleAlterNamesChange(value);
         }}
+        placeholder="Alternative names (5 max)"
+        value={currentDocument?.alter_names}
       />
       <AutoComplete
-        className="border-t max-h-40 border-zinc-600 documentTagsAutocomplete"
-        value={currentDocument?.tags}
-        suggestions={tags.suggestions}
+        className="documentTagsAutocomplete max-h-40 border-zinc-600"
         completeMethod={filterTags}
         multiple
         onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
-        placeholder="Add Tags"
-        onSelect={(e) => handleTagsChange(e.value)}
-        onUnselect={(e) => handleTagsChange(e.value)}
         onKeyPress={async (e) => {
           // For adding completely new tags
           if (e.key === "Enter" && e.currentTarget.value !== "") {
@@ -81,17 +78,22 @@ export default function TagsAutocomplete() {
             e.currentTarget.value = "";
           }
         }}
+        onSelect={(e) => handleTagsChange(e.value)}
+        onUnselect={(e) => handleTagsChange(e.value)}
+        placeholder="Add Tags"
+        suggestions={tags.suggestions}
+        value={currentDocument?.tags}
       />
       <Accordion>
         <AccordionTab header="Options">
           {!currentDocument?.template ? (
             <div className="w-full flex items-center justify-between flex-nowrap">
-              <label className="mx-2">Public:</label>
+              <span className="mx-2">Public:</span>
               <Checkbox
                 checked={currentDocument?.public}
+                onChange={(e) => handlePublicChange(e.checked)}
                 tooltip="If checked, anyone can access the content via a public page"
                 tooltipOptions={{ position: "left", showDelay: 500 }}
-                onChange={(e) => handlePublicChange(e.checked)}
               />
             </div>
           ) : null}

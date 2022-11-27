@@ -2,7 +2,6 @@ import {
   autoPlacement,
   autoUpdate,
   inline,
-  Placement,
   safePolygon,
   useDismiss,
   useFloating,
@@ -19,7 +18,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const Tooltip = ({ children, label, disabled }: Props) => {
+export function Tooltip({ children, label, disabled }: Props) {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, context } = useFloating({
@@ -33,7 +32,7 @@ export const Tooltip = ({ children, label, disabled }: Props) => {
     useHover(context, {
       handleClose: safePolygon(),
       delay: {
-        open: 750,
+        open: 500,
       },
     }),
     useFocus(context),
@@ -43,10 +42,7 @@ export const Tooltip = ({ children, label, disabled }: Props) => {
 
   return (
     <>
-      {cloneElement(
-        children,
-        getReferenceProps({ ref: reference, ...children.props }),
-      )}
+      {cloneElement(children, getReferenceProps({ ref: reference, ...children.props }))}
       {!disabled && open && (
         <div
           {...getFloatingProps({
@@ -65,4 +61,4 @@ export const Tooltip = ({ children, label, disabled }: Props) => {
       )}
     </>
   );
-};
+}
