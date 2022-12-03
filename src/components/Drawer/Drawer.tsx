@@ -32,7 +32,6 @@ function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void
 
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  console.log(drawer.type);
   return (
     <PrimeDrawer
       className="p-sidebar-sm"
