@@ -6,12 +6,13 @@ import { Dropdown } from "primereact/dropdown";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
 import { SelectButton } from "primereact/selectbutton";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
+import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
-import { MapLayerType } from "../../types/mapTypes";
+import { MapLayerType, MapType } from "../../types/mapTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import ImageDropdownItem from "../Dropdown/ImageDropdownItem";
@@ -144,9 +145,15 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
 }
 function UpdateMapLayers() {
   const { project_id } = useParams();
-  const [, setLayers] = useState<MapLayerType[]>([]);
   const [dialog] = useAtom(DialogAtom);
-  const createMapLayer = useCreateSubItem(project_id as string, "map_layers");
+  const currentMap = useGetItem(project_id as string, dialog.data?.id, "maps") as MapType;
+  const createMapLayer = useCreateSubItem(project_id as string, "map_layers", "maps");
+  const [layers, setLayers] = useState<MapLayerType[]>(currentMap?.map_layers || []);
+
+  useEffect(() => {
+    if (currentMap?.map_layers) setLayers(currentMap.map_layers);
+  }, [currentMap?.map_layers]);
+
   return (
     <>
       <div className="mb-2 flex w-full items-center justify-between">
@@ -156,24 +163,24 @@ function UpdateMapLayers() {
           onClick={() =>
             createMapLayer.mutate({
               title: "New Layer",
-              parent: dialog.data?.parent,
+              parent: dialog.data?.id,
             })
           }>
           <Icon icon="mdi:layers-plus" />
         </Button>
       </div>
-      <div className="flex w-full flex-wrap items-center gap-y-1">
-        {dialog?.data?.layers &&
-          dialog.data.layers
+      <div className="flex w-min flex-wrap items-center gap-y-1">
+        {layers &&
+          layers
             .sort((a: MapLayerType, b: MapLayerType) => {
               if (a.title > b.title) return 1;
               if (a.title < b.title) return -1;
               return 0;
             })
             .map((layer: MapLayerType) => (
-              <div key={layer.id} className="justify-content-between align-items-center flex w-full ">
+              <div key={layer.id} className="flex w-full items-center justify-start gap-x-2">
                 <InputText
-                  className="w-4"
+                  className="w-48"
                   onChange={(e) =>
                     setLayers((prev) =>
                       prev?.map((prevLayer) => {
@@ -186,55 +193,57 @@ function UpdateMapLayers() {
                   }
                   value={layer.title}
                 />
-                <div className="w-4">
+                <div className="w-48">
                   <Dropdown
                     itemTemplate={ImageDropdownItem}
                     // onChange={(e) => setLayers((prev) => ({ ...prev, map_image: e.value[0] }))}
                     // options={map_images ? [map_images] : []}
-                    placeholder="Select map"
+                    placeholder="Select map image"
                     value={layer.image}
                     valueTemplate={ImageDropdownValue({ map_image: layer?.image })}
                   />
                 </div>
-                <Button
-                  className="p-button-outlined p-button-success w-1"
-                  icon="pi pi-save"
-                  // onClick={() => {
-                  //   updateMapLayerMutation.mutate({
-                  //     id: layer.id,
-                  //     title: layer.title,
-                  //     map_id: visible.map_id,
-                  //     public: layer.public,
-                  //     image: layer.image,
-                  //   });
-                  // }}
-                />
-                <Button
-                  className={`p-button-outlined w-1 p-button-${layer.public ? "info" : "secondary"}`}
-                  icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
-                  onClick={() => {
-                    setLayers((prev) =>
-                      prev?.map((prevLayer) => {
-                        if (prevLayer.id === layer.id) {
-                          return { ...layer, public: !layer.public };
-                        }
-                        return prevLayer;
-                      }),
-                    );
-                  }}
-                  tooltip="Toggle public"
-                />
-                <Button
-                  className="p-button-outlined p-button-danger w-1"
-                  icon="pi pi-trash"
-                  // onClick={() =>
-                  //   deleteMapLayerMutation.mutate({
-                  //     id: layer.id,
-                  //     project_id: project_id as string,
-                  //     map_id: visible.map_id,
-                  //   })
-                  // }
-                />
+                <div className="flex w-fit gap-x-4">
+                  <Button
+                    className="p-button-outlined p-button-success w-24"
+                    icon="pi pi-save"
+                    // onClick={() => {
+                    //   updateMapLayerMutation.mutate({
+                    //     id: layer.id,
+                    //     title: layer.title,
+                    //     map_id: visible.map_id,
+                    //     public: layer.public,
+                    //     image: layer.image,
+                    //   });
+                    // }}
+                  />
+                  <Button
+                    className={`p-button-outlined w-1/12 p-button-${layer.public ? "info" : "secondary"}`}
+                    icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
+                    onClick={() => {
+                      setLayers((prev) =>
+                        prev?.map((prevLayer) => {
+                          if (prevLayer.id === layer.id) {
+                            return { ...layer, public: !layer.public };
+                          }
+                          return prevLayer;
+                        }),
+                      );
+                    }}
+                    tooltip="Toggle public"
+                  />
+                  <Button
+                    className="p-button-outlined p-button-danger w-1/12"
+                    icon="pi pi-trash"
+                    // onClick={() =>
+                    //   deleteMapLayerMutation.mutate({
+                    //     id: layer.id,
+                    //     project_id: project_id as string,
+                    //     map_id: visible.map_id,
+                    //   })
+                    // }
+                  />
+                </div>
               </div>
             ))}
       </div>

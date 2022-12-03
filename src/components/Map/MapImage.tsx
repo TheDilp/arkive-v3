@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { LatLngBoundsExpression } from "leaflet";
-import { MutableRefObject, useEffect, useLayoutEffect, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
 import { useParams } from "react-router-dom";
 
@@ -22,7 +22,6 @@ type Props = {
 export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
   const { project_id, item_id } = useParams();
   const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
-  const [pins, setPins] = useState(currentMap?.map_pins);
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
   const handleKeyUp = (e: KeyboardEvent) => {
     if (!e.shiftKey && !e.altKey) {
@@ -59,10 +58,6 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
     };
   }, []);
 
-  useLayoutEffect(() => {
-    if (currentMap?.map_pins) setPins(currentMap.map_pins);
-  }, [currentMap?.map_pins]);
-
   return (
     <div>
       <LayersControl position="topright">
@@ -73,8 +68,8 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
         {/* Markers layer */}
         <LayersControl.Overlay checked name="Markers">
           <LayerGroup>
-            {pins &&
-              pins
+            {currentMap?.map_pins &&
+              currentMap?.map_pins
                 ?.filter((mapPin: MapPinType) => {
                   if (isReadOnly) {
                     if (mapPin.public) {

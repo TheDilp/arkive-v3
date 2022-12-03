@@ -82,7 +82,7 @@ export const useCreateItem = (type: AvailableItemTypes) => {
   );
 };
 
-export const useCreateSubItem = (project_id: string, subType: AvailableSubItemTypes) => {
+export const useCreateSubItem = (project_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -97,24 +97,10 @@ export const useCreateSubItem = (project_id: string, subType: AvailableSubItemTy
       return null;
     },
     {
-      onError: () => toaster("error", "There was an error creating this item."),
+      onError: () => toaster("error", "There was an error creating this sub item."),
       onSuccess: async (data) => {
-        const type = "maps";
         const newData: AllSubItemsType = await data?.json();
-        // queryClient.invalidateQueries(["allItems", project_id, type]);
-        if (newData)
-          queryClient.setQueryData(["allItems", project_id, type], (old: AllItemsType[] | undefined) => {
-            return old
-              ? [
-                  ...old.map((item: AllItemsType) => {
-                    if (item.id === newData.parent) {
-                      if ("map_pins" in item) return { ...item, map_pins: [...item.map_pins, newData] };
-                    }
-                    return item;
-                  }),
-                ]
-              : old;
-          });
+        if (newData) queryClient.refetchQueries(["allItems", project_id, type]);
       },
     },
   );

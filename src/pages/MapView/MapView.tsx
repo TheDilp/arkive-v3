@@ -42,7 +42,6 @@ export default function MapView({ isReadOnly }: Props) {
   ];
 
   const currentMap = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"])?.find((map) => map.id === item_id);
-
   useEffect(() => {
     if (currentMap) {
       const img = new Image();

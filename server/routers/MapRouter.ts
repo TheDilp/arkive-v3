@@ -8,6 +8,7 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
     const data = await prisma.maps.findMany({
       include: {
         map_pins: true,
+        map_layers: true,
       },
       where: {
         project_id: req.params.project_id,
@@ -48,6 +49,25 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         });
 
         return newMapPin;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/createmaplayer",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const newMapLayer = await prisma.map_layers.create({
+          data: JSON.parse(req.body) as any,
+        });
+
+        return newMapLayer;
       } catch (error) {
         console.log(error);
       }

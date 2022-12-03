@@ -59,10 +59,9 @@ export default function MapPin({ pinData: markerData, readOnly }: { pinData: Map
                   //   }
                 }}
                 style={{
-                  background: `url('https://api.iconify.design/mdi/${icon.replace(/.*:/g, "")}.svg?color=%23${color.replace(
-                    "#",
-                    "",
-                  )}') no-repeat`,
+                  background: `url('https://api.iconify.design/mdi/${icon ? icon?.replace(/.*:/g, "") : ""}.svg?color=%23${
+                    color ? color.replace("#", "") : ""
+                  }') no-repeat`,
                   backgroundColor,
                   backgroundPosition: "center",
                   backgroundSize: "2rem",
