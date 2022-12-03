@@ -16,8 +16,9 @@ export default function MentionDropdownComponent() {
     const query = mentionState.query.full.toLowerCase() ?? "";
     if (mentionState.name === "at") {
       const documents: DocumentType[] | undefined = queryClient.getQueryData([
-        "allDocuments",
+        "allItems",
         project_id,
+        "documents"
       ]);
       let only_documents =
         documents?.filter((doc) => !doc.folder && !doc.template) ?? [];
