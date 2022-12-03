@@ -1,29 +1,28 @@
 import L, { LatLngExpression } from "leaflet";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { MapPinType } from "../../types/mapTypes";
 
 export default function MapPin({ pinData: markerData, readOnly }: { pinData: MapPinType; readOnly?: boolean }) {
-  const { id, parent, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, public: markerPublic } = markerData;
-  const { project_id, item_id } = useParams();
+  const { id, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, public: markerPublic } = markerData;
   const navigate = useNavigate();
-  const updateMarkerMutation = useUpdateItem("map_pins");
+  const updateMarkerMutation = useUpdateSubItem("map_pins");
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const eventHandlers = {
     click: (e: any) => {
-      //   if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !readOnly) {
-      //   } else if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
-      //   else if (e.originalEvent.shiftKey && map_link) {
-      //     e.originalEvent.preventDefault();
-      //     navigate(`../../${map_link}`);
-      //   } else if (e.originalEvent.altKey && doc_id) {
-      //     e.originalEvent.preventDefault();
-      //     navigate(`../../../wiki/doc/${doc_id}`);
-      //   }
+      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !readOnly) return;
+      if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
+      if (e.originalEvent.shiftKey && map_link) {
+        e.originalEvent.preventDefault();
+        navigate(`../../${map_link}`);
+      } else if (e.originalEvent.altKey && doc_id) {
+        e.originalEvent.preventDefault();
+        navigate(`../../../wiki/doc/${doc_id}`);
+      }
     },
     // contextmenu: (e: any) => {
     //   if (!readOnly) {

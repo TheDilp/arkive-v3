@@ -23,7 +23,7 @@ export function handleCloseDrawer(setDrawer: Dispatch<SetStateAction<DrawerAtomT
 function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void) {
   return (
     <Button
-      className="p-0 w-fit p-button-text p-button-rounded p-button-secondary hover:bg-transparent"
+      className="p-button-text p-button-rounded p-button-secondary w-fit p-0 hover:bg-transparent"
       icon={<Icon className="pointer-events-none" fontSize={26} icon="mdi:close" />}
       onClick={() => handleCloseDrawer(setDrawer)}
     />

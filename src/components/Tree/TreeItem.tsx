@@ -117,7 +117,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
                 id: node.id as string,
                 position: "right",
                 show: true,
-                type: "documents",
+                type,
               });
             }}
           />

@@ -28,7 +28,7 @@ function App() {
 
   return (
     <main className="flex h-screen flex-col overflow-hidden">
-      <ToastContainer autoClose={3000} newestOnTop pauseOnHover theme="dark" />
+      <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
