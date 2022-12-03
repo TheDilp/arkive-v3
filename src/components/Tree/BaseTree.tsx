@@ -7,7 +7,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
-import { useCreateMutation, useDeleteMutation, useGetAllItems, useSortMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteMutation, useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/queries";
 import { DocumentType } from "../../types/documentTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -49,8 +49,8 @@ function Placeholder(args: PlaceholderRenderParams) {
 export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
   const { data: items, isLoading, error } = useGetAllItems(project_id as string, type);
-  const createItemMutation = useCreateMutation(type);
-  const updateItemMutation = useUpdateMutation(type);
+  const createItemMutation = useCreateItem(type);
+  const updateItemMutation = useUpdateItem(type);
   const deleteItemMutation = useDeleteMutation(type);
   const sortItemMutation = useSortMutation(type);
   const [, setDrawer] = useAtom(DrawerAtom);

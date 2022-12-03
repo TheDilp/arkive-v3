@@ -2,7 +2,13 @@ import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanst
 
 import { baseURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
 import { DocumentType } from "../types/documentTypes";
-import { AllItemsType, AllSubItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
+import {
+  AllAvailableTypes,
+  AllItemsType,
+  AllSubItemsType,
+  AvailableItemTypes,
+  AvailableSubItemTypes,
+} from "../types/generalTypes";
 import { MapType } from "../types/mapTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
@@ -48,7 +54,7 @@ export const useGetAllMapImages = (project_id: string) => {
   );
 };
 
-export const useCreateMutation = (type: AvailableItemTypes) => {
+export const useCreateItem = (type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -76,7 +82,7 @@ export const useCreateMutation = (type: AvailableItemTypes) => {
   );
 };
 
-export const useCreateSubItemMutation = (project_id: string, subType: AvailableSubItemTypes) => {
+export const useCreateSubItem = (project_id: string, subType: AvailableSubItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -114,11 +120,44 @@ export const useCreateSubItemMutation = (project_id: string, subType: AvailableS
   );
 };
 
-export const useUpdateMutation = (type: AvailableItemTypes) => {
+export const useUpdateItem = (type: AllAvailableTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
     async (updateItemValues: Partial<AllItemsType>) => {
+      if (updateItemValues.id) {
+        const url = updateURL(updateItemValues.id, type);
+        if (url)
+          return fetch(url, {
+            body: JSON.stringify(updateItemValues),
+            method: "POST",
+          });
+      }
+      return null;
+    },
+    {
+      onError: () => toaster("error", "There was an error updating this item."),
+      onSuccess: async (data, variables) => {
+        const newData: AllItemsType = await data?.json();
+        if (newData)
+          queryClient.setQueryData(["allItems", newData.project_id, type], (old: AllItemsType[] | undefined) => {
+            if (old)
+              return old.map((item) => {
+                if (item.id === variables.id) return { ...item, ...variables };
+                return item;
+              });
+
+            return [];
+          });
+      },
+    },
+  );
+};
+export const useUpdateSubItem = (type: AvailableSubItemTypes) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (updateItemValues: Partial<AllSubItemsType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, type);
         if (url)

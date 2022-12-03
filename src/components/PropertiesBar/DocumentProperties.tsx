@@ -5,7 +5,7 @@ import { Chips } from "primereact/chips";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
+import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/queries";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DocumentType } from "../../types/documentTypes";
@@ -16,7 +16,7 @@ export default function DocumentProperties() {
   const { data: initialTags } = useGetAllTags(project_id as string, "documents");
 
   const [tags, setTags] = useState({ selected: currentDocument?.tags || [], suggestions: initialTags });
-  const updateDocumentMutation = useUpdateMutation("documents");
+  const updateDocumentMutation = useUpdateItem("documents");
 
   const filterTags = (e: AutoCompleteCompleteMethodParams) => {
     const { query } = e;
@@ -54,7 +54,7 @@ export default function DocumentProperties() {
   };
 
   return (
-    <span className="overflow-hidden p-fluid propertiesBar">
+    <span className="p-fluid propertiesBar overflow-hidden">
       <Chips
         allowDuplicate={false}
         className="alterNamesChips box-border max-h-40 min-h-[48px] w-full max-w-full border-l border-zinc-600"
@@ -87,7 +87,7 @@ export default function DocumentProperties() {
       <Accordion>
         <AccordionTab header="Options">
           {!currentDocument?.template ? (
-            <div className="w-full flex items-center justify-between flex-nowrap">
+            <div className="flex w-full flex-nowrap items-center justify-between">
               <span className="mx-2">Public:</span>
               <Checkbox
                 checked={currentDocument?.public}

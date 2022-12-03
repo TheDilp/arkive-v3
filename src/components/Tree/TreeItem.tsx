@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useDeleteMutation, useUpdateMutation } from "../../CRUD/ItemsCRUD";
+import { useDeleteMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { TreeDataType } from "../../types/treeTypes";
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
@@ -26,7 +26,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
   const navigate = useNavigate();
   const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
-  const updateMutation = useUpdateMutation(type);
+  const updateMutation = useUpdateItem(type);
   const deleteMutation = useDeleteMutation(type);
   if (!node.data) return null;
   return (

@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
+
 import { prisma } from "..";
 import { removeNull } from "../utils/transform";
 
@@ -31,6 +32,7 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       } catch (error) {
         console.log(error);
       }
+      return null;
     },
   );
   server.post(
@@ -48,6 +50,27 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         return newMapPin;
       } catch (error) {
         console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/updatemappin/:id",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const updatedMapPin = await prisma.map_pins.update({
+          data: removeNull(JSON.parse(req.body)) as any,
+          where: { id: req.params.id },
+        });
+        return updatedMapPin;
+      } catch (error: any) {
+        console.log(error);
+        return new Error(error);
       }
     },
   );

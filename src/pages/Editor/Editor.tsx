@@ -11,7 +11,7 @@ import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import Menubar from "../../components/Editor/Menubar";
 import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
 import DocumentProperties from "../../components/PropertiesBar/DocumentProperties";
-import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
+import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
@@ -19,7 +19,7 @@ import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
   const currentDocument = useGetItem(project_id as string, item_id as string, "documents");
-  const updateDocumentMutation = useUpdateMutation("documents");
+  const updateDocumentMutation = useUpdateItem("documents");
 
   const { manager, state } = useRemirror({
     content:

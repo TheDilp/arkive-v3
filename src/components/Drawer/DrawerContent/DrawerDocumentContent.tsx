@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateMutation, useDeleteMutation, useGetAllItems, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteMutation, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -24,8 +24,8 @@ export default function DrawerDocumentContent() {
 
   const { data: allDocuments } = useGetAllItems(project_id as string, "documents");
   const document = useGetItem(project_id as string, drawer?.id, "documents") as DocumentType;
-  const createDocumentMutation = useCreateMutation("documents");
-  const updateDocumentMutation = useUpdateMutation("documents");
+  const createDocumentMutation = useCreateItem("documents");
+  const updateDocumentMutation = useUpdateItem("documents");
   const deleteDocumentMutation = useDeleteMutation("documents");
 
   function CreateUpdateDocument(newData: DocumentCreateType) {

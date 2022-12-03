@@ -8,7 +8,7 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItemMutation, useGetAllItems } from "../../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../../types/documentTypes";
 import { MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -18,7 +18,7 @@ import { IconSelect } from "../../IconSelect/IconSelect";
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const [drawer] = useAtom(DrawerAtom);
-  const createSubItemMutation = useCreateSubItemMutation(project_id as string, "map_pins");
+  const createSubItemMutation = useCreateSubItem(project_id as string, "map_pins");
   const { data: documents } = useGetAllItems(project_id as string, "documents");
   const { data: maps } = useGetAllItems(project_id as string, "maps");
   const [localItem, setLocalItem] = useState({
@@ -32,7 +32,7 @@ export default function DrawerMapPinContent() {
     text: "",
   });
   return (
-    <div className="w-full flex flex-col gap-y-5">
+    <div className="flex w-full flex-col gap-y-5">
       <div className="flex flex-wrap items-center">
         <h4 className="w-full text-lg underline">Marker Text</h4>
         <InputText
@@ -46,7 +46,7 @@ export default function DrawerMapPinContent() {
         <h4 className="w-full text-lg underline">Marker Icon</h4>
         <IconSelect setIcon={(newIcon) => setLocalItem((prev) => ({ ...prev, icon: newIcon }))}>
           <Icon
-            className="rounded-full cursor-pointer hover:bg-sky-400"
+            className="cursor-pointer rounded-full hover:bg-sky-400"
             color={localItem.color}
             fontSize={24}
             icon={localItem.icon}
@@ -97,7 +97,7 @@ export default function DrawerMapPinContent() {
         />
       </div>
       <Button
-        className="ml-auto p-button-outlined p-button-success"
+        className="p-button-outlined p-button-success ml-auto"
         onClick={() => {
           createSubItemMutation.mutate(localItem);
         }}

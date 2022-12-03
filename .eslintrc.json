@@ -23,6 +23,7 @@
   "root": true,
   "plugins": ["prettier", "react", "react-hooks", "simple-import-sort", "import", "@typescript-eslint"],
   "rules": {
+    "no-underscore-dangle": "off",
     "camelcase": "off",
     "import/first": "error",
     "import/newline-after-import": "error",

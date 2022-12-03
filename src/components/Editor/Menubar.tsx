@@ -5,7 +5,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { findParentNode, RemirrorJSON } from "remirror";
-import { useUpdateMutation } from "../../CRUD/ItemsCRUD";
+import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { toaster } from "../../utils/toast";
 
 export default function MenuBar({ saving }: { saving: number | boolean }) {
@@ -38,7 +38,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
   const active = useActive();
   const attrs = useAttrs();
   const [showDialog, setShowDialog] = useState(false);
-  const updateDocumentMutation = useUpdateMutation("documents");
+  const updateDocumentMutation = useUpdateItem("documents");
   function calloutToggle(type: string) {
     if (active.callout()) {
       if (!active.callout({ type })) {
@@ -183,7 +183,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             className: active.bulletList() ? "menuBarButtonActive" : "",
             template: (item: any, options: any) => (
               <span className={`${options.className} text-center `} onClick={options.onClick}>
-                <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+                <div className="justify-content-center customMenuBarIconContainer m-0 flex">
                   <Icon className={`${options.iconClassName} m-0 `} icon="bi:list-ul" />
                 </div>
               </span>
@@ -198,7 +198,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
 
             template: (item: any, options: any) => (
               <span className={`${options.className} text-center `} onClick={options.onClick}>
-                <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+                <div className="justify-content-center customMenuBarIconContainer m-0 flex">
                   <Icon className={`${options.iconClassName} m-0 `} icon="bi:list-ol" />
                 </div>
               </span>
@@ -306,7 +306,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               <span
                 className={`${options.className} text-center  ${active.horizontalRule() ? "menuBarButtonActive" : ""}`}
                 onClick={options.onClick}>
-                <div className="flex justify-content-center m-0 customMenuBarIconContainer">
+                <div className="justify-content-center customMenuBarIconContainer m-0 flex">
                   <Icon className={`${options.iconClassName} m-0`} icon="radix-icons:divider-horizontal" />
                 </div>
               </span>
@@ -424,7 +424,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           // { label: "DT", command: () => deleteTable() }
         ]}
         end={() => (saving ? <ProgressSpinner className="w-2rem h-2rem" /> : "")}
-        className="p-0 Lato w-full border-0"
+        className="Lato w-full border-0 p-0"
         style={{
           zIndex: 30,
         }}

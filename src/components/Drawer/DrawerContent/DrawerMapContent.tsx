@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateMutation, useGetAllMapImages, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -20,8 +20,8 @@ export default function DrawerMapContent() {
   const { project_id } = useParams();
   const [drawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
-  const updateMapMutation = useUpdateMutation("maps");
-  const createMapMutation = useCreateMutation("maps");
+  const updateMapMutation = useUpdateItem("maps");
+  const createMapMutation = useCreateItem("maps");
   const map = useGetItem(project_id as string, drawer?.id, "maps") as MapType;
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {
