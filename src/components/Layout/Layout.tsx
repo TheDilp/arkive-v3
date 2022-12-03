@@ -1,4 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Outlet, useParams } from "react-router-dom";
 
 import { getItems, getTags } from "../../utils/CRUD/CRUDFunctions";
@@ -10,7 +11,7 @@ import Sidebar from "../Sidebar/Sidebar";
 export default function Layout() {
   const { project_id } = useParams();
 
-  useQueries({
+  const results = useQueries({
     queries: [
       { queryKey: ["allItems", project_id, "documents"], queryFn: () => getItems(project_id as string, "documents") },
       { queryKey: ["allItems", project_id, "maps"], queryFn: () => getItems(project_id as string, "maps") },
@@ -18,6 +19,8 @@ export default function Layout() {
       { queryKey: ["allTags", project_id, "maps"], queryFn: () => getTags(project_id as string, "maps") },
     ],
   });
+
+  if (results.some((query) => !query.isFetched)) return <ProgressSpinner />;
   return (
     <div className="flex flex-1 flex-col">
       <DialogWrapper />
