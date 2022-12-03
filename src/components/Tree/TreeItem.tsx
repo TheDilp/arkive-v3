@@ -31,7 +31,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
   if (!node.data) return null;
   return (
     <button
-      className="text-md group inline-flex w-full cursor-pointer items-center gap-x-1 py-1 text-left hover:bg-sky-700"
+      className="inline-flex items-center w-full py-1 text-left cursor-pointer text-md group gap-x-1 hover:bg-sky-700"
       onClick={() => {
         // Navigate if not a folder
         if (!node.data?.folder) {
@@ -46,11 +46,13 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         if (node.droppable)
           setContextMenu({
             data: node.data,
-            type: "doc_folder",
+            type,
+            folder: node.droppable,
+            template: false,
           });
         else if (node.data && "template" in node.data && node.data?.template) {
-          setContextMenu({ data: node.data, type: "template" });
-        } else setContextMenu({ data: node.data, type });
+          setContextMenu({ data: node.data, type, folder: false, template: true });
+        } else setContextMenu({ data: node.data, type, folder: false, template: false });
         cm.current.show(e);
       }}
       type="button">
@@ -103,7 +105,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
       </span>
 
       <div className={`flex w-full items-center font-Lato ${node.id === item_id && "text-sky-400"}`}>
-        <div className="white-space-nowrap text-overflow-ellipsis w-full overflow-hidden">
+        <div className="w-full overflow-hidden white-space-nowrap text-overflow-ellipsis">
           {node.text} {"template" in node.data && node.data?.template && !node.droppable ? "[TEMPLATE]" : null}
         </div>
         <div className="flex items-center opacity-0 group-hover:opacity-100">

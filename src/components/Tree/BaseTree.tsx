@@ -68,7 +68,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
       label: "New Folder",
     },
   ];
-
   function contextMenuItems(cmType: SidebarTreeItemType) {
     const docItems = [
       {
@@ -144,7 +143,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
               id: cmType.data.id,
               position: "right",
               show: true,
-              type: "documents",
+              type: cmType?.type,
             });
         },
         icon: "pi pi-fw pi-pencil",
@@ -222,6 +221,16 @@ export default function BaseTree({ isTemplates, type }: Props) {
       {
         label: "Update Map",
         icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "maps",
+            });
+        },
       },
       {
         label: "Toggle Public",
@@ -248,9 +257,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
         command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
       },
     ];
+    if (cmType.folder) return folderItems;
+    if (cmType.template) return templateItems;
     if (cmType.type === "documents") return docItems;
-    if (cmType.type === "doc_folder") return folderItems;
-    if (cmType.type === "template") return templateItems;
     if (cmType.type === "maps") return mapItems;
     return rootItems;
   }
@@ -321,7 +330,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
       <ConfirmDialog />
       <ContextMenu cm={cm} items={contextMenuItems(contextMenu)} />
       <InputText
-        className="mt-1 p-1"
+        className="p-1 mt-1"
         onChange={(e) => setFilter(e.target.value)}
         placeholder="Filter by Title"
         value={filter}

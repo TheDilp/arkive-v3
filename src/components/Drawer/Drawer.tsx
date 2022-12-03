@@ -23,7 +23,7 @@ export function handleCloseDrawer(setDrawer: Dispatch<SetStateAction<DrawerAtomT
 function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void) {
   return (
     <Button
-      className="p-button-text p-button-rounded p-button-secondary w-fit p-0 hover:bg-transparent"
+      className="p-0 p-button-text p-button-rounded p-button-secondary w-fit hover:bg-transparent"
       icon={<Icon className="pointer-events-none" fontSize={26} icon="mdi:close" />}
       onClick={() => handleCloseDrawer(setDrawer)}
     />
@@ -32,7 +32,7 @@ function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void
 
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-
+  console.log(drawer.type);
   return (
     <PrimeDrawer
       className="p-sidebar-sm"

@@ -20,6 +20,8 @@ export type DialogAtomType = {
 export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
   data: null,
   type: null,
+  folder: false,
+  template: false,
 });
 
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
