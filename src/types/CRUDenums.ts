@@ -1,6 +1,6 @@
-export enum baseURLS {
-  baseServer = "http://localhost:5174/",
-}
+export const baseURLS = {
+  baseServer : `http://localhost:${import.meta.env.VITE_BE_PORT}/`
+};
 export enum getURLS {
   //  Projects
   getAllProjects = "getallprojects",

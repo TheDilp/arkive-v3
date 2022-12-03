@@ -8,7 +8,7 @@ datasource db {
 }
 
 model projects {
-  id        String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String      @id @default(uuid()) @db.Uuid
   title     String      @default("New Project")
   documents documents[]
   maps      maps[]
@@ -16,7 +16,7 @@ model projects {
 }
 
 model documents {
-  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String   @id @default(uuid()) @db.Uuid
   title       String   @default("New Document")
   content     Json?
   tags        String[] @default([])
@@ -37,7 +37,7 @@ model documents {
 }
 
 model maps {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
   title     String   @default("New Map")
   folder    Boolean  @default(false)
   public    Boolean  @default(false)
@@ -54,7 +54,7 @@ model maps {
 }
 
 model map_pins {
-  id              String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id              String  @id @default(uuid()) @db.Uuid
   parent          String  @db.Uuid
   lat             Float
   lng             Float
@@ -69,7 +69,7 @@ model map_pins {
 }
 
 model boards {
-  id               String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id               String  @id @default(uuid()) @db.Uuid
   title            String  @default("New Board")
   folder           Boolean @default(false)
   public           Boolean @default(false)
@@ -86,7 +86,7 @@ model boards {
 }
 
 model nodes {
-  id                String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                String  @id @default(uuid()) @db.Uuid
   label             String?
   width             Int     @default(50)
   height            Int     @default(50)
@@ -114,7 +114,7 @@ model nodes {
 }
 
 model edges {
-  id                    String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                    String  @id @default(uuid()) @db.Uuid
   label                 String?
   curveStyle            String  @default("straight")
   lineStyle             String  @default("solid")

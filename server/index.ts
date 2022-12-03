@@ -28,7 +28,8 @@ server.register(documentRouter);
 server.register(mapRouter);
 server.register(imagesRouter);
 
-server.listen({ port: 5174 }, (err, address) => {
+if (process.env.VITE_BE_PORT) 
+server.listen({ port: parseInt(process.env.VITE_BE_PORT) as number }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);

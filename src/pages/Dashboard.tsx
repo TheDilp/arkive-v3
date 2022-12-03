@@ -11,7 +11,7 @@ export default function Dashboard() {
   if (isLoading) return <span>Loading...</span>;
 
   if (error) return <span>An error has occurred</span>;
-
+  console.log(projects);
   return (
     <div className="w-full h-full flex flex-col overflow-y-auto">
       <div className="w-full flex flex-1 align-start">
@@ -28,10 +28,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="w-full flex flex-wrap items-start justify-start px-6 py-4 pl-6 gap-x-6">
-          {projects &&
-            projects.map((project: ProjectType) => (
-              <ProjectCard key={project.id} {...project} />
-            ))}
+          {projects && projects.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)}
         </div>
       </div>
     </div>
