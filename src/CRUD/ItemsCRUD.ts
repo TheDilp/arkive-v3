@@ -5,22 +5,14 @@ import { DocumentType } from "../types/documentTypes";
 import { AllItemsType, AllSubItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { MapType } from "../types/mapTypes";
 import { SortIndexes } from "../types/treeTypes";
-import { createURL, getURL, updateURL } from "../utils/CRUDUrls";
+import { getItems } from "../utils/CRUD/CRUDFunctions";
+import { createURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
   return useQuery<(DocumentType | MapType)[]>(
     ["allItems", project_id, type],
-    async () => {
-      const url = getURL(project_id as string, type);
-      if (url)
-        return (
-          await fetch(url, {
-            method: "GET",
-          })
-        ).json();
-      return null;
-    },
+    async () => getItems(project_id as string, type),
     {
       staleTime: 5 * 60 * 1000,
     },

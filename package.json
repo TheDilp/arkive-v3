@@ -16,9 +16,9 @@
     "@iconify/react": "^4.0.0",
     "@minoru/react-dnd-treeview": "^3.3.0",
     "@remirror/pm": "^2.0.1",
-    "@remirror/react": "^2.0.16",
-    "@tanstack/react-query": "^4.14.3",
-    "concurrently": "^7.5.0",
+    "@remirror/react": "^2.0.19",
+    "@tanstack/react-query": "^4.19.0",
+    "concurrently": "^7.6.0",
     "jotai": "^1.9.1",
     "leaflet": "^1.9.3",
     "primeicons": "^6.0.1",
@@ -31,7 +31,7 @@
     "react-router-dom": "^6.4.3",
     "react-toastify": "^9.1.1",
     "react-virtual": "^2.10.4",
-    "remirror": "^2.0.15",
+    "remirror": "^2.0.18",
     "use-debounce": "^8.0.4",
     "uuid": "^9.0.0"
   },
@@ -59,7 +59,7 @@
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.2.0",
     "tailwindcss": "^3.2.2",
-    "typescript": "^4.6.4",
+    "typescript": "^4.9.3",
     "vite": "^3.2.0"
   }
 }

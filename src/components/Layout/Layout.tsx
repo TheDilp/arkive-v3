@@ -1,11 +1,23 @@
-import { Outlet } from "react-router-dom";
+import { useQueries } from "@tanstack/react-query";
+import { Outlet, useParams } from "react-router-dom";
 
+import { getItems, getTags } from "../../utils/CRUD/CRUDFunctions";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import Navbar from "../Nav/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
+  const { project_id } = useParams();
+
+  useQueries({
+    queries: [
+      { queryKey: ["allItems", project_id, "documents"], queryFn: () => getItems(project_id as string, "documents") },
+      { queryKey: ["allItems", project_id, "maps"], queryFn: () => getItems(project_id as string, "maps") },
+      { queryKey: ["allTags", project_id, "documents"], queryFn: () => getTags(project_id as string, "documents") },
+      { queryKey: ["allTags", project_id, "maps"], queryFn: () => getTags(project_id as string, "maps") },
+    ],
+  });
   return (
     <div className="flex flex-1 flex-col">
       <DialogWrapper />

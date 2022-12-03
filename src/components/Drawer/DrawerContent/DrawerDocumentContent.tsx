@@ -6,10 +6,10 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { useCreateMutation, useDeleteMutation, useGetAllItems, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
-import { MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
@@ -17,6 +17,7 @@ import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { IconSelect } from "../../IconSelect/IconSelect";
 import { handleCloseDrawer } from "../Drawer";
+
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -74,14 +75,14 @@ export default function DrawerDocumentContent() {
     return true;
   }
   return (
-    <div className="flex flex-col my-2 gap-y-8">
-      <h2 className="text-2xl text-center">
+    <div className="my-2 flex flex-col gap-y-8">
+      <h2 className="text-center text-2xl">
         {document ? `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}` : "Create New Document"}
       </h2>
       <div className="flex flex-col gap-y-2">
         <InputText
+          autoFocus
           className="w-full"
-          value={localItem?.title || ""}
           onChange={(e) =>
             setLocalItem((prev) => ({
               ...prev,
@@ -98,16 +99,12 @@ export default function DrawerDocumentContent() {
                 });
             }
           }}
-          autoFocus={true}
+          value={localItem?.title || ""}
         />
         {!localItem?.template && (
           <div className="my-2">
             <Dropdown
               className="w-full"
-              placeholder="Document Folder"
-              optionLabel="title"
-              optionValue="id"
-              value={localItem?.parent}
               filter
               onChange={(e) => {
                 setLocalItem((prev) => ({
@@ -115,43 +112,42 @@ export default function DrawerDocumentContent() {
                   parent: e.value,
                 }));
               }}
+              optionLabel="title"
               options={
                 allDocuments
                   ? [{ id: null, title: "Root" }, ...(allDocuments as DocumentType[]).filter(DropdownFilter)]
                   : [{ id: null, title: "Root" }]
               }
+              optionValue="id"
+              placeholder="Document Folder"
+              value={localItem?.parent}
             />
           </div>
         )}
         <div className="flex items-center justify-between">
-          <label htmlFor="cb1" className="p-checkbox-label">
-            Is Folder?
-          </label>
+          <span className="p-checkbox-label">Is Folder?</span>
           <Checkbox
+            checked={localItem.folder}
             onChange={(e) =>
               setLocalItem((prev) => ({
                 ...prev,
                 folder: e.checked,
               }))
             }
-            checked={localItem.folder}
           />
         </div>
         <div className="flex items-center justify-between">
-          <label htmlFor="cb1" className="p-checkbox-label">
-            Icon
-          </label>
+          <span className="p-checkbox-label">Icon</span>
           <IconSelect setIcon={(newIcon: string) => setLocalItem((prev) => ({ ...prev, icon: newIcon }))}>
-            <Icon className="cursor-pointer" icon={localItem.icon || "mdi:file"} fontSize={20} />
+            <Icon className="cursor-pointer" fontSize={20} icon={localItem.icon || "mdi:file"} />
           </IconSelect>
         </div>
       </div>
 
-      <div className="w-full flex justify-between">
+      <div className="flex w-full justify-between">
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger"
-            type="submit"
             onClick={() => {
               if (document)
                 deleteItem(
@@ -164,13 +160,13 @@ export default function DrawerDocumentContent() {
                   },
                   () => toaster("info", "Item not deleted."),
                 );
-            }}>
+            }}
+            type="submit">
             {buttonLabelWithIcon("Delete", "mdi:trash")}
           </Button>
         ) : null}
         <Button
-          className="ml-auto p-button-outlined p-button-success"
-          type="submit"
+          className="p-button-outlined p-button-success ml-auto"
           onClick={() => {
             if (allDocuments?.some((item) => item.parent === localItem.id)) {
               toaster("error", "Cannot convert to file if folder contains files.");
@@ -178,7 +174,8 @@ export default function DrawerDocumentContent() {
             }
 
             CreateUpdateDocument(localItem);
-          }}>
+          }}
+          type="submit">
           {buttonLabelWithIcon("Save", "mdi:content-save")}
         </Button>
       </div>
