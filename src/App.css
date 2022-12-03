@@ -29,7 +29,7 @@
 }
 /* Editor */
 .remirror-editor-wrapper {
-  @apply flex-col flex-1;
+  @apply flex-1 flex-col;
 }
 .remirror-editor.ProseMirror {
   @apply overflow-y-auto !important;
@@ -69,7 +69,7 @@
     @apply list-disc;
   }
   blockquote {
-    @apply p-0 border-0;
+    @apply border-0 p-0;
   }
   blockquote > * {
     @apply border-l-[3px] pl-2 font-Merriweather text-2xl font-normal text-zinc-300 !important;
@@ -129,6 +129,13 @@
 .alterNamesChips .p-chips-token {
   @apply max-w-full bg-orange-600 !important;
 }
+.documentTagsAutocomplete,
+.mapTagsAutocomplete {
+  ul,
+  input {
+    @apply w-full;
+  }
+}
 .documentTagsAutocomplete .p-autocomplete-token {
   @apply bg-blue-500 !important;
 }
@@ -140,7 +147,7 @@
 }
 
 .remirror-mention-atom-popup-item {
-  @apply text-white bg-zinc-700;
+  @apply bg-zinc-700 text-white;
 }
 
 .remirror-mention-atom-popup-highlight {
@@ -169,7 +176,7 @@
   @apply text-white;
 }
 .remirror-mention-atom-popup-item.remirror-mention-atom-popup-hovered {
-  @apply bg-blue-200 cursor-pointer;
+  @apply cursor-pointer bg-blue-200;
 }
 
 /* Properties Panel */

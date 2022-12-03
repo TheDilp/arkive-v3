@@ -5,6 +5,7 @@ import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-lea
 import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/getItemHook";
+import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapPinType, MapType } from "../../types/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -16,14 +17,13 @@ type Props = {
   bounds: LatLngBoundsExpression;
   imgRef: any;
   isReadOnly?: boolean;
-  mapPins: MapPinType[];
-  //   map_layers: MapLayerProps[];
 };
 
-export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, mapPins }: Props) {
+export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
   const { project_id, item_id } = useParams();
   const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
   const [pins, setPins] = useState(currentMap?.map_pins);
+  const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
   const handleKeyUp = (e: KeyboardEvent) => {
     if (!e.shiftKey && !e.altKey) {
       setMarkerFilter(false);
@@ -40,7 +40,6 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, mapPins 
       setMarkerFilter("doc");
     }
   };
-  const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
   const [, setDrawer] = useAtom(DrawerAtom);
   // eslint-disable-next-line no-unused-vars
   const map = useMapEvents({
@@ -100,25 +99,28 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, mapPins 
                 .map((pin) => <MapPin key={pin.id} pinData={pin} readOnly={isReadOnly} />)}
           </LayerGroup>
         </LayersControl.Overlay>
-        {/*
-     Other layers 
         <LayerGroup>
-          {map_layers
-            .sort((a, b) => {
-              if (a.title > b.title) return 1;
-              if (a.title < b.title) return -1;
-              return 0;
-            })
-            .filter((layer) => layer.image?.link && (readOnly ? layer.public : true))
-            .map((layer) => {
-              return (
-                <LayersControl.Overlay key={layer.id + layer.title} name={layer.title}>
-                  <ImageOverlay url={supabaseStorageImagesLink + layer.image?.link} bounds={bounds} ref={imgRef} />
-                </LayersControl.Overlay>
-              );
-            })}
+          {currentMap?.map_layers
+            ? currentMap.map_layers
+                .sort((a, b) => {
+                  if (a.title > b.title) return 1;
+                  if (a.title < b.title) return -1;
+                  return 0;
+                })
+                .filter((layer) => layer.image && (isReadOnly ? layer.public : true))
+                .map((layer) => {
+                  return (
+                    <LayersControl.Overlay key={layer.id + layer.title} name={layer.title}>
+                      <ImageOverlay
+                        ref={imgRef}
+                        bounds={bounds}
+                        url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${layer.image}`}
+                      />
+                    </LayersControl.Overlay>
+                  );
+                })
+            : null}
         </LayerGroup>
-        */}
       </LayersControl>
     </div>
   );

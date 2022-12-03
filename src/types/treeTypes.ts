@@ -1,11 +1,11 @@
 import { DocumentType } from "./documentTypes";
-import { MapType } from "./mapTypes";
+import { MapLayerType, MapType } from "./mapTypes";
 
 export type TreeDataType = DocumentType | MapType;
 
 export type SidebarTreeItemType = {
-  data?: null | Partial<DocumentType>;
-  type: null | "document" | "template" | "doc_folder" | "map" | "map_folder" | "map_image";
+  data?: null | Partial<DocumentType | MapType | MapLayerType>;
+  type: null | "documents" | "template" | "doc_folder" | "maps" | "map_folder" | "map_image" | "map_pin" | "map_layer";
 };
 
 export type SortIndexes = {

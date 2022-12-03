@@ -13,7 +13,7 @@ import { DocumentType } from "../../types/documentTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { MapType } from "../../types/mapTypes";
 import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
-import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 import { getDepth, handleDrop } from "../../utils/tree";
@@ -54,6 +54,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const deleteItemMutation = useDeleteMutation(type);
   const sortItemMutation = useSortMutation(type);
   const [, setDrawer] = useAtom(DrawerAtom);
+  const [, setDialog] = useAtom(DialogAtom);
 
   const rootItems = [
     {
@@ -217,11 +218,41 @@ export default function BaseTree({ isTemplates, type }: Props) {
         // command: confirmdelete,
       },
     ];
-    if (cmType.type === "document") return docItems;
+    const mapItems = [
+      {
+        label: "Update Map",
+        icon: "pi pi-fw pi-pencil",
+      },
+      {
+        label: "Toggle Public",
+        icon: `pi pi-fw ${"2" ? "pi-eye" : "pi-eye-slash"}`,
+      },
+      {
+        label: "Manage Layers",
+        icon: "pi pi-clone",
+        command: () =>
+          setDialog((prev) => ({ ...prev, position: "top-left", data: cmType?.data, show: true, type: "map_layer" })),
+      },
+      { separator: true },
+      {
+        label: "View Public Map",
+        icon: "pi pi-fw pi-external-link",
+      },
+      {
+        label: "Copy Public URL",
+        icon: "pi pi-fw pi-link",
+      },
+      {
+        label: "Delete Map",
+        icon: "pi pi-fw pi-trash",
+        command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
+      },
+    ];
+    if (cmType.type === "documents") return docItems;
     if (cmType.type === "doc_folder") return folderItems;
     if (cmType.type === "template") return templateItems;
-    if (cmType.type === "map") return rootItems;
-    return [];
+    if (cmType.type === "maps") return mapItems;
+    return rootItems;
   }
 
   const [contextMenu] = useAtom(SidebarTreeContextAtom);

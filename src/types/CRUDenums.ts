@@ -23,6 +23,7 @@ export enum createURLS {
   createDocument = "createdocument",
   createMap = "createmap",
   createMapPin = "createmappin",
+  createMapLayer = "createmaplayer",
   uploadImage = "uploadimage/images/",
   uploadMap = "uploadimage/maps/",
 }

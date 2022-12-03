@@ -10,6 +10,7 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${createURLS.createDocument}`;
   if (type === "maps") return `${baseURLS.baseServer}${createURLS.createMap}`;
   if (type === "map_pins") return `${baseURLS.baseServer}${createURLS.createMapPin}`;
+  if (type === "map_layers") return `${baseURLS.baseServer}${createURLS.createMapLayer}`;
   return null;
 };
 export const updateURL = (id: string, type: AllAvailableTypes) => {

@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
-import { MapPinType, MapType } from "../../types/mapTypes";
+import { MapType } from "../../types/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
@@ -19,7 +19,6 @@ type Props = {
 export default function MapView({ isReadOnly }: Props) {
   const queryClient = useQueryClient();
   const { project_id, item_id } = useParams();
-  const [mapPins, setMapPins] = useState<MapPinType[]>([]);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
@@ -46,7 +45,6 @@ export default function MapView({ isReadOnly }: Props) {
 
   useEffect(() => {
     if (currentMap) {
-      setMapPins(currentMap.map_pins);
       const img = new Image();
       img.src = `${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap.map_image}`;
       img.onload = () => {
@@ -76,7 +74,7 @@ export default function MapView({ isReadOnly }: Props) {
     //  Wait for map to finish loading
   }, [bounds]);
   return (
-    <div className="w-full flex flex-col flex-1">
+    <div className="flex w-full flex-1 flex-col">
       <ContextMenu cm={cm} items={items} />
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
       <MapContainer
@@ -84,7 +82,7 @@ export default function MapView({ isReadOnly }: Props) {
         attributionControl={false}
         bounds={bounds as LatLngBoundsExpression}
         center={[bounds[1][0] / 2, bounds[1][1] / 2]}
-        className="w-full h-full flex-1 outline-none bg-zinc-900"
+        className="h-full w-full flex-1 bg-zinc-900 outline-none"
         crs={CRS.Simple}
         maxZoom={2}
         minZoom={-3}
@@ -96,7 +94,6 @@ export default function MapView({ isReadOnly }: Props) {
           cm={cm}
           imgRef={imgRef}
           isReadOnly={isReadOnly}
-          mapPins={mapPins}
           src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
         />
         <ImageOverlay

@@ -50,7 +50,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
           });
         else if (node.data && "template" in node.data && node.data?.template) {
           setContextMenu({ data: node.data, type: "template" });
-        } else setContextMenu({ data: node.data, type: "document" });
+        } else setContextMenu({ data: node.data, type });
         cm.current.show(e);
       }}
       type="button">

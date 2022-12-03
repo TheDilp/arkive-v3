@@ -1,4 +1,5 @@
 import { useAtom } from "jotai";
+import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
@@ -7,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useGetAllTags } from "../../../CRUD/queries";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -22,6 +24,8 @@ export default function DrawerMapContent() {
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const updateMapMutation = useUpdateItem("maps");
   const createMapMutation = useCreateItem("maps");
+  const { data: initialTags } = useGetAllTags(project_id as string, "maps");
+
   const map = useGetItem(project_id as string, drawer?.id, "maps") as MapType;
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {
@@ -30,6 +34,31 @@ export default function DrawerMapContent() {
     },
   );
 
+  const [tags, setTags] = useState({ selected: map?.tags || [], suggestions: initialTags });
+
+  const filterTags = (e: AutoCompleteCompleteMethodParams) => {
+    const { query } = e;
+    if (query && initialTags)
+      setTags((prev) => ({
+        ...prev,
+        suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
+      }));
+
+    if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
+  };
+  const handleTagsChange = (value: string) => {
+    if (map && !map.tags.includes(value)) {
+      updateMapMutation?.mutate({
+        id: map.id,
+        tags: [...map.tags, value],
+      });
+    } else if (map.tags.includes(value)) {
+      updateMapMutation?.mutate({
+        id: map.id,
+        tags: map.tags.filter((tag) => tag !== value),
+      });
+    }
+  };
   function CreateUpdateMap(newData: MapCreateType) {
     if (map) {
       updateMapMutation?.mutate(
@@ -95,6 +124,24 @@ export default function DrawerMapContent() {
         placeholder="Select map"
         value={localItem.map_image}
         valueTemplate={ImageDropdownValue({ map_image: localItem?.map_image })}
+      />
+      <AutoComplete
+        className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
+        completeMethod={filterTags}
+        multiple
+        onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
+        onKeyPress={async (e) => {
+          // For adding completely new tags
+          if (e.key === "Enter" && e.currentTarget.value !== "") {
+            handleTagsChange(e.currentTarget.value);
+            e.currentTarget.value = "";
+          }
+        }}
+        onSelect={(e) => handleTagsChange(e.value)}
+        onUnselect={(e) => handleTagsChange(e.value)}
+        placeholder="Add Tags"
+        suggestions={tags.suggestions}
+        value={map?.tags}
       />
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>

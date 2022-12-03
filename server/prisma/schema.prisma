@@ -50,7 +50,8 @@ model maps {
   project    projects @relation(fields: [project_id], references: [id])
   project_id String   @db.Uuid
 
-  map_pins map_pins[]
+  map_pins   map_pins[]
+  map_layers map_layers[]
 }
 
 model map_pins {
@@ -66,6 +67,15 @@ model map_pins {
   map_link        String? @db.Uuid
   doc_id          String? @db.Uuid
   maps            maps?   @relation(fields: [parent], references: [id])
+}
+
+model map_layers {
+  id     String  @id @default(uuid()) @db.Uuid
+  title  String  @default("New Layer")
+  image  String
+  parent String  @db.Uuid
+  public Boolean @default(false)
+  maps   maps?   @relation(fields: [parent], references: [id])
 }
 
 model boards {

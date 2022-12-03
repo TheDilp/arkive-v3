@@ -34,6 +34,11 @@ export default function DocumentProperties() {
         id: currentDocument.id,
         tags: [...currentDocument.tags, value],
       });
+    } else if (currentDocument.tags.includes(value)) {
+      updateDocumentMutation?.mutate({
+        id: currentDocument.id,
+        tags: currentDocument.tags.filter((tag) => tag !== value),
+      });
     }
   };
   const handleAlterNamesChange = (value: string[]) => {
@@ -44,7 +49,6 @@ export default function DocumentProperties() {
       });
     }
   };
-
   const handlePublicChange = (checked: boolean) => {
     if (currentDocument)
       updateDocumentMutation?.mutate({

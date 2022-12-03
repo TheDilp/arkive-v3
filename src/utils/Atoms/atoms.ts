@@ -7,12 +7,12 @@ import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefau
 
 export type DialogAtomType = {
   id: null | string;
-  type: null | "files" | "map_pin";
+  type: null | "files" | "map_layer";
   position?: DialogPositionType;
   modal?: boolean;
   fullscreen?: boolean;
   show: boolean;
-  data?: {
+  data?: null | {
     [key: string]: any;
   };
 };
