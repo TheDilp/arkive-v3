@@ -51,7 +51,6 @@ export default function DrawerMapContent() {
       });
     }
   }
-  console.log(map_images);
   useEffect(() => {
     if (map) {
       setLocalItem(map);
@@ -92,7 +91,7 @@ export default function DrawerMapContent() {
         valueTemplate={() => {
           return <div>{localItem?.map_image || "Select Map"}</div>;
         }}
-        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value }))}
+        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value[0] }))}
         value={localItem.map_image}
         itemTemplate={(e) => (
           <div className="flex items-center justify-between max-w-[200px]">
