@@ -5,14 +5,16 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { useCreateMutation, useGetAllMapImages, useUpdateMutation } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
-import { baseURLS } from "../../../types/CRUDenums";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import ImageDropdownItem from "../../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 
 export default function DrawerMapContent() {
   const { project_id } = useParams();
@@ -60,13 +62,14 @@ export default function DrawerMapContent() {
         project_id: project_id as string,
       });
     }
-  }, [map]);
+  }, [map, project_id]);
+
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-2xl text-center">Create New Map</h2>
+      <h2 className="text-center text-2xl">Create New Map</h2>
       <InputText
+        autoFocus
         className="w-full"
-        value={localItem?.title || ""}
         onChange={(e) =>
           setLocalItem((prev) => ({
             ...prev,
@@ -82,44 +85,35 @@ export default function DrawerMapContent() {
             });
           }
         }}
-        autoFocus={true}
+        value={localItem?.title || ""}
       />
 
       <Dropdown
+        itemTemplate={ImageDropdownItem}
+        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value[0] }))}
         options={map_images ? [map_images] : []}
         placeholder="Select map"
-        valueTemplate={() => {
-          return <div>{localItem?.map_image || "Select Map"}</div>;
-        }}
-        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value[0] }))}
         value={localItem.map_image}
-        itemTemplate={(e) => (
-          <div className="flex items-center justify-between max-w-[200px]">
-            <span className="truncate">{e}</span>
-            <img className="w-12 h-12" src={`${baseURLS.baseServer}getimage/maps/${project_id}/${e}`} />
-          </div>
-        )}
+        valueTemplate={ImageDropdownValue({ map_image: localItem?.map_image })}
       />
       <div className="flex items-center justify-between">
-        <label htmlFor="cb1" className="p-checkbox-label">
-          Is Folder?
-        </label>
+        <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox
+          checked={localItem.folder}
           onChange={(e) =>
             setLocalItem((prev) => ({
               ...prev,
               folder: e.checked,
             }))
           }
-          checked={localItem.folder}
         />
       </div>
       <Button
-        className="ml-auto p-button-outlined p-button-success"
-        type="submit"
+        className="p-button-outlined p-button-success ml-auto"
         onClick={() => {
           CreateUpdateMap(localItem);
-        }}>
+        }}
+        type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
     </div>
