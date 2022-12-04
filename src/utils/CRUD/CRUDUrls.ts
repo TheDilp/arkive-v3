@@ -21,10 +21,10 @@ export const updateURL = (id: string, type: AllAvailableTypes) => {
   return null;
 };
 
-export const deleteURL = (type: AllAvailableTypes) => {
-  if (type === "documents") return `${baseURLS.baseServer}${deleteURLs.deleteDocument}`;
-  if (type === "maps") return `${baseURLS.baseServer}${deleteURLs.deleteMap}`;
-  if (type === "map_pins") return `${baseURLS.baseServer}${deleteURLs.deleteMapPin}`;
-  if (type === "map_layers") return `${baseURLS.baseServer}${deleteURLs.deleteMapLayer}`;
+export const deleteURL = (id: string, type: AllAvailableTypes) => {
+  if (type === "documents") return `${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`;
+  if (type === "maps") return `${baseURLS.baseServer}${deleteURLs.deleteMap}${id}`;
+  if (type === "map_pins") return `${baseURLS.baseServer}${deleteURLs.deleteMapPin}${id}`;
+  if (type === "map_layers") return `${baseURLS.baseServer}${deleteURLs.deleteMapLayer}${id}`;
   return null;
 };

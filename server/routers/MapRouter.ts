@@ -159,6 +159,23 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       return newDocument;
     },
   );
+  server.delete(
+    "/deletemaplayer/:id",
+    async (
+      req: FastifyRequest<{
+        Params: { id: string };
+      }>,
+    ) => {
+      await prisma.map_layers.deleteMany({
+        where: {
+          parent: req.params.id,
+        },
+      });
+      await prisma.map_layers.delete({
+        where: { id: req.params.id },
+      });
+    },
+  );
 
   done();
 };

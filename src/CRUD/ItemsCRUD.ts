@@ -12,7 +12,7 @@ import {
 import { MapType } from "../types/mapTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
-import { createURL, updateURL } from "../utils/CRUD/CRUDUrls";
+import { createURL, deleteURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
@@ -167,10 +167,10 @@ export const useUpdateSubItem = (subType: AvailableSubItemTypes, type: Available
 export const useDeleteMutation = (type: AllAvailableTypes, project_id: string) => {
   const queryClient = useQueryClient();
 
-  const deleteDocumentMutation = useMutation(
+  return useMutation(
     async (id: string) => {
       if (id) {
-        const url = updateURL(id, type);
+        const url = deleteURL(id, type);
         if (url)
           return fetch(url, {
             method: "DELETE",
@@ -181,13 +181,11 @@ export const useDeleteMutation = (type: AllAvailableTypes, project_id: string) =
 
     {
       onSuccess: async () => {
-        if (["documents", "maps"].includes(type)) queryClient.refetchQueries(["allDocuments", project_id, type]);
-        if (["map_pins", "map_layers"].includes(type)) queryClient.refetchQueries(["allDocuments", project_id, "maps"]);
+        if (["documents", "maps"].includes(type)) queryClient.refetchQueries(["allItems", project_id, type]);
+        if (["map_pins", "map_layers"].includes(type)) queryClient.refetchQueries(["allItems", project_id, "maps"]);
       },
     },
   );
-  if (type === "documents") return deleteDocumentMutation;
-  return null;
 };
 
 export const useSortMutation = (
