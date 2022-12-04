@@ -16,7 +16,7 @@ type Props = {
 
 function TooltipContent({ content, title }: Pick<Props, "content" | "title">) {
   return (
-    <Card className="overflow-y-auto h-96 w-96" title={<div className="p-0 text-center">{title}</div>}>
+    <Card className="h-96 w-96 overflow-y-auto" title={<div className="p-0 text-center">{title}</div>}>
       {content ? (
         <div className="whitespace-pre-line">
           <Editor content={content} editable={false} />
@@ -28,13 +28,13 @@ function TooltipContent({ content, title }: Pick<Props, "content" | "title">) {
 export default function DocumentMention({ title, content, id, label, isDisabledTooltip }: Props) {
   return id && content ? (
     <Tooltip disabled={isDisabledTooltip ?? false} label={<TooltipContent content={content} title={title} />}>
-      <Link className="text-base font-bold text-white font-Lato" id={`link-${id}`} to={`../doc/${id}`}>
+      <Link className="font-Lato text-base font-bold text-white" to={`../doc/${id}`}>
         {title || label}
       </Link>
     </Tooltip>
   ) : (
     <button
-      className="text-white underline cursor-pointer font-Lato"
+      className="cursor-pointer font-Lato text-white underline"
       onClick={() => {
         toaster("warning", "Document not found.");
       }}

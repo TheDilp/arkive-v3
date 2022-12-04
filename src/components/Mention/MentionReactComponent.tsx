@@ -2,7 +2,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 import { DocumentType } from "../../types/documentTypes";
+import { MapType } from "../../types/mapTypes";
 import DocumentMention from "./DocumentMention";
+import MapMention from "./MapMention";
 // import { BoardType } from "../../../../../../types/BoardTypes";
 // import { MapProps } from "../../../../../../types/MapTypes";
 // import BoardMention from "./BoardMention";
@@ -44,25 +46,15 @@ export default function MentionReactComponent({ node }: Props) {
       }
       return <DocumentMention content={undefined} id={undefined} label={label} title={label} />;
     }
-    //   else if (nodeName === "hash") {
-    //     const maps: MapProps[] | undefined = queryClient.getQueryData<MapProps[]>(
-    //       `${project_id}-maps`,
-    //     );
-    //     let mapItem: MapProps | undefined = maps
-    //       ? maps.find((map) => map.id === nodeId)
-    //       : undefined;
-    //     if (mapItem) {
-    //       return (
-    //         <MapMention
-    //           title={mapItem.title}
-    //           nodeId={nodeId}
-    //           nodeLabel={nodeLabel}
-    //         />
-    //       );
-    //     } else {
-    //       return <MapMention nodeId={undefined} nodeLabel={nodeLabel} />;
-    //     }
-    //   } else if (nodeName === "dollah") {
+    if (name === "hash") {
+      const maps: MapType[] | undefined = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"]);
+      const mapItem: MapType | undefined = maps ? maps.find((map) => map.id === id) : undefined;
+      if (mapItem) {
+        return <MapMention nodeId={id} nodeLabel={label} title={mapItem.title} />;
+      }
+      return <MapMention nodeId={undefined} nodeLabel={label} />;
+    }
+    // else if (nodeName === "dollah") {
     //     const boards: BoardType[] | undefined = queryClient.getQueryData<
     //       BoardType[]
     //     >(`${project_id}-boards`);

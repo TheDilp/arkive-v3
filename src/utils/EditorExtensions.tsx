@@ -1,6 +1,5 @@
 import { Callout, createLinkHandler, Doc, Heading, MarkMap, PlaceholderExtension, TextHandler } from "@remirror/react";
-import { ComponentType, FC } from "react";
-import { RemirrorJSON } from "remirror";
+import { ComponentType } from "react";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -22,22 +21,19 @@ import {
   UnderlineExtension,
 } from "remirror/extensions";
 
-import DocumentMention from "../components/Mention/DocumentMention";
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
 
 export const DefaultEditorExtensions = () => {
   const CustomMentionExtension = new MentionAtomExtension({
     matchers: [
       {
-        appendText: "",
         char: "@",
         name: "at",
       },
-      // {
-      //   name: "hash",
-      //   char: "#",
-      //   appendText: "",
-      // },
+      {
+        name: "hash",
+        char: "#",
+      },
       // {
       //   name: "dollah",
       //   char: "$",
@@ -99,7 +95,6 @@ export type TestMap = Partial<Record<string, string | ComponentType<any>>>;
 export const typeMap: MarkMap = {
   blockquote: "blockquote",
   bulletList: (props) => {
-    console.log(props);
     return <div>{props.children}</div>;
   },
   callout: Callout,
@@ -110,7 +105,6 @@ export const typeMap: MarkMap = {
   image: "img",
   listItem: "li",
   mentionAtom: (props) => {
-    console.log(props);
     return <MentionReactComponent {...props.node.attrs} disableTooltip />;
   },
   orderedList: "ol",
