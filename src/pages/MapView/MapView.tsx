@@ -53,12 +53,10 @@ export default function MapView({ isReadOnly }: Props) {
           [img.height, img.width],
         ]);
         if (imgRef.current) {
-          setTimeout(() => {
-            imgRef.current.setBounds([
-              [0, 0],
-              [img.height, img.width],
-            ]);
-          }, 1);
+          imgRef.current.setBounds([
+            [0, 0],
+            [img.height, img.width],
+          ]);
         }
         setLoading(false);
       };
