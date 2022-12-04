@@ -164,23 +164,25 @@ export const useUpdateSubItem = (subType: AvailableSubItemTypes, type: Available
   );
 };
 
-export const useDeleteMutation = (type: AvailableItemTypes) => {
+export const useDeleteMutation = (type: AllAvailableTypes, project_id: string) => {
   const queryClient = useQueryClient();
 
   const deleteDocumentMutation = useMutation(
-    async (id: string) =>
-      fetch(`${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`, {
-        method: "DELETE",
-      }),
+    async (id: string) => {
+      if (id) {
+        const url = updateURL(id, type);
+        if (url)
+          return fetch(url, {
+            method: "DELETE",
+          });
+      }
+      return null;
+    },
 
     {
-      onSuccess: async (data, id) => {
-        const newData: DocumentType = await data.json();
-        queryClient.setQueryData(["allDocuments", newData.project_id], (old: DocumentType[] | undefined) => {
-          if (old) return old.filter((doc) => doc.id !== id);
-          return [];
-        });
-        return [];
+      onSuccess: async () => {
+        if (["documents", "maps"].includes(type)) queryClient.refetchQueries(["allDocuments", project_id, type]);
+        if (["map_pins", "map_layers"].includes(type)) queryClient.refetchQueries(["allDocuments", project_id, "maps"]);
       },
     },
   );

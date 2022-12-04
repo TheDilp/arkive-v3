@@ -51,7 +51,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const { data: items, isLoading, error } = useGetAllItems(project_id as string, type);
   const createItemMutation = useCreateItem(type);
   const updateItemMutation = useUpdateItem(type);
-  const deleteItemMutation = useDeleteMutation(type);
+  const deleteItemMutation = useDeleteMutation(type, project_id as string);
   const sortItemMutation = useSortMutation(type);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setDialog] = useAtom(DialogAtom);

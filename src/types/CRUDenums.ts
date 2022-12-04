@@ -1,5 +1,5 @@
 export const baseURLS = {
-  baseServer : `http://localhost:${import.meta.env.VITE_BE_PORT}/`
+  baseServer: `http://localhost:${import.meta.env.VITE_BE_PORT}/`,
 };
 export enum getURLS {
   //  Projects
@@ -41,6 +41,9 @@ export enum updateURLs {
 
 export enum deleteURLs {
   deleteDocument = "deletedocument/",
+  deleteMap = "deletemap/",
+  deleteMapPin = "deletemappin/",
+  deleteMapLayer = "deletemaplayer/",
 }
 
 export enum MainToSubType {

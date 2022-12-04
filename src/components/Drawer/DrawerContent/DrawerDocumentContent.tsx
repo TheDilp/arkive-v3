@@ -26,7 +26,7 @@ export default function DrawerDocumentContent() {
   const document = useGetItem(project_id as string, drawer?.id, "documents") as DocumentType;
   const createDocumentMutation = useCreateItem("documents");
   const updateDocumentMutation = useUpdateItem("documents");
-  const deleteDocumentMutation = useDeleteMutation("documents");
+  const deleteDocumentMutation = useDeleteMutation("documents", project_id as string);
 
   function CreateUpdateDocument(newData: DocumentCreateType) {
     if (document) {
@@ -75,8 +75,8 @@ export default function DrawerDocumentContent() {
     return true;
   }
   return (
-    <div className="my-2 flex flex-col gap-y-8">
-      <h2 className="text-center text-2xl">
+    <div className="flex flex-col my-2 gap-y-8">
+      <h2 className="text-2xl text-center">
         {document ? `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}` : "Create New Document"}
       </h2>
       <div className="flex flex-col gap-y-2">
@@ -144,7 +144,7 @@ export default function DrawerDocumentContent() {
         </div>
       </div>
 
-      <div className="flex w-full justify-between">
+      <div className="flex justify-between w-full">
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger"
@@ -166,7 +166,7 @@ export default function DrawerDocumentContent() {
           </Button>
         ) : null}
         <Button
-          className="p-button-outlined p-button-success ml-auto"
+          className="ml-auto p-button-outlined p-button-success"
           onClick={() => {
             if (allDocuments?.some((item) => item.parent === localItem.id)) {
               toaster("error", "Cannot convert to file if folder contains files.");

@@ -22,12 +22,12 @@ type Props = {
 };
 
 export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Props) {
-  const { item_id } = useParams();
+  const { project_id, item_id } = useParams();
   const navigate = useNavigate();
   const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const updateMutation = useUpdateItem(type);
-  const deleteMutation = useDeleteMutation(type);
+  const deleteMutation = useDeleteMutation(type, project_id as string);
   if (!node.data) return null;
   return (
     <button
