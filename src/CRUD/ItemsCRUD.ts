@@ -139,13 +139,13 @@ export const useUpdateItem = (type: AllAvailableTypes) => {
     },
   );
 };
-export const useUpdateSubItem = (type: AvailableSubItemTypes) => {
+export const useUpdateSubItem = (subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
     async (updateItemValues: Partial<AllSubItemsType>) => {
       if (updateItemValues.id) {
-        const url = updateURL(updateItemValues.id, type);
+        const url = updateURL(updateItemValues.id, subType);
         if (url)
           return fetch(url, {
             body: JSON.stringify(updateItemValues),
@@ -156,18 +156,9 @@ export const useUpdateSubItem = (type: AvailableSubItemTypes) => {
     },
     {
       onError: () => toaster("error", "There was an error updating this item."),
-      onSuccess: async (data, variables) => {
+      onSuccess: async (data) => {
         const newData: AllItemsType = await data?.json();
-        if (newData)
-          queryClient.setQueryData(["allItems", newData.project_id, type], (old: AllItemsType[] | undefined) => {
-            if (old)
-              return old.map((item) => {
-                if (item.id === variables.id) return { ...item, ...variables };
-                return item;
-              });
-
-            return [];
-          });
+        if (newData) queryClient.refetchQueries(["allItems", newData.project_id, type]);
       },
     },
   );

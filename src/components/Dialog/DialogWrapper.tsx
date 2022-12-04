@@ -15,6 +15,7 @@ import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { MapLayerType, MapType } from "../../types/mapTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { toaster } from "../../utils/toast";
 import ImageDropdownItem from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 
@@ -149,7 +150,7 @@ function UpdateMapLayers() {
   const currentMap = useGetItem(project_id as string, dialog.data?.id, "maps") as MapType;
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const createMapLayer = useCreateSubItem(project_id as string, "map_layers", "maps");
-  const updateMapLayer = useUpdateSubItem("map_layers");
+  const updateMapLayer = useUpdateSubItem("map_layers", "maps");
   const [layers, setLayers] = useState<MapLayerType[]>(currentMap?.map_layers || []);
   useEffect(() => {
     if (currentMap?.map_layers) setLayers(currentMap.map_layers);
@@ -216,7 +217,6 @@ function UpdateMapLayers() {
                     updateMapLayer.mutate({
                       id: layer.id,
                       title: layer.title,
-                      public: layer.public,
                       image: layer.image,
                     });
                   }}
@@ -225,6 +225,19 @@ function UpdateMapLayers() {
                   className={`p-button-outlined w-1/12 p-button-${layer.public ? "info" : "secondary"}`}
                   icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
                   onClick={() => {
+                    updateMapLayer.mutate(
+                      {
+                        id: layer.id,
+                        public: !layer.public,
+                      },
+                      {
+                        onSuccess: () =>
+                          toaster(
+                            "success",
+                            `Visiblity of this layer has been changed to: ${!layer.public ? "public" : "private."}`,
+                          ),
+                      },
+                    );
                     setLayers((prev) =>
                       prev?.map((prevLayer) => {
                         if (prevLayer.id === layer.id) {
