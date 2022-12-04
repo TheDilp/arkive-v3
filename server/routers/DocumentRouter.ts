@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
+
 import { prisma } from "..";
 import { removeNull } from "../utils/transform";
 
@@ -13,7 +14,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
   });
 
   server.get("/getsingledocument/:id", async (req: FastifyRequest<{ Params: { id: string } }>) => {
-    return await prisma.documents.findUnique({
+    return prisma.documents.findUnique({
       where: { id: req.params.id },
     });
   });
@@ -34,6 +35,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
       } catch (error) {
         console.log(error);
       }
+      return null;
     },
   );
   server.post(
@@ -53,6 +55,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
       } catch (error) {
         console.log(error);
       }
+      return null;
     },
   );
   server.post("/sortdocuments", async (req: FastifyRequest<{ Body: string }>) => {

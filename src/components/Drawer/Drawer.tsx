@@ -23,7 +23,7 @@ export function handleCloseDrawer(setDrawer: Dispatch<SetStateAction<DrawerAtomT
 function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void) {
   return (
     <Button
-      className="p-0 p-button-text p-button-rounded p-button-secondary w-fit hover:bg-transparent"
+      className="p-button-text p-button-rounded p-button-secondary w-fit p-0 hover:bg-transparent"
       icon={<Icon className="pointer-events-none" fontSize={26} icon="mdi:close" />}
       onClick={() => handleCloseDrawer(setDrawer)}
     />
@@ -46,6 +46,7 @@ export default function Drawer() {
       {drawer.type === "documents" && drawer.exceptions?.fromTemplate ? <DrawerFromTemplateContent /> : null}
       {drawer.type === "maps" ? <DrawerMapContent /> : null}
       {drawer.type === "map_pins" ? <DrawerMapPinContent /> : null}
+      {drawer.type === "boards" ? <DrawerMapPinContent /> : null}
     </PrimeDrawer>
   );
 }

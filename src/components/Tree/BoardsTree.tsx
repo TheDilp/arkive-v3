@@ -7,10 +7,10 @@ import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
 
-export default function MapsTree() {
+export default function BoardsTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const createMapMutation = useCreateItem("maps");
+  const createBoardMutation = useCreateItem("boards");
 
   return (
     <div className="flex flex-1 flex-col">
@@ -20,7 +20,7 @@ export default function MapsTree() {
           icon="pi pi-folder"
           label="New Folder"
           onClick={() => {
-            createMapMutation?.mutate({
+            createBoardMutation?.mutate({
               folder: true,
               project_id: project_id as string,
               title: "New Folder",
@@ -30,19 +30,19 @@ export default function MapsTree() {
         <Button
           className="p-button-outlined"
           icon="pi pi-map"
-          label="New Map"
+          label="New Board"
           onClick={() => {
             setDrawer({
               ...DefaultDrawer,
               position: "right",
               show: true,
-              type: "maps",
+              type: "boards",
             });
           }}
         />
       </div>
 
-      <BaseTree type="maps" />
+      <BaseTree type="boards" />
     </div>
   );
 }

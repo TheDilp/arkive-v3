@@ -10,6 +10,7 @@ export const getURL = (project_id: string, type: AvailableItemTypes) => {
 export const createURL = (type: AllAvailableTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${createURLS.createDocument}`;
   if (type === "maps") return `${baseURLS.baseServer}${createURLS.createMap}`;
+  if (type === "boards") return `${baseURLS.baseServer}${createURLS.createBoard}`;
   if (type === "map_pins") return `${baseURLS.baseServer}${createURLS.createMapPin}`;
   if (type === "map_layers") return `${baseURLS.baseServer}${createURLS.createMapLayer}`;
   return null;

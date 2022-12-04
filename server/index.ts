@@ -5,6 +5,7 @@ import fastify from "fastify";
 import fileupload from "fastify-file-upload";
 import path from "path";
 
+import { boardRouter } from "./routers/BoardRouter";
 import { documentRouter } from "./routers/DocumentRouter";
 import { getRouter } from "./routers/GetRouter";
 import { imagesRouter } from "./routers/ImagesRouter";
@@ -27,6 +28,7 @@ server.register(projectRouter);
 server.register(getRouter);
 server.register(documentRouter);
 server.register(mapRouter);
+server.register(boardRouter);
 server.register(imagesRouter);
 if (process.env.VITE_BE_PORT)
   server.listen({ port: parseInt(process.env.VITE_BE_PORT, 10) as number }, (err, address) => {
