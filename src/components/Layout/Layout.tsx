@@ -15,6 +15,7 @@ export default function Layout() {
     queries: [
       { queryKey: ["allItems", project_id, "documents"], queryFn: () => getItems(project_id as string, "documents") },
       { queryKey: ["allItems", project_id, "maps"], queryFn: () => getItems(project_id as string, "maps") },
+      { queryKey: ["allItems", project_id, "boards"], queryFn: () => getItems(project_id as string, "boards") },
       { queryKey: ["allTags", project_id, "documents"], queryFn: () => getTags(project_id as string, "documents") },
       { queryKey: ["allTags", project_id, "maps"], queryFn: () => getTags(project_id as string, "maps") },
     ],

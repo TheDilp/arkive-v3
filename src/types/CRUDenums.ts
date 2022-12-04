@@ -10,6 +10,8 @@ export enum getURLS {
   getAllDocuments = "getalldocuments/",
   // Maps
   getAllMaps = "getallmaps/",
+  // Boards
+  getAllBoards = "getallboards/",
   // Images
   getAllImages = "getallimages/",
   getAllMapImages = "getallmapimages/",

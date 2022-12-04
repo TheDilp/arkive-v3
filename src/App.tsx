@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor/Editor";
 import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
+import BoardView from "./pages/BoardView/BoardView";
 
 function App() {
   const queryClient = new QueryClient({
@@ -44,7 +45,7 @@ function App() {
                 <Route element={<MapView />} path=":item_id" />
               </Route>
               <Route path="boards/*">
-                <Route element={<div>BOARD</div>} path=":item_id" />
+                <Route element={<BoardView />} path=":item_id" />
               </Route>
               <Route path="timelines/*">
                 <Route element={<div>TIMELINE</div>} path=":item_id" />

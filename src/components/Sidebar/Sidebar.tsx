@@ -9,12 +9,12 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   if (pathname.includes("wiki"))
     return (
-      <div className="flex flex-col flex-1">
-        <TabView className="flex flex-col flex-1" renderActiveOnly>
-          <TabPanel className="w-full h-full flex flex-col flex-1" header="Documents">
+      <div className="flex flex-1 flex-col">
+        <TabView className="flex flex-1 flex-col" renderActiveOnly>
+          <TabPanel className="flex h-full w-full flex-1 flex-col" header="Documents">
             <DocumentsTree />
           </TabPanel>
-          <TabPanel className="w-full h-full flex flex-col flex-1" header="Templates">
+          <TabPanel className="flex h-full w-full flex-1 flex-col" header="Templates">
             <TemplatesTree />
           </TabPanel>
         </TabView>
@@ -22,12 +22,12 @@ export default function Sidebar() {
     );
   if (pathname.includes("maps"))
     return (
-      <div className="h-full flex flex-col flex-1 p-4 bg-zinc-800">
+      <div className="flex h-full flex-1 flex-col bg-zinc-800 p-4">
         <MapsTree />
       </div>
     );
-  if (pathname.includes("boards")) return <div className="flex flex-col flex-1 bg-zinc-800">BOARDS</div>;
-  if (pathname.includes("timelines")) return <div className="flex flex-col flex-1 bg-zinc-800">TIMELINES</div>;
+  if (pathname.includes("boards")) return <div className="flex flex-1 flex-col bg-zinc-800">BOARDS</div>;
+  if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-800">TIMELINES</div>;
 
   return null;
 }
