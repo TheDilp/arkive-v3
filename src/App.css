@@ -213,11 +213,3 @@
 .leaflet-control-layers-overlays {
   @apply select-none;
 }
-.leaflet-pane {
-  @apply z-0 !important;
-}
-.leafletImageOverlayLayer {
-  img {
-    @apply z-[999] h-full w-full !important;
-  }
-}
