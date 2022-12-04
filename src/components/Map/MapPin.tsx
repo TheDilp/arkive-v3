@@ -42,7 +42,7 @@ export default function MapPin({
       if (!readOnly) {
         setMapContext({ type: "pin" });
         cm.current.show(e.originalEvent);
-        setDrawer({ ...DefaultDrawer, data: { ...e.latlng } });
+        setDrawer({ ...DefaultDrawer, data: { ...markerData, ...e.latlng } });
       }
     },
     dragend(e: any) {
