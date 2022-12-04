@@ -9,7 +9,7 @@ import { SelectButton } from "primereact/selectbutton";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useGetAllMapImages, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { MapLayerType, MapType } from "../../types/mapTypes";
@@ -32,7 +32,7 @@ function FileUploadItemTemplate(
 ) {
   const { name, objectURL } = file;
   return (
-    <div className="flex w-full items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <img alt="Error" className="w-12" src={objectURL} />
       <p className="truncate">{name}</p>
       <SelectButton
@@ -147,16 +147,17 @@ function UpdateMapLayers() {
   const { project_id } = useParams();
   const [dialog] = useAtom(DialogAtom);
   const currentMap = useGetItem(project_id as string, dialog.data?.id, "maps") as MapType;
+  const { data: map_images } = useGetAllMapImages(project_id as string);
   const createMapLayer = useCreateSubItem(project_id as string, "map_layers", "maps");
+  const updateMapLayer = useUpdateSubItem("map_layers");
   const [layers, setLayers] = useState<MapLayerType[]>(currentMap?.map_layers || []);
-
   useEffect(() => {
     if (currentMap?.map_layers) setLayers(currentMap.map_layers);
   }, [currentMap?.map_layers]);
 
   return (
     <>
-      <div className="mb-2 flex w-full items-center justify-between">
+      <div className="flex items-center justify-between w-full mb-2">
         <span className="font-medium text-blue-300">New Layer</span>
         <Button
           className="p-button-outlined"
@@ -169,83 +170,86 @@ function UpdateMapLayers() {
           <Icon icon="mdi:layers-plus" />
         </Button>
       </div>
-      <div className="flex w-min flex-wrap items-center gap-y-1">
+
+      <div className="flex flex-wrap items-center w-min gap-y-1">
+        <span className="w-full text-sm text-zinc-400">Only layers with a set map image will be visible</span>
+
         {layers &&
-          layers
-            .sort((a: MapLayerType, b: MapLayerType) => {
-              if (a.title > b.title) return 1;
-              if (a.title < b.title) return -1;
-              return 0;
-            })
-            .map((layer: MapLayerType) => (
-              <div key={layer.id} className="flex w-full items-center justify-start gap-x-2">
-                <InputText
-                  className="w-48"
+          layers.map((layer: MapLayerType) => (
+            <div key={layer.id} className="flex items-center justify-start w-full gap-x-2">
+              <InputText
+                className="w-48"
+                onChange={(e) =>
+                  setLayers((prev) =>
+                    prev?.map((stateLayer) => {
+                      if (stateLayer.id === layer.id) {
+                        return { ...layer, title: e.target.value };
+                      }
+                      return stateLayer;
+                    }),
+                  )
+                }
+                value={layer.title}
+              />
+              <div className="w-48">
+                <Dropdown
+                  itemTemplate={ImageDropdownItem}
                   onChange={(e) =>
                     setLayers((prev) =>
-                      prev?.map((prevLayer) => {
-                        if (prevLayer.id === layer.id) {
-                          return { ...layer, title: e.target.value };
-                        }
-                        return prevLayer;
+                      prev.map((stateLayer) => {
+                        if (stateLayer.id === layer.id) return { ...stateLayer, image: e.value };
+                        return stateLayer;
                       }),
                     )
                   }
-                  value={layer.title}
+                  options={map_images || []}
+                  placeholder="Select map image"
+                  value={layer.image}
+                  valueTemplate={ImageDropdownValue({ map_image: layer?.image })}
                 />
-                <div className="w-48">
-                  <Dropdown
-                    itemTemplate={ImageDropdownItem}
-                    // onChange={(e) => setLayers((prev) => ({ ...prev, map_image: e.value[0] }))}
-                    // options={map_images ? [map_images] : []}
-                    placeholder="Select map image"
-                    value={layer.image}
-                    valueTemplate={ImageDropdownValue({ map_image: layer?.image })}
-                  />
-                </div>
-                <div className="flex w-fit gap-x-4">
-                  <Button
-                    className="p-button-outlined p-button-success w-24"
-                    icon="pi pi-save"
-                    // onClick={() => {
-                    //   updateMapLayerMutation.mutate({
-                    //     id: layer.id,
-                    //     title: layer.title,
-                    //     map_id: visible.map_id,
-                    //     public: layer.public,
-                    //     image: layer.image,
-                    //   });
-                    // }}
-                  />
-                  <Button
-                    className={`p-button-outlined w-1/12 p-button-${layer.public ? "info" : "secondary"}`}
-                    icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
-                    onClick={() => {
-                      setLayers((prev) =>
-                        prev?.map((prevLayer) => {
-                          if (prevLayer.id === layer.id) {
-                            return { ...layer, public: !layer.public };
-                          }
-                          return prevLayer;
-                        }),
-                      );
-                    }}
-                    tooltip="Toggle public"
-                  />
-                  <Button
-                    className="p-button-outlined p-button-danger w-1/12"
-                    icon="pi pi-trash"
-                    // onClick={() =>
-                    //   deleteMapLayerMutation.mutate({
-                    //     id: layer.id,
-                    //     project_id: project_id as string,
-                    //     map_id: visible.map_id,
-                    //   })
-                    // }
-                  />
-                </div>
               </div>
-            ))}
+              <div className="flex w-fit gap-x-4">
+                <Button
+                  className="w-24 p-button-outlined p-button-success"
+                  icon="pi pi-save"
+                  onClick={() => {
+                    updateMapLayer.mutate({
+                      id: layer.id,
+                      title: layer.title,
+                      public: layer.public,
+                      image: layer.image,
+                    });
+                  }}
+                />
+                <Button
+                  className={`p-button-outlined w-1/12 p-button-${layer.public ? "info" : "secondary"}`}
+                  icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
+                  onClick={() => {
+                    setLayers((prev) =>
+                      prev?.map((prevLayer) => {
+                        if (prevLayer.id === layer.id) {
+                          return { ...layer, public: !layer.public };
+                        }
+                        return prevLayer;
+                      }),
+                    );
+                  }}
+                  tooltip="Toggle public"
+                />
+                <Button
+                  className="w-1/12 p-button-outlined p-button-danger"
+                  icon="pi pi-trash"
+                  // onClick={() =>
+                  //   deleteMapLayerMutation.mutate({
+                  //     id: layer.id,
+                  //     project_id: project_id as string,
+                  //     map_id: visible.map_id,
+                  //   })
+                  // }
+                />
+              </div>
+            </div>
+          ))}
       </div>
     </>
   );

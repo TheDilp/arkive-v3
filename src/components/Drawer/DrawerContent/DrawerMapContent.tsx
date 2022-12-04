@@ -95,7 +95,7 @@ export default function DrawerMapContent() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{map ? `Edit ${map.title}` : "Create New Document"}</h2>
+      <h2 className="text-2xl text-center">{map ? `Edit ${map.title}` : "Create New Document"}</h2>
       <InputText
         autoFocus
         className="w-full"
@@ -119,14 +119,14 @@ export default function DrawerMapContent() {
 
       <Dropdown
         itemTemplate={ImageDropdownItem}
-        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value[0] }))}
-        options={map_images ? [map_images] : []}
+        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value }))}
+        options={map_images || []}
         placeholder="Select map"
         value={localItem.map_image}
         valueTemplate={ImageDropdownValue({ map_image: localItem?.map_image })}
       />
       <AutoComplete
-        className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
+        className="w-full mapTagsAutocomplete max-h-40 border-zinc-600"
         completeMethod={filterTags}
         multiple
         onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
@@ -156,7 +156,7 @@ export default function DrawerMapContent() {
         />
       </div>
       <Button
-        className="p-button-outlined p-button-success ml-auto"
+        className="ml-auto p-button-outlined p-button-success"
         onClick={() => {
           CreateUpdateMap(localItem);
         }}

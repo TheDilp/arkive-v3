@@ -95,6 +95,26 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
     },
   );
   server.post(
+    "/updatemaplayer/:id",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const updatedMapLayer = await prisma.map_layers.update({
+          data: removeNull(JSON.parse(req.body)) as any,
+          where: { id: req.params.id },
+        });
+        return updatedMapLayer;
+      } catch (error: any) {
+        console.log(error);
+        return new Error(error);
+      }
+    },
+  );
+  server.post(
     "/updatemap/:id",
     async (
       req: FastifyRequest<{

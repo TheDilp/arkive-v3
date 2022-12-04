@@ -17,5 +17,6 @@ export const updateURL = (id: string, type: AllAvailableTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${updateURLs.updateDocument}${id}`;
   if (type === "maps") return `${baseURLS.baseServer}${updateURLs.updateMap}${id}`;
   if (type === "map_pins") return `${baseURLS.baseServer}${updateURLs.updateMapPin}${id}`;
+  if (type === "map_layers") return `${baseURLS.baseServer}${updateURLs.updateMapLayer}${id}`;
   return null;
 };
