@@ -38,7 +38,7 @@ export default function MapView({ isReadOnly }: Props) {
       label: "New Token",
     },
     {
-      command: () => mapRef?.current?.flyToBounds(bounds),
+      command: () => mapRef?.current?.fitBounds(bounds),
       label: "Fit Map",
     },
   ];
@@ -58,16 +58,7 @@ export default function MapView({ isReadOnly }: Props) {
               [0, 0],
               [img.height, img.width],
             ]);
-            mapRef.current.fitBounds(
-              [
-                [0, 0],
-                [img.height, img.width],
-              ],
-              {
-                animate: false,
-              },
-            );
-          }, 250);
+          }, 1);
         }
         setLoading(false);
       };
