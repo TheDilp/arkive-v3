@@ -9,14 +9,20 @@ import { SelectButton } from "primereact/selectbutton";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem, useDeleteMutation, useGetAllMapImages, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
+import {
+  useCreateSubItem,
+  useDeleteMutation,
+  useGetAllImages,
+  useGetAllMapImages,
+  useUpdateSubItem,
+} from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { MapLayerType, MapType } from "../../types/mapTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
-import ImageDropdownItem from "../Dropdown/ImageDropdownItem";
+import { ImageDropdownItem, MapImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 
 function FileUploadItemTemplate(
@@ -33,7 +39,7 @@ function FileUploadItemTemplate(
 ) {
   const { name, objectURL } = file;
   return (
-    <div className="flex items-center justify-between w-full">
+    <div className="flex w-full items-center justify-between">
       <img alt="Error" className="w-12" src={objectURL} />
       <p className="truncate">{name}</p>
       <SelectButton
@@ -159,7 +165,7 @@ function UpdateMapLayers() {
 
   return (
     <>
-      <div className="flex items-center justify-between w-full mb-2">
+      <div className="mb-2 flex w-full items-center justify-between">
         <span className="font-medium text-blue-300">New Layer</span>
         <Button
           className="p-button-outlined"
@@ -173,12 +179,12 @@ function UpdateMapLayers() {
         </Button>
       </div>
 
-      <div className="flex flex-wrap items-center w-min gap-y-1">
+      <div className="flex w-min flex-wrap items-center gap-y-1">
         <span className="w-full text-sm text-zinc-400">Only layers with a set map image will be visible</span>
 
         {layers &&
           layers.map((layer: MapLayerType) => (
-            <div key={layer.id} className="flex items-center justify-start w-full gap-x-2">
+            <div key={layer.id} className="flex w-full items-center justify-start gap-x-2">
               <InputText
                 className="w-48"
                 onChange={(e) =>
@@ -195,7 +201,7 @@ function UpdateMapLayers() {
               />
               <div className="w-48">
                 <Dropdown
-                  itemTemplate={ImageDropdownItem}
+                  itemTemplate={MapImageDropdownItem}
                   onChange={(e) =>
                     setLayers((prev) =>
                       prev.map((stateLayer) => {
@@ -212,7 +218,7 @@ function UpdateMapLayers() {
               </div>
               <div className="flex w-fit gap-x-4">
                 <Button
-                  className="w-24 p-button-outlined p-button-success"
+                  className="p-button-outlined p-button-success w-24"
                   icon="pi pi-save"
                   onClick={() => {
                     updateMapLayer.mutate({
@@ -251,7 +257,7 @@ function UpdateMapLayers() {
                   tooltip="Toggle public"
                 />
                 <Button
-                  className="w-1/12 p-button-outlined p-button-danger"
+                  className="p-button-outlined p-button-danger w-1/12"
                   icon="pi pi-trash"
                   onClick={() => deleteMapLayer.mutate(layer.id)}
                 />
@@ -260,6 +266,34 @@ function UpdateMapLayers() {
           ))}
       </div>
     </>
+  );
+}
+function InsertEditorImage() {
+  const { project_id } = useParams();
+  const { data: images } = useGetAllImages(project_id as string);
+  const [dialog] = useAtom(DialogAtom);
+  const [localImage, setLocalImage] = useState("");
+
+  return (
+    <div>
+      <Dropdown
+        itemTemplate={ImageDropdownItem}
+        onChange={(e) => setLocalImage(e.value)}
+        options={images || []}
+        placeholder="Select map"
+        value={localImage}
+        valueTemplate={ImageDropdownValue({ map_image: localImage })}
+      />
+      <Button
+        className="p-button-rounded p-button-outlined"
+        icon="pi pi-image"
+        iconPos="right"
+        onClick={() => {
+          dialog.data?.insertImage({ src: `${baseURLS.baseServer}getimage/images/${project_id}/${localImage}` });
+          console.log(`${baseURLS.baseServer}getimage/images/${project_id}/${localImage}`);
+        }}
+      />
+    </div>
   );
 }
 export default function DialogWrapper() {
@@ -271,6 +305,7 @@ export default function DialogWrapper() {
       header={() => {
         if (dialog.type === "files") return "Upload Files";
         if (dialog.type === "map_layer") return "Edit Map Layers";
+        if (dialog.type === "editor_image") return "Insert An Image";
         if (uploading) return "Uploading...";
         return null;
       }}
@@ -282,6 +317,7 @@ export default function DialogWrapper() {
       visible={dialog.show}>
       {dialog.type === "files" && <QuickUploadDialog setUploading={setUploading} />}
       {dialog.type === "map_layer" && <UpdateMapLayers />}
+      {dialog.type === "editor_image" && <InsertEditorImage />}
     </Dialog>
   );
 }

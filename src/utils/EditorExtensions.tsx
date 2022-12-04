@@ -21,6 +21,7 @@ import {
   TaskListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
+
 import DocumentMention from "../components/Mention/DocumentMention";
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
 
@@ -71,7 +72,7 @@ export const DefaultEditorExtensions = () => {
     }),
     new HorizontalRuleExtension(),
     new CalloutExtension(),
-    // new NodeFormattingExtension(),
+    new NodeFormattingExtension(),
     new HardBreakExtension(),
     new MarkdownExtension(),
     CustomMentionExtension,

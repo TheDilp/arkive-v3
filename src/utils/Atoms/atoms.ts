@@ -7,7 +7,7 @@ import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefau
 
 export type DialogAtomType = {
   id: null | string;
-  type: null | "files" | "map_layer";
+  type: null | "files" | "map_layer" | "editor_image";
   position?: DialogPositionType;
   modal?: boolean;
   fullscreen?: boolean;
