@@ -95,7 +95,7 @@ export default function DrawerMapContent() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{map ? `Edit ${map.title}` : "Create New Document"}</h2>
+      <h2 className="text-center text-2xl">{map ? `Edit ${map.title}` : "Create New Map"}</h2>
       <InputText
         autoFocus
         className="w-full"

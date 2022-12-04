@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction } from "react";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerBoardContent from "./DrawerContent/DrawerBoardContent";
 import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent";
 import DrawerMapContent from "./DrawerContent/DrawerMapContent";
@@ -46,7 +47,7 @@ export default function Drawer() {
       {drawer.type === "documents" && drawer.exceptions?.fromTemplate ? <DrawerFromTemplateContent /> : null}
       {drawer.type === "maps" ? <DrawerMapContent /> : null}
       {drawer.type === "map_pins" ? <DrawerMapPinContent /> : null}
-      {drawer.type === "boards" ? <DrawerMapPinContent /> : null}
+      {drawer.type === "boards" ? <DrawerBoardContent /> : null}
     </PrimeDrawer>
   );
 }

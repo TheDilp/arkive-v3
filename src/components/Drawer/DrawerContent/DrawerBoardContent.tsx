@@ -10,8 +10,10 @@ import { useParams } from "react-router-dom";
 import { useCreateItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../../CRUD/queries";
 import { useGetItem } from "../../../hooks/getItemHook";
+import { BoardCreateType, BoardType } from "../../../types/boardTypes";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -25,40 +27,40 @@ export default function DrawerBoardContent() {
   const createBoardMutation = useCreateItem("boards");
   // const { data: initialTags } = useGetAllTags(project_id as string, "maps");
 
-  const board = useGetItem(project_id as string, drawer?.id, "boards") as MapType;
-  const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
+  const board = useGetItem(project_id as string, drawer?.id, "boards") as BoardType;
+  const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     board ?? {
       ...DefaultMap,
       project_id: project_id as string,
     },
   );
 
-  const [tags, setTags] = useState({ selected: board?.tags || [], suggestions: initialTags });
+  // const [tags, setTags] = useState({ selected: board?.tags || [], suggestions: initialTags });
 
-  const filterTags = (e: AutoCompleteCompleteMethodParams) => {
-    const { query } = e;
-    if (query && initialTags)
-      setTags((prev) => ({
-        ...prev,
-        suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
-      }));
+  // const filterTags = (e: AutoCompleteCompleteMethodParams) => {
+  //   const { query } = e;
+  //   if (query && initialTags)
+  //     setTags((prev) => ({
+  //       ...prev,
+  //       suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
+  //     }));
 
-    if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
-  };
-  const handleTagsChange = (value: string) => {
-    if (board && !board.tags.includes(value)) {
-      updateBoardMutation?.mutate({
-        id: board.id,
-        tags: [...board.tags, value],
-      });
-    } else if (board.tags.includes(value)) {
-      updateBoardMutation?.mutate({
-        id: board.id,
-        tags: board.tags.filter((tag) => tag !== value),
-      });
-    }
-  };
-  function CreateUpdateMap(newData: MapCreateType) {
+  //   if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
+  // };
+  // const handleTagsChange = (value: string) => {
+  //   if (board && !board.tags.includes(value)) {
+  //     updateBoardMutation?.mutate({
+  //       id: board.id,
+  //       tags: [...board.tags, value],
+  //     });
+  //   } else if (board.tags.includes(value)) {
+  //     updateBoardMutation?.mutate({
+  //       id: board.id,
+  //       tags: board.tags.filter((tag) => tag !== value),
+  //     });
+  //   }
+  // };
+  function CreateUpdateBoard(newData: BoardCreateType) {
     if (board) {
       updateBoardMutation?.mutate(
         {
@@ -67,16 +69,12 @@ export default function DrawerBoardContent() {
           title: newData.title,
         },
         {
-          onSuccess: () => toaster("success", "Your map was successfully updated."),
+          onSuccess: () => toaster("success", "Your board was successfully updated."),
         },
       );
     } else {
-      if (!localItem.folder && !localItem.map_image) {
-        toaster("warning", "Maps must have a map image.");
-        return;
-      }
       createBoardMutation.mutate({
-        ...DefaultMap,
+        ...DefaultBoard,
         ...newData,
       });
     }
@@ -86,7 +84,7 @@ export default function DrawerBoardContent() {
       setLocalItem(board);
     } else {
       setLocalItem({
-        ...DefaultMap,
+        ...DefaultBoard,
         project_id: project_id as string,
       });
     }
@@ -94,7 +92,7 @@ export default function DrawerBoardContent() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Document"}</h2>
+      <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
       <InputText
         autoFocus
         className="w-full"
@@ -116,15 +114,7 @@ export default function DrawerBoardContent() {
         value={localItem?.title || ""}
       />
 
-      <Dropdown
-        itemTemplate={MapImageDropdownItem}
-        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value }))}
-        options={map_images || []}
-        placeholder="Select map"
-        value={localItem.map_image}
-        valueTemplate={ImageDropdownValue({ map_image: localItem?.map_image })}
-      />
-      <AutoComplete
+      {/* <AutoComplete
         className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
         completeMethod={filterTags}
         multiple
@@ -141,7 +131,7 @@ export default function DrawerBoardContent() {
         placeholder="Add Tags"
         suggestions={tags.suggestions}
         value={board?.tags}
-      />
+      /> */}
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox
@@ -157,7 +147,7 @@ export default function DrawerBoardContent() {
       <Button
         className="p-button-outlined p-button-success ml-auto"
         onClick={() => {
-          CreateUpdateMap(localItem);
+          CreateUpdateBoard(localItem);
         }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}

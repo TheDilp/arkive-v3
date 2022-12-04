@@ -54,3 +54,9 @@ export type BoardType = {
   defaultEdgeColor: string;
   project_id: string;
 };
+
+export type DefaultBoardType = Omit<BoardType, "id" | "project_id">;
+
+export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
+  project_id: string;
+};
