@@ -90,14 +90,6 @@ export default function MapView({ isReadOnly }: Props) {
               isReadOnly={isReadOnly}
               src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
             />
-            <ImageOverlay
-              ref={imgRef}
-              bounds={[
-                [0, 0],
-                [0, 0],
-              ]}
-              url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
-            />
           </MapContainer>
         </div>
       ) : null}
