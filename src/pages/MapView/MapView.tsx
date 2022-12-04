@@ -73,37 +73,40 @@ export default function MapView({ isReadOnly }: Props) {
     //  Wait for map to finish loading
   }, [bounds]);
   return (
-    <div className="flex w-full flex-1 flex-col">
+    <div className="flex flex-col flex-1 w-full h-full">
       <ContextMenu cm={cm} items={items} />
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
-      <MapContainer
-        ref={mapRef}
-        attributionControl={false}
-        bounds={bounds as LatLngBoundsExpression}
-        center={[bounds[1][0] / 2, bounds[1][1] / 2]}
-        className="h-full w-full flex-1 bg-zinc-900 outline-none"
-        crs={CRS.Simple}
-        maxZoom={2}
-        minZoom={-3}
-        scrollWheelZoom
-        zoom={0}
-        zoomSnap={0}>
-        <MapImage
+      {/* This div is needed for layers to properly work */}
+      <div className="w-full h-full">
+        <MapContainer
+          ref={mapRef}
+          attributionControl={false}
           bounds={bounds as LatLngBoundsExpression}
-          cm={cm}
-          imgRef={imgRef}
-          isReadOnly={isReadOnly}
-          src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
-        />
-        <ImageOverlay
-          ref={imgRef}
-          bounds={[
-            [0, 0],
-            [0, 0],
-          ]}
-          url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
-        />
-      </MapContainer>
+          center={[bounds[1][0] / 2, bounds[1][1] / 2]}
+          className="flex-1 w-full h-full outline-none bg-zinc-900"
+          crs={CRS.Simple}
+          maxZoom={2}
+          minZoom={-3}
+          scrollWheelZoom
+          zoom={0}
+          zoomSnap={0}>
+          <MapImage
+            bounds={bounds as LatLngBoundsExpression}
+            cm={cm}
+            imgRef={imgRef}
+            isReadOnly={isReadOnly}
+            src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
+          />
+          <ImageOverlay
+            ref={imgRef}
+            bounds={[
+              [0, 0],
+              [0, 0],
+            ]}
+            url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
+          />
+        </MapContainer>
+      </div>
     </div>
   );
 }

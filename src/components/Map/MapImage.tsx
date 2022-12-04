@@ -57,7 +57,6 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
-
   return (
     <div>
       <LayersControl position="topright">
@@ -95,7 +94,7 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
           </LayerGroup>
         </LayersControl.Overlay>
         <LayerGroup>
-          {currentMap?.map_layers
+          {currentMap?.map_layers?.length
             ? currentMap.map_layers
                 .sort((a, b) => {
                   if (a.title > b.title) return 1;
@@ -109,7 +108,9 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
                       <ImageOverlay
                         ref={imgRef}
                         bounds={bounds}
+                        className="leafletImageOverlayLayer "
                         url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${layer.image}`}
+                        zIndex={9999}
                       />
                     </LayersControl.Overlay>
                   );
