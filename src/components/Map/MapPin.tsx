@@ -3,7 +3,7 @@ import L, { LatLngExpression } from "leaflet";
 import { MutableRefObject, useState } from "react";
 import ReactDOM from "react-dom/server";
 import { Marker, Tooltip } from "react-leaflet";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { MapPinType } from "../../types/mapTypes";
@@ -21,7 +21,8 @@ export default function MapPin({
 }) {
   const { id, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, public: markerPublic } = markerData;
   const navigate = useNavigate();
-  const updateMarkerMutation = useUpdateSubItem("map_pins", "maps");
+  const { project_id } = useParams();
+  const updateMapPin = useUpdateSubItem(project_id as string, "map_pins", "maps");
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setMapContext] = useAtom(MapContextAtom);
@@ -42,14 +43,14 @@ export default function MapPin({
       if (!readOnly) {
         setMapContext({ type: "pin" });
         cm.current.show(e.originalEvent);
-        setDrawer({ ...DefaultDrawer, data: { ...markerData, ...e.latlng } });
+        setDrawer({ ...DefaultDrawer, id, data: { ...markerData, ...e.latlng } });
       }
     },
     dragend(e: any) {
       if (!readOnly) {
         // eslint-disable-next-line no-underscore-dangle
         setPosition(e.target._latlng);
-        updateMarkerMutation.mutate({
+        updateMapPin.mutate({
           id,
           lat: e.target._latlng.lat,
           lng: e.target._latlng.lng,

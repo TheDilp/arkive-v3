@@ -150,7 +150,7 @@ function UpdateMapLayers() {
   const currentMap = useGetItem(project_id as string, dialog.data?.id, "maps") as MapType;
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const createMapLayer = useCreateSubItem(project_id as string, "map_layers", "maps");
-  const updateMapLayer = useUpdateSubItem("map_layers", "maps");
+  const updateMapLayer = useUpdateSubItem(project_id as string, "map_layers", "maps");
   const deleteMapLayer = useDeleteMutation("map_layers", project_id as string);
   const [layers, setLayers] = useState<MapLayerType[]>(currentMap?.map_layers || []);
   useEffect(() => {

@@ -46,7 +46,7 @@ export default function MapView({ isReadOnly }: Props) {
         ]
       : [
           {
-            command: () => setDrawer({ ...DefaultDrawer, data: drawer?.data, position: "left", show: true, type: "map_pins" }),
+            command: () => setDrawer((prev) => ({ ...prev, position: "left", show: true, type: "map_pins" })),
             icon: "pi pi-fw pi-pencil",
             label: "Edit Pin",
           },

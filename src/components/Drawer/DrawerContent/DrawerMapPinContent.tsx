@@ -8,9 +8,10 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem, useGetAllItems } from "../../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useGetItem } from "../../../hooks/getItemHook";
 import { DocumentType } from "../../../types/documentTypes";
-import { MapType } from "../../../types/mapTypes";
+import { MapPinCreateType, MapPinType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { IconSelect } from "../../IconSelect/IconSelect";
@@ -18,21 +19,26 @@ import { IconSelect } from "../../IconSelect/IconSelect";
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const [drawer] = useAtom(DrawerAtom);
-  const createSubItemMutation = useCreateSubItem(project_id as string, "map_pins");
+  const createMapPin = useCreateSubItem(project_id as string, "map_pins", "maps");
+  const updateMapPin = useUpdateSubItem(project_id as string, "map_pins", "maps");
+  const map = useGetItem(project_id as string, drawer?.data?.parent, "maps") as MapType;
+  const currentPin = map?.map_pins.find((pin) => pin.id === drawer.id);
   const { data: documents } = useGetAllItems(project_id as string, "documents");
   const { data: maps } = useGetAllItems(project_id as string, "maps");
-  const [localItem, setLocalItem] = useState({
-    backgroundColor: "#000000",
-    color: "#ffffff",
-    icon: "mdi:user",
-    lat: drawer?.data?.lat,
-    lng: drawer?.data?.lng,
-    parent: item_id,
-    public: false,
-    text: "",
-  });
+  const [localItem, setLocalItem] = useState<MapPinType | MapPinCreateType>(
+    currentPin ?? {
+      backgroundColor: "#000000",
+      color: "#ffffff",
+      icon: "mdi:user",
+      lat: drawer?.data?.lat,
+      lng: drawer?.data?.lng,
+      parent: item_id as string,
+      public: false,
+      text: "",
+    },
+  );
   return (
-    <div className="flex w-full flex-col gap-y-5">
+    <div className="flex flex-col w-full gap-y-5">
       <div className="flex flex-wrap items-center">
         <h4 className="w-full text-lg underline">Marker Text</h4>
         <InputText
@@ -46,7 +52,7 @@ export default function DrawerMapPinContent() {
         <h4 className="w-full text-lg underline">Marker Icon</h4>
         <IconSelect setIcon={(newIcon) => setLocalItem((prev) => ({ ...prev, icon: newIcon }))}>
           <Icon
-            className="cursor-pointer rounded-full hover:bg-sky-400"
+            className="rounded-full cursor-pointer hover:bg-sky-400"
             color={localItem.color}
             fontSize={24}
             icon={localItem.icon}
@@ -97,9 +103,10 @@ export default function DrawerMapPinContent() {
         />
       </div>
       <Button
-        className="p-button-outlined p-button-success ml-auto"
+        className="ml-auto p-button-outlined p-button-success"
         onClick={() => {
-          createSubItemMutation.mutate(localItem);
+          if (localItem?.id) updateMapPin.mutate(localItem);
+          else createMapPin.mutate(localItem);
         }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}

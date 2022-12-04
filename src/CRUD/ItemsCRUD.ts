@@ -139,7 +139,7 @@ export const useUpdateItem = (type: AllAvailableTypes) => {
     },
   );
 };
-export const useUpdateSubItem = (subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useUpdateSubItem = (project_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -158,7 +158,7 @@ export const useUpdateSubItem = (subType: AvailableSubItemTypes, type: Available
       onError: () => toaster("error", "There was an error updating this item."),
       onSuccess: async (data) => {
         const newData: AllItemsType = await data?.json();
-        if (newData) queryClient.refetchQueries(["allItems", newData.project_id, type]);
+        if (newData) queryClient.refetchQueries(["allItems", project_id, type]);
       },
     },
   );
