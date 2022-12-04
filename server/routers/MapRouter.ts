@@ -176,6 +176,23 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       });
     },
   );
+  server.delete(
+    "/deletemappin/:id",
+    async (
+      req: FastifyRequest<{
+        Params: { id: string };
+      }>,
+    ) => {
+      await prisma.map_pins.deleteMany({
+        where: {
+          parent: req.params.id,
+        },
+      });
+      await prisma.map_pins.delete({
+        where: { id: req.params.id },
+      });
+    },
+  );
 
   done();
 };

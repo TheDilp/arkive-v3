@@ -7,10 +7,12 @@ import { useParams } from "react-router-dom";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
+import { useDeleteMutation } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapPinType, MapType } from "../../types/mapTypes";
 import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
+import { deleteItem } from "../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 type Props = {
@@ -19,6 +21,7 @@ type Props = {
 
 export default function MapView({ isReadOnly }: Props) {
   const { project_id, item_id, pin_id } = useParams();
+  const deleteMapPin = useDeleteMutation("map_pins", project_id as string);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
@@ -49,6 +52,13 @@ export default function MapView({ isReadOnly }: Props) {
             command: () => setDrawer((prev) => ({ ...prev, position: "left", show: true, type: "map_pins" })),
             icon: "pi pi-fw pi-pencil",
             label: "Edit Pin",
+          },
+          {
+            command: () => {
+              if (drawer?.id) deleteMapPin.mutate(drawer.id);
+            },
+            icon: "pi pi-fw pi-trash",
+            label: "Delete Pin",
           },
         ];
   const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
