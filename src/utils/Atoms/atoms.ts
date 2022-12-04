@@ -27,3 +27,5 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
 
 export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
+
+export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null });

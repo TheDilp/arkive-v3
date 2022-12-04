@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useGetItem } from "../../hooks/getItemHook";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapPinType, MapType } from "../../types/mapTypes";
-import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import MapPin from "./MapPin";
 
@@ -23,6 +23,28 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
   const { project_id, item_id } = useParams();
   const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
+
+  const PinFilter = (mapPin: MapPinType) => {
+    if (isReadOnly) {
+      if (mapPin.public) {
+        if (markerFilter === "map") {
+          return false;
+        }
+        if (markerFilter === "doc") {
+          return mapPin.doc_id;
+        }
+        return true;
+      }
+      return false;
+    }
+    if (markerFilter === "map") {
+      return mapPin.map_link;
+    }
+    if (markerFilter === "doc") {
+      return mapPin.doc_id;
+    }
+    return true;
+  };
   const handleKeyUp = (e: KeyboardEvent) => {
     if (!e.shiftKey && !e.altKey) {
       setMarkerFilter(false);
@@ -40,10 +62,12 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
     }
   };
   const [, setDrawer] = useAtom(DrawerAtom);
+  const [, setMapContext] = useAtom(MapContextAtom);
   // eslint-disable-next-line no-unused-vars
   const map = useMapEvents({
     contextmenu(e: any) {
       if (!isReadOnly) {
+        setMapContext({ type: "map" });
         cm.current.show(e.originalEvent);
         setDrawer({ ...DefaultDrawer, data: { ...e.latlng } });
       }
@@ -69,28 +93,8 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
           <LayerGroup>
             {currentMap?.map_pins &&
               currentMap?.map_pins
-                ?.filter((mapPin: MapPinType) => {
-                  if (isReadOnly) {
-                    if (mapPin.public) {
-                      if (markerFilter === "map") {
-                        return false;
-                      }
-                      if (markerFilter === "doc") {
-                        return mapPin.doc_id;
-                      }
-                      return true;
-                    }
-                    return false;
-                  }
-                  if (markerFilter === "map") {
-                    return mapPin.map_link;
-                  }
-                  if (markerFilter === "doc") {
-                    return mapPin.doc_id;
-                  }
-                  return true;
-                })
-                .map((pin) => <MapPin key={pin.id} pinData={pin} readOnly={isReadOnly} />)}
+                ?.filter(PinFilter)
+                .map((pin) => <MapPin key={pin.id} cm={cm} pinData={pin} readOnly={isReadOnly} />)}
           </LayerGroup>
         </LayersControl.Overlay>
         <LayerGroup>
