@@ -324,7 +324,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error </div>;
-  console.log(items);
   return (
     <>
       <ConfirmDialog />
@@ -354,12 +353,10 @@ export default function BaseTree({ isTemplates, type }: Props) {
       <Tree
         canDrop={(tree, { dragSource, dropTargetId }) => {
           const depth = getDepth(tree, dropTargetId);
+          if (dragSource?.id === dropTargetId) return false;
           // Don't allow nesting documents beyond this depth
           if (depth > 5) return false;
-          if (dragSource?.parent === dropTargetId) {
-            return true;
-          }
-          return false;
+          return true;
         }}
         classes={{
           container: "list-none flex-1 flex flex-col",
@@ -374,11 +371,11 @@ export default function BaseTree({ isTemplates, type }: Props) {
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;
           handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
-          if (type === "documents")
-            updateItemMutation?.mutate({
-              id: dragSourceId as string,
-              parent: dropTargetId === "0" ? null : (dropTargetId as string),
-            });
+          // if (type === "documents")
+          //   updateItemMutation?.mutate({
+          //     id: dragSourceId as string,
+          //     parent: dropTargetId === "0" ? null : (dropTargetId as string),
+          //   });
         }}
         // @ts-ignore
         placeholderRender={Placeholder}

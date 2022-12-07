@@ -37,6 +37,7 @@ export enum updateURLs {
   updateMap = "updatemap/",
   updateMapPin = "updatemappin/",
   updateMapLayer = "updatemaplayer/",
+  updateBoard = "updateboard/",
 
   sortDocuments = "sortdocuments",
   sortMaps = "sortmaps",
