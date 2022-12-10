@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
+import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
@@ -71,6 +72,8 @@ export default function DrawerBoardContent() {
           folder: newData.folder,
           id: board.id,
           title: newData.title,
+          defaultNodeColor: newData.defaultNodeColor,
+          defaultEdgeColor: newData.defaultEdgeColor,
         },
         {
           onSuccess: () => toaster("success", "Your board was successfully updated."),
@@ -136,6 +139,30 @@ export default function DrawerBoardContent() {
         suggestions={tags.suggestions}
         value={board?.tags}
       />
+      <div className="flex flex-wrap items-center justify-between">
+        <h4 className="w-full text-lg underline">Default Node Color</h4>
+
+        <ColorPicker
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultNodeColor: `#${e.value}` as string }))}
+          value={localItem.defaultNodeColor}
+        />
+        <InputText
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultNodeColor: e.target.value }))}
+          value={localItem.defaultNodeColor}
+        />
+      </div>
+      <div className="flex flex-wrap items-center justify-between">
+        <h4 className="w-full text-lg underline">Default Edge Color</h4>
+
+        <ColorPicker
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultEdgeColor: `#${e.value}` as string }))}
+          value={localItem.defaultEdgeColor}
+        />
+        <InputText
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultEdgeColor: e.target.value }))}
+          value={localItem.defaultEdgeColor}
+        />
+      </div>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox

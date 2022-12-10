@@ -38,7 +38,7 @@ export default function DrawerMapPinContent() {
     },
   );
   return (
-    <div className="flex flex-col w-full gap-y-5">
+    <div className="flex w-full flex-col gap-y-5">
       <div className="flex flex-wrap items-center">
         <h4 className="w-full text-lg underline">Marker Text</h4>
         <InputText
@@ -52,10 +52,10 @@ export default function DrawerMapPinContent() {
         <h4 className="w-full text-lg underline">Marker Icon</h4>
         <IconSelect setIcon={(newIcon) => setLocalItem((prev) => ({ ...prev, icon: newIcon }))}>
           <Icon
-            className="rounded-full cursor-pointer hover:bg-sky-400"
+            className="cursor-pointer rounded-full hover:bg-sky-400"
             color={localItem.color}
             fontSize={24}
-            icon={localItem.icon}
+            icon={localItem.icon ?? "mdi:map-pin"}
             inline
           />
         </IconSelect>
@@ -103,7 +103,7 @@ export default function DrawerMapPinContent() {
         />
       </div>
       <Button
-        className="ml-auto p-button-outlined p-button-success"
+        className="p-button-outlined p-button-success ml-auto"
         onClick={() => {
           if (localItem?.id) updateMapPin.mutate(localItem);
           else createMapPin.mutate(localItem);
