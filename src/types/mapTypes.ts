@@ -1,3 +1,5 @@
+import { BaseItemType } from "./generalTypes";
+
 // Map Pins
 export type MapPinType = {
   id: string;
@@ -22,20 +24,11 @@ export type MapLayerType = {
   public: boolean;
 };
 
-export type MapType = {
-  id: string;
-  project_id: string;
-  title: string;
-  folder: boolean;
-  public: boolean;
-  expanded: boolean;
-  sort: number;
-  tags: string[];
-  parent: string | null;
+export interface MapType extends BaseItemType {
   map_image?: string;
   map_pins: MapPinType[];
   map_layers: MapLayerType[];
-};
+}
 
 export type MapCreateType = Partial<Omit<MapType, "project_id">> & {
   project_id: string;

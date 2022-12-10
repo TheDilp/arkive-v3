@@ -13,6 +13,7 @@ export type AllItemsType = DocumentType | MapType | BoardType;
 export type AllSubItemsType = MapPinType | MapLayerType;
 
 export type IconSelectMenuType = {
+  // eslint-disable-next-line no-unused-vars
   setIcon: (newIcon: string) => void;
   close: () => void;
 };
@@ -22,3 +23,15 @@ export type EditorType = {
   editable?: boolean;
 };
 export type BreadcrumbsType = { template: React.ReactNode }[];
+
+export interface BaseItemType {
+  id: string;
+  project_id: string;
+  title: string;
+  parent: string;
+  sort: number;
+  folder: boolean;
+  public: boolean;
+  expanded: boolean;
+  tags: string[];
+}

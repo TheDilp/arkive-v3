@@ -25,7 +25,7 @@ export default function DrawerBoardContent() {
   const [drawer] = useAtom(DrawerAtom);
   const updateBoardMutation = useUpdateItem("boards");
   const createBoardMutation = useCreateItem("boards");
-  // const { data: initialTags } = useGetAllTags(project_id as string, "maps");
+  const { data: initialTags } = useGetAllTags(project_id as string, "boards");
   const { data: boards } = useGetAllItems(project_id as string, "boards");
   const board = useGetItem(project_id as string, drawer?.id, "boards") as BoardType;
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
@@ -35,31 +35,31 @@ export default function DrawerBoardContent() {
     },
   );
 
-  // const [tags, setTags] = useState({ selected: board?.tags || [], suggestions: initialTags });
+  const [tags, setTags] = useState({ selected: board?.tags || [], suggestions: initialTags });
 
-  // const filterTags = (e: AutoCompleteCompleteMethodParams) => {
-  //   const { query } = e;
-  //   if (query && initialTags)
-  //     setTags((prev) => ({
-  //       ...prev,
-  //       suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
-  //     }));
+  const filterTags = (e: AutoCompleteCompleteMethodParams) => {
+    const { query } = e;
+    if (query && initialTags)
+      setTags((prev) => ({
+        ...prev,
+        suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
+      }));
 
-  //   if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
-  // };
-  // const handleTagsChange = (value: string) => {
-  //   if (board && !board.tags.includes(value)) {
-  //     updateBoardMutation?.mutate({
-  //       id: board.id,
-  //       tags: [...board.tags, value],
-  //     });
-  //   } else if (board.tags.includes(value)) {
-  //     updateBoardMutation?.mutate({
-  //       id: board.id,
-  //       tags: board.tags.filter((tag) => tag !== value),
-  //     });
-  //   }
-  // };
+    if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
+  };
+  const handleTagsChange = (value: string) => {
+    if (board && !board.tags.includes(value)) {
+      updateBoardMutation?.mutate({
+        id: board.id,
+        tags: [...board.tags, value],
+      });
+    } else if (board.tags.includes(value)) {
+      updateBoardMutation?.mutate({
+        id: board.id,
+        tags: board.tags.filter((tag) => tag !== value),
+      });
+    }
+  };
   function CreateUpdateBoard(newData: BoardCreateType) {
     if (board) {
       if (boards?.some((item) => item.parent === newData.id) && !newData.folder) {
@@ -118,8 +118,8 @@ export default function DrawerBoardContent() {
         value={localItem?.title || ""}
       />
 
-      {/* <AutoComplete
-        className="w-full mapTagsAutocomplete max-h-40 border-zinc-600"
+      <AutoComplete
+        className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
         completeMethod={filterTags}
         multiple
         onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
@@ -135,7 +135,7 @@ export default function DrawerBoardContent() {
         placeholder="Add Tags"
         suggestions={tags.suggestions}
         value={board?.tags}
-      /> */}
+      />
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox

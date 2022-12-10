@@ -1,3 +1,5 @@
+import { BaseItemType } from "./generalTypes";
+
 export type NodeType = {
   id: string;
   label?: string;
@@ -42,18 +44,10 @@ export type EdgeType = {
   target_id: string;
   parent: string;
 };
-export type BoardType = {
-  id: string;
-  title: string;
-  folder: boolean;
-  public: boolean;
-  expanded: boolean;
-  sort: number;
-  parent: string | null;
+export interface BoardType extends BaseItemType {
   defaultNodeColor: string;
   defaultEdgeColor: string;
-  project_id: string;
-};
+}
 
 export type DefaultBoardType = Omit<BoardType, "id" | "project_id">;
 
