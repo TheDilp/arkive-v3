@@ -36,7 +36,7 @@ export default function MapPin({
         navigate(`../../${map_link}`);
       } else if (e.originalEvent.altKey && doc_id) {
         e.originalEvent.preventDefault();
-        navigate(`../../../wiki/doc/${doc_id}`);
+        navigate(`../../../documents/${doc_id}`);
       }
     },
     contextmenu: (e: any) => {
@@ -67,9 +67,9 @@ export default function MapPin({
         className: "relative",
         html: ReactDOM.renderToString(
           <div className="relative">
-            <div className="absolute w-12 h-12">
+            <div className="absolute h-12 w-12">
               <div
-                className="fixed w-full h-full p-4 rounded-full"
+                className="fixed h-full w-full rounded-full p-4"
                 onContextMenu={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -94,8 +94,8 @@ export default function MapPin({
       })}
       position={position}>
       {text && (
-        <Tooltip className="p-2 text-lg text-white bg-gray-800 border-gray-800 border-solid border-rounded-sm" direction="top">
-          <div className="text-center Lato">{text}</div>
+        <Tooltip className="border-rounded-sm border-solid border-gray-800 bg-gray-800 p-2 text-lg text-white" direction="top">
+          <div className="Lato text-center">{text}</div>
         </Tooltip>
       )}
     </Marker>

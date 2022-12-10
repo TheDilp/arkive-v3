@@ -1,6 +1,7 @@
 import { BreadCrumb } from "primereact/breadcrumb";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DocumentType } from "../../types/documentTypes";
@@ -23,8 +24,8 @@ export default function Breadcrumbs() {
       tempBreadcrumbs.push({
         template: (
           <Link
-            className="text-white fontWeight700"
-            to={`/project/${project_id}/wiki/${parent.folder ? "folder" : "doc"}/${parent.id}`}>
+            className="fontWeight700 text-white"
+            to={`/project/${project_id}/documents/${parent.folder ? "folder/" : ""}${parent.id}`}>
             {parent.title}
           </Link>
         ),
@@ -35,7 +36,6 @@ export default function Breadcrumbs() {
       const current = tempBreadcrumbs.shift();
       if (current) tempBreadcrumbs.push(current);
       setBreadcrumbs(tempBreadcrumbs);
-      return;
     }
   }
 
@@ -54,19 +54,14 @@ export default function Breadcrumbs() {
           },
         ];
 
-        recursiveFindParents(
-          currentDocument?.parent || null,
-          documents as DocumentType[],
-          tempBreadcrumbs,
-          setBreadcrumbs,
-        );
+        recursiveFindParents(currentDocument?.parent || null, documents as DocumentType[], tempBreadcrumbs, setBreadcrumbs);
       }
     }
   }, [item_id]);
 
   return (
     <BreadCrumb
-      model={breadcrumbs}
+      className="border-bottom-2 border-noround z-5 w-full border-none bg-transparent font-bold"
       home={{
         className: "flex",
         command: () => navigate("../"),
@@ -75,7 +70,7 @@ export default function Breadcrumbs() {
           height: "21px",
         },
       }}
-      className="w-full font-bold bg-transparent border-none border-bottom-2 border-noround z-5"
+      model={breadcrumbs}
       style={{
         height: "50px",
       }}

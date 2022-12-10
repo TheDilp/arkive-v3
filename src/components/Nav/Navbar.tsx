@@ -90,7 +90,7 @@ export default function Navbar() {
               fontSize={20}
               icon="mdi:books"
               onClick={async () => {
-                navigate("./wiki");
+                navigate("./documents");
               }}
             />
             <Icon

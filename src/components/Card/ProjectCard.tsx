@@ -8,7 +8,7 @@ import { buttonLabelWithIcon } from "../../utils/transform";
 
 export default function ProjectCard({ ...project }: ProjectType) {
   const header = (
-    <Link className="relative h-60 no-underline" to={`/project/${project.id}/wiki`}>
+    <Link className="relative h-60 no-underline" to={`/project/${project.id}/documents`}>
       <img alt="Card" className="h-full w-full cursor-pointer" src={defaultImage} style={{ objectFit: "fill" }} />
     </Link>
   );
