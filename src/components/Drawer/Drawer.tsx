@@ -35,7 +35,7 @@ export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   return (
     <PrimeDrawer
-      className="p-sidebar-sm"
+      className="p-sidebar-sm max-h-full overflow-y-auto"
       dismissable={false}
       icons={() => DrawerIcons(setDrawer)}
       modal={false}

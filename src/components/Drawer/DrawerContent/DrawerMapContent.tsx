@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../../CRUD/queries";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
@@ -22,6 +22,7 @@ export default function DrawerMapContent() {
   const { project_id } = useParams();
   const [drawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
+  const { data: maps } = useGetAllItems(project_id as string, "maps");
   const updateMapMutation = useUpdateItem("maps");
   const createMapMutation = useCreateItem("maps");
   const { data: initialTags } = useGetAllTags(project_id as string, "maps");
@@ -61,6 +62,10 @@ export default function DrawerMapContent() {
   };
   function CreateUpdateMap(newData: MapCreateType) {
     if (map) {
+      if (!newData.folder && maps?.some((mapItem) => mapItem.parent === map.id)) {
+        toaster("warning", "Cannot turn folder into map if it contains children");
+        return;
+      }
       updateMapMutation?.mutate(
         {
           folder: newData.folder,
@@ -95,7 +100,7 @@ export default function DrawerMapContent() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-2xl text-center">{map ? `Edit ${map.title}` : "Create New Map"}</h2>
+      <h2 className="text-center text-2xl">{map ? `Edit ${map.title}` : "Create New Map"}</h2>
       <InputText
         autoFocus
         className="w-full"
@@ -126,7 +131,7 @@ export default function DrawerMapContent() {
         valueTemplate={ImageDropdownValue({ map_image: localItem?.map_image })}
       />
       <AutoComplete
-        className="w-full mapTagsAutocomplete max-h-40 border-zinc-600"
+        className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
         completeMethod={filterTags}
         multiple
         onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
@@ -156,7 +161,7 @@ export default function DrawerMapContent() {
         />
       </div>
       <Button
-        className="ml-auto p-button-outlined p-button-success"
+        className="p-button-outlined p-button-success ml-auto"
         onClick={() => {
           CreateUpdateMap(localItem);
         }}

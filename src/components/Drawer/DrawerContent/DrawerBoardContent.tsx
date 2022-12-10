@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../../CRUD/queries";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { BoardCreateType, BoardType } from "../../../types/boardTypes";
@@ -26,7 +26,7 @@ export default function DrawerBoardContent() {
   const updateBoardMutation = useUpdateItem("boards");
   const createBoardMutation = useCreateItem("boards");
   // const { data: initialTags } = useGetAllTags(project_id as string, "maps");
-
+  const { data: boards } = useGetAllItems(project_id as string, "boards");
   const board = useGetItem(project_id as string, drawer?.id, "boards") as BoardType;
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     board ?? {
@@ -62,6 +62,10 @@ export default function DrawerBoardContent() {
   // };
   function CreateUpdateBoard(newData: BoardCreateType) {
     if (board) {
+      if (boards?.some((item) => item.parent === newData.id) && !newData.folder) {
+        toaster("warning", "Cannot convert to board if folder contains files.");
+        return;
+      }
       updateBoardMutation?.mutate(
         {
           folder: newData.folder,
@@ -92,7 +96,7 @@ export default function DrawerBoardContent() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-2xl text-center">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
+      <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
       <InputText
         autoFocus
         className="w-full"
@@ -145,7 +149,7 @@ export default function DrawerBoardContent() {
         />
       </div>
       <Button
-        className="ml-auto p-button-outlined p-button-success"
+        className="p-button-outlined p-button-success ml-auto"
         onClick={() => {
           CreateUpdateBoard(localItem);
         }}

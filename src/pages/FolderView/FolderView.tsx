@@ -8,9 +8,13 @@ import { getIcon, getType } from "../../utils/transform";
 function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: AllItemsType[] }) {
   return (
     <div className="flex flex-wrap">
-      {items.map((item: AllItemsType) => (
-        <FolderCard key={item.id} icon={getIcon(type, item)} id={item.id} isFolder={item.folder} title={item.title} />
-      ))}
+      {items?.length ? (
+        items.map((item: AllItemsType) => (
+          <FolderCard key={item.id} icon={getIcon(type, item)} id={item.id} isFolder={item.folder} title={item.title} />
+        ))
+      ) : (
+        <div className="text-zinc-600">No items in this folder.</div>
+      )}
     </div>
   );
 }
