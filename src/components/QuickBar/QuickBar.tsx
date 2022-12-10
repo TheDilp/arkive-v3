@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
+import { useAtom } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
@@ -14,15 +15,19 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { BoardExportType, BoardNodeType, BoardStateAction, BoardStateType } from "../../../types/BoardTypes";
 import { changeLockState, ColorPresets, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
+import { useGetItem } from "../../hooks/getItemHook";
+import { BoardType } from "../../types/boardTypes";
+import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
+import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
 type Props = {
   boardState: BoardStateType;
   boardStateDispatch: Dispatch<BoardStateAction>;
 };
-export default function BoardQuickBar({ boardState, boardStateDispatch }: Props) {
-  const { project_id, board_id } = useParams();
-  const { cyRef } = useContext(BoardRefsContext);
-  const board = useGetBoardData(project_id as string, board_id as string, false);
+export default function BoardQuickBar({}: Props) {
+  const { project_id, item_id } = useParams();
+  const [boardRef] = useAtom(BoardReferenceAtom);
+  const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
   const [search, setSearch] = useState("");
   const [searchDialog, setSearchDialog] = useState(false);
@@ -34,91 +39,91 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
     show: false,
   });
 
-  const updateNodeMutation = useUpdateNode(project_id as string);
-  const updateEdgeMutation = useUpdateEdge(project_id as string);
-  const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
-  const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
-  const debouncedColorPick = useDebouncedCallback(
-    // function
-    (color) => {
-      updateColor(cyRef, `#${color}`, board_id as string, updateNodeMutation, updateEdgeMutation);
-    },
-    // delay in ms
-    400,
-  );
+  //   const updateNodeMutation = useUpdateNode(project_id as string);
+  //   const updateEdgeMutation = useUpdateEdge(project_id as string);
+  //   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
+  //   const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
+  //   const debouncedColorPick = useDebouncedCallback(
+  //     // function
+  //     (color) => {
+  //       updateColor(cyRef, `#${color}`, board_id as string, updateNodeMutation, updateEdgeMutation);
+  //     },
+  //     // delay in ms
+  //     400,
+  //   );
 
-  const exportBoardFunction = (
-    view: "Graph" | "View",
-    background: "Color" | "Transparent",
-    type: "PNG" | "JPEG" | "JSON",
-    boardTitle?: string,
-  ) => {
-    if (!cyRef) return;
-    if (type === "PNG") {
-      saveAs(
-        new Blob(
-          [
-            cyRef.current.png({
-              output: "blob",
-              bg: background === "Color" ? "#121212" : "transparent",
-              full: view === "Graph",
-            }),
-          ],
-          {
-            type: "image/png",
-          },
-        ),
-        `${boardTitle || "ArkiveBoard"}.png`,
-      );
-    } else if (type === "JPEG") {
-      saveAs(
-        new Blob(
-          [
-            cyRef.current.jpg({
-              output: "blob",
-              bg: background === "Color" ? "#121212" : "transparent",
-              full: view === "Graph",
-            }),
-          ],
-          {
-            type: "image/jpg",
-          },
-        ),
-        `${boardTitle || "ArkiveBoard"}.jpg`,
-      );
-    } else if (type === "JSON") {
-      saveAs(
-        new Blob([JSON.stringify(cyRef.current.json(true))], {
-          type: "application/json",
-        }),
-        `${boardTitle || "ArkiveBoard"}.json`,
-      );
-    }
-  };
+  //   const exportBoardFunction = (
+  //     view: "Graph" | "View",
+  //     background: "Color" | "Transparent",
+  //     type: "PNG" | "JPEG" | "JSON",
+  //     boardTitle?: string,
+  //   ) => {
+  //     if (!cyRef) return;
+  //     if (type === "PNG") {
+  //       saveAs(
+  //         new Blob(
+  //           [
+  //             cyRef.current.png({
+  //               output: "blob",
+  //               bg: background === "Color" ? "#121212" : "transparent",
+  //               full: view === "Graph",
+  //             }),
+  //           ],
+  //           {
+  //             type: "image/png",
+  //           },
+  //         ),
+  //         `${boardTitle || "ArkiveBoard"}.png`,
+  //       );
+  //     } else if (type === "JPEG") {
+  //       saveAs(
+  //         new Blob(
+  //           [
+  //             cyRef.current.jpg({
+  //               output: "blob",
+  //               bg: background === "Color" ? "#121212" : "transparent",
+  //               full: view === "Graph",
+  //             }),
+  //           ],
+  //           {
+  //             type: "image/jpg",
+  //           },
+  //         ),
+  //         `${boardTitle || "ArkiveBoard"}.jpg`,
+  //       );
+  //     } else if (type === "JSON") {
+  //       saveAs(
+  //         new Blob([JSON.stringify(cyRef.current.json(true))], {
+  //           type: "application/json",
+  //         }),
+  //         `${boardTitle || "ArkiveBoard"}.json`,
+  //       );
+  //     }
+  //   };
 
-  const confirmDelete = (selected: any) => {
-    confirmDialog({
-      message: <div>Are you sure you want to delete these nodes/edges?</div>,
-      header: "Delete nodes/edges",
-      icon: "pi pi-exclamation-triangle",
-      acceptClassName: "p-button-outlined text-red-400",
-      accept: async () => {
-        if (selected.nodes()?.length > 0) {
-          deleteManyNodesMutation.mutate({
-            ids: selected.nodes().map((node: any) => node.data().id),
-            board_id: board_id as string,
-          });
-        }
-        if (selected.edges().length > 0) {
-          deleteManyEdgesMutation.mutate({
-            ids: selected.edges().map((edge: any) => edge.data().id),
-            board_id: board_id as string,
-          });
-        }
-      },
-      reject: () => {},
-    });
-  };
+  //   const confirmDelete = (selected: any) => {
+  //     confirmDialog({
+  //       message: <div>Are you sure you want to delete these nodes/edges?</div>,
+  //       header: "Delete nodes/edges",
+  //       icon: "pi pi-exclamation-triangle",
+  //       acceptClassName: "p-button-outlined text-red-400",
+  //       accept: async () => {
+  //         if (selected.nodes()?.length > 0) {
+  //           deleteManyNodesMutation.mutate({
+  //             ids: selected.nodes().map((node: any) => node.data().id),
+  //             board_id: board_id as string,
+  //           });
+  //         }
+  //         if (selected.edges().length > 0) {
+  //           deleteManyEdgesMutation.mutate({
+  //             ids: selected.edges().map((edge: any) => edge.data().id),
+  //             board_id: board_id as string,
+  //           });
+  //         }
+  //       },
+  //       reject: () => {},
+  //     });
+  //   };
 
   return (
     <div
@@ -148,33 +153,33 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
             setFilteredNodes(board?.nodes.filter((node) => node.label?.toLowerCase().includes(e.query.toLowerCase())) || [])
           }
           field="label"
-          itemTemplate={(item: BoardNodeType) => (
-            <span>
-              <ImgDropdownItem link={item.customImage?.link || ""} title={item.label || ""} />
-            </span>
-          )}
+          //   itemTemplate={(item: BoardNodeType) => (
+          //     // <span>
+          //     //   <ImageDropdownItem link={item.customImage?.link || ""} title={item.label || ""} />
+          //     // </span>
+          //   )}
           onChange={(e) => setSearch(e.value)}
-          onSelect={(e) => {
-            if (!cyRef) return;
-            if (e.value) {
-              const foundNode = cyRef.current.getElementById(e.value.id);
-              cyRef.current.animate(
-                {
-                  center: {
-                    eles: foundNode,
-                  },
-                  zoom: 1,
-                },
-                {
-                  duration: 1250,
-                },
-              );
-            }
-          }}
+          //   onSelect={(e) => {
+          //     if (!cyRef) return;
+          //     if (e.value) {
+          //       const foundNode = cyRef.current.getElementById(e.value.id);
+          //       cyRef.current.animate(
+          //         {
+          //           center: {
+          //             eles: foundNode,
+          //           },
+          //           zoom: 1,
+          //         },
+          //         {
+          //           duration: 1250,
+          //         },
+          //       );
+          //     }
+          //   }}
           placeholder="Search Nodes"
           suggestions={filteredNodes}
           value={search}
-          virtualScrollerOptions={virtualScrollerSettings}
+          //   virtualScrollerOptions={virtualScrollerSettings}
         />
       </Dialog>
       {/* Export board dialog */}
@@ -225,13 +230,13 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
               icon="pi pi-download"
               iconPos="right"
               label="Export"
-              onClick={() => {
-                if (cyRef && cyRef.current) {
-                  exportBoardFunction(exportDialog.view, exportDialog.background, exportDialog.type, board?.title);
-                } else {
-                  toastWarn("Ooops");
-                }
-              }}
+              //   onClick={() => {
+              //     if (cyRef && cyRef.current) {
+              //       exportBoardFunction(exportDialog.view, exportDialog.background, exportDialog.type, board?.title);
+              //     } else {
+              //       toastWarn("Ooops");
+              //     }
+              //   }}
             />
           </div>
         </div>
@@ -247,12 +252,8 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
         }}
         visible={updateManyDialog}>
         <TabView renderActiveOnly>
-          <TabPanel header="Nodes">
-            <UpdateManyNodes />
-          </TabPanel>
-          <TabPanel header="Edges">
-            <UpdateManyEdges />
-          </TabPanel>
+          <TabPanel header="Nodes">{/* <UpdateManyNodes /> */}</TabPanel>
+          <TabPanel header="Edges">{/* <UpdateManyEdges /> */}</TabPanel>
         </TabView>
       </Dialog>
       {/* Tooltips */}
@@ -269,7 +270,7 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
 
         <Tooltip autoHide={false} hideEvent="focus" position="top" target=".colorPresets">
           <div className="w-10rem flex flex-wrap">
-            {ColorPresets.map((color) => (
+            {/* {ColorPresets.map((color) => (
               <div
                 key={color}
                 className="w-1rem h-1rem border-rounded cursor-pointer"
@@ -280,7 +281,7 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
                   backgroundColor: `#${color}`,
                 }}
               />
-            ))}
+            ))} */}
           </div>
         </Tooltip>
         <Tooltip content="Pick color for selected elements" position="top" target=".pickColor" />
@@ -288,77 +289,80 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
 
       {/* Toggle grid visibility */}
       <span
-        className={`flex cursor-pointer hover:text-blue-300 ${boardState.drawGrid ? "text-green-500" : ""}  drawGrid`}
-        onClick={() => {
-          if (cyRef) {
-            boardStateDispatch({ type: "GRID", payload: !boardState.drawGrid });
-            cyRef.current.gridGuide({
-              ...cytoscapeGridOptions,
-              drawGrid: !boardState.drawGrid,
-            });
-          }
-        }}>
+      // className={`flex cursor-pointer hover:text-blue-300 ${boardState.drawGrid ? "text-green-500" : ""}  drawGrid`}
+      // onClick={() => {
+      //   //   if (cyRef) {
+      //   //     boardStateDispatch({ type: "GRID", payload: !boardState.drawGrid });
+      //   //     cyRef.current.gridGuide({
+      //   //       ...cytoscapeGridOptions,
+      //   //       drawGrid: !boardState.drawGrid,
+      //   //     });
+      //   //   }
+      // }}
+      >
         <Icon icon="mdi:grid" />
       </span>
       {/* Lock selected elements button */}
       <i
         className="pi pi-fw pi-lock lockSelected cursor-pointer hover:text-blue-300"
-        onClick={() => changeLockState(cyRef, true)}
+        // onClick={() => changeLockState(cyRef, true)}
       />
       {/* Unlock selected elements button */}
       <i
         className="pi pi-fw pi-lock-open unlockSelected cursor-pointer hover:text-blue-300"
-        onClick={() => changeLockState(cyRef, false)}
+        // onClick={() => changeLockState(cyRef, false)}
       />
       {/* Delete selected elements button */}
       <i
         className="pi pi-fw pi-trash deleteSelected cursor-pointer hover:text-blue-300"
-        onClick={() => {
-          if (!cyRef) return;
-          const selected = cyRef.current.elements(":selected");
-          if (selected.length === 0) {
-            toastWarn("No elements are selected.");
-            return;
-          }
-          confirmDelete(selected);
-        }}
+        // onClick={() => {
+        //   if (!cyRef) return;
+        //   const selected = cyRef.current.elements(":selected");
+        //   if (selected.length === 0) {
+        //     toastWarn("No elements are selected.");
+        //     return;
+        //   }
+        //   confirmDelete(selected);
+        // }}
       />
 
       {/* Drawmode button */}
       <i
-        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""} drawMode`}
-        onClick={() => boardStateDispatch({ type: "DRAW", payload: !boardState.drawMode })}
+      // className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""} drawMode`}
+      // onClick={() => boardStateDispatch({ type: "DRAW", payload: !boardState.drawMode })}
       />
       {/* Export button */}
       <i
         className="pi pi-download saveButton cursor-pointer hover:text-blue-300"
-        onClick={() => {
-          setExportDialog({ ...exportDialog, show: true });
-        }}
+        // onClick={() => {
+        //   setExportDialog({ ...exportDialog, show: true });
+        // }}
       />
       {/* Search button */}
       <i
         className="pi pi-search searchButton cursor-pointer hover:text-blue-300"
-        onClick={() => setSearchDialog((prev) => !prev)}
+        // onClick={() => setSearchDialog((prev) => !prev)}
       />
 
       {/* Reset to default color button */}
       <span
         className="resetColors flex cursor-pointer hover:text-blue-300"
-        onClick={() => updateColor(cyRef, "#595959", board_id as string, updateNodeMutation, updateEdgeMutation)}>
+        // onClick={() => updateColor(cyRef, "#595959", board_id as string, updateNodeMutation, updateEdgeMutation)}
+      >
         <Icon fontSize={20} icon="mdi:invert-colors-off" />
       </span>
       {/* Edit selected button */}
       <span
         className="editSelectedElements flex cursor-pointer hover:text-blue-300"
-        onClick={() => {
-          if (!cyRef) return;
-          if (cyRef.current.elements(":selected")?.length > 0) {
-            setUpdateManyDialog(true);
-          } else {
-            toastWarn("No elements are selected.");
-          }
-        }}>
+        // onClick={() => {
+        //   if (!cyRef) return;
+        //   if (cyRef.current.elements(":selected")?.length > 0) {
+        //     setUpdateManyDialog(true);
+        //   } else {
+        //     toastWarn("No elements are selected.");
+        //   }
+        // }}
+      >
         <Icon icon="mdi:vector-polyline-edit" />
       </span>
       {/* Color preset button */}
@@ -368,7 +372,7 @@ export default function BoardQuickBar({ boardState, boardStateDispatch }: Props)
         className="w-2rem h-2rem"
         defaultColor="595959"
         onChange={(e) => {
-          debouncedColorPick(e.target.value);
+          //   debouncedColorPick(e.target.value);
         }}
       />
     </div>

@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { DialogPositionType } from "primereact/dialog";
+import { MutableRefObject } from "react";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
@@ -29,3 +30,5 @@ export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
 export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
 
 export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null });
+
+export const BoardReferenceAtom = atom<null | MutableRefObject<any>>(null);
