@@ -1,10 +1,11 @@
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { ToggleButton } from "primereact/togglebutton";
 import { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import FolderCard from "../../components/Folder/FolderCard";
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
-import { AllItemsType } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { getIcon, getType } from "../../utils/transform";
 
 const columnHelper = createColumnHelper<AllItemsType>();
@@ -29,6 +30,16 @@ const columns = [
   }),
 ];
 
+function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: AllItemsType[] }) {
+  return (
+    <>
+      {items.map((item: AllItemsType) => (
+        <FolderCard key={item.id} icon={getIcon(type, item)} id={item.id} isFolder={item.folder} title={item.title} />
+      ))}
+    </>
+  );
+}
+
 export default function FolderView() {
   const { project_id, item_id } = useParams();
   const { pathname } = useLocation();
@@ -49,26 +60,34 @@ export default function FolderView() {
   });
 
   return (
-    <div className="flex gap-4 p-8">
-      {currentItems.map((item) => (
-        <FolderCard key={item.id} icon={getIcon(type, item)} id={item.id} isFolder={item.folder} title={item.title} />
-      ))}
-      {/* {table.getHeaderGroups().map((headerGroup) => (
-        <div key={headerGroup.id}>
-          {headerGroup.headers.map((header) => (
-            <div key={header.id}>
-              {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-            </div>
-          ))}
-        </div>
-      ))}
-      {table.getRowModel().rows.map((row) => (
-        <div key={row.id}>
-          {row.getVisibleCells().map((cell) => (
-            <div key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
-          ))}
-        </div>
-      ))} */}
+    <div className="flex flex-col gap-4 p-8">
+      <div className="w-full">
+        <ToggleButton checked={view} offLabel="Table View" onChange={(e) => setView(e.value)} onLabel="Card View" />
+      </div>
+      <div className="flex flex-wrap">
+        {view ? (
+          <FolderViewCards items={currentItems} type={type} />
+        ) : (
+          <div>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <div key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <div key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </div>
+                ))}
+              </div>
+            ))}
+            {table.getRowModel().rows.map((row) => (
+              <div key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <div key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
