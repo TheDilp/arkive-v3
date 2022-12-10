@@ -1,11 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
-import { DocumentType } from "../../types/documentTypes";
+import { getType } from "../../utils/transform";
 
 export default function FolderView() {
   const { project_id, item_id } = useParams();
-  const { data, isLoading, isError } = useGetAllItems(project_id as string, "documents");
+  const { pathname } = useLocation();
+  const type = getType(pathname);
+  const { data, isLoading, isError } = useGetAllItems(project_id as string, type);
 
   if (isLoading || isError) return null;
 
@@ -14,7 +16,5 @@ export default function FolderView() {
     return !item.parent;
   });
 
-  console.log(currentItems);
-
-  return <div>FolderView</div>;
+  return <div>{currentItems.map((item) => item.title)}</div>;
 }

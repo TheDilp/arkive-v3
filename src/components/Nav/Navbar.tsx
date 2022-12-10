@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -9,8 +10,8 @@ import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 export default function Navbar() {
   const navigate = useNavigate();
   const { project_id } = useParams();
-  const [dialog, setDialog] = useAtom(DialogAtom);
-  const [search, setSearch] = useState<string | null>(null);
+  const [, setDialog] = useAtom(DialogAtom);
+  // const [search, setSearch] = useState<string | null>(null);
   const projectData = useGetSingleProject(project_id as string);
   function navbarShortcuts(e: KeyboardEvent) {
     if (e.ctrlKey && project_id) {
@@ -21,7 +22,7 @@ export default function Navbar() {
       } else if (e.key === "2") {
         e.preventDefault();
         e.stopPropagation();
-        navigate("./wiki");
+        navigate("./documents");
       } else if (e.key === "3") {
         e.preventDefault();
         e.stopPropagation();
@@ -42,12 +43,12 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="flex py-2 border-b shadow border-zinc-600 bg-zinc-800 flex-nowrap">
-      <div className="w-full flex items-center px-2 gap-x-2">
+    <div className="flex flex-nowrap border-b border-zinc-600 bg-zinc-800 py-2 shadow">
+      <div className="flex w-full items-center gap-x-2 px-2">
         <Icon
           className="cursor-pointer hover:text-blue-300"
-          icon="mdi:home"
           fontSize={20}
+          icon="mdi:home"
           onClick={async () => {
             navigate("/");
           }}
@@ -86,16 +87,16 @@ export default function Navbar() {
               /> */}
             <Icon
               className="cursor-pointer hover:text-blue-300 "
-              icon="mdi:books"
               fontSize={20}
+              icon="mdi:books"
               onClick={async () => {
                 navigate("./wiki");
               }}
             />
             <Icon
               className="cursor-pointer hover:text-blue-300 "
-              icon="mdi:map-marker"
               fontSize={20}
+              icon="mdi:map-marker"
               onClick={async () => {
                 navigate("./maps");
               }}
@@ -103,32 +104,32 @@ export default function Navbar() {
 
             <Icon
               className="cursor-pointer hover:text-blue-300"
-              icon="mdi:draw"
               fontSize={20}
+              icon="mdi:draw"
               onClick={async () => {
                 navigate("./boards");
               }}
             />
             <Icon
               className="cursor-pointer hover:text-blue-300"
-              icon="mdi:chart-timeline-variant"
               fontSize={20}
+              icon="mdi:chart-timeline-variant"
               onClick={async () => {
                 navigate("./timelines");
               }}
             />
 
-            <span className="flex items-center ml-auto gap-x-2">
+            <span className="ml-auto flex items-center gap-x-2">
               <Icon
                 className="cursor-pointer hover:text-blue-300"
-                icon="ion:upload"
                 fontSize={20}
+                icon="ion:upload"
                 onClick={async () => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
               />
               <Icon
                 className="cursor-pointer hover:text-blue-300"
-                icon="ion:images"
                 fontSize={20}
+                icon="ion:images"
                 onClick={async () => {
                   navigate("./filebrowser");
                 }}
@@ -140,11 +141,11 @@ export default function Navbar() {
       {/* Use project title only if in project */}
       {project_id && (
         <div
-          className="w-full flex fixed overflow-hidden pointer-events-none h-2rem align-items-start"
+          className="h-2rem align-items-start pointer-events-none fixed flex w-full overflow-hidden"
           style={{
             top: "0.25rem",
           }}>
-          <h2 className="mx-auto my-0 text-3xl font-Merriweather">{projectData?.data?.title}</h2>
+          <h2 className="mx-auto my-0 font-Merriweather text-3xl">{projectData?.data?.title}</h2>
         </div>
       )}
     </div>

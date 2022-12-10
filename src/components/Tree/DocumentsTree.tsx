@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { SplitButton } from "primereact/splitbutton";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
+
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -9,7 +10,7 @@ import BaseTree from "./BaseTree";
 
 export default function DocumentsTree() {
   const { project_id } = useParams();
-  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [, setDrawer] = useAtom(DrawerAtom);
   const createDocumentMutation = useCreateItem("documents");
 
   const items = useMemo(
@@ -46,8 +47,8 @@ export default function DocumentsTree() {
     <>
       <SplitButton
         className="p-button-outlined"
-        label="Quick Create"
         icon="pi pi-bolt"
+        label="Quick Create"
         model={items}
         onClick={() => {
           createDocumentMutation?.mutate({
