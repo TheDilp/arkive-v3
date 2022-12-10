@@ -51,7 +51,7 @@ export interface BoardType extends BaseItemType {
   edges: EdgeType[];
 }
 
-export type DefaultBoardType = Omit<BoardType, "id" | "project_id">;
+export type DefaultBoardType = Omit<BoardType, "id" | "project_id" | "nodes" | "edges">;
 
 export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
   project_id: string;

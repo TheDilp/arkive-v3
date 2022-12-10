@@ -28,7 +28,7 @@ export interface BaseItemType {
   id: string;
   project_id: string;
   title: string;
-  parent: string;
+  parent: string | null;
   sort: number;
   folder: boolean;
   public: boolean;

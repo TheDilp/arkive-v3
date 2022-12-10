@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import { Icon } from "@iconify/react";
 // import { saveAs } from "file-saver";
 import { useAtom } from "jotai";
@@ -14,16 +15,14 @@ import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { BoardExportType, BoardNodeType, BoardStateAction, BoardStateType } from "../../../types/BoardTypes";
-import { changeLockState, ColorPresets, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
+import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
 import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
+import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
-type Props = {
-  boardState: BoardStateType;
-  boardStateDispatch: Dispatch<BoardStateAction>;
-};
+type Props = {};
 export default function BoardQuickBar({}: Props) {
   const { project_id, item_id } = useParams();
   const [boardRef] = useAtom(BoardReferenceAtom);
@@ -127,136 +126,10 @@ export default function BoardQuickBar({}: Props) {
 
   return (
     <div
-      className="border-round surface-50 h-3rem align-items-center justify-content-around shadow-5 absolute flex w-2 text-white"
+      className="absolute left-1/2 z-10 flex h-12 w-1/6 items-center justify-around rounded bg-zinc-800 text-white shadow-md"
       style={{
         top: "95.6vh",
-        left: "50%",
-        zIndex: 5,
       }}>
-      {/* Dialogs */}
-      {/* Search nodes dialog */}
-      <Dialog
-        className="w-20rem"
-        header="Search Nodes"
-        modal={false}
-        onHide={() => {
-          setSearchDialog(false);
-          setSearch("");
-          setFilteredNodes(board?.nodes || []);
-        }}
-        position="center"
-        visible={searchDialog}>
-        <AutoComplete
-          autoFocus
-          className="w-15rem ml-2"
-          completeMethod={(e) =>
-            setFilteredNodes(board?.nodes.filter((node) => node.label?.toLowerCase().includes(e.query.toLowerCase())) || [])
-          }
-          field="label"
-          //   itemTemplate={(item: BoardNodeType) => (
-          //     // <span>
-          //     //   <ImageDropdownItem link={item.customImage?.link || ""} title={item.label || ""} />
-          //     // </span>
-          //   )}
-          onChange={(e) => setSearch(e.value)}
-          //   onSelect={(e) => {
-          //     if (!cyRef) return;
-          //     if (e.value) {
-          //       const foundNode = cyRef.current.getElementById(e.value.id);
-          //       cyRef.current.animate(
-          //         {
-          //           center: {
-          //             eles: foundNode,
-          //           },
-          //           zoom: 1,
-          //         },
-          //         {
-          //           duration: 1250,
-          //         },
-          //       );
-          //     }
-          //   }}
-          placeholder="Search Nodes"
-          suggestions={filteredNodes}
-          value={search}
-          //   virtualScrollerOptions={virtualScrollerSettings}
-        />
-      </Dialog>
-      {/* Export board dialog */}
-      <Dialog
-        header={`Export Board - ${board?.title}`}
-        modal={false}
-        onHide={() =>
-          setExportDialog({
-            view: "Graph",
-            background: "Color",
-            type: "PNG",
-            show: false,
-          })
-        }
-        position="top-left"
-        style={{
-          maxWidth: "14vw",
-        }}
-        visible={exportDialog.show}>
-        <div className="flex flex-wrap">
-          <div className="justify-content-center flex w-full flex-wrap">
-            <h3 className="mb-1 mt-0 w-full text-center">View</h3>
-            <SelectButton
-              onChange={(e) => setExportDialog({ ...exportDialog, view: e.value })}
-              options={["Graph", "Current"]}
-              value={exportDialog.view}
-            />
-          </div>
-          <div className="justify-content-center flex w-full flex-wrap">
-            <h3 className="my-2">Background</h3>
-            <SelectButton
-              onChange={(e) => setExportDialog({ ...exportDialog, background: e.value })}
-              options={["Color", "Transparent"]}
-              value={exportDialog.background}
-            />
-          </div>
-          <div className="justify-content-center flex w-full flex-wrap">
-            <h3 className="my-2">File Type</h3>
-            <SelectButton
-              onChange={(e) => setExportDialog({ ...exportDialog, type: e.value })}
-              options={["PNG", "JPEG", "JSON"]}
-              value={exportDialog.type}
-            />
-          </div>
-          <div className="justify-content-center mt-2 flex w-full">
-            <Button
-              className="p-button-outlined p-button-success"
-              icon="pi pi-download"
-              iconPos="right"
-              label="Export"
-              //   onClick={() => {
-              //     if (cyRef && cyRef.current) {
-              //       exportBoardFunction(exportDialog.view, exportDialog.background, exportDialog.type, board?.title);
-              //     } else {
-              //       toastWarn("Ooops");
-              //     }
-              //   }}
-            />
-          </div>
-        </div>
-      </Dialog>
-      <Dialog
-        className="w-25rem overflow-y-auto"
-        header="Update Many"
-        modal={false}
-        onHide={() => setUpdateManyDialog(false)}
-        position="right"
-        style={{
-          height: "45rem",
-        }}
-        visible={updateManyDialog}>
-        <TabView renderActiveOnly>
-          <TabPanel header="Nodes">{/* <UpdateManyNodes /> */}</TabPanel>
-          <TabPanel header="Edges">{/* <UpdateManyEdges /> */}</TabPanel>
-        </TabView>
-      </Dialog>
-      {/* Tooltips */}
       <span>
         <Tooltip autoHide content="Toggle grid display" position="top" target=".drawGrid" />
         <Tooltip autoHide content="Lock selected nodes" position="top" target=".lockSelected" />
@@ -269,19 +142,20 @@ export default function BoardQuickBar({}: Props) {
         <Tooltip autoHide content="Edit selected elements" position="top" target=".editSelectedElements" />
 
         <Tooltip autoHide={false} hideEvent="focus" position="top" target=".colorPresets">
-          <div className="w-10rem flex flex-wrap">
-            {/* {ColorPresets.map((color) => (
-              <div
+          <div className="flex w-40 flex-wrap gap-1">
+            {ColorPresets.map((color: string) => (
+              <button
                 key={color}
-                className="w-1rem h-1rem border-rounded cursor-pointer"
+                className="h-4 w-4 cursor-pointer rounded-sm"
                 onClick={() => {
-                  updateColor(cyRef, `#${color}`, board_id as string, updateNodeMutation, updateEdgeMutation);
+                  //   updateColor(cyRef, `#${color}`, board_id as string, updateNodeMutation, updateEdgeMutation);
                 }}
                 style={{
                   backgroundColor: `#${color}`,
                 }}
+                type="button"
               />
-            ))} */}
+            ))}
           </div>
         </Tooltip>
         <Tooltip content="Pick color for selected elements" position="top" target=".pickColor" />
@@ -376,5 +250,128 @@ export default function BoardQuickBar({}: Props) {
         }}
       />
     </div>
+    //   {/* Dialogs */}
+    //   {/* Search nodes dialog */}
+    //   {/* <Dialog
+    //     className="w-80"
+    //     header="Search Nodes"
+    //     modal={false}
+    //     onHide={() => {
+    //       setSearchDialog(false);
+    //       setSearch("");
+    //       setFilteredNodes(board?.nodes || []);
+    //     }}
+    //     position="center"
+    //     visible={searchDialog}>
+    //     <AutoComplete
+    //       autoFocus
+    //       className="ml-2 w-60"
+    //       completeMethod={(e) =>
+    //         setFilteredNodes(board?.nodes.filter((node) => node.label?.toLowerCase().includes(e.query.toLowerCase())) || [])
+    //       }
+    //       field="label"
+    //       //   itemTemplate={(item: BoardNodeType) => (
+    //       //     // <span>
+    //       //     //   <ImageDropdownItem link={item.customImage?.link || ""} title={item.label || ""} />
+    //       //     // </span>
+    //       //   )}
+    //       onChange={(e) => setSearch(e.value)}
+    //       //   onSelect={(e) => {
+    //       //     if (!cyRef) return;
+    //       //     if (e.value) {
+    //       //       const foundNode = cyRef.current.getElementById(e.value.id);
+    //       //       cyRef.current.animate(
+    //       //         {
+    //       //           center: {
+    //       //             eles: foundNode,
+    //       //           },
+    //       //           zoom: 1,
+    //       //         },
+    //       //         {
+    //       //           duration: 1250,
+    //       //         },
+    //       //       );
+    //       //     }
+    //       //   }}
+    //       placeholder="Search Nodes"
+    //       suggestions={filteredNodes}
+    //       value={search}
+    //       //   virtualScrollerOptions={virtualScrollerSettings}
+    //     />
+    //   </Dialog> */}
+    //   {/* Export board dialog */}
+    //   {/* <Dialog
+    //     header={`Export Board - ${board?.title}`}
+    //     modal={false}
+    //     onHide={() =>
+    //       setExportDialog({
+    //         view: "Graph",
+    //         background: "Color",
+    //         type: "PNG",
+    //         show: false,
+    //       })
+    //     }
+    //     position="top-left"
+    //     style={{
+    //       maxWidth: "14vw",
+    //     }}
+    //     visible={exportDialog.show}>
+    //     <div className="flex flex-wrap">
+    //       <div className="flex w-full flex-wrap justify-center">
+    //         <h3 className="mb-1 mt-0 w-full text-center">View</h3>
+    //         <SelectButton
+    //           onChange={(e) => setExportDialog({ ...exportDialog, view: e.value })}
+    //           options={["Graph", "Current"]}
+    //           value={exportDialog.view}
+    //         />
+    //       </div>
+    //       <div className="flex w-full flex-wrap justify-center">
+    //         <h3 className="my-2">Background</h3>
+    //         <SelectButton
+    //           onChange={(e) => setExportDialog({ ...exportDialog, background: e.value })}
+    //           options={["Color", "Transparent"]}
+    //           value={exportDialog.background}
+    //         />
+    //       </div>
+    //       <div className="flex w-full flex-wrap justify-center">
+    //         <h3 className="my-2">File Type</h3>
+    //         <SelectButton
+    //           onChange={(e) => setExportDialog({ ...exportDialog, type: e.value })}
+    //           options={["PNG", "JPEG", "JSON"]}
+    //           value={exportDialog.type}
+    //         />
+    //       </div>
+    //       <div className="mt-2 flex w-full justify-center">
+    //         <Button
+    //           className="p-button-outlined p-button-success"
+    //           icon="pi pi-download"
+    //           iconPos="right"
+    //           label="Export"
+    //           //   onClick={() => {
+    //           //     if (cyRef && cyRef.current) {
+    //           //       exportBoardFunction(exportDialog.view, exportDialog.background, exportDialog.type, board?.title);
+    //           //     } else {
+    //           //       toastWarn("Ooops");
+    //           //     }
+    //           //   }}
+    //         />
+    //       </div>
+    //     </div>
+    //   </Dialog> */}
+    //   {/* <Dialog
+    //     className="w-[25rem] overflow-y-auto"
+    //     header="Update Many"
+    //     modal={false}
+    //     onHide={() => setUpdateManyDialog(false)}
+    //     position="right"
+    //     style={{
+    //       height: "45rem",
+    //     }}
+    //     visible={updateManyDialog}>
+    //     <TabView renderActiveOnly>
+    //       <TabPanel header="Nodes">{/* <UpdateManyNodes /> */}</TabPanel>
+    //       <TabPanel header="Edges">{/* <UpdateManyEdges /> */}</TabPanel>
+    //     </TabView>
+    // </Dialog> */}
   );
 }
