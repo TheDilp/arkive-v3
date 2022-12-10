@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { baseURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
+import { baseURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import {
   AllAvailableTypes,
   AllItemsType,

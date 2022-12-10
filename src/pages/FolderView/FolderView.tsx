@@ -1,5 +1,3 @@
-import { ToggleButton } from "primereact/togglebutton";
-import { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import FolderCard from "../../components/Folder/FolderCard";
@@ -20,7 +18,6 @@ function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: All
 export default function FolderView() {
   const { project_id, item_id } = useParams();
   const { pathname } = useLocation();
-  const [view, setView] = useState(false);
   const type = getType(pathname);
   const { data, isLoading, isError } = useGetAllItems(project_id as string, type);
 
@@ -33,9 +30,6 @@ export default function FolderView() {
 
   return (
     <div className="flex flex-col gap-4 p-8">
-      <div className="w-full">
-        <ToggleButton checked={view} offLabel="Table View" onChange={(e) => setView(e.value)} onLabel="Card View" />
-      </div>
       <FolderViewCards items={currentItems} type={type} />
     </div>
   );
