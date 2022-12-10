@@ -38,6 +38,8 @@ export enum updateURLs {
   updateMapPin = "updatemappin/",
   updateMapLayer = "updatemaplayer/",
   updateBoard = "updateboard/",
+  updateNode = "updatenode/",
+  updateEdge = "updateedge/",
 
   sortDocuments = "sortdocuments",
   sortMaps = "sortmaps",

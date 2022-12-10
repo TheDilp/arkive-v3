@@ -1,16 +1,16 @@
 import React from "react";
 import { RemirrorJSON } from "remirror";
 
-import { BoardType } from "./boardTypes";
+import { BoardType, EdgeType, NodeType } from "./boardTypes";
 import { DocumentType } from "./documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./mapTypes";
 
 export type AvailableItemTypes = "documents" | "maps" | "boards" | "timelines";
-export type AvailableSubItemTypes = "map_pins" | "map_layers";
+export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
 export type AllItemsType = DocumentType | MapType | BoardType;
-export type AllSubItemsType = MapPinType | MapLayerType;
+export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType;
 
 export type IconSelectMenuType = {
   // eslint-disable-next-line no-unused-vars

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { BoardType } from "../types/boardTypes";
 import { DocumentType } from "../types/documentTypes";
-import { AvailableItemTypes } from "../types/generalTypes";
+import { AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { MapType } from "../types/mapTypes";
 
 export function useGetItem(project_id: string, id: null | string, type: AvailableItemTypes) {

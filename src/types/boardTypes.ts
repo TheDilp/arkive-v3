@@ -47,6 +47,8 @@ export type EdgeType = {
 export interface BoardType extends BaseItemType {
   defaultNodeColor: string;
   defaultEdgeColor: string;
+  nodes: NodeType[];
+  edges: EdgeType[];
 }
 
 export type DefaultBoardType = Omit<BoardType, "id" | "project_id">;

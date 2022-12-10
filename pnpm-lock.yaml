@@ -12,6 +12,7 @@ specifiers:
   '@tanstack/react-table': ^8.7.0
   '@types/leaflet': ^1.9.0
   '@types/react': ^18.0.22
+  '@types/react-cytoscapejs': ^1.2.2
   '@types/react-dom': ^18.0.7
   '@types/uuid': ^8.3.4
   '@typescript-eslint/eslint-plugin': ^5.45.0
@@ -19,6 +20,7 @@ specifiers:
   '@vitejs/plugin-react': ^2.2.0
   autoprefixer: ^10.4.13
   concurrently: ^7.6.0
+  cytoscape: ^3.23.0
   eslint: ^8.29.0
   eslint-config-airbnb: ^19.0.4
   eslint-config-prettier: ^8.5.0
@@ -37,6 +39,7 @@ specifiers:
   primeicons: ^6.0.1
   primereact: ^8.7.1
   react: ^18.2.0
+  react-cytoscapejs: ^2.0.0
   react-dnd: ^16.0.1
   react-dom: ^18.2.0
   react-leaflet: ^4.2.0
@@ -61,11 +64,13 @@ dependencies:
   '@tanstack/react-query': 4.19.0_biqbaboplfbrettd7655fr4n2y
   '@tanstack/react-table': 8.7.0_biqbaboplfbrettd7655fr4n2y
   concurrently: 7.6.0
+  cytoscape: 3.23.0
   jotai: 1.9.1_react@18.2.0
   leaflet: 1.9.3
   primeicons: 6.0.1
   primereact: 8.7.1_esim4yelhr35vesnk67vhutmai
   react: 18.2.0
+  react-cytoscapejs: 2.0.0_bwu3tuwxqgbhqogdmspjd7bfae
   react-dnd: 16.0.1_fan5qbzahqtxlm5dzefqlqx5ia
   react-dom: 18.2.0_react@18.2.0
   react-leaflet: 4.2.0_yydtlhsdonbqao6vgvkwhv2zki
@@ -81,6 +86,7 @@ devDependencies:
   '@tanstack/react-query-devtools': 4.16.1_budcsmmktl2xfbndofa5sinodm
   '@types/leaflet': 1.9.0
   '@types/react': 18.0.25
+  '@types/react-cytoscapejs': 1.2.2
   '@types/react-dom': 18.0.8
   '@types/uuid': 8.3.4
   '@typescript-eslint/eslint-plugin': 5.45.0_yjegg5cyoezm3fzsmuszzhetym
@@ -2400,6 +2406,10 @@ packages:
       '@types/tern': 0.23.4
     dev: false
 
+  /@types/cytoscape/3.19.9:
+    resolution: {integrity: sha512-oqCx0ZGiBO0UESbjgq052vjDAy2X53lZpMrWqiweMpvVwKw/2IiYDdzPFK6+f4tMfdv9YKEM9raO5bAZc3UYBg==}
+    dev: true
+
   /@types/direction/1.0.0:
     resolution: {integrity: sha512-et1wmqXm/5smJ8lTJfBnwD12/2Y7eVJLKbuaRT0h2xaKAoo1h8Dz2Io22GObDLFwxY1ddXRTLH3Gq5v44Fl/2w==}
     dev: false
@@ -2474,6 +2484,13 @@ packages:
       '@types/reactcss': 1.2.6
     dev: false
 
+  /@types/react-cytoscapejs/1.2.2:
+    resolution: {integrity: sha512-Z+CeQLw4XyQOrS/SdbcUCdYfWqYmaPS/WT+gNy33KYR09BtVzekx1jeNU5kNDvXCv8/8jGlhSrSk0uO7ocGuFg==}
+    dependencies:
+      '@types/cytoscape': 3.19.9
+      '@types/react': 18.0.26
+    dev: true
+
   /@types/react-dom/18.0.8:
     resolution: {integrity: sha512-C3GYO0HLaOkk9dDAz3Dl4sbe4AKUGTCfFIZsz3n/82dPNN8Du533HzKatDxeUYWu24wJgMP1xICqkWk1YOLOIw==}
     dependencies:
@@ -2504,7 +2521,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
-    dev: false
 
   /@types/reactcss/1.2.6:
     resolution: {integrity: sha512-qaIzpCuXNWomGR1Xq8SCFTtF4v8V27Y6f+b9+bzHiv087MylI/nTCqqdChNeWS7tslgROmYB7yeiruWX7WnqNg==}
@@ -3129,6 +3145,14 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /cytoscape/3.23.0:
+    resolution: {integrity: sha512-gRZqJj/1kiAVPkrVFvz/GccxsXhF3Qwpptl32gKKypO4IlqnKBjTOu+HbXtEggSGzC5KCaHp3/F7GgENrtsFkA==}
+    engines: {node: '>=0.10'}
+    dependencies:
+      heap: 0.2.7
+      lodash: 4.17.21
+    dev: false
 
   /damerau-levenshtein/1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -4151,6 +4175,10 @@ packages:
       hast-util-parse-selector: 2.2.5
       property-information: 5.6.0
       space-separated-tokens: 1.1.5
+    dev: false
+
+  /heap/0.2.7:
+    resolution: {integrity: sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==}
     dev: false
 
   /hoist-non-react-statics/3.3.2:
@@ -5239,6 +5267,17 @@ packages:
       react: 18.2.0
       reactcss: 1.2.3_react@18.2.0
       tinycolor2: 1.4.2
+    dev: false
+
+  /react-cytoscapejs/2.0.0_bwu3tuwxqgbhqogdmspjd7bfae:
+    resolution: {integrity: sha512-t3SSl1DQy7+JQjN+8QHi1anEJlM3i3aAeydHTsJwmjo/isyKK7Rs7oCvU6kZsB9NwZidzZQR21Vm2PcBLG/Tjg==}
+    peerDependencies:
+      cytoscape: ^3.2.19
+      react: '>=15.0.0'
+    dependencies:
+      cytoscape: 3.23.0
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-dnd-html5-backend/16.0.1:

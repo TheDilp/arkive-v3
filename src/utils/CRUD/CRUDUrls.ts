@@ -21,6 +21,8 @@ export const updateURL = (id: string, type: AllAvailableTypes) => {
   if (type === "boards") return `${baseURLS.baseServer}${updateURLs.updateBoard}${id}`;
   if (type === "map_pins") return `${baseURLS.baseServer}${updateURLs.updateMapPin}${id}`;
   if (type === "map_layers") return `${baseURLS.baseServer}${updateURLs.updateMapLayer}${id}`;
+  if (type === "nodes") return `${baseURLS.baseServer}${updateURLs.updateNode}${id}`;
+  if (type === "edges") return `${baseURLS.baseServer}${updateURLs.updateEdge}${id}`;
   return null;
 };
 

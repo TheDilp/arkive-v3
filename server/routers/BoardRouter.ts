@@ -9,6 +9,10 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       where: {
         project_id: req.params.project_id,
       },
+      include: {
+        nodes: true,
+        edges: true,
+      },
     });
     return data;
   });
@@ -41,6 +45,52 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
     ) => {
       try {
         const newDocument = await prisma.boards.update({
+          where: {
+            id: req.params.id,
+          },
+          data: removeNull(JSON.parse(req.body)) as any,
+        });
+
+        return newDocument;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/updatenode/:id",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const newDocument = await prisma.nodes.update({
+          where: {
+            id: req.params.id,
+          },
+          data: removeNull(JSON.parse(req.body)) as any,
+        });
+
+        return newDocument;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/updateedge/:id",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const newDocument = await prisma.edges.update({
           where: {
             id: req.params.id,
           },

@@ -1,4 +1,5 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
+import { NodeType } from "../types/boardTypes";
 
 import { baseURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import {
@@ -212,4 +213,27 @@ export const useSortMutation = (
   if (type === "maps") return sortMapsMutation;
 
   return undefined;
+};
+
+// Board Mutations
+
+export const useUpdateNode = (subType: "nodes" | "edges") => {
+  return useMutation(
+    async (updateItemValues: Partial<AllSubItemsType>) => {
+      if (updateItemValues.id) {
+        const url = updateURL(updateItemValues.id, subType);
+        if (url)
+          return fetch(url, {
+            body: JSON.stringify(updateItemValues),
+            method: "POST",
+          });
+      }
+      return null;
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    },
+  );
 };
