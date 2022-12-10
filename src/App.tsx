@@ -36,10 +36,8 @@ function App() {
           <Routes>
             <Route element={<Dashboard />} path="/" />
             <Route element={<Layout />} path="/project/:project_id/">
-              <Route path="wiki/*">
-                <Route element={<Editor editable />} path="doc/:item_id" />
-                <Route element={<FolderView />} path="folder" />
-                <Route element={<FolderView />} path="folder/:item_id" />
+              <Route path="documents/*">
+                <Route element={<Editor editable />} path=":item_id" />
               </Route>
               <Route path="maps/*">
                 <Route element={<MapView />} path=":item_id" />
@@ -50,6 +48,8 @@ function App() {
               <Route path="timelines/*">
                 <Route element={<div>TIMELINE</div>} path=":item_id" />
               </Route>
+              <Route element={<FolderView />} path="folder/:type/:item_id" />
+
               <Route element={<div>SETTINGS</div>} path="settings" />
             </Route>
           </Routes>

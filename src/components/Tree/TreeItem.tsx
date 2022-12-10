@@ -34,13 +34,8 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
       className="text-md group inline-flex w-full cursor-pointer items-center gap-x-1 py-1 text-left hover:bg-sky-700"
       onClick={() => {
         // Navigate if not a folder
-        if (!node.data?.folder) {
-          if (type === "documents") navigate(`./wiki/doc/${node.id}`);
-          if (type === "maps") navigate(`./maps/${node.id}`);
-          if (type === "boards") navigate(`./boards/${node.id}`);
-        } else {
-          navigate(`folder/${node.id}`);
-        }
+        if (!node.data?.folder) navigate(`./${type}/${node.id}`);
+        else navigate(`./folder/${type}/${node.id}`);
       }}
       onContextMenu={(e) => {
         if (node.droppable)

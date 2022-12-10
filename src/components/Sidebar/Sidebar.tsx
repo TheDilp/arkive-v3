@@ -8,7 +8,7 @@ import TemplatesTree from "../Tree/TemplatesTree";
 
 export default function Sidebar() {
   const { pathname } = useLocation();
-  if (pathname.includes("wiki"))
+  if (pathname.includes("wiki") || pathname.includes("documents"))
     return (
       <div className="flex flex-1 flex-col">
         <TabView className="flex flex-1 flex-col" renderActiveOnly>
