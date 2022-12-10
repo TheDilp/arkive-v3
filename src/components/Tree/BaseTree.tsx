@@ -36,7 +36,7 @@ function Placeholder(args: PlaceholderRenderParams) {
       style={{
         backgroundColor: "#1967d2",
         height: "2px",
-        left: depth * 24,
+        left: (depth || 0) * 24,
         position: "absolute",
         right: 0,
         top: 0,
@@ -372,10 +372,10 @@ export default function BaseTree({ isTemplates, type }: Props) {
           const { dragSourceId, dropTargetId } = options;
           handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
           // if (type === "documents")
-          //   updateItemMutation?.mutate({
-          //     id: dragSourceId as string,
-          //     parent: dropTargetId === "0" ? null : (dropTargetId as string),
-          //   });
+          updateItemMutation?.mutate({
+            id: dragSourceId as string,
+            parent: dropTargetId === "0" ? null : (dropTargetId as string),
+          });
         }}
         // @ts-ignore
         placeholderRender={Placeholder}

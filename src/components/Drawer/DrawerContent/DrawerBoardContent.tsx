@@ -92,7 +92,7 @@ export default function DrawerBoardContent() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
+      <h2 className="text-2xl text-center">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
       <InputText
         autoFocus
         className="w-full"
@@ -115,7 +115,7 @@ export default function DrawerBoardContent() {
       />
 
       {/* <AutoComplete
-        className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
+        className="w-full mapTagsAutocomplete max-h-40 border-zinc-600"
         completeMethod={filterTags}
         multiple
         onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
@@ -145,7 +145,7 @@ export default function DrawerBoardContent() {
         />
       </div>
       <Button
-        className="p-button-outlined p-button-success ml-auto"
+        className="ml-auto p-button-outlined p-button-success"
         onClick={() => {
           CreateUpdateBoard(localItem);
         }}

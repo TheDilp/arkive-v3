@@ -79,15 +79,16 @@ model map_layers {
 }
 
 model boards {
-  id               String  @id @default(uuid()) @db.Uuid
-  title            String  @default("New Board")
-  folder           Boolean @default(false)
-  public           Boolean @default(false)
-  expanded         Boolean @default(false)
-  sort             Int     @default(0)
-  parent           String? @db.Uuid
-  defaultNodeColor String  @default("#595959")
-  defaultEdgeColor String  @default("#595959")
+  id               String   @id @default(uuid()) @db.Uuid
+  title            String   @default("New Board")
+  folder           Boolean  @default(false)
+  public           Boolean  @default(false)
+  expanded         Boolean  @default(false)
+  sort             Int      @default(0)
+  tags             String[] @default([])
+  parent           String?  @db.Uuid
+  defaultNodeColor String   @default("#595959")
+  defaultEdgeColor String   @default("#595959")
 
   project    projects @relation(fields: [project_id], references: [id])
   project_id String   @db.Uuid

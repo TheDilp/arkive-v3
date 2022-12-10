@@ -31,5 +31,28 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       return null;
     },
   );
+  server.post(
+    "/updateboard/:id",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const newDocument = await prisma.boards.update({
+          where: {
+            id: req.params.id,
+          },
+          data: removeNull(JSON.parse(req.body)) as any,
+        });
+
+        return newDocument;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
   done();
 };
