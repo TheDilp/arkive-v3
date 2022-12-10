@@ -1,26 +1,21 @@
 import { Button } from "primereact/button";
-import { buttonLabelWithIcon } from "../../utils/transform";
 import { Card } from "primereact/card";
-import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { Link } from "react-router-dom";
+
+import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ProjectType } from "../../types/projectTypes";
-export default function ProjectCard({ ...Project }: ProjectType) {
+import { buttonLabelWithIcon } from "../../utils/transform";
+
+export default function ProjectCard({ ...project }: ProjectType) {
   const header = (
-    <Link
-      to={`/project/${Project.id}/wiki`}
-      className="relative no-underline h-60">
-      <img
-        alt="Card"
-        src={defaultImage}
-        style={{ objectFit: "fill" }}
-        className="w-full h-full cursor-pointer"
-      />
+    <Link className="relative h-60 no-underline" to={`/project/${project.id}/wiki`}>
+      <img alt="Card" className="h-full w-full cursor-pointer" src={defaultImage} style={{ objectFit: "fill" }} />
     </Link>
   );
   const footer = (
     <div className="flex flex-wrap justify-between">
-      <Link to={`../project/${Project.id}/wiki`} className="no-underline">
-        <Button className="w-full p-button-outlined p-button-primary font-Lato">
+      <Link className="no-underline" to={`../project/${project.id}/documents`}>
+        <Button className="p-button-outlined p-button-primary w-full font-Lato">
           {buttonLabelWithIcon("Wiki", "mdi:files")}
         </Button>
       </Link>
@@ -63,10 +58,8 @@ export default function ProjectCard({ ...Project }: ProjectType) {
         />
       </Link> */}
 
-      <Link
-        to={`/project/${Project.id}/settings/project-settings`}
-        className="no-underline">
-        <Button className="w-full p-button-outlined p-button-secondary font-Lato">
+      <Link className="no-underline" to={`/project/${project.id}/settings/project-settings`}>
+        <Button className="p-button-outlined p-button-secondary w-full font-Lato">
           {buttonLabelWithIcon("Settings", "mdi:cog")}
         </Button>
       </Link>
@@ -74,9 +67,10 @@ export default function ProjectCard({ ...Project }: ProjectType) {
   );
   return (
     <Card
-      title={<div className="font-Merriweather">{Project.title}</div>}
-      className="flex flex-col justify-between mx-2 text-center h-25rem Merriweather w-80"
+      className="h-25rem Merriweather mx-2 flex w-80 flex-col justify-between text-center"
+      footer={footer}
       header={header}
-      footer={footer}></Card>
+      title={<div className="font-Merriweather">{project.title}</div>}
+    />
   );
 }

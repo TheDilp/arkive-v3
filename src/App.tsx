@@ -48,7 +48,7 @@ function App() {
               <Route path="timelines/*">
                 <Route element={<div>TIMELINE</div>} path=":item_id" />
               </Route>
-              <Route element={<FolderView />} path="folder/:type/:item_id" />
+              <Route element={<FolderView />} path=":type/folder/:item_id" />
 
               <Route element={<div>SETTINGS</div>} path="settings" />
             </Route>

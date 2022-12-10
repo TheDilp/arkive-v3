@@ -1,7 +1,6 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
-import { DocumentType } from "../types/documentTypes";
 import {
   AllAvailableTypes,
   AllItemsType,
@@ -9,20 +8,15 @@ import {
   AvailableItemTypes,
   AvailableSubItemTypes,
 } from "../types/generalTypes";
-import { MapType } from "../types/mapTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
 import { createURL, deleteURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
-  return useQuery<(DocumentType | MapType)[]>(
-    ["allItems", project_id, type],
-    async () => getItems(project_id as string, type),
-    {
-      staleTime: 5 * 60 * 1000,
-    },
-  );
+  return useQuery<AllItemsType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type), {
+    staleTime: 5 * 60 * 1000,
+  });
 };
 
 export const useGetAllImages = (project_id: string) => {

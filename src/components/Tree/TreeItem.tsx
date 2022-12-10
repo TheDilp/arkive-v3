@@ -35,7 +35,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
       onClick={() => {
         // Navigate if not a folder
         if (!node.data?.folder) navigate(`./${type}/${node.id}`);
-        else navigate(`./folder/${type}/${node.id}`);
+        else navigate(`./${type}/folder/${node.id}`);
       }}
       onContextMenu={(e) => {
         if (node.droppable)
