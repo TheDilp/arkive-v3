@@ -11,7 +11,7 @@ import {
 } from "../types/generalTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
-import { createURL, deleteURL, updateURL } from "../utils/CRUD/CRUDUrls";
+import { createURL, deleteURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
@@ -255,6 +255,26 @@ export const useUpdateNode = (subType: "nodes" | "edges") => {
     async (updateItemValues: Partial<AllSubItemsType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, subType);
+        if (url)
+          return fetch(url, {
+            body: JSON.stringify(updateItemValues),
+            method: "POST",
+          });
+      }
+      return null;
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    },
+  );
+};
+export const useUpdateMany = (type: AllAvailableTypes) => {
+  return useMutation(
+    async (updateItemValues: { ids: string[]; data: Partial<AllItemsType | AllSubItemsType> }) => {
+      if (updateItemValues.ids) {
+        const url = updateManyURL(type);
         if (url)
           return fetch(url, {
             body: JSON.stringify(updateItemValues),

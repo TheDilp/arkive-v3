@@ -1,5 +1,5 @@
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../../types/CRUDenums";
-import { AllAvailableTypes, AvailableItemTypes } from "../../types/generalTypes";
+import { AllAvailableTypes, AvailableItemTypes, AvailableSubItemTypes } from "../../types/generalTypes";
 
 export const getURL = (project_id: string, type: AvailableItemTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${getURLS.getAllDocuments}${project_id}`;
@@ -33,5 +33,14 @@ export const deleteURL = (id: string, type: AllAvailableTypes) => {
   if (type === "maps") return `${baseURLS.baseServer}${deleteURLs.deleteMap}${id}`;
   if (type === "map_pins") return `${baseURLS.baseServer}${deleteURLs.deleteMapPin}${id}`;
   if (type === "map_layers") return `${baseURLS.baseServer}${deleteURLs.deleteMapLayer}${id}`;
+  return null;
+};
+
+export const updateManyURL = (type: AllAvailableTypes) => {
+  if (type === "documents") return `${baseURLS.baseServer}updatemanydocuments`;
+  if (type === "maps") return `${baseURLS.baseServer}updatemanymaps`;
+  if (type === "boards") return `${baseURLS.baseServer}updatemanyboards`;
+  if (type === "nodes") return `${baseURLS.baseServer}updatemanynodes`;
+  if (type === "edges") return `${baseURLS.baseServer}updatemanyedges`;
   return null;
 };

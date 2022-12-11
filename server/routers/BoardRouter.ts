@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { FastifyInstance, FastifyRequest } from "fastify";
 
 import { prisma } from "..";
@@ -59,6 +60,51 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
     },
   );
   server.post(
+    "/createnode",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const newNode = await prisma.nodes.create({
+          data: removeNull(JSON.parse(req.body)) as any,
+        });
+
+        return newNode;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/updatemanynodes",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const body: { ids: string[]; data: any } = JSON.parse(req.body);
+        const updatedNodes = await prisma.nodes.updateMany({
+          where: {
+            id: {
+              in: body.ids,
+            },
+          },
+          data: removeNull(body.data) as any,
+        });
+
+        return updatedNodes;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
     "/updatenode/:id",
     async (
       req: FastifyRequest<{
@@ -75,26 +121,6 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
         });
 
         return updatedNode;
-      } catch (error) {
-        console.log(error);
-      }
-      return null;
-    },
-  );
-  server.post(
-    "/createnode",
-    async (
-      req: FastifyRequest<{
-        Body: string;
-        Params: { id: string };
-      }>,
-    ) => {
-      try {
-        const newNode = await prisma.nodes.create({
-          data: removeNull(JSON.parse(req.body)) as any,
-        });
-
-        return newNode;
       } catch (error) {
         console.log(error);
       }
@@ -144,5 +170,6 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       return null;
     },
   );
+
   done();
 };

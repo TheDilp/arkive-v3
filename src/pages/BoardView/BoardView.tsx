@@ -7,10 +7,11 @@ import { v4 } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateNode } from "../../CRUD/ItemsCRUD";
+import { useCreateNode, useUpdateMany } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
+import { changeLockState } from "../../utils/boardUtils";
 import { cytoscapeStylesheet, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -28,6 +29,7 @@ export default function BoardView({}: Props) {
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   const createNodeMutation = useCreateNode(project_id as string, "nodes");
+  const updateManyNodes = useUpdateMany("nodes");
   const items = [
     {
       command: () => {
@@ -45,8 +47,46 @@ export default function BoardView({}: Props) {
       label: "New Node",
     },
     {
-      // command: () => mapRef?.current?.fitBounds(bounds),
-      // label: "Fit Map",
+      label: "Un/Lock Nodes",
+      items: [
+        {
+          label: "Unlock Selected",
+          icon: "pi pi-fw pi-lock",
+          command: () => {
+            if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+          },
+        },
+        {
+          label: "Lock Selected",
+          icon: "pi pi-fw pi-unlock",
+          command: () => {
+            if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+          },
+        },
+      ],
+    },
+    {
+      label: "View",
+      items: [
+        {
+          label: "Go to center of nodes",
+        },
+        {
+          label: "Fit view to nodes",
+        },
+      ],
+    },
+    {
+      label: "Quick Create",
+      items: [
+        {
+          label: "From Document",
+        },
+      ],
+    },
+    { separator: true },
+    {
+      label: "Delete Selected Nodes",
     },
   ];
 
