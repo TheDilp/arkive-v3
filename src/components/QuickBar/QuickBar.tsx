@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Icon } from "@iconify/react";
 // import { saveAs } from "file-saver";
@@ -18,7 +20,7 @@ import { BoardExportType, BoardNodeType, BoardStateAction, BoardStateType } from
 import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
-import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
+import { BoardReferenceAtom, BoardStateAtom } from "../../utils/Atoms/atoms";
 import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
@@ -26,6 +28,7 @@ type Props = {};
 export default function BoardQuickBar({}: Props) {
   const { project_id, item_id } = useParams();
   const [boardRef] = useAtom(BoardReferenceAtom);
+  const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
   const [search, setSearch] = useState("");
@@ -37,7 +40,6 @@ export default function BoardQuickBar({}: Props) {
     type: "PNG",
     show: false,
   });
-
   //   const updateNodeMutation = useUpdateNode(project_id as string);
   //   const updateEdgeMutation = useUpdateEdge(project_id as string);
   //   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
@@ -62,7 +64,7 @@ export default function BoardQuickBar({}: Props) {
   //       saveAs(
   //         new Blob(
   //           [
-  //             cyRef.current.png({
+  //             boardRef.png({
   //               output: "blob",
   //               bg: background === "Color" ? "#121212" : "transparent",
   //               full: view === "Graph",
@@ -78,7 +80,7 @@ export default function BoardQuickBar({}: Props) {
   //       saveAs(
   //         new Blob(
   //           [
-  //             cyRef.current.jpg({
+  //             boardRef.jpg({
   //               output: "blob",
   //               bg: background === "Color" ? "#121212" : "transparent",
   //               full: view === "Graph",
@@ -92,7 +94,7 @@ export default function BoardQuickBar({}: Props) {
   //       );
   //     } else if (type === "JSON") {
   //       saveAs(
-  //         new Blob([JSON.stringify(cyRef.current.json(true))], {
+  //         new Blob([JSON.stringify(boardRef.json(true))], {
   //           type: "application/json",
   //         }),
   //         `${boardTitle || "ArkiveBoard"}.json`,
@@ -123,7 +125,7 @@ export default function BoardQuickBar({}: Props) {
   //       reject: () => {},
   //     });
   //   };
-
+  const { edgeHandles } = boardState;
   return (
     <div
       className="absolute left-1/2 z-10 flex h-12 w-1/6 items-center justify-around rounded bg-zinc-800 text-white shadow-md"
@@ -167,7 +169,7 @@ export default function BoardQuickBar({}: Props) {
       // onClick={() => {
       //   //   if (cyRef) {
       //   //     boardStateDispatch({ type: "GRID", payload: !boardState.drawGrid });
-      //   //     cyRef.current.gridGuide({
+      //   //     boardRef.gridGuide({
       //   //       ...cytoscapeGridOptions,
       //   //       drawGrid: !boardState.drawGrid,
       //   //     });
@@ -191,7 +193,7 @@ export default function BoardQuickBar({}: Props) {
         className="pi pi-fw pi-trash deleteSelected cursor-pointer hover:text-blue-300"
         // onClick={() => {
         //   if (!cyRef) return;
-        //   const selected = cyRef.current.elements(":selected");
+        //   const selected = boardRef.elements(":selected");
         //   if (selected.length === 0) {
         //     toastWarn("No elements are selected.");
         //     return;
@@ -202,8 +204,28 @@ export default function BoardQuickBar({}: Props) {
 
       {/* Drawmode button */}
       <i
-      // className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""} drawMode`}
-      // onClick={() => boardStateDispatch({ type: "DRAW", payload: !boardState.drawMode })}
+        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
+          edgeHandles && edgeHandles.drawMode ? "text-green-500" : ""
+        } drawMode`}
+        onClick={() => {
+          if (boardRef && edgeHandles) {
+            if (edgeHandles.drawMode) {
+              edgeHandles.ref.disable();
+              edgeHandles.ref.disableDrawMode();
+              boardRef.autoungrabify(false);
+              boardRef.autounselectify(false);
+              boardRef.autolock(false);
+              boardRef.zoomingEnabled(true);
+              boardRef.userZoomingEnabled(true);
+              boardRef.panningEnabled(true);
+              setBoardState({ ...boardState, edgeHandles: { ref: edgeHandles.ref, drawMode: false } });
+            } else {
+              edgeHandles.ref.enable();
+              edgeHandles.ref.enableDrawMode();
+              setBoardState({ ...boardState, edgeHandles: { ref: edgeHandles.ref, drawMode: true } });
+            }
+          }
+        }}
       />
       {/* Export button */}
       <i
@@ -230,7 +252,7 @@ export default function BoardQuickBar({}: Props) {
         className="editSelectedElements flex cursor-pointer hover:text-blue-300"
         // onClick={() => {
         //   if (!cyRef) return;
-        //   if (cyRef.current.elements(":selected")?.length > 0) {
+        //   if (boardRef.elements(":selected")?.length > 0) {
         //     setUpdateManyDialog(true);
         //   } else {
         //     toastWarn("No elements are selected.");
@@ -279,8 +301,8 @@ export default function BoardQuickBar({}: Props) {
     //       //   onSelect={(e) => {
     //       //     if (!cyRef) return;
     //       //     if (e.value) {
-    //       //       const foundNode = cyRef.current.getElementById(e.value.id);
-    //       //       cyRef.current.animate(
+    //       //       const foundNode = boardRef.getElementById(e.value.id);
+    //       //       boardRef.animate(
     //       //         {
     //       //           center: {
     //       //             eles: foundNode,
@@ -348,7 +370,7 @@ export default function BoardQuickBar({}: Props) {
     //           iconPos="right"
     //           label="Export"
     //           //   onClick={() => {
-    //           //     if (cyRef && cyRef.current) {
+    //           //     if (cyRef && boardRef) {
     //           //       exportBoardFunction(exportDialog.view, exportDialog.background, exportDialog.type, board?.title);
     //           //     } else {
     //           //       toastWarn("Ooops");

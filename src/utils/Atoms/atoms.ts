@@ -32,3 +32,5 @@ export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
 export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null });
 
 export const BoardReferenceAtom = atom<null | cytoscape.Core>(null);
+
+export const BoardStateAtom = atom<{ edgeHandles: null | any; grid: null | any }>({ edgeHandles: null, grid: null });

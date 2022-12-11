@@ -10,8 +10,8 @@ import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
-import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
-import { changeLockState } from "../../utils/boardUtils";
+import { BoardReferenceAtom, BoardStateAtom } from "../../utils/Atoms/atoms";
+import { changeLockState, edgehandlesSettings } from "../../utils/boardUtils";
 import { cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -23,6 +23,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const cm = useRef() as any;
   const { project_id, item_id } = useParams();
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
+  const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<{ x: null | number; y: null | number; type: "node" | "edge" }>({
     x: null,
     y: null,
@@ -173,6 +174,7 @@ export default function BoardView({ isReadOnly }: Props) {
   // Board Events
   useEffect(() => {
     if (boardRef && !isReadOnly) {
+      setBoardState({ ...boardState, edgeHandles: { drawMode: false, ref: boardRef.edgehandles(edgehandlesSettings) } });
       // Right click
       boardRef.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
