@@ -12,6 +12,7 @@ import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent";
 import DrawerMapContent from "./DrawerContent/DrawerMapContent";
 import DrawerMapPinContent from "./DrawerContent/DrawerMapPinContent";
+import DrawerNodeContent from "./DrawerContent/DrawerNodeContent";
 
 export function handleCloseDrawer(setDrawer: Dispatch<SetStateAction<DrawerAtomType>>) {
   setDrawer((prev) => ({ ...prev, show: false }));
@@ -35,7 +36,7 @@ export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   return (
     <PrimeDrawer
-      className="p-sidebar-sm max-h-full overflow-y-auto"
+      className={`p-sidebar-${drawer.drawerSize || "sm"} max-h-full overflow-y-auto`}
       dismissable={false}
       icons={() => DrawerIcons(setDrawer)}
       modal={false}
@@ -48,6 +49,7 @@ export default function Drawer() {
       {drawer.type === "maps" ? <DrawerMapContent /> : null}
       {drawer.type === "map_pins" ? <DrawerMapPinContent /> : null}
       {drawer.type === "boards" ? <DrawerBoardContent /> : null}
+      {drawer.type === "nodes" ? <DrawerNodeContent /> : null}
     </PrimeDrawer>
   );
 }

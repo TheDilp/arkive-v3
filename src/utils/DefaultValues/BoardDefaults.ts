@@ -37,7 +37,7 @@ export const DefaultNode: DefaultNodeType = {
   y: 0,
   type: "rectangle",
   fontSize: 16,
-  fontColor: "white",
+  fontColor: "#ffffff",
   fontFamily: "Lato",
   textHAlign: "center",
   textVAlign: "top",
