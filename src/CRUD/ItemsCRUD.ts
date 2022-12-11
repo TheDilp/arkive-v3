@@ -250,11 +250,12 @@ export const useCreateNodeEdge = (project_id: string, subType: "nodes" | "edges"
     },
   );
 };
-export const useUpdateNode = (subType: "nodes" | "edges") => {
+export const useUpdateNodeEdge = (project_id: string, item_id: string, type: "nodes" | "edges") => {
+  const queryClient = useQueryClient();
   return useMutation(
     async (updateItemValues: Partial<AllSubItemsType>) => {
       if (updateItemValues.id) {
-        const url = updateURL(updateItemValues.id, subType);
+        const url = updateURL(updateItemValues.id, type);
         if (url)
           return fetch(url, {
             body: JSON.stringify(updateItemValues),
@@ -264,8 +265,23 @@ export const useUpdateNode = (subType: "nodes" | "edges") => {
       return null;
     },
     {
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: async (data, variables) => {
+        queryClient.setQueryData(["allItems", project_id, "boards"], (oldData: BoardType[] | undefined) => {
+          if (oldData)
+            return oldData.map((board) => {
+              if (board.id !== item_id) return board;
+              // @ts-ignore
+              return {
+                ...board,
+                [type]: board[type].map((item) => {
+                  if (item.id !== variables.id) return item;
+                  return { ...item, ...variables };
+                }),
+              };
+            });
+
+          return [];
+        });
       },
     },
   );

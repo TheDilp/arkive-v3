@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
+import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { BoardReferenceAtom, BoardStateAtom } from "../../utils/Atoms/atoms";
@@ -32,6 +32,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   const createNodeMutation = useCreateNodeEdge(project_id as string, "nodes");
+  const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const deleteManyNodes = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
   const createEdgeMutation = useCreateNodeEdge(project_id as string, "edges");
@@ -209,16 +210,32 @@ export default function BoardView({ isReadOnly }: Props) {
         const sourceData = sourceNode._private.data;
         const targetData = targetNode._private.data;
 
-        console.log(sourceData, targetData, sourceNode, targetNode, addedEdge);
         // Check due to weird edgehandles behavior when toggling drawmode
         // When drawmode is turned on and then off and then back on
         // It can add an edges to a node that doesn't exist
         try {
           boardRef.remove(addedEdge);
         } catch (error) {
-          toaster("warning", "Cytoedge couldn't be removed, there was an error (BoardView 172)");
+          toaster("warning", "Cytoedge couldn't be removed, there was an error.");
         }
         makeEdgeCallback(sourceData.id, targetData.id, board?.defaultEdgeColor);
+      });
+      // Moving nodes
+      boardRef.on("free", "node", function (evt: any) {
+        const target = evt.target._private;
+        boardRef.elements(":selected").select();
+        evt.target.select();
+
+        // Grid extenstion messes with the "grab events"
+        // "Freeon" event triggers on double clicking
+        // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
+        if (target.position.x !== target?.data.x || target.position.y !== target.data?.y)
+          updateNodeMutation.mutate({
+            id: target.data.id,
+            board_id: board_id as string,
+            x: target.position.x,
+            y: target.position.y,
+          });
       });
     }
   }, [boardRef]);
