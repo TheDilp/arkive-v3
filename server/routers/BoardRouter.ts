@@ -67,14 +67,54 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       }>,
     ) => {
       try {
-        const newDocument = await prisma.nodes.update({
+        const updatedNode = await prisma.nodes.update({
           where: {
             id: req.params.id,
           },
           data: removeNull(JSON.parse(req.body)) as any,
         });
 
-        return newDocument;
+        return updatedNode;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/createnode",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const newNode = await prisma.nodes.create({
+          data: removeNull(JSON.parse(req.body)) as any,
+        });
+
+        return newNode;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/createedge",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+        Params: { id: string };
+      }>,
+    ) => {
+      try {
+        const newEdge = await prisma.edges.create({
+          data: removeNull(JSON.parse(req.body)) as any,
+        });
+
+        return newEdge;
       } catch (error) {
         console.log(error);
       }

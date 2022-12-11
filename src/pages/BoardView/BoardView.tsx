@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
@@ -8,7 +8,7 @@ import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateNode } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
-import { BoardType } from "../../types/boardTypes";
+import { BoardType, NodeType } from "../../types/boardTypes";
 import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
 import { DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 
@@ -18,9 +18,9 @@ export default function BoardView({}: Props) {
   const cm = useRef() as any;
   const { project_id, item_id } = useParams();
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
+  const [elements, setElements] = useState([]);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   const createNodeMutation = useCreateNode(project_id as string, "nodes");
-  const elements = [...board.nodes, ...board.edges];
   const items = [
     {
       command: () => {
@@ -34,6 +34,38 @@ export default function BoardView({}: Props) {
       // label: "Fit Map",
     },
   ];
+
+  useEffect(() => {
+    if (board) {
+      let temp_nodes = [];
+      let temp_edges = [];
+      if (board.nodes.length > 0) {
+        temp_nodes = board.nodes
+          .filter((node) => !node.template)
+          .map((node: NodeType) => ({
+            data: {
+              ...node,
+              classes: "boardNode",
+              label: node.label || "",
+              zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
+              // Custom image has priority, if not set use document image, if neither - empty array
+              // Empty string ("") causes issues with cytoscape, so an empty array must be used
+              // backgroundImage: node.customImage?.link
+              //   ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(" ", "%20")}`
+              //   : node.document?.image?.link
+              //   ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(" ", "%20")}`
+              //   : [],
+            },
+            scratch: {
+              doc_id: node?.doc_id,
+            },
+            locked: node.locked,
+            position: { x: node.x, y: node.y },
+          }));
+      }
+      setElements([...temp_nodes]);
+    }
+  }, [board, item_id]);
 
   useEffect(() => {
     if (boardRef) {
