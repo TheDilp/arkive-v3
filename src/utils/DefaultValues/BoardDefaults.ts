@@ -159,7 +159,7 @@ export const cytoscapeStylesheet = [
       "curve-style": "data(curveStyle)",
       "text-rotation": "autorotate",
       "control-point-distances": "data(controlPointDistances)",
-      "control-point-weights": "data(controlPointWeightss)",
+      "control-point-weights": "data(controlPointWeights)",
       "z-index": "data(zIndex)",
       "z-index-compare": "manual",
     },

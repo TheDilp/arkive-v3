@@ -1,4 +1,4 @@
-import { EdgeDefinition, NodeDefinition } from "cytoscape";
+import { EdgeDefinition, EventHandler, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -203,8 +203,23 @@ export default function BoardView({ isReadOnly }: Props) {
           }
         }
       });
-
       // Creating edges
+      // @ts-ignore
+      boardRef.on("ehcomplete", function (event: any, sourceNode: any, targetNode: any, addedEdge: any) {
+        const sourceData = sourceNode._private.data;
+        const targetData = targetNode._private.data;
+
+        console.log(sourceData, targetData, sourceNode, targetNode, addedEdge);
+        // Check due to weird edgehandles behavior when toggling drawmode
+        // When drawmode is turned on and then off and then back on
+        // It can add an edges to a node that doesn't exist
+        try {
+          boardRef.remove(addedEdge);
+        } catch (error) {
+          toaster("warning", "Cytoedge couldn't be removed, there was an error (BoardView 172)");
+        }
+        makeEdgeCallback(sourceData.id, targetData.id, board?.defaultEdgeColor);
+      });
     }
   }, [boardRef]);
 
