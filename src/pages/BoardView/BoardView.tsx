@@ -70,9 +70,24 @@ export default function BoardView({}: Props) {
       items: [
         {
           label: "Go to center of nodes",
+          command: () => boardRef?.center(),
         },
         {
           label: "Fit view to nodes",
+          command: () => {
+            if (boardRef)
+              boardRef.animate(
+                {
+                  fit: {
+                    padding: 0,
+                    eles: boardRef.nodes(),
+                  },
+                },
+                {
+                  duration: 1250,
+                },
+              );
+          },
         },
       ],
     },

@@ -1,5 +1,5 @@
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../../types/CRUDenums";
-import { AllAvailableTypes, AvailableItemTypes, AvailableSubItemTypes } from "../../types/generalTypes";
+import { AllAvailableTypes, AvailableItemTypes } from "../../types/generalTypes";
 
 export const getURL = (project_id: string, type: AvailableItemTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${getURLS.getAllDocuments}${project_id}`;
