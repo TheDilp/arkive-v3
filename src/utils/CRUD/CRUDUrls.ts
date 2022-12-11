@@ -44,3 +44,11 @@ export const updateManyURL = (type: AllAvailableTypes) => {
   if (type === "edges") return `${baseURLS.baseServer}updatemanyedges`;
   return null;
 };
+export const deleteManyURL = (type: AllAvailableTypes) => {
+  if (type === "documents") return `${baseURLS.baseServer}deletemanydocuments`;
+  if (type === "maps") return `${baseURLS.baseServer}deletemanymaps`;
+  if (type === "boards") return `${baseURLS.baseServer}deletemanyboards`;
+  if (type === "nodes") return `${baseURLS.baseServer}deletemanynodes`;
+  if (type === "edges") return `${baseURLS.baseServer}deletemanyedges`;
+  return null;
+};

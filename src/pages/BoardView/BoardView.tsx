@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateNode, useUpdateMany } from "../../CRUD/ItemsCRUD";
+import { useCreateNode, useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
@@ -29,7 +29,8 @@ export default function BoardView({}: Props) {
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   const createNodeMutation = useCreateNode(project_id as string, "nodes");
-  const updateManyNodes = useUpdateMany("nodes");
+  const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
+  const deleteManyNodes = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
   const items = [
     {
       command: () => {
@@ -102,6 +103,12 @@ export default function BoardView({}: Props) {
     { separator: true },
     {
       label: "Delete Selected Nodes",
+      command: () => {
+        if (boardRef) {
+          const ids: string[] = boardRef.nodes(":selected").map((node: any) => node.data().id);
+          deleteManyNodes.mutate(ids);
+        }
+      },
     },
   ];
 

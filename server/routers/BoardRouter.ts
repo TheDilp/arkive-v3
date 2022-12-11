@@ -78,6 +78,45 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       return null;
     },
   );
+  server.delete(
+    "/deletemanynodes",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const ids: string[] = JSON.parse(req.body);
+        await prisma.edges.deleteMany({
+          where: {
+            OR: [
+              {
+                source_id: {
+                  in: ids,
+                },
+              },
+              {
+                target_id: {
+                  in: ids,
+                },
+              },
+            ],
+          },
+        });
+        await prisma.nodes.deleteMany({
+          where: {
+            id: {
+              in: ids,
+            },
+          },
+        });
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
   server.post(
     "/updatemanynodes",
     async (
@@ -87,13 +126,20 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
     ) => {
       try {
         const body: { ids: string[]; data: any } = JSON.parse(req.body);
-        const updatedNodes = await prisma.nodes.updateMany({
+        await prisma.nodes.updateMany({
           where: {
             id: {
               in: body.ids,
             },
           },
           data: removeNull(body.data) as any,
+        });
+        const updatedNodes = await prisma.nodes.findMany({
+          where: {
+            id: {
+              in: body.ids,
+            },
+          },
         });
 
         return updatedNodes;

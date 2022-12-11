@@ -11,7 +11,7 @@ import {
 } from "../types/generalTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
-import { createURL, deleteURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
+import { createURL, deleteManyURL, deleteURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
@@ -270,7 +270,8 @@ export const useUpdateNode = (subType: "nodes" | "edges") => {
     },
   );
 };
-export const useUpdateMany = (type: AllAvailableTypes) => {
+export const useUpdateManySubItems = (project_id: string, type: AvailableSubItemTypes) => {
+  const queryClient = useQueryClient();
   return useMutation(
     async (updateItemValues: { ids: string[]; data: Partial<AllItemsType | AllSubItemsType> }) => {
       if (updateItemValues.ids) {
@@ -284,8 +285,42 @@ export const useUpdateMany = (type: AllAvailableTypes) => {
       return null;
     },
     {
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: async () => {
+        if (type === "nodes" || type === "edges") {
+          queryClient.refetchQueries(["allItems", project_id, "boards"]);
+        }
+      },
+    },
+  );
+};
+export const useDeleteManySubItems = (project_id: string, item_id: string, type: AvailableSubItemTypes) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (ids: string[]) => {
+      if (ids) {
+        const url = deleteManyURL(type);
+        if (url)
+          return fetch(url, {
+            body: JSON.stringify(ids),
+            method: "DELETE",
+          });
+      }
+      return null;
+    },
+    {
+      onSuccess: async (data, ids) => {
+        if (type === "nodes" || type === "edges") {
+          queryClient.setQueryData(["allItems", project_id, "boards"], (oldData: BoardType[] | undefined) => {
+            if (oldData)
+              return oldData.map((board) => {
+                if (board.id !== item_id) return board;
+                // @ts-ignore
+                return { ...board, [type]: board[type].filter((item) => !ids.includes(item.id)) };
+              });
+
+            return [];
+          });
+        }
       },
     },
   );
