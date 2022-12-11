@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
-import { NodeType } from "../types/boardTypes";
 
+import { BoardType, NodeType } from "../types/boardTypes";
 import { baseURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import {
   AllAvailableTypes,
@@ -217,6 +217,39 @@ export const useSortMutation = (
 
 // Board Mutations
 
+export const useCreateNode = (project_id: string, subType: "nodes" | "edges") => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (createValues: NodeType) => {
+      const url = createURL(subType);
+      if (url)
+        return fetch(url, {
+          body: JSON.stringify(createValues),
+          method: "POST",
+        });
+      return null;
+    },
+    {
+      onMutate: (newData) => {
+        const oldQueryData = queryClient.getQueryData(["allItems", project_id, "boards"]);
+        queryClient.setQueryData(["allItems", project_id, "boards"], (oldData: BoardType[] | undefined) => {
+          if (oldData)
+            return oldData.map((board) => {
+              if (board.id === newData.parent) return { ...board, nodes: [...board.nodes, newData] };
+              return board;
+            });
+
+          return [];
+        });
+
+        return { oldQueryData };
+      },
+      onError: (error, variables, context) => {
+        if (error) queryClient.setQueryData(["allItems", project_id, "boards"], context?.oldQueryData);
+      },
+    },
+  );
+};
 export const useUpdateNode = (subType: "nodes" | "edges") => {
   return useMutation(
     async (updateItemValues: Partial<AllSubItemsType>) => {

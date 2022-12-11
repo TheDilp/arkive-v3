@@ -27,6 +27,8 @@ export enum createURLS {
   createMapPin = "createmappin",
   createMapLayer = "createmaplayer",
   createBoard = "createboard",
+  createNode = "createnode",
+  createEdge = "createedge",
   uploadImage = "uploadimage/images/",
   uploadMap = "uploadimage/maps/",
 }

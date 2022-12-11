@@ -45,7 +45,7 @@ export default function BoardQuickBar({}: Props) {
   //   const debouncedColorPick = useDebouncedCallback(
   //     // function
   //     (color) => {
-  //       updateColor(cyRef, `#${color}`, board_id as string, updateNodeMutation, updateEdgeMutation);
+  //       updateColor(boardRef, `#${color}`, item_id as string, updateNodeMutation, updateEdgeMutation);
   //     },
   //     // delay in ms
   //     400,
@@ -245,9 +245,9 @@ export default function BoardQuickBar({}: Props) {
       <ColorPicker
         className="w-2rem h-2rem"
         defaultColor="595959"
-        onChange={(e) => {
-          //   debouncedColorPick(e.target.value);
-        }}
+        // onChange={(e) => {
+        //   debouncedColorPick(e.target.value);
+        // }}
       />
     </div>
     //   {/* Dialogs */}

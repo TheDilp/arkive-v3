@@ -13,6 +13,8 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "boards") return `${baseURLS.baseServer}${createURLS.createBoard}`;
   if (type === "map_pins") return `${baseURLS.baseServer}${createURLS.createMapPin}`;
   if (type === "map_layers") return `${baseURLS.baseServer}${createURLS.createMapLayer}`;
+  if (type === "nodes") return `${baseURLS.baseServer}${createURLS.createNode}`;
+  if (type === "edges") return `${baseURLS.baseServer}${createURLS.createEdge}`;
   return null;
 };
 export const updateURL = (id: string, type: AllAvailableTypes) => {

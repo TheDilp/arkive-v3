@@ -1,4 +1,4 @@
-import { DefaultBoardType } from "../../types/boardTypes";
+import { DefaultBoardType, DefaultNodeType } from "../../types/boardTypes";
 
 export const DefaultBoard: DefaultBoardType = {
   title: "",
@@ -11,7 +11,25 @@ export const DefaultBoard: DefaultBoardType = {
   defaultNodeColor: "#595959",
   defaultEdgeColor: "#595959",
 };
-
+export const DefaultNode: DefaultNodeType = {
+  id: "",
+  parent: "",
+  width: 50,
+  height: 50,
+  x: 0,
+  y: 0,
+  type: "rectangle",
+  fontSize: 16,
+  fontColor: "white",
+  fontFamily: "Lato",
+  textHAlign: "center",
+  textVAlign: "top",
+  backgroundColor: "#595959",
+  backgroundOpacity: 1,
+  locked: false,
+  template: false,
+  zIndex: 1,
+};
 export const ColorPresets = [
   "000000",
   "1E1E1E",

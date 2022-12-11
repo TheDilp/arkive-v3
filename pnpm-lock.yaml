@@ -10,6 +10,7 @@ specifiers:
   '@tanstack/react-query': ^4.19.0
   '@tanstack/react-query-devtools': ^4.16.1
   '@tanstack/react-table': ^8.7.0
+  '@types/cytoscape': ^3.19.9
   '@types/leaflet': ^1.9.0
   '@types/react': ^18.0.22
   '@types/react-cytoscapejs': ^1.2.2
@@ -84,6 +85,7 @@ dependencies:
 
 devDependencies:
   '@tanstack/react-query-devtools': 4.16.1_budcsmmktl2xfbndofa5sinodm
+  '@types/cytoscape': 3.19.9
   '@types/leaflet': 1.9.0
   '@types/react': 18.0.25
   '@types/react-cytoscapejs': 1.2.2

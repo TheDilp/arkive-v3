@@ -1,4 +1,38 @@
 import { BaseItemType } from "./generalTypes";
+type ArrowShape =
+  | "none"
+  | "triangle"
+  | "triangle-tee"
+  | "triangle-cross"
+  | "triangle-backcurve"
+  | "circle-triangle"
+  | "vee"
+  | "tee"
+  | "circle"
+  | "diamond"
+  | "chevron";
+
+type NodeShape =
+  | "rectangle"
+  | "ellipse"
+  | "triangle"
+  | "barrel"
+  | "rhomboid"
+  | "diamond"
+  | "pentagon"
+  | "hexagon"
+  | "heptagon"
+  | "octagon"
+  | "star"
+  | "cut-rectangle"
+  | "round-triangle"
+  | "round-rectangle"
+  | "bottom-round-rectangle"
+  | "round-diamond"
+  | "round-pentagon"
+  | "round-hexagon"
+  | "round-heptagon"
+  | "round-octagon";
 
 export type NodeType = {
   id: string;
@@ -7,12 +41,12 @@ export type NodeType = {
   height: number;
   x: number;
   y: number;
-  type: string;
+  type: NodeShape;
   fontSize: number;
   fontColor: string;
   fontFamily: string;
-  textVAlign: string;
-  textHAlign: string;
+  textHAlign: "left" | "center" | "right";
+  textVAlign: "top" | "center" | "bottom";
   backgroundColor: string;
   backgroundOpacity: number;
   locked: boolean;
@@ -24,17 +58,17 @@ export type NodeType = {
 export type EdgeType = {
   id: string;
   label?: string;
-  curveStyle: string;
-  lineStyle: string;
+  curveStyle: "straight" | "bezier" | "taxi";
+  lineStyle: "solid" | "dashed" | "dotted";
   lineColor: string;
   controlPointDistances: number;
   controlPointWeight: number;
-  taxiDirection: string;
+  taxiDirection: "auto" | "vertical" | "horizontal" | "upward" | "downward" | "leftward" | "rightward";
   taxiTurn: number;
-  targetArrowShape: string;
-  sourceArrowShape: string;
-  midSourceArrowShape: string;
-  midTargetArrowShape: string;
+  targetArrowShape: ArrowShape;
+  sourceArrowShape: ArrowShape;
+  midSourceArrowShape: ArrowShape;
+  midTargetArrowShape: ArrowShape;
   fontSize: number;
   fontColor: string;
   fontFamily: string;
@@ -52,7 +86,7 @@ export interface BoardType extends BaseItemType {
 }
 
 export type DefaultBoardType = Omit<BoardType, "id" | "project_id" | "nodes" | "edges">;
-
+export type DefaultNodeType = Omit<NodeType, "doc_id" | "label">;
 export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
   project_id: string;
 };
