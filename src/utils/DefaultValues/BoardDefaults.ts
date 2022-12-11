@@ -1,4 +1,4 @@
-import { DefaultBoardType, DefaultNodeType } from "../../types/boardTypes";
+import { DefaultBoardType, DefaultEdgeType, DefaultNodeType } from "../../types/boardTypes";
 
 export const DefaultBoard: DefaultBoardType = {
   title: "",
@@ -10,6 +10,23 @@ export const DefaultBoard: DefaultBoardType = {
   tags: [],
   defaultNodeColor: "#595959",
   defaultEdgeColor: "#595959",
+};
+
+export const DefaultEdge: DefaultEdgeType = {
+  id: "",
+  parent: "",
+  curveStyle: "straight",
+  lineColor: "#595959",
+  lineStyle: "solid",
+  fontColor: "#ffffff",
+  fontFamily: "Lato",
+  fontSize: 16,
+  controlPointDistances: -100,
+  controlPointWeights: 0.5,
+  taxiDirection: "auto",
+  taxiTurn: 50,
+  targetArrowShape: "triangle",
+  zIndex: 1,
 };
 export const DefaultNode: DefaultNodeType = {
   id: "",
@@ -142,7 +159,7 @@ export const cytoscapeStylesheet = [
       "curve-style": "data(curveStyle)",
       "text-rotation": "autorotate",
       "control-point-distances": "data(controlPointDistances)",
-      "control-point-weights": "data(controlPointWeights)",
+      "control-point-weights": "data(controlPointWeightss)",
       "z-index": "data(zIndex)",
       "z-index-compare": "manual",
     },

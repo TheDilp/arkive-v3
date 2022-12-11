@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { BoardType, NodeType } from "../types/boardTypes";
+import { BoardType, EdgeType, NodeType } from "../types/boardTypes";
 import { baseURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import {
   AllAvailableTypes,
@@ -217,10 +217,10 @@ export const useSortMutation = (
 
 // Board Mutations
 
-export const useCreateNode = (project_id: string, subType: "nodes" | "edges") => {
+export const useCreateNodeEdge = (project_id: string, subType: "nodes" | "edges") => {
   const queryClient = useQueryClient();
   return useMutation(
-    async (createValues: NodeType) => {
+    async (createValues: Partial<NodeType | EdgeType>) => {
       const url = createURL(subType);
       if (url)
         return fetch(url, {
@@ -235,7 +235,7 @@ export const useCreateNode = (project_id: string, subType: "nodes" | "edges") =>
         queryClient.setQueryData(["allItems", project_id, "boards"], (oldData: BoardType[] | undefined) => {
           if (oldData)
             return oldData.map((board) => {
-              if (board.id === newData.parent) return { ...board, nodes: [...board.nodes, newData] };
+              if (board.id === newData.parent) return { ...board, [subType]: [...board[subType], newData] };
               return board;
             });
 

@@ -131,7 +131,7 @@ model edges {
   lineStyle             String  @default("solid")
   lineColor             String  @default("#595959")
   controlPointDistances Int     @default(-100)
-  controlPointWeight    Float   @default(0.5)
+  controlPointWeights   Float   @default(0.5)
   taxiDirection         String  @default("auto")
   taxiTurn              Int     @default(50)
   targetArrowShape      String  @default("triangle")

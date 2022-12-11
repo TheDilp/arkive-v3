@@ -64,7 +64,7 @@ export type EdgeType = {
   lineStyle: "solid" | "dashed" | "dotted";
   lineColor: string;
   controlPointDistances: number;
-  controlPointWeight: number;
+  controlPointWeights: number;
   taxiDirection: "auto" | "vertical" | "horizontal" | "upward" | "downward" | "leftward" | "rightward";
   taxiTurn: number;
   targetArrowShape: ArrowShape;
@@ -89,6 +89,10 @@ export interface BoardType extends BaseItemType {
 
 export type DefaultBoardType = Omit<BoardType, "id" | "project_id" | "nodes" | "edges">;
 export type DefaultNodeType = Omit<NodeType, "doc_id" | "label">;
+export type DefaultEdgeType = Omit<
+  EdgeType,
+  "midSourceArrowShape" | "midTargetArrowShape" | "sourceArrowShape" | "source_id" | "target_id" | "label"
+>;
 export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
   project_id: string;
 };

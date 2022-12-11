@@ -11,6 +11,7 @@ specifiers:
   '@tanstack/react-query-devtools': ^4.16.1
   '@tanstack/react-table': ^8.7.0
   '@types/cytoscape': ^3.19.9
+  '@types/cytoscape-edgehandles': ^4.0.0
   '@types/leaflet': ^1.9.0
   '@types/react': ^18.0.22
   '@types/react-cytoscapejs': ^1.2.2
@@ -22,6 +23,7 @@ specifiers:
   autoprefixer: ^10.4.13
   concurrently: ^7.6.0
   cytoscape: ^3.23.0
+  cytoscape-edgehandles: ^4.0.1
   eslint: ^8.29.0
   eslint-config-airbnb: ^19.0.4
   eslint-config-prettier: ^8.5.0
@@ -66,6 +68,7 @@ dependencies:
   '@tanstack/react-table': 8.7.0_biqbaboplfbrettd7655fr4n2y
   concurrently: 7.6.0
   cytoscape: 3.23.0
+  cytoscape-edgehandles: 4.0.1_cytoscape@3.23.0
   jotai: 1.9.1_react@18.2.0
   leaflet: 1.9.3
   primeicons: 6.0.1
@@ -86,6 +89,7 @@ dependencies:
 devDependencies:
   '@tanstack/react-query-devtools': 4.16.1_budcsmmktl2xfbndofa5sinodm
   '@types/cytoscape': 3.19.9
+  '@types/cytoscape-edgehandles': 4.0.0
   '@types/leaflet': 1.9.0
   '@types/react': 18.0.25
   '@types/react-cytoscapejs': 1.2.2
@@ -2408,6 +2412,12 @@ packages:
       '@types/tern': 0.23.4
     dev: false
 
+  /@types/cytoscape-edgehandles/4.0.0:
+    resolution: {integrity: sha512-150ohT1VxeS6fa414KLvv6B85CdHAFLI/rInFdCrzhOBgSwStSNonu0rypthliq9AxDjZ+wPOI5hB7VJOyu0wQ==}
+    dependencies:
+      '@types/cytoscape': 3.19.9
+    dev: true
+
   /@types/cytoscape/3.19.9:
     resolution: {integrity: sha512-oqCx0ZGiBO0UESbjgq052vjDAy2X53lZpMrWqiweMpvVwKw/2IiYDdzPFK6+f4tMfdv9YKEM9raO5bAZc3UYBg==}
     dev: true
@@ -3147,6 +3157,16 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /cytoscape-edgehandles/4.0.1_cytoscape@3.23.0:
+    resolution: {integrity: sha512-uSYshkqRZ4luCxK295bEVTg46q4ZW+fwJhcIzMrtfNR7zeAnJ38Z48kUGeu5ibtXkgLbcZAg0YE4ED2dRuaePg==}
+    peerDependencies:
+      cytoscape: ^3.2.0
+    dependencies:
+      cytoscape: 3.23.0
+      lodash.memoize: 4.1.2
+      lodash.throttle: 4.1.1
+    dev: false
 
   /cytoscape/3.23.0:
     resolution: {integrity: sha512-gRZqJj/1kiAVPkrVFvz/GccxsXhF3Qwpptl32gKKypO4IlqnKBjTOu+HbXtEggSGzC5KCaHp3/F7GgENrtsFkA==}
@@ -4556,9 +4576,17 @@ packages:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
+  /lodash.memoize/4.1.2:
+    resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
+    dev: false
+
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
+
+  /lodash.throttle/4.1.1:
+    resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}
+    dev: false
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}

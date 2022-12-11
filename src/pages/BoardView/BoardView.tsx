@@ -1,23 +1,25 @@
 import { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateNode, useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
+import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
 import { changeLockState } from "../../utils/boardUtils";
-import { cytoscapeStylesheet, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { toaster } from "../../utils/toast";
 
-type Props = {};
+type Props = {
+  isReadOnly?: boolean;
+};
 
-export default function BoardView({}: Props) {
+export default function BoardView({ isReadOnly }: Props) {
   const cm = useRef() as any;
   const { project_id, item_id } = useParams();
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
@@ -28,9 +30,10 @@ export default function BoardView({}: Props) {
   });
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
-  const createNodeMutation = useCreateNode(project_id as string, "nodes");
+  const createNodeMutation = useCreateNodeEdge(project_id as string, "nodes");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const deleteManyNodes = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
+  const createEdgeMutation = useCreateNodeEdge(project_id as string, "edges");
   const items = [
     {
       command: () => {
@@ -122,7 +125,7 @@ export default function BoardView({}: Props) {
           .map((node: NodeType) => ({
             data: {
               ...node,
-              classes: "boardNode",
+              classes: `boardNode ${isReadOnly && "publicBoardNode"}`,
               label: node.label || "",
               zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
               backgroundImage: [],
@@ -147,7 +150,7 @@ export default function BoardView({}: Props) {
             ...edge,
             source: edge.source_id,
             target: edge.target_id,
-            classes: "boardEdge",
+            classes: `boardEdge ${isReadOnly && "publicBoardEdge"}`,
             label: edge.label || "",
           },
         }));
@@ -155,10 +158,22 @@ export default function BoardView({}: Props) {
       setElements([...temp_nodes, ...temp_edges]);
     }
   }, [board, item_id]);
-
+  const makeEdgeCallback = useCallback(
+    (source: string, target: string, color?: string) => {
+      createEdgeMutation.mutate({
+        ...DefaultEdge,
+        id: v4(),
+        parent: item_id as string,
+        source_id: source,
+        target_id: target,
+      });
+    },
+    [item_id],
+  );
   // Board Events
   useEffect(() => {
-    if (boardRef) {
+    if (boardRef && !isReadOnly) {
+      // Right click
       boardRef.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
         if (evt.target === boardRef) {
@@ -186,6 +201,8 @@ export default function BoardView({}: Props) {
           }
         }
       });
+
+      // Creating edges
     }
   }, [boardRef]);
 
@@ -194,7 +211,9 @@ export default function BoardView({}: Props) {
       <ContextMenu cm={cm} items={items} />
       <CytoscapeComponent
         className="h-full w-full"
-        cy={(cy) => setBoardRef(cy)}
+        cy={(cy) => {
+          setBoardRef(cy);
+        }}
         elements={elements}
         // @ts-ignore
         stylesheet={cytoscapeStylesheet}
