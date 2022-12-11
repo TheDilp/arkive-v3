@@ -1,4 +1,4 @@
-import cytoscape from "cytoscape";
+import { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -9,9 +9,10 @@ import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateNode } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
-import { BoardType, NodeType } from "../../types/boardTypes";
+import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { BoardReferenceAtom } from "../../utils/Atoms/atoms";
 import { cytoscapeStylesheet, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
+import { toaster } from "../../utils/toast";
 
 type Props = {};
 
@@ -24,19 +25,21 @@ export default function BoardView({}: Props) {
     y: null,
     type: "node",
   });
-  const [elements, setElements] = useState([]);
+  const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   const createNodeMutation = useCreateNode(project_id as string, "nodes");
   const items = [
     {
       command: () => {
-        createNodeMutation.mutate({
-          ...DefaultNode,
-          x: boardContext.x,
-          y: boardContext.y,
-          parent: item_id as string,
-          id: v4(),
-        });
+        if (boardContext.x && boardContext.y)
+          createNodeMutation.mutate({
+            ...DefaultNode,
+            x: boardContext.x,
+            y: boardContext.y,
+            parent: item_id as string,
+            id: v4(),
+          });
+        else toaster("error", "There was an error creating your node (missing X and Y).");
       },
       icon: "pi pi-fw pi-map-marker",
       label: "New Node",
@@ -49,8 +52,8 @@ export default function BoardView({}: Props) {
 
   useEffect(() => {
     if (board) {
-      let temp_nodes = [];
-      const temp_edges = [];
+      let temp_nodes: NodeDefinition[] = [];
+      let temp_edges: EdgeDefinition[] = [];
       if (board.nodes.length > 0) {
         temp_nodes = board.nodes
           .filter((node) => !node.template)
@@ -76,7 +79,18 @@ export default function BoardView({}: Props) {
             position: { x: node.x, y: node.y },
           }));
       }
-      setElements([...temp_nodes]);
+      if (board.edges.length > 0) {
+        temp_edges = board.edges.map((edge: EdgeType) => ({
+          data: {
+            ...edge,
+            source: edge.source_id,
+            target: edge.target_id,
+            classes: "boardEdge",
+            label: edge.label || "",
+          },
+        }));
+      }
+      setElements([...temp_nodes, ...temp_edges]);
     }
   }, [board, item_id]);
 

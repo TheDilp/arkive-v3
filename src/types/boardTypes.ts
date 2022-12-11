@@ -1,4 +1,6 @@
+import cytoscape from "cytoscape";
 import { BaseItemType } from "./generalTypes";
+
 type ArrowShape =
   | "none"
   | "triangle"
@@ -90,3 +92,12 @@ export type DefaultNodeType = Omit<NodeType, "doc_id" | "label">;
 export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
   project_id: string;
 };
+
+export type CytoscapeNodeType = cytoscape.NodeDefinition;
+// Custom image has priority, if not set use document image, if neither - empty array
+// Empty string ("") causes issues with cytoscape, so an empty array must be used
+// backgroundImage: node.customImage?.link
+//   ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(" ", "%20")}`
+//   : node.document?.image?.link
+//   ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(" ", "%20")}`
+//   : [],
