@@ -213,3 +213,9 @@
 .leaflet-control-layers-overlays {
   @apply select-none;
 }
+
+/* Inputs */
+
+.p-inputnumber-button {
+  @apply bg-blue-300 !important;
+}
