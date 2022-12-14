@@ -21,9 +21,10 @@ import { useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 // import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
-import { BoardReferenceAtom, BoardStateAtom } from "../../utils/Atoms/atoms";
+import { BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
 import { changeLockState } from "../../utils/boardUtils";
 import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
+import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
 type Props = {};
@@ -31,12 +32,12 @@ export default function BoardQuickBar({}: Props) {
   const { project_id, item_id } = useParams();
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
+  const [, setDialog] = useAtom(DialogAtom);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
 
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
 
-  const [searchDialog, setSearchDialog] = useState(false);
   const [exportDialog, setExportDialog] = useState<BoardExportType>({
     view: "Graph",
     background: "Color",
@@ -235,7 +236,7 @@ export default function BoardQuickBar({}: Props) {
       {/* Search button */}
       <i
         className="pi pi-search searchButton cursor-pointer hover:text-blue-300"
-        // onClick={() => setSearchDialog((prev) => !prev)}
+        onClick={() => setDialog({ ...DefaultDialog, type: "node_search", show: true, position: "top`" })}
       />
 
       {/* Reset to default color button */}

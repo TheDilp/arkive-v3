@@ -305,7 +305,7 @@ function NodeSearch() {
   const [filteredNodes, setFilteredNodes] = useState<NodeType[]>(board?.nodes.filter((node) => node.label) || []);
 
   return (
-    <div>
+    <div className="flex flex-col justify-center">
       <AutoComplete
         autoFocus
         className="w-15rem ml-2"
@@ -353,10 +353,13 @@ export default function DialogWrapper() {
 
   return (
     <Dialog
+      className="p-0"
+      contentClassName="pb-0"
       header={() => {
         if (dialog.type === "files") return "Upload Files";
         if (dialog.type === "map_layer") return "Edit Map Layers";
         if (dialog.type === "editor_image") return "Insert An Image";
+        if (dialog.type === "node_search") return "Search nodes";
         if (uploading) return "Uploading...";
         return null;
       }}
