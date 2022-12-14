@@ -178,7 +178,13 @@ export default function BoardView({ isReadOnly }: Props) {
   // Board Events
   useEffect(() => {
     if (boardRef && !isReadOnly) {
-      setBoardState({ ...boardState, edgeHandles: { drawMode: false, ref: boardRef.edgehandles(edgehandlesSettings) } });
+      // @ts-ignore
+      boardRef.gridGuide({ ...cytoscapeGridOptions, drawGrid: board.defaultGrid, snapToGridDuringDrag: board.defaultGrid });
+      setBoardState({
+        ...boardState,
+        edgeHandles: { drawMode: false, ref: boardRef.edgehandles(edgehandlesSettings) },
+        grid: board.defaultGrid,
+      });
       // Right click
       boardRef.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas

@@ -70,6 +70,7 @@ export default function DrawerBoardContent() {
           title: newData.title,
           defaultNodeColor: newData.defaultNodeColor,
           defaultEdgeColor: newData.defaultEdgeColor,
+          defaultGrid: newData.defaultGrid,
         },
         {
           onSuccess: () => toaster("success", "Your board was successfully updated."),
@@ -174,11 +175,11 @@ export default function DrawerBoardContent() {
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Draw grid by default?</span>
         <Checkbox
-          checked={localItem.folder}
+          checked={localItem.defaultGrid}
           onChange={(e) =>
             setLocalItem((prev) => ({
               ...prev,
-              grid: e.checked,
+              defaultGrid: e.checked,
             }))
           }
         />
