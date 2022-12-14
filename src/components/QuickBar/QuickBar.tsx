@@ -25,6 +25,7 @@ import { BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atom
 import { changeLockState, updateColor } from "../../utils/boardUtils";
 import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { toaster } from "../../utils/toast";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
 type Props = {};
@@ -50,14 +51,14 @@ export default function BoardQuickBar({}: Props) {
   //   const updateEdgeMutation = useUpdateEdge(project_id as string);
   //   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
   //   const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
-  //   const debouncedColorPick = useDebouncedCallback(
-  //     // function
-  //     (color) => {
-  //       updateColor(boardRef, `#${color}`, item_id as string, updateNodeMutation, updateEdgeMutation);
-  //     },
-  //     // delay in ms
-  //     400,
-  //   );
+  const debouncedColorPick = useDebouncedCallback(
+    // function
+    (color) => {
+      if (boardRef) updateColor(boardRef, `#${color}`, item_id as string, updateNodeMutation, updateEdgeMutation);
+    },
+    // delay in ms
+    400,
+  );
 
   //   const exportBoardFunction = (
   //     view: "Graph" | "View",
@@ -192,15 +193,15 @@ export default function BoardQuickBar({}: Props) {
       {/* Delete selected elements button */}
       <i
         className="pi pi-fw pi-trash deleteSelected cursor-pointer hover:text-blue-300"
-        // onClick={() => {
-        //   if (!cyRef) return;
-        //   const selected = boardRef.elements(":selected");
-        //   if (selected.length === 0) {
-        //     toastWarn("No elements are selected.");
-        //     return;
-        //   }
-        //   confirmDelete(selected);
-        // }}
+        onClick={() => {
+          if (!boardRef) return;
+          const selected = boardRef.elements(":selected");
+          if (selected.length === 0) {
+            toaster("warning", "No elements are selected.");
+            return;
+          }
+          // confirmDelete(selected);
+        }}
       />
 
       {/* Drawmode button */}
@@ -269,9 +270,9 @@ export default function BoardQuickBar({}: Props) {
       <ColorPicker
         className="w-2rem h-2rem"
         defaultColor="595959"
-        // onChange={(e) => {
-        //   debouncedColorPick(e.target.value);
-        // }}
+        onChange={(e) => {
+          debouncedColorPick(e.target.value);
+        }}
       />
     </div>
 
