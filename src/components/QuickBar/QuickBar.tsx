@@ -156,7 +156,7 @@ export default function BoardQuickBar({}: Props) {
                 key={color}
                 className="h-4 w-4 cursor-pointer rounded-sm"
                 onClick={() => {
-                  //   updateColor(cyRef, `#${color}`, board_id as string, updateNodeMutation, updateEdgeMutation);
+                  if (boardRef) updateColor(boardRef, `#${color}`, item_id as string, updateNodeMutation, updateEdgeMutation);
                 }}
                 style={{
                   backgroundColor: `#${color}`,
@@ -274,54 +274,7 @@ export default function BoardQuickBar({}: Props) {
         // }}
       />
     </div>
-    //   {/* Dialogs */}
-    //   {/* Search nodes dialog */}
-    //   {/* <Dialog
-    //     className="w-80"
-    //     header="Search Nodes"
-    //     modal={false}
-    //     onHide={() => {
-    //       setSearchDialog(false);
-    //       setSearch("");
-    //       setFilteredNodes(board?.nodes || []);
-    //     }}
-    //     position="center"
-    //     visible={searchDialog}>
-    //     <AutoComplete
-    //       autoFocus
-    //       className="ml-2 w-60"
-    //       completeMethod={(e) =>
-    //         setFilteredNodes(board?.nodes.filter((node) => node.label?.toLowerCase().includes(e.query.toLowerCase())) || [])
-    //       }
-    //       field="label"
-    //       //   itemTemplate={(item: BoardNodeType) => (
-    //       //     // <span>
-    //       //     //   <ImageDropdownItem link={item.customImage?.link || ""} title={item.label || ""} />
-    //       //     // </span>
-    //       //   )}
-    //       onChange={(e) => setSearch(e.value)}
-    //       //   onSelect={(e) => {
-    //       //     if (!cyRef) return;
-    //       //     if (e.value) {
-    //       //       const foundNode = boardRef.getElementById(e.value.id);
-    //       //       boardRef.animate(
-    //       //         {
-    //       //           center: {
-    //       //             eles: foundNode,
-    //       //           },
-    //       //           zoom: 1,
-    //       //         },
-    //       //         {
-    //       //           duration: 1250,
-    //       //         },
-    //       //       );
-    //       //     }
-    //       //   }}
-    //       placeholder="Search Nodes"
-    //       suggestions={filteredNodes}
-    //       value={search}
-    //       //   virtualScrollerOptions={virtualScrollerSettings}
-    //     />
+
     //   </Dialog> */}
     //   {/* Export board dialog */}
     //   {/* <Dialog
