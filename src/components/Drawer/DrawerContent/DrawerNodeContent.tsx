@@ -6,7 +6,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { TabPanel, TabView } from "primereact/tabview";
-import { KeyboardEventHandler, useState } from "react";
+import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
@@ -44,6 +44,10 @@ export default function DrawerNodeContent({}: Props) {
   const handleEnter: KeyboardEventHandler = (e: any) => {
     if (e.key === "Enter" && localItem) updateNodeMutation.mutate(localItem);
   };
+
+  useEffect(() => {
+    if (drawer?.data) setLocalItem(drawer?.data);
+  }, [drawer?.data]);
   if (!localItem) {
     setDrawer(DefaultDrawer);
     return null;

@@ -245,6 +245,7 @@ export default function BoardView({ isReadOnly }: Props) {
         const target = evt.target._private;
         const { backgroundImage, board_id, classes, document, locked, parent, user_id, x, y, zIndexCompare, ...rest } =
           target.data;
+        console.log(rest);
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "nodes", drawerSize: "sm" });
       });
     }

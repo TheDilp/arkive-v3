@@ -1,8 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Link, useParams } from "react-router-dom";
 
-import { AvailableItemTypes } from "../../types/generalTypes";
-
 type Props = {
   id: string;
   title: string;
