@@ -10,6 +10,7 @@ export const DefaultBoard: DefaultBoardType = {
   tags: [],
   defaultNodeColor: "#595959",
   defaultEdgeColor: "#595959",
+  defaultGrid: false,
 };
 
 export const DefaultEdge: DefaultEdgeType = {

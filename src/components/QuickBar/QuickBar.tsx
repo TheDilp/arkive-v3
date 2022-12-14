@@ -17,10 +17,12 @@ import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { BoardExportType, BoardNodeType, BoardStateAction, BoardStateType } from "../../../types/BoardTypes";
+import { useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 // import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
 import { BoardReferenceAtom, BoardStateAtom } from "../../utils/Atoms/atoms";
+import { changeLockState } from "../../utils/boardUtils";
 import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
@@ -30,10 +32,11 @@ export default function BoardQuickBar({}: Props) {
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
+
+  const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
-  const [search, setSearch] = useState("");
+
   const [searchDialog, setSearchDialog] = useState(false);
-  const [filteredNodes, setFilteredNodes] = useState<BoardNodeType[]>(board?.nodes.filter((node) => node.label) || []);
   const [exportDialog, setExportDialog] = useState<BoardExportType>({
     view: "Graph",
     background: "Color",
@@ -172,12 +175,16 @@ export default function BoardQuickBar({}: Props) {
       {/* Lock selected elements button */}
       <i
         className="pi pi-fw pi-lock lockSelected cursor-pointer hover:text-blue-300"
-        // onClick={() => changeLockState(cyRef, true)}
+        onClick={() => {
+          if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+        }}
       />
       {/* Unlock selected elements button */}
       <i
         className="pi pi-fw pi-lock-open unlockSelected cursor-pointer hover:text-blue-300"
-        // onClick={() => changeLockState(cyRef, false)}
+        onClick={() => {
+          if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+        }}
       />
       {/* Delete selected elements button */}
       <i

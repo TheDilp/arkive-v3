@@ -6,9 +6,11 @@ import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
 
+export type DialogTypes = null | "files" | "map_layer" | "editor_image" | "node_search";
+
 export type DialogAtomType = {
   id: null | string;
-  type: null | "files" | "map_layer" | "editor_image";
+  type: DialogTypes;
   position?: DialogPositionType;
   modal?: boolean;
   fullscreen?: boolean;

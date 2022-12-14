@@ -259,6 +259,7 @@ export default function BoardView({ isReadOnly }: Props) {
           // @ts-ignore
           cy.gridGuide({
             ...cytoscapeGridOptions,
+            snapToGridDuringDrag: boardState.grid,
             drawGrid: boardState.grid,
           });
           setBoardRef(cy);

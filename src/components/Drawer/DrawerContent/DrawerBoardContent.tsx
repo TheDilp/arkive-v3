@@ -3,23 +3,19 @@ import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autoc
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
-import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../../CRUD/queries";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { BoardCreateType, BoardType } from "../../../types/boardTypes";
-import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
-import { MapImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
-import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 
 export default function DrawerBoardContent() {
   const { project_id } = useParams();
@@ -171,6 +167,18 @@ export default function DrawerBoardContent() {
             setLocalItem((prev) => ({
               ...prev,
               folder: e.checked,
+            }))
+          }
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="p-checkbox-label">Draw grid by default?</span>
+        <Checkbox
+          checked={localItem.folder}
+          onChange={(e) =>
+            setLocalItem((prev) => ({
+              ...prev,
+              grid: e.checked,
             }))
           }
         />

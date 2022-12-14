@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
+import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
@@ -17,9 +18,10 @@ import {
   useUpdateSubItem,
 } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
+import { BoardType, NodeType } from "../../types/boardTypes";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { MapLayerType, MapType } from "../../types/mapTypes";
-import { DialogAtom } from "../../utils/Atoms/atoms";
+import { BoardReferenceAtom, DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 import { ImageDropdownItem, MapImageDropdownItem } from "../Dropdown/ImageDropdownItem";
@@ -290,7 +292,56 @@ function InsertEditorImage() {
         iconPos="right"
         onClick={() => {
           dialog.data?.insertImage({ src: `${baseURLS.baseServer}getimage/images/${project_id}/${localImage}` });
-          console.log(`${baseURLS.baseServer}getimage/images/${project_id}/${localImage}`);
+        }}
+      />
+    </div>
+  );
+}
+function NodeSearch() {
+  const [boardRef] = useAtom(BoardReferenceAtom);
+  const { project_id, item_id } = useParams();
+  const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
+  const [search, setSearch] = useState("");
+  const [filteredNodes, setFilteredNodes] = useState<NodeType[]>(board?.nodes.filter((node) => node.label) || []);
+
+  return (
+    <div>
+      <AutoComplete
+        autoFocus
+        className="w-15rem ml-2"
+        field="label"
+        onChange={(e) => setSearch(e.value)}
+        placeholder="Search Nodes"
+        value={search}
+        completeMethod={(e) =>
+          setFilteredNodes(board?.nodes.filter((node) => node.label?.toLowerCase().includes(e.query.toLowerCase())) || [])
+        }
+        // itemTemplate={(item: BoardType) => (
+        //   <span>
+        //     <ImgDropdownItem
+        //       title={item.label || ""}
+        //       link={item.customImage?.link || ""}
+        //     />
+        //   </span>
+        // )}
+        suggestions={filteredNodes}
+        // virtualScrollerOptions={virtualScrollerSettings}
+        onSelect={(e) => {
+          if (!boardRef) return;
+          if (e.value) {
+            const foundNode = boardRef.getElementById(e.value.id);
+            boardRef.animate(
+              {
+                center: {
+                  eles: foundNode,
+                },
+                zoom: 1,
+              },
+              {
+                duration: 1250,
+              },
+            );
+          }
         }}
       />
     </div>
@@ -318,6 +369,7 @@ export default function DialogWrapper() {
       {dialog.type === "files" && <QuickUploadDialog setUploading={setUploading} />}
       {dialog.type === "map_layer" && <UpdateMapLayers />}
       {dialog.type === "editor_image" && <InsertEditorImage />}
+      {dialog.type === "node_search" && <NodeSearch />}
     </Dialog>
   );
 }
