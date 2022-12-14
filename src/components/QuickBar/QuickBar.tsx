@@ -236,7 +236,7 @@ export default function BoardQuickBar({}: Props) {
       {/* Search button */}
       <i
         className="pi pi-search searchButton cursor-pointer hover:text-blue-300"
-        onClick={() => setDialog({ ...DefaultDialog, type: "node_search", show: true, position: "top`" })}
+        onClick={() => setDialog({ ...DefaultDialog, type: "node_search", show: true, position: "top" })}
       />
 
       {/* Reset to default color button */}
