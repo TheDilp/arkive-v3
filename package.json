@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "client": "vite",
-    "server": "cd server && pnpm start",
-    "start": "concurrently \"pnpm run client\" \"pnpm run server\"",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "clientinstall": "pnpm install",
     "serverinstall": "cd server && pnpm install",
-    "installall": "pnpm install && pnpm serverinstall"
+    "installall": "pnpm install && pnpm serverinstall",
+    "server": "cd server && pnpm prisma migrate dev && pnpm prisma generate && pnpm start",
+    "start": "concurrently  \"pnpm run server\" \"pnpm run client\""
+
   },
   "dependencies": {
     "@floating-ui/react-dom": "^1.0.0",

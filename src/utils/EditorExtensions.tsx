@@ -48,16 +48,16 @@ export const DefaultEditorExtensions = () => {
       placeholder: "Write something awesome! 📜",
     }),
     CustomMentionExtension,
-    new BoldExtension(),
-    new ItalicExtension(),
-    new HeadingExtension(),
-    new UnderlineExtension(),
-    new BlockquoteExtension(),
+    new BoldExtension({}),
+    new ItalicExtension({}),
+    new HeadingExtension({}),
+    new UnderlineExtension({}),
+    new BlockquoteExtension({}),
     new BulletListExtension({
       enableSpine: false,
     }),
-    new TaskListExtension(),
-    new OrderedListExtension(),
+    new TaskListExtension({}),
+    new OrderedListExtension({}),
     new LinkExtension({
       autoLink: true,
       defaultTarget: "_blank",
@@ -66,11 +66,11 @@ export const DefaultEditorExtensions = () => {
     new ImageExtension({
       enableResizing: true,
     }),
-    new HorizontalRuleExtension(),
-    new CalloutExtension(),
-    new NodeFormattingExtension(),
-    new HardBreakExtension(),
-    new MarkdownExtension(),
+    new HorizontalRuleExtension({}),
+    new CalloutExtension({}),
+    new NodeFormattingExtension({}),
+    new HardBreakExtension({}),
+    new MarkdownExtension({}),
     CustomMentionExtension,
     //   new SecretExtension({
     //     extraAttributes: {
@@ -84,8 +84,8 @@ export const DefaultEditorExtensions = () => {
     // public_view: false,
     // type: null,
     //   }),
-    new GapCursorExtension(),
-    new DropCursorExtension(),
+    new GapCursorExtension({}),
+    new DropCursorExtension({}),
     //   new TableExtension(),
   ];
 };
