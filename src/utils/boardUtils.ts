@@ -2,6 +2,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import cytoscape from "cytoscape";
 
 import { AllItemsType, AllSubItemsType } from "../types/generalTypes";
+import { toaster } from "./toast";
 
 export function changeLockState(
   boardContext: cytoscape.Core,
@@ -328,3 +329,30 @@ export const edgeTargetArrowShapes = [
     value: "chevron",
   },
 ];
+export function updateColor(
+  boardRef: cytoscape.Core,
+  color: string,
+  item_id: string,
+  updateNodeMutation: any,
+  updateEdgeMutation: any,
+) {
+  if (boardRef.elements(":selected")?.length > 0) {
+    boardRef.elements(":selected").forEach((el: any) => {
+      if (el.isNode()) {
+        updateNodeMutation.mutate({
+          id: el.data().id,
+          parent: item_id as string,
+          backgroundColor: color,
+        });
+      } else {
+        updateEdgeMutation.mutate({
+          id: el.data().id,
+          parent: item_id as string,
+          lineColor: color,
+        });
+      }
+    });
+  } else {
+    toaster("warning", "No elements are selected.");
+  }
+}

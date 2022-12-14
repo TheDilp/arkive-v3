@@ -17,12 +17,12 @@ import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { BoardExportType, BoardNodeType, BoardStateAction, BoardStateType } from "../../../types/BoardTypes";
-import { useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
+import { useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
 // import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
 import { BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
-import { changeLockState } from "../../utils/boardUtils";
+import { changeLockState, updateColor } from "../../utils/boardUtils";
 import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
@@ -35,6 +35,8 @@ export default function BoardQuickBar({}: Props) {
   const [, setDialog] = useAtom(DialogAtom);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
 
+  const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
+  const updateEdgeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "edges");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
 
@@ -242,8 +244,9 @@ export default function BoardQuickBar({}: Props) {
       {/* Reset to default color button */}
       <span
         className="resetColors flex cursor-pointer hover:text-blue-300"
-        // onClick={() => updateColor(cyRef, "#595959", board_id as string, updateNodeMutation, updateEdgeMutation)}
-      >
+        onClick={() => {
+          if (boardRef) updateColor(boardRef, "#595959", item_id as string, updateNodeMutation, updateEdgeMutation);
+        }}>
         <Icon fontSize={20} icon="mdi:invert-colors-off" />
       </span>
       {/* Edit selected button */}
