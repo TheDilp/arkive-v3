@@ -50,12 +50,15 @@ function App() {
                 <Route element={<Editor editable />} path=":item_id" />
               </Route>
               <Route path="maps/*">
+                <Route element={<FolderView />} path="*" />
                 <Route element={<MapView />} path=":item_id" />
               </Route>
               <Route path="boards/*">
+                <Route element={<FolderView />} path="*" />
                 <Route element={<BoardView />} path=":item_id" />
               </Route>
               <Route path="timelines/*">
+                <Route element={<FolderView />} path="*" />
                 <Route element={<div>TIMELINE</div>} path=":item_id" />
               </Route>
               <Route element={<FolderView />} path=":type/folder/:item_id" />

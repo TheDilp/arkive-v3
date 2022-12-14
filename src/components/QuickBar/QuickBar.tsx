@@ -253,15 +253,14 @@ export default function BoardQuickBar({}: Props) {
       {/* Edit selected button */}
       <span
         className="editSelectedElements flex cursor-pointer hover:text-blue-300"
-        // onClick={() => {
-        //   if (!cyRef) return;
-        //   if (boardRef.elements(":selected")?.length > 0) {
-        //     setUpdateManyDialog(true);
-        //   } else {
-        //     toastWarn("No elements are selected.");
-        //   }
-        // }}
-      >
+        onClick={() => {
+          if (!boardRef) return;
+          if (boardRef.elements(":selected")?.length > 0) {
+            setUpdateManyDialog(true);
+          } else {
+            toaster("warning", "No elements are selected.");
+          }
+        }}>
         <Icon icon="mdi:vector-polyline-edit" />
       </span>
       {/* Color preset button */}
