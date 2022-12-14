@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import cytoscape from "cytoscape";
 import edgehandles from "cytoscape-edgehandles";
+import gridguide from "cytoscape-grid-guide";
 import { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { Route, Routes } from "react-router-dom";
@@ -24,6 +25,7 @@ import MapView from "./pages/MapView/MapView";
 function App() {
   useEffect(() => {
     cytoscape.use(edgehandles);
+    gridguide(cytoscape);
   }, []);
 
   const queryClient = new QueryClient({

@@ -12,7 +12,7 @@ import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, edgehandlesSettings } from "../../utils/boardUtils";
-import { cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -245,7 +245,6 @@ export default function BoardView({ isReadOnly }: Props) {
         const target = evt.target._private;
         const { backgroundImage, board_id, classes, document, locked, parent, user_id, x, y, zIndexCompare, ...rest } =
           target.data;
-        console.log(rest);
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "nodes", drawerSize: "sm" });
       });
     }
@@ -257,6 +256,8 @@ export default function BoardView({ isReadOnly }: Props) {
       <CytoscapeComponent
         className="h-full w-full"
         cy={(cy) => {
+          // @ts-ignore
+          cy.gridGuide(cytoscapeGridOptions);
           setBoardRef(cy);
         }}
         elements={elements}

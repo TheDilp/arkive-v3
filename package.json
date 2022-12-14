@@ -22,6 +22,7 @@
     "concurrently": "^7.6.0",
     "cytoscape": "^3.23.0",
     "cytoscape-edgehandles": "^4.0.1",
+    "cytoscape-grid-guide": "^2.3.3",
     "jotai": "^1.9.1",
     "leaflet": "^1.9.3",
     "primeicons": "^6.0.1",

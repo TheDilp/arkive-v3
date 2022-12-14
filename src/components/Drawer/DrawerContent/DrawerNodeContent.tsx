@@ -1,18 +1,15 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { TabPanel, TabView } from "primereact/tabview";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { BoardType, NodeType } from "../../../types/boardTypes";
-import { DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
   BoardFontFamilies,
@@ -21,17 +18,15 @@ import {
   textHAlignOptions,
   textVAlignOptions,
 } from "../../../utils/boardUtils";
-import { DefaultNode } from "../../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 
-type Props = {};
-
 function FontItemTemplate(item: { label: string; value: string }) {
-  return <div style={{ fontFamily: item.value }}>{item.label}</div>;
+  const { value, label } = item;
+  return <div style={{ fontFamily: value }}>{label}</div>;
 }
 
-export default function DrawerNodeContent({}: Props) {
+export default function DrawerNodeContent() {
   const { project_id, item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
@@ -46,7 +41,7 @@ export default function DrawerNodeContent({}: Props) {
   };
 
   useEffect(() => {
-    if (drawer?.data) setLocalItem(drawer?.data);
+    if (drawer?.data) setLocalItem(drawer?.data as NodeType);
   }, [drawer?.data]);
   if (!localItem) {
     setDrawer(DefaultDrawer);
@@ -111,7 +106,7 @@ export default function DrawerNodeContent({}: Props) {
                 value={localItem.fontColor}
               />
               <InputText
-                onChange={(e) => setLocalItem({ ...localItem, fontColor: `#${e.value}` as string })}
+                onChange={(e) => setLocalItem({ ...localItem, fontColor: `#${e.target.value}` as string })}
                 value={localItem.fontColor}
               />
             </div>
