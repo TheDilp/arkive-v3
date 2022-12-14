@@ -4,11 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "client": "concurrently vite",
+    "client": "vite",
     "server": "cd server && pnpm start",
     "start": "concurrently \"pnpm run client\" \"pnpm run server\"",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clientinstall": "pnpm install",
+    "serverinstall": "cd server && pnpm install",
+    "installall": "pnpm install && pnpm serverinstall"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^1.0.0",
