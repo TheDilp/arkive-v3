@@ -1,4 +1,4 @@
-import { EdgeDefinition, EventHandler, NodeDefinition } from "cytoscape";
+import { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -163,13 +163,14 @@ export default function BoardView({ isReadOnly }: Props) {
     }
   }, [board, item_id]);
   const makeEdgeCallback = useCallback(
-    (source: string, target: string, color?: string) => {
+    (source: string, target: string) => {
       createEdgeMutation.mutate({
         ...DefaultEdge,
         id: v4(),
         parent: item_id as string,
         source_id: source,
         target_id: target,
+        lineColor: board.defaultEdgeColor,
       });
     },
     [item_id],
@@ -239,6 +240,7 @@ export default function BoardView({ isReadOnly }: Props) {
           });
       });
 
+      // Double Click
       boardRef.on("dbltap", "node", function (evt: any) {
         const target = evt.target._private;
         const { backgroundImage, board_id, classes, document, locked, parent, user_id, x, y, zIndexCompare, ...rest } =

@@ -1,5 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 
+import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import FolderCard from "../../components/Folder/FolderCard";
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
@@ -33,7 +34,8 @@ export default function FolderView() {
   });
 
   return (
-    <div className="flex flex-col gap-4 p-8">
+    <div className="flex flex-col gap-4 px-8">
+      <Breadcrumbs />
       <FolderViewCards items={currentItems} type={type} />
     </div>
   );

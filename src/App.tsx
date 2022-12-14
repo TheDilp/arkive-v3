@@ -42,8 +42,9 @@ function App() {
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
           <Routes>
             <Route element={<Dashboard />} path="/" />
-            <Route element={<Layout />} path="/project/:project_id/">
+            <Route element={<Layout />} path="/project/:project_id/*">
               <Route path="documents/*">
+                <Route element={<FolderView />} path="*" />
                 <Route element={<Editor editable />} path=":item_id" />
               </Route>
               <Route path="maps/*">

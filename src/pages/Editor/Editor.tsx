@@ -13,12 +13,13 @@ import MentionDropdownComponent from "../../components/Mention/MentionDropdownCo
 import DocumentProperties from "../../components/PropertiesBar/DocumentProperties";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
+import { DocumentType } from "../../types/documentTypes";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
-  const currentDocument = useGetItem(project_id as string, item_id as string, "documents");
+  const currentDocument = useGetItem(project_id as string, item_id as string, "documents") as DocumentType;
   const updateDocumentMutation = useUpdateItem("documents");
 
   const { manager, state } = useRemirror({
@@ -56,45 +57,43 @@ export default function Editor({ content, editable }: EditorType) {
   }, [item_id]);
 
   if (!currentDocument) return <Navigate to="../" />;
-  if ("content" in currentDocument)
-    return (
-      <div className="flex w-full flex-1">
-        <div className={`${editable ? "w-5/6" : "h-96 w-full"} relative flex flex-col content-start`}>
-          {editable ? (
-            <h1 className=" sticky top-0 z-20 mb-0 flex h-12 w-full items-center justify-center border-b-2 border-zinc-700 bg-[#1e1e1e] pr-20 font-Merriweather text-2xl">
-              <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
-              {currentDocument.title}
-              {currentDocument?.template ? "[TEMPLATE]" : ""}
-            </h1>
-          ) : null}
-          {editable ? <Breadcrumbs /> : null}
-          <Remirror
-            classNames={[
-              "editor",
-              "w-full",
-              "flex-1",
-              "font-Lato",
-              `${editable ? "h-[calc(100vh-10rem)] overflow-y-auto" : "h-full"}`,
-            ]}
-            editable={editable || true}
-            initialContent={state}
-            manager={manager}>
-            <OnChangeJSON
-              onChange={(changedContent: RemirrorJSON) => {
-                onChange(changedContent, item_id as string);
-              }}
-            />
-            {editable ? <Menubar saving={false} /> : null}
-            <EditorComponent />
-            <MentionDropdownComponent />
-          </Remirror>
-        </div>
+  return (
+    <div className="flex w-full flex-1">
+      <div className={`${editable ? "w-5/6" : "h-96 w-full"} relative flex flex-col content-start`}>
         {editable ? (
-          <div className="flex w-1/6 flex-col bg-zinc-800">
-            <DocumentProperties />
-          </div>
+          <h1 className=" sticky top-0 z-20 mb-0 flex h-12 w-full items-center justify-center border-b-2 border-zinc-700 bg-[#1e1e1e] pr-20 font-Merriweather text-2xl">
+            <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
+            {currentDocument.title}
+            {currentDocument?.template ? "[TEMPLATE]" : ""}
+          </h1>
         ) : null}
+        {editable ? <Breadcrumbs /> : null}
+        <Remirror
+          classNames={[
+            "editor",
+            "w-full",
+            "flex-1",
+            "font-Lato",
+            `${editable ? "h-[calc(100vh-10rem)] overflow-y-auto" : "h-full"}`,
+          ]}
+          editable={editable || true}
+          initialContent={state}
+          manager={manager}>
+          <OnChangeJSON
+            onChange={(changedContent: RemirrorJSON) => {
+              onChange(changedContent, item_id as string);
+            }}
+          />
+          {editable ? <Menubar saving={false} /> : null}
+          <EditorComponent />
+          <MentionDropdownComponent />
+        </Remirror>
       </div>
-    );
-  return null;
+      {editable ? (
+        <div className="flex w-1/6 flex-col bg-zinc-800">
+          <DocumentProperties />
+        </div>
+      ) : null}
+    </div>
+  );
 }

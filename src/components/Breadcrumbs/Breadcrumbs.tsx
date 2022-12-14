@@ -1,5 +1,6 @@
+import { SetStateAction } from "jotai";
 import { BreadCrumb } from "primereact/breadcrumb";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
@@ -15,11 +16,11 @@ export default function Breadcrumbs() {
   const navigate = useNavigate();
   function recursiveFindParents(
     parent_id: string | null,
-    documents: DocumentType[],
+    recursiveDocuments: DocumentType[],
     tempBreadcrumbs: BreadcrumbsType,
-    setBreadcrumbs: (breadcrumbs: BreadcrumbsType) => void,
+    setCrumbs: Dispatch<SetStateAction<BreadcrumbsType>>,
   ) {
-    const parent = documents.find((doc) => doc.id === parent_id);
+    const parent = recursiveDocuments.find((doc) => doc.id === parent_id);
     if (parent) {
       tempBreadcrumbs.push({
         template: (
@@ -31,11 +32,11 @@ export default function Breadcrumbs() {
         ),
       });
 
-      recursiveFindParents(parent.parent || null, documents, tempBreadcrumbs, setBreadcrumbs);
+      recursiveFindParents(parent.parent || null, recursiveDocuments, tempBreadcrumbs, setCrumbs);
     } else {
       const current = tempBreadcrumbs.shift();
       if (current) tempBreadcrumbs.push(current);
-      setBreadcrumbs(tempBreadcrumbs);
+      setCrumbs(tempBreadcrumbs);
     }
   }
 
