@@ -17,11 +17,11 @@ import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { BoardExportType, BoardNodeType, BoardStateAction, BoardStateType } from "../../../types/BoardTypes";
-import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
+// import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
 import { BoardReferenceAtom, BoardStateAtom } from "../../utils/Atoms/atoms";
-import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
+import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
 type Props = {};
@@ -165,17 +165,8 @@ export default function BoardQuickBar({}: Props) {
 
       {/* Toggle grid visibility */}
       <span
-      // className={`flex cursor-pointer hover:text-blue-300 ${boardState.drawGrid ? "text-green-500" : ""}  drawGrid`}
-      // onClick={() => {
-      //   //   if (cyRef) {
-      //   //     boardStateDispatch({ type: "GRID", payload: !boardState.drawGrid });
-      //   //     boardRef.gridGuide({
-      //   //       ...cytoscapeGridOptions,
-      //   //       drawGrid: !boardState.drawGrid,
-      //   //     });
-      //   //   }
-      // }}
-      >
+        className={`flex cursor-pointer hover:text-blue-300 ${boardState.grid ? "text-green-500" : ""}  drawGrid`}
+        onClick={() => setBoardState({ ...boardState, grid: !boardState.grid })}>
         <Icon icon="mdi:grid" />
       </span>
       {/* Lock selected elements button */}

@@ -257,7 +257,10 @@ export default function BoardView({ isReadOnly }: Props) {
         className="h-full w-full"
         cy={(cy) => {
           // @ts-ignore
-          cy.gridGuide(cytoscapeGridOptions);
+          cy.gridGuide({
+            ...cytoscapeGridOptions,
+            drawGrid: boardState.grid,
+          });
           setBoardRef(cy);
         }}
         elements={elements}
