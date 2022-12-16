@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
-import { useGetAllTags } from "../../../CRUD/queries";
+import { useGetAllTags } from "../../../CRUD/OtherCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
 import { BoardCreateType, BoardType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";

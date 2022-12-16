@@ -18,6 +18,7 @@ export enum getURLS {
   getSingleMapImage = "getimage/maps/",
   // Misc
   getAllTags = "alltags/",
+  getFullSearch = "fullsearch/",
 }
 
 export enum createURLS {

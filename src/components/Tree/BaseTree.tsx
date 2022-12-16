@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
 import { useCreateItem, useDeleteMutation, useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
-import { useGetAllTags } from "../../CRUD/queries";
+import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { DocumentType } from "../../types/documentTypes";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { MapType } from "../../types/mapTypes";

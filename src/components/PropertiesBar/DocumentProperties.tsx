@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
-import { useGetAllTags } from "../../CRUD/queries";
+import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { DocumentType } from "../../types/documentTypes";
 
