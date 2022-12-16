@@ -10,6 +10,7 @@ import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import DrawerBoardContent from "./DrawerContent/DrawerBoardContent";
 import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent";
+import DrawerFullSearch from "./DrawerContent/DrawerFullSearch";
 import DrawerMapContent from "./DrawerContent/DrawerMapContent";
 import DrawerMapPinContent from "./DrawerContent/DrawerMapPinContent";
 import DrawerNodeContent from "./DrawerContent/DrawerNodeContent";
@@ -50,6 +51,7 @@ export default function Drawer() {
       {drawer.type === "map_pins" ? <DrawerMapPinContent /> : null}
       {drawer.type === "boards" ? <DrawerBoardContent /> : null}
       {drawer.type === "nodes" ? <DrawerNodeContent /> : null}
+      {drawer.type === "full_search" ? <DrawerFullSearch /> : null}
     </PrimeDrawer>
   );
 }

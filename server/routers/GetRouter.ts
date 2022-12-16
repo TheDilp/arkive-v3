@@ -55,8 +55,44 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
       } catch (error) {
         console.log(error);
       }
+      return [];
     },
   );
-
+  server.post("/full_search/:project_id", async (req: FastifyRequest<{ Params: { project_id: string }; Body: string }>) => {
+    const { project_id } = req.params;
+    const { query } = JSON.parse(req.body) as { query: string };
+    const documents = await prisma.$queryRaw`
+select id,title from documents where (project_id::text = ${project_id} and content->>'content'::text like ${`%${query}%`})
+;`;
+    const maps = await prisma.maps.findMany({
+      where: {
+        title: {
+          startsWith: query,
+        },
+      },
+    });
+    const pins = await prisma.map_pins.findMany({
+      where: {
+        text: {
+          startsWith: query,
+        },
+      },
+    });
+    const boards = await prisma.boards.findMany({
+      where: {
+        title: {
+          startsWith: query,
+        },
+      },
+    });
+    const nodes = await prisma.nodes.findMany({
+      where: {
+        label: {
+          startsWith: query,
+        },
+      },
+    });
+    return [documents, maps, pins, boards, nodes].flat();
+  });
   done();
 };

@@ -1,17 +1,17 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
-import { DialogAtom } from "../../utils/Atoms/atoms";
-import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { project_id } = useParams();
   const [, setDialog] = useAtom(DialogAtom);
-  // const [search, setSearch] = useState<string | null>(null);
+  const [, setDrawer] = useAtom(DrawerAtom);
   const projectData = useGetSingleProject(project_id as string);
   function navbarShortcuts(e: KeyboardEvent) {
     if (e.ctrlKey && project_id) {
@@ -120,6 +120,12 @@ export default function Navbar() {
             />
 
             <span className="ml-auto flex items-center gap-x-2">
+              <Icon
+                className="cursor-pointer hover:text-blue-300"
+                fontSize={20}
+                icon="ion:search"
+                onClick={async () => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "full_search" })}
+              />
               <Icon
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
