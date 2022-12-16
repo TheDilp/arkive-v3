@@ -62,40 +62,58 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
     const { project_id } = req.params;
     const { query } = JSON.parse(req.body) as { query: string };
     const documents = await prisma.$queryRaw`
-select id,title from documents where (project_id::text = ${project_id} and (lower(content->>'content'::text) like lower(${`%${query}%`}) or lower(title) like lower(${`%${query}%`})) and folder = false)
+select id,title,icon from documents where (project_id::text = ${project_id} and (lower(content->>'content'::text) like lower(${`%${query}%`}) or lower(title) like lower(${`%${query}%`})) and folder = false)
 ;`;
     const maps = await prisma.maps.findMany({
       where: {
         title: {
-          startsWith: query,
+          contains: query,
           mode: "insensitive",
         },
         folder: false,
+      },
+      select: {
+        id: true,
+        title: true,
+        icon: true,
       },
     });
     const pins = await prisma.map_pins.findMany({
       where: {
         text: {
-          startsWith: query,
+          contains: query,
           mode: "insensitive",
         },
+      },
+      select: {
+        id: true,
+        text: true,
       },
     });
     const boards = await prisma.boards.findMany({
       where: {
         title: {
-          startsWith: query,
+          contains: query,
           mode: "insensitive",
         },
         folder: false,
+      },
+      select: {
+        id: true,
+        title: true,
+        icon: true,
       },
     });
     const nodes = await prisma.nodes.findMany({
       where: {
         label: {
-          startsWith: query,
+          contains: query,
           mode: "insensitive",
         },
+      },
+      select: {
+        id: true,
+        label: true,
       },
     });
     return [documents, maps, pins, boards, nodes].flat();
