@@ -169,13 +169,13 @@ export default function DrawerDocumentContent() {
             {buttonLabelWithIcon("Delete", "mdi:trash")}
           </Button>
         ) : null}
-        <Button
-          className="p-button-outlined p-button-success ml-auto"
-          onClick={() => CreateUpdateDocument(localItem)}
-          type="submit">
-          {buttonLabelWithIcon("Save", "mdi:content-save")}
-        </Button>
       </div>
+      <Button
+        className="p-button-outlined p-button-success ml-auto"
+        onClick={() => CreateUpdateDocument(localItem)}
+        type="submit">
+        {buttonLabelWithIcon("Save", "mdi:content-save")}
+      </Button>
     </div>
   );
 }
