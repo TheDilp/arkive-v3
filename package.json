@@ -11,6 +11,7 @@
     "installall": "pnpm install && pnpm serverinstall",
     "server": "cd server && pnpm prisma migrate dev --name Init migration && pnpm prisma generate && pnpm start",
     "start": "concurrently  \"pnpm run server\" \"pnpm run client\""
+
   },
   "dependencies": {
     "@floating-ui/react-dom": "^1.0.0",
@@ -40,8 +41,7 @@
     "react-virtual": "^2.10.4",
     "remirror": "^2.0.18",
     "use-debounce": "^8.0.4",
-    "uuid": "^9.0.0",
-    "zod": "^3.20.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^4.16.1",
