@@ -8,18 +8,11 @@ import { useDebouncedCallback } from "use-debounce";
 import { useFullSearch } from "../../../CRUD/OtherCRUD";
 import { BoardType, NodeType } from "../../../types/boardTypes";
 import { DocumentType } from "../../../types/documentTypes";
-import { AllItemsType, AllSubItemsType } from "../../../types/generalTypes";
+import { AvailableSearchResultTypes } from "../../../types/generalTypes";
 import { MapPinType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
-
-type AvailableResultTypes = "documents" | "maps" | "boards" | "nodes" | "pins";
-function getLinkForFullSearch(id: string, parent: string, type: AvailableResultTypes, project_id: string) {
-  if (["documents", "maps", "boards"].includes(type)) return `/project/${project_id}/${type}/${id}`;
-  if (type === "pins") return `/project/${project_id}/maps/${id}/${parent}`;
-  if (type === "nodes") return `/project/${project_id}/maps/${id}/${parent}`;
-  return "./";
-}
+import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
 
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
@@ -52,22 +45,27 @@ export default function DrawerFullSearch() {
         value={query}
       />
       <ul className="mt-2 flex flex-col gap-y-2 font-Lato">
-        {Object.keys(results).map((key) =>
-          results[key as AvailableResultTypes].map((item) => (
-            <li key={item.id} className="flex cursor-pointer py-1 hover:bg-sky-400">
-              <Link
-                className="flex"
-                onClick={() => setDrawer(DefaultDrawer)}
-                to={getLinkForFullSearch(item.id, item.parent as string, key as AvailableResultTypes, project_id as string)}>
-                {"icon" in item && <Icon fontSize={24} icon={item.icon || "mdi:file"} />}
-                {"text" in item && <Icon icon="mdi:map_marker" />}
-                {"label" in item && <Icon icon="mdi:cog" />}
-                {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                {"label" in item && (item.label || "Node")}
-              </Link>
-            </li>
-          )),
-        )}
+        {Object.keys(results).length
+          ? Object.keys(results).map((key) =>
+              results[key as AvailableSearchResultTypes].map((item) => (
+                <li key={item.id} className="flex cursor-pointer truncate py-1 hover:bg-sky-400">
+                  <Link
+                    className="flex items-center gap-x-1"
+                    onClick={() => setDrawer(DefaultDrawer)}
+                    to={getLinkForFullSearch(
+                      item.id,
+                      item.parent as string,
+                      key as AvailableSearchResultTypes,
+                      project_id as string,
+                    )}>
+                    <Icon fontSize={24} icon={getIconForFullSearch(item)} />
+                    {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
+                    {"label" in item && (item.label || "Node")}
+                  </Link>
+                </li>
+              )),
+            )
+          : (query && "No items match this query.") || ""}
       </ul>
     </div>
   );

@@ -1,6 +1,9 @@
 import { Icon } from "@iconify/react";
 
-import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
+import { BoardType, NodeType } from "../types/boardTypes";
+import { DocumentType } from "../types/documentTypes";
+import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
+import { MapPinType, MapType } from "../types/mapTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
   <div className="flex items-center gap-x-1">
@@ -21,4 +24,20 @@ export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
   if (type === "maps") return "mdi:map";
   if (type === "boards") return "mdi:draw";
   return "mdi:file";
+}
+
+export function getLinkForFullSearch(id: string, parent: string, type: AvailableSearchResultTypes, project_id: string) {
+  if (["documents", "maps", "boards"].includes(type)) return `/project/${project_id}/${type}/${id}`;
+  if (type === "pins") return `/project/${project_id}/maps/${id}/${parent}`;
+  if (type === "nodes") return `/project/${project_id}/maps/${id}/${parent}`;
+  return "./";
+}
+
+export function getIconForFullSearch(item: DocumentType | MapType | MapPinType | BoardType | NodeType) {
+  let icon = "mdi:file";
+  if ("icon" in item) icon = item.icon || "mdi:file";
+  if ("text" in item) icon = "mdi:map_marker";
+  if ("label" in item) icon = "mdi:cog";
+
+  return icon;
 }

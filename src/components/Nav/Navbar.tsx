@@ -43,8 +43,8 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="flex py-2 border-b shadow flex-nowrap border-zinc-600 bg-zinc-800">
-      <div className="flex items-center w-full px-2 gap-x-2">
+    <div className="flex flex-nowrap border-b border-zinc-600 bg-zinc-800 py-2 shadow">
+      <div className="flex w-full items-center gap-x-2 px-2">
         <Icon
           className="cursor-pointer hover:text-blue-300"
           fontSize={20}
@@ -119,12 +119,12 @@ export default function Navbar() {
               }}
             />
 
-            <span className="flex items-center ml-auto gap-x-2">
+            <span className="ml-auto flex items-center gap-x-2">
               <Icon
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
                 icon="ion:search"
-                onClick={async () => setDrawer({ ...DefaultDrawer, position: "left", show: true, type: "full_search" })}
+                onClick={async () => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "full_search" })}
               />
               <Icon
                 className="cursor-pointer hover:text-blue-300"
@@ -147,11 +147,11 @@ export default function Navbar() {
       {/* Use project title only if in project */}
       {project_id && (
         <div
-          className="fixed flex w-full overflow-hidden pointer-events-none h-2rem align-items-start"
+          className="h-2rem align-items-start pointer-events-none fixed flex w-full overflow-hidden"
           style={{
             top: "0.25rem",
           }}>
-          <h2 className="mx-auto my-0 text-3xl font-Merriweather">{projectData?.data?.title}</h2>
+          <h2 className="mx-auto my-0 font-Merriweather text-3xl">{projectData?.data?.title}</h2>
         </div>
       )}
     </div>
