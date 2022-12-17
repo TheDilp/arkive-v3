@@ -13,6 +13,7 @@ import { MapPinType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
+
 const SearchDefault = { documents: [], maps: [], boards: [], pins: [], nodes: [] };
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
