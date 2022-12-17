@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Checkbox } from "primereact/checkbox";
@@ -14,7 +15,7 @@ export default function DocumentProperties() {
   const { project_id, item_id } = useParams();
   const currentDocument = useGetItem(project_id as string, item_id as string, "documents") as DocumentType;
   const { data: initialTags } = useGetAllTags(project_id as string, "documents");
-
+  const queryClient = useQueryClient();
   const [tags, setTags] = useState({ selected: currentDocument?.tags || [], suggestions: initialTags });
   const updateDocumentMutation = useUpdateItem("documents");
 
@@ -28,18 +29,19 @@ export default function DocumentProperties() {
 
     if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
   };
-  const handleTagsChange = (value: string) => {
+  const handleTagsChange = async (value: string) => {
     if (currentDocument && !currentDocument.tags.includes(value)) {
-      updateDocumentMutation?.mutate({
+      await updateDocumentMutation?.mutateAsync({
         id: currentDocument.id,
         tags: [...currentDocument.tags, value],
       });
     } else if (currentDocument.tags.includes(value)) {
-      updateDocumentMutation?.mutate({
+      await updateDocumentMutation?.mutateAsync({
         id: currentDocument.id,
         tags: currentDocument.tags.filter((tag) => tag !== value),
       });
     }
+    await queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
   };
   const handleAlterNamesChange = (value: string[]) => {
     if (currentDocument) {
