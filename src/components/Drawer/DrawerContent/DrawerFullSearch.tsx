@@ -13,7 +13,7 @@ import { MapPinType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
-
+const SearchDefault = { documents: [], maps: [], boards: [], pins: [], nodes: [] };
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<{
@@ -22,7 +22,7 @@ export default function DrawerFullSearch() {
     pins: MapPinType[];
     boards: BoardType[];
     nodes: NodeType[];
-  }>({ documents: [], maps: [], boards: [], pins: [], nodes: [] });
+  }>(SearchDefault);
   const [, setDrawer] = useAtom(DrawerAtom);
   const { project_id } = useParams();
   const { mutate } = useFullSearch(project_id as string);
@@ -32,7 +32,7 @@ export default function DrawerFullSearch() {
       mutate(search, {
         onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: [] }) => setResults(data),
       });
-    else setResults({});
+    else setResults(SearchDefault);
   }, 500);
   return (
     <div>
