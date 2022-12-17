@@ -31,7 +31,24 @@ export const DefaultEdge: DefaultEdgeType = {
   controlPointWeights: 0.5,
   taxiDirection: "auto",
   taxiTurn: 50,
+  arrowScale: 1,
+
   targetArrowShape: "triangle",
+  targetArrowFill: "filled",
+  targetArrowColor: "#595959",
+
+  sourceArrowShape: "none",
+  sourceArrowFill: "filled",
+  sourceArrowColor: "#595959",
+
+  midSourceArrowShape: "none",
+  midSourceArrowFill: "filled",
+  midSourceArrowColor: "#595959",
+
+  midTargetArrowShape: "none",
+  midTargetArrowFill: "filled",
+  midTargetArrowColor: "#595959",
+
   zIndex: 1,
 };
 export const DefaultNode: DefaultNodeType = {
@@ -154,16 +171,29 @@ export const cytoscapeStylesheet = [
       "font-size": "data(fontSize)",
       "text-outline-color": "black",
       "text-outline-width": "2px",
+      "source-endpoint": "outside-to-node-or-label",
+      "target-endpoint": "outside-to-node-or-label",
       width: "data(width)",
       "line-opacity": "data(lineOpacity)",
       "line-cap": "data(lineCap)",
       "line-fill": "data(lineFill)",
       "source-arrow-shape": "data(sourceArrowShape)",
-      "target-arrow-shape": "data(targetArrowShape)",
-      "mid-source-arrow-shape": "data(midSourceArrowShape)",
-      "mid-target-arrow-shape": "data(midTargetArrowShape)",
-      "arrow-scale": 2,
-      "target-arrow-color": "data(lineColor)",
+      "source-arrow-fill": "data(sourceArrowFill)",
+      "source-arrow-color": "data(sourceArrowColor)",
+
+      "target-arrow-shape": "data(sourceArrowShape)",
+      "target-arrow-fill": "data(sourceArrowFill)",
+      "target-arrow-color": "data(sourceArrowColor)",
+
+      "mid-source-arrow-shape": "data(sourceArrowShape)",
+      "mid-source-arrow-fill": "data(sourceArrowFill)",
+      "mid-source-arrow-color": "data(sourceArrowColor)",
+
+      "mid-target-arrow-shape": "data(sourceArrowShape)",
+      "mid-target-arrow-fill": "data(sourceArrowFill)",
+      "mid-target-arrow-color": "data(sourceArrowColor)",
+
+      "arrow-scale": "data(arrowScale)",
       "line-color": "data(lineColor)",
       "line-style": "data(lineStyle)",
       "line-dash-pattern": [5, 10],

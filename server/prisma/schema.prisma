@@ -148,10 +148,23 @@ model edges {
   taxiDirection String @default("auto")
   taxiTurn      Int    @default(50)
 
-  targetArrowShape    String @default("triangle")
-  sourceArrowShape    String @default("none")
-  midSourceArrowShape String @default("none")
+  arrowScale Int @default(1)
+
+  targetArrowShape String @default("triangle")
+  targetArrowFill  String @default("filled")
+  targetArrowColor String @default("#595959")
+
+  sourceArrowShape String @default("none")
+  sourceArrowFill  String @default("filled")
+  sourceArrowColor String @default("#595959")
+
   midTargetArrowShape String @default("none")
+  midTargetArrowFill  String @default("filled")
+  midTargetArrowColor String @default("#595959")
+
+  midSourceArrowShape String @default("none")
+  midSourceArrowFill  String @default("filled")
+  midSourceArrowColor String @default("#595959")
 
   fontSize   Int    @default(16)
   fontColor  String @default("#ffffff")

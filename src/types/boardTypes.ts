@@ -1,4 +1,5 @@
 import cytoscape from "cytoscape";
+
 import { BaseItemType } from "./generalTypes";
 
 type ArrowShape =
@@ -13,6 +14,8 @@ type ArrowShape =
   | "circle"
   | "diamond"
   | "chevron";
+
+type ArrowFill = "filled" | "hollow";
 
 type NodeShape =
   | "rectangle"
@@ -71,10 +74,24 @@ export type EdgeType = {
   controlPointWeights: number;
   taxiDirection: "auto" | "vertical" | "horizontal" | "upward" | "downward" | "leftward" | "rightward";
   taxiTurn: number;
-  targetArrowShape: ArrowShape;
+  arrowScale: number;
+
   sourceArrowShape: ArrowShape;
+  sourceArrowFill: ArrowFill;
+  sourceArrowColor: string;
+
+  targetArrowShape: ArrowShape;
+  targetArrowFill: ArrowFill;
+  targetArrowColor: string;
+
   midSourceArrowShape: ArrowShape;
+  midSourceArrowFill: ArrowFill;
+  midSourceArrowColor: string;
+
   midTargetArrowShape: ArrowShape;
+  midTargetArrowFill: ArrowFill;
+  midTargetArrowColor: string;
+
   fontSize: number;
   fontColor: string;
   fontFamily: string;
@@ -93,10 +110,7 @@ export interface BoardType extends BaseItemType {
 
 export type DefaultBoardType = Omit<BoardType, "id" | "project_id" | "nodes" | "edges">;
 export type DefaultNodeType = Omit<NodeType, "doc_id" | "label">;
-export type DefaultEdgeType = Omit<
-  EdgeType,
-  "midSourceArrowShape" | "midTargetArrowShape" | "sourceArrowShape" | "source_id" | "target_id" | "label"
->;
+export type DefaultEdgeType = Omit<EdgeType, "source_id" | "target_id" | "label">;
 export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
   project_id: string;
 };
