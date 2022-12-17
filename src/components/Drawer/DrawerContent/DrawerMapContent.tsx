@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Button } from "primereact/button";
@@ -20,6 +21,7 @@ import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 
 export default function DrawerMapContent() {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const [drawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const { data: maps } = useGetAllItems(project_id as string, "maps");
@@ -47,18 +49,19 @@ export default function DrawerMapContent() {
 
     if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
   };
-  const handleTagsChange = (value: string) => {
+  const handleTagsChange = async (value: string) => {
     if (map && !map.tags.includes(value)) {
-      updateMapMutation?.mutate({
+      await updateMapMutation?.mutateAsync({
         id: map.id,
         tags: [...map.tags, value],
       });
     } else if (map.tags.includes(value)) {
-      updateMapMutation?.mutate({
+      await updateMapMutation?.mutateAsync({
         id: map.id,
         tags: map.tags.filter((tag) => tag !== value),
       });
     }
+    await queryClient.refetchQueries({ queryKey: ["allTags", project_id, "maps"] });
   };
   function CreateUpdateMap(newData: MapCreateType) {
     if (map) {

@@ -9,10 +9,8 @@ import { v4 as uuid } from "uuid";
 
 import { useCreateItem, useDeleteMutation, useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { DocumentType } from "../../types/documentTypes";
-import { AvailableItemTypes } from "../../types/generalTypes";
-import { MapType } from "../../types/mapTypes";
-import { SidebarTreeItemType, TreeDataType } from "../../types/treeTypes";
+import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { SidebarTreeItemType } from "../../types/treeTypes";
 import { DialogAtom, DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
@@ -26,7 +24,7 @@ type Props = {
   isTemplates?: boolean;
 };
 
-function DragPreviewComponent(monitorProps: DragLayerMonitorProps<TreeDataType>) {
+function DragPreviewComponent(monitorProps: DragLayerMonitorProps<AllItemsType>) {
   return <DragPreview monitorProps={monitorProps} />;
 }
 function Placeholder(args: PlaceholderRenderParams) {
@@ -268,7 +266,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const { data: tags } = useGetAllTags(project_id as string, type);
 
   const cm = useRef();
-  const [treeData, setTreeData] = useState<NodeModel<TreeDataType>[]>([]);
+  const [treeData, setTreeData] = useState<NodeModel<AllItemsType>[]>([]);
   const [filter, setFilter] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
@@ -284,11 +282,11 @@ export default function BaseTree({ isTemplates, type }: Props) {
           setTreeData(
             tempItems
               .filter(
-                (filterItems: DocumentType | MapType) =>
+                (filterItems: AllItemsType) =>
                   filterItems.title.toLowerCase().includes(filter.toLowerCase()) &&
                   selectedTags.every((tag) => filterItems.tags.includes(tag)),
               )
-              .map((doc: DocumentType | MapType) => ({
+              .map((doc: AllItemsType) => ({
                 data: doc,
                 droppable: doc.folder,
                 id: doc.id,
@@ -307,7 +305,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
       }
       setTreeData(
         tempItems
-          .map((item: DocumentType | MapType) => ({
+          .map((item: AllItemsType) => ({
             data: item,
             droppable: item.folder,
             id: item.id,
@@ -379,7 +377,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
         }}
         // @ts-ignore
         placeholderRender={Placeholder}
-        render={(node: NodeModel<TreeDataType>, { depth, isOpen, onToggle }) => (
+        render={(node: NodeModel<AllItemsType>, { depth, isOpen, onToggle }) => (
           <TreeItem cm={cm} depth={depth} isOpen={isOpen} node={node} onToggle={onToggle} type={type} />
         )}
         rootId="0"

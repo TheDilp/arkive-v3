@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Button } from "primereact/button";
@@ -19,6 +20,7 @@ import { buttonLabelWithIcon } from "../../../utils/transform";
 
 export default function DrawerBoardContent() {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const [drawer] = useAtom(DrawerAtom);
   const updateBoardMutation = useUpdateItem("boards");
   const createBoardMutation = useCreateItem("boards");
@@ -44,18 +46,19 @@ export default function DrawerBoardContent() {
 
     if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
   };
-  const handleTagsChange = (value: string) => {
+  const handleTagsChange = async (value: string) => {
     if (board && !board.tags.includes(value)) {
-      updateBoardMutation?.mutate({
+      await updateBoardMutation?.mutateAsync({
         id: board.id,
         tags: [...board.tags, value],
       });
     } else if (board.tags.includes(value)) {
-      updateBoardMutation?.mutate({
+      await updateBoardMutation?.mutateAsync({
         id: board.id,
         tags: board.tags.filter((tag) => tag !== value),
       });
     }
+    queryClient.refetchQueries({ queryKey: ["allTags", project_id, "boards"] });
   };
   function CreateUpdateBoard(newData: BoardCreateType) {
     if (board) {
