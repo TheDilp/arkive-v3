@@ -88,6 +88,7 @@ select id,title,icon from documents where (project_id::text = ${project_id} and 
       select: {
         id: true,
         text: true,
+        parent: true,
       },
     });
     const boards = await prisma.boards.findMany({
@@ -114,9 +115,10 @@ select id,title,icon from documents where (project_id::text = ${project_id} and 
       select: {
         id: true,
         label: true,
+        parent: true,
       },
     });
-    return [documents, maps, pins, boards, nodes].flat();
+    return { documents, maps, pins, boards, nodes };
   });
   done();
 };

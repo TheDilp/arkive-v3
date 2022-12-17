@@ -16,6 +16,7 @@ import { useGetItem } from "../../hooks/getItemHook";
 import { DocumentType } from "../../types/documentTypes";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
+import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
@@ -56,7 +57,10 @@ export default function Editor({ content, editable }: EditorType) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item_id]);
 
-  if (!currentDocument) return <Navigate to="../" />;
+  if (!currentDocument) {
+    toaster("warning", "That document doesn't exist.");
+    return <Navigate to="../" />;
+  }
   return (
     <div className="flex w-full flex-1">
       <div className={`${editable ? "w-5/6" : "h-96 w-full"} relative flex flex-col content-start`}>
