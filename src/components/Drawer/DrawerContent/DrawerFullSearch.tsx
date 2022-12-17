@@ -28,9 +28,11 @@ export default function DrawerFullSearch() {
   const { mutate } = useFullSearch(project_id as string);
 
   const debounceSearch = useDebouncedCallback((search: string) => {
-    mutate(search, {
-      onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: [] }) => setResults(data),
-    });
+    if (search)
+      mutate(search, {
+        onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: [] }) => setResults(data),
+      });
+    else setResults({});
   }, 500);
   return (
     <div>
@@ -65,7 +67,7 @@ export default function DrawerFullSearch() {
                 </li>
               )),
             )
-          : (query && "No items match this query.") || ""}
+          : (query && "No items match this query.") || "Type something to search for documents, maps, pins, boards or nodes!"}
       </ul>
     </div>
   );
