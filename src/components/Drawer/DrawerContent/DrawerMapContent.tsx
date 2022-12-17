@@ -131,7 +131,7 @@ export default function DrawerMapContent() {
         options={map_images || []}
         placeholder="Select map"
         value={localItem.map_image}
-        valueTemplate={ImageDropdownValue({ map_image: localItem?.map_image })}
+        valueTemplate={ImageDropdownValue({ image: localItem?.map_image })}
       />
       <AutoComplete
         className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"

@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
+import { useGetAllImages, useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
 // import { useGetItem } from "../../../hooks/getItemHook";
 import { NodeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -19,7 +19,8 @@ import {
   textVAlignOptions,
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
-// import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 
 function FontItemTemplate(item: { label: string; value: string }) {
   const { value, label } = item;
@@ -31,7 +32,7 @@ export default function DrawerNodeContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
   const { data: documents } = useGetAllItems(project_id as string, "documents");
-  // const { data: images } = useGetAllImages(project_id as string);
+  const { data: images } = useGetAllImages(project_id as string);
   // const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   //   const [selectedTemplate, setSelectedTemplate] = useState<NodeType | null>(null);
   //   const updateNodeMutation = useUpdateNode(project_id as string);
@@ -48,10 +49,80 @@ export default function DrawerNodeContent() {
     return null;
   }
   return (
-    <div className="flex h-full flex-col justify-between">
-      <div className="flex w-full flex-col">
-        <div className="my-1 flex w-full flex-wrap">
-          <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-2">
+    <div className="flex h-full flex-col gap-y-4">
+      <div className="flex w-full flex-col gap-y-4">
+        <div className="flex w-full flex-col gap-y-4">
+          <div className=" w-full">
+            <span className="w-full text-sm text-zinc-400">Node shape</span>
+            <Dropdown
+              className="w-full"
+              filter
+              onChange={(e) => setLocalItem({ ...localItem, type: e.value })}
+              options={boardNodeShapes}
+              placeholder="Node Shape"
+              value={localItem.type}
+            />
+          </div>
+          <div className="flex flex-nowrap gap-x-1 gap-y-2">
+            <div className="w-full">
+              <span className="w-full text-sm text-zinc-400">Width</span>
+              <InputNumber
+                inputClassName="w-full"
+                max={5000}
+                min={10}
+                onChange={(e) => setLocalItem({ ...localItem, width: e.value as number })}
+                onKeyDown={handleEnter}
+                showButtons
+                step={10}
+                value={localItem.width}
+              />
+            </div>
+            <div className="w-full">
+              <span className="w-full text-sm text-zinc-400">Height</span>
+              <InputNumber
+                inputClassName="w-full"
+                max={5000}
+                min={10}
+                onChange={(e) => setLocalItem({ ...localItem, height: e.value as number })}
+                onKeyDown={handleEnter}
+                showButtons
+                step={10}
+                value={localItem.height}
+              />
+            </div>
+          </div>
+          <div className="flex w-full flex-wrap items-center justify-between">
+            <span className="w-full text-sm text-zinc-400">Node color</span>
+            <ColorPicker
+              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.value}` as string })}
+              value={localItem.backgroundColor}
+            />
+            <InputText
+              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.target.value}` as string })}
+              value={localItem.backgroundColor}
+            />
+          </div>
+          <div className="w-full">
+            <span className="pl-1">
+              <span className="w-full text-sm text-zinc-400">Background opacity</span>
+            </span>
+            <div className="flex flex-row-reverse items-center">
+              <InputNumber
+                className="ml-1 w-full"
+                max={1}
+                min={0}
+                mode="decimal"
+                onChange={(e) => setLocalItem({ ...localItem, backgroundOpacity: e.value as number })}
+                onKeyDown={handleEnter}
+                showButtons
+                step={0.01}
+                value={localItem.backgroundOpacity}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full flex-col gap-y-4">
+          <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-4">
             {/* Label text */}
 
             <div className="flex w-full flex-wrap">
@@ -135,100 +206,33 @@ export default function DrawerNodeContent() {
           </div>
         </div>
         <hr className="my-2" />
-        <div className="flex w-full flex-col">
-          <div className=" w-full">
-            <span className="w-full text-sm text-zinc-400">Node shape</span>
-            <Dropdown
-              className="w-full"
-              filter
-              onChange={(e) => setLocalItem({ ...localItem, type: e.value })}
-              options={boardNodeShapes}
-              placeholder="Node Shape"
-              value={localItem.type}
-            />
-          </div>
-          <div className="flex flex-nowrap gap-x-1 gap-y-2">
-            <div className="w-full">
-              <span className="w-full text-sm text-zinc-400">Width</span>
-              <InputNumber
-                inputClassName="w-full"
-                max={5000}
-                min={10}
-                onChange={(e) => setLocalItem({ ...localItem, width: e.value as number })}
-                onKeyDown={handleEnter}
-                showButtons
-                step={10}
-                value={localItem.width}
-              />
-            </div>
-            <div className="w-full">
-              <span className="w-full text-sm text-zinc-400">Height</span>
-              <InputNumber
-                inputClassName="w-full"
-                max={5000}
-                min={10}
-                onChange={(e) => setLocalItem({ ...localItem, height: e.value as number })}
-                onKeyDown={handleEnter}
-                showButtons
-                step={10}
-                value={localItem.height}
-              />
-            </div>
-          </div>
-          <div className="flex w-full flex-wrap items-center justify-between">
-            <span className="w-full text-sm text-zinc-400">Node color</span>
-            <ColorPicker
-              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.value}` as string })}
-              value={localItem.backgroundColor}
-            />
-            <InputText
-              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.target.value}` as string })}
-              value={localItem.backgroundColor}
-            />
-          </div>
-          <div className="w-full">
-            <span className="pl-1">
-              <span className="w-full text-sm text-zinc-400">Background opacity</span>
-            </span>
-            <div className="flex flex-row-reverse items-center">
-              <InputNumber
-                className="ml-1 w-full"
-                max={1}
-                min={0}
-                mode="decimal"
-                onChange={(e) => setLocalItem({ ...localItem, backgroundOpacity: e.value as number })}
-                onKeyDown={handleEnter}
-                showButtons
-                step={0.01}
-                value={localItem.backgroundOpacity}
-              />
-            </div>
-          </div>
-          <div className="w-full">
-            <span className="w-full text-sm text-zinc-400">Linked document</span>
-            <Dropdown
-              className="w-full"
-              emptyFilterMessage="No documents found"
-              filter
-              onChange={(e) => setLocalItem({ ...localItem, doc_id: e.value })}
-              optionLabel="title"
-              options={
-                documents
-                  ? [
-                      { title: "No document", id: null },
-                      ...documents.filter((doc) => {
-                        if ("template" in doc) return !doc.template && !doc.folder;
-                        return false;
-                      }),
-                    ]
-                  : []
-              }
-              optionValue="id"
-              placeholder="Link Document"
-              value={localItem.doc_id}
-            />
-          </div>
-          {/* <div className="flex w-full flex-wrap">
+      </div>
+      <div className="flex w-full flex-col gap-y-4">
+        <div className="w-full">
+          <span className="w-full text-sm text-zinc-400">Linked document</span>
+          <Dropdown
+            className="w-full"
+            emptyFilterMessage="No documents found"
+            filter
+            onChange={(e) => setLocalItem({ ...localItem, doc_id: e.value })}
+            optionLabel="title"
+            options={
+              documents
+                ? [
+                    { title: "No document", id: null },
+                    ...documents.filter((doc) => {
+                      if ("template" in doc) return !doc.template && !doc.folder;
+                      return false;
+                    }),
+                  ]
+                : []
+            }
+            optionValue="id"
+            placeholder="Link Document"
+            value={localItem.doc_id}
+          />
+        </div>
+        {/* <div className="flex w-full flex-wrap">
                 <span className="w-full text-sm text-zinc-400">Template</span>
                 <Dropdown
                   className="w-full"
@@ -261,75 +265,64 @@ export default function DrawerNodeContent() {
                   value={selectedTemplate}
                 />
               </div> */}
-          <div className="w-full">
-            <span className="w-full text-sm text-zinc-400">Custom image</span>
-            {/* <Dropdown
-              className="w-full"
-              filter
-              filterBy="title"
-              itemTemplate={(item: ImageProps) => <ImageDropdownItem image={item} />}
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  customImage: e.value,
-                }))
-              }
-              optionLabel="title"
-              tooltipOptions={{
-                position: "left",
-              }}
-              //   virtualScrollerOptions={virtualScrollerSettings}
-              options={images ? [{ title: "No image", id: null }, images] : []}
-              placeholder="Custom Image"
-              tooltip="Custom images override images from linked documents."
-              value={localItem.customImage}
-            /> */}
-          </div>
-          <div className="mb-2 w-full">
-            <span className="w-full text-sm text-zinc-400">Node level</span>
-            <InputNumber
-              className="w-full"
-              onChange={(e) =>
-                setLocalItem({
-                  ...localItem,
-                  zIndex: e.value as number,
-                })
-              }
-              onKeyDown={handleEnter}
-              showButtons
-              tooltip="Changes if node is above or below others"
-              tooltipOptions={{ position: "left" }}
-              value={localItem.zIndex}
-            />
-          </div>
+        <div className="flex w-full flex-col">
+          <span className="w-full text-sm text-zinc-400">Custom image</span>
+          <Dropdown
+            itemTemplate={ImageDropdownItem}
+            onChange={(e) =>
+              setLocalItem((prev) => {
+                if (prev) return { ...prev, image: e.value };
+                return prev;
+              })
+            }
+            options={images || []}
+            placeholder="Select image"
+            value={localItem}
+            valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+          />
+        </div>
+        <div className="mb-2 w-full">
+          <span className="w-full text-sm text-zinc-400">Node level</span>
+          <InputNumber
+            className="w-full"
+            onChange={(e) =>
+              setLocalItem({
+                ...localItem,
+                zIndex: e.value as number,
+              })
+            }
+            onKeyDown={handleEnter}
+            showButtons
+            tooltip="Changes if node is above or below others"
+            tooltipOptions={{ position: "left" }}
+            value={localItem.zIndex}
+          />
         </div>
       </div>
-      <div className="justify-content-end flex w-full">
-        <Button
-          className="p-button-outlined p-button-success"
-          icon="pi pi-save"
-          iconPos="right"
-          label="Save Node"
-          onClick={() => {
-            updateNodeMutation.mutate(localItem);
-            // if (selectedTemplate) {
-            //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
-            //   //   const { show, ...restDialog } = localItem;
-            //   //   updateNodeMutation.mutate({
-            //   //     ...restDialog,
-            //   //     ...restTemplate,
-            //   //     board_id: board_id as string,
-            //   //   });
-            //   //   setSelectedTemplate(null);
-            //   //   toastSuccess("Template Applied");
-            //   // } else {
+      <Button
+        className="p-button-outlined p-button-success"
+        icon="pi pi-save"
+        iconPos="right"
+        label="Save Node"
+        onClick={() => {
+          updateNodeMutation.mutate(localItem);
+          // if (selectedTemplate) {
+          //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
+          //   //   const { show, ...restDialog } = localItem;
+          //   //   updateNodeMutation.mutate({
+          //   //     ...restDialog,
+          //   //     ...restTemplate,
+          //   //     board_id: board_id as string,
+          //   //   });
+          //   //   setSelectedTemplate(null);
+          //   //   toastSuccess("Template Applied");
+          //   // } else {
 
-            //   setSelectedTemplate(null);
-            // }
-          }}
-          type="submit"
-        />
-      </div>
+          //   setSelectedTemplate(null);
+          // }
+        }}
+        type="submit"
+      />
     </div>
   );
 }

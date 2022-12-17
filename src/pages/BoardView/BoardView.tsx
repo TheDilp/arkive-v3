@@ -11,6 +11,7 @@ import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
+import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, edgehandlesSettings } from "../../utils/boardUtils";
 import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
@@ -29,7 +30,7 @@ export default function BoardView({ isReadOnly }: Props) {
 
   const edgeHandlesRef = useRef() as MutableRefObject<EdgeHandlesInstance | null>;
 
-  const [boardState, setBoardState] = useAtom(BoardStateAtom);
+  const [boardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<{ x: null | number; y: null | number; type: "node" | "edge" }>({
     x: null,
     y: null,
@@ -137,14 +138,7 @@ export default function BoardView({ isReadOnly }: Props) {
               classes: `boardNode ${isReadOnly && "publicBoardNode"}`,
               label: node.label || "",
               zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
-              backgroundImage: [],
-              // Custom image has priority, if not set use document image, if neither - empty array
-              // Empty string ("") causes issues with cytoscape, so an empty array must be used
-              // backgroundImage: node.customImage?.link
-              //   ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(" ", "%20")}`
-              //   : node.document?.image?.link
-              //   ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(" ", "%20")}`
-              //   : [],
+              backgroundImage: node.image ? `${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${node?.image}` : [],
             },
             scratch: {
               doc_id: node?.doc_id,
@@ -154,8 +148,6 @@ export default function BoardView({ isReadOnly }: Props) {
           }));
       }
       if (board.edges.length > 0) {
-        console.log(board.edges);
-        console.log(board.edges);
         temp_edges = board.edges.map((edge: EdgeType) => ({
           data: {
             ...edge,
@@ -265,21 +257,10 @@ export default function BoardView({ isReadOnly }: Props) {
     };
   }, [boardRef, item_id]);
 
-  useEffect(() => {
-    if (!boardRef || !edgeHandlesRef) return;
-    edgeHandlesRef.current = null;
-  }, [item_id]);
-
   return (
     <div className="h-full w-full">
       <ContextMenu cm={cm} items={items} />
-      <button
-        onClick={() => {
-          edgeHandlesRef.current?.enableDrawMode();
-          edgeHandlesRef.current?.enable();
-        }}>
-        TEST
-      </button>
+
       <CytoscapeComponent
         className="h-full w-full"
         cy={(cy) => {

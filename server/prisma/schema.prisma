@@ -125,6 +125,7 @@ model nodes {
   board        boards     @relation(fields: [parent], references: [id])
   document     documents? @relation(fields: [doc_id], references: [id])
   doc_id       String?    @db.Uuid
+  image        String?
   parent       String     @db.Uuid
   edges_source edges[]    @relation("edges_source")
   edges_target edges[]    @relation("edges_target")

@@ -17,10 +17,7 @@ export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
   });
   server.get(
     "/getimage/:type/:project_id/:image_name",
-    async (
-      req: FastifyRequest<{ Params: { type: "images" | "maps"; project_id: string; image_name: string } }>,
-      reply,
-    ) => {
+    async (req: FastifyRequest<{ Params: { type: "images" | "maps"; project_id: string; image_name: string } }>, reply) => {
       const { type, project_id, image_name } = req.params;
       return reply
         .type("image/*")

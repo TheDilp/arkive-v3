@@ -215,7 +215,7 @@ function UpdateMapLayers() {
                   options={map_images || []}
                   placeholder="Select map image"
                   value={layer.image}
-                  valueTemplate={ImageDropdownValue({ map_image: layer?.image })}
+                  valueTemplate={ImageDropdownValue({ image: layer?.image })}
                 />
               </div>
               <div className="flex w-fit gap-x-4">
@@ -284,7 +284,7 @@ function InsertEditorImage() {
         options={images || []}
         placeholder="Select map"
         value={localImage}
-        valueTemplate={ImageDropdownValue({ map_image: localImage })}
+        valueTemplate={ImageDropdownValue({ image: localImage })}
       />
       <Button
         className="p-button-rounded p-button-outlined"

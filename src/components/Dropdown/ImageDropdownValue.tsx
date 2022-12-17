@@ -1,9 +1,9 @@
 import React from "react";
 
 type Props = {
-  map_image?: string;
+  image?: string;
 };
 
-export default function ImageDropdownValue({ map_image }: Props) {
-  return <div>{map_image || "Select Map"}</div>;
+export default function ImageDropdownValue({ image }: Props) {
+  return <div>{image || "Select Map"}</div>;
 }

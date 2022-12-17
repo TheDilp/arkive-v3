@@ -14,6 +14,7 @@ export enum getURLS {
   getAllBoards = "getallboards/",
   // Images
   getAllImages = "getallimages/",
+  getSingleImage = "getimage/images/",
   getAllMapImages = "getallmapimages/",
   getSingleMapImage = "getimage/maps/",
   // Misc

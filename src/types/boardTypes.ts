@@ -42,6 +42,7 @@ type NodeShape =
 export type NodeType = {
   id: string;
   label?: string;
+  image?: string;
   width: number;
   height: number;
   x: number;
