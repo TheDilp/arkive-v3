@@ -150,6 +150,7 @@ export default function BoardView({ isReadOnly }: Props) {
           }));
       }
       if (board.edges.length > 0) {
+        console.log(board.edges);
         temp_edges = board.edges.map((edge: EdgeType) => ({
           data: {
             ...edge,

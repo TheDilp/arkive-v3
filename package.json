@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "serverinstall": "cd server && pnpm install",
     "installall": "pnpm install && pnpm serverinstall",
-    "server": "cd server && pnpm prisma migrate dev && pnpm prisma generate && pnpm start",
+    "server": "cd server && pnpm prisma migrate dev --name Init migration && pnpm prisma generate && pnpm start",
     "start": "concurrently  \"pnpm run server\" \"pnpm run client\""
 
   },

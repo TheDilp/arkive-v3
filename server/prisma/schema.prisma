@@ -131,30 +131,38 @@ model nodes {
 }
 
 model edges {
-  id                    String  @id @default(uuid()) @db.Uuid
-  label                 String?
-  curveStyle            String  @default("straight")
-  lineStyle             String  @default("solid")
-  lineColor             String  @default("#595959")
-  controlPointDistances Int     @default(-100)
-  controlPointWeights   Float   @default(0.5)
-  taxiDirection         String  @default("auto")
-  taxiTurn              Int     @default(50)
-  targetArrowShape      String  @default("triangle")
-  sourceArrowShape      String  @default("none")
-  midSourceArrowShape   String  @default("none")
-  midTargetArrowShape   String  @default("none")
-  fontSize              Int     @default(16)
-  fontColor             String  @default("#ffffff")
-  fontFamily            String  @default("Lato")
-  zIndex                Int     @default(1)
-  thickness             Int     @default(1)
-  lineCap               String  @default("butt")
-  lineFill              String  @default("solid")
-  board                 boards  @relation(fields: [parent], references: [id])
-  source                nodes   @relation("edges_source", fields: [source_id], references: [id])
-  target                nodes   @relation("edges_target", fields: [target_id], references: [id])
-  source_id             String  @db.Uuid
-  target_id             String  @db.Uuid
-  parent                String  @db.Uuid
+  id    String  @id @default(uuid()) @db.Uuid
+  label String?
+
+  curveStyle  String @default("straight")
+  lineStyle   String @default("solid")
+  lineColor   String @default("#595959")
+  lineCap     String @default("butt")
+  lineFill    String @default("solid")
+  lineOpacity Int    @default(1)
+  width       Int    @default(1)
+
+  controlPointDistances Int   @default(-100)
+  controlPointWeights   Float @default(0.5)
+
+  taxiDirection String @default("auto")
+  taxiTurn      Int    @default(50)
+
+  targetArrowShape    String @default("triangle")
+  sourceArrowShape    String @default("none")
+  midSourceArrowShape String @default("none")
+  midTargetArrowShape String @default("none")
+
+  fontSize   Int    @default(16)
+  fontColor  String @default("#ffffff")
+  fontFamily String @default("Lato")
+
+  zIndex Int @default(1)
+
+  board     boards @relation(fields: [parent], references: [id])
+  source    nodes  @relation("edges_source", fields: [source_id], references: [id])
+  target    nodes  @relation("edges_target", fields: [target_id], references: [id])
+  source_id String @db.Uuid
+  target_id String @db.Uuid
+  parent    String @db.Uuid
 }

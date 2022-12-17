@@ -62,7 +62,11 @@ export type EdgeType = {
   label?: string;
   curveStyle: "straight" | "bezier" | "taxi";
   lineStyle: "solid" | "dashed" | "dotted";
+  lineCap: "butt" | "round" | "square";
+  lineFill: "solid" | "linear-gradient";
+  lineOpacity: number;
   lineColor: string;
+  width: number;
   controlPointDistances: number;
   controlPointWeights: number;
   taxiDirection: "auto" | "vertical" | "horizontal" | "upward" | "downward" | "leftward" | "rightward";
@@ -75,7 +79,6 @@ export type EdgeType = {
   fontColor: string;
   fontFamily: string;
   zIndex: number;
-
   source_id: string;
   target_id: string;
   parent: string;
@@ -99,10 +102,4 @@ export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
 };
 
 export type CytoscapeNodeType = cytoscape.NodeDefinition;
-// Custom image has priority, if not set use document image, if neither - empty array
-// Empty string ("") causes issues with cytoscape, so an empty array must be used
-// backgroundImage: node.customImage?.link
-//   ? `${supabaseStorageImagesLink}${node.customImage.link.replaceAll(" ", "%20")}`
-//   : node.document?.image?.link
-//   ? `${supabaseStorageImagesLink}${node.document.image.link?.replaceAll(" ", "%20")}`
-//   : [],
+export type CytoscapeEdgeType = cytoscape.EdgeDefinition;
