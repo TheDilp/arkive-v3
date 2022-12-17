@@ -164,14 +164,14 @@ export default function BoardView({ isReadOnly }: Props) {
     }
   }, [board, item_id]);
   const makeEdgeCallback = useCallback(
-    (source: string, target: string) => {
+    (source: string, target: string, color: string) => {
       createEdgeMutation.mutate({
         ...DefaultEdge,
         id: v4(),
         parent: item_id as string,
         source_id: source,
         target_id: target,
-        lineColor: board.defaultEdgeColor,
+        lineColor: color,
       });
     },
     [item_id],
@@ -250,9 +250,13 @@ export default function BoardView({ isReadOnly }: Props) {
       // Double Click
       boardRef.on("dbltap", "node", function (evt: any) {
         const target = evt.target._private;
-        const { backgroundImage, board_id, classes, document, locked, parent, user_id, x, y, zIndexCompare, ...rest } =
-          target.data;
+        const { backgroundImage, classes, document, locked, parent, zIndexCompare, ...rest } = target.data;
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "nodes", drawerSize: "sm" });
+      });
+      boardRef.on("dbltap", "edge", function (evt: any) {
+        const target = evt.target._private;
+        const { classes, parent, zIndexCompare, ...rest } = target.data;
+        setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "edges", drawerSize: "sm" });
       });
     }
   }, [boardRef]);

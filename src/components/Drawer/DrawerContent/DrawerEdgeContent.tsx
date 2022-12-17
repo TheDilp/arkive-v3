@@ -7,11 +7,13 @@ import { InputText } from "primereact/inputtext";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
-// import { useGetItem } from "../../../hooks/getItemHook";
-import { NodeType } from "../../../types/boardTypes";
+import { useGetAllImages, useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
+import { useGetItem } from "../../../hooks/getItemHook";
+import { BoardType, EdgeType, NodeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
+  boardEdgeArrowShapes,
+  boardEdgeCurveStyles,
   BoardFontFamilies,
   BoardFontSizes,
   boardNodeShapes,
@@ -19,29 +21,29 @@ import {
   textVAlignOptions,
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
-// import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 
 function FontItemTemplate(item: { label: string; value: string }) {
   const { value, label } = item;
   return <div style={{ fontFamily: value }}>{label}</div>;
 }
 
-export default function DrawerNodeContent() {
+export default function DrawerEdgeContent() {
   const { project_id, item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
   const { data: documents } = useGetAllItems(project_id as string, "documents");
-  // const { data: images } = useGetAllImages(project_id as string);
-  // const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
+  const { data: images } = useGetAllImages(project_id as string);
+  const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
   //   const [selectedTemplate, setSelectedTemplate] = useState<NodeType | null>(null);
   //   const updateNodeMutation = useUpdateNode(project_id as string);
-  const [localItem, setLocalItem] = useState<NodeType | undefined>(drawer?.data as NodeType);
+  const [localItem, setLocalItem] = useState<EdgeType | undefined>(drawer?.data as EdgeType);
   const handleEnter: KeyboardEventHandler = (e: any) => {
     if (e.key === "Enter" && localItem) updateNodeMutation.mutate(localItem);
   };
 
   useEffect(() => {
-    if (drawer?.data) setLocalItem(drawer?.data as NodeType);
+    if (drawer?.data) setLocalItem(drawer?.data as EdgeType);
   }, [drawer?.data]);
   if (!localItem) {
     setDrawer(DefaultDrawer);
@@ -55,7 +57,7 @@ export default function DrawerNodeContent() {
             {/* Label text */}
 
             <div className="flex w-full flex-wrap">
-              <span className="w-full text-sm text-zinc-400">Node label</span>
+              <span className="w-full text-sm text-zinc-400">Edge label</span>
 
               <InputText
                 autoComplete="false"
@@ -64,7 +66,7 @@ export default function DrawerNodeContent() {
                   setLocalItem({ ...localItem, label: e.target.value });
                 }}
                 onKeyDown={handleEnter}
-                placeholder="Node Label"
+                placeholder="Edge Label"
                 value={localItem.label}
               />
             </div>
@@ -111,46 +113,45 @@ export default function DrawerNodeContent() {
               />
             </div>
 
-            {/* Aligns */}
+            {/* Line, Curve style */}
             <div className="flex w-full flex-nowrap gap-x-1">
               <div className="w-full">
-                <span className="w-full text-sm text-zinc-400">Horizontal align</span>
+                <span className="w-full text-sm text-zinc-400">Edge Curve Type</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, textHAlign: e.value })}
-                  options={textHAlignOptions}
-                  value={localItem.textHAlign}
+                  onChange={(e) => setLocalItem({ ...localItem, curveStyle: e.value })}
+                  options={boardEdgeCurveStyles}
+                  value={localItem.curveStyle}
                 />
               </div>
               <div className="w-full">
-                <span className="w-full text-sm text-zinc-400">Vertical align</span>
+                <span className="w-full text-sm text-zinc-400">Line Style</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, textHAlign: e.value })}
-                  options={textVAlignOptions}
-                  value={localItem.textVAlign}
+                  onChange={(e) => setLocalItem({ ...localItem, curveStyle: e.value })}
+                  options={boardEdgeCurveStyles}
+                  value={localItem.curveStyle}
                 />
               </div>
             </div>
           </div>
         </div>
-        <hr className="my-2" />
         <div className="flex w-full flex-col">
           <div className=" w-full">
-            <span className="w-full text-sm text-zinc-400">Node shape</span>
+            <span className="w-full text-sm text-zinc-400">Arrow shape</span>
             <Dropdown
               className="w-full"
               filter
-              onChange={(e) => setLocalItem({ ...localItem, type: e.value })}
-              options={boardNodeShapes}
+              onChange={(e) => setLocalItem({ ...localItem, targetArrowShape: e.value })}
+              options={boardEdgeArrowShapes}
               placeholder="Node Shape"
-              value={localItem.type}
+              value={localItem.targetArrowShape}
             />
           </div>
           <div className="flex flex-nowrap gap-x-1 gap-y-2">
             <div className="w-full">
               <span className="w-full text-sm text-zinc-400">Width</span>
-              <InputNumber
+              {/* <InputNumber
                 inputClassName="w-full"
                 max={5000}
                 min={10}
@@ -159,11 +160,11 @@ export default function DrawerNodeContent() {
                 showButtons
                 step={10}
                 value={localItem.width}
-              />
+              /> */}
             </div>
             <div className="w-full">
               <span className="w-full text-sm text-zinc-400">Height</span>
-              <InputNumber
+              {/* <InputNumber
                 inputClassName="w-full"
                 max={5000}
                 min={10}
@@ -172,18 +173,18 @@ export default function DrawerNodeContent() {
                 showButtons
                 step={10}
                 value={localItem.height}
-              />
+              /> */}
             </div>
           </div>
           <div className="flex w-full flex-wrap items-center justify-between">
-            <span className="w-full text-sm text-zinc-400">Node color</span>
+            <span className="w-full text-sm text-zinc-400">Edge color</span>
             <ColorPicker
-              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.value}` as string })}
-              value={localItem.backgroundColor}
+              onChange={(e) => setLocalItem({ ...localItem, lineColor: `#${e.value}` as string })}
+              value={localItem.lineColor}
             />
             <InputText
-              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.target.value}` as string })}
-              value={localItem.backgroundColor}
+              onChange={(e) => setLocalItem({ ...localItem, lineColor: `#${e.target.value}` as string })}
+              value={localItem.lineColor}
             />
           </div>
           <div className="w-full">
@@ -191,7 +192,7 @@ export default function DrawerNodeContent() {
               <span className="w-full text-sm text-zinc-400">Background opacity</span>
             </span>
             <div className="flex flex-row-reverse items-center">
-              <InputNumber
+              {/* <InputNumber
                 className="ml-1 w-full"
                 max={1}
                 min={0}
@@ -201,33 +202,10 @@ export default function DrawerNodeContent() {
                 showButtons
                 step={0.01}
                 value={localItem.backgroundOpacity}
-              />
+              /> */}
             </div>
           </div>
-          <div className="w-full">
-            <span className="w-full text-sm text-zinc-400">Linked document</span>
-            <Dropdown
-              className="w-full"
-              emptyFilterMessage="No documents found"
-              filter
-              onChange={(e) => setLocalItem({ ...localItem, doc_id: e.value })}
-              optionLabel="title"
-              options={
-                documents
-                  ? [
-                      { title: "No document", id: null },
-                      ...documents.filter((doc) => {
-                        if ("template" in doc) return !doc.template && !doc.folder;
-                        return false;
-                      }),
-                    ]
-                  : []
-              }
-              optionValue="id"
-              placeholder="Link Document"
-              value={localItem.doc_id}
-            />
-          </div>
+
           {/* <div className="flex w-full flex-wrap">
                 <span className="w-full text-sm text-zinc-400">Template</span>
                 <Dropdown
@@ -261,32 +239,8 @@ export default function DrawerNodeContent() {
                   value={selectedTemplate}
                 />
               </div> */}
-          <div className="w-full">
-            <span className="w-full text-sm text-zinc-400">Custom image</span>
-            {/* <Dropdown
-              className="w-full"
-              filter
-              filterBy="title"
-              itemTemplate={(item: ImageProps) => <ImageDropdownItem image={item} />}
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  customImage: e.value,
-                }))
-              }
-              optionLabel="title"
-              tooltipOptions={{
-                position: "left",
-              }}
-              //   virtualScrollerOptions={virtualScrollerSettings}
-              options={images ? [{ title: "No image", id: null }, images] : []}
-              placeholder="Custom Image"
-              tooltip="Custom images override images from linked documents."
-              value={localItem.customImage}
-            /> */}
-          </div>
           <div className="mb-2 w-full">
-            <span className="w-full text-sm text-zinc-400">Node level</span>
+            <span className="w-full text-sm text-zinc-400">Edge level</span>
             <InputNumber
               className="w-full"
               onChange={(e) =>

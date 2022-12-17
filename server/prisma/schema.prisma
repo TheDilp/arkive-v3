@@ -148,11 +148,13 @@ model edges {
   fontColor             String  @default("#ffffff")
   fontFamily            String  @default("Lato")
   zIndex                Int     @default(1)
-
-  board     boards @relation(fields: [parent], references: [id])
-  source    nodes  @relation("edges_source", fields: [source_id], references: [id])
-  target    nodes  @relation("edges_target", fields: [target_id], references: [id])
-  source_id String @db.Uuid
-  target_id String @db.Uuid
-  parent    String @db.Uuid
+  thickness             Int     @default(1)
+  lineCap               String  @default("butt")
+  lineFill              String  @default("solid")
+  board                 boards  @relation(fields: [parent], references: [id])
+  source                nodes   @relation("edges_source", fields: [source_id], references: [id])
+  target                nodes   @relation("edges_target", fields: [target_id], references: [id])
+  source_id             String  @db.Uuid
+  target_id             String  @db.Uuid
+  parent                String  @db.Uuid
 }

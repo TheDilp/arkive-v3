@@ -200,10 +200,24 @@ export const cytoscapeStylesheet = [
 
   // Classes for highlighting
   {
-    selector: ":selected",
+    selector: "node:selected",
     style: {
       "underlay-color": "green",
       "underlay-padding": 8,
+      "underlay-opacity": 1,
+      "border-opacity": 0.25,
+      // "overlay-color": "green",
+      // "overlay-padding": 5,
+      // "overlay-opacity": 0.65,
+      "line-color": "green",
+      "target-arrow-color": "green",
+    },
+  },
+  {
+    selector: "edge:selected",
+    style: {
+      "underlay-color": "green",
+      "underlay-padding": 2,
       "underlay-opacity": 1,
       "border-opacity": 0.25,
       // "overlay-color": "green",

@@ -283,7 +283,7 @@ export const boardEdgeTaxiDirections = [
     value: "rightward",
   },
 ];
-export const edgeTargetArrowShapes = [
+export const boardEdgeArrowShapes = [
   {
     label: "None",
     value: "none",
