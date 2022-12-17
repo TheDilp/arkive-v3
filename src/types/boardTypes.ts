@@ -1,119 +1,112 @@
 import cytoscape from "cytoscape";
-import { z as zod } from "zod";
 
-import { BaseItemSchema } from "./generalTypes";
+import { BaseItemType } from "./generalTypes";
 
-const ArrowShape = [
-  "none",
-  "triangle",
-  "triangle-tee",
-  "triangle-cross",
-  "triangle-backcurve",
-  "circle-triangle",
-  "vee",
-  "tee",
-  "circle",
-  "diamond",
-  "chevron",
-] as const;
+type ArrowShape =
+  | "none"
+  | "triangle"
+  | "triangle-tee"
+  | "triangle-cross"
+  | "triangle-backcurve"
+  | "circle-triangle"
+  | "vee"
+  | "tee"
+  | "circle"
+  | "diamond"
+  | "chevron";
 
-const NodeSchema = zod.object({
-  id: zod.string(),
-  label: zod.string().nullish(),
-  width: zod.number(),
-  height: zod.number(),
-  x: zod.number(),
-  y: zod.number(),
-  type: zod.enum([
-    "rectangle",
-    "ellipse",
-    "triangle",
-    "barrel",
-    "rhomboid",
-    "diamond",
-    "pentagon",
-    "hexagon",
-    "heptagon",
-    "octagon",
-    "star",
-    "cut-rectangle",
-    "round-triangle",
-    "round-rectangle",
-    "bottom-round-rectangle",
-    "round-diamond",
-    "round-pentagon",
-    "round-hexagon",
-    "round-heptagon",
-    "round-octagon",
-  ]),
-  fontSize: zod.number(),
-  fontColor: zod.string(),
-  fontFamily: zod.string(),
-  textHAlign: zod.enum(["left", "center", "right"]),
-  textVAlign: zod.enum(["top", "center", "bottom"]),
-  backgroundColor: zod.string(),
-  backgroundOpacity: zod.number(),
-  locked: zod.boolean(),
-  template: zod.boolean(),
-  zIndex: zod.number(),
-  doc_id: zod.string().nullish(),
-  parent: zod.string(),
-});
+type ArrowFill = "filled" | "hollow";
 
-const EdgeSchema = zod.object({
-  id: zod.string(),
-  label: zod.string().nullish(),
-  curveStyle: zod.enum(["straight", "bezier", "taxi"]),
-  lineStyle: zod.enum(["solid", "dashed", "dotted"]),
-  lineCap: zod.enum(["butt", "round", "square"]),
-  lineFill: zod.enum(["solid", "linear-gradient"]),
-  lineOpacity: zod.number(),
-  lineColor: zod.string(),
-  width: zod.number(),
-  controlPointDistances: zod.number(),
-  controlPointWeights: zod.number(),
-  taxiTurn: zod.number(),
-  taxiDirection: zod.enum(["auto", "vertical", "horizontal", "upward", "downward", "leftward", "rightward"]),
+type NodeShape =
+  | "rectangle"
+  | "ellipse"
+  | "triangle"
+  | "barrel"
+  | "rhomboid"
+  | "diamond"
+  | "pentagon"
+  | "hexagon"
+  | "heptagon"
+  | "octagon"
+  | "star"
+  | "cut-rectangle"
+  | "round-triangle"
+  | "round-rectangle"
+  | "bottom-round-rectangle"
+  | "round-diamond"
+  | "round-pentagon"
+  | "round-hexagon"
+  | "round-heptagon"
+  | "round-octagon";
 
-  fontSize: zod.number(),
-  fontColor: zod.string(),
-  fontFamily: zod.string(),
-  zIndex: zod.number(),
-  source_id: zod.string(),
-  target_id: zod.string(),
-  parent: zod.string(),
+export type NodeType = {
+  id: string;
+  label?: string;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  type: NodeShape;
+  fontSize: number;
+  fontColor: string;
+  fontFamily: string;
+  textHAlign: "left" | "center" | "right";
+  textVAlign: "top" | "center" | "bottom";
+  backgroundColor: string;
+  backgroundOpacity: number;
+  locked: boolean;
+  template: boolean;
+  zIndex: number;
+  doc_id?: string;
+  parent: string;
+};
+export type EdgeType = {
+  id: string;
+  label?: string;
+  curveStyle: "straight" | "bezier" | "taxi";
+  lineStyle: "solid" | "dashed" | "dotted";
+  lineCap: "butt" | "round" | "square";
+  lineFill: "solid" | "linear-gradient";
+  lineOpacity: number;
+  lineColor: string;
+  width: number;
+  controlPointDistances: number;
+  controlPointWeights: number;
+  taxiDirection: "auto" | "vertical" | "horizontal" | "upward" | "downward" | "leftward" | "rightward";
+  taxiTurn: number;
+  arrowScale: number;
 
-  arrowScale: zod.number(),
+  sourceArrowShape: ArrowShape;
+  sourceArrowFill: ArrowFill;
+  sourceArrowColor: string;
 
-  sourceArrowShape: zod.enum(ArrowShape),
-  sourceArrowFill: zod.enum(["filled", "hollow"]),
-  sourceArrowColor: zod.string(),
+  targetArrowShape: ArrowShape;
+  targetArrowFill: ArrowFill;
+  targetArrowColor: string;
 
-  targetArrowShape: zod.enum(ArrowShape),
-  targetArrowFill: zod.enum(["filled", "hollow"]),
-  targetArrowColor: zod.string(),
+  midSourceArrowShape: ArrowShape;
+  midSourceArrowFill: ArrowFill;
+  midSourceArrowColor: string;
 
-  midSourceArrowShape: zod.enum(ArrowShape),
-  midSourceArrowFill: zod.enum(["filled", "hollow"]),
-  midSourceArrowColor: zod.string(),
+  midTargetArrowShape: ArrowShape;
+  midTargetArrowFill: ArrowFill;
+  midTargetArrowColor: string;
 
-  midTargetArrowShape: zod.enum(ArrowShape),
-  midTargetArrowFill: zod.enum(["filled", "hollow"]),
-  midTargetArrowColor: zod.string(),
-});
-
-export type NodeType = zod.infer<typeof NodeSchema>;
-export type EdgeType = zod.infer<typeof EdgeSchema>;
-
-const BoardSchema = BaseItemSchema.extend({
-  defaultNodeColor: zod.string(),
-  defaultEdgeColor: zod.string(),
-  defaultGrid: zod.boolean(),
-  nodes: zod.array(NodeSchema),
-  edges: zod.array(EdgeSchema),
-});
-
-export type BoardType = zod.infer<typeof BoardSchema>;
+  fontSize: number;
+  fontColor: string;
+  fontFamily: string;
+  zIndex: number;
+  source_id: string;
+  target_id: string;
+  parent: string;
+};
+export interface BoardType extends BaseItemType {
+  defaultNodeColor: string;
+  defaultEdgeColor: string;
+  defaultGrid: boolean;
+  nodes: NodeType[];
+  edges: EdgeType[];
+}
 
 export type DefaultBoardType = Omit<BoardType, "id" | "project_id" | "nodes" | "edges">;
 export type DefaultNodeType = Omit<NodeType, "doc_id" | "label">;

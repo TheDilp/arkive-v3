@@ -1,6 +1,6 @@
 import React from "react";
 import { RemirrorJSON } from "remirror";
-import { z as zod } from "zod";
+
 import { BoardType, EdgeType, NodeType } from "./boardTypes";
 import { DocumentType } from "./documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./mapTypes";
@@ -26,15 +26,15 @@ export type EditorType = {
 };
 export type BreadcrumbsType = { template: React.ReactNode }[];
 
-export const BaseItemSchema = zod.object({
-  id: zod.string(),
-  project_id: zod.string(),
-  title: zod.string(),
-  parent: zod.string().nullable(),
-  icon: zod.string(),
-  sort: zod.number(),
-  folder: zod.boolean(),
-  expanded: zod.boolean(),
-  public: zod.boolean(),
-  tags: zod.array(zod.string()),
-});
+export interface BaseItemType {
+  id: string;
+  project_id: string;
+  title: string;
+  parent: string | null;
+  icon: string;
+  sort: number;
+  folder: boolean;
+  public: boolean;
+  expanded: boolean;
+  tags: string[];
+}
