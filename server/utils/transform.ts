@@ -6,10 +6,6 @@ export const removeNull = (obj: JSON) =>
     }),
   );
 
-export const onlyUniqueStrings = (
-  value: string,
-  index: number,
-  self: string[],
-) => {
+export const onlyUniqueStrings = (value: string, index: number, self: string[]) => {
   return self.indexOf(value) === index;
 };

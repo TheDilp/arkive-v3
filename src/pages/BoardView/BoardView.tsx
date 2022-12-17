@@ -255,8 +255,8 @@ export default function BoardView({ isReadOnly }: Props) {
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "nodes", drawerSize: "sm" });
       });
       boardRef.on("dbltap", "edge", function (evt: any) {
-        const target = evt.target._private;
-        const { classes, parent, zIndexCompare, ...rest } = target.data;
+        const targetEdge = evt.target._private;
+        const { classes, parent, zIndexCompare, source, target, ...rest } = targetEdge.data;
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "edges", drawerSize: "sm" });
       });
     }

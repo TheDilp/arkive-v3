@@ -329,6 +329,11 @@ export const boardEdgeArrowShapes = [
     value: "chevron",
   },
 ];
+export const boardEdgeCaps = [
+  { label: "Round", value: "round" },
+  { label: "Butt", value: "butt" },
+  { label: "Square", value: "square" },
+];
 export function updateColor(
   boardRef: cytoscape.Core,
   color: string,
