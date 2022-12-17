@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/getItemHook";
-import { BoardType, EdgeType, NodeType } from "../../../types/boardTypes";
+import { BoardType, EdgeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
   boardEdgeArrowShapes,
@@ -17,9 +17,6 @@ import {
   boardEdgeCurveStyles,
   BoardFontFamilies,
   BoardFontSizes,
-  boardNodeShapes,
-  textHAlignOptions,
-  textVAlignOptions,
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
@@ -138,54 +135,6 @@ export default function DrawerEdgeContent() {
           </div>
         </div>
         <div className="flex w-full flex-col">
-          <div className="flex w-full flex-nowrap gap-x-1">
-            <div className="w-1/2">
-              <span className="w-full text-sm text-zinc-400">Source Arrow</span>
-              <Dropdown
-                className="w-full"
-                filter
-                onChange={(e) => setLocalItem({ ...localItem, sourceArrowShape: e.value })}
-                options={boardEdgeArrowShapes}
-                placeholder="Node Shape"
-                value={localItem.sourceArrowShape}
-              />
-            </div>
-            <div className="w-1/2">
-              <span className="w-full text-sm text-zinc-400">Target Arrow</span>
-              <Dropdown
-                className="w-full"
-                filter
-                onChange={(e) => setLocalItem({ ...localItem, targetArrowShape: e.value })}
-                options={boardEdgeArrowShapes}
-                placeholder="Node Shape"
-                value={localItem.targetArrowShape}
-              />
-            </div>
-          </div>
-          <div className="flex w-full flex-nowrap gap-x-1">
-            <div className="w-1/2">
-              <span className="w-full  text-sm text-zinc-400">Mid Source Arrow</span>
-              <Dropdown
-                className="w-full"
-                filter
-                onChange={(e) => setLocalItem({ ...localItem, midSourceArrowShape: e.value })}
-                options={boardEdgeArrowShapes}
-                placeholder="Node Shape"
-                value={localItem.midSourceArrowShape}
-              />
-            </div>
-            <div className="w-1/2">
-              <span className="w-full text-sm text-zinc-400">Mid Target Arrow</span>
-              <Dropdown
-                className="w-full"
-                filter
-                onChange={(e) => setLocalItem({ ...localItem, midTargetArrowShape: e.value })}
-                options={boardEdgeArrowShapes}
-                placeholder="Node Shape"
-                value={localItem.midTargetArrowShape}
-              />
-            </div>
-          </div>
           <div className="flex gap-x-1 gap-y-2">
             <div className="flex w-full flex-wrap">
               <span className="w-full text-sm text-zinc-400">Thickness</span>
@@ -261,6 +210,57 @@ export default function DrawerEdgeContent() {
             />
           </div>
         </div>
+        <hr />
+        <div className="flex w-full flex-col">
+          <div className="flex w-full flex-nowrap gap-x-1">
+            <div className="w-1/2">
+              <span className="w-full text-sm text-zinc-400">Source Arrow</span>
+              <Dropdown
+                className="w-full"
+                filter
+                onChange={(e) => setLocalItem({ ...localItem, sourceArrowShape: e.value })}
+                options={boardEdgeArrowShapes}
+                placeholder="Node Shape"
+                value={localItem.sourceArrowShape}
+              />
+            </div>
+            <div className="w-1/2">
+              <span className="w-full text-sm text-zinc-400">Target Arrow</span>
+              <Dropdown
+                className="w-full"
+                filter
+                onChange={(e) => setLocalItem({ ...localItem, targetArrowShape: e.value })}
+                options={boardEdgeArrowShapes}
+                placeholder="Node Shape"
+                value={localItem.targetArrowShape}
+              />
+            </div>
+          </div>
+          <div className="flex w-full flex-nowrap gap-x-1">
+            <div className="w-1/2">
+              <span className="w-full  text-sm text-zinc-400">Mid Source Arrow</span>
+              <Dropdown
+                className="w-full"
+                filter
+                onChange={(e) => setLocalItem({ ...localItem, midSourceArrowShape: e.value })}
+                options={boardEdgeArrowShapes}
+                placeholder="Node Shape"
+                value={localItem.midSourceArrowShape}
+              />
+            </div>
+            <div className="w-1/2">
+              <span className="w-full text-sm text-zinc-400">Mid Target Arrow</span>
+              <Dropdown
+                className="w-full"
+                filter
+                onChange={(e) => setLocalItem({ ...localItem, midTargetArrowShape: e.value })}
+                options={boardEdgeArrowShapes}
+                placeholder="Node Shape"
+                value={localItem.midTargetArrowShape}
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <div className="justify-content-end flex w-full">
         <Button
@@ -268,24 +268,7 @@ export default function DrawerEdgeContent() {
           icon="pi pi-save"
           iconPos="right"
           label="Save Edge"
-          onClick={() => {
-            updateEdgeMutaiton.mutate(localItem);
-            console.log(localItem);
-            // if (selectedTemplate) {
-            //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
-            //   //   const { show, ...restDialog } = localItem;
-            //   //   updateNodeMutation.mutate({
-            //   //     ...restDialog,
-            //   //     ...restTemplate,
-            //   //     board_id: board_id as string,
-            //   //   });
-            //   //   setSelectedTemplate(null);
-            //   //   toastSuccess("Template Applied");
-            //   // } else {
-
-            //   setSelectedTemplate(null);
-            // }
-          }}
+          onClick={() => updateEdgeMutaiton.mutate(localItem)}
           type="submit"
         />
       </div>

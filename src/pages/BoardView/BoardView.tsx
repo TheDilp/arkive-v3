@@ -1,6 +1,7 @@
 import { EdgeDefinition, NodeDefinition } from "cytoscape";
+import { EdgeHandlesInstance } from "cytoscape-edgehandles";
 import { useAtom } from "jotai";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
@@ -25,6 +26,9 @@ export default function BoardView({ isReadOnly }: Props) {
   const { project_id, item_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
+
+  const edgeHandlesRef = useRef() as MutableRefObject<EdgeHandlesInstance | null>;
+
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<{ x: null | number; y: null | number; type: "node" | "edge" }>({
     x: null,
@@ -151,6 +155,7 @@ export default function BoardView({ isReadOnly }: Props) {
       }
       if (board.edges.length > 0) {
         console.log(board.edges);
+        console.log(board.edges);
         temp_edges = board.edges.map((edge: EdgeType) => ({
           data: {
             ...edge,
@@ -180,13 +185,6 @@ export default function BoardView({ isReadOnly }: Props) {
   // Board Events
   useEffect(() => {
     if (boardRef && !isReadOnly) {
-      // @ts-ignore
-      boardRef.gridGuide({ ...cytoscapeGridOptions, drawGrid: board.defaultGrid, snapToGridDuringDrag: board.defaultGrid });
-      setBoardState({
-        ...boardState,
-        edgeHandles: { drawMode: false, ref: boardRef.edgehandles(edgehandlesSettings) },
-        grid: board.defaultGrid,
-      });
       // Right click
       boardRef.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
@@ -260,11 +258,28 @@ export default function BoardView({ isReadOnly }: Props) {
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "edges", drawerSize: "sm" });
       });
     }
-  }, [boardRef]);
+    return () => {
+      if (!isReadOnly && boardRef) {
+        boardRef.removeListener("click mousedown cxttap dbltap free ehcomplete");
+      }
+    };
+  }, [boardRef, item_id]);
+
+  useEffect(() => {
+    if (!boardRef || !edgeHandlesRef) return;
+    edgeHandlesRef.current = null;
+  }, [item_id]);
 
   return (
     <div className="h-full w-full">
       <ContextMenu cm={cm} items={items} />
+      <button
+        onClick={() => {
+          edgeHandlesRef.current?.enableDrawMode();
+          edgeHandlesRef.current?.enable();
+        }}>
+        TEST
+      </button>
       <CytoscapeComponent
         className="h-full w-full"
         cy={(cy) => {
@@ -275,6 +290,7 @@ export default function BoardView({ isReadOnly }: Props) {
             drawGrid: boardState.grid,
           });
           setBoardRef(cy);
+          if (!edgeHandlesRef.current && boardRef) edgeHandlesRef.current = boardRef.edgehandles(edgehandlesSettings);
         }}
         elements={elements}
         // @ts-ignore

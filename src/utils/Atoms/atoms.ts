@@ -1,4 +1,5 @@
 import cytoscape from "cytoscape";
+import { EdgeHandlesInstance } from "cytoscape-edgehandles";
 import { atom } from "jotai";
 import { DialogPositionType } from "primereact/dialog";
 
@@ -35,4 +36,10 @@ export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null 
 
 export const BoardReferenceAtom = atom<null | cytoscape.Core>(null);
 
-export const BoardStateAtom = atom<{ edgeHandles: null | any; grid: boolean }>({ edgeHandles: null, grid: false });
+export const BoardStateAtom = atom<{
+  edgeHandles: null | { ref: EdgeHandlesInstance | null; drawMode: boolean };
+  grid: boolean;
+}>({
+  edgeHandles: null,
+  grid: false,
+});

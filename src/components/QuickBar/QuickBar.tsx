@@ -210,7 +210,7 @@ export default function BoardQuickBar({}: Props) {
           edgeHandles && edgeHandles.drawMode ? "text-green-500" : ""
         } drawMode`}
         onClick={() => {
-          if (boardRef && edgeHandles) {
+          if (boardRef && edgeHandles && edgeHandles.ref) {
             if (edgeHandles.drawMode) {
               edgeHandles.ref.disable();
               edgeHandles.ref.disableDrawMode();
@@ -220,11 +220,17 @@ export default function BoardQuickBar({}: Props) {
               boardRef.zoomingEnabled(true);
               boardRef.userZoomingEnabled(true);
               boardRef.panningEnabled(true);
-              setBoardState({ ...boardState, edgeHandles: { ref: edgeHandles.ref, drawMode: false } });
+              setBoardState((prev) => {
+                if (prev.edgeHandles) return { ...prev, edgeHandles: { ...prev.edgeHandles, drawMode: false } };
+                return prev;
+              });
             } else {
               edgeHandles.ref.enable();
               edgeHandles.ref.enableDrawMode();
-              setBoardState({ ...boardState, edgeHandles: { ref: edgeHandles.ref, drawMode: true } });
+              setBoardState((prev) => {
+                if (prev.edgeHandles) return { ...prev, edgeHandles: { ...prev.edgeHandles, drawMode: true } };
+                return prev;
+              });
             }
           }
         }}
