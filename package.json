@@ -11,7 +11,6 @@
     "installall": "pnpm install && pnpm serverinstall",
     "server": "cd server && pnpm prisma migrate dev --name Init migration && pnpm prisma generate && pnpm start",
     "start": "concurrently  \"pnpm run server\" \"pnpm run client\""
-
   },
   "dependencies": {
     "@floating-ui/react-dom": "^1.0.0",
@@ -26,6 +25,7 @@
     "cytoscape": "^3.23.0",
     "cytoscape-edgehandles": "^4.0.1",
     "cytoscape-grid-guide": "^2.3.3",
+    "file-saver": "^2.0.5",
     "jotai": "^1.9.1",
     "leaflet": "^1.9.3",
     "primeicons": "^6.0.1",
@@ -47,6 +47,7 @@
     "@tanstack/react-query-devtools": "^4.16.1",
     "@types/cytoscape": "^3.19.9",
     "@types/cytoscape-edgehandles": "^4.0.0",
+    "@types/file-saver": "^2.0.5",
     "@types/leaflet": "^1.9.0",
     "@types/react": "^18.0.22",
     "@types/react-cytoscapejs": "^1.2.2",

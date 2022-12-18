@@ -1,5 +1,6 @@
 import { UseMutationResult } from "@tanstack/react-query";
 import cytoscape from "cytoscape";
+import { saveAs } from "file-saver";
 
 import { AllItemsType, AllSubItemsType } from "../types/generalTypes";
 import { toaster } from "./toast";
@@ -361,3 +362,53 @@ export function updateColor(
     toaster("warning", "No elements are selected.");
   }
 }
+
+export const exportBoardFunction = (
+  boardRef: cytoscape.Core,
+  view: "Graph" | "View",
+  background: "Color" | "Transparent",
+  type: "PNG" | "JPEG" | "JSON",
+  boardTitle?: string,
+) => {
+  if (!boardRef) return;
+  if (type === "PNG") {
+    saveAs(
+      new Blob(
+        [
+          boardRef.png({
+            output: "blob",
+            bg: background === "Color" ? "#121212" : "transparent",
+            full: view === "Graph",
+          }),
+        ],
+        {
+          type: "image/png",
+        },
+      ),
+      `${boardTitle || "ArkiveBoard"}.png`,
+    );
+  } else if (type === "JPEG") {
+    saveAs(
+      new Blob(
+        [
+          boardRef.jpg({
+            output: "blob",
+            bg: background === "Color" ? "#121212" : "transparent",
+            full: view === "Graph",
+          }),
+        ],
+        {
+          type: "image/jpg",
+        },
+      ),
+      `${boardTitle || "ArkiveBoard"}.jpg`,
+    );
+  } else if (type === "JSON") {
+    saveAs(
+      new Blob([JSON.stringify(boardRef.json())], {
+        type: "application/json",
+      }),
+      `${boardTitle || "ArkiveBoard"}.json`,
+    );
+  }
+};

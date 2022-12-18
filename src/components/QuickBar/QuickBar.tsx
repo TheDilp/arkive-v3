@@ -2,39 +2,29 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Icon } from "@iconify/react";
-// import { saveAs } from "file-saver";
 import { useAtom } from "jotai";
-import { AutoComplete } from "primereact/autocomplete";
-import { Button } from "primereact/button";
 import { ColorPicker } from "primereact/colorpicker";
-import { confirmDialog } from "primereact/confirmdialog";
-import { Dialog } from "primereact/dialog";
-import { SelectButton } from "primereact/selectbutton";
-import { TabPanel, TabView } from "primereact/tabview";
 import { Tooltip } from "primereact/tooltip";
-import { Dispatch, useContext, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-import { BoardExportType, BoardNodeType, BoardStateAction, BoardStateType } from "../../../types/BoardTypes";
 import { useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
 // import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, updateColor } from "../../utils/boardUtils";
-import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
+import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
-import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 
-type Props = {};
-export default function BoardQuickBar({}: Props) {
+export default function BoardQuickBar() {
   const { project_id, item_id } = useParams();
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [, setDialog] = useAtom(DialogAtom);
-  const [edgehandles, setEdgehandles] = useAtom(BoardEdgeHandlesAtom);
+  const [edgehandles] = useAtom(BoardEdgeHandlesAtom);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
 
   const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
@@ -42,12 +32,7 @@ export default function BoardQuickBar({}: Props) {
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const [updateManyDialog, setUpdateManyDialog] = useState(false);
 
-  const [exportDialog, setExportDialog] = useState<BoardExportType>({
-    view: "Graph",
-    background: "Color",
-    type: "PNG",
-    show: false,
-  });
+  const [, setExportDialog] = useAtom(DialogAtom);
   //   const updateNodeMutation = useUpdateNode(project_id as string);
   //   const updateEdgeMutation = useUpdateEdge(project_id as string);
   //   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
@@ -60,55 +45,6 @@ export default function BoardQuickBar({}: Props) {
     // delay in ms
     400,
   );
-
-  //   const exportBoardFunction = (
-  //     view: "Graph" | "View",
-  //     background: "Color" | "Transparent",
-  //     type: "PNG" | "JPEG" | "JSON",
-  //     boardTitle?: string,
-  //   ) => {
-  //     if (!cyRef) return;
-  //     if (type === "PNG") {
-  //       saveAs(
-  //         new Blob(
-  //           [
-  //             boardRef.png({
-  //               output: "blob",
-  //               bg: background === "Color" ? "#121212" : "transparent",
-  //               full: view === "Graph",
-  //             }),
-  //           ],
-  //           {
-  //             type: "image/png",
-  //           },
-  //         ),
-  //         `${boardTitle || "ArkiveBoard"}.png`,
-  //       );
-  //     } else if (type === "JPEG") {
-  //       saveAs(
-  //         new Blob(
-  //           [
-  //             boardRef.jpg({
-  //               output: "blob",
-  //               bg: background === "Color" ? "#121212" : "transparent",
-  //               full: view === "Graph",
-  //             }),
-  //           ],
-  //           {
-  //             type: "image/jpg",
-  //           },
-  //         ),
-  //         `${boardTitle || "ArkiveBoard"}.jpg`,
-  //       );
-  //     } else if (type === "JSON") {
-  //       saveAs(
-  //         new Blob([JSON.stringify(boardRef.json(true))], {
-  //           type: "application/json",
-  //         }),
-  //         `${boardTitle || "ArkiveBoard"}.json`,
-  //       );
-  //     }
-  //   };
 
   //   const confirmDelete = (selected: any) => {
   //     confirmDialog({
@@ -232,9 +168,16 @@ export default function BoardQuickBar({}: Props) {
       {/* Export button */}
       <i
         className="pi pi-download saveButton cursor-pointer hover:text-blue-300"
-        // onClick={() => {
-        //   setExportDialog({ ...exportDialog, show: true });
-        // }}
+        onClick={() => {
+          setExportDialog((prev) => ({
+            ...prev,
+            data: { title: board.title },
+            position: "center",
+            modal: true,
+            type: "export_board",
+            show: true,
+          }));
+        }}
       />
       {/* Search button */}
       <i
@@ -277,64 +220,7 @@ export default function BoardQuickBar({}: Props) {
 
     //   </Dialog> */}
     //   {/* Export board dialog */}
-    //   {/* <Dialog
-    //     header={`Export Board - ${board?.title}`}
-    //     modal={false}
-    //     onHide={() =>
-    //       setExportDialog({
-    //         view: "Graph",
-    //         background: "Color",
-    //         type: "PNG",
-    //         show: false,
-    //       })
-    //     }
-    //     position="top-left"
-    //     style={{
-    //       maxWidth: "14vw",
-    //     }}
-    //     visible={exportDialog.show}>
-    //     <div className="flex flex-wrap">
-    //       <div className="flex w-full flex-wrap justify-center">
-    //         <h3 className="mb-1 mt-0 w-full text-center">View</h3>
-    //         <SelectButton
-    //           onChange={(e) => setExportDialog({ ...exportDialog, view: e.value })}
-    //           options={["Graph", "Current"]}
-    //           value={exportDialog.view}
-    //         />
-    //       </div>
-    //       <div className="flex w-full flex-wrap justify-center">
-    //         <h3 className="my-2">Background</h3>
-    //         <SelectButton
-    //           onChange={(e) => setExportDialog({ ...exportDialog, background: e.value })}
-    //           options={["Color", "Transparent"]}
-    //           value={exportDialog.background}
-    //         />
-    //       </div>
-    //       <div className="flex w-full flex-wrap justify-center">
-    //         <h3 className="my-2">File Type</h3>
-    //         <SelectButton
-    //           onChange={(e) => setExportDialog({ ...exportDialog, type: e.value })}
-    //           options={["PNG", "JPEG", "JSON"]}
-    //           value={exportDialog.type}
-    //         />
-    //       </div>
-    //       <div className="mt-2 flex w-full justify-center">
-    //         <Button
-    //           className="p-button-outlined p-button-success"
-    //           icon="pi pi-download"
-    //           iconPos="right"
-    //           label="Export"
-    //           //   onClick={() => {
-    //           //     if (cyRef && boardRef) {
-    //           //       exportBoardFunction(exportDialog.view, exportDialog.background, exportDialog.type, board?.title);
-    //           //     } else {
-    //           //       toastWarn("Ooops");
-    //           //     }
-    //           //   }}
-    //         />
-    //       </div>
-    //     </div>
-    //   </Dialog> */}
+
     //   {/* <Dialog
     //     className="w-[25rem] overflow-y-auto"
     //     header="Update Many"

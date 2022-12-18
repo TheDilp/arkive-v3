@@ -18,10 +18,11 @@ import {
   useUpdateSubItem,
 } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
-import { BoardType, NodeType } from "../../types/boardTypes";
+import { BoardExportType, BoardType, NodeType } from "../../types/boardTypes";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { MapLayerType, MapType } from "../../types/mapTypes";
 import { BoardReferenceAtom, DialogAtom } from "../../utils/Atoms/atoms";
+import { exportBoardFunction } from "../../utils/boardUtils";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 import { ImageDropdownItem, MapImageDropdownItem } from "../Dropdown/ImageDropdownItem";
@@ -298,6 +299,7 @@ function InsertEditorImage() {
   );
 }
 function NodeSearch() {
+  const [, setDialog] = useAtom(DialogAtom);
   const [boardRef] = useAtom(BoardReferenceAtom);
   const { project_id, item_id } = useParams();
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
@@ -309,23 +311,11 @@ function NodeSearch() {
       <AutoComplete
         autoFocus
         className="w-15rem ml-2"
-        field="label"
-        onChange={(e) => setSearch(e.value)}
-        placeholder="Search Nodes"
-        value={search}
         completeMethod={(e) =>
           setFilteredNodes(board?.nodes.filter((node) => node.label?.toLowerCase().includes(e.query.toLowerCase())) || [])
         }
-        // itemTemplate={(item: BoardType) => (
-        //   <span>
-        //     <ImgDropdownItem
-        //       title={item.label || ""}
-        //       link={item.customImage?.link || ""}
-        //     />
-        //   </span>
-        // )}
-        suggestions={filteredNodes}
-        // virtualScrollerOptions={virtualScrollerSettings}
+        field="label"
+        onChange={(e) => setSearch(e.value)}
         onSelect={(e) => {
           if (!boardRef) return;
           if (e.value) {
@@ -341,9 +331,68 @@ function NodeSearch() {
                 duration: 1250,
               },
             );
+            setDialog((prev) => ({ ...DefaultDialog, position: prev.position }));
           }
         }}
+        placeholder="Search Nodes"
+        suggestions={filteredNodes}
+        value={search}
       />
+    </div>
+  );
+}
+
+function ExportBoard() {
+  const [boardRef] = useAtom(BoardReferenceAtom);
+  const [dialog] = useAtom(DialogAtom);
+  const [exportSettings, setExportSettings] = useState<BoardExportType>({ view: "Graph", background: "Color", type: "PNG" });
+  return (
+    <div className="flex flex-col gap-y-4">
+      <div className="flex w-full flex-col items-center">
+        <h3 className="mb-1 mt-0 w-full text-center">View</h3>
+        <SelectButton
+          onChange={(e) => setExportSettings({ ...exportSettings, view: e.value })}
+          options={["Graph", "Current"]}
+          value={exportSettings.view}
+        />
+      </div>
+      <div className="flex w-full flex-col items-center">
+        <h3 className="my-2">Background</h3>
+        <SelectButton
+          onChange={(e) => setExportSettings({ ...exportSettings, background: e.value })}
+          options={["Color", "Transparent"]}
+          value={exportSettings.background}
+        />
+      </div>
+      <div className="flex w-full flex-col items-center">
+        <h3 className="my-2">File Type</h3>
+        <SelectButton
+          onChange={(e) => setExportSettings({ ...exportSettings, type: e.value })}
+          options={["PNG", "JPEG", "JSON"]}
+          value={exportSettings.type}
+        />
+      </div>
+      <div className="mt-2 flex w-full justify-center">
+        <Button
+          className="p-button-outlined p-button-success"
+          icon="pi pi-download"
+          iconPos="right"
+          label="Export"
+          onClick={() => {
+            if (boardRef) {
+              exportBoardFunction(
+                boardRef,
+                exportSettings.view,
+                exportSettings.background,
+                exportSettings.type,
+                dialog.data?.title,
+              );
+            } else {
+              toaster("error", "There was an error exporting your board.");
+            }
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -360,6 +409,7 @@ export default function DialogWrapper() {
         if (dialog.type === "map_layer") return "Edit Map Layers";
         if (dialog.type === "editor_image") return "Insert An Image";
         if (dialog.type === "node_search") return "Search nodes";
+        if (dialog.type === "export_board") return "Export board";
         if (uploading) return "Uploading...";
         return null;
       }}
@@ -373,6 +423,7 @@ export default function DialogWrapper() {
       {dialog.type === "map_layer" && <UpdateMapLayers />}
       {dialog.type === "editor_image" && <InsertEditorImage />}
       {dialog.type === "node_search" && <NodeSearch />}
+      {dialog.type === "export_board" && <ExportBoard />}
     </Dialog>
   );
 }

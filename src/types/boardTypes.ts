@@ -118,3 +118,9 @@ export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
 
 export type CytoscapeNodeType = cytoscape.NodeDefinition;
 export type CytoscapeEdgeType = cytoscape.EdgeDefinition;
+
+export type BoardExportType = {
+  view: "Graph" | "View";
+  background: "Color" | "Transparent";
+  type: "PNG" | "JPEG" | "JSON";
+};
