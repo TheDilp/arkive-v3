@@ -24,7 +24,7 @@ type Props = {
 
 export default function BoardView({ isReadOnly }: Props) {
   const cm = useRef() as any;
-  const { project_id, item_id } = useParams();
+  const { project_id, item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
 
@@ -256,6 +256,17 @@ export default function BoardView({ isReadOnly }: Props) {
       }
     };
   }, [boardRef, item_id]);
+
+  useEffect(() => {
+    if (subitem_id && boardRef) {
+      const node = boardRef.getElementById(subitem_id);
+      boardRef.animate({
+        center: {
+          eles: node,
+        },
+      });
+    }
+  }, [subitem_id, boardRef]);
 
   return (
     <div className="h-full w-full">

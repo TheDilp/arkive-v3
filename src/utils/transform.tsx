@@ -29,7 +29,7 @@ export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
 export function getLinkForFullSearch(id: string, parent: string, type: AvailableSearchResultTypes, project_id: string) {
   if (["documents", "maps", "boards"].includes(type)) return `/project/${project_id}/${type}/${id}`;
   if (type === "pins") return `/project/${project_id}/maps/${parent}/${id}`;
-  if (type === "nodes") return `/project/${project_id}/maps/${parent}/${id}`;
+  if (type === "nodes") return `/project/${project_id}/boards/${parent}/${id}`;
   return "./";
 }
 

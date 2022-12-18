@@ -60,7 +60,7 @@ function App() {
                 <Route element={<FolderView />} path="" />
                 <Route element={<FolderView />} path="folder/:item_id" />
                 <Route element={<BoardView />} path=":item_id" />
-                <Route element={<MapView />} path=":item_id/:subitem_id" />
+                <Route element={<BoardView />} path=":item_id/:subitem_id" />
               </Route>
               <Route path="timelines/*">
                 <Route element={<FolderView />} path="folder/:item_id" />
