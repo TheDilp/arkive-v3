@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
+import { Tooltip } from "primereact/tooltip";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -55,38 +56,12 @@ export default function Navbar() {
         />
         {project_id && (
           <>
-            {/* <Tooltip
-                target=".wikiIcon"
-                content="Project Wiki"
-                position="bottom"
-                autoHide
-              />{" "}
-              <Tooltip
-                target=".mapsIcon"
-                content="Project Maps"
-                position="bottom"
-                autoHide
-              />{" "}
-              <Tooltip
-                target=".boardsIcon"
-                content="Project Boards"
-                position="bottom"
-                autoHide
-              />
-              <Tooltip
-                target=".timelineIcon"
-                content="Timelines"
-                position="bottom"
-                autoHide
-              />
-              <Tooltip
-                target=".filebrowserIcon"
-                content="Project Files"
-                position="bottom"
-                autoHide
-              /> */}
+            <Tooltip autoHide content="Documents" position="bottom" target=".documentsIcon" />{" "}
+            <Tooltip autoHide content="Maps" position="bottom" target=".mapsIcon" />{" "}
+            <Tooltip autoHide content="Boards" position="bottom" target=".boardsIcon" />
+            <Tooltip autoHide content="Files" position="bottom" target=".filebrowserIcon" />
             <Icon
-              className="cursor-pointer hover:text-blue-300 "
+              className="documentsIcon cursor-pointer hover:text-blue-300"
               fontSize={20}
               icon="mdi:books"
               onClick={async () => {
@@ -94,31 +69,29 @@ export default function Navbar() {
               }}
             />
             <Icon
-              className="cursor-pointer hover:text-blue-300 "
+              className="mapsIcon cursor-pointer hover:text-blue-300"
               fontSize={20}
               icon="mdi:map-marker"
               onClick={async () => {
                 navigate("./maps");
               }}
             />
-
             <Icon
-              className="cursor-pointer hover:text-blue-300"
+              className="boardsIcon cursor-pointer hover:text-blue-300"
               fontSize={20}
               icon="mdi:draw"
               onClick={async () => {
                 navigate("./boards");
               }}
             />
-            <Icon
+            {/* <Icon
               className="cursor-pointer hover:text-blue-300"
               fontSize={20}
               icon="mdi:chart-timeline-variant"
               onClick={async () => {
                 navigate("./timelines");
               }}
-            />
-
+            /> */}
             <span className="ml-auto flex items-center gap-x-2">
               <Icon
                 className="cursor-pointer hover:text-blue-300"
@@ -127,7 +100,7 @@ export default function Navbar() {
                 onClick={async () => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "full_search" })}
               />
               <Icon
-                className="cursor-pointer hover:text-blue-300"
+                className="fileBrowserIcon cursor-pointer hover:text-blue-300"
                 fontSize={20}
                 icon="ion:upload"
                 onClick={async () => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
@@ -138,6 +111,14 @@ export default function Navbar() {
                 icon="ion:images"
                 onClick={async () => {
                   navigate("./filebrowser");
+                }}
+              />
+              <Icon
+                className="cursor-pointer hover:text-blue-300"
+                fontSize={20}
+                icon="mdi:cog"
+                onClick={async () => {
+                  navigate("./projectsettings");
                 }}
               />
             </span>
