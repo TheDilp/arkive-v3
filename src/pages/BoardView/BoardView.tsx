@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
@@ -53,7 +53,7 @@ export default function BoardView({ isReadOnly }: Props) {
             x: boardContext.x,
             y: boardContext.y,
             parent: item_id as string,
-            id: v4(),
+            id: uuid(),
           });
         else toaster("error", "There was an error creating your node (missing X and Y).");
       },
@@ -165,7 +165,7 @@ export default function BoardView({ isReadOnly }: Props) {
     (source: string, target: string, color: string) => {
       createEdgeMutation.mutate({
         ...DefaultEdge,
-        id: v4(),
+        id: uuid(),
         parent: item_id as string,
         source_id: source,
         target_id: target,
