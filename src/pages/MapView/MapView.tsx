@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function MapView({ isReadOnly }: Props) {
-  const { project_id, item_id } = useParams();
+  const { project_id, item_id, subitem_id } = useParams();
   const deleteMapPin = useDeleteMutation("map_pins", project_id as string);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
