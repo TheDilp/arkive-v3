@@ -21,7 +21,7 @@ import { useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
 // import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
-import { BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
+import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, updateColor } from "../../utils/boardUtils";
 import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -34,6 +34,7 @@ export default function BoardQuickBar({}: Props) {
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [, setDialog] = useAtom(DialogAtom);
+  const [edgehandles, setEdgehandles] = useAtom(BoardEdgeHandlesAtom);
   const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
 
   const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
@@ -132,7 +133,6 @@ export default function BoardQuickBar({}: Props) {
   //       reject: () => {},
   //     });
   //   };
-  const { edgeHandles } = boardState;
   return (
     <div
       className="absolute left-1/2 z-10 flex h-12 w-1/6 items-center justify-around rounded bg-zinc-800 text-white shadow-md"
@@ -198,7 +198,7 @@ export default function BoardQuickBar({}: Props) {
           const selected = boardRef.elements(":selected");
           if (selected.length === 0) {
             toaster("warning", "No elements are selected.");
-            return;
+            // return;
           }
           // confirmDelete(selected);
         }}
@@ -207,30 +207,24 @@ export default function BoardQuickBar({}: Props) {
       {/* Drawmode button */}
       <i
         className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
-          edgeHandles && edgeHandles.drawMode ? "text-green-500" : ""
+          edgehandles && boardState.drawMode ? "text-green-500" : ""
         } drawMode`}
         onClick={() => {
-          if (boardRef && edgeHandles && edgeHandles.ref) {
-            if (edgeHandles.drawMode) {
-              edgeHandles.ref.disable();
-              edgeHandles.ref.disableDrawMode();
+          if (boardRef && edgehandles) {
+            if (boardState.drawMode) {
+              edgehandles.disable();
+              edgehandles.disableDrawMode();
               boardRef.autoungrabify(false);
               boardRef.autounselectify(false);
               boardRef.autolock(false);
               boardRef.zoomingEnabled(true);
               boardRef.userZoomingEnabled(true);
               boardRef.panningEnabled(true);
-              setBoardState((prev) => {
-                if (prev.edgeHandles) return { ...prev, edgeHandles: { ...prev.edgeHandles, drawMode: false } };
-                return prev;
-              });
+              setBoardState((prev) => ({ ...prev, drawMode: false }));
             } else {
-              edgeHandles.ref.enable();
-              edgeHandles.ref.enableDrawMode();
-              setBoardState((prev) => {
-                if (prev.edgeHandles) return { ...prev, edgeHandles: { ...prev.edgeHandles, drawMode: true } };
-                return prev;
-              });
+              edgehandles.enable();
+              edgehandles.enableDrawMode();
+              setBoardState((prev) => ({ ...prev, drawMode: true }));
             }
           }
         }}

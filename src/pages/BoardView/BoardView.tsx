@@ -12,7 +12,7 @@ import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems, useUpd
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
-import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, edgehandlesSettings } from "../../utils/boardUtils";
 import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -28,7 +28,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
 
-  const edgeHandlesRef = useRef() as MutableRefObject<EdgeHandlesInstance | null>;
+  const [edgeHandlesRef, setEdgeHandlesRef] = useAtom(BoardEdgeHandlesAtom);
 
   const [boardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<{ x: null | number; y: null | number; type: "node" | "edge" }>({
@@ -258,6 +258,7 @@ export default function BoardView({ isReadOnly }: Props) {
   }, [boardRef, item_id]);
 
   useEffect(() => {
+    // If there is a node id in the URL navigate to that node
     if (subitem_id && boardRef) {
       const node = boardRef.getElementById(subitem_id);
       boardRef.animate({
@@ -282,7 +283,7 @@ export default function BoardView({ isReadOnly }: Props) {
             drawGrid: boardState.grid,
           });
           setBoardRef(cy);
-          if (!edgeHandlesRef.current && boardRef) edgeHandlesRef.current = boardRef.edgehandles(edgehandlesSettings);
+          if (!edgeHandlesRef && boardRef) setEdgeHandlesRef(boardRef.edgehandles(edgehandlesSettings));
         }}
         elements={elements}
         // @ts-ignore

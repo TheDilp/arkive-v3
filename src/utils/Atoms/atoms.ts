@@ -37,9 +37,11 @@ export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null 
 export const BoardReferenceAtom = atom<null | cytoscape.Core>(null);
 
 export const BoardStateAtom = atom<{
-  edgeHandles: null | { ref: EdgeHandlesInstance | null; drawMode: boolean };
   grid: boolean;
+  drawMode: boolean;
 }>({
-  edgeHandles: null,
   grid: false,
+  drawMode: false,
 });
+
+export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
