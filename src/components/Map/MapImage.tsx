@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
-  const { project_id, item_id } = useParams();
+  const { project_id, item_id, subitem_id } = useParams();
   const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
 
@@ -81,6 +81,15 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+
+  useEffect(() => {
+    if (subitem_id) {
+      const pin = currentMap.map_pins.find((map_pin) => map_pin.id === subitem_id);
+      if (pin) map.panTo([pin.lat, pin.lng], {});
+    } else {
+      map.fitBounds(bounds);
+    }
+  }, [subitem_id, bounds]);
   return (
     <div>
       <LayersControl position="topright">

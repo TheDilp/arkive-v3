@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function MapView({ isReadOnly }: Props) {
-  const { project_id, item_id, subitem_id } = useParams();
+  const { project_id, item_id } = useParams();
   const deleteMapPin = useDeleteMutation("map_pins", project_id as string);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
@@ -99,7 +99,7 @@ export default function MapView({ isReadOnly }: Props) {
             maxZoom={2}
             minZoom={-3}
             scrollWheelZoom
-            zoom={0}
+            zoom={1}
             zoomSnap={0}>
             <MapImage
               bounds={bounds as LatLngBoundsExpression}
