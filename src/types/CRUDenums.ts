@@ -54,6 +54,8 @@ export enum deleteURLs {
   deleteMap = "deletemap/",
   deleteMapPin = "deletemappin/",
   deleteMapLayer = "deletemaplayer/",
+  deleteNode = "deletenode/",
+  deleteEdge = "deleteedge/",
 }
 
 export enum MainToSubType {

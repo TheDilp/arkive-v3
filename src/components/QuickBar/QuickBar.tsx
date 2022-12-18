@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
+import { useDeleteManySubItems, useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
 // import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
 import { useGetItem } from "../../hooks/getItemHook";
 import { BoardType } from "../../types/boardTypes";
@@ -35,7 +35,7 @@ export default function BoardQuickBar() {
   const [, setExportDialog] = useAtom(DialogAtom);
   //   const updateNodeMutation = useUpdateNode(project_id as string);
   //   const updateEdgeMutation = useUpdateEdge(project_id as string);
-  //   const deleteManyNodesMutation = useDeleteManyNodes(project_id as string);
+  const deleteManyNodesMutation = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
   //   const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
   const debouncedColorPick = useDebouncedCallback(
     // function
@@ -134,9 +134,10 @@ export default function BoardQuickBar() {
           const selected = boardRef.elements(":selected");
           if (selected.length === 0) {
             toaster("warning", "No elements are selected.");
-            // return;
+          } else {
+            deleteManyNodesMutation.mutate(selected.map((el) => el.id()));
           }
-          // confirmDelete(selected);
+          // conirm(selected);
         }}
       />
 
@@ -217,24 +218,5 @@ export default function BoardQuickBar() {
         }}
       />
     </div>
-
-    //   </Dialog> */}
-    //   {/* Export board dialog */}
-
-    //   {/* <Dialog
-    //     className="w-[25rem] overflow-y-auto"
-    //     header="Update Many"
-    //     modal={false}
-    //     onHide={() => setUpdateManyDialog(false)}
-    //     position="right"
-    //     style={{
-    //       height: "45rem",
-    //     }}
-    //     visible={updateManyDialog}>
-    //     <TabView renderActiveOnly>
-    //       <TabPanel header="Nodes">{/* <UpdateManyNodes /> */}</TabPanel>
-    //       <TabPanel header="Edges">{/* <UpdateManyEdges /> */}</TabPanel>
-    //     </TabView>
-    // </Dialog> */}
   );
 }
