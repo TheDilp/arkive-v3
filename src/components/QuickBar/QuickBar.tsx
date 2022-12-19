@@ -30,7 +30,7 @@ export default function BoardQuickBar() {
   const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
   const updateEdgeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "edges");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
-  const [updateManyDialog, setUpdateManyDialog] = useState(false);
+  const [, setUpdateManyDialog] = useState(false);
 
   const [, setExportDialog] = useAtom(DialogAtom);
   //   const updateNodeMutation = useUpdateNode(project_id as string);
