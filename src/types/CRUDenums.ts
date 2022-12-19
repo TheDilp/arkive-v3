@@ -1,63 +1,64 @@
 export const baseURLS = {
   baseServer: `http://localhost:${import.meta.env.VITE_BE_PORT}/`,
 };
-export enum getURLS {
+export const getURLS = {
   //  Projects
-  getAllProjects = "getallprojects",
-  getSingeProject = "getsingleproject",
+  getAllProjects: "getallprojects",
+  getSingeProject: "getsingleproject",
 
   // Documents
-  getAllDocuments = "getalldocuments/",
+  getAllDocuments: "getalldocuments/",
+  getSingleDocument: "getsingledocument/",
   // Maps
-  getAllMaps = "getallmaps/",
+  getAllMaps: "getallmaps/",
   // Boards
-  getAllBoards = "getallboards/",
+  getAllBoards: "getallboards/",
   // Images
-  getAllImages = "getallimages/",
-  getSingleImage = "getimage/images/",
-  getAllMapImages = "getallmapimages/",
-  getSingleMapImage = "getimage/maps/",
+  getAllImages: "getallimages/",
+  getSingleImage: "getimage/images/",
+  getAllMapImages: "getallmapimages/",
+  getSingleMapImage: "getimage/maps/",
   // Misc
-  getAllTags = "alltags/",
-  getFullSearch = "fullsearch/",
-}
+  getAllTags: "alltags/",
+  getFullSearch: "fullsearch/",
+};
 
-export enum createURLS {
-  createProject = "createproject",
-  createDocument = "createdocument",
-  createMap = "createmap",
-  createMapPin = "createmappin",
-  createMapLayer = "createmaplayer",
-  createBoard = "createboard",
-  createNode = "createnode",
-  createEdge = "createedge",
-  uploadImage = "uploadimage/images/",
-  uploadMap = "uploadimage/maps/",
-}
+export const createURLS = {
+  createProject: "createproject",
+  createDocument: "createdocument",
+  createMap: "createmap",
+  createMapPin: "createmappin",
+  createMapLayer: "createmaplayer",
+  createBoard: "createboard",
+  createNode: "createnode",
+  createEdge: "createedge",
+  uploadImage: "uploadimage/images/",
+  uploadMap: "uploadimage/maps/",
+};
 
-export enum updateURLs {
-  updateProject = "updateproject/",
-  updateDocument = "updatedocument/",
-  updateMap = "updatemap/",
-  updateMapPin = "updatemappin/",
-  updateMapLayer = "updatemaplayer/",
-  updateBoard = "updateboard/",
-  updateNode = "updatenode/",
-  updateEdge = "updateedge/",
+export const updateURLs = {
+  updateProject: "updateproject/",
+  updateDocument: "updatedocument/",
+  updateMap: "updatemap/",
+  updateMapPin: "updatemappin/",
+  updateMapLayer: "updatemaplayer/",
+  updateBoard: "updateboard/",
+  updateNode: "updatenode/",
+  updateEdge: "updateedge/",
 
-  sortDocuments = "sortdocuments",
-  sortMaps = "sortmaps",
-}
+  sortDocuments: "sortdocuments",
+  sortMaps: "sortmaps",
+};
 
-export enum deleteURLs {
-  deleteDocument = "deletedocument/",
-  deleteMap = "deletemap/",
-  deleteMapPin = "deletemappin/",
-  deleteMapLayer = "deletemaplayer/",
-  deleteNode = "deletenode/",
-  deleteEdge = "deleteedge/",
-}
+export const deleteURLs = {
+  deleteDocument: "deletedocument/",
+  deleteMap: "deletemap/",
+  deleteMapPin: "deletemappin/",
+  deleteMapLayer: "deletemaplayer/",
+  deleteNode: "deletenode/",
+  deleteEdge: "deleteedge/",
+};
 
-export enum MainToSubType {
-  map_pins = "maps",
-}
+export const MainToSubType = {
+  map_pins: "maps",
+};
