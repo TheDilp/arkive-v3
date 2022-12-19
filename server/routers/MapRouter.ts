@@ -13,6 +13,7 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         sort: true,
         expanded: true,
         folder: true,
+        parent: true,
       },
       where: {
         project_id: req.params.project_id,
@@ -156,8 +157,13 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
     const updates = indexes.map((idx) =>
       prisma.maps.update({ data: { parent: idx.parent, sort: idx.sort }, where: { id: idx.id } }),
     );
-    await prisma.$transaction(updates);
+    try {
+      await prisma.$transaction(updates);
+    } catch (error) {
+      console.log(error);
+    }
   });
+
   server.delete(
     "/deletemap/:id",
     async (
