@@ -6,12 +6,29 @@ import { removeNull } from "../utils/transform";
 export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getallmaps/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
     const data = await prisma.maps.findMany({
-      include: {
-        map_pins: true,
-        map_layers: true,
+      select: {
+        id: true,
+        title: true,
+        project_id: true,
+        sort: true,
+        expanded: true,
+        folder: true,
       },
       where: {
         project_id: req.params.project_id,
+      },
+    });
+    return data;
+  });
+
+  server.get("/getsinglemap/:id", async (req: FastifyRequest<{ Params: { id: string } }>) => {
+    const data = await prisma.maps.findUnique({
+      where: {
+        id: req.params.id,
+      },
+      include: {
+        map_pins: true,
+        map_layers: true,
       },
     });
     return data;

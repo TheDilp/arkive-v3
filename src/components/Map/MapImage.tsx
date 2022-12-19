@@ -21,7 +21,7 @@ type Props = {
 
 export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
   const { project_id, item_id, subitem_id } = useParams();
-  const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
+  const { data: currentMap } = useGetItem(item_id as string, "maps") as { data: MapType };
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
 
   const PinFilter = (mapPin: MapPinType) => {

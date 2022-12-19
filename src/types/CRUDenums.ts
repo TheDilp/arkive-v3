@@ -11,6 +11,7 @@ export const getURLS = {
   getSingleDocument: "getsingledocument/",
   // Maps
   getAllMaps: "getallmaps/",
+  getSingleMap: "getsinglemap/",
   // Boards
   getAllBoards: "getallboards/",
   // Images

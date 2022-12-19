@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { DocumentType } from "../types/documentTypes";
-import { AvailableItemTypes } from "../types/generalTypes";
+import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { getSingleURL } from "../utils/CRUD/CRUDUrls";
 
 export function useGetItem(id: string, type: AvailableItemTypes) {
-  const { data, isLoading } = useQuery<DocumentType>({
+  const { data, isLoading } = useQuery<AllItemsType>({
     queryKey: [type, id],
     queryFn: async () => {
       const url = getSingleURL(type, id);

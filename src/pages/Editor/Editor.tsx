@@ -14,13 +14,17 @@ import MentionDropdownComponent from "../../components/Mention/MentionDropdownCo
 import DocumentProperties from "../../components/PropertiesBar/DocumentProperties";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/getItemHook";
+import { DocumentType } from "../../types/documentTypes";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
   const { item_id } = useParams();
-  const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents");
+  const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents") as {
+    data: DocumentType;
+    isLoading: boolean;
+  };
   const updateDocumentMutation = useUpdateItem("documents");
   const { manager, state } = useRemirror({
     content: editable === false ? content || undefined : (currentDocument && currentDocument?.content) || undefined,

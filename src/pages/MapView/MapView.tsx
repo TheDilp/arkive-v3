@@ -60,7 +60,7 @@ export default function MapView({ isReadOnly }: Props) {
             label: "Delete Pin",
           },
         ];
-  const currentMap = useGetItem(project_id as string, item_id as string, "maps") as MapType;
+  const { data: currentMap, isLoading } = useGetItem(item_id as string, "maps") as { data: MapType; isLoading: boolean };
   useEffect(() => {
     if (currentMap) {
       const img = new Image();
@@ -81,20 +81,20 @@ export default function MapView({ isReadOnly }: Props) {
     }
   }, [currentMap, project_id]);
 
-  if (loading) return <ProgressSpinner />;
+  if (loading || isLoading) return <ProgressSpinner />;
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex flex-col w-full h-full">
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
       <ContextMenu cm={cm} items={items} />
       {/* This div is needed for layers to properly work */}
       {currentMap ? (
-        <div className="h-full w-full">
+        <div className="w-full h-full">
           <MapContainer
             ref={mapRef}
             attributionControl={false}
             bounds={bounds as LatLngBoundsExpression}
             center={[bounds[1][0] / 2, bounds[1][1] / 2]}
-            className="h-full w-full flex-1 bg-zinc-900 outline-none"
+            className="flex-1 w-full h-full outline-none bg-zinc-900"
             crs={CRS.Simple}
             maxZoom={2}
             minZoom={-3}
