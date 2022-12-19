@@ -1,6 +1,7 @@
 import { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { EdgeHandlesInstance } from "cytoscape-edgehandles";
 import { useAtom } from "jotai";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
@@ -37,7 +38,10 @@ export default function BoardView({ isReadOnly }: Props) {
     type: "node",
   });
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
-  const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
+  const { data: board, isLoading } = useGetItem(item_id as string, "boards") as {
+    data: BoardType;
+    isLoading: boolean;
+  };
   const createNodeMutation = useCreateNodeEdge(project_id as string, "nodes");
   const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
@@ -268,7 +272,7 @@ export default function BoardView({ isReadOnly }: Props) {
       });
     }
   }, [subitem_id, boardRef]);
-
+  if (isLoading) return <ProgressSpinner />;
   return (
     <div className="h-full w-full">
       <ContextMenu cm={cm} items={items} />

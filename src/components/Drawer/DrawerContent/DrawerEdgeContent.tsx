@@ -7,9 +7,8 @@ import { InputText } from "primereact/inputtext";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetAllImages, useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../../hooks/getItemHook";
-import { BoardType, EdgeType } from "../../../types/boardTypes";
+import { useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { EdgeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
   boardEdgeArrowShapes,
@@ -19,7 +18,6 @@ import {
   BoardFontSizes,
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
-import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 
 function FontItemTemplate(item: { label: string; value: string }) {
   const { value, label } = item;
@@ -27,14 +25,9 @@ function FontItemTemplate(item: { label: string; value: string }) {
 }
 
 export default function DrawerEdgeContent() {
-  const { project_id, item_id } = useParams();
+  const { item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const updateEdgeMutaiton = useUpdateNodeEdge(project_id as string, item_id as string, "edges");
-  const { data: documents } = useGetAllItems(project_id as string, "documents");
-  const { data: images } = useGetAllImages(project_id as string);
-  const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
-  //   const [selectedTemplate, setSelectedTemplate] = useState<NodeType | null>(null);
-  //   const updateNodeMutation = useUpdateNode(project_id as string);
+  const updateEdgeMutaiton = useUpdateSubItem(item_id as string, "edges", "boards");
   const [localItem, setLocalItem] = useState<EdgeType | undefined>(drawer?.data as EdgeType);
   const handleEnter: KeyboardEventHandler = (e: any) => {
     if (e.key === "Enter" && localItem) updateEdgeMutaiton.mutate(localItem);

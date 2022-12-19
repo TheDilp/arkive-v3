@@ -134,7 +134,7 @@ export const useUpdateItem = (type: AllAvailableTypes) => {
     },
   );
 };
-export const useUpdateSubItem = (project_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -153,7 +153,7 @@ export const useUpdateSubItem = (project_id: string, subType: AvailableSubItemTy
       onError: () => toaster("error", "There was an error updating this item."),
       onSuccess: async (data) => {
         const newData: AllItemsType = await data?.json();
-        if (newData) queryClient.refetchQueries(["allItems", project_id, type]);
+        if (newData) queryClient.refetchQueries({ queryKey: [type, id] });
       },
     },
   );
@@ -269,6 +269,7 @@ export const useUpdateNodeEdge = (project_id: string, item_id: string, type: "no
         queryClient.setQueryData(["allItems", project_id, "boards"], (oldData: BoardType[] | undefined) => {
           if (oldData)
             return oldData.map((board) => {
+              console.log(board[type]);
               if (board.id !== item_id) return board;
               // @ts-ignore
               return {

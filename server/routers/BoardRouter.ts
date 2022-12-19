@@ -9,6 +9,22 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       where: {
         project_id: req.params.project_id,
       },
+      select: {
+        id: true,
+        title: true,
+        folder: true,
+        sort: true,
+        parent: true,
+        expanded: true,
+      },
+    });
+    return data;
+  });
+  server.get("/getsingleboard/:id", async (req: FastifyRequest<{ Params: { id: string } }>) => {
+    const data = await prisma.boards.findUnique({
+      where: {
+        id: req.params.id,
+      },
       include: {
         nodes: true,
         edges: true,

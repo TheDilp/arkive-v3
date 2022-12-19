@@ -181,17 +181,17 @@ export const cytoscapeStylesheet = [
       "source-arrow-fill": "data(sourceArrowFill)",
       "source-arrow-color": "data(sourceArrowColor)",
 
-      "target-arrow-shape": "data(sourceArrowShape)",
-      "target-arrow-fill": "data(sourceArrowFill)",
-      "target-arrow-color": "data(sourceArrowColor)",
+      "target-arrow-shape": "data(targetArrowShape)",
+      "target-arrow-fill": "data(targetArrowFill)",
+      "target-arrow-color": "data(targetArrowColor)",
 
-      "mid-source-arrow-shape": "data(sourceArrowShape)",
-      "mid-source-arrow-fill": "data(sourceArrowFill)",
-      "mid-source-arrow-color": "data(sourceArrowColor)",
+      "mid-source-arrow-shape": "data(midSourceArrowShape)",
+      "mid-source-arrow-fill": "data(midSourceArrowFill)",
+      "mid-source-arrow-color": "data(midSourceArrowColor)",
 
-      "mid-target-arrow-shape": "data(sourceArrowShape)",
-      "mid-target-arrow-fill": "data(sourceArrowFill)",
-      "mid-target-arrow-color": "data(sourceArrowColor)",
+      "mid-target-arrow-shape": "data(midTargetArrowShape)",
+      "mid-target-arrow-fill": "data(midTargetArrowFill)",
+      "mid-target-arrow-color": "data(midTargetArrowColor)",
 
       "arrow-scale": "data(arrowScale)",
       "line-color": "data(lineColor)",

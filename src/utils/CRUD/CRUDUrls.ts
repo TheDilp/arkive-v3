@@ -10,8 +10,8 @@ export const getURL = (project_id: string, type: AvailableItemTypes) => {
 export const getSingleURL = (type: AvailableItemTypes, id: string) => {
   if (type === "documents") return `${baseURLS.baseServer}${getURLS.getSingleDocument}${id}`;
   if (type === "maps") return `${baseURLS.baseServer}${getURLS.getSingleMap}${id}`;
+  if (type === "boards") return `${baseURLS.baseServer}${getURLS.getSingleBoard}${id}`;
 
-  // if (type === "boards") return `${baseURLS.baseServer}${getURLS.getAllBoards}${project_id}`;
   return null;
 };
 export const createURL = (type: AllAvailableTypes) => {
