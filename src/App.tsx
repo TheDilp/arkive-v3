@@ -12,7 +12,7 @@ import edgehandles from "cytoscape-edgehandles";
 import gridguide from "cytoscape-grid-guide";
 import { useEffect } from "react";
 import { DndProvider } from "react-dnd";
-import { Route, Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Layout from "./components/Layout/Layout";
