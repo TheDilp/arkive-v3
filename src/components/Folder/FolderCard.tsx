@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { AvailableItemTypes } from "../../types/generalTypes";
 
@@ -20,8 +20,9 @@ const getCardURL = ({ id, isFolder, type }: { id: string; type: AvailableItemTyp
 };
 
 export default function FolderCard({ id, title, type, isFolder, icon }: Props) {
+  const { project_id } = useParams();
   return (
-    <Link to={`../${getCardURL({ isFolder, type, id })}`}>
+    <Link to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>
       <div className="flex h-36 w-36 cursor-pointer flex-col items-center justify-between px-4 py-2 transition-colors hover:text-blue-300">
         <Icon fontSize={80} icon={isFolder ? "mdi:folder" : icon} />
         <h3 className="text-center text-lg">{title}</h3>
