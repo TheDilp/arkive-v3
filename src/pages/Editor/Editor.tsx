@@ -20,7 +20,6 @@ import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
-  console.log(content);
   const { item_id } = useParams();
   const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents", { enabled: !!editable }) as {
     data: DocumentType;

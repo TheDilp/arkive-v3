@@ -30,7 +30,7 @@ function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
       return null;
     },
 
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000,
   });
   return (
     <Card className="h-96 w-96 overflow-y-auto" title={<div className="p-0 text-center">{title}</div>}>
