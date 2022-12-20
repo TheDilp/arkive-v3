@@ -45,7 +45,7 @@ export default function Sidebar() {
               pathname.includes("project-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/project-settings">
-            <Icon icon="mdi:cogs" />
+            <Icon fontSize={24} icon="mdi:cogs" />
             Project Settings
           </Link>
           <Link
@@ -53,7 +53,7 @@ export default function Sidebar() {
               pathname.includes("document-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/document-settings">
-            <Icon icon="mdi:files" />
+            <Icon fontSize={24} icon="mdi:files" />
             Document Settings
           </Link>
           <Link
@@ -61,7 +61,7 @@ export default function Sidebar() {
               pathname.includes("map-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/map-settings">
-            <Icon icon="mdi:map" />
+            <Icon fontSize={24} icon="mdi:map" />
             Map Settings
           </Link>
           <Link
@@ -69,7 +69,7 @@ export default function Sidebar() {
               pathname.includes("board-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/board-settings">
-            <Icon icon="mdi:draw" />
+            <Icon fontSize={24} icon="mdi:draw" />
             Board Settings
           </Link>
         </ul>
