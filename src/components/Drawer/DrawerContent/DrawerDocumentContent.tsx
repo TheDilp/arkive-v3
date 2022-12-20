@@ -23,11 +23,10 @@ export default function DrawerDocumentContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const { data: allDocuments } = useGetAllItems(project_id as string, "documents");
-  const document = useGetItem(project_id as string, drawer?.id, "documents") as DocumentType;
+  const { data: document } = useGetItem(drawer?.id as string, "documents", { enabled: !!drawer?.id }) as { data: DocumentType };
   const createDocumentMutation = useCreateItem("documents");
   const updateDocumentMutation = useUpdateItem("documents");
   const deleteDocumentMutation = useDeleteMutation("documents", project_id as string);
-
   function CreateUpdateDocument(newData: DocumentCreateType) {
     if (document) {
       if (allDocuments?.some((item) => item.parent === newData.id) && !newData.folder) {

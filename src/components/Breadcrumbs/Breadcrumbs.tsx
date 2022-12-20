@@ -6,13 +6,15 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DocumentType } from "../../types/documentTypes";
-import { BreadcrumbsType } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes, BreadcrumbsType } from "../../types/generalTypes";
 
-export default function Breadcrumbs() {
+export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
   const { project_id, item_id } = useParams();
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsType>([]);
-  const { data: documents } = useGetAllItems(project_id as string, "documents");
-  const currentDocument = useGetItem(project_id as string, item_id as string, "documents");
+  const { data: documents } = useGetAllItems(project_id as string, type);
+  const { data: currentDocument } = useGetItem(item_id as string, type, { enabled: !!item_id }) as {
+    data: DocumentType;
+  };
   const navigate = useNavigate();
   function recursiveFindParents(
     parent_id: string | null,
@@ -56,16 +58,18 @@ export default function Breadcrumbs() {
         ];
 
         recursiveFindParents(currentDocument?.parent || null, documents as DocumentType[], tempBreadcrumbs, setBreadcrumbs);
+      } else {
+        setBreadcrumbs([]);
       }
     }
-  }, [item_id]);
+  }, [item_id, currentDocument]);
 
   return (
     <BreadCrumb
       className="border-bottom-2 border-noround z-5 w-full border-none bg-transparent font-bold"
       home={{
         className: "flex",
-        command: () => navigate("../"),
+        command: () => navigate(`/project/${project_id}/${type}`),
         icon: "pi pi-home",
         style: {
           height: "21px",

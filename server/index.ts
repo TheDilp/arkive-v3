@@ -30,7 +30,7 @@ server.register(documentRouter);
 server.register(mapRouter);
 server.register(boardRouter);
 server.register(imagesRouter);
-if (process.env.VITE_BE_PORT)
+if (process.env.VITE_BE_PORT) {
   server.listen({ port: parseInt(process.env.VITE_BE_PORT, 10) as number }, (err, address) => {
     if (err) {
       console.error(err);
@@ -38,3 +38,6 @@ if (process.env.VITE_BE_PORT)
     }
     console.log(`Server listening at ${address}`);
   });
+} else {
+  console.log("NO VITE_BE_PORT");
+}
