@@ -49,7 +49,7 @@ export default function DrawerEdgeContent() {
       <div className="flex w-full flex-col">
         <TabView renderActiveOnly>
           <TabPanel header="Edge">
-            <div className="my-1 flex w-full flex-wrap">
+            <div className="flex w-full flex-col gap-y-3">
               <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-2">
                 {/* Label text */}
 
@@ -128,8 +128,6 @@ export default function DrawerEdgeContent() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="flex w-full flex-col">
               <div className="flex gap-x-1 gap-y-2">
                 <div className="flex w-full flex-wrap">
                   <span className="w-full text-sm text-zinc-400">Thickness</span>

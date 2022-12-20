@@ -117,19 +117,19 @@ export const useUpdateItem = (type: AllAvailableTypes) => {
       return null;
     },
     {
-      onError: () => toaster("error", "There was an error updating this item."),
-      onSuccess: async (data, variables) => {
-        const newData: AllItemsType = await data?.json();
-        if (newData)
-          queryClient.setQueryData(["allItems", newData.project_id, type], (old: AllItemsType[] | undefined) => {
-            if (old)
-              return old.map((item) => {
-                if (item.id === variables.id) return { ...item, ...variables };
-                return item;
-              });
-
-            return [];
+      onMutate: async (variables) => {
+        const oldData = queryClient.getQueryData([type, variables.id]);
+        if (variables)
+          queryClient.setQueryData([type, variables.id], (old: AllItemsType | undefined) => {
+            if (old) return { ...old, ...variables };
+            return old;
           });
+
+        return { oldData };
+      },
+      onError: (error, variables, context) => {
+        toaster("error", "There was an error updating this item.");
+        queryClient.setQueryData([type, variables.id], context?.oldData);
       },
     },
   );

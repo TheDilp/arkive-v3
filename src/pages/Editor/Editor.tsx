@@ -20,8 +20,9 @@ import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
 import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
+  console.log(content);
   const { item_id } = useParams();
-  const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents") as {
+  const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents", { enabled: !!editable }) as {
     data: DocumentType;
     isLoading: boolean;
   };
@@ -54,14 +55,7 @@ export default function Editor({ content, editable }: EditorType) {
         }),
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item_id]);
-
-  useEffect(() => {
-    if (currentDocument) {
-      manager.view.updateState(manager.createState({ content: currentDocument.content || undefined }));
-    }
-  }, [currentDocument]);
+  }, [currentDocument, item_id]);
 
   if (isLoading) return <ProgressSpinner />;
 

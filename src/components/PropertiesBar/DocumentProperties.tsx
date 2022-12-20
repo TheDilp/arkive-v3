@@ -13,7 +13,7 @@ import { DocumentType } from "../../types/documentTypes";
 
 export default function DocumentProperties() {
   const { project_id, item_id } = useParams();
-  const currentDocument = useGetItem(project_id as string, item_id as string, "documents") as DocumentType;
+  const { data: currentDocument } = useGetItem(item_id as string, "documents") as { data: DocumentType };
   const { data: initialTags } = useGetAllTags(project_id as string, "documents");
   const queryClient = useQueryClient();
   const [tags, setTags] = useState({ selected: currentDocument?.tags || [], suggestions: initialTags });
@@ -41,7 +41,7 @@ export default function DocumentProperties() {
         tags: currentDocument.tags.filter((tag) => tag !== value),
       });
     }
-    await queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
+    await queryClient.refetchQueries({ queryKey: ["documents", item_id] });
   };
   const handleAlterNamesChange = (value: string[]) => {
     if (currentDocument) {

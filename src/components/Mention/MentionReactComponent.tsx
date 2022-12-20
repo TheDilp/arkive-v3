@@ -20,20 +20,20 @@ export default function MentionReactComponent({ node }: Props) {
   const { project_id } = useParams();
   if (node?.attrs) {
     const { id, name, label } = node.attrs;
-
     if (name === "at") {
+      let docId: string = id;
+
+      // Detect if it's an alter_name by checking the id
+      // Extract the main documents ID from the node's id if it is
+      if (docId.startsWith("alter")) {
+        docId = docId.replace(/^alter-\d /g, "");
+      }
       const docs: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
-      const docItem = docs ? docs.find((doc) => doc.id === id.replace(/^alter-\d /g, "")) : undefined;
+      const docItem = docs ? docs.find((doc) => doc.id === docId) : undefined;
 
       if (docItem) {
         let title = "";
-        let docId: string = id;
 
-        // Detect if it's an alter_name by checking the id
-        // Extract the main documents ID from the node's id if it is
-        if (docId.startsWith("alter")) {
-          docId = docId.replace(/^alter-\d /g, "");
-        }
         // If the item is using an alter name then use it instead of the main document's title
         if (docItem.alter_names && docItem.alter_names.includes(label)) {
           title = label;
@@ -42,9 +42,9 @@ export default function MentionReactComponent({ node }: Props) {
         else {
           title = docItem.title;
         }
-        return <DocumentMention content={docItem.content} id={docId} label={label} title={title} />;
+        return <DocumentMention id={docId} label={label} title={title} />;
       }
-      return <DocumentMention content={undefined} id={undefined} label={label} title={label} />;
+      return <DocumentMention id={undefined} label={label} title={label} />;
     }
     if (name === "hash") {
       const maps: MapType[] | undefined = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"]);

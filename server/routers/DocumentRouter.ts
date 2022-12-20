@@ -20,6 +20,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         expanded: true,
         public: true,
         project_id: true,
+        alter_names: true,
         tags: true,
       },
     });
