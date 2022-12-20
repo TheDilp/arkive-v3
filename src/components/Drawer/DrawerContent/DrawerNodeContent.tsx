@@ -49,7 +49,7 @@ export default function DrawerNodeContent() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-y-4">
+    <div className="flex h-full flex-col justify-between gap-y-4">
       <div className="flex w-full flex-col gap-y-4">
         <div className="flex w-full flex-col gap-y-4">
           <div className=" w-full">
@@ -202,33 +202,32 @@ export default function DrawerNodeContent() {
           </div>
         </div>
         <hr className="my-2" />
-      </div>
-      <div className="flex w-full flex-col gap-y-4">
-        <div className="w-full">
-          <span className="w-full text-sm text-zinc-400">Linked document</span>
-          <Dropdown
-            className="w-full"
-            emptyFilterMessage="No documents found"
-            filter
-            onChange={(e) => handleChange({ name: "doc_id", value: e.value })}
-            optionLabel="title"
-            options={
-              documents
-                ? [
-                    { title: "No document", id: null },
-                    ...documents.filter((doc) => {
-                      if ("template" in doc) return !doc.template && !doc.folder;
-                      return false;
-                    }),
-                  ]
-                : []
-            }
-            optionValue="id"
-            placeholder="Link Document"
-            value={localItem.doc_id}
-          />
-        </div>
-        {/* <div className="flex w-full flex-wrap">
+        <div className="flex w-full flex-col gap-y-4">
+          <div className="w-full">
+            <span className="w-full text-sm text-zinc-400">Linked document</span>
+            <Dropdown
+              className="w-full"
+              emptyFilterMessage="No documents found"
+              filter
+              onChange={(e) => handleChange({ name: "doc_id", value: e.value })}
+              optionLabel="title"
+              options={
+                documents
+                  ? [
+                      { title: "No document", id: null },
+                      ...documents.filter((doc) => {
+                        if ("template" in doc) return !doc.template && !doc.folder;
+                        return false;
+                      }),
+                    ]
+                  : []
+              }
+              optionValue="id"
+              placeholder="Link Document"
+              value={localItem.doc_id}
+            />
+          </div>
+          {/* <div className="flex w-full flex-wrap">
                 <span className="w-full text-sm text-zinc-400">Template</span>
                 <Dropdown
                   className="w-full"
@@ -261,28 +260,29 @@ export default function DrawerNodeContent() {
                   value={selectedTemplate}
                 />
               </div> */}
-        <div className="flex w-full flex-col">
-          <span className="w-full text-sm text-zinc-400">Custom image</span>
-          <Dropdown
-            itemTemplate={ImageDropdownItem}
-            onChange={(e) => handleChange({ name: "image", value: e.value })}
-            options={images || []}
-            placeholder="Select image"
-            value={localItem}
-            valueTemplate={ImageDropdownValue({ image: localItem?.image })}
-          />
-        </div>
-        <div className="mb-2 w-full">
-          <span className="w-full text-sm text-zinc-400">Node level</span>
-          <InputNumber
-            className="w-full"
-            onChange={(e) => handleChange({ name: "zIndex", value: e.value })}
-            onKeyDown={handleEnter}
-            showButtons
-            tooltip="Changes if node is above or below others"
-            tooltipOptions={{ position: "left" }}
-            value={localItem.zIndex}
-          />
+          <div className="flex w-full flex-col">
+            <span className="w-full text-sm text-zinc-400">Custom image</span>
+            <Dropdown
+              itemTemplate={ImageDropdownItem}
+              onChange={(e) => handleChange({ name: "image", value: e.value })}
+              options={images || []}
+              placeholder="Select image"
+              value={localItem}
+              valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+            />
+          </div>
+          <div className="mb-2 w-full">
+            <span className="w-full text-sm text-zinc-400">Node level</span>
+            <InputNumber
+              className="w-full"
+              onChange={(e) => handleChange({ name: "zIndex", value: e.value })}
+              onKeyDown={handleEnter}
+              showButtons
+              tooltip="Changes if node is above or below others"
+              tooltipOptions={{ position: "left" }}
+              value={localItem.zIndex}
+            />
+          </div>
         </div>
       </div>
       <Button
