@@ -9,9 +9,9 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useDeleteManySubItems, useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
+import { useDeleteManySubItems, useUpdateManySubItems, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 // import { changeLockState, cytoscapeGridOptions, updateColor } from "../../../utils/boardUtils";
-import { useGetItem } from "../../hooks/getItemHook";
+import { useGetItem } from "../../hooks/useGetItem";
 import { BoardType } from "../../types/boardTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, updateColor } from "../../utils/boardUtils";
@@ -25,10 +25,10 @@ export default function BoardQuickBar() {
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [, setDialog] = useAtom(DialogAtom);
   const [edgehandles] = useAtom(BoardEdgeHandlesAtom);
-  const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
+  const { data: board } = useGetItem(item_id as string, "boards") as { data: BoardType };
 
-  const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
-  const updateEdgeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "edges");
+  const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
+  const updateEdgeMutation = useUpdateSubItem(item_id as string, "edges", "boards");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const [, setUpdateManyDialog] = useState(false);
 

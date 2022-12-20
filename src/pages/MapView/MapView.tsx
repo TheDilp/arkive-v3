@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
 import { useDeleteMutation } from "../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../hooks/getItemHook";
+import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapType } from "../../types/mapTypes";
 import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
@@ -83,18 +83,18 @@ export default function MapView({ isReadOnly }: Props) {
 
   if (loading || isLoading) return <ProgressSpinner />;
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex h-full w-full flex-col">
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
       <ContextMenu cm={cm} items={items} />
       {/* This div is needed for layers to properly work */}
       {currentMap ? (
-        <div className="w-full h-full">
+        <div className="h-full w-full">
           <MapContainer
             ref={mapRef}
             attributionControl={false}
             bounds={bounds as LatLngBoundsExpression}
             center={[bounds[1][0] / 2, bounds[1][1] / 2]}
-            className="flex-1 w-full h-full outline-none bg-zinc-900"
+            className="h-full w-full flex-1 bg-zinc-900 outline-none"
             crs={CRS.Simple}
             maxZoom={2}
             minZoom={-3}

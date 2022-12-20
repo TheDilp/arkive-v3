@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteMutation, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../../hooks/getItemHook";
+import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";

@@ -42,17 +42,17 @@ type NodeShape =
 export type NodeType = {
   id: string;
   label?: string;
+  fontSize: number;
+  fontColor: string;
+  fontFamily: string;
+  textHAlign: "left" | "center" | "right";
+  textVAlign: "top" | "center" | "bottom";
   image?: string;
   width: number;
   height: number;
   x: number;
   y: number;
   type: NodeShape;
-  fontSize: number;
-  fontColor: string;
-  fontFamily: string;
-  textHAlign: "left" | "center" | "right";
-  textVAlign: "top" | "center" | "bottom";
   backgroundColor: string;
   backgroundOpacity: number;
   locked: boolean;
@@ -64,6 +64,7 @@ export type NodeType = {
 export type EdgeType = {
   id: string;
   label?: string;
+
   curveStyle: "straight" | "bezier" | "taxi";
   lineStyle: "solid" | "dashed" | "dotted";
   lineCap: "butt" | "round" | "square";
@@ -96,6 +97,7 @@ export type EdgeType = {
   fontSize: number;
   fontColor: string;
   fontFamily: string;
+
   zIndex: number;
   source_id: string;
   target_id: string;

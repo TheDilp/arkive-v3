@@ -14,6 +14,9 @@ specifiers:
   '@types/cytoscape-edgehandles': ^4.0.0
   '@types/file-saver': ^2.0.5
   '@types/leaflet': ^1.9.0
+  '@types/lodash.clonedeep': ^4.5.7
+  '@types/lodash.pick': ^4.4.7
+  '@types/lodash.set': ^4.3.7
   '@types/react': ^18.0.22
   '@types/react-cytoscapejs': ^1.2.2
   '@types/react-dom': ^18.0.7
@@ -39,6 +42,9 @@ specifiers:
   file-saver: ^2.0.5
   jotai: ^1.9.1
   leaflet: ^1.9.3
+  lodash.clonedeep: ^4.5.0
+  lodash.pick: ^4.4.0
+  lodash.set: ^4.3.2
   postcss: ^8.4.18
   prettier: ^2.8.0
   prettier-plugin-tailwindcss: ^0.2.0
@@ -76,6 +82,9 @@ dependencies:
   file-saver: 2.0.5
   jotai: 1.9.1_react@18.2.0
   leaflet: 1.9.3
+  lodash.clonedeep: 4.5.0
+  lodash.pick: 4.4.0
+  lodash.set: 4.3.2
   primeicons: 6.0.1
   primereact: 8.7.1_esim4yelhr35vesnk67vhutmai
   react: 18.2.0
@@ -97,6 +106,9 @@ devDependencies:
   '@types/cytoscape-edgehandles': 4.0.0
   '@types/file-saver': 2.0.5
   '@types/leaflet': 1.9.0
+  '@types/lodash.clonedeep': 4.5.7
+  '@types/lodash.pick': 4.4.7
+  '@types/lodash.set': 4.3.7
   '@types/react': 18.0.25
   '@types/react-cytoscapejs': 1.2.2
   '@types/react-dom': 18.0.8
@@ -2468,6 +2480,28 @@ packages:
       '@types/geojson': 7946.0.10
     dev: true
 
+  /@types/lodash.clonedeep/4.5.7:
+    resolution: {integrity: sha512-ccNqkPptFIXrpVqUECi60/DFxjNKsfoQxSQsgcBJCX/fuX1wgyQieojkcWH/KpE3xzLoWN/2k+ZeGqIN3paSvw==}
+    dependencies:
+      '@types/lodash': 4.14.191
+    dev: true
+
+  /@types/lodash.pick/4.4.7:
+    resolution: {integrity: sha512-HgdyKz7/1+oeoVzbpu1XiX/Bti9AUksHtOILH38T07aKvqoirzcdOsrO2+Yg3L51Hv/8m1MetvHZEUGeABiTiQ==}
+    dependencies:
+      '@types/lodash': 4.14.191
+    dev: true
+
+  /@types/lodash.set/4.3.7:
+    resolution: {integrity: sha512-bS5Wkg/nrT82YUfkNYPSccFrNZRL+irl7Yt4iM6OTSQ0VZJED2oUIVm15NkNtUAQ8SRhCe+axqERUV6MJgkeEg==}
+    dependencies:
+      '@types/lodash': 4.14.191
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+    dev: true
+
   /@types/marked/4.0.7:
     resolution: {integrity: sha512-eEAhnz21CwvKVW+YvRvcTuFKNU9CV1qH+opcgVK3pIMI6YZzDm6gc8o2vHjldFk6MGKt5pueSB7IOpvpx5Qekw==}
     dev: false
@@ -4603,6 +4637,10 @@ packages:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
+  /lodash.clonedeep/4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+    dev: false
+
   /lodash.memoize/4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
     dev: false
@@ -4610,6 +4648,14 @@ packages:
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
+
+  /lodash.pick/4.4.0:
+    resolution: {integrity: sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==}
+    dev: false
+
+  /lodash.set/4.3.2:
+    resolution: {integrity: sha512-4hNPN5jlm/N/HLMCO43v8BXKq9Z7QdAGc/VGrRD61w8gN9g/6jF9A4L1pbUgBLCffi0w9VsXfTOij5x8iTyFvg==}
+    dev: false
 
   /lodash.throttle/4.1.1:
     resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}

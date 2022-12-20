@@ -17,7 +17,7 @@ import {
   useGetAllMapImages,
   useUpdateSubItem,
 } from "../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../hooks/getItemHook";
+import { useGetItem } from "../../hooks/useGetItem";
 import { BoardExportType, BoardType, NodeType } from "../../types/boardTypes";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { MapLayerType, MapType } from "../../types/mapTypes";

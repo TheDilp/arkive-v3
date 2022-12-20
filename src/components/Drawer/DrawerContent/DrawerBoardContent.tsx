@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../../CRUD/OtherCRUD";
-import { useGetItem } from "../../../hooks/getItemHook";
+import { useGetItem } from "../../../hooks/useGetItem";
 import { BoardCreateType, BoardType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";

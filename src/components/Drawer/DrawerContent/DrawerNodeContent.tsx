@@ -7,7 +7,8 @@ import { InputText } from "primereact/inputtext";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetAllImages, useGetAllItems, useUpdateNodeEdge } from "../../../CRUD/ItemsCRUD";
+import { useGetAllImages, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useHandleChange } from "../../../hooks/useGetChanged";
 // import { useGetItem } from "../../../hooks/getItemHook";
 import { NodeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -30,17 +31,15 @@ function FontItemTemplate(item: { label: string; value: string }) {
 export default function DrawerNodeContent() {
   const { project_id, item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
+  const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
   const { data: documents } = useGetAllItems(project_id as string, "documents");
   const { data: images } = useGetAllImages(project_id as string);
-  // const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
-  //   const [selectedTemplate, setSelectedTemplate] = useState<NodeType | null>(null);
-  //   const updateNodeMutation = useUpdateNode(project_id as string);
   const [localItem, setLocalItem] = useState<NodeType | undefined>(drawer?.data as NodeType);
+  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
+
   const handleEnter: KeyboardEventHandler = (e: any) => {
     if (e.key === "Enter" && localItem) updateNodeMutation.mutate(localItem);
   };
-
   useEffect(() => {
     if (drawer?.data) setLocalItem(drawer?.data as NodeType);
   }, [drawer?.data]);
@@ -48,6 +47,7 @@ export default function DrawerNodeContent() {
     setDrawer(DefaultDrawer);
     return null;
   }
+
   return (
     <div className="flex h-full flex-col gap-y-4">
       <div className="flex w-full flex-col gap-y-4">
@@ -57,7 +57,7 @@ export default function DrawerNodeContent() {
             <Dropdown
               className="w-full"
               filter
-              onChange={(e) => setLocalItem({ ...localItem, type: e.value })}
+              onChange={(e) => handleChange({ name: "type", value: e.value })}
               options={boardNodeShapes}
               placeholder="Node Shape"
               value={localItem.type}
@@ -70,7 +70,7 @@ export default function DrawerNodeContent() {
                 inputClassName="w-full"
                 max={5000}
                 min={10}
-                onChange={(e) => setLocalItem({ ...localItem, width: e.value as number })}
+                onChange={(e) => handleChange({ name: "width", value: e.value as number })}
                 onKeyDown={handleEnter}
                 showButtons
                 step={10}
@@ -83,7 +83,7 @@ export default function DrawerNodeContent() {
                 inputClassName="w-full"
                 max={5000}
                 min={10}
-                onChange={(e) => setLocalItem({ ...localItem, height: e.value as number })}
+                onChange={(e) => handleChange({ name: "height", value: e.value as number })}
                 onKeyDown={handleEnter}
                 showButtons
                 step={10}
@@ -94,11 +94,11 @@ export default function DrawerNodeContent() {
           <div className="flex w-full flex-wrap items-center justify-between">
             <span className="w-full text-sm text-zinc-400">Node color</span>
             <ColorPicker
-              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.value}` as string })}
+              onChange={(e) => handleChange({ name: "backgroundColor", value: `#${e.value}` })}
               value={localItem.backgroundColor}
             />
             <InputText
-              onChange={(e) => setLocalItem({ ...localItem, backgroundColor: `#${e.target.value}` as string })}
+              onChange={(e) => handleChange({ name: "backgroundColor", value: `#${e.target.value}` })}
               value={localItem.backgroundColor}
             />
           </div>
@@ -112,7 +112,7 @@ export default function DrawerNodeContent() {
                 max={1}
                 min={0}
                 mode="decimal"
-                onChange={(e) => setLocalItem({ ...localItem, backgroundOpacity: e.value as number })}
+                onChange={(e) => handleChange({ name: "backgroundOpacity", value: e.value as number })}
                 onKeyDown={handleEnter}
                 showButtons
                 step={0.01}
@@ -131,9 +131,7 @@ export default function DrawerNodeContent() {
               <InputText
                 autoComplete="false"
                 className="w-full"
-                onChange={(e) => {
-                  setLocalItem({ ...localItem, label: e.target.value });
-                }}
+                onChange={(e) => handleChange({ name: "label", value: e.target.value })}
                 onKeyDown={handleEnter}
                 placeholder="Node Label"
                 value={localItem.label}
@@ -148,9 +146,7 @@ export default function DrawerNodeContent() {
                 <Dropdown
                   className="w-full"
                   itemTemplate={FontItemTemplate}
-                  onChange={(e) => {
-                    setLocalItem({ ...localItem, fontFamily: e.value });
-                  }}
+                  onChange={(e) => handleChange({ name: "fontFamily", value: e.value })}
                   options={BoardFontFamilies}
                   value={localItem.fontFamily}
                   valueTemplate={FontItemTemplate}
@@ -161,7 +157,7 @@ export default function DrawerNodeContent() {
                 <span className="w-full text-sm text-zinc-400">Label size</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, fontSize: e.value })}
+                  onChange={(e) => handleChange({ name: "fontSize", value: e.value })}
                   options={BoardFontSizes}
                   placeholder="Label Font Size"
                   value={localItem.fontSize}
@@ -173,11 +169,11 @@ export default function DrawerNodeContent() {
             <div className="flex w-full flex-wrap items-center justify-between">
               <span className="w-full text-sm text-zinc-400">Label color</span>
               <ColorPicker
-                onChange={(e) => setLocalItem({ ...localItem, fontColor: `#${e.value}` as string })}
+                onChange={(e) => handleChange({ name: "fontColor", value: `#${e.target.value}` })}
                 value={localItem.fontColor}
               />
               <InputText
-                onChange={(e) => setLocalItem({ ...localItem, fontColor: `#${e.target.value}` as string })}
+                onChange={(e) => handleChange({ name: "fontColor", value: `#${e.target.value}` })}
                 value={localItem.fontColor}
               />
             </div>
@@ -188,7 +184,7 @@ export default function DrawerNodeContent() {
                 <span className="w-full text-sm text-zinc-400">Horizontal align</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, textHAlign: e.value })}
+                  onChange={(e) => handleChange({ name: "textHAlign", value: e.value })}
                   options={textHAlignOptions}
                   value={localItem.textHAlign}
                 />
@@ -197,7 +193,7 @@ export default function DrawerNodeContent() {
                 <span className="w-full text-sm text-zinc-400">Vertical align</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, textHAlign: e.value })}
+                  onChange={(e) => handleChange({ name: "textVAlign", value: e.value })}
                   options={textVAlignOptions}
                   value={localItem.textVAlign}
                 />
@@ -214,7 +210,7 @@ export default function DrawerNodeContent() {
             className="w-full"
             emptyFilterMessage="No documents found"
             filter
-            onChange={(e) => setLocalItem({ ...localItem, doc_id: e.value })}
+            onChange={(e) => handleChange({ name: "doc_id", value: e.value })}
             optionLabel="title"
             options={
               documents
@@ -269,12 +265,7 @@ export default function DrawerNodeContent() {
           <span className="w-full text-sm text-zinc-400">Custom image</span>
           <Dropdown
             itemTemplate={ImageDropdownItem}
-            onChange={(e) =>
-              setLocalItem((prev) => {
-                if (prev) return { ...prev, image: e.value };
-                return prev;
-              })
-            }
+            onChange={(e) => handleChange({ name: "image", value: e.value })}
             options={images || []}
             placeholder="Select image"
             value={localItem}
@@ -285,12 +276,7 @@ export default function DrawerNodeContent() {
           <span className="w-full text-sm text-zinc-400">Node level</span>
           <InputNumber
             className="w-full"
-            onChange={(e) =>
-              setLocalItem({
-                ...localItem,
-                zIndex: e.value as number,
-              })
-            }
+            onChange={(e) => handleChange({ name: "zIndex", value: e.value })}
             onKeyDown={handleEnter}
             showButtons
             tooltip="Changes if node is above or below others"
@@ -305,7 +291,7 @@ export default function DrawerNodeContent() {
         iconPos="right"
         label="Save Node"
         onClick={() => {
-          updateNodeMutation.mutate(localItem);
+          updateNodeMutation.mutate({ id: localItem.id, ...changedData }, { onSuccess: resetChanges });
           // if (selectedTemplate) {
           //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
           //   //   const { show, ...restDialog } = localItem;

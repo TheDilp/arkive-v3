@@ -4,7 +4,7 @@ import { Dispatch, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../hooks/getItemHook";
+import { useGetItem } from "../../hooks/useGetItem";
 import { DocumentType } from "../../types/documentTypes";
 import { BreadcrumbsType } from "../../types/generalTypes";
 

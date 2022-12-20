@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateSubItem, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../../hooks/getItemHook";
+import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/documentTypes";
 import { MapPinCreateType, MapPinType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";

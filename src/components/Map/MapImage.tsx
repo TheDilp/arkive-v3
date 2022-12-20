@@ -4,7 +4,7 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
 import { useParams } from "react-router-dom";
 
-import { useGetItem } from "../../hooks/getItemHook";
+import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapPinType, MapType } from "../../types/mapTypes";
 import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";

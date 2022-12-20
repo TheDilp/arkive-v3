@@ -40,6 +40,7 @@ export default function DrawerEdgeContent() {
     setDrawer(DefaultDrawer);
     return null;
   }
+
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flex w-full flex-col">

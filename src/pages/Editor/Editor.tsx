@@ -13,7 +13,7 @@ import Menubar from "../../components/Editor/Menubar";
 import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
 import DocumentProperties from "../../components/PropertiesBar/DocumentProperties";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../hooks/getItemHook";
+import { useGetItem } from "../../hooks/useGetItem";
 import { DocumentType } from "../../types/documentTypes";
 import { EditorType } from "../../types/generalTypes";
 import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
@@ -72,7 +72,7 @@ export default function Editor({ content, editable }: EditorType) {
 
   if (currentDocument)
     return (
-      <div className="flex flex-1 w-full">
+      <div className="flex w-full flex-1">
         <div className={`${editable ? "w-5/6" : "h-96 w-full"} relative flex flex-col content-start`}>
           {editable ? (
             <h1 className=" sticky top-0 z-20 mb-0 flex h-12 w-full items-center justify-center border-b-2 border-zinc-700 bg-[#1e1e1e] pr-20 font-Merriweather text-2xl">
@@ -104,7 +104,7 @@ export default function Editor({ content, editable }: EditorType) {
           </Remirror>
         </div>
         {editable ? (
-          <div className="flex flex-col w-1/6 bg-zinc-800">
+          <div className="flex w-1/6 flex-col bg-zinc-800">
             <DocumentProperties />
           </div>
         ) : null}

@@ -9,8 +9,14 @@ import { v4 as uuid } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems, useUpdateNodeEdge } from "../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../hooks/getItemHook";
+import {
+  useCreateNodeEdge,
+  useDeleteManySubItems,
+  useUpdateManySubItems,
+  useUpdateNodeEdge,
+  useUpdateSubItem,
+} from "../../CRUD/ItemsCRUD";
+import { useGetItem } from "../../hooks/useGetItem";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
@@ -43,7 +49,7 @@ export default function BoardView({ isReadOnly }: Props) {
     isLoading: boolean;
   };
   const createNodeMutation = useCreateNodeEdge(project_id as string, "nodes");
-  const updateNodeMutation = useUpdateNodeEdge(project_id as string, item_id as string, "nodes");
+  const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const deleteManyNodes = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
   const createEdgeMutation = useCreateNodeEdge(project_id as string, "edges");
