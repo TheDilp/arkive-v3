@@ -8,6 +8,7 @@ import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useHandleChange } from "../../../hooks/useGetChanged";
 import { EdgeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
@@ -29,8 +30,9 @@ export default function DrawerEdgeContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateEdgeMutaiton = useUpdateSubItem(item_id as string, "edges", "boards");
   const [localItem, setLocalItem] = useState<EdgeType | undefined>(drawer?.data as EdgeType);
+  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
   const handleEnter: KeyboardEventHandler = (e: any) => {
-    if (e.key === "Enter" && localItem) updateEdgeMutaiton.mutate(localItem);
+    if (e.key === "Enter" && localItem) updateEdgeMutaiton.mutate({ id: localItem.id, ...changedData });
   };
 
   useEffect(() => {
@@ -40,7 +42,6 @@ export default function DrawerEdgeContent() {
     setDrawer(DefaultDrawer);
     return null;
   }
-
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flex w-full flex-col">
@@ -54,9 +55,7 @@ export default function DrawerEdgeContent() {
               <InputText
                 autoComplete="false"
                 className="w-full"
-                onChange={(e) => {
-                  setLocalItem({ ...localItem, label: e.target.value });
-                }}
+                onChange={(e) => handleChange({ name: "label", value: e.target.value })}
                 onKeyDown={handleEnter}
                 placeholder="Edge Label"
                 value={localItem.label}
@@ -71,9 +70,7 @@ export default function DrawerEdgeContent() {
                 <Dropdown
                   className="w-full"
                   itemTemplate={FontItemTemplate}
-                  onChange={(e) => {
-                    setLocalItem({ ...localItem, fontFamily: e.value });
-                  }}
+                  onChange={(e) => handleChange({ name: "label", value: e.target.value })}
                   options={BoardFontFamilies}
                   value={localItem.fontFamily}
                   valueTemplate={FontItemTemplate}
@@ -84,7 +81,7 @@ export default function DrawerEdgeContent() {
                 <span className="w-full text-sm text-zinc-400">Label size</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, fontSize: e.value })}
+                  onChange={(e) => handleChange({ name: "fontSize", value: e.target.value })}
                   options={BoardFontSizes}
                   placeholder="Label Font Size"
                   value={localItem.fontSize}
@@ -96,11 +93,11 @@ export default function DrawerEdgeContent() {
             <div className="flex w-full flex-wrap items-center justify-between">
               <span className="w-full text-sm text-zinc-400">Label color</span>
               <ColorPicker
-                onChange={(e) => setLocalItem({ ...localItem, fontColor: `#${e.value}` as string })}
+                onChange={(e) => handleChange({ name: "fontColor", value: `#${e.value}` })}
                 value={localItem.fontColor}
               />
               <InputText
-                onChange={(e) => setLocalItem({ ...localItem, fontColor: `#${e.target.value}` as string })}
+                onChange={(e) => handleChange({ name: "fontColor", value: `#${e.target.value}` })}
                 value={localItem.fontColor}
               />
             </div>
@@ -111,7 +108,7 @@ export default function DrawerEdgeContent() {
                 <span className="w-full text-sm text-zinc-400">Edge Curve Type</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, curveStyle: e.value })}
+                  onChange={(e) => handleChange({ name: "curveStyle", value: e.value })}
                   options={boardEdgeCurveStyles}
                   value={localItem.curveStyle}
                 />
@@ -120,7 +117,7 @@ export default function DrawerEdgeContent() {
                 <span className="w-full text-sm text-zinc-400">Line Style</span>
                 <Dropdown
                   className="w-full"
-                  onChange={(e) => setLocalItem({ ...localItem, curveStyle: e.value })}
+                  onChange={(e) => handleChange({ name: "lineStyle", value: e.value })}
                   options={boardEdgeCurveStyles}
                   value={localItem.curveStyle}
                 />
@@ -137,7 +134,7 @@ export default function DrawerEdgeContent() {
                 inputClassName="w-full"
                 max={5000}
                 min={10}
-                onChange={(e) => setLocalItem({ ...localItem, width: e.value as number })}
+                onChange={(e) => handleChange({ name: "width", value: e.value })}
                 onKeyDown={handleEnter}
                 showButtons
                 step={10}
@@ -148,11 +145,12 @@ export default function DrawerEdgeContent() {
           <div className="flex w-full flex-wrap items-center justify-between">
             <span className="w-full text-sm text-zinc-400">Edge color</span>
             <ColorPicker
-              onChange={(e) => setLocalItem({ ...localItem, lineColor: `#${e.value}` as string })}
+              onChange={(e) => handleChange({ name: "lineColor", value: `#${e.value}` })}
               value={localItem.lineColor}
             />
             <InputText
-              onChange={(e) => setLocalItem({ ...localItem, lineColor: `#${e.target.value}` as string })}
+              prefix="#"
+              onChange={(e) => handleChange({ name: "lineColor", value: `${e.target.value}` })}
               value={localItem.lineColor}
             />
           </div>
@@ -166,7 +164,7 @@ export default function DrawerEdgeContent() {
                 max={1}
                 min={0}
                 mode="decimal"
-                onChange={(e) => setLocalItem({ ...localItem, lineOpacity: e.value as number })}
+                onChange={(e) => handleChange({ name: "lineOpacity", value: e.value })}
                 onKeyDown={handleEnter}
                 showButtons
                 step={0.01}
@@ -179,7 +177,7 @@ export default function DrawerEdgeContent() {
               <span className="w-full text-sm text-zinc-400">Line Style</span>
               <Dropdown
                 className="w-full"
-                onChange={(e) => setLocalItem({ ...localItem, lineCap: e.value })}
+                onChange={(e) => handleChange({ name: "lineCap", value: e.value })}
                 options={boardEdgeCaps}
                 value={localItem.lineCap}
               />
@@ -190,12 +188,7 @@ export default function DrawerEdgeContent() {
             <span className="w-full text-sm text-zinc-400">Edge level</span>
             <InputNumber
               className="w-full"
-              onChange={(e) =>
-                setLocalItem({
-                  ...localItem,
-                  zIndex: e.value as number,
-                })
-              }
+              onChange={(e) => handleChange({ name: "zIndex", value: e.value })}
               onKeyDown={handleEnter}
               showButtons
               tooltip="Changes if node is above or below others"
@@ -212,7 +205,7 @@ export default function DrawerEdgeContent() {
               <Dropdown
                 className="w-full"
                 filter
-                onChange={(e) => setLocalItem({ ...localItem, sourceArrowShape: e.value })}
+                onChange={(e) => handleChange({ name: "sourceArrowShape", value: e.value })}
                 options={boardEdgeArrowShapes}
                 placeholder="Node Shape"
                 value={localItem.sourceArrowShape}
@@ -223,7 +216,7 @@ export default function DrawerEdgeContent() {
               <Dropdown
                 className="w-full"
                 filter
-                onChange={(e) => setLocalItem({ ...localItem, targetArrowShape: e.value })}
+                onChange={(e) => handleChange({ name: "targetArrowShape", value: e.value })}
                 options={boardEdgeArrowShapes}
                 placeholder="Node Shape"
                 value={localItem.targetArrowShape}
@@ -236,7 +229,7 @@ export default function DrawerEdgeContent() {
               <Dropdown
                 className="w-full"
                 filter
-                onChange={(e) => setLocalItem({ ...localItem, midSourceArrowShape: e.value })}
+                onChange={(e) => handleChange({ name: "midSourceArrowShape", value: e.value })}
                 options={boardEdgeArrowShapes}
                 placeholder="Node Shape"
                 value={localItem.midSourceArrowShape}
@@ -247,7 +240,7 @@ export default function DrawerEdgeContent() {
               <Dropdown
                 className="w-full"
                 filter
-                onChange={(e) => setLocalItem({ ...localItem, midTargetArrowShape: e.value })}
+                onChange={(e) => handleChange({ name: "midTargetArrowShape", value: e.value })}
                 options={boardEdgeArrowShapes}
                 placeholder="Node Shape"
                 value={localItem.midTargetArrowShape}
@@ -262,7 +255,9 @@ export default function DrawerEdgeContent() {
           icon="pi pi-save"
           iconPos="right"
           label="Save Edge"
-          onClick={() => updateEdgeMutaiton.mutate(localItem)}
+          onClick={() => {
+            updateEdgeMutaiton.mutate({ id: localItem.id, ...changedData }, { onSuccess: resetChanges });
+          }}
           type="submit"
         />
       </div>

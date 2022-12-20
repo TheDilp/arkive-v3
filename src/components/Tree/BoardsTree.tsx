@@ -14,9 +14,9 @@ export default function BoardsTree() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex items-center justify-between border-b border-zinc-600 pb-2">
+      <div className="flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 xl:flex-nowrap xl:gap-x-2">
         <Button
-          className="p-button-outlined p-button-secondary"
+          className="p-button-outlined p-button-secondary w-full"
           icon="pi pi-folder"
           label="New Folder"
           onClick={() => {
@@ -28,7 +28,7 @@ export default function BoardsTree() {
           }}
         />
         <Button
-          className="p-button-outlined"
+          className="p-button-outlined w-full"
           icon="pi pi-map"
           label="New Board"
           onClick={() => {

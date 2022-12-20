@@ -1,21 +1,14 @@
 import { EdgeDefinition, NodeDefinition } from "cytoscape";
-import { EdgeHandlesInstance } from "cytoscape-edgehandles";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import {
-  useCreateNodeEdge,
-  useDeleteManySubItems,
-  useUpdateManySubItems,
-  useUpdateNodeEdge,
-  useUpdateSubItem,
-} from "../../CRUD/ItemsCRUD";
+import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
