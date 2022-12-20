@@ -21,6 +21,7 @@ import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor/Editor";
 import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
+import Settings from "./pages/Settings/Settings";
 
 function App() {
   useEffect(() => {
@@ -68,7 +69,7 @@ function App() {
               </Route>
               <Route element={<FolderView />} path=":type/folder/:item_id" />
 
-              <Route element={<div>SETTINGS</div>} path="settings" />
+              <Route element={<Settings />} path="settings" />
             </Route>
           </Routes>
         </DndProvider>

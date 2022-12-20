@@ -118,7 +118,7 @@ export default function Navbar() {
                 fontSize={20}
                 icon="mdi:cog"
                 onClick={async () => {
-                  navigate("./projectsettings");
+                  navigate("./settings/project-settings");
                 }}
               />
             </span>

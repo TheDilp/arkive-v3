@@ -1,5 +1,6 @@
+import { Icon } from "@iconify/react";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import BoardsTree from "../Tree/BoardsTree";
 import DocumentsTree from "../Tree/DocumentsTree";
@@ -33,7 +34,46 @@ export default function Sidebar() {
         <BoardsTree />
       </div>
     );
-  if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-800">TIMELINES</div>;
 
+  if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-800">TIMELINES</div>;
+  if (pathname.includes("settings"))
+    return (
+      <div className="flex flex-1 flex-col bg-zinc-800 p-4">
+        <ul className="flex w-full flex-col gap-y-4 font-Lato text-lg">
+          <Link
+            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
+              pathname.includes("project-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+            }`}
+            to="./settings/project-settings">
+            <Icon icon="mdi:cogs" />
+            Project Settings
+          </Link>
+          <Link
+            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
+              pathname.includes("document-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+            }`}
+            to="./settings/document-settings">
+            <Icon icon="mdi:files" />
+            Document Settings
+          </Link>
+          <Link
+            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
+              pathname.includes("map-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+            }`}
+            to="./settings/map-settings">
+            <Icon icon="mdi:map" />
+            Map Settings
+          </Link>
+          <Link
+            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
+              pathname.includes("board-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+            }`}
+            to="./settings/board-settings">
+            <Icon icon="mdi:draw" />
+            Board Settings
+          </Link>
+        </ul>
+      </div>
+    );
   return null;
 }
