@@ -45,6 +45,12 @@ export const deleteURL = (id: string, type: AllAvailableTypes) => {
   return null;
 };
 
+export const sortURL = (type: AllAvailableTypes) => {
+  if (type === "documents") return `${baseURLS.baseServer}${updateURLs.sortDocuments}`;
+  if (type === "maps") return `${baseURLS.baseServer}${updateURLs.sortMaps}`;
+  return null;
+};
+
 export const updateManyURL = (type: AllAvailableTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}updatemanydocuments`;
   if (type === "maps") return `${baseURLS.baseServer}updatemanymaps`;

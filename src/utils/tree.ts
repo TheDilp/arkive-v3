@@ -1,7 +1,8 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { UseMutationResult } from "@tanstack/react-query";
+import { SetStateAction } from "jotai";
+import { Dispatch } from "react";
 
-import { SortIndexes, TreeDataType } from "../types/treeTypes";
+import { AllItemsType } from "../types/generalTypes";
 
 export const getDepth = (tree: NodeModel[], id: number | string, depth = 0): number => {
   const target: NodeModel | undefined = tree.find((node) => node.id === id);
@@ -14,16 +15,19 @@ export const getDepth = (tree: NodeModel[], id: number | string, depth = 0): num
 };
 
 export const handleDrop = async (
-  newTree: NodeModel<TreeDataType>[],
-  setTreeData: (newData: NodeModel<TreeDataType>[]) => void,
+  newTree: NodeModel<AllItemsType>[],
+  setTreeData: Dispatch<SetStateAction<NodeModel<AllItemsType>[]>>,
   dropTargetId: string,
-  sortItemsMutation: UseMutationResult<Response, unknown, SortIndexes, unknown> | undefined,
+  sortItemsMutation: any,
 ) => {
-  setTreeData(newTree);
+  // setTreeData(newTree);
   const indexes = newTree
     .filter(
       (doc) =>
-        doc.parent === dropTargetId || (doc.parent === undefined && dropTargetId === "0" && (!doc.data?.template || true)),
+        doc.parent === dropTargetId ||
+        (doc.parent === undefined &&
+          dropTargetId === "0" &&
+          ((doc?.data && "template" in doc.data && !doc.data?.template) || true)),
     )
     .map((doc, index) => {
       return {

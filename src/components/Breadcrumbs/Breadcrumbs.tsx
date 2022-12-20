@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DocumentType } from "../../types/documentTypes";
-import { AllItemsType, AvailableItemTypes, BreadcrumbsType } from "../../types/generalTypes";
+import { AvailableItemTypes, BreadcrumbsType } from "../../types/generalTypes";
 
 export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
   const { project_id, item_id } = useParams();

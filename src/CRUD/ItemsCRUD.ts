@@ -1,7 +1,7 @@
-import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { BoardType, EdgeType, NodeType } from "../types/boardTypes";
-import { baseURLS, getURLS, updateURLs } from "../types/CRUDenums";
+import { baseURLS, getURLS } from "../types/CRUDenums";
 import {
   AllAvailableTypes,
   AllItemsType,
@@ -11,13 +11,11 @@ import {
 } from "../types/generalTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
-import { createURL, deleteManyURL, deleteURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
+import { createURL, deleteManyURL, deleteURL, sortURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
 export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
-  return useQuery<AllItemsType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type), {
-    staleTime: 5 * 60 * 1000,
-  });
+  return useQuery<AllItemsType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type));
 };
 
 export const useGetAllImages = (project_id: string) => {
@@ -209,38 +207,41 @@ export const useDeleteMutation = (type: AllAvailableTypes, project_id: string) =
   );
 };
 
-export const useSortMutation = (
-  type: AvailableItemTypes,
-): UseMutationResult<Response, unknown, SortIndexes, unknown> | undefined => {
-  const sortDocumentMutation = useMutation(
+export const useSortMutation = (project_id: string, type: AvailableItemTypes) => {
+  const queryClient = useQueryClient();
+  return useMutation(
     async (updateDocumentValues: SortIndexes) => {
-      return fetch(`${baseURLS.baseServer}${updateURLs.sortDocuments}`, {
-        body: JSON.stringify(updateDocumentValues),
-        method: "POST",
-      });
+      const url = sortURL(type);
+      if (url) {
+        return fetch(url, {
+          body: JSON.stringify(updateDocumentValues),
+          method: "POST",
+        });
+      }
+
+      return null;
     },
     {
+      onMutate: (variables) => {
+        const oldData = queryClient.getQueryData(["allItems", project_id, type]);
+
+        queryClient.setQueryData(["allItems", project_id, type], (prev: AllItemsType[] | undefined) => {
+          if (prev)
+            return prev.map((item) => {
+              const idx = variables.findIndex((sortIndex) => sortIndex.id === item.id);
+              if (idx !== -1) return { ...item, parent: variables[idx].parent, sort: variables[idx].sort };
+              return item;
+            });
+
+          return prev;
+        });
+
+        return { oldData };
+      },
       onError: () => toaster("error", "There was an error updating your documents."),
     },
   );
-  const sortMapsMutation = useMutation(
-    async (updateMapValues: SortIndexes) => {
-      return fetch(`${baseURLS.baseServer}${updateURLs.sortMaps}`, {
-        body: JSON.stringify(updateMapValues),
-        method: "POST",
-      });
-    },
-    {
-      onError: () => toaster("error", "There was an error updating your documents."),
-    },
-  );
-
-  if (type === "documents") return sortDocumentMutation;
-  if (type === "maps") return sortMapsMutation;
-
-  return undefined;
 };
-
 // Board Mutations
 
 export const useCreateNodeEdge = (project_id: string, subType: "nodes" | "edges") => {
