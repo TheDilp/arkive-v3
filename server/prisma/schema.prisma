@@ -15,7 +15,6 @@ model projects {
   documents documents[]
   maps      maps[]
   boards    boards[]
-  tags     String[] @default([])
   image String?
 }
 
