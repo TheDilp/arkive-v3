@@ -1,6 +1,5 @@
 import { Icon } from "@iconify/react";
 import {
-  ColumnDef,
   createColumnHelper,
   flexRender,
   getCoreRowModel,
@@ -14,8 +13,6 @@ import { useParams } from "react-router-dom";
 
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/documentTypes";
-
-type Props = {};
 
 const columnHelper = createColumnHelper<Omit<DocumentType, "project_id" | "content">>();
 
@@ -48,8 +45,12 @@ const columns = [
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("icon", {
-    header: "Icon",
-    cell: (info) => <Icon icon={info.getValue() || "mdi:file"} />,
+    header: () => <div className="flex w-full justify-center">Icon</div>,
+    cell: ({ getValue, row }) => (
+      <div className="flex w-full justify-center">
+        <Icon fontSize={24} icon={getValue() || (row.original.folder ? "mdi:folder" : "mdi:file")} />
+      </div>
+    ),
   }),
 ];
 
@@ -99,7 +100,7 @@ export default function DocumentSettings() {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id} className="flex w-full items-center  border-zinc-700 px-4 py-2 last:border-b odd:border-y">
               {row.getVisibleCells().map((cell) => (
-                <td className="flex w-24 items-center truncate px-2" key={cell.id}>
+                <td key={cell.id} className="flex w-24 items-center truncate px-2">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

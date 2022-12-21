@@ -39,13 +39,13 @@ export default function Sidebar() {
   if (pathname.includes("settings"))
     return (
       <div className="flex flex-1 flex-col bg-zinc-800 p-4">
-        <ul className="flex w-full flex-col gap-y-4 font-Lato text-lg">
+        <ul className="flex w-full flex-col gap-y-1 font-Lato text-sm">
           <Link
             className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
               pathname.includes("project-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/project-settings">
-            <Icon fontSize={24} icon="mdi:cogs" />
+            <Icon fontSize={18} icon="mdi:cogs" />
             Project Settings
           </Link>
           <Link
@@ -53,7 +53,7 @@ export default function Sidebar() {
               pathname.includes("document-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/document-settings">
-            <Icon fontSize={24} icon="mdi:files" />
+            <Icon fontSize={18} icon="mdi:files" />
             Document Settings
           </Link>
           <Link
@@ -61,7 +61,7 @@ export default function Sidebar() {
               pathname.includes("map-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/map-settings">
-            <Icon fontSize={24} icon="mdi:map" />
+            <Icon fontSize={18} icon="mdi:map" />
             Map Settings
           </Link>
           <Link
@@ -69,7 +69,7 @@ export default function Sidebar() {
               pathname.includes("board-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
             }`}
             to="./settings/board-settings">
-            <Icon fontSize={24} icon="mdi:draw" />
+            <Icon fontSize={18} icon="mdi:draw" />
             Board Settings
           </Link>
         </ul>

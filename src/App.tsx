@@ -21,9 +21,8 @@ import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor/Editor";
 import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
-import Settings from "./pages/Settings/Settings";
-import ProjectSettings from "./pages/Settings/ProjectSettings";
 import DocumentSettings from "./pages/Settings/DocumentSettings";
+import ProjectSettings from "./pages/Settings/ProjectSettings";
 
 function App() {
   useEffect(() => {
