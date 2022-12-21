@@ -30,7 +30,7 @@ export default function BoardView({ isReadOnly }: Props) {
 
   const [edgeHandlesRef, setEdgeHandlesRef] = useAtom(BoardEdgeHandlesAtom);
 
-  const [boardState] = useAtom(BoardStateAtom);
+  const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<{ x: null | number; y: null | number; type: "node" | "edge" }>({
     x: null,
     y: null,
@@ -127,9 +127,9 @@ export default function BoardView({ isReadOnly }: Props) {
       },
     },
   ];
-
   useEffect(() => {
     if (board) {
+      setBoardState((prev) => ({ ...prev, grid: board.defaultGrid }));
       let temp_nodes: NodeDefinition[] = [];
       let temp_edges: EdgeDefinition[] = [];
       if (board.nodes.length > 0) {

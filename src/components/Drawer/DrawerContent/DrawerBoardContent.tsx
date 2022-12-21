@@ -26,15 +26,14 @@ export default function DrawerBoardContent() {
   const createBoardMutation = useCreateItem("boards");
   const { data: initialTags } = useGetAllTags(project_id as string, "boards");
   const { data: boards } = useGetAllItems(project_id as string, "boards");
-  const board = useGetItem(project_id as string, drawer?.id, "boards") as BoardType;
+  const { data: currentBoard } = useGetItem(drawer?.id as string, "boards", { enabled: !!drawer?.id }) as { data: BoardType };
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
-    board ?? {
+    currentBoard ?? {
       ...DefaultMap,
       project_id: project_id as string,
     },
   );
-
-  const [tags, setTags] = useState({ selected: board?.tags || [], suggestions: initialTags });
+  const [tags, setTags] = useState({ selected: currentBoard?.tags || [], suggestions: initialTags });
 
   const filterTags = (e: AutoCompleteCompleteMethodParams) => {
     const { query } = e;
@@ -47,21 +46,26 @@ export default function DrawerBoardContent() {
     if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
   };
   const handleTagsChange = async (value: string) => {
-    if (board && !board.tags.includes(value)) {
+    if (!currentBoard && !localItem?.tags?.includes(value)) {
+      setLocalItem((prev) => ({ ...prev, tags: [...(localItem?.tags || []), value] }));
+    } else if (!currentBoard && localItem?.tags?.includes(value)) {
+      setLocalItem((prev) => ({ ...prev, tags: (localItem?.tags || []).filter((tag) => tag !== value) }));
+    }
+    if (currentBoard && !currentBoard?.tags?.includes(value)) {
       await updateBoardMutation?.mutateAsync({
-        id: board.id,
-        tags: [...board.tags, value],
+        id: currentBoard.id,
+        tags: [...currentBoard.tags, value],
       });
-    } else if (board.tags.includes(value)) {
+    } else if (currentBoard && currentBoard?.tags?.includes(value)) {
       await updateBoardMutation?.mutateAsync({
-        id: board.id,
-        tags: board.tags.filter((tag) => tag !== value),
+        id: currentBoard.id,
+        tags: currentBoard.tags.filter((tag) => tag !== value),
       });
     }
     queryClient.refetchQueries({ queryKey: ["allTags", project_id, "boards"] });
   };
   function CreateUpdateBoard(newData: BoardCreateType) {
-    if (board) {
+    if (currentBoard) {
       if (boards?.some((item) => item.parent === newData.id) && !newData.folder) {
         toaster("warning", "Cannot convert to board if folder contains files.");
         return;
@@ -69,7 +73,7 @@ export default function DrawerBoardContent() {
       updateBoardMutation?.mutate(
         {
           folder: newData.folder,
-          id: board.id,
+          id: currentBoard.id,
           title: newData.title,
           defaultNodeColor: newData.defaultNodeColor,
           defaultEdgeColor: newData.defaultEdgeColor,
@@ -87,19 +91,19 @@ export default function DrawerBoardContent() {
     }
   }
   useEffect(() => {
-    if (board) {
-      setLocalItem(board);
+    if (currentBoard) {
+      setLocalItem(currentBoard);
     } else {
       setLocalItem({
         ...DefaultBoard,
         project_id: project_id as string,
       });
     }
-  }, [board, project_id]);
+  }, [currentBoard, project_id]);
 
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
+      <h2 className="text-center text-2xl">{currentBoard ? `Edit ${currentBoard.title}` : "Create New Board"}</h2>
       <InputText
         autoFocus
         className="w-full"
@@ -110,9 +114,9 @@ export default function DrawerBoardContent() {
           }))
         }
         onKeyDown={(e) => {
-          if (e.key === "Enter" && board) {
+          if (e.key === "Enter" && currentBoard) {
             updateBoardMutation?.mutate({
-              id: board.id,
+              id: currentBoard.id,
               parent: localItem.parent,
               title: localItem.title,
             });
@@ -137,7 +141,7 @@ export default function DrawerBoardContent() {
         onUnselect={(e) => handleTagsChange(e.value)}
         placeholder="Add Tags"
         suggestions={tags.suggestions}
-        value={board?.tags}
+        value={localItem?.tags}
       />
       <div className="flex flex-wrap items-center justify-between">
         <h4 className="w-full text-lg underline">Default Node Color</h4>
@@ -148,7 +152,7 @@ export default function DrawerBoardContent() {
         />
         <InputText
           onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultNodeColor: e.target.value }))}
-          value={localItem.defaultNodeColor}
+          value={localItem.defaultNodeColor || ""}
         />
       </div>
       <div className="flex flex-wrap items-center justify-between">
@@ -160,7 +164,7 @@ export default function DrawerBoardContent() {
         />
         <InputText
           onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultEdgeColor: e.target.value }))}
-          value={localItem.defaultEdgeColor}
+          value={localItem.defaultEdgeColor || ""}
         />
       </div>
       <div className="flex items-center justify-between">
