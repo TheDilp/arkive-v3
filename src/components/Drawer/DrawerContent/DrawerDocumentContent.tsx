@@ -1,5 +1,7 @@
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
+import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
@@ -8,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteMutation, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useGetAllTags } from "../../../CRUD/OtherCRUD";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -21,7 +24,8 @@ import { handleCloseDrawer } from "../Drawer";
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-
+  const { data: initialTags } = useGetAllTags(project_id as string, "documents");
+  const queryClient = useQueryClient();
   const { data: allDocuments } = useGetAllItems(project_id as string, "documents");
   const { data: document } = useGetItem(drawer?.id as string, "documents", { enabled: !!drawer?.id }) as { data: DocumentType };
   const createDocumentMutation = useCreateItem("documents");
@@ -61,6 +65,19 @@ export default function DrawerDocumentContent() {
     },
   );
 
+  const [tags, setTags] = useState({ selected: document?.tags || [], suggestions: initialTags });
+
+  const filterTags = (e: AutoCompleteCompleteMethodParams) => {
+    const { query } = e;
+    if (query && initialTags)
+      setTags((prev) => ({
+        ...prev,
+        suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
+      }));
+
+    if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
+  };
+
   useEffect(() => {
     if (document) {
       setLocalItem(document);
@@ -77,6 +94,27 @@ export default function DrawerDocumentContent() {
     if (!item.folder || (document && item.id === document.id)) return false;
     return true;
   }
+
+  const handleTagsChange = async (value: string) => {
+    if (!document && !localItem?.tags?.includes(value)) {
+      setLocalItem((prev) => ({ ...prev, tags: [...(localItem?.tags || []), value] }));
+    } else if (!document && localItem?.tags?.includes(value)) {
+      setLocalItem((prev) => ({ ...prev, tags: (localItem?.tags || []).filter((tag) => tag !== value) }));
+    }
+    if (document && !document?.tags?.includes(value)) {
+      await updateDocumentMutation?.mutateAsync({
+        id: document.id,
+        tags: [...document.tags, value],
+      });
+    } else if (document && document?.tags?.includes(value)) {
+      await updateDocumentMutation?.mutateAsync({
+        id: document.id,
+        tags: document.tags.filter((tag) => tag !== value),
+      });
+    }
+    queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
+  };
+
   return (
     <div className="my-2 flex flex-col gap-y-8">
       <h2 className="text-center text-2xl">
@@ -127,6 +165,26 @@ export default function DrawerDocumentContent() {
             />
           </div>
         )}
+        <div className="">
+          <AutoComplete
+            className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
+            completeMethod={filterTags}
+            multiple
+            onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
+            onKeyPress={async (e) => {
+              // For adding completely new tags
+              if (e.key === "Enter" && e.currentTarget.value !== "") {
+                handleTagsChange(e.currentTarget.value);
+                e.currentTarget.value = "";
+              }
+            }}
+            onSelect={(e) => handleTagsChange(e.value)}
+            onUnselect={(e) => handleTagsChange(e.value)}
+            placeholder="Add Tags"
+            suggestions={tags.suggestions}
+            value={localItem?.tags}
+          />
+        </div>
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Is Folder?</span>
           <Checkbox
