@@ -172,6 +172,7 @@ export default function BoardView({ isReadOnly }: Props) {
         source_id: source,
         target_id: target,
         lineColor: color,
+        targetArrowColor: color,
       });
     },
     [item_id],

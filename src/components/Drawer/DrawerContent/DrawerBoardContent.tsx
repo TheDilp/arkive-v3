@@ -156,7 +156,7 @@ export default function DrawerBoardContent() {
         />
       </div>
       <div className="flex flex-wrap items-center justify-between">
-        <h4 className="w-full text-lg underline">Default Edge Color</h4>
+        <h4 className="w-full text-lg underline">Default Edge & Arrow Color</h4>
 
         <ColorPicker
           onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultEdgeColor: `#${e.value}` as string }))}
@@ -191,6 +191,7 @@ export default function DrawerBoardContent() {
           }
         />
       </div>
+
       <Button
         className="p-button-outlined p-button-success ml-auto"
         onClick={() => {

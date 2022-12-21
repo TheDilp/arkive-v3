@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { BoardType, EdgeType, NodeType } from "../types/boardTypes";
+import { BoardType } from "../types/boardTypes";
 import { baseURLS, getURLS } from "../types/CRUDenums";
 import {
   AllAvailableTypes,
