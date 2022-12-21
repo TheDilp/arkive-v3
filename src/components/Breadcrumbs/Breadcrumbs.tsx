@@ -66,7 +66,7 @@ export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
 
   return (
     <BreadCrumb
-      className="border-bottom-2 border-noround z-5 w-full border-none bg-transparent font-bold"
+      className="border-bottom-2 border-noround z-5 w-full border-none font-bold"
       home={{
         className: "flex",
         command: () => navigate(`/project/${project_id}/${type}`),

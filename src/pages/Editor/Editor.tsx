@@ -74,7 +74,7 @@ export default function Editor({ content, editable }: EditorType) {
               {currentDocument?.template ? "[TEMPLATE]" : ""}
             </h1>
           ) : null}
-          {editable ? <Breadcrumbs /> : null}
+          {editable ? <Breadcrumbs type="documents" /> : null}
           <Remirror
             classNames={[
               "editor",
