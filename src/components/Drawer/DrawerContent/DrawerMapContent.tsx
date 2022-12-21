@@ -29,7 +29,7 @@ export default function DrawerMapContent() {
   const createMapMutation = useCreateItem("maps");
   const { data: initialTags } = useGetAllTags(project_id as string, "maps");
 
-  const map = useGetItem(project_id as string, drawer?.id, "maps") as MapType;
+  const { data: map } = useGetItem(drawer?.id as string, "maps", { enabled: !!drawer?.id }) as { data: MapType };
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {
       ...DefaultMap,
@@ -50,12 +50,17 @@ export default function DrawerMapContent() {
     if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
   };
   const handleTagsChange = async (value: string) => {
+    if (!map && !localItem?.tags?.includes(value)) {
+      setLocalItem((prev) => ({ ...prev, tags: [...(localItem?.tags || []), value] }));
+    } else if (!map && localItem?.tags?.includes(value)) {
+      setLocalItem((prev) => ({ ...prev, tags: (localItem?.tags || []).filter((tag) => tag !== value) }));
+    }
     if (map && !map.tags.includes(value)) {
       await updateMapMutation?.mutateAsync({
         id: map.id,
         tags: [...map.tags, value],
       });
-    } else if (map.tags.includes(value)) {
+    } else if (map && map.tags.includes(value)) {
       await updateMapMutation?.mutateAsync({
         id: map.id,
         tags: map.tags.filter((tag) => tag !== value),
@@ -149,7 +154,7 @@ export default function DrawerMapContent() {
         onUnselect={(e) => handleTagsChange(e.value)}
         placeholder="Add Tags"
         suggestions={tags.suggestions}
-        value={map?.tags}
+        value={localItem?.tags}
       />
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>

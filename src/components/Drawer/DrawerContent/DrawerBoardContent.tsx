@@ -106,7 +106,6 @@ export default function DrawerBoardContent() {
       <h2 className="text-center text-2xl">{currentBoard ? `Edit ${currentBoard.title}` : "Create New Board"}</h2>
       <InputText
         autoFocus
-        placeholder="Board Name"
         className="w-full"
         onChange={(e) =>
           setLocalItem((prev) => ({
@@ -123,6 +122,7 @@ export default function DrawerBoardContent() {
             });
           }
         }}
+        placeholder="Board Name"
         value={localItem?.title || ""}
       />
 
