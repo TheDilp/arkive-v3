@@ -15,6 +15,7 @@ model projects {
   documents documents[]
   maps      maps[]
   boards    boards[]
+  tags     String[] @default([])
   image String?
 }
 
@@ -107,16 +108,20 @@ model boards {
 model nodes {
   id                String  @id @default(uuid()) @db.Uuid
   label             String?
+  tags     String[] @default([])
+
+  type              String  @default("rectangle")
   width             Int     @default(50)
   height            Int     @default(50)
   x                 Float   @default(0)
   y                 Float   @default(0)
-  type              String  @default("rectangle")
+
   fontSize          Int     @default(16)
   fontColor         String  @default("#ffffff")
   fontFamily        String  @default("Lato")
   textVAlign        String  @default("center")
   textHAlign        String  @default("center")
+
   backgroundColor   String  @default("#595959")
   backgroundOpacity Float   @default(1)
 
@@ -136,6 +141,7 @@ model nodes {
 model edges {
   id    String  @id @default(uuid()) @db.Uuid
   label String?
+  tags     String[] @default([])
 
   curveStyle  String @default("straight")
   lineStyle   String @default("solid")
