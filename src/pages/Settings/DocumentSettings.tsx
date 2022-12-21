@@ -1,4 +1,12 @@
-import { ColumnDef, createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
 import { Checkbox } from "primereact/checkbox";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -38,16 +46,20 @@ const columns = [
 
 export default function DocumentSettings() {
   const { project_id } = useParams();
-  const { data } = useGetAllItems(project_id as string, "documents");
+  const { data } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   const [rowSelection, setRowSelection] = useState({});
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     data: data || [],
     state: {
       rowSelection,
+      sorting,
     },
     columns,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: setRowSelection,
+    getSortedRowModel: getSortedRowModel(),
   });
   return (
     <div className="h-full w-full">
@@ -56,8 +68,19 @@ export default function DocumentSettings() {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id} className="flex items-center">
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="flex h-min items-start px-2">
+                <th
+                  key={header.id}
+                  {...{
+                    className: header.column.getCanSort()
+                      ? "cursor-pointer select-none flex h-min items-start px-2"
+                      : "flex h-min items-start px-2",
+                    onClick: header.column.getToggleSortingHandler(),
+                  }}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  {{
+                    asc: " 🔼",
+                    desc: " 🔽",
+                  }[header.column.getIsSorted() as string] ?? null}
                 </th>
               ))}
             </tr>
