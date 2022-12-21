@@ -32,6 +32,7 @@ model documents {
   template    Boolean  @default(false)
   properties  Json?
   alter_names String[] @default([])
+  image String? 
 
   // Relations
   project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
@@ -51,7 +52,7 @@ model maps {
   map_image String?
   icon      String?  @default("mdi:map")
 
-  project    projects @relation(fields: [project_id], references: [id])
+  project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
   project_id String   @db.Uuid
 
   map_pins   map_pins[]
@@ -70,7 +71,7 @@ model map_pins {
   text            String?
   map_link        String? @db.Uuid
   doc_id          String? @db.Uuid
-  maps            maps?   @relation(fields: [parent], references: [id])
+  maps            maps?   @relation(fields: [parent], references: [id],onDelete: Cascade)
 }
 
 model map_layers {
@@ -79,7 +80,7 @@ model map_layers {
   image  String?
   parent String  @db.Uuid
   public Boolean @default(false)
-  maps   maps?   @relation(fields: [parent], references: [id])
+  maps   maps?   @relation(fields: [parent], references: [id], onDelete: Cascade)
 }
 
 model boards {
@@ -97,7 +98,7 @@ model boards {
   defaultEdgeColor String  @default("#595959")
   defaultGrid      Boolean @default(false)
 
-  project    projects @relation(fields: [project_id], references: [id])
+  project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
   project_id String   @db.Uuid
   nodes      nodes[]
   edges      edges[]
@@ -123,7 +124,7 @@ model nodes {
   template Boolean @default(false)
   zIndex   Int     @default(1)
 
-  board        boards     @relation(fields: [parent], references: [id])
+  board        boards     @relation(fields: [parent], references: [id], onDelete: Cascade)
   document     documents? @relation(fields: [doc_id], references: [id])
   doc_id       String?    @db.Uuid
   image        String?
@@ -174,9 +175,9 @@ model edges {
 
   zIndex Int @default(1)
 
-  board     boards @relation(fields: [parent], references: [id])
-  source    nodes  @relation("edges_source", fields: [source_id], references: [id])
-  target    nodes  @relation("edges_target", fields: [target_id], references: [id])
+  board     boards @relation(fields: [parent], references: [id], onDelete: Cascade)
+  source    nodes  @relation("edges_source", fields: [source_id], references: [id], onDelete: Cascade)
+  target    nodes  @relation("edges_target", fields: [target_id], references: [id],onDelete: Cascade)
   source_id String @db.Uuid
   target_id String @db.Uuid
   parent    String @db.Uuid

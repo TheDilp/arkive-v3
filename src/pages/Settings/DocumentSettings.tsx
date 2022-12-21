@@ -42,6 +42,10 @@ const columns = [
     header: "Title",
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor("image", {
+    header: "Image",
+    cell: (info) => info.getValue(),
+  }),
 ];
 
 export default function DocumentSettings() {
@@ -72,8 +76,8 @@ export default function DocumentSettings() {
                   key={header.id}
                   {...{
                     className: header.column.getCanSort()
-                      ? "cursor-pointer select-none flex h-min items-start px-2"
-                      : "flex h-min items-start px-2",
+                      ? "cursor-pointer select-none flex w-24 truncate items-start px-2"
+                      : "flex w-24 truncate items-start px-2",
                     onClick: header.column.getToggleSortingHandler(),
                   }}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -88,9 +92,9 @@ export default function DocumentSettings() {
         </thead>
         <tbody className="flex h-full w-full flex-col">
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="flex w-full items-center border-zinc-700 px-4 py-2 last:border-b odd:border-y">
+            <tr key={row.id} className="flex w-full items-center  border-zinc-700 px-4 py-2 last:border-b odd:border-y">
               {row.getVisibleCells().map((cell) => (
-                <td className="flex items-center px-2" key={cell.id}>
+                <td className="flex w-24 items-center truncate px-2" key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
