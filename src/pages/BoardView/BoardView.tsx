@@ -8,7 +8,7 @@ import { v4 as uuid } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateNodeEdge, useDeleteManySubItems, useUpdateManySubItems, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useDeleteManySubItems, useUpdateManySubItems, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
@@ -30,7 +30,7 @@ export default function BoardView({ isReadOnly }: Props) {
 
   const [edgeHandlesRef, setEdgeHandlesRef] = useAtom(BoardEdgeHandlesAtom);
 
-  const [boardState, setBoardState] = useAtom(BoardStateAtom);
+  const [boardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<{ x: null | number; y: null | number; type: "node" | "edge" }>({
     x: null,
     y: null,
@@ -41,11 +41,11 @@ export default function BoardView({ isReadOnly }: Props) {
     data: BoardType;
     isLoading: boolean;
   };
-  const createNodeMutation = useCreateNodeEdge(project_id as string, "nodes");
+  const createNodeMutation = useCreateSubItem(item_id as string, "nodes", "boards");
   const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
   const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
   const deleteManyNodes = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
-  const createEdgeMutation = useCreateNodeEdge(project_id as string, "edges");
+  const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
   const items = [
     {
       command: () => {
@@ -129,7 +129,6 @@ export default function BoardView({ isReadOnly }: Props) {
   ];
   useEffect(() => {
     if (board) {
-      setBoardState((prev) => ({ ...prev, grid: board.defaultGrid }));
       let temp_nodes: NodeDefinition[] = [];
       let temp_edges: EdgeDefinition[] = [];
       if (board.nodes.length > 0) {

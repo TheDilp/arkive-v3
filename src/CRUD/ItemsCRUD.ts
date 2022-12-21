@@ -75,7 +75,7 @@ export const useCreateItem = (type: AvailableItemTypes) => {
   );
 };
 
-export const useCreateSubItem = (project_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useCreateSubItem = (id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -90,10 +90,31 @@ export const useCreateSubItem = (project_id: string, subType: AvailableSubItemTy
       return null;
     },
     {
-      onError: () => toaster("error", "There was an error creating this sub item."),
-      onSuccess: async (data) => {
-        const newData: AllSubItemsType = await data?.json();
-        if (newData) queryClient.refetchQueries(["allItems", project_id, type]);
+      onMutate: async (variables) => {
+        const oldData: AllItemsType | undefined = queryClient.getQueryData([type, id]);
+        if (oldData && variables) {
+          if (
+            type === "boards" &&
+            ((subType === "nodes" && "nodes" in oldData) || (subType === "edges" && "edges" in oldData))
+          ) {
+            const updatedData = [...(oldData[subType] || []), variables];
+
+            queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
+          }
+          if (
+            type === "maps" &&
+            ((subType === "map_layers" && "map_layers" in oldData) || (subType === "map_pins" && "map_pins" in oldData))
+          ) {
+            const updatedData = [...(oldData[subType] || []), variables];
+            queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
+          }
+        }
+
+        return { oldData };
+      },
+      onError: (error, variables, context) => {
+        toaster("error", "There was an error updating this item.");
+        queryClient.setQueryData([type, id], context?.oldData);
       },
     },
   );
@@ -155,7 +176,7 @@ export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, typ
             type === "boards" &&
             ((subType === "nodes" && "nodes" in oldData) || (subType === "edges" && "edges" in oldData))
           ) {
-            const updatedData = oldData[subType].map((subItem) => {
+            const updatedData = (oldData[subType] || []).map((subItem) => {
               if (subItem.id === variables.id) return { ...subItem, ...variables };
               return subItem;
             });
@@ -165,7 +186,7 @@ export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, typ
             type === "maps" &&
             ((subType === "map_layers" && "map_layers" in oldData) || (subType === "map_pins" && "map_pins" in oldData))
           ) {
-            const updatedData = oldData[subType].map((subItem) => {
+            const updatedData = (oldData[subType] || []).map((subItem) => {
               if (subItem.id === variables.id) return { ...subItem, ...variables };
               return subItem;
             });
@@ -239,41 +260,6 @@ export const useSortMutation = (project_id: string, type: AvailableItemTypes) =>
         return { oldData };
       },
       onError: () => toaster("error", "There was an error updating your documents."),
-    },
-  );
-};
-// Board Mutations
-
-export const useCreateNodeEdge = (project_id: string, subType: "nodes" | "edges") => {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (createValues: Partial<NodeType | EdgeType>) => {
-      const url = createURL(subType);
-      if (url)
-        return fetch(url, {
-          body: JSON.stringify(createValues),
-          method: "POST",
-        });
-      return null;
-    },
-    {
-      onMutate: (newData) => {
-        const oldQueryData = queryClient.getQueryData(["allItems", project_id, "boards"]);
-        queryClient.setQueryData(["allItems", project_id, "boards"], (oldData: BoardType[] | undefined) => {
-          if (oldData)
-            return oldData.map((board) => {
-              if (board.id === newData.parent) return { ...board, [subType]: [...board[subType], newData] };
-              return board;
-            });
-
-          return [];
-        });
-
-        return { oldQueryData };
-      },
-      onError: (error, variables, context) => {
-        if (error) queryClient.setQueryData(["allItems", project_id, "boards"], context?.oldQueryData);
-      },
     },
   );
 };
