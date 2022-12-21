@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
@@ -65,7 +66,7 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
   const { project_id } = useParams();
   const fileUploadRef = useRef<FileUpload>(null);
   const [types, setTypes] = useState<{ name: string; type: "Image" | "Map" }[]>([]);
-
+  const queryClient = useQueryClient();
   const onTemplateSelect = (e: any) => {
     const allTypes = types;
     const { files } = e;
@@ -103,13 +104,15 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
         }}>
         {chooseButton}
         <span>{uploadButton}</span>
-        <button
+        <div
           onClick={() => {
             fileUploadRef.current?.clear();
           }}
-          type="button">
+          onKeyDown={() => {}}
+          role="button"
+          tabIndex={-1}>
           {cancelButton}
-        </button>
+        </div>
       </div>
     );
   };
@@ -127,7 +130,6 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
       multiple
       name="quickupload[]"
       onSelect={onTemplateSelect}
-      onUpload={(e) => console.log(e)}
       uploadHandler={async (e) => {
         setUploading(true);
         const imageFormData = new FormData();
@@ -137,14 +139,20 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
           if (types[index].type === "Image") imageFormData.append(file.name, file);
           if (types[index].type === "Map") mapsFormData.append(file.name, file);
         });
-        await fetch(`${baseURLS.baseServer}${createURLS.uploadImage}${project_id}`, {
-          body: imageFormData,
-          method: "POST",
-        });
-        await fetch(`${baseURLS.baseServer}${createURLS.uploadMap}${project_id}`, {
-          body: mapsFormData,
-          method: "POST",
-        });
+        if (types.some((type) => type.type === "Image")) {
+          await fetch(`${baseURLS.baseServer}${createURLS.uploadImage}${project_id}`, {
+            body: imageFormData,
+            method: "POST",
+          });
+          queryClient.refetchQueries({ queryKey: ["allImages", project_id] });
+        }
+        if (types.some((type) => type.type === "Map")) {
+          await fetch(`${baseURLS.baseServer}${createURLS.uploadMap}${project_id}`, {
+            body: mapsFormData,
+            method: "POST",
+          });
+          queryClient.refetchQueries({ queryKey: ["allMaps", project_id] });
+        }
         setUploading(false);
         setTypes([]);
         e.options.clear();
@@ -156,7 +164,7 @@ function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAc
 function UpdateMapLayers() {
   const { project_id } = useParams();
   const [dialog] = useAtom(DialogAtom);
-  const currentMap = useGetItem(project_id as string, dialog.data?.id, "maps") as MapType;
+  const { data: currentMap } = useGetItem(dialog.data?.id as string, "maps") as { data: MapType };
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const createMapLayer = useCreateSubItem(project_id as string, "map_layers", "maps");
   const updateMapLayer = useUpdateSubItem(project_id as string, "map_layers", "maps");
@@ -301,8 +309,8 @@ function InsertEditorImage() {
 function NodeSearch() {
   const [, setDialog] = useAtom(DialogAtom);
   const [boardRef] = useAtom(BoardReferenceAtom);
-  const { project_id, item_id } = useParams();
-  const board = useGetItem(project_id as string, item_id as string, "boards") as BoardType;
+  const { item_id } = useParams();
+  const { data: board } = useGetItem(item_id as string, "boards") as { data: BoardType };
   const [search, setSearch] = useState("");
   const [filteredNodes, setFilteredNodes] = useState<NodeType[]>(board?.nodes.filter((node) => node.label) || []);
 

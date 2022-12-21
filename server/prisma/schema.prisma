@@ -15,6 +15,7 @@ model projects {
   documents documents[]
   maps      maps[]
   boards    boards[]
+  image String?
 }
 
 model documents {
