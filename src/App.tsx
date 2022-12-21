@@ -23,6 +23,7 @@ import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
 import Settings from "./pages/Settings/Settings";
 import ProjectSettings from "./pages/Settings/ProjectSettings";
+import DocumentSettings from "./pages/Settings/DocumentSettings";
 
 function App() {
   useEffect(() => {
@@ -72,6 +73,7 @@ function App() {
 
               <Route path="settings/*">
                 <Route element={<ProjectSettings />} path="project-settings" />
+                <Route element={<DocumentSettings />} path="document-settings" />
               </Route>
             </Route>
           </Routes>

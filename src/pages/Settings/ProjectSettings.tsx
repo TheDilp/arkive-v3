@@ -12,9 +12,7 @@ import { useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/projectTypes";
 
-type Props = {};
-
-export default function ProjectSettings({}: Props) {
+export default function ProjectSettings() {
   const { project_id } = useParams();
   const { data } = useGetSingleProject(project_id as string);
   const { data: allImages } = useGetAllImages(project_id as string);
@@ -23,7 +21,6 @@ export default function ProjectSettings({}: Props) {
   useEffect(() => {
     if (data) setLocalItem(data);
   }, [data]);
-  console.log(localItem);
   const updateProject = useUpdateProject();
   return (
     <div className="flex flex-col gap-y-4 p-4">
