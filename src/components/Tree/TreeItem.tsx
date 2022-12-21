@@ -1,19 +1,19 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useDeleteMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
-import { AvailableItemTypes } from "../../types/generalTypes";
-import { TreeDataType } from "../../types/treeTypes";
+import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { toaster } from "../../utils/toast";
 import { IconSelect } from "../IconSelect/IconSelect";
 
 type Props = {
-  node: NodeModel<TreeDataType>;
+  node: NodeModel<AllItemsType>;
   depth: number;
   isOpen: boolean;
   onToggle: () => void;
@@ -22,6 +22,7 @@ type Props = {
 };
 
 export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Props) {
+  const queryClient = useQueryClient();
   const { project_id, item_id } = useParams();
   const navigate = useNavigate();
   const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
@@ -81,7 +82,18 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         {node.data?.folder ? (
           <Icon className="mr-1" icon="bxs:folder" inline />
         ) : (
-          <IconSelect setIcon={(newIcon) => updateMutation?.mutate({ icon: newIcon, id: node.id as string })}>
+          <IconSelect
+            setIcon={(newIcon) => {
+              updateMutation?.mutate(
+                { icon: newIcon, id: node.id as string },
+                {
+                  onSuccess: () => {
+                    queryClient.refetchQueries({ queryKey: ["allItems", project_id, type] });
+                    toaster("success", "Icon updated successfully.");
+                  },
+                },
+              );
+            }}>
             <Icon
               className={`rounded-full ${type === "documents" ? "hover:bg-sky-400" : ""}`}
               icon={

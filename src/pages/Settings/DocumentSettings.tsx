@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import {
   ColumnDef,
   createColumnHelper,
@@ -45,6 +46,10 @@ const columns = [
   columnHelper.accessor("image", {
     header: "Image",
     cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor("icon", {
+    header: "Icon",
+    cell: (info) => <Icon icon={info.getValue() || "mdi:file"} />,
   }),
 ];
 
