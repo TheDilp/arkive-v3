@@ -1,20 +1,34 @@
+import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Checkbox } from "primereact/checkbox";
 import { Chips } from "primereact/chips";
+import { Dropdown } from "primereact/dropdown";
+import { Image } from "primereact/image";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useGetAllImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
+import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { DocumentType } from "../../types/documentTypes";
+import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 
+function DocumentOptionsHeader({ icon, title }: { icon: string; title: string }) {
+  return (
+    <div className="flex items-center gap-x-2">
+      <Icon fontSize={22} icon={icon} /> {title}
+    </div>
+  );
+}
 export default function DocumentProperties() {
   const { project_id, item_id } = useParams();
   const { data: currentDocument } = useGetItem(item_id as string, "documents") as { data: DocumentType };
   const { data: initialTags } = useGetAllTags(project_id as string, "documents");
+  const { data: images } = useGetAllImages(project_id as string);
   const queryClient = useQueryClient();
   const [tags, setTags] = useState({ selected: currentDocument?.tags || [], suggestions: initialTags });
   const updateDocumentMutation = useUpdateItem("documents");
@@ -90,8 +104,20 @@ export default function DocumentProperties() {
         suggestions={tags.suggestions}
         value={currentDocument?.tags}
       />
+
       <Accordion>
-        <AccordionTab header="Options">
+        <AccordionTab headerTemplate={() => DocumentOptionsHeader({ icon: "mdi:image", title: "Image" })}>
+          <Image preview src={`${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${currentDocument?.image}`} />
+          <Dropdown
+            itemTemplate={ImageDropdownItem}
+            onChange={(e) => updateDocumentMutation?.mutate({ id: currentDocument?.id, image: e.value })}
+            options={images || []}
+            placeholder="Select map"
+            value={currentDocument?.image}
+            valueTemplate={ImageDropdownValue({ image: currentDocument?.image })}
+          />
+        </AccordionTab>
+        <AccordionTab headerTemplate={() => DocumentOptionsHeader({ icon: "mdi:cog", title: "Settings" })}>
           {!currentDocument?.template ? (
             <div className="flex w-full flex-nowrap items-center justify-between">
               <span className="mx-2">Public:</span>
