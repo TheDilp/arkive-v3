@@ -35,15 +35,16 @@ export default function FolderView() {
   const { data, isLoading, isError } = useGetAllItems(project_id as string, type);
   if (isLoading || isError) return null;
 
-  const currentItems = data.filter((item) => {
-    if (item_id) return item.parent === item_id;
-    return !item.parent;
-  });
-
   return (
     <div className="flex flex-col gap-4 px-8">
       <Breadcrumbs type={type} />
-      <FolderViewCards items={currentItems} type={type} />
+      <FolderViewCards
+        items={data.filter((item) => {
+          if (item_id) return item.parent === item_id;
+          return !item.parent;
+        })}
+        type={type}
+      />
     </div>
   );
 }

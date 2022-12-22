@@ -5,19 +5,23 @@ import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autoc
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
+import { Image } from "primereact/image";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useDeleteMutation, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteMutation, useGetAllImages, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../../CRUD/OtherCRUD";
 import { useGetItem } from "../../../hooks/useGetItem";
+import { baseURLS, getURLS } from "../../../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../IconSelect/IconSelect";
 import { handleCloseDrawer } from "../Drawer";
 
@@ -28,6 +32,7 @@ export default function DrawerDocumentContent() {
   const queryClient = useQueryClient();
   const { data: allDocuments } = useGetAllItems(project_id as string, "documents");
   const { data: document } = useGetItem(drawer?.id as string, "documents", { enabled: !!drawer?.id }) as { data: DocumentType };
+  const { data: images } = useGetAllImages(project_id as string);
   const createDocumentMutation = useCreateItem("documents");
   const updateDocumentMutation = useUpdateItem("documents");
   const deleteDocumentMutation = useDeleteMutation("documents", project_id as string);
@@ -42,6 +47,7 @@ export default function DrawerDocumentContent() {
           folder: newData.folder,
           icon: newData.icon,
           id: document.id,
+          image: newData.image,
           title: newData.title,
         },
         {
@@ -49,10 +55,15 @@ export default function DrawerDocumentContent() {
         },
       );
     } else {
-      createDocumentMutation?.mutate({
-        ...DefaultDocument,
-        ...newData,
-      });
+      createDocumentMutation?.mutate(
+        {
+          ...DefaultDocument,
+          ...newData,
+        },
+        {
+          onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] }),
+        },
+      );
     }
   }
 
@@ -183,6 +194,23 @@ export default function DrawerDocumentContent() {
             placeholder="Add Tags"
             suggestions={tags.suggestions}
             value={localItem?.tags}
+          />
+        </div>
+        <div className="flex w-full flex-col items-center gap-y-0 ">
+          <Image
+            className="h-28 w-36 object-contain"
+            imageClassName="object-fit"
+            preview
+            src={`${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${localItem?.image}`}
+          />
+          <Dropdown
+            className="w-full"
+            itemTemplate={ImageDropdownItem}
+            onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value }))}
+            options={images || []}
+            placeholder="Select map"
+            value={localItem?.image}
+            valueTemplate={ImageDropdownValue({ image: localItem?.image })}
           />
         </div>
         <div className="flex items-center justify-between">
