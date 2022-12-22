@@ -7,8 +7,8 @@ import { MapPinType, MapType } from "../types/mapTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
   <div className="flex w-full items-center justify-center gap-x-1">
-    <div className="text-center">{title}</div>
-    <Icon fontSize={size || 20} icon={icon} />
+    <div className="ml-4 text-center">{title}</div>
+    <Icon className="ml-auto" fontSize={size || 20} icon={icon} />
   </div>
 );
 

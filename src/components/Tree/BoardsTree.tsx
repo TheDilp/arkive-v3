@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { buttonLabelWithIcon } from "../../utils/transform";
 import BaseTree from "./BaseTree";
 
 export default function BoardsTree() {
@@ -29,8 +30,6 @@ export default function BoardsTree() {
         />
         <Button
           className="p-button-outlined w-full"
-          icon="pi pi-map"
-          label="New Board"
           onClick={() => {
             setDrawer({
               ...DefaultDrawer,
@@ -38,8 +37,9 @@ export default function BoardsTree() {
               show: true,
               type: "boards",
             });
-          }}
-        />
+          }}>
+          {buttonLabelWithIcon("New Board", "mdi:draw")}
+        </Button>
       </div>
 
       <BaseTree type="boards" />
