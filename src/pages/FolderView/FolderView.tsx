@@ -15,6 +15,7 @@ function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: All
             key={item.id}
             icon={getIcon(type, item)}
             id={item.id}
+            image={"image" in item ? item?.image : undefined}
             isFolder={item.folder}
             title={item.title}
             type={type}

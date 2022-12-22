@@ -21,6 +21,7 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         public: true,
         project_id: true,
         alter_names: true,
+        image: true,
         tags: true,
       },
     });
