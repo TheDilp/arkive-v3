@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
@@ -33,6 +34,9 @@ export default function FolderView() {
   const { pathname } = useLocation();
   const type = getType(pathname);
   const { data, isLoading, isError } = useGetAllItems(project_id as string, type);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   if (isLoading || isError) return null;
 
   return (

@@ -22,7 +22,9 @@ export function ImageDropdownItem(props: Props) {
   return (
     <div className="flex max-w-[200px] items-center justify-between">
       <span className="truncate">{image}</span>
-      <img alt={project_id} className="h-12 w-12" src={`${baseURLS.baseServer}getimage/images/${project_id}/${image}`} />
+      {image !== "None" ? (
+        <img alt={project_id} className="h-12 w-12" src={`${baseURLS.baseServer}getimage/images/${project_id}/${image}`} />
+      ) : null}
     </div>
   );
 }

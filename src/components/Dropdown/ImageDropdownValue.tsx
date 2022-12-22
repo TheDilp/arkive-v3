@@ -1,7 +1,7 @@
 import React from "react";
 
 type Props = {
-  image?: string;
+  image?: string | null;
 };
 
 export default function ImageDropdownValue({ image }: Props) {

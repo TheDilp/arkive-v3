@@ -47,11 +47,14 @@ export default function DrawerDocumentContent() {
           folder: newData.folder,
           icon: newData.icon,
           id: document.id,
-          image: newData.image,
+          image: newData.image || null,
           title: newData.title,
         },
         {
-          onSuccess: () => toaster("success", "Your document was successfully updated."),
+          onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
+            toaster("success", "Your document was successfully updated.");
+          },
         },
       );
     } else {
@@ -61,7 +64,10 @@ export default function DrawerDocumentContent() {
           ...newData,
         },
         {
-          onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] }),
+          onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
+            toaster("success", "Your document was successfully created.");
+          },
         },
       );
     }
@@ -197,17 +203,19 @@ export default function DrawerDocumentContent() {
           />
         </div>
         <div className="flex w-full flex-col items-center gap-y-0 ">
-          <Image
-            className="h-28 w-36 object-contain"
-            imageClassName="object-fit"
-            preview
-            src={`${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${localItem?.image}`}
-          />
+          {localItem?.image ? (
+            <Image
+              className="h-28 w-36 object-contain"
+              imageClassName="object-fit"
+              preview
+              src={`${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${localItem?.image}`}
+            />
+          ) : null}
           <Dropdown
             className="w-full"
             itemTemplate={ImageDropdownItem}
-            onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value }))}
-            options={images || []}
+            onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value === "None" ? undefined : e.value }))}
+            options={["None", ...(images || [])] || []}
             placeholder="Select map"
             value={localItem?.image}
             valueTemplate={ImageDropdownValue({ image: localItem?.image })}

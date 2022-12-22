@@ -10,7 +10,7 @@ type Props = {
   isFolder: boolean;
   icon: string;
   type: AvailableItemTypes;
-  image?: string;
+  image?: string | null;
 };
 
 const getCardURL = ({ id, isFolder, type }: { id: string; type: AvailableItemTypes; isFolder: boolean }) => {
@@ -26,7 +26,7 @@ export default function FolderCard({ id, title, type, isFolder, icon, image }: P
   return (
     <Link to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>
       <div className="flex h-36 w-36 cursor-pointer flex-col items-center justify-between px-4 py-2 transition-colors hover:text-blue-300">
-        {image ? (
+        {image && !isFolder ? (
           <img
             alt={type}
             className="object-contain"

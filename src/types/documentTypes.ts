@@ -8,7 +8,7 @@ export interface DocumentType extends BaseItemType {
   template: boolean;
   properties: undefined | string[];
   alter_names: string[];
-  image?: string;
+  image?: string | null;
 }
 
 export type DocumentCreateType = Partial<Omit<DocumentType, "project_id">> & {
