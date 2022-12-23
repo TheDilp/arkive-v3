@@ -22,6 +22,7 @@ import {
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
+import Tags from "../../Tags/Tags";
 
 function FontItemTemplate(item: { label: string; value: string }) {
   const { value, label } = item;
@@ -281,6 +282,14 @@ export default function DrawerNodeContent() {
               tooltip="Changes if node is above or below others"
               tooltipOptions={{ position: "left" }}
               value={localItem.zIndex}
+            />
+          </div>
+          <div className="mb-2 w-full">
+            <Tags
+              localItem={localItem}
+              setLocalItem={(d) => handleChange({ name: "tags", value: d })}
+              type="boards"
+              updateMutation={updateNodeMutation}
             />
           </div>
         </div>

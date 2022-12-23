@@ -42,6 +42,8 @@ type NodeShape =
 export type NodeType = {
   id: string;
   label?: string;
+  tags: string[];
+
   fontSize: number;
   fontColor: string;
   fontFamily: string;
@@ -64,6 +66,7 @@ export type NodeType = {
 export type EdgeType = {
   id: string;
   label?: string;
+  tags: string[];
 
   curveStyle: "straight" | "bezier" | "taxi";
   lineStyle: "solid" | "dashed" | "dotted";

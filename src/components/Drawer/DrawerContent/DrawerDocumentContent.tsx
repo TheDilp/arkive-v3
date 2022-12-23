@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteMutation, useGetAllImages, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
@@ -36,6 +37,16 @@ export default function DrawerDocumentContent() {
   const createDocumentMutation = useCreateItem("documents");
   const updateDocumentMutation = useUpdateItem("documents");
   const deleteDocumentMutation = useDeleteMutation("documents", project_id as string);
+  // Use item if editing or use a blank document (default values) if not to create new one
+  const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(
+    document ?? {
+      ...DefaultDocument,
+      project_id: project_id as string,
+      template: drawer.exceptions?.createTemplate || false,
+    },
+  );
+  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
+
   function CreateUpdateDocument(newData: DocumentCreateType) {
     if (document) {
       if (allDocuments?.some((item) => item.parent === newData.id) && !newData.folder) {
@@ -53,6 +64,7 @@ export default function DrawerDocumentContent() {
         {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
+            if ("tags" in changedData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
             toaster("success", "Your document was successfully updated.");
           },
         },
@@ -66,21 +78,14 @@ export default function DrawerDocumentContent() {
         {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
+            if ("tags" in changedData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
             toaster("success", "Your document was successfully created.");
           },
         },
       );
     }
+    resetChanges();
   }
-
-  // Use item if editing or use a blank document (default values) if not to create new one
-  const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(
-    document ?? {
-      ...DefaultDocument,
-      project_id: project_id as string,
-      template: drawer.exceptions?.createTemplate || false,
-    },
-  );
 
   useEffect(() => {
     if (document) {
@@ -108,12 +113,7 @@ export default function DrawerDocumentContent() {
         <InputText
           autoFocus
           className="w-full"
-          onChange={(e) =>
-            setLocalItem((prev) => ({
-              ...prev,
-              title: e.target.value,
-            }))
-          }
+          onChange={(e) => handleChange({ name: "title", value: e.target.value })}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               if (document)
@@ -131,12 +131,7 @@ export default function DrawerDocumentContent() {
             <Dropdown
               className="w-full"
               filter
-              onChange={(e) => {
-                setLocalItem((prev) => ({
-                  ...prev,
-                  parent: e.value,
-                }));
-              }}
+              onChange={(e) => handleChange({ name: "parent", value: e.target.value })}
               optionLabel="title"
               options={
                 allDocuments
@@ -150,13 +145,7 @@ export default function DrawerDocumentContent() {
           </div>
         )}
         <div className="">
-          <Tags
-            item={document}
-            localItem={localItem}
-            setLocalItem={setLocalItem}
-            type="documents"
-            updateMutation={updateDocumentMutation}
-          />
+          <Tags handleChange={handleChange} localItem={localItem} type="documents" />
         </div>
         <div className="flex w-full flex-col items-center gap-y-0 ">
           {localItem?.image ? (
@@ -170,7 +159,7 @@ export default function DrawerDocumentContent() {
           <Dropdown
             className="w-full"
             itemTemplate={ImageDropdownItem}
-            onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value === "None" ? undefined : e.value }))}
+            onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? undefined : e.value })}
             options={["None", ...(images || [])] || []}
             placeholder="Select map"
             value={localItem?.image}
@@ -179,19 +168,11 @@ export default function DrawerDocumentContent() {
         </div>
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Is Folder?</span>
-          <Checkbox
-            checked={localItem.folder}
-            onChange={(e) =>
-              setLocalItem((prev) => ({
-                ...prev,
-                folder: e.checked,
-              }))
-            }
-          />
+          <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />
         </div>
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Icon</span>
-          <IconSelect setIcon={(newIcon: string) => setLocalItem((prev) => ({ ...prev, icon: newIcon }))}>
+          <IconSelect setIcon={(newIcon: string) => handleChange({ name: "icon", value: newIcon })}>
             <Icon className="cursor-pointer" fontSize={20} icon={localItem.icon || "mdi:file"} />
           </IconSelect>
         </div>
