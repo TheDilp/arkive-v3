@@ -84,65 +84,74 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
     return [];
   });
   server.post("/fullsearch/:project_id", async (req: FastifyRequest<{ Params: { project_id: string }; Body: string }>) => {
+    //   const updates = indexes.map((idx) =>
+    //   prisma.documents.update({ data: { parent: idx.parent, sort: idx.sort }, where: { id: idx.id } }),
+    // );
+
     const { project_id } = req.params;
     const { query } = JSON.parse(req.body) as { query: string };
-    const documents = await prisma.$queryRaw`
-select id,title,icon from documents where (project_id::text = ${project_id} and (lower(content->>'content'::text) like lower(${`%${query}%`}) or lower(title) like lower(${`%${query}%`})) and folder = false)
-;`;
-    const maps = await prisma.maps.findMany({
-      where: {
-        title: {
-          contains: query,
-          mode: "insensitive",
+
+    const searches = [
+      prisma.$queryRaw`
+      select id,title,icon from documents where (project_id::text = ${project_id} and (lower(content->>'content'::text) like lower(${`%${query}%`}) or lower(title) like lower(${`%${query}%`})) and folder = false)
+      ;`,
+      prisma.maps.findMany({
+        where: {
+          title: {
+            contains: query,
+            mode: "insensitive",
+          },
+          folder: false,
         },
-        folder: false,
-      },
-      select: {
-        id: true,
-        title: true,
-        icon: true,
-      },
-    });
-    const pins = await prisma.map_pins.findMany({
-      where: {
-        text: {
-          contains: query,
-          mode: "insensitive",
+        select: {
+          id: true,
+          title: true,
+          icon: true,
         },
-      },
-      select: {
-        id: true,
-        text: true,
-        parent: true,
-      },
-    });
-    const boards = await prisma.boards.findMany({
-      where: {
-        title: {
-          contains: query,
-          mode: "insensitive",
+      }),
+      prisma.map_pins.findMany({
+        where: {
+          text: {
+            contains: query,
+            mode: "insensitive",
+          },
         },
-        folder: false,
-      },
-      select: {
-        id: true,
-        title: true,
-        icon: true,
-      },
-    });
-    const nodes = await prisma.nodes.findMany({
-      where: {
-        label: {
-          contains: query,
-          mode: "insensitive",
+        select: {
+          id: true,
+          text: true,
+          parent: true,
         },
-      },
-      select: {
-        id: true,
-        label: true,
-        parent: true,
-      },
-    });
+      }),
+      prisma.boards.findMany({
+        where: {
+          title: {
+            contains: query,
+            mode: "insensitive",
+          },
+          folder: false,
+        },
+        select: {
+          id: true,
+          title: true,
+          icon: true,
+        },
+      }),
+      prisma.nodes.findMany({
+        where: {
+          label: {
+            contains: query,
+            mode: "insensitive",
+          },
+        },
+        select: {
+          id: true,
+          label: true,
+          parent: true,
+        },
+      }),
+    ];
+
+    const [documents, maps, pins, boards, nodes] = await prisma.$transaction(searches);
     return { documents, maps, pins, boards, nodes };
   });
   done();

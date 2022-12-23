@@ -20,6 +20,7 @@ import {
   textVAlignOptions,
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
+import { toaster } from "../../../utils/toast";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
@@ -125,7 +126,6 @@ export default function DrawerNodeContent() {
         <div className="flex w-full flex-col gap-y-4">
           <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-4">
             {/* Label text */}
-
             <div className="flex w-full flex-wrap">
               <span className="w-full text-sm text-zinc-400">Node label</span>
 
@@ -138,9 +138,7 @@ export default function DrawerNodeContent() {
                 value={localItem.label}
               />
             </div>
-
             {/* Label font & size */}
-
             <div className="flex w-full flex-nowrap gap-x-1">
               <div className="flex w-1/2 flex-col">
                 <span className="w-full text-sm text-zinc-400">Label Font</span>
@@ -165,7 +163,6 @@ export default function DrawerNodeContent() {
                 />
               </div>
             </div>
-
             {/* Label color */}
             <div className="flex w-full flex-wrap items-center justify-between">
               <span className="w-full text-sm text-zinc-400">Label color</span>
@@ -178,7 +175,6 @@ export default function DrawerNodeContent() {
                 value={localItem.fontColor}
               />
             </div>
-
             {/* Aligns */}
             <div className="flex w-full flex-nowrap gap-x-1">
               <div className="w-full">
@@ -285,12 +281,7 @@ export default function DrawerNodeContent() {
             />
           </div>
           <div className="mb-2 w-full">
-            <Tags
-              localItem={localItem}
-              setLocalItem={(d) => handleChange({ name: "tags", value: d })}
-              type="boards"
-              updateMutation={updateNodeMutation}
-            />
+            <Tags handleChange={handleChange} localItem={localItem} type="documents" />
           </div>
         </div>
       </div>
@@ -300,7 +291,15 @@ export default function DrawerNodeContent() {
         iconPos="right"
         label="Save Node"
         onClick={() => {
-          updateNodeMutation.mutate({ id: localItem.id, ...changedData }, { onSuccess: resetChanges });
+          updateNodeMutation.mutate(
+            { id: localItem.id, ...changedData },
+            {
+              onSuccess: () => {
+                resetChanges();
+                toaster("success", `Node ${localItem.label || ""} was successfully updated.`);
+              },
+            },
+          );
           // if (selectedTemplate) {
           //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
           //   //   const { show, ...restDialog } = localItem;
