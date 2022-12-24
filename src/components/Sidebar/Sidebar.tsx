@@ -42,7 +42,7 @@ export default function Sidebar() {
         <ul className="flex w-full flex-col gap-y-1 font-Lato text-sm">
           <Link
             className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("project-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+              pathname.includes("project-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
             }`}
             to="./settings/project-settings">
             <Icon fontSize={18} icon="mdi:cogs" />
@@ -50,7 +50,7 @@ export default function Sidebar() {
           </Link>
           <Link
             className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("document-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+              pathname.includes("document-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
             }`}
             to="./settings/document-settings">
             <Icon fontSize={18} icon="mdi:files" />
@@ -58,7 +58,7 @@ export default function Sidebar() {
           </Link>
           <Link
             className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("map-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+              pathname.includes("map-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
             }`}
             to="./settings/map-settings">
             <Icon fontSize={18} icon="mdi:map" />
@@ -66,7 +66,7 @@ export default function Sidebar() {
           </Link>
           <Link
             className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("board-settings") ? "bg-sky-700 text-white" : "text-zinc-600"
+              pathname.includes("board-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
             }`}
             to="./settings/board-settings">
             <Icon fontSize={18} icon="mdi:draw" />

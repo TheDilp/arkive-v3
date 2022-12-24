@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Icon } from "@iconify/react";
 import {
   createColumnHelper,
@@ -53,14 +54,27 @@ const columns = [
     ),
   }),
 ];
-
+function getHeaderClassNames(select: boolean, canSort: boolean) {
+  if (select) return "w-8";
+  if (canSort) return "cursor-pointer select-none flex flex-1 truncate items-start px-2";
+  return "flex flex-1 truncate items-start px-2";
+}
+function getRowClassNames(select: boolean) {
+  if (select) return "w-8";
+  return "flex flex-1 items-center truncate px-2";
+}
 export default function DocumentSettings() {
   const { project_id } = useParams();
   const { data } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
-    data: data || [],
+    data:
+      data.filter((item) => {
+        if ("folder" in item && item.folder) return false;
+        if ("template" in item && item.template) return false;
+        return true;
+      }) || [],
     state: {
       rowSelection,
       sorting,
@@ -73,17 +87,15 @@ export default function DocumentSettings() {
   });
   return (
     <div className="h-full w-full">
-      <table className="flex h-full w-full flex-col border border-zinc-700">
-        <thead className="flex items-center px-4 py-2">
+      <div className="flex h-full w-full flex-col border border-zinc-700">
+        <div className="flex items-center px-4 py-2">
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="flex items-center">
+            <div key={headerGroup.id} className="flex flex-1">
               {headerGroup.headers.map((header) => (
-                <th
+                <div
                   key={header.id}
                   {...{
-                    className: header.column.getCanSort()
-                      ? "cursor-pointer select-none flex w-24 truncate items-start px-2"
-                      : "flex w-24 truncate items-start px-2",
+                    className: getHeaderClassNames(header.id === "select", header.column.getCanSort()),
                     onClick: header.column.getToggleSortingHandler(),
                   }}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -91,23 +103,23 @@ export default function DocumentSettings() {
                     asc: " 🔼",
                     desc: " 🔽",
                   }[header.column.getIsSorted() as string] ?? null}
-                </th>
+                </div>
               ))}
-            </tr>
+            </div>
           ))}
-        </thead>
-        <tbody className="flex h-full w-full flex-col">
+        </div>
+        <div className="flex h-full w-full flex-col">
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="flex w-full items-center  border-zinc-700 px-4 py-2 last:border-b odd:border-y">
+            <div key={row.id} className="flex w-full items-center  border-zinc-700 px-4 py-2 last:border-b odd:border-y">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="flex w-24 items-center truncate px-2">
+                <div key={cell.id} className={getRowClassNames(cell.column.id === "select")}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+                </div>
               ))}
-            </tr>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
 }
