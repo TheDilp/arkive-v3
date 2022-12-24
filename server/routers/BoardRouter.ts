@@ -151,6 +151,30 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       return null;
     },
   );
+  server.delete(
+    "/deletemanyedges",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const ids: string[] = JSON.parse(req.body);
+        await prisma.edges.deleteMany({
+          where: {
+            id: {
+              in: ids,
+            },
+          },
+        });
+
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
   server.post(
     "/updatemanyedges",
     async (

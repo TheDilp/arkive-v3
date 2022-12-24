@@ -33,7 +33,7 @@ export default function BoardQuickBar() {
 
   const [, setExportDialog] = useAtom(DialogAtom);
   const deleteManyNodesMutation = useDeleteManySubItems(item_id as string, "nodes");
-  //   const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
+  const deleteManyEdgesMutation = useDeleteManySubItems(item_id as string, "edges");
   const debouncedColorPick = useDebouncedCallback(
     // function
     (color) => {
@@ -132,9 +132,11 @@ export default function BoardQuickBar() {
           if (selected.length === 0) {
             toaster("warning", "No elements are selected.");
           } else {
-            deleteManyNodesMutation.mutate(selected.map((el) => el.id()));
+            const nodes = selected.nodes();
+            const edges = selected.edges();
+            if (nodes.length) deleteManyNodesMutation.mutate(nodes.map((node) => node.id()));
+            if (edges.length) deleteManyEdgesMutation.mutate(edges.map((edge) => edge.id()));
           }
-          // conirm(selected);
         }}
       />
 
