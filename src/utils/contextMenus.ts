@@ -1,10 +1,20 @@
 import { useAtom } from "jotai";
 
-import { useCreateSubItem, useDeleteManySubItems, useUpdateManySubItems } from "../CRUD/ItemsCRUD";
+import {
+  useCreateItem,
+  useCreateSubItem,
+  useDeleteItem,
+  useDeleteManySubItems,
+  useUpdateItem,
+  useUpdateManySubItems,
+} from "../CRUD/ItemsCRUD";
 import { BoardContext, BoardContextType, BoardType } from "../types/boardTypes";
-import { BoardReferenceAtom } from "./Atoms/atoms";
+import { AvailableItemTypes } from "../types/generalTypes";
+import { SidebarTreeItemType } from "../types/treeTypes";
+import { BoardReferenceAtom, DialogAtom, DrawerAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
+import { DefaultDrawer } from "./DefaultValues/DrawerDialogDefaults";
 import { toaster } from "./toast";
 
 export type BoardContextMenuType = {
@@ -182,4 +192,218 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
       },
     ];
   return [];
+}
+
+export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableItemTypes, project_id: string) {
+  const rootItems = [
+    {
+      // command: () => {},
+      icon: "pi pi-fw pi-file",
+      label: "New Document",
+    },
+    {
+      // command: () => {},
+      icon: "pi pi-fw pi-folder",
+      label: "New Folder",
+    },
+  ];
+
+  const createItemMutation = useCreateItem(type);
+  const updateItemMutation = useUpdateItem(type);
+  const deleteItemMutation = useDeleteItem(type, project_id);
+  const [, setDrawer] = useAtom(DrawerAtom);
+  const [, setDialog] = useAtom(DialogAtom);
+  const docItems = [
+    {
+      command: () => {
+        if (cmType.data?.id)
+          setDrawer({
+            ...DefaultDrawer,
+            id: cmType.data.id,
+            position: "right",
+            show: true,
+            type: "documents",
+          });
+      },
+      icon: "pi pi-fw pi-pencil",
+      label: "Edit Document",
+    },
+
+    {
+      command: () => {
+        if (cmType.data?.id) {
+          updateItemMutation?.mutate({
+            folder: true,
+            id: cmType.data.id,
+          });
+        }
+      },
+      icon: "pi pi-fw pi-folder",
+      label: "Change To Folder",
+    },
+    {
+      command: () => {
+        if (cmType.data) {
+          createItemMutation?.mutate({
+            ...cmType.data,
+            id: crypto.randomUUID(),
+            parent: null,
+            project_id: project_id as string,
+            template: true,
+          });
+        }
+      },
+      icon: "pi pi-fw pi-copy",
+      label: "Covert to Template",
+    },
+    {
+      icon: "pi pi-fw pi-download",
+      label: "Export JSON",
+      // command: () => {},
+    },
+    { separator: true },
+    {
+      icon: "pi pi-fw pi-external-link",
+      label: "View Public Document",
+      // command: () => {},
+    },
+    {
+      icon: "pi pi-fw pi-link",
+      label: "Copy Public URL",
+      // command: () => {},
+    },
+    {
+      command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
+      icon: "pi pi-fw pi-trash",
+      label: "Delete Document",
+    },
+  ];
+  const folderItems = [
+    {
+      command: () => {
+        if (cmType.data?.id)
+          setDrawer({
+            exceptions: {},
+            id: cmType.data.id,
+            position: "right",
+            show: true,
+            type: cmType?.type,
+          });
+      },
+      icon: "pi pi-fw pi-pencil",
+      label: "Edit Folder",
+    },
+
+    {
+      command: () => {
+        if (cmType.data?.id) {
+          // if (items?.some((item) => item.parent === cmType.data?.id)) {
+          //   toaster("error", "Cannot convert to file if folder contains files.");
+          //   return;
+          // }
+          updateItemMutation?.mutate({
+            folder: false,
+            id: cmType.data.id,
+          });
+        }
+      },
+      icon: "pi pi-fw, pi-file",
+      label: "Change To File",
+    },
+    {
+      icon: "pi pi-fw pi-plus",
+      items: [
+        {
+          // command: () => {},
+          icon: "pi pi-fw pi-file",
+          label: "Insert Document",
+        },
+        {
+          // command: () => {},
+          icon: "pi pi-fw pi-folder",
+          label: "Insert Folder",
+        },
+      ],
+      label: "Insert Into Folder",
+    },
+    { separator: true },
+    {
+      command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
+      icon: "pi pi-fw pi-trash",
+      label: "Delete Folder",
+    },
+  ];
+  const templateItems = [
+    {
+      command: () => {
+        if (cmType.data?.id)
+          setDrawer({
+            exceptions: {},
+            id: cmType.data.id,
+            position: "right",
+            show: true,
+            type: "documents",
+          });
+      },
+      icon: "pi pi-fw pi-pencil",
+      label: "Edit Document",
+    },
+
+    {
+      icon: "pi pi-fw pi-copy",
+      label: "Create Doc From Template",
+      // command: () => {},
+    },
+    { separator: true },
+    {
+      icon: "pi pi-fw pi-trash",
+      label: "Delete Document",
+      // command: confirmdelete,
+    },
+  ];
+  const mapItems = [
+    {
+      label: "Update Map",
+      icon: "pi pi-fw pi-pencil",
+      command: () => {
+        if (cmType.data?.id)
+          setDrawer({
+            ...DefaultDrawer,
+            id: cmType.data.id,
+            position: "right",
+            show: true,
+            type: "maps",
+          });
+      },
+    },
+    {
+      label: "Toggle Public",
+      icon: `pi pi-fw ${"2" ? "pi-eye" : "pi-eye-slash"}`,
+    },
+    {
+      label: "Manage Layers",
+      icon: "pi pi-clone",
+      command: () =>
+        setDialog((prev) => ({ ...prev, position: "top-left", data: cmType?.data, show: true, type: "map_layer" })),
+    },
+    { separator: true },
+    {
+      label: "View Public Map",
+      icon: "pi pi-fw pi-external-link",
+    },
+    {
+      label: "Copy Public URL",
+      icon: "pi pi-fw pi-link",
+    },
+    {
+      label: "Delete Map",
+      icon: "pi pi-fw pi-trash",
+      command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
+    },
+  ];
+  if (cmType.folder) return folderItems;
+  if (cmType.template) return templateItems;
+  if (cmType.type === "documents") return docItems;
+  if (cmType.type === "maps") return mapItems;
+  return rootItems;
 }

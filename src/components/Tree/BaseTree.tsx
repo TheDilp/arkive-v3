@@ -3,17 +3,14 @@ import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
-import { useLayoutEffect, useRef, useState } from "react";
+import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 
-import { useCreateItem, useDeleteItem, useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
-import { SidebarTreeItemType } from "../../types/treeTypes";
-import { DialogAtom, DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
-import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { toaster } from "../../utils/toast";
+import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
+import { useTreeMenuItems } from "../../utils/contextMenus";
 import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
@@ -46,226 +43,16 @@ function Placeholder(args: PlaceholderRenderParams) {
 
 export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
-  const { data: items, isLoading, error } = useGetAllItems(project_id as string, type);
-  const createItemMutation = useCreateItem(type);
+  const { data: items } = useGetAllItems(project_id as string, type);
   const updateItemMutation = useUpdateItem(type);
-  const deleteItemMutation = useDeleteItem(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const [, setDialog] = useAtom(DialogAtom);
 
-  const rootItems = [
-    {
-      // command: () => {},
-      icon: "pi pi-fw pi-file",
-      label: "New Document",
-    },
-    {
-      // command: () => {},
-      icon: "pi pi-fw pi-folder",
-      label: "New Folder",
-    },
-  ];
-  function contextMenuItems(cmType: SidebarTreeItemType) {
-    const docItems = [
-      {
-        command: () => {
-          if (cmType.data?.id)
-            setDrawer({
-              ...DefaultDrawer,
-              id: cmType.data.id,
-              position: "right",
-              show: true,
-              type: "documents",
-            });
-        },
-        icon: "pi pi-fw pi-pencil",
-        label: "Edit Document",
-      },
+  const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
+  const contextItems = useTreeMenuItems(contextMenu, type, project_id as string);
 
-      {
-        command: () => {
-          if (cmType.data?.id) {
-            updateItemMutation?.mutate({
-              folder: true,
-              id: cmType.data.id,
-            });
-          }
-        },
-        icon: "pi pi-fw pi-folder",
-        label: "Change To Folder",
-      },
-      {
-        command: () => {
-          if (cmType.data) {
-            createItemMutation?.mutate({
-              ...cmType.data,
-              id: uuid(),
-              parent: null,
-              project_id: project_id as string,
-              template: true,
-            });
-          }
-        },
-        icon: "pi pi-fw pi-copy",
-        label: "Covert to Template",
-      },
-      {
-        icon: "pi pi-fw pi-download",
-        label: "Export JSON",
-        // command: () => {},
-      },
-      { separator: true },
-      {
-        icon: "pi pi-fw pi-external-link",
-        label: "View Public Document",
-        // command: () => {},
-      },
-      {
-        icon: "pi pi-fw pi-link",
-        label: "Copy Public URL",
-        // command: () => {},
-      },
-      {
-        command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
-        icon: "pi pi-fw pi-trash",
-        label: "Delete Document",
-      },
-    ];
-    const folderItems = [
-      {
-        command: () => {
-          if (cmType.data?.id)
-            setDrawer({
-              exceptions: {},
-              id: cmType.data.id,
-              position: "right",
-              show: true,
-              type: cmType?.type,
-            });
-        },
-        icon: "pi pi-fw pi-pencil",
-        label: "Edit Folder",
-      },
-
-      {
-        command: () => {
-          if (cmType.data?.id) {
-            if (items?.some((item) => item.parent === cmType.data?.id)) {
-              toaster("error", "Cannot convert to file if folder contains files.");
-              return;
-            }
-            updateItemMutation?.mutate({
-              folder: false,
-              id: cmType.data.id,
-            });
-          }
-        },
-        icon: "pi pi-fw, pi-file",
-        label: "Change To File",
-      },
-      {
-        icon: "pi pi-fw pi-plus",
-        items: [
-          {
-            // command: () => {},
-            icon: "pi pi-fw pi-file",
-            label: "Insert Document",
-          },
-          {
-            // command: () => {},
-            icon: "pi pi-fw pi-folder",
-            label: "Insert Folder",
-          },
-        ],
-        label: "Insert Into Folder",
-      },
-      { separator: true },
-      {
-        command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
-        icon: "pi pi-fw pi-trash",
-        label: "Delete Folder",
-      },
-    ];
-    const templateItems = [
-      {
-        command: () => {
-          if (cmType.data?.id)
-            setDrawer({
-              exceptions: {},
-              id: cmType.data.id,
-              position: "right",
-              show: true,
-              type: "documents",
-            });
-        },
-        icon: "pi pi-fw pi-pencil",
-        label: "Edit Document",
-      },
-
-      {
-        icon: "pi pi-fw pi-copy",
-        label: "Create Doc From Template",
-        // command: () => {},
-      },
-      { separator: true },
-      {
-        icon: "pi pi-fw pi-trash",
-        label: "Delete Document",
-        // command: confirmdelete,
-      },
-    ];
-    const mapItems = [
-      {
-        label: "Update Map",
-        icon: "pi pi-fw pi-pencil",
-        command: () => {
-          if (cmType.data?.id)
-            setDrawer({
-              ...DefaultDrawer,
-              id: cmType.data.id,
-              position: "right",
-              show: true,
-              type: "maps",
-            });
-        },
-      },
-      {
-        label: "Toggle Public",
-        icon: `pi pi-fw ${"2" ? "pi-eye" : "pi-eye-slash"}`,
-      },
-      {
-        label: "Manage Layers",
-        icon: "pi pi-clone",
-        command: () =>
-          setDialog((prev) => ({ ...prev, position: "top-left", data: cmType?.data, show: true, type: "map_layer" })),
-      },
-      { separator: true },
-      {
-        label: "View Public Map",
-        icon: "pi pi-fw pi-external-link",
-      },
-      {
-        label: "Copy Public URL",
-        icon: "pi pi-fw pi-link",
-      },
-      {
-        label: "Delete Map",
-        icon: "pi pi-fw pi-trash",
-        command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
-      },
-    ];
-    if (cmType.folder) return folderItems;
-    if (cmType.template) return templateItems;
-    if (cmType.type === "documents") return docItems;
-    if (cmType.type === "maps") return mapItems;
-    return rootItems;
-  }
-
-  const [contextMenu] = useAtom(SidebarTreeContextAtom);
   const { data: tags } = useGetAllTags(project_id as string, type);
 
-  const cm = useRef();
+  const cm = useRef() as MutableRefObject<any>;
   const [treeData, setTreeData] = useState<NodeModel<AllItemsType>[]>([]);
   const [filter, setFilter] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -320,14 +107,16 @@ export default function BaseTree({ isTemplates, type }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error </div>;
   return (
-    <>
+    <div
+      onContextMenu={(e) => {
+        setContextMenu({ data: null, type, folder: false, template: true });
+        cm?.current?.show(e);
+      }}>
       <ConfirmDialog />
-      <ContextMenu cm={cm} items={contextMenuItems(contextMenu)} />
+      <ContextMenu cm={cm} items={contextItems} />
       <InputText
-        className="mt-1 p-1"
+        className="mt-1 w-full p-1"
         onChange={(e) => setFilter(e.target.value)}
         placeholder="Filter by Title"
         value={filter}
@@ -384,6 +173,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
         sort={false}
         tree={treeData}
       />
-    </>
+    </div>
   );
 }
