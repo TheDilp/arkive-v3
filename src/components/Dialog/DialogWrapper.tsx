@@ -11,13 +11,7 @@ import { SelectButton } from "primereact/selectbutton";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import {
-  useCreateSubItem,
-  useDeleteMutation,
-  useGetAllImages,
-  useGetAllMapImages,
-  useUpdateSubItem,
-} from "../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useDeleteItem, useGetAllImages, useGetAllMapImages, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardExportType, BoardType, NodeType } from "../../types/boardTypes";
 import { baseURLS, createURLS } from "../../types/CRUDenums";
@@ -168,7 +162,7 @@ function UpdateMapLayers() {
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const createMapLayer = useCreateSubItem(project_id as string, "map_layers", "maps");
   const updateMapLayer = useUpdateSubItem(project_id as string, "map_layers", "maps");
-  const deleteMapLayer = useDeleteMutation("map_layers", project_id as string);
+  const deleteMapLayer = useDeleteItem("map_layers", project_id as string);
   const [layers, setLayers] = useState<MapLayerType[]>(currentMap?.map_layers || []);
   useEffect(() => {
     if (currentMap?.map_layers) setLayers(currentMap.map_layers);

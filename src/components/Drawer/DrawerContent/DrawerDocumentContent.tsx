@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useDeleteMutation, useGetAllImages, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../../types/CRUDenums";
@@ -36,7 +36,7 @@ export default function DrawerDocumentContent() {
 
   const createDocumentMutation = useCreateItem("documents");
   const updateDocumentMutation = useUpdateItem("documents");
-  const deleteDocumentMutation = useDeleteMutation("documents", project_id as string);
+  const deleteDocumentMutation = useDeleteItem("documents", project_id as string);
   // Use item if editing or use a blank document (default values) if not to create new one
   const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(
     document ?? {
@@ -105,7 +105,7 @@ export default function DrawerDocumentContent() {
   }
 
   return (
-    <div className="my-2 flex flex-col gap-y-8">
+    <div className="flex h-full flex-col gap-y-8">
       <h2 className="text-center text-2xl">
         {document ? `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}` : "Create New Document"}
       </h2>
@@ -178,10 +178,16 @@ export default function DrawerDocumentContent() {
         </div>
       </div>
 
-      <div className="flex w-full justify-between">
+      <Button
+        className="p-button-outlined p-button-success ml-auto"
+        onClick={() => CreateUpdateDocument(localItem)}
+        type="submit">
+        {buttonLabelWithIcon("Save", "mdi:content-save")}
+      </Button>
+      <div className="mt-auto flex w-full">
         {document ? (
           <Button
-            className=" p-button-outlined p-button-danger"
+            className=" p-button-outlined p-button-danger w-full"
             onClick={() => {
               if (document)
                 deleteItem(
@@ -189,10 +195,8 @@ export default function DrawerDocumentContent() {
                     ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
                     : "Are you sure you want to delete this document?",
                   () => {
-                    deleteDocumentMutation?.mutate(document.id, {
-                      onSuccess: () => toaster("success", "Document successfully deleted."),
-                    });
-                    handleCloseDrawer(setDrawer);
+                    deleteDocumentMutation?.mutate(document.id);
+                    handleCloseDrawer(setDrawer, "right");
                   },
                   () => toaster("info", "Item not deleted."),
                 );
@@ -202,12 +206,6 @@ export default function DrawerDocumentContent() {
           </Button>
         ) : null}
       </div>
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        onClick={() => CreateUpdateDocument(localItem)}
-        type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
-      </Button>
     </div>
   );
 }

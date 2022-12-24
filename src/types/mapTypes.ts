@@ -25,7 +25,7 @@ export type MapLayerType = {
 };
 
 export interface MapType extends BaseItemType {
-  map_image?: string;
+  image?: string;
   map_pins: MapPinType[];
   map_layers: MapLayerType[];
 }

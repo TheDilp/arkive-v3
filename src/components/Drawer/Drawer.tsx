@@ -16,8 +16,11 @@ import DrawerMapContent from "./DrawerContent/DrawerMapContent";
 import DrawerMapPinContent from "./DrawerContent/DrawerMapPinContent";
 import DrawerNodeContent from "./DrawerContent/DrawerNodeContent";
 
-export function handleCloseDrawer(setDrawer: Dispatch<SetStateAction<DrawerAtomType>>) {
-  setDrawer((prev) => ({ ...prev, show: false }));
+export function handleCloseDrawer(
+  setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,
+  position?: "left" | "right" | "top" | "bottom",
+) {
+  setDrawer((prev) => ({ ...prev, position: position || prev.position, show: false }));
   setTimeout(() => {
     setDrawer(DefaultDrawer);
   }, 500);

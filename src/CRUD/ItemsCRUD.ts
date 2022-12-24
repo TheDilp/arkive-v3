@@ -65,11 +65,13 @@ export const useCreateItem = (type: AvailableItemTypes) => {
       onError: () => toaster("error", "There was an error creating this item."),
       onSuccess: async (data) => {
         const newData: AllItemsType = await data?.json();
-        if (newData)
+        if (newData) {
           queryClient.setQueryData(["allItems", newData.project_id, type], (old: AllItemsType[] | undefined) => {
             if (old) return [...old, newData];
             return [newData];
           });
+          toaster("success", "Item successfully created.");
+        }
       },
     },
   );
@@ -204,7 +206,7 @@ export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, typ
   );
 };
 
-export const useDeleteMutation = (type: AllAvailableTypes, project_id: string) => {
+export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(

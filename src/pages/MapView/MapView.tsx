@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
-import { useDeleteMutation } from "../../CRUD/ItemsCRUD";
+import { useDeleteItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapType } from "../../types/mapTypes";
@@ -20,7 +20,7 @@ type Props = {
 
 export default function MapView({ isReadOnly }: Props) {
   const { project_id, item_id } = useParams();
-  const deleteMapPin = useDeleteMutation("map_pins", project_id as string);
+  const deleteMapPin = useDeleteItem("map_pins", project_id as string);
   const [bounds, setBounds] = useState<number[][]>([
     [0, 0],
     [0, 0],
@@ -64,7 +64,7 @@ export default function MapView({ isReadOnly }: Props) {
   useEffect(() => {
     if (currentMap) {
       const img = new Image();
-      img.src = `${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap.map_image}`;
+      img.src = `${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap.image}`;
       img.onload = () => {
         setBounds([
           [0, 0],
@@ -106,7 +106,7 @@ export default function MapView({ isReadOnly }: Props) {
               cm={cm}
               imgRef={imgRef}
               isReadOnly={isReadOnly}
-              src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.map_image}`}
+              src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${currentMap?.image}`}
             />
           </MapContainer>
         </div>

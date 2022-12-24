@@ -3,7 +3,7 @@ import { DefaultMapType } from "../../types/mapTypes";
 export const DefaultMap: DefaultMapType = {
   expanded: false,
   folder: false,
-  map_image: "",
+  image: "",
   parent: null,
   public: false,
   sort: 0,

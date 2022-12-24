@@ -1,6 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
-import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
@@ -8,28 +6,29 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
-import { useGetAllTags } from "../../../CRUD/OtherCRUD";
+import { useCreateItem, useDeleteItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { MapImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
+import Tags from "../../Tags/Tags";
+import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerMapContent() {
   const { project_id } = useParams();
-  const queryClient = useQueryClient();
-  const [drawer] = useAtom(DrawerAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const { data: maps } = useGetAllItems(project_id as string, "maps");
-  const updateMapMutation = useUpdateItem("maps");
   const createMapMutation = useCreateItem("maps");
-  const { data: initialTags } = useGetAllTags(project_id as string, "maps");
+  const updateMapMutation = useUpdateItem("maps");
+  const deleteMapMutation = useDeleteItem("maps", project_id as string);
 
-  console.log(map_images);
   const { data: map } = useGetItem(drawer?.id as string, "maps", { enabled: !!drawer?.id }) as { data: MapType };
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {
@@ -38,37 +37,8 @@ export default function DrawerMapContent() {
     },
   );
 
-  const [tags, setTags] = useState({ selected: map?.tags || [], suggestions: initialTags });
+  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
-  const filterTags = (e: AutoCompleteCompleteMethodParams) => {
-    const { query } = e;
-    if (query && initialTags)
-      setTags((prev) => ({
-        ...prev,
-        suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
-      }));
-
-    if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
-  };
-  const handleTagsChange = async (value: string) => {
-    if (!map && !localItem?.tags?.includes(value)) {
-      setLocalItem((prev) => ({ ...prev, tags: [...(localItem?.tags || []), value] }));
-    } else if (!map && localItem?.tags?.includes(value)) {
-      setLocalItem((prev) => ({ ...prev, tags: (localItem?.tags || []).filter((tag) => tag !== value) }));
-    }
-    if (map && !map.tags.includes(value)) {
-      await updateMapMutation?.mutateAsync({
-        id: map.id,
-        tags: [...map.tags, value],
-      });
-    } else if (map && map.tags.includes(value)) {
-      await updateMapMutation?.mutateAsync({
-        id: map.id,
-        tags: map.tags.filter((tag) => tag !== value),
-      });
-    }
-    await queryClient.refetchQueries({ queryKey: ["allTags", project_id, "maps"] });
-  };
   function CreateUpdateMap(newData: MapCreateType) {
     if (map) {
       if (!newData.folder && maps?.some((mapItem) => mapItem.parent === map.id)) {
@@ -77,16 +47,18 @@ export default function DrawerMapContent() {
       }
       updateMapMutation?.mutate(
         {
-          folder: newData.folder,
-          id: map.id,
-          title: newData.title,
+          id: localItem.id,
+          ...changedData,
         },
         {
-          onSuccess: () => toaster("success", "Your map was successfully updated."),
+          onSuccess: () => {
+            toaster("success", "Your map was successfully updated.");
+            resetChanges();
+          },
         },
       );
     } else {
-      if (!localItem.folder && !localItem.map_image) {
+      if (!localItem.folder && !localItem.image) {
         toaster("warning", "Maps must have a map image.");
         return;
       }
@@ -108,17 +80,12 @@ export default function DrawerMapContent() {
   }, [map, project_id]);
 
   return (
-    <div className="flex flex-col gap-y-2">
+    <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">{map ? `Edit ${map.title}` : "Create New Map"}</h2>
       <InputText
         autoFocus
         className="w-full"
-        onChange={(e) =>
-          setLocalItem((prev) => ({
-            ...prev,
-            title: e.target.value,
-          }))
-        }
+        onChange={(e) => handleChange({ name: "title", value: e.target.value })}
         onKeyDown={(e) => {
           if (e.key === "Enter" && map) {
             updateMapMutation?.mutate({
@@ -133,41 +100,18 @@ export default function DrawerMapContent() {
 
       <Dropdown
         itemTemplate={MapImageDropdownItem}
-        onChange={(e) => setLocalItem((prev) => ({ ...prev, map_image: e.value }))}
+        onChange={(e) => handleChange({ name: "image", value: e.target.value })}
         options={map_images || []}
         placeholder="Select map"
-        value={localItem.map_image}
-        valueTemplate={ImageDropdownValue({ image: localItem?.map_image })}
+        value={localItem.image}
+        valueTemplate={ImageDropdownValue({ image: localItem?.image })}
       />
-      <AutoComplete
-        className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
-        completeMethod={filterTags}
-        multiple
-        onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
-        onKeyPress={async (e) => {
-          // For adding completely new tags
-          if (e.key === "Enter" && e.currentTarget.value !== "") {
-            handleTagsChange(e.currentTarget.value);
-            e.currentTarget.value = "";
-          }
-        }}
-        onSelect={(e) => handleTagsChange(e.value)}
-        onUnselect={(e) => handleTagsChange(e.value)}
-        placeholder="Add Tags"
-        suggestions={tags.suggestions}
-        value={localItem?.tags}
-      />
+      <div>
+        <Tags handleChange={handleChange} localItem={localItem} type="maps" />
+      </div>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
-        <Checkbox
-          checked={localItem.folder}
-          onChange={(e) =>
-            setLocalItem((prev) => ({
-              ...prev,
-              folder: e.checked,
-            }))
-          }
-        />
+        <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
@@ -177,6 +121,28 @@ export default function DrawerMapContent() {
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
+      <div className="mt-auto w-full">
+        {map ? (
+          <Button
+            className=" p-button-outlined p-button-danger w-full"
+            onClick={() => {
+              if (document)
+                deleteItem(
+                  map.folder
+                    ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
+                    : "Are you sure you want to delete this map?",
+                  () => {
+                    deleteMapMutation?.mutate(map.id);
+                    handleCloseDrawer(setDrawer, "right");
+                  },
+                  () => toaster("info", "Item not deleted."),
+                );
+            }}
+            type="submit">
+            {buttonLabelWithIcon("Delete", "mdi:trash")}
+          </Button>
+        ) : null}
+      </div>
     </div>
   );
 }

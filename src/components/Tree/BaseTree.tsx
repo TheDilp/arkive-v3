@@ -7,7 +7,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
-import { useCreateItem, useDeleteMutation, useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteItem, useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
@@ -49,7 +49,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const { data: items, isLoading, error } = useGetAllItems(project_id as string, type);
   const createItemMutation = useCreateItem(type);
   const updateItemMutation = useUpdateItem(type);
-  const deleteItemMutation = useDeleteMutation(type, project_id as string);
+  const deleteItemMutation = useDeleteItem(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setDialog] = useAtom(DialogAtom);
