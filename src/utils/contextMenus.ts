@@ -17,6 +17,8 @@ import { DefaultNode } from "./DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "./DefaultValues/DrawerDialogDefaults";
 import { toaster } from "./toast";
 
+import { deleteItem } from "./Confirms/Confirm";
+
 export type BoardContextMenuType = {
   type: BoardContextType;
   boardContext: BoardContext;
@@ -273,7 +275,11 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       // command: () => {},
     },
     {
-      command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
+      command: () =>
+        deleteItem("Are you sure you want to delete this document?", () => {
+          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+        }),
+
       icon: "pi pi-fw pi-trash",
       label: "Delete Document",
     },
@@ -328,7 +334,10 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
     },
     { separator: true },
     {
-      command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
+      command: () =>
+        deleteItem("Are you sure you want to delete this folder?", () => {
+          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+        }),
       icon: "pi pi-fw pi-trash",
       label: "Delete Folder",
     },
@@ -358,7 +367,10 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
     {
       icon: "pi pi-fw pi-trash",
       label: "Delete Document",
-      // command: confirmdelete,
+      command: () =>
+        deleteItem("Are you sure you want to delete this template?", () => {
+          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+        }),
     },
   ];
   const mapItems = [
@@ -398,12 +410,63 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
     {
       label: "Delete Map",
       icon: "pi pi-fw pi-trash",
-      command: () => cmType.data?.id && deleteItemMutation?.mutate(cmType.data.id),
+      command: () =>
+        deleteItem("Are you sure you want to delete this map?", () => {
+          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+        }),
     },
   ];
+  const boardItems = [
+    {
+      label: "Update Board",
+      icon: "pi pi-fw pi-pencil",
+      command: () => {
+        if (cmType.data?.id)
+          setDrawer({
+            ...DefaultDrawer,
+            id: cmType.data.id,
+            position: "right",
+            show: true,
+            type: "boards",
+          });
+      },
+    },
+
+    {
+      label: "Toggle Public",
+      icon: `pi pi-fw ${true ? "pi-eye" : "pi-eye-slash"}`,
+    },
+
+    { separator: true },
+    {
+      label: "View Public Board",
+      icon: "pi pi-fw pi-external-link",
+    },
+    {
+      label: "Copy Public URL",
+      icon: "pi pi-fw pi-link",
+      // command: () => {
+      //   if (navigator && navigator.clipboard) {
+      //     navigator.clipboard.writeText(`${window.location.host}/view/${project_id}/boards/${displayDialog.id}`).then(() => {
+      //       toastSuccess("URL copied! 🔗");
+      //     });
+      //   }
+      // },
+    },
+    {
+      label: "Delete Board",
+      icon: "pi pi-fw pi-trash",
+      command: () =>
+        deleteItem("Are you sure you want to delete this board?", () => {
+          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+        }),
+    },
+  ];
+
   if (cmType.folder) return folderItems;
   if (cmType.template) return templateItems;
   if (cmType.type === "documents") return docItems;
   if (cmType.type === "maps") return mapItems;
+  if (cmType.type === "boards") return boardItems;
   return rootItems;
 }
