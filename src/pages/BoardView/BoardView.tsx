@@ -261,15 +261,19 @@ export default function BoardView({ isReadOnly }: Props) {
   }, [boardRef, item_id]);
 
   useEffect(() => {
-    // If there is a node id in the URL navigate to that node
-    if (subitem_id && boardRef) {
-      const node = boardRef.getElementById(subitem_id);
-      boardRef.animate({
-        center: {
-          eles: node,
-        },
-      });
-    }
+    setTimeout(() => {
+      // If there is a node id in the URL navigate to that node
+      if (subitem_id && boardRef) {
+        const node = boardRef.getElementById(subitem_id);
+
+        if (node)
+          boardRef?.animate({
+            center: {
+              eles: node,
+            },
+          });
+      }
+    }, 250);
   }, [subitem_id, boardRef]);
   if (isLoading) return <ProgressSpinner />;
   return (
@@ -279,12 +283,14 @@ export default function BoardView({ isReadOnly }: Props) {
       <CytoscapeComponent
         className="h-full w-full"
         cy={(cy) => {
-          // @ts-ignore
-          cy.gridGuide({
-            ...cytoscapeGridOptions,
-            snapToGridDuringDrag: boardState.grid,
-            drawGrid: boardState.grid,
-          });
+          if (cy) {
+            // @ts-ignore
+            cy.gridGuide({
+              ...cytoscapeGridOptions,
+              snapToGridDuringDrag: boardState.grid,
+              drawGrid: boardState.grid,
+            });
+          }
           setBoardRef(cy);
           if (!edgeHandlesRef && boardRef) setEdgeHandlesRef(boardRef.edgehandles(edgehandlesSettings));
         }}
