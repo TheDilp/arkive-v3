@@ -21,6 +21,7 @@ import {
   BoardFontSizes,
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
+import { toaster } from "../../../utils/toast";
 import Tags from "../../Tags/Tags";
 
 function FontItemTemplate(item: { label: string; value: string }) {
@@ -200,7 +201,7 @@ export default function DrawerEdgeContent() {
                 />
               </div>
               <div className="mb-2 w-full">
-                <Tags handleChange={handleChange} localItem={localItem} type="documents" />
+                <Tags handleChange={handleChange} localItem={localItem} type="edges" />
               </div>
             </div>
           </TabPanel>
@@ -367,7 +368,15 @@ export default function DrawerEdgeContent() {
           iconPos="right"
           label="Save Edge"
           onClick={() => {
-            updateEdgeMutaiton.mutate({ id: localItem.id, ...changedData }, { onSuccess: resetChanges });
+            updateEdgeMutaiton.mutate(
+              { id: localItem.id, ...changedData },
+              {
+                onSuccess: () => {
+                  toaster("success", `Edge ${localItem?.label || ""} was successfully updated.`);
+                  resetChanges();
+                },
+              },
+            );
           }}
           type="submit"
         />

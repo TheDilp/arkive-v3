@@ -361,7 +361,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
           listItem: "w-full",
           placeholder: "relative",
           root: "w-full mt-1 pl-0 overflow-y-auto flex flex-col flex-1",
-          dropTarget: "bg-blue-400",
+          dropTarget: "bg-zinc-800",
         }}
         dragPreviewRender={DragPreviewComponent}
         dropTargetOffset={10}
@@ -370,7 +370,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;
           handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
-          // if (type === "documents")
           updateItemMutation?.mutate({
             id: dragSourceId as string,
             parent: dropTargetId === "0" ? null : (dropTargetId as string),
