@@ -20,7 +20,7 @@ import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
 export default function BoardQuickBar() {
-  const { project_id, item_id } = useParams();
+  const { item_id } = useParams();
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [, setDialog] = useAtom(DialogAtom);
@@ -29,13 +29,11 @@ export default function BoardQuickBar() {
 
   const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
   const updateEdgeMutation = useUpdateSubItem(item_id as string, "edges", "boards");
-  const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
+  const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const [, setUpdateManyDialog] = useState(false);
 
   const [, setExportDialog] = useAtom(DialogAtom);
-  //   const updateNodeMutation = useUpdateNode(project_id as string);
-  //   const updateEdgeMutation = useUpdateEdge(project_id as string);
-  const deleteManyNodesMutation = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
+  const deleteManyNodesMutation = useDeleteManySubItems(item_id as string, "nodes");
   //   const deleteManyEdgesMutation = useDeleteManyEdges(project_id as string);
   const debouncedColorPick = useDebouncedCallback(
     // function
@@ -93,7 +91,7 @@ export default function BoardQuickBar() {
                 key={color}
                 className="h-4 w-4 cursor-pointer rounded-sm"
                 onClick={() => {
-                  if (boardRef) updateColor(boardRef, `#${color}`, item_id as string, updateNodeMutation, updateEdgeMutation);
+                  if (boardRef) updateColor(boardRef, `#${color}`, updateManyNodes, updateEdgeMutation);
                 }}
                 style={{
                   backgroundColor: `#${color}`,

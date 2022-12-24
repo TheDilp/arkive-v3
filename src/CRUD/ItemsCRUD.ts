@@ -287,7 +287,7 @@ export const useUpdateManySubItems = (item_id: string, subType: AvailableSubItem
       onMutate: async (variables) => {
         const old = queryClient.getQueryData(["boards", item_id]);
         if (subType === "nodes" || subType === "edges") {
-          queryClient.setQueryData(["board", item_id], (oldData: BoardType | undefined) => {
+          queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
             if (oldData) {
               if (subType === "nodes")
                 return {
