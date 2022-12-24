@@ -3,7 +3,6 @@ import { useAtom } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
-import { div, TabView } from "primereact/tabview";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
@@ -14,7 +13,7 @@ import { DocumentType } from "../../../types/documentTypes";
 import { AvailableSearchResultTypes } from "../../../types/generalTypes";
 import { MapPinType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
-import { getSearchTags, getTags } from "../../../utils/CRUD/CRUDFunctions";
+import { getSearchTags } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
 
@@ -50,8 +49,8 @@ export default function DrawerFullSearch() {
     setFilteredTags(t);
   }, 500);
   return (
-    <div className="flex flex-col">
-      <div className="min-h-[9rem]">
+    <div className="flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-2">
         <TabMenu
           activeIndex={menuIndex}
           model={[{ label: "Name & Content" }, { label: "Tags" }]}

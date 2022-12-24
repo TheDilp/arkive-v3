@@ -133,14 +133,6 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
       }),
     ];
     const tags = await prisma.$transaction(items);
-    console.log(
-      tags
-        .flat()
-        .map((o) => o.tags)
-        .flat()
-        .filter(onlyUniqueStrings),
-      query,
-    );
     return tags
       .flat()
       .map((o) => o.tags)
@@ -165,6 +157,7 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
                 contains: query as string,
                 mode: "insensitive",
               },
+              project_id,
               folder: false,
             },
             select: {
@@ -178,6 +171,9 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
               text: {
                 contains: query as string,
                 mode: "insensitive",
+              },
+              maps: {
+                project_id,
               },
             },
             select: {
@@ -193,6 +189,7 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
                 mode: "insensitive",
               },
               folder: false,
+              project_id,
             },
             select: {
               id: true,
@@ -205,6 +202,9 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
               label: {
                 contains: query as string,
                 mode: "insensitive",
+              },
+              board: {
+                project_id,
               },
             },
             select: {
