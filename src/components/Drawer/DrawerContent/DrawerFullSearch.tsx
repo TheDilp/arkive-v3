@@ -2,7 +2,8 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputText } from "primereact/inputtext";
-import { TabPanel, TabView } from "primereact/tabview";
+import { TabMenu } from "primereact/tabmenu";
+import { div, TabView } from "primereact/tabview";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
@@ -22,6 +23,7 @@ export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState([]);
   const [filteredTags, setFilteredTags] = useState([]);
+  const [menuIndex, setMenuIndex] = useState(0);
   const [results, setResults] = useState<{
     documents: DocumentType[];
     maps: MapType[];
@@ -48,81 +50,66 @@ export default function DrawerFullSearch() {
     setFilteredTags(t);
   }, 500);
   return (
-    <div>
-      <TabView renderActiveOnly>
-        <TabPanel header="By Name & Content">
-          <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
-          <InputText
-            autoFocus
-            className="w-full"
-            onChange={(e) => {
-              setQuery(e.target.value);
-              debounceSearch(e.target.value, "namecontent");
-            }}
-            value={query}
-          />
-          <div className="mt-2 flex flex-col gap-y-2 font-Lato">
-            {Object.keys(results).length
-              ? Object.keys(results).map((key) =>
-                  results[key as AvailableSearchResultTypes].map((item) => (
-                    <Link
-                      key={item.id}
-                      className="flex cursor-pointer items-center gap-x-1 truncate py-1 hover:bg-sky-400"
-                      onClick={() => setDrawer(DefaultDrawer)}
-                      to={getLinkForFullSearch(
-                        item.id,
-                        item.parent as string,
-                        key as AvailableSearchResultTypes,
-                        project_id as string,
-                      )}>
-                      <Icon fontSize={24} icon={getIconForFullSearch(item)} />
-                      {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                      {"label" in item && (item.label || "Node")}
-                    </Link>
-                  )),
-                )
-              : (query && "No items match this query.") ||
-                "Type something to search for documents, maps, pins, boards or nodes!"}
+    <div className="flex flex-col">
+      <div className="min-h-[9rem]">
+        <TabMenu
+          activeIndex={menuIndex}
+          model={[{ label: "Name & Content" }, { label: "Tags" }]}
+          onTabChange={(e) => setMenuIndex(e.index)}
+        />
+        {menuIndex === 0 ? (
+          <div>
+            <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
+            <InputText
+              autoFocus
+              className="w-full"
+              onChange={(e) => {
+                setQuery(e.target.value);
+                debounceSearch(e.target.value, "namecontent");
+              }}
+              value={query}
+            />
           </div>
-        </TabPanel>
-        <TabPanel header="By Tag">
-          <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
-          <AutoComplete
-            className="w-full"
-            completeMethod={(e) => debounceTags(e.query)}
-            inputClassName="w-full"
-            multiple
-            onChange={(e) => setTags(e.value)}
-            onSelect={(e) => debounceSearch(e.value, "tags")}
-            suggestions={filteredTags}
-            value={tags}
-          />
-          <ul className="mt-2 flex flex-col gap-y-2 font-Lato">
-            {Object.keys(results).length
-              ? Object.keys(results).map((key) =>
-                  results[key as AvailableSearchResultTypes].map((item) => (
-                    <li key={item.id} className="flex cursor-pointer truncate py-1 hover:bg-sky-400">
-                      <Link
-                        className="flex items-center gap-x-1"
-                        onClick={() => setDrawer(DefaultDrawer)}
-                        to={getLinkForFullSearch(
-                          item.id,
-                          item.parent as string,
-                          key as AvailableSearchResultTypes,
-                          project_id as string,
-                        )}>
-                        <Icon fontSize={24} icon={getIconForFullSearch(item)} />
-                        {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                        {"label" in item && (item.label || "Node/Edge")}
-                      </Link>
-                    </li>
-                  )),
-                )
-              : (query && "No items match this query.") ||
-                "Type something to search for documents, maps, pins, boards or nodes!"}
-          </ul>
-        </TabPanel>
-      </TabView>
+        ) : null}
+        {menuIndex === 1 ? (
+          <div>
+            <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
+            <AutoComplete
+              className="w-full"
+              completeMethod={(e) => debounceTags(e.query)}
+              inputClassName="w-full"
+              multiple
+              onChange={(e) => setTags(e.value)}
+              onSelect={(e) => debounceSearch(e.value, "tags")}
+              suggestions={filteredTags}
+              value={tags}
+            />
+          </div>
+        ) : null}
+      </div>
+
+      <div className="mt-2 flex flex-col gap-y-2 font-Lato">
+        {Object.keys(results).length
+          ? Object.keys(results).map((key) =>
+              results[key as AvailableSearchResultTypes].map((item) => (
+                <Link
+                  key={item.id}
+                  className="flex cursor-pointer items-center gap-x-1 truncate py-1 hover:bg-sky-400"
+                  onClick={() => setDrawer({ ...DefaultDrawer, position: "right" })}
+                  to={getLinkForFullSearch(
+                    item.id,
+                    item.parent as string,
+                    key as AvailableSearchResultTypes,
+                    project_id as string,
+                  )}>
+                  <Icon fontSize={24} icon={getIconForFullSearch(item)} />
+                  {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
+                  {"label" in item && (item.label || "Node/Edge")}
+                </Link>
+              )),
+            )
+          : (query && "No items match this query.") || "Type something to search for documents, maps, pins, boards or nodes!"}
+      </div>
     </div>
   );
 }
