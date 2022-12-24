@@ -107,6 +107,7 @@ export type EdgeType = {
   parent: string;
 };
 export interface BoardType extends BaseItemType {
+  defaultNodeShape: NodeShape;
   defaultNodeColor: string;
   defaultEdgeColor: string;
   defaultGrid: boolean;

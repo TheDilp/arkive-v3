@@ -15,13 +15,13 @@ model projects {
   documents documents[]
   maps      maps[]
   boards    boards[]
-  image String?
+  image     String?
 }
 
 model documents {
   id          String   @id @default(uuid()) @db.Uuid
   title       String   @default("New Document")
-  content     Json?   @db.JsonB
+  content     Json?    @db.JsonB
   tags        String[] @default([])
   icon        String?  @default("mdi:file")
   parent      String?  @db.Uuid
@@ -32,7 +32,7 @@ model documents {
   template    Boolean  @default(false)
   properties  Json?
   alter_names String[] @default([])
-  image String? 
+  image       String?
 
   // Relations
   project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
@@ -41,16 +41,16 @@ model documents {
 }
 
 model maps {
-  id        String   @id @default(uuid()) @db.Uuid
-  title     String   @default("New Map")
-  folder    Boolean  @default(false)
-  public    Boolean  @default(false)
-  expanded  Boolean  @default(false)
-  sort      Int      @default(0)
-  tags      String[] @default([])
-  parent    String?  @db.Uuid
-  image String?
-  icon      String?  @default("mdi:map")
+  id       String   @id @default(uuid()) @db.Uuid
+  title    String   @default("New Map")
+  folder   Boolean  @default(false)
+  public   Boolean  @default(false)
+  expanded Boolean  @default(false)
+  sort     Int      @default(0)
+  tags     String[] @default([])
+  parent   String?  @db.Uuid
+  image    String?
+  icon     String?  @default("mdi:map")
 
   project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
   project_id String   @db.Uuid
@@ -71,7 +71,7 @@ model map_pins {
   text            String?
   map_link        String? @db.Uuid
   doc_id          String? @db.Uuid
-  maps            maps?   @relation(fields: [parent], references: [id],onDelete: Cascade)
+  maps            maps?   @relation(fields: [parent], references: [id], onDelete: Cascade)
 }
 
 model map_layers {
@@ -94,6 +94,7 @@ model boards {
   parent   String?  @db.Uuid
   icon     String?  @default("mdi:draw")
 
+  defaultNodeShape String  @default("rectangle")
   defaultNodeColor String  @default("#595959")
   defaultEdgeColor String  @default("#595959")
   defaultGrid      Boolean @default(false)
@@ -105,24 +106,24 @@ model boards {
 }
 
 model nodes {
-  id                String  @id @default(uuid()) @db.Uuid
-  label             String?
-  tags     String[] @default([])
+  id    String   @id @default(uuid()) @db.Uuid
+  label String?
+  tags  String[] @default([])
 
-  type              String  @default("rectangle")
-  width             Int     @default(50)
-  height            Int     @default(50)
-  x                 Float   @default(0)
-  y                 Float   @default(0)
+  type   String @default("rectangle")
+  width  Int    @default(50)
+  height Int    @default(50)
+  x      Float  @default(0)
+  y      Float  @default(0)
 
-  fontSize          Int     @default(16)
-  fontColor         String  @default("#ffffff")
-  fontFamily        String  @default("Lato")
-  textVAlign        String  @default("center")
-  textHAlign        String  @default("center")
+  fontSize   Int    @default(16)
+  fontColor  String @default("#ffffff")
+  fontFamily String @default("Lato")
+  textVAlign String @default("center")
+  textHAlign String @default("center")
 
-  backgroundColor   String  @default("#595959")
-  backgroundOpacity Float   @default(1)
+  backgroundColor   String @default("#595959")
+  backgroundOpacity Float  @default(1)
 
   locked   Boolean @default(false)
   template Boolean @default(false)
@@ -138,9 +139,9 @@ model nodes {
 }
 
 model edges {
-  id    String  @id @default(uuid()) @db.Uuid
+  id    String   @id @default(uuid()) @db.Uuid
   label String?
-  tags     String[] @default([])
+  tags  String[] @default([])
 
   curveStyle  String @default("straight")
   lineStyle   String @default("solid")
@@ -182,7 +183,7 @@ model edges {
 
   board     boards @relation(fields: [parent], references: [id], onDelete: Cascade)
   source    nodes  @relation("edges_source", fields: [source_id], references: [id], onDelete: Cascade)
-  target    nodes  @relation("edges_target", fields: [target_id], references: [id],onDelete: Cascade)
+  target    nodes  @relation("edges_target", fields: [target_id], references: [id], onDelete: Cascade)
   source_id String @db.Uuid
   target_id String @db.Uuid
   parent    String @db.Uuid

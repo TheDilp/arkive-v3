@@ -52,6 +52,7 @@ export default function BoardView({ isReadOnly }: Props) {
         if (boardContext.x && boardContext.y)
           createNodeMutation.mutate({
             ...DefaultNode,
+            type: board?.defaultNodeShape,
             backgroundColor: board?.defaultNodeColor,
             x: boardContext.x,
             y: boardContext.y,

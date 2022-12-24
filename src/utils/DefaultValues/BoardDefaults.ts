@@ -9,6 +9,7 @@ export const DefaultBoard: DefaultBoardType = {
   sort: 0,
   parent: null,
   tags: [],
+  defaultNodeShape: "rectangle",
   defaultNodeColor: "#595959",
   defaultEdgeColor: "#595959",
   defaultGrid: false,
@@ -32,6 +33,8 @@ export const DefaultEdge: DefaultEdgeType = {
   taxiDirection: "auto",
   taxiTurn: 50,
   arrowScale: 1,
+
+  tags: [],
 
   targetArrowShape: "triangle",
   targetArrowFill: "filled",
@@ -68,6 +71,7 @@ export const DefaultNode: DefaultNodeType = {
   backgroundOpacity: 1,
   locked: false,
   template: false,
+  tags: [],
   zIndex: 1,
 };
 export const ColorPresets = [

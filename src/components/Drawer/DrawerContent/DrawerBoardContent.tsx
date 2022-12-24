@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -11,6 +12,7 @@ import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { BoardCreateType, BoardType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { boardNodeShapes } from "../../../utils/boardUtils";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
@@ -99,6 +101,15 @@ export default function DrawerBoardContent() {
       />
 
       <Tags handleChange={handleChange} localItem={localItem} type="boards" />
+      <span className="w-full text-sm text-zinc-400">Node shape</span>
+      <Dropdown
+        className="w-full"
+        filter
+        onChange={(e) => handleChange({ name: "defaultNodeShape", value: e.value })}
+        options={boardNodeShapes}
+        placeholder="Node Shape"
+        value={localItem.defaultNodeShape}
+      />
       <div className="flex flex-wrap items-center justify-between">
         <h4 className="w-full text-lg underline">Default Node Color</h4>
 
