@@ -14,7 +14,7 @@ export const getItems = async (project_id: string, type: AvailableItemTypes) => 
 };
 export const getTags = async (project_id: string, type: AvailableItemTypes) =>
   (
-    await fetch(`${baseURLS.baseServer}${getURLS.getAllTags}${type}${project_id}`, {
+    await fetch(`${baseURLS.baseServer}${getURLS.getAllTags}${type}/${project_id}`, {
       method: "GET",
     })
   ).json();

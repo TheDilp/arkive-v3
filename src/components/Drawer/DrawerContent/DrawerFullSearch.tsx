@@ -61,37 +61,36 @@ export default function DrawerFullSearch() {
             }}
             value={query}
           />
-          <ul className="mt-2 flex flex-col gap-y-2 font-Lato">
+          <div className="mt-2 flex flex-col gap-y-2 font-Lato">
             {Object.keys(results).length
               ? Object.keys(results).map((key) =>
                   results[key as AvailableSearchResultTypes].map((item) => (
-                    <li key={item.id} className="flex cursor-pointer truncate py-1 hover:bg-sky-400">
-                      <Link
-                        className="flex items-center gap-x-1"
-                        onClick={() => setDrawer(DefaultDrawer)}
-                        to={getLinkForFullSearch(
-                          item.id,
-                          item.parent as string,
-                          key as AvailableSearchResultTypes,
-                          project_id as string,
-                        )}>
-                        <Icon fontSize={24} icon={getIconForFullSearch(item)} />
-                        {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                        {"label" in item && (item.label || "Node")}
-                      </Link>
-                    </li>
+                    <Link
+                      key={item.id}
+                      className="flex cursor-pointer items-center gap-x-1 truncate py-1 hover:bg-sky-400"
+                      onClick={() => setDrawer(DefaultDrawer)}
+                      to={getLinkForFullSearch(
+                        item.id,
+                        item.parent as string,
+                        key as AvailableSearchResultTypes,
+                        project_id as string,
+                      )}>
+                      <Icon fontSize={24} icon={getIconForFullSearch(item)} />
+                      {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
+                      {"label" in item && (item.label || "Node")}
+                    </Link>
                   )),
                 )
               : (query && "No items match this query.") ||
                 "Type something to search for documents, maps, pins, boards or nodes!"}
-          </ul>
+          </div>
         </TabPanel>
         <TabPanel header="By Tag">
           <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
           <AutoComplete
-            completeMethod={(e) => {
-              debounceTags(e.query);
-            }}
+            className="w-full"
+            completeMethod={(e) => debounceTags(e.query)}
+            inputClassName="w-full"
             multiple
             onChange={(e) => setTags(e.value)}
             onSelect={(e) => debounceSearch(e.value, "tags")}
