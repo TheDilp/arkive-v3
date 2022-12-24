@@ -2,7 +2,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import cytoscape from "cytoscape";
 import { saveAs } from "file-saver";
 
-import { AllItemsType, AllSubItemsType } from "../types/generalTypes";
+import { AllSubItemsType } from "../types/generalTypes";
 import { toaster } from "./toast";
 
 export function changeLockState(
@@ -13,9 +13,11 @@ export function changeLockState(
     unknown,
     {
       ids: string[];
-      data: Partial<AllItemsType | AllSubItemsType>;
+      data: Partial<AllSubItemsType>;
     },
-    unknown
+    {
+      old: unknown;
+    }
   >,
 ) {
   const selected = boardContext.nodes(":selected");

@@ -43,8 +43,8 @@ export default function BoardView({ isReadOnly }: Props) {
   };
   const createNodeMutation = useCreateSubItem(item_id as string, "nodes", "boards");
   const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
-  const updateManyNodes = useUpdateManySubItems(project_id as string, "nodes");
-  const deleteManyNodes = useDeleteManySubItems(project_id as string, item_id as string, "nodes");
+  const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
+  const deleteManyNodes = useDeleteManySubItems(item_id as string, "nodes");
   const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
   const items = [
     {
@@ -56,7 +56,7 @@ export default function BoardView({ isReadOnly }: Props) {
             x: boardContext.x,
             y: boardContext.y,
             parent: item_id as string,
-            id: uuid(),
+            id: crypto.randomUUID(),
           });
         else toaster("error", "There was an error creating your node (missing X and Y).");
       },

@@ -141,6 +141,7 @@ export const useUpdateItem = (type: AllAvailableTypes) => {
       onMutate: async (variables) => {
         const oldData = queryClient.getQueryData([type, variables.id]);
         if (variables)
+          // @ts-ignore
           queryClient.setQueryData([type, variables.id], (old: AllItemsType | undefined) => {
             if (old) return { ...old, ...variables };
             return old;
@@ -268,12 +269,12 @@ export const useSortMutation = (project_id: string, type: AvailableItemTypes) =>
   );
 };
 
-export const useUpdateManySubItems = (project_id: string, type: AvailableSubItemTypes) => {
+export const useUpdateManySubItems = (item_id: string, subType: AvailableSubItemTypes) => {
   const queryClient = useQueryClient();
   return useMutation(
-    async (updateItemValues: { ids: string[]; data: Partial<AllItemsType | AllSubItemsType> }) => {
+    async (updateItemValues: { ids: string[]; data: Partial<AllSubItemsType> }) => {
       if (updateItemValues.ids) {
-        const url = updateManyURL(type);
+        const url = updateManyURL(subType);
         if (url)
           return fetch(url, {
             body: JSON.stringify(updateItemValues),
@@ -283,20 +284,46 @@ export const useUpdateManySubItems = (project_id: string, type: AvailableSubItem
       return null;
     },
     {
-      onSuccess: async () => {
-        if (type === "nodes" || type === "edges") {
-          queryClient.refetchQueries(["allItems", project_id, "boards"]);
+      onMutate: async (variables) => {
+        const old = queryClient.getQueryData(["boards", item_id]);
+        if (subType === "nodes" || subType === "edges") {
+          queryClient.setQueryData(["board", item_id], (oldData: BoardType | undefined) => {
+            if (oldData) {
+              if (subType === "nodes")
+                return {
+                  ...oldData,
+                  [subType]: oldData[subType].map((subItem) => {
+                    if (variables.ids.includes(subItem.id)) return { ...subItem, ...variables.data };
+                    return subItem;
+                  }),
+                };
+              if (subType === "edges")
+                return {
+                  ...oldData,
+                  [subType]: oldData[subType].map((subItem) => {
+                    if (variables.ids.includes(subItem.id)) return { ...subItem, ...variables.data };
+                    return subItem;
+                  }),
+                };
+            }
+            return oldData;
+          });
         }
+        return { old };
+      },
+      onError: (error, variables, context) => {
+        toaster("error", "There was an error updating these items.");
+        queryClient.setQueryData(["boards", item_id], context?.old);
       },
     },
   );
 };
-export const useDeleteManySubItems = (project_id: string, item_id: string, type: AvailableSubItemTypes) => {
+export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItemTypes) => {
   const queryClient = useQueryClient();
   return useMutation(
     async (ids: string[]) => {
       if (ids) {
-        const url = deleteManyURL(type);
+        const url = deleteManyURL(subType);
         if (url)
           return fetch(url, {
             body: JSON.stringify(ids),
@@ -306,19 +333,27 @@ export const useDeleteManySubItems = (project_id: string, item_id: string, type:
       return null;
     },
     {
-      onSuccess: async (data, ids) => {
-        if (type === "nodes" || type === "edges") {
-          queryClient.setQueryData(["allItems", project_id, "boards"], (oldData: BoardType[] | undefined) => {
-            if (oldData)
-              return oldData.map((board) => {
-                if (board.id !== item_id) return board;
-                // @ts-ignore
-                return { ...board, [type]: board[type].filter((item) => !ids.includes(item.id)) };
-              });
-
-            return [];
+      onMutate: async (ids) => {
+        const old = queryClient.getQueryData(["boards", item_id]);
+        if (subType === "nodes" || subType === "edges") {
+          queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
+            if (oldData) {
+              if (subType === "nodes") {
+                return { ...oldData, [subType]: oldData[subType].filter((subItem) => !ids.includes(subItem.id)) };
+              }
+              if (subType === "edges") {
+                return { ...oldData, [subType]: oldData[subType].filter((subItem) => !ids.includes(subItem.id)) };
+              }
+            }
+            return oldData;
           });
         }
+        return { old };
+      },
+      onSuccess: () => toaster("success", "Items successfully deleted."),
+      onError: (error, variables, context) => {
+        toaster("error", "There was an error deleting these items.");
+        queryClient.setQueryData(["boards", item_id], context?.old);
       },
     },
   );
