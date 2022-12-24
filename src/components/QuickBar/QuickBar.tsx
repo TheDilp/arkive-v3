@@ -27,7 +27,6 @@ export default function BoardQuickBar() {
   const { data: board } = useGetItem(item_id as string, "boards") as { data: BoardType };
 
   const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
-  const updateEdgeMutation = useUpdateSubItem(item_id as string, "edges", "boards");
   const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const updateManyEdges = useUpdateManySubItems(item_id as string, "edges");
   const [, setUpdateManyDialog] = useState(false);
@@ -91,7 +90,7 @@ export default function BoardQuickBar() {
                 key={color}
                 className="h-4 w-4 cursor-pointer rounded-sm"
                 onClick={() => {
-                  if (boardRef) updateColor(boardRef, `#${color}`, updateManyNodes, updateEdgeMutation);
+                  if (boardRef) updateColor(boardRef, `#${color}`, updateManyNodes, updateManyEdges);
                 }}
                 style={{
                   backgroundColor: `#${color}`,

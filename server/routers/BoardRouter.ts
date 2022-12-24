@@ -152,6 +152,29 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
     },
   );
   server.post(
+    "/updatemanyedges",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const body: { ids: string[]; data: any } = JSON.parse(req.body);
+        await prisma.edges.updateMany({
+          where: {
+            id: {
+              in: body.ids,
+            },
+          },
+          data: removeNull(body.data) as any,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
     "/updatemanynodes",
     async (
       req: FastifyRequest<{
@@ -168,15 +191,6 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
           },
           data: removeNull(body.data) as any,
         });
-        const updatedNodes = await prisma.nodes.findMany({
-          where: {
-            id: {
-              in: body.ids,
-            },
-          },
-        });
-
-        return updatedNodes;
       } catch (error) {
         console.log(error);
       }
