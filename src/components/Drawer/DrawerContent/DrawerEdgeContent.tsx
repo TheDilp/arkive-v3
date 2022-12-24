@@ -22,6 +22,7 @@ import {
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
+import { getHexColor } from "../../../utils/transform";
 import Tags from "../../Tags/Tags";
 
 function FontItemTemplate(item: { label: string; value: string }) {
@@ -99,11 +100,11 @@ export default function DrawerEdgeContent() {
                 <div className="flex w-full flex-wrap items-center justify-between">
                   <span className="w-full text-sm text-zinc-400">Label color</span>
                   <ColorPicker
-                    onChange={(e) => handleChange({ name: "fontColor", value: `#${e.value}` })}
+                    onChange={(e) => handleChange({ name: "fontColor", value: getHexColor(e.value) })}
                     value={localItem.fontColor}
                   />
                   <InputText
-                    onChange={(e) => handleChange({ name: "fontColor", value: `#${e.target.value}` })}
+                    onChange={(e) => handleChange({ name: "fontColor", value: getHexColor(e.target.value) })}
                     value={localItem.fontColor}
                   />
                 </div>
@@ -149,11 +150,11 @@ export default function DrawerEdgeContent() {
               <div className="flex w-full flex-wrap items-center justify-between">
                 <span className="w-full text-sm text-zinc-400">Edge color</span>
                 <ColorPicker
-                  onChange={(e) => handleChange({ name: "lineColor", value: `#${e.value}` })}
+                  onChange={(e) => handleChange({ name: "lineColor", value: getHexColor(e.value) })}
                   value={localItem.lineColor}
                 />
                 <InputText
-                  onChange={(e) => handleChange({ name: "lineColor", value: `${e.target.value}` })}
+                  onChange={(e) => handleChange({ name: "lineColor", value: getHexColor(e.target.value) })}
                   prefix="#"
                   value={localItem.lineColor}
                 />
@@ -235,11 +236,11 @@ export default function DrawerEdgeContent() {
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
                     <ColorPicker
-                      onChange={(e) => handleChange({ name: "targetArrowColor", value: `#${e.value}` })}
+                      onChange={(e) => handleChange({ name: "targetArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.targetArrowColor}
                     />
                     <InputText
-                      onChange={(e) => handleChange({ name: "targetArrowColor", value: `#${e.target.value}` })}
+                      onChange={(e) => handleChange({ name: "targetArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.targetArrowColor}
                     />
                   </div>
@@ -271,11 +272,11 @@ export default function DrawerEdgeContent() {
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
                     <ColorPicker
-                      onChange={(e) => handleChange({ name: "sourceArrowColor", value: `#${e.value}` })}
+                      onChange={(e) => handleChange({ name: "sourceArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.sourceArrowColor}
                     />
                     <InputText
-                      onChange={(e) => handleChange({ name: "sourceArrowColor", value: `#${e.target.value}` })}
+                      onChange={(e) => handleChange({ name: "sourceArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.sourceArrowColor}
                     />
                   </div>
@@ -309,11 +310,11 @@ export default function DrawerEdgeContent() {
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
                     <ColorPicker
-                      onChange={(e) => handleChange({ name: "midTargetArrowColor", value: `#${e.value}` })}
+                      onChange={(e) => handleChange({ name: "midTargetArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.midTargetArrowColor}
                     />
                     <InputText
-                      onChange={(e) => handleChange({ name: "midTargetArrowColor", value: `#${e.target.value}` })}
+                      onChange={(e) => handleChange({ name: "midTargetArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.midTargetArrowColor}
                     />
                   </div>
@@ -347,11 +348,11 @@ export default function DrawerEdgeContent() {
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
                     <ColorPicker
-                      onChange={(e) => handleChange({ name: "midSourceArrowColor", value: `#${e.value}` })}
+                      onChange={(e) => handleChange({ name: "midSourceArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.midSourceArrowColor}
                     />
                     <InputText
-                      onChange={(e) => handleChange({ name: "midSourceArrowColor", value: `#${e.target.value}` })}
+                      onChange={(e) => handleChange({ name: "midSourceArrowColor", value: getHexColor(e.target.value) })}
                       value={localItem.midSourceArrowColor}
                     />
                   </div>

@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { ColorPickerValueType } from "primereact/colorpicker";
 
 import { BoardType, EdgeType, NodeType } from "../types/boardTypes";
 import { DocumentType } from "../types/documentTypes";
@@ -40,4 +41,8 @@ export function getIconForFullSearch(item: DocumentType | MapType | MapPinType |
   if ("label" in item) icon = "ph:graph-light";
 
   return icon;
+}
+
+export function getHexColor(value: string | ColorPickerValueType) {
+  return `#${value?.toString().replaceAll("#", "")}`;
 }

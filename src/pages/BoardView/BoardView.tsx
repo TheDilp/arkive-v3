@@ -54,7 +54,9 @@ export default function BoardView({ isReadOnly }: Props) {
   const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
   const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const deleteManyNodes = useDeleteManySubItems(item_id as string, "nodes");
+
   const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
+  const deleteManyEdges = useDeleteManySubItems(item_id as string, "edges");
   const items = (type: BoardContextType) => {
     const nodes = boardRef?.nodes(":selected");
     const edges = boardRef?.edges(":selected");
@@ -183,9 +185,38 @@ export default function BoardView({ isReadOnly }: Props) {
         },
         { separator: true },
         { label: "Template From Node" },
-        { label: "Delete Selected Node" },
+        {
+          label: "Delete Selected Nodes",
+          command: () => {
+            if (!boardRef || !nodes || !edges) return;
+            const selected = boardRef.elements(":selected");
+            if (selected.length === 0) {
+              toaster("warning", "No elements are selected.");
+            } else {
+              if (nodes.length) deleteManyNodes.mutate(nodes.map((node) => node.id()));
+              if (edges.length) deleteManyEdges.mutate(edges.map((edge) => edge.id()));
+            }
+          },
+        },
       ];
-
+    if (type === "edges")
+      return [
+        {
+          label: "Highlight Connected Nodes",
+          command: () => {
+            if (edges) {
+              edges.sources().flashClass("incomingNodeHighlight", 2000);
+              edges.targets().flashClass("outgoingNodeHighlight", 2000);
+            }
+          },
+        },
+        {
+          label: "Delete Selected Edges",
+          command: () => {
+            if (edges) deleteManyEdges.mutate(edges.map((edge: any) => edge.id()));
+          },
+        },
+      ];
     return [];
   };
   useEffect(() => {
