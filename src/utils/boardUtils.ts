@@ -337,27 +337,23 @@ export const boardEdgeCaps = [
   { label: "Butt", value: "butt" },
   { label: "Square", value: "square" },
 ];
-export function updateColor(
-  boardRef: cytoscape.Core,
-  color: string,
-  updateManyNodes: UseMutationResult<
-    Response | null,
-    unknown,
-    {
-      ids: string[];
-      data: Partial<AllSubItemsType>;
-    },
-    {
-      old: unknown;
-    }
-  >,
-  updateEdgeMutation: any,
-) {
+export function updateColor(boardRef: cytoscape.Core, color: string, updateManyNodes: any, updateManyEdges: any) {
   if (boardRef.elements(":selected")?.length > 0) {
     const nodes = boardRef.elements(":selected").nodes();
     updateManyNodes.mutate({
       ids: nodes.map((node) => node.id()),
       data: { backgroundColor: color },
+    });
+    const edges = boardRef.elements(":selected").edges();
+    updateManyEdges.mutate({
+      ids: edges.map((node) => node.id()),
+      data: {
+        backgroundColor: color,
+        targetArrowColor: color,
+        sourceArrowColor: color,
+        midTargetArrowColor: color,
+        midSourceArrowColor: color,
+      },
     });
   } else {
     toaster("warning", "No elements are selected.");
