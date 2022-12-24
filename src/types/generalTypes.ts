@@ -12,7 +12,7 @@ export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 export type AllItemsType = DocumentType | MapType | BoardType;
 export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType;
 
-export type AvailableSearchResultTypes = "documents" | "maps" | "boards" | "nodes" | "pins";
+export type AvailableSearchResultTypes = "documents" | "maps" | "boards" | "pins" | "nodes" | "edges";
 
 export type IconSelectMenuType = {
   // eslint-disable-next-line no-unused-vars
