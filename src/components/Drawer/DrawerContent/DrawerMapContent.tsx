@@ -29,6 +29,7 @@ export default function DrawerMapContent() {
   const createMapMutation = useCreateItem("maps");
   const { data: initialTags } = useGetAllTags(project_id as string, "maps");
 
+  console.log(map_images);
   const { data: map } = useGetItem(drawer?.id as string, "maps", { enabled: !!drawer?.id }) as { data: MapType };
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {

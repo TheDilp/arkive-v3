@@ -4,9 +4,11 @@ import { existsSync, mkdirSync, readdirSync, writeFile } from "fs";
 export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getallimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
     const dir = `./assets/images/${req.params.project_id}`;
+    // check if folder already exists
     if (!existsSync(dir)) {
-      // check if folder already exists
-      mkdirSync(dir); // creating folder
+      mkdirSync(dir, {
+        recursive: true,
+      }); // creating folder
     }
     const files = readdirSync(`./assets/images/${req.params.project_id}`);
     if (files) return files;
@@ -14,10 +16,12 @@ export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
   });
   server.get("/getallmapimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
     try {
-      const dir = `./assets/images/${req.params.project_id}`;
+      const dir = `./assets/maps/${req.params.project_id}`;
+      // check if folder already exists
       if (!existsSync(dir)) {
-        // check if folder already exists
-        mkdirSync(dir); // creating folder
+        mkdirSync(dir, {
+          recursive: true,
+        }); // creating folder
       }
       const files = readdirSync(`./assets/maps/${req.params.project_id}`);
       if (files) return files;
@@ -31,9 +35,11 @@ export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
     async (req: FastifyRequest<{ Params: { type: "images" | "maps"; project_id: string; image_name: string } }>, reply) => {
       const { type, project_id, image_name } = req.params;
       const dir = `./assets/images/${project_id}`;
+      // check if folder already exists
       if (!existsSync(dir)) {
-        // check if folder already exists
-        mkdirSync(dir); // creating folder
+        mkdirSync(dir, {
+          recursive: true,
+        }); // creating folder
       }
       return reply
         .type("image/*")
@@ -50,18 +56,25 @@ export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
         Body: any[];
       }>,
     ) => {
-      const files = req.body;
-      const { type, project_id } = req.params;
-      const dir = `./assets/${type}/${project_id}`;
-      if (!existsSync(dir)) {
+      try {
+        const files = req.body;
+        const { type, project_id } = req.params;
+        const dir = `./assets/${type}/${project_id}`;
+
         // check if folder already exists
-        mkdirSync(dir); // creating folder
-      }
-      Object.entries(files).forEach(([key, file]) => {
-        writeFile(`./assets/${type}/${project_id}/${key}`, file.data, (err) => {
-          if (err) console.log(err);
+        if (!existsSync(dir)) {
+          mkdirSync(dir, {
+            recursive: true,
+          }); // creating folder
+        }
+        Object.entries(files).forEach(([key, file]) => {
+          writeFile(`./assets/${type}/${project_id}/${key}`, file.data, (err) => {
+            if (err) console.log(err);
+          });
         });
-      });
+      } catch (error) {
+        console.log(error);
+      }
     },
   );
 
