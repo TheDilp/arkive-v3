@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { Core } from "cytoscape";
 import { useAtom } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputText } from "primereact/inputtext";
@@ -12,16 +13,31 @@ import { BoardType, EdgeType, NodeType } from "../../../types/boardTypes";
 import { DocumentType } from "../../../types/documentTypes";
 import { AvailableSearchResultTypes } from "../../../types/generalTypes";
 import { MapPinType, MapType } from "../../../types/mapTypes";
-import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { BoardReferenceAtom, DrawerAtom } from "../../../utils/Atoms/atoms";
 import { getSearchTags } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
 
 const SearchDefault = { documents: [], maps: [], boards: [], pins: [], nodes: [], edges: [] };
+
+function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core) {
+  if (subitem_id === id && boardRef) {
+    const node = boardRef.getElementById(subitem_id);
+
+    if (node)
+      boardRef?.animate({
+        center: {
+          eles: node,
+        },
+      });
+  }
+}
+
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState([]);
   const [filteredTags, setFilteredTags] = useState([]);
+  const [boardRef] = useAtom(BoardReferenceAtom);
   const [menuIndex, setMenuIndex] = useState(0);
   const [results, setResults] = useState<{
     documents: DocumentType[];
@@ -32,7 +48,7 @@ export default function DrawerFullSearch() {
     edges: EdgeType[];
   }>(SearchDefault);
   const [, setDrawer] = useAtom(DrawerAtom);
-  const { project_id } = useParams();
+  const { project_id, subitem_id } = useParams();
   const { mutate } = useFullSearch(project_id as string);
   const debounceSearch = useDebouncedCallback((searchQuery: string, type: "namecontent" | "tags") => {
     if (searchQuery)
@@ -93,7 +109,10 @@ export default function DrawerFullSearch() {
                 <Link
                   key={item.id}
                   className="flex cursor-pointer items-center gap-x-1 truncate py-1 hover:bg-sky-400"
-                  onClick={() => setDrawer({ ...DefaultDrawer, position: "right" })}
+                  onClick={() => {
+                    goToNodeEdge(subitem_id, item.id, boardRef);
+                    setDrawer({ ...DefaultDrawer, position: "right" });
+                  }}
                   to={getLinkForFullSearch(
                     item.id,
                     item.parent as string,

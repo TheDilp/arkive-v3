@@ -220,9 +220,25 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
               parent: true,
             },
           }),
+          prisma.edges.findMany({
+            where: {
+              label: {
+                contains: query as string,
+                mode: "insensitive",
+              },
+              board: {
+                project_id,
+              },
+            },
+            select: {
+              id: true,
+              label: true,
+              parent: true,
+            },
+          }),
         ];
-        const [documents, maps, pins, boards, nodes] = await prisma.$transaction(searches);
-        return { documents, maps, pins, boards, nodes };
+        const [documents, maps, pins, boards, nodes, edges] = await prisma.$transaction(searches);
+        return { documents, maps, pins, boards, nodes, edges };
       }
       if (type === "tags") {
         const searches = [
