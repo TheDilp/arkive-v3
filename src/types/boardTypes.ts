@@ -1,4 +1,4 @@
-import cytoscape from "cytoscape";
+import cytoscape, { EdgeCollection, NodeCollection } from "cytoscape";
 
 import { BaseItemType } from "./generalTypes";
 
@@ -124,6 +124,16 @@ export type BoardCreateType = Partial<Omit<BoardType, "project_id">> & {
 
 export type CytoscapeNodeType = cytoscape.NodeDefinition;
 export type CytoscapeEdgeType = cytoscape.EdgeDefinition;
+
+export type BoardContextType = null | "board" | "nodes" | "edges";
+
+export type BoardContext = {
+  x: null | number;
+  y: null | number;
+  type: BoardContextType;
+  nodes: NodeCollection | null;
+  edges: EdgeCollection | null;
+};
 
 export type BoardExportType = {
   view: "Graph" | "View";
