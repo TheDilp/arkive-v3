@@ -12,6 +12,7 @@ export function onlyUniqueStrings(value: string, index: number, self: string[]) 
 }
 
 export function hasValueDeep(json: any, findValue: string): boolean {
+  const lowercasedFindValue = findValue.toLowerCase();
   let hasValue = false;
   if (typeof json === "object" && !Array.isArray(json)) {
     const values = Object.values(json);
@@ -19,11 +20,11 @@ export function hasValueDeep(json: any, findValue: string): boolean {
       if (hasValue) return hasValue;
       if (value !== null) {
         if (typeof value === "string") {
-          hasValue = value.includes(findValue);
+          hasValue = value?.toLowerCase().includes(lowercasedFindValue);
           if (hasValue) return hasValue;
         }
         if (typeof value === "object") {
-          hasValue = hasValue || hasValueDeep(value, findValue);
+          hasValue = hasValue || hasValueDeep(value, lowercasedFindValue);
           if (hasValue) return hasValue;
         }
       }
@@ -33,7 +34,7 @@ export function hasValueDeep(json: any, findValue: string): boolean {
   }
   if (Array.isArray(json)) {
     for (let index = 0; index < json.length; index += 1) {
-      hasValue = hasValue || hasValueDeep(json[index], findValue);
+      hasValue = hasValue || hasValueDeep(json[index], lowercasedFindValue);
       if (hasValue) return hasValue;
     }
   }
