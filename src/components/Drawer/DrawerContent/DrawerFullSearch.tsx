@@ -21,7 +21,7 @@ import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/trans
 const SearchDefault = { documents: [], maps: [], boards: [], pins: [], nodes: [], edges: [] };
 
 function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core) {
-  if (subitem_id === id && boardRef) {
+  if (subitem_id === id) {
     const node = boardRef.getElementById(subitem_id);
 
     if (node)
@@ -51,7 +51,7 @@ export default function DrawerFullSearch() {
   const { project_id, subitem_id } = useParams();
   const { mutate } = useFullSearch(project_id as string);
   const debounceSearch = useDebouncedCallback((searchQuery: string, type: "namecontent" | "tags") => {
-    if (searchQuery)
+    if (searchQuery && searchQuery.length >= 3)
       mutate(
         { query: searchQuery, type },
         {
@@ -76,6 +76,7 @@ export default function DrawerFullSearch() {
           <div>
             <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
             <InputText
+              placeholder="Enter at least 3 characters"
               autoFocus
               className="w-full"
               onChange={(e) => {
@@ -103,27 +104,29 @@ export default function DrawerFullSearch() {
       </div>
 
       <div className="mt-2 flex flex-col gap-y-2 font-Lato">
-        {Object.keys(results).length
+        {results && Object.keys(results).length > 0
           ? Object.keys(results).map((key) =>
-              results[key as AvailableSearchResultTypes].map((item) => (
-                <Link
-                  key={item.id}
-                  className="flex cursor-pointer items-center gap-x-1 truncate py-1 hover:bg-sky-400"
-                  onClick={() => {
-                    goToNodeEdge(subitem_id, item.id, boardRef);
-                    setDrawer({ ...DefaultDrawer, position: "right" });
-                  }}
-                  to={getLinkForFullSearch(
-                    item.id,
-                    item.parent as string,
-                    key as AvailableSearchResultTypes,
-                    project_id as string,
-                  )}>
-                  <Icon fontSize={24} icon={getIconForFullSearch(item)} />
-                  {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                  {"label" in item && (item.label || "Node/Edge")}
-                </Link>
-              )),
+              Array.isArray(results[key as AvailableSearchResultTypes])
+                ? results[key as AvailableSearchResultTypes].map((item) => (
+                    <Link
+                      key={item.id}
+                      className="flex cursor-pointer items-center gap-x-1 truncate py-1 hover:bg-sky-400"
+                      onClick={() => {
+                        if (boardRef) goToNodeEdge(subitem_id, item.id, boardRef);
+                        setDrawer({ ...DefaultDrawer, position: "right" });
+                      }}
+                      to={getLinkForFullSearch(
+                        item.id,
+                        item.parent as string,
+                        key as AvailableSearchResultTypes,
+                        project_id as string,
+                      )}>
+                      <Icon fontSize={24} icon={getIconForFullSearch(item)} />
+                      {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
+                      {"label" in item && (item.label || "Node/Edge")}
+                    </Link>
+                  ))
+                : null,
             )
           : (query && "No items match this query.") || "Type something to search for documents, maps, pins, boards or nodes!"}
       </div>

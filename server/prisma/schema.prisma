@@ -21,7 +21,7 @@ model projects {
 model documents {
   id          String   @id @default(uuid()) @db.Uuid
   title       String   @default("New Document")
-  content     Json?
+  content     Json?   @db.JsonB
   tags        String[] @default([])
   icon        String?  @default("mdi:file")
   parent      String?  @db.Uuid

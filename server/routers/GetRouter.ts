@@ -1,8 +1,9 @@
+import { documents as prismaDocumentsType } from "@prisma/client";
 import { FastifyInstance, FastifyRequest } from "fastify";
 
 import { prisma } from "..";
 import { AvailableTypes } from "../types/dataTypes";
-import { onlyUniqueStrings } from "../utils/transform";
+import { hasValueDeep, onlyUniqueStrings } from "../utils/transform";
 
 export const getRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get(
@@ -156,8 +157,8 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
       if (type === "namecontent") {
         const searches = [
           prisma.$queryRaw`
-  select id,title,icon from documents where (project_id::text = ${project_id} and (lower(content->>'content'::text) like lower(${`%${query}%`}) or lower(title) like lower(${`%${query}%`})) and folder = false)
-  ;`,
+          select id,title,icon, content from documents where (project_id::text = ${project_id} and ( lower(content->>'content'::text) like lower(${`%${query}%`}) or (lower(title) like lower(${`%${query}%`}) ) ) and folder = false)
+          ;`,
           prisma.maps.findMany({
             where: {
               title: {
@@ -238,7 +239,12 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
           }),
         ];
         const [documents, maps, pins, boards, nodes, edges] = await prisma.$transaction(searches);
-        return { documents, maps, pins, boards, nodes, edges };
+
+        const contentSearchedDocuments = (documents as prismaDocumentsType[]).filter((doc) =>
+          hasValueDeep(doc.content, query as string),
+        );
+
+        return { documents: contentSearchedDocuments, maps, pins, boards, nodes, edges };
       }
       if (type === "tags") {
         const searches = [
