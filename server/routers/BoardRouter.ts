@@ -74,6 +74,24 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       return null;
     },
   );
+  server.delete(
+    "/deleteboard/:id",
+    async (
+      req: FastifyRequest<{
+        Params: { id: string };
+      }>,
+    ) => {
+      await prisma.boards.deleteMany({
+        where: {
+          parent: req.params.id,
+        },
+      });
+      const newDocument = await prisma.boards.delete({
+        where: { id: req.params.id },
+      });
+      return newDocument;
+    },
+  );
   server.post(
     "/createnode",
     async (

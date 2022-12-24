@@ -1,6 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
-import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { ColorPicker } from "primereact/colorpicker";
@@ -8,62 +6,37 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
-import { useGetAllTags } from "../../../CRUD/OtherCRUD";
+import { useCreateItem, useDeleteItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { BoardCreateType, BoardType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import Tags from "../../Tags/Tags";
+import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerBoardContent() {
   const { project_id } = useParams();
-  const queryClient = useQueryClient();
-  const [drawer] = useAtom(DrawerAtom);
-  const updateBoardMutation = useUpdateItem("boards");
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createBoardMutation = useCreateItem("boards");
-  const { data: initialTags } = useGetAllTags(project_id as string, "boards");
+  const updateBoardMutation = useUpdateItem("boards");
+  const deleteBoardMutation = useDeleteItem("boards", project_id as string);
   const { data: boards } = useGetAllItems(project_id as string, "boards");
   const { data: currentBoard } = useGetItem(drawer?.id as string, "boards", { enabled: !!drawer?.id }) as { data: BoardType };
+
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     currentBoard ?? {
       ...DefaultMap,
       project_id: project_id as string,
     },
   );
-  const [tags, setTags] = useState({ selected: currentBoard?.tags || [], suggestions: initialTags });
 
-  const filterTags = (e: AutoCompleteCompleteMethodParams) => {
-    const { query } = e;
-    if (query && initialTags)
-      setTags((prev) => ({
-        ...prev,
-        suggestions: initialTags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase())),
-      }));
+  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
-    if (!query && initialTags) setTags((prev) => ({ ...prev, suggestions: initialTags }));
-  };
-  const handleTagsChange = async (value: string) => {
-    if (!currentBoard && !localItem?.tags?.includes(value)) {
-      setLocalItem((prev) => ({ ...prev, tags: [...(localItem?.tags || []), value] }));
-    } else if (!currentBoard && localItem?.tags?.includes(value)) {
-      setLocalItem((prev) => ({ ...prev, tags: (localItem?.tags || []).filter((tag) => tag !== value) }));
-    }
-    if (currentBoard && !currentBoard?.tags?.includes(value)) {
-      await updateBoardMutation?.mutateAsync({
-        id: currentBoard.id,
-        tags: [...currentBoard.tags, value],
-      });
-    } else if (currentBoard && currentBoard?.tags?.includes(value)) {
-      await updateBoardMutation?.mutateAsync({
-        id: currentBoard.id,
-        tags: currentBoard.tags.filter((tag) => tag !== value),
-      });
-    }
-    queryClient.refetchQueries({ queryKey: ["allTags", project_id, "boards"] });
-  };
   function CreateUpdateBoard(newData: BoardCreateType) {
     if (currentBoard) {
       if (boards?.some((item) => item.parent === newData.id) && !newData.folder) {
@@ -72,15 +45,14 @@ export default function DrawerBoardContent() {
       }
       updateBoardMutation?.mutate(
         {
-          folder: newData.folder,
           id: currentBoard.id,
-          title: newData.title,
-          defaultNodeColor: newData.defaultNodeColor,
-          defaultEdgeColor: newData.defaultEdgeColor,
-          defaultGrid: newData.defaultGrid,
+          ...changedData,
         },
         {
-          onSuccess: () => toaster("success", "Your board was successfully updated."),
+          onSuccess: () => {
+            toaster("success", "Your board was successfully updated.");
+            resetChanges();
+          },
         },
       );
     } else {
@@ -102,16 +74,16 @@ export default function DrawerBoardContent() {
   }, [currentBoard, project_id]);
 
   return (
-    <div className="flex flex-col gap-y-2">
+    <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">{currentBoard ? `Edit ${currentBoard.title}` : "Create New Board"}</h2>
       <InputText
         autoFocus
         className="w-full"
         onChange={(e) =>
-          setLocalItem((prev) => ({
-            ...prev,
-            title: e.target.value,
-          }))
+          handleChange({
+            name: "title",
+            value: e.target.value,
+          })
         }
         onKeyDown={(e) => {
           if (e.key === "Enter" && currentBoard) {
@@ -126,33 +98,26 @@ export default function DrawerBoardContent() {
         value={localItem?.title || ""}
       />
 
-      <AutoComplete
-        className="mapTagsAutocomplete max-h-40 w-full border-zinc-600"
-        completeMethod={filterTags}
-        multiple
-        onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
-        onKeyPress={async (e) => {
-          // For adding completely new tags
-          if (e.key === "Enter" && e.currentTarget.value !== "") {
-            handleTagsChange(e.currentTarget.value);
-            e.currentTarget.value = "";
-          }
-        }}
-        onSelect={(e) => handleTagsChange(e.value)}
-        onUnselect={(e) => handleTagsChange(e.value)}
-        placeholder="Add Tags"
-        suggestions={tags.suggestions}
-        value={localItem?.tags}
-      />
+      <Tags handleChange={handleChange} localItem={localItem} type="boards" />
       <div className="flex flex-wrap items-center justify-between">
         <h4 className="w-full text-lg underline">Default Node Color</h4>
 
         <ColorPicker
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultNodeColor: `#${e.value}` as string }))}
+          onChange={(e) =>
+            handleChange({
+              name: "defaultNodeColor",
+              value: `#${e.target.value}`,
+            })
+          }
           value={localItem.defaultNodeColor}
         />
         <InputText
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultNodeColor: e.target.value }))}
+          onChange={(e) =>
+            handleChange({
+              name: "defaultNodeColor",
+              value: e.target.value,
+            })
+          }
           value={localItem.defaultNodeColor || ""}
         />
       </div>
@@ -160,11 +125,21 @@ export default function DrawerBoardContent() {
         <h4 className="w-full text-lg underline">Default Edge & Arrow Color</h4>
 
         <ColorPicker
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultEdgeColor: `#${e.value}` as string }))}
+          onChange={(e) =>
+            handleChange({
+              name: "defaultEdgeColor",
+              value: `#${e.target.value}`,
+            })
+          }
           value={localItem.defaultEdgeColor}
         />
         <InputText
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, defaultEdgeColor: e.target.value }))}
+          onChange={(e) =>
+            handleChange({
+              name: "defaultNodeColor",
+              value: e.target.value,
+            })
+          }
           value={localItem.defaultEdgeColor || ""}
         />
       </div>
@@ -173,10 +148,10 @@ export default function DrawerBoardContent() {
         <Checkbox
           checked={localItem.folder}
           onChange={(e) =>
-            setLocalItem((prev) => ({
-              ...prev,
-              folder: e.checked,
-            }))
+            handleChange({
+              name: "folder",
+              value: e.checked,
+            })
           }
         />
       </div>
@@ -185,10 +160,10 @@ export default function DrawerBoardContent() {
         <Checkbox
           checked={localItem.defaultGrid}
           onChange={(e) =>
-            setLocalItem((prev) => ({
-              ...prev,
-              defaultGrid: e.checked,
-            }))
+            handleChange({
+              name: "defaultGrid",
+              value: e.checked,
+            })
           }
         />
       </div>
@@ -201,6 +176,28 @@ export default function DrawerBoardContent() {
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
+      <div className="mt-auto flex w-full">
+        {document ? (
+          <Button
+            className=" p-button-outlined p-button-danger w-full"
+            onClick={() => {
+              if (document)
+                deleteItem(
+                  currentBoard.folder
+                    ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
+                    : "Are you sure you want to delete this board?",
+                  () => {
+                    deleteBoardMutation?.mutate(currentBoard.id);
+                    handleCloseDrawer(setDrawer, "right");
+                  },
+                  () => toaster("info", "Item not deleted."),
+                );
+            }}
+            type="submit">
+            {buttonLabelWithIcon("Delete", "mdi:trash")}
+          </Button>
+        ) : null}
+      </div>
     </div>
   );
 }

@@ -106,9 +106,7 @@ export default function DrawerMapContent() {
         value={localItem.image}
         valueTemplate={ImageDropdownValue({ image: localItem?.image })}
       />
-      <div>
-        <Tags handleChange={handleChange} localItem={localItem} type="maps" />
-      </div>
+      <Tags handleChange={handleChange} localItem={localItem} type="maps" />
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />

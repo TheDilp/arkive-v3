@@ -57,6 +57,7 @@ export const deleteURLs = {
   deleteMap: "deletemap/",
   deleteMapPin: "deletemappin/",
   deleteMapLayer: "deletemaplayer/",
+  deleteBoard: "deleteboard/",
   deleteNode: "deletenode/",
   deleteEdge: "deleteedge/",
 };

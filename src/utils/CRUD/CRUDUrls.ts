@@ -40,6 +40,7 @@ export const deleteURL = (id: string, type: AllAvailableTypes) => {
   if (type === "maps") return `${baseURLS.baseServer}${deleteURLs.deleteMap}${id}`;
   if (type === "map_pins") return `${baseURLS.baseServer}${deleteURLs.deleteMapPin}${id}`;
   if (type === "map_layers") return `${baseURLS.baseServer}${deleteURLs.deleteMapLayer}${id}`;
+  if (type === "boards") return `${baseURLS.baseServer}${deleteURLs.deleteBoard}${id}`;
   if (type === "nodes") return `${baseURLS.baseServer}${deleteURLs.deleteNode}${id}`;
   if (type === "edges") return `${baseURLS.baseServer}${deleteURLs.deleteEdge}${id}`;
   return null;
