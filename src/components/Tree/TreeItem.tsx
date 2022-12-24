@@ -52,26 +52,8 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         cm.current.show(e);
       }}
       type="button">
-      {node.droppable && (
-        <span
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            updateMutation?.mutate({
-              expanded: !isOpen,
-              id: node.id as string,
-            });
-
-            onToggle();
-          }}
-          onKeyDown={() => {}}
-          role="button"
-          tabIndex={-1}>
-          {isOpen ? <Icon icon="akar-icons:chevron-down" /> : <Icon icon="akar-icons:chevron-right" />}
-        </span>
-      )}
-
       <span
+        className="flex items-center gap-x-1"
         onClick={(e) => {
           e.stopPropagation();
         }}
@@ -79,6 +61,24 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         role="button"
         style={{ marginInlineStart: depth * 40 }}
         tabIndex={-1}>
+        {node.droppable && (
+          <span
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              updateMutation?.mutate({
+                expanded: !isOpen,
+                id: node.id as string,
+              });
+
+              onToggle();
+            }}
+            onKeyDown={() => {}}
+            role="button"
+            tabIndex={-1}>
+            {isOpen ? <Icon icon="akar-icons:chevron-down" /> : <Icon icon="akar-icons:chevron-right" />}
+          </span>
+        )}
         {node.data?.folder ? (
           <Icon className="mr-1" icon="bxs:folder" inline />
         ) : (
