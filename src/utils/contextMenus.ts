@@ -13,11 +13,10 @@ import { AvailableItemTypes } from "../types/generalTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 import { BoardReferenceAtom, DialogAtom, DrawerAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
+import { deleteItem } from "./Confirms/Confirm";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "./DefaultValues/DrawerDialogDefaults";
 import { toaster } from "./toast";
-
-import { deleteItem } from "./Confirms/Confirm";
 
 export type BoardContextMenuType = {
   type: BoardContextType;
