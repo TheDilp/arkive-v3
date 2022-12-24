@@ -11,17 +11,19 @@ function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: All
   return (
     <div className="flex flex-wrap">
       {items?.length ? (
-        items.map((item: AllItemsType) => (
-          <FolderCard
-            key={item.id}
-            icon={getIcon(type, item)}
-            id={item.id}
-            image={"image" in item ? item?.image : undefined}
-            isFolder={item.folder}
-            title={item.title}
-            type={type}
-          />
-        ))
+        items
+          .sort((a, b) => a.sort - b.sort)
+          .map((item: AllItemsType) => (
+            <FolderCard
+              key={item.id}
+              icon={getIcon(type, item)}
+              id={item.id}
+              image={"image" in item ? item?.image : undefined}
+              isFolder={item.folder}
+              title={item.title}
+              type={type}
+            />
+          ))
       ) : (
         <div className="text-zinc-600">No items in this folder.</div>
       )}
@@ -34,9 +36,7 @@ export default function FolderView() {
   const { pathname } = useLocation();
   const type = getType(pathname);
   const { data, isLoading, isError } = useGetAllItems(project_id as string, type);
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+
   if (isLoading || isError) return null;
 
   return (

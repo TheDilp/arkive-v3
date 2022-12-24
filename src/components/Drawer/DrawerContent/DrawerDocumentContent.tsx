@@ -189,7 +189,9 @@ export default function DrawerDocumentContent() {
                     ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
                     : "Are you sure you want to delete this document?",
                   () => {
-                    deleteDocumentMutation?.mutate(document.id);
+                    deleteDocumentMutation?.mutate(document.id, {
+                      onSuccess: () => toaster("success", "Document successfully deleted."),
+                    });
                     handleCloseDrawer(setDrawer);
                   },
                   () => toaster("info", "Item not deleted."),

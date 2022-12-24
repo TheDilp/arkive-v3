@@ -76,13 +76,13 @@ export default function DrawerFullSearch() {
           <div>
             <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
             <InputText
-              placeholder="Enter at least 3 characters"
               autoFocus
               className="w-full"
               onChange={(e) => {
                 setQuery(e.target.value);
                 debounceSearch(e.target.value, "namecontent");
               }}
+              placeholder="Enter at least 3 characters"
               value={query}
             />
           </div>
