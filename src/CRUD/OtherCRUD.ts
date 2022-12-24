@@ -19,9 +19,9 @@ export const useGetAllTags = (project_id: string, type: AvailableItemTypes | "no
 };
 
 export const useFullSearch = (project_id: string) => {
-  return useMutation(async (query: string) =>
+  return useMutation(async ({ query, type }: { query: string | string[]; type: "namecontent" | "tags" }) =>
     (
-      await fetch(`${baseURLS.baseServer}${getURLS.getFullSearch}${project_id}`, {
+      await fetch(`${baseURLS.baseServer}${getURLS.getFullSearch}${project_id}/${type}`, {
         method: "POST",
         body: JSON.stringify({ query }),
       })
