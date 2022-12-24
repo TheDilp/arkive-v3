@@ -1,4 +1,4 @@
-import { EdgeDefinition, NodeDefinition } from "cytoscape";
+import { EdgeCollection, EdgeDefinition, NodeCollection, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -21,6 +21,7 @@ import { toaster } from "../../utils/toast";
 type Props = {
   isReadOnly?: boolean;
 };
+type BoardContextType = null | "board" | "nodes" | "edges";
 
 export default function BoardView({ isReadOnly }: Props) {
   const cm = useRef() as any;
@@ -31,10 +32,18 @@ export default function BoardView({ isReadOnly }: Props) {
   const [edgeHandlesRef, setEdgeHandlesRef] = useAtom(BoardEdgeHandlesAtom);
 
   const [boardState] = useAtom(BoardStateAtom);
-  const [boardContext, setBoardContext] = useState<{ x: null | number; y: null | number; type: "node" | "edge" }>({
+  const [boardContext, setBoardContext] = useState<{
+    x: null | number;
+    y: null | number;
+    type: BoardContextType;
+    nodes: NodeCollection | null;
+    edges: EdgeCollection | null;
+  }>({
     x: null,
     y: null,
-    type: "node",
+    type: null,
+    nodes: null,
+    edges: null,
   });
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
   const { data: board, isLoading } = useGetItem(item_id as string, "boards") as {
@@ -46,88 +55,139 @@ export default function BoardView({ isReadOnly }: Props) {
   const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const deleteManyNodes = useDeleteManySubItems(item_id as string, "nodes");
   const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
-  const items = [
-    {
-      command: () => {
-        if (boardContext.x && boardContext.y)
-          createNodeMutation.mutate({
-            ...DefaultNode,
-            type: board?.defaultNodeShape,
-            backgroundColor: board?.defaultNodeColor,
-            x: boardContext.x,
-            y: boardContext.y,
-            parent: item_id as string,
-            id: crypto.randomUUID(),
-          });
-        else toaster("error", "There was an error creating your node (missing X and Y).");
-      },
-      icon: "pi pi-fw pi-map-marker",
-      label: "New Node",
-    },
-    {
-      label: "Un/Lock Nodes",
-      items: [
+  const items = (type: BoardContextType) => {
+    const nodes = boardRef?.nodes(":selected");
+    const edges = boardRef?.edges(":selected");
+    if (type === "board")
+      return [
         {
-          label: "Unlock Selected",
-          icon: "pi pi-fw pi-lock",
           command: () => {
-            if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+            if (boardContext.x && boardContext.y)
+              createNodeMutation.mutate({
+                ...DefaultNode,
+                type: board?.defaultNodeShape,
+                backgroundColor: board?.defaultNodeColor,
+                x: boardContext.x,
+                y: boardContext.y,
+                parent: item_id as string,
+                id: crypto.randomUUID(),
+              });
+            else toaster("error", "There was an error creating your node (missing X and Y).");
+          },
+          label: "New Node",
+        },
+        {
+          label: "Un/Lock Nodes",
+          items: [
+            {
+              label: "Unlock Selected",
+              icon: "pi pi-fw pi-lock",
+              command: () => {
+                if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+              },
+            },
+            {
+              label: "Lock Selected",
+              icon: "pi pi-fw pi-unlock",
+              command: () => {
+                if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+              },
+            },
+          ],
+        },
+        {
+          label: "View",
+          items: [
+            {
+              label: "Go to center of nodes",
+              command: () => boardRef?.center(),
+            },
+            {
+              label: "Fit view to nodes",
+              command: () => {
+                if (boardRef)
+                  boardRef.animate(
+                    {
+                      fit: {
+                        padding: 0,
+                        eles: boardRef.nodes(),
+                      },
+                    },
+                    {
+                      duration: 1250,
+                    },
+                  );
+              },
+            },
+          ],
+        },
+        {
+          label: "Quick Create",
+          items: [
+            {
+              label: "From Document",
+            },
+          ],
+        },
+        { separator: true },
+        {
+          label: "Delete Selected Nodes",
+          command: () => {
+            if (boardRef) {
+              const ids: string[] = boardRef.nodes(":selected").map((node: any) => node.data().id);
+              deleteManyNodes.mutate(ids);
+            }
+          },
+        },
+      ];
+
+    if (type === "nodes")
+      return [
+        {
+          label: "Center Nodes",
+          command: () => {
+            if (boardRef && boardContext.nodes) boardRef.center(boardContext.nodes);
           },
         },
         {
-          label: "Lock Selected",
-          icon: "pi pi-fw pi-unlock",
+          label: "Highlight Connected Nodes",
           command: () => {
-            if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+            if (nodes) {
+              const incomers = nodes.incomers();
+              const outgoers = nodes.outgoers();
+              incomers.nodes().flashClass("incomingNodeHighlight", 1500);
+              incomers.edges().flashClass("incomingEdgeHighlight", 1500);
+              outgoers.nodes().flashClass("outgoingNodeHighlight", 1500);
+              outgoers.edges().flashClass("outgoingEdgeHighlight", 1500);
+            }
           },
         },
-      ],
-    },
-    {
-      label: "View",
-      items: [
         {
-          label: "Go to center of nodes",
-          command: () => boardRef?.center(),
+          label: "Un/Lock Nodes",
+          items: [
+            {
+              label: "Unlock selected",
+              icon: "pi pi-fw pi-lock-open",
+              command: () => {
+                if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+              },
+            },
+            {
+              label: "Lock selected",
+              icon: "pi pi-fw pi-lock",
+              command: () => {
+                if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+              },
+            },
+          ],
         },
-        {
-          label: "Fit view to nodes",
-          command: () => {
-            if (boardRef)
-              boardRef.animate(
-                {
-                  fit: {
-                    padding: 0,
-                    eles: boardRef.nodes(),
-                  },
-                },
-                {
-                  duration: 1250,
-                },
-              );
-          },
-        },
-      ],
-    },
-    {
-      label: "Quick Create",
-      items: [
-        {
-          label: "From Document",
-        },
-      ],
-    },
-    { separator: true },
-    {
-      label: "Delete Selected Nodes",
-      command: () => {
-        if (boardRef) {
-          const ids: string[] = boardRef.nodes(":selected").map((node: any) => node.data().id);
-          deleteManyNodes.mutate(ids);
-        }
-      },
-    },
-  ];
+        { separator: true },
+        { label: "Template From Node" },
+        { label: "Delete Selected Node" },
+      ];
+
+    return [];
+  };
   useEffect(() => {
     if (board) {
       let temp_nodes: NodeDefinition[] = [];
@@ -188,7 +248,7 @@ export default function BoardView({ isReadOnly }: Props) {
           cm.current.show(evt.originalEvent);
           setBoardContext({
             ...evt.position,
-            type: "node",
+            type: "board",
           });
         }
         // Else - the target is a node or an edge
@@ -204,8 +264,18 @@ export default function BoardView({ isReadOnly }: Props) {
           }
           if (group === "nodes") {
             cm.current.show(evt.originalEvent);
+            setBoardContext({
+              ...evt.position,
+              nodes: group,
+              type: "nodes",
+            });
           } else if (group === "edges") {
             cm.current.show(evt.originalEvent);
+            setBoardContext({
+              ...evt.position,
+              edges: group,
+              type: "edges",
+            });
           }
         }
       });
@@ -279,7 +349,7 @@ export default function BoardView({ isReadOnly }: Props) {
   if (isLoading) return <ProgressSpinner />;
   return (
     <div className="h-full w-full">
-      <ContextMenu cm={cm} items={items} />
+      <ContextMenu cm={cm} items={items(boardContext.type)} />
 
       <CytoscapeComponent
         className="h-full w-full"
