@@ -123,6 +123,9 @@
 .p-chips-multiple-container {
   @apply max-w-full rounded-none border-t-0 !important;
 }
+.p-autocomplete {
+  @apply block !important;
+}
 .p-chips-token,
 .p-autocomplete-token {
   @apply my-0.5 !important;

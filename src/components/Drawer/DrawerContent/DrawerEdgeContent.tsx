@@ -21,6 +21,7 @@ import {
   BoardFontSizes,
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
+import Tags from "../../Tags/Tags";
 
 function FontItemTemplate(item: { label: string; value: string }) {
   const { value, label } = item;
@@ -197,6 +198,9 @@ export default function DrawerEdgeContent() {
                   tooltipOptions={{ position: "left" }}
                   value={localItem.zIndex}
                 />
+              </div>
+              <div className="mb-2 w-full">
+                <Tags handleChange={handleChange} localItem={localItem} type="documents" />
               </div>
             </div>
           </TabPanel>

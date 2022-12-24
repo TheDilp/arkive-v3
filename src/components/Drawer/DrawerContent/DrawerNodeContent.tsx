@@ -281,7 +281,7 @@ export default function DrawerNodeContent() {
             />
           </div>
           <div className="mb-2 w-full">
-            <Tags handleChange={handleChange} localItem={localItem} type="documents" />
+            <Tags handleChange={handleChange} localItem={localItem} type="nodes" />
           </div>
         </div>
       </div>

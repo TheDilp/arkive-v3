@@ -37,7 +37,7 @@ export function getIconForFullSearch(item: DocumentType | MapType | MapPinType |
   let icon = "mdi:file";
   if ("icon" in item) icon = item.icon || "mdi:file";
   if ("text" in item) icon = "mdi:map_marker";
-  if ("label" in item) icon = "mdi:cog";
+  if ("label" in item) icon = "ph:graph-light";
 
   return icon;
 }

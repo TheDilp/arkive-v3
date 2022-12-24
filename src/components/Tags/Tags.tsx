@@ -11,7 +11,7 @@ import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 type Props = {
   handleChange: ({ name, value }: { name: string; value: any }) => void;
   localItem: AllItemsType | NodeType | EdgeType | DocumentCreateType;
-  type: AvailableItemTypes;
+  type: AvailableItemTypes | "nodes" | "edges";
 };
 
 const handleTagsChange = async (

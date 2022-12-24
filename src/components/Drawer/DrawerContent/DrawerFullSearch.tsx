@@ -39,7 +39,7 @@ export default function DrawerFullSearch() {
       mutate(
         { query: searchQuery, type },
         {
-          onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: [] }) => setResults(data),
+          onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: []; edges: [] }) => setResults(data),
         },
       );
     else setResults(SearchDefault);
@@ -71,12 +71,11 @@ export default function DrawerFullSearch() {
           </div>
         ) : null}
         {menuIndex === 1 ? (
-          <div>
-            <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
+          <div className="flex w-full flex-col">
+            <h2 className="w-full text-center font-Lato text-2xl">Search by Tag</h2>
             <AutoComplete
               className="w-full"
               completeMethod={(e) => debounceTags(e.query)}
-              inputClassName="w-full"
               multiple
               onChange={(e) => setTags(e.value)}
               onSelect={(e) => debounceSearch(e.value, "tags")}

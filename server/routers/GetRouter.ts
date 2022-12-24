@@ -5,84 +5,91 @@ import { AvailableTypes } from "../types/dataTypes";
 import { onlyUniqueStrings } from "../utils/transform";
 
 export const getRouter = (server: FastifyInstance, _: any, done: any) => {
-  server.get("/alltags/:type/:parent", async (req: FastifyRequest<{ Params: { type: AvailableTypes; parent: string } }>) => {
-    const { type, parent } = req.params;
-    try {
-      if (type === "documents") {
-        const data = await prisma.documents.findMany({
-          select: {
-            tags: true,
-          },
-          where: {
-            project_id: parent,
-          },
-        });
-        return data
-          .map((obj: { tags: string[] }) => obj.tags)
-          .flat()
-          .filter(onlyUniqueStrings);
+  server.get(
+    "/alltags/:type/:project_id",
+    async (req: FastifyRequest<{ Params: { type: AvailableTypes; project_id: string } }>) => {
+      const { type, project_id } = req.params;
+      try {
+        if (type === "documents") {
+          const data = await prisma.documents.findMany({
+            select: {
+              tags: true,
+            },
+            where: {
+              project_id,
+            },
+          });
+          return data
+            .map((obj: { tags: string[] }) => obj.tags)
+            .flat()
+            .filter(onlyUniqueStrings);
+        }
+        if (type === "maps") {
+          const data = await prisma.maps.findMany({
+            select: {
+              tags: true,
+            },
+            where: {
+              project_id,
+            },
+          });
+          return data
+            .map((obj: { tags: string[] }) => obj.tags)
+            .flat()
+            .filter(onlyUniqueStrings);
+        }
+        if (type === "boards") {
+          const data = await prisma.boards.findMany({
+            select: {
+              tags: true,
+            },
+            where: {
+              project_id,
+            },
+          });
+          return data
+            .map((obj: { tags: string[] }) => obj.tags)
+            .flat()
+            .filter(onlyUniqueStrings);
+        }
+        if (type === "nodes") {
+          const data = await prisma.nodes.findMany({
+            select: {
+              tags: true,
+            },
+            where: {
+              board: {
+                project_id,
+              },
+            },
+          });
+          return data
+            .map((obj: { tags: string[] }) => obj.tags)
+            .flat()
+            .filter(onlyUniqueStrings);
+        }
+        if (type === "edges") {
+          const data = await prisma.edges.findMany({
+            select: {
+              tags: true,
+            },
+            where: {
+              board: {
+                project_id,
+              },
+            },
+          });
+          return data
+            .map((obj: { tags: string[] }) => obj.tags)
+            .flat()
+            .filter(onlyUniqueStrings);
+        }
+      } catch (error) {
+        console.log(error);
       }
-      if (type === "maps") {
-        const data = await prisma.maps.findMany({
-          select: {
-            tags: true,
-          },
-          where: {
-            project_id: parent,
-          },
-        });
-        return data
-          .map((obj: { tags: string[] }) => obj.tags)
-          .flat()
-          .filter(onlyUniqueStrings);
-      }
-      if (type === "boards") {
-        const data = await prisma.boards.findMany({
-          select: {
-            tags: true,
-          },
-          where: {
-            project_id: parent,
-          },
-        });
-        return data
-          .map((obj: { tags: string[] }) => obj.tags)
-          .flat()
-          .filter(onlyUniqueStrings);
-      }
-      if (type === "nodes") {
-        const data = await prisma.nodes.findMany({
-          select: {
-            tags: true,
-          },
-          where: {
-            parent,
-          },
-        });
-        return data
-          .map((obj: { tags: string[] }) => obj.tags)
-          .flat()
-          .filter(onlyUniqueStrings);
-      }
-      if (type === "edges") {
-        const data = await prisma.edges.findMany({
-          select: {
-            tags: true,
-          },
-          where: {
-            parent,
-          },
-        });
-        return data
-          .map((obj: { tags: string[] }) => obj.tags)
-          .flat()
-          .filter(onlyUniqueStrings);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    return [];
-  });
+      return [];
+    },
+  );
   server.post("/alltags/:project_id", async (req: FastifyRequest<{ Params: { project_id: string }; Body: string }>) => {
     const { project_id } = req.params;
     const { query } = JSON.parse(req.body);
