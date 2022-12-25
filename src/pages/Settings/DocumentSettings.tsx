@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../components/IconSelect/IconSelect";
+import Tags from "../../components/Tags/Tags";
 import { useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/documentTypes";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
@@ -28,7 +29,7 @@ function getCheckedValue(
   return false;
 }
 
-function TitleEditor(editorOptions: ColumnEditorOptions, updateDocument: any) {
+function TitleEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: Partial<DocumentType>) => void) {
   const { rowData, editorCallback } = editorOptions;
 
   return (
@@ -82,7 +83,11 @@ function ImageColumn({ image }: DocumentType) {
     </div>
   ) : null;
 }
-function ImageEditor(editorOptions: ColumnEditorOptions, images: string[] | undefined, updateDocument: any) {
+function ImageEditor(
+  editorOptions: ColumnEditorOptions,
+  images: string[] | undefined,
+  updateDocument: (data: Partial<DocumentType>) => void,
+) {
   const { rowData } = editorOptions as { rowData: DocumentType };
   return (
     <div className="w-36">
@@ -141,27 +146,45 @@ function TagsColumn({ tags }: DocumentType) {
     </div>
   );
 }
+function TagsEditor(
+  editorOptions: ColumnEditorOptions,
+  updateDocument: (data: Partial<DocumentType>) => void,
+  refetchTags: () => void,
+) {
+  const { rowData, editorCallback } = editorOptions;
+  return (
+    <Tags
+      handleChange={({ name, value }) => {
+        if (editorCallback) editorCallback(value);
+        updateDocument({ id: rowData.id, [name]: value });
+        refetchTags();
+      }}
+      localItem={rowData}
+      type="documents"
+    />
+  );
+}
 
 export default function DocumentSettings() {
   const { project_id } = useParams();
 
   const tableRef = useRef() as MutableRefObject<DataTable>;
-
+  const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
+  const { data: images } = useGetAllImages(project_id as string);
   const [selected, setSelected] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
+
   const { mutate } = useUpdateItem("documents");
   const queryClient = useQueryClient();
 
   const updateDocument = (data: Partial<DocumentType>) =>
     mutate(data, {
-      onSuccess: () => {
-        queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
+      onSuccess: async () => {
+        await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
         toaster("success", "Item updated successfully.");
       },
     });
-
-  const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
-  const { data: images } = useGetAllImages(project_id as string);
+  const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
 
   return (
     <div className="p-4">
@@ -199,7 +222,15 @@ export default function DocumentSettings() {
           sortable
           sortField="parent"
         />
-        <Column align="center" body={(data) => TagsColumn(data)} field="tags" header="Tags" sortable sortField="tags" />
+        <Column
+          align="center"
+          body={(data) => TagsColumn(data)}
+          editor={(e) => TagsEditor(e, updateDocument, refetchTags)}
+          field="tags"
+          header="Tags"
+          sortable
+          sortField="tags"
+        />
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "folder")}
