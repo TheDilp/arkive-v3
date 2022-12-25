@@ -15,7 +15,6 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { boardNodeShapes } from "../../../utils/boardUtils";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
-import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import Tags from "../../Tags/Tags";
@@ -32,7 +31,7 @@ export default function DrawerBoardContent() {
 
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     currentBoard ?? {
-      ...DefaultMap,
+      ...DefaultBoard,
       project_id: project_id as string,
     },
   );
@@ -91,8 +90,7 @@ export default function DrawerBoardContent() {
           if (e.key === "Enter" && currentBoard) {
             updateBoardMutation?.mutate({
               id: currentBoard.id,
-              parent: localItem.parent,
-              title: localItem.title,
+              ...changedData,
             });
           }
         }}

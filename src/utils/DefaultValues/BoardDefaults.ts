@@ -7,7 +7,7 @@ export const DefaultBoard: DefaultBoardType = {
   isPublic: false,
   expanded: false,
   sort: 0,
-  parent: null,
+  parentId: null,
   tags: [],
   defaultNodeShape: "rectangle",
   defaultNodeColor: "#595959",
