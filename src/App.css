@@ -1,6 +1,9 @@
 .p-tag {
   @apply bg-sky-700 text-white !important;
 }
+.alter_namesTags .p-tag {
+  @apply bg-orange-600 !important;
+}
 .p-breadcrumb {
   @apply border-transparent bg-transparent !important;
 }

@@ -137,15 +137,16 @@ function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
   return null;
 }
 
-function TagsColumn({ tags }: DocumentType) {
+function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" | "alter_names") {
   return (
-    <div className="flex justify-center gap-x-1">
-      {tags.map((tag) => (
+    <div className={`flex justify-center gap-x-1 ${type}Tags`}>
+      {(type === "tags" ? tags : alter_names).map((tag) => (
         <Tag key={tag} value={tag} />
       ))}
     </div>
   );
 }
+
 function TagsEditor(
   editorOptions: ColumnEditorOptions,
   updateDocument: (data: Partial<DocumentType>) => void,
@@ -224,7 +225,7 @@ export default function DocumentSettings() {
         />
         <Column
           align="center"
-          body={(data) => TagsColumn(data)}
+          body={(data) => TagsAlterNamesColumn(data, "tags")}
           editor={(e) => TagsEditor(e, updateDocument, refetchTags)}
           field="tags"
           header="Tags"
@@ -254,6 +255,15 @@ export default function DocumentSettings() {
           field="isPublic"
           header="Public"
           sortable
+        />
+        <Column
+          align="center"
+          body={(data) => TagsAlterNamesColumn(data, "alter_names")}
+          // editor={(e) => TagsEditor(e, updateDocument, refetchTags)}
+          field="alter_names"
+          header="Alternative Names"
+          sortable
+          sortField="alter_names"
         />
       </DataTable>
     </div>
