@@ -113,10 +113,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
         setContextMenu({ data: null, type, folder: false, template: true });
         cm?.current?.show(e);
       }}>
-      <ConfirmDialog />
       <ContextMenu cm={cm} items={contextItems} />
       <InputText
-        className="mt-1 w-full p-1"
+        className="w-full p-1 mt-1"
         onChange={(e) => setFilter(e.target.value)}
         placeholder="Filter by Title"
         value={filter}

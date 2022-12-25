@@ -15,11 +15,12 @@ import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../components/IconSelect/IconSelect";
 import Tags from "../../components/Tags/Tags";
-import { useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/documentTypes";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { toaster } from "../../utils/toast";
 import SettingsToolbar from "./SettingsToolbar";
+import { deleteItem } from "../../utils/Confirms/Confirm";
 // TABLE UTIL FUNCTIONS
 function getCheckedValue(
   { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
@@ -186,7 +187,7 @@ function AlterNamesEditor(editorOptions: ColumnEditorOptions, updateDocument: (d
   );
 }
 
-function ActionsColumn({ id, title, folder }: DocumentType, project_id: string, navigate: NavigateFunction) {
+function ActionsColumn({ id, folder }: DocumentType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
     <div className="flex gap-x-1">
       <Button
@@ -198,7 +199,12 @@ function ActionsColumn({ id, title, folder }: DocumentType, project_id: string, 
         tooltip="Go to item"
         tooltipOptions={{ showDelay: 300, position: "left" }}
       />
-      <Button className="p-button-danger p-button-outlined" icon="pi pi-fw pi-trash" iconPos="right" onClick={() => {}} />
+      <Button
+        className="p-button-danger p-button-outlined"
+        icon="pi pi-fw pi-trash"
+        iconPos="right"
+        onClick={() => deleteAction(id)}
+      />
     </div>
   );
 }
@@ -213,6 +219,7 @@ export default function DocumentSettings() {
   const [globalFilter, setGlobalFilter] = useState("");
 
   const { mutate } = useUpdateItem("documents");
+  const { mutate: deleteMutation } = useDeleteItem("documents", project_id as string);
   const queryClient = useQueryClient();
 
   const updateDocument = (data: Partial<DocumentType>) =>
@@ -223,7 +230,7 @@ export default function DocumentSettings() {
       },
     });
   const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
-
+  const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   return (
     <div className="p-4">
       <SettingsToolbar ref={tableRef} filter={{ globalFilter, setGlobalFilter }} type="documents" />
@@ -302,12 +309,7 @@ export default function DocumentSettings() {
           sortable
           sortField="alter_names"
         />
-        <Column
-          align="center"
-          body={(data) => ActionsColumn(data, project_id as string, navigate)}
-          editor={(e) => AlterNamesEditor(e, updateDocument)}
-          header="Actions"
-        />
+        <Column align="center" body={(data) => ActionsColumn(data, navigate, deleteAction)} header="Actions" />
       </DataTable>
     </div>
   );
