@@ -1,20 +1,24 @@
 import { UseMutateFunction } from "@tanstack/react-query";
 import { SetStateAction } from "jotai";
+import { AutoComplete } from "primereact/autocomplete";
 import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
-import { Dispatch, forwardRef, MutableRefObject } from "react";
+import { Dispatch, forwardRef, MutableRefObject, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
+import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { getSearchTags } from "../../utils/CRUD/CRUDFunctions";
 
 type Props = {
   type: AvailableItemTypes;
   filter: {
-    globalFilter: string;
-    setGlobalFilter: Dispatch<SetStateAction<string>>;
+    globalFilter: { title: string; tags: string[] };
+    setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: string[] }>>;
   };
 };
 
@@ -65,48 +69,80 @@ const leftToolbarTemplate = (
     </div>
   );
 };
-const rightToolbarTemplate = (
+function RightToolbarTemplate(
   ref: MutableRefObject<DataTable>,
   filter: {
-    globalFilter: string;
-    setGlobalFilter: Dispatch<SetStateAction<string>>;
+    globalFilter: { title: string; tags: string[] };
+    setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: string[] }>>;
   },
-) => {
+  type: AvailableItemTypes,
+) {
+  const { project_id } = useParams();
+  const { current } = ref;
+  const { globalFilter, setGlobalFilter } = filter;
+
+  const { data: tags } = useGetAllTags(project_id as string, type);
+  const [filteredTags, setFilteredTags] = useState<string[]>([]);
+
   return (
-    <div className="flex gap-x-2">
+    <div className="flex flex-1 gap-x-2">
       <Button
-        className="p-button-outlined mr-2"
+        className="w-48 p-button-outlined"
         icon="pi pi-filter-slash"
         label="Reset"
         onClick={() => {
           // @ts-ignore
-          ref?.current?.reset();
+          current?.reset();
+          setGlobalFilter({ title: globalFilter.title, tags: [] });
         }}
         tooltip="Resets Filters, Sorting and Pagination"
         type="button"
+      />
+      <AutoComplete
+        className="w-full"
+        completeMethod={(e) => setFilteredTags(tags?.filter((tag) => tag.toLowerCase().includes(e.query.toLowerCase())) || [])}
+        multiple
+        onChange={(e) => setGlobalFilter({ title: globalFilter.title, tags: e.value })}
+        onKeyPress={(e) => {
+          if (e.key === "Enter") {
+            if (globalFilter.tags.includes(e.currentTarget.value))
+              setGlobalFilter({
+                title: globalFilter.title,
+                tags: globalFilter.tags.filter((tag) => tag !== e.currentTarget.value),
+              });
+            else setGlobalFilter({ title: globalFilter.title, tags: [...globalFilter.tags, e.currentTarget.value] });
+          }
+        }}
+        onSelect={(e) => {
+          if (globalFilter.tags.includes(e.value))
+            setGlobalFilter({ title: globalFilter.title, tags: globalFilter.tags.filter((tag) => tag !== e.value) });
+          else setGlobalFilter({ title: globalFilter.title, tags: [...globalFilter.tags, e.value] });
+        }}
+        suggestions={filteredTags}
+        value={globalFilter.tags}
       />
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
           onChange={(e) => {
-            filter.setGlobalFilter(e.target.value);
+            setGlobalFilter({ title: e.currentTarget.value, tags: globalFilter.tags });
           }}
           placeholder="Quick Search"
-          value={filter.globalFilter}
+          value={globalFilter.title}
         />
       </span>
     </div>
   );
-};
+}
 
 const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter }, ref) => {
   const { project_id } = useParams();
   const { mutate } = useCreateItem(type);
   return (
     <Toolbar
-      className="mb-2 flex justify-between"
+      className="flex mb-1"
       left={() => leftToolbarTemplate(mutate, project_id as string)}
-      right={() => rightToolbarTemplate(ref as MutableRefObject<DataTable>, filter)}
+      right={() => RightToolbarTemplate(ref as MutableRefObject<DataTable>, filter, type)}
     />
   );
 });

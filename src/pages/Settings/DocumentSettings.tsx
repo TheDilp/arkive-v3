@@ -216,7 +216,7 @@ export default function DocumentSettings() {
   const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   const { data: images } = useGetAllImages(project_id as string);
   const [selected, setSelected] = useState([]);
-  const [globalFilter, setGlobalFilter] = useState("");
+  const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
 
   const { mutate } = useUpdateItem("documents");
   const { mutate: deleteMutation } = useDeleteItem("documents", project_id as string);
@@ -246,7 +246,9 @@ export default function DocumentSettings() {
         showGridlines
         size="small"
         sortMode="multiple"
-        value={documents}>
+        value={documents
+          .filter((doc) => (globalFilter.title ? doc.title.toLowerCase().includes(globalFilter.title.toLowerCase()) : true))
+          .filter((doc) => (globalFilter.tags.length ? globalFilter.tags.every((tag) => doc.tags.includes(tag)) : true))}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column editor={(e) => TitleEditor(e, updateDocument)} field="title" header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
