@@ -104,6 +104,7 @@ function RightToolbarTemplate(
             setGlobalFilter({ title: globalFilter.title, tags: globalFilter.tags.filter((tag) => tag !== e.value) });
           else setGlobalFilter({ title: globalFilter.title, tags: [...globalFilter.tags, e.value] });
         }}
+        placeholder="Search by tags"
         suggestions={filteredTags}
         value={globalFilter.tags}
       />

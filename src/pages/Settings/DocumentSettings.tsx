@@ -189,7 +189,7 @@ function AlterNamesEditor(editorOptions: ColumnEditorOptions, updateDocument: (d
 
 function ActionsColumn({ id, folder }: DocumentType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
-    <div className="flex gap-x-1">
+    <div className="flex justify-center gap-x-1">
       <Button
         className="p-button-success p-button-outlined"
         icon="pi pi-fw pi-link"
