@@ -9,6 +9,7 @@ export interface DocumentType extends BaseItemType {
   properties: undefined | string[];
   alter_names: string[];
   image?: string | null;
+  parent?: DocumentType;
 }
 
 export type DocumentCreateType = Partial<Omit<DocumentType, "project_id">> & {

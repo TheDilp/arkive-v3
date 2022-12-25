@@ -30,7 +30,7 @@ export default function DrawerDocumentContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const queryClient = useQueryClient();
-  const { data: allDocuments } = useGetAllItems(project_id as string, "documents");
+  const { data: allDocuments } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   const { data: document } = useGetItem(drawer?.id as string, "documents", { enabled: !!drawer?.id }) as { data: DocumentType };
   const { data: images } = useGetAllImages(project_id as string);
 
@@ -49,7 +49,7 @@ export default function DrawerDocumentContent() {
 
   function CreateUpdateDocument(newData: DocumentCreateType) {
     if (document) {
-      if (allDocuments?.some((item) => item.parent === newData.id) && !newData.folder) {
+      if (allDocuments?.some((item) => item?.parent?.id === newData.id) && !newData.folder) {
         toaster("warning", "Cannot convert to file if folder contains files.");
         return;
       }
@@ -62,7 +62,6 @@ export default function DrawerDocumentContent() {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
             if ("tags" in changedData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
-            toaster("success", "Your document was successfully updated.");
           },
         },
       );
@@ -76,7 +75,6 @@ export default function DrawerDocumentContent() {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
             if ("tags" in changedData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
-            toaster("success", "Your document was successfully created.");
           },
         },
       );
@@ -128,7 +126,7 @@ export default function DrawerDocumentContent() {
             <Dropdown
               className="w-full"
               filter
-              onChange={(e) => handleChange({ name: "parent", value: e.target.value })}
+              onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
               optionLabel="title"
               options={
                 allDocuments
@@ -137,7 +135,7 @@ export default function DrawerDocumentContent() {
               }
               optionValue="id"
               placeholder="Document Folder"
-              value={localItem?.parent}
+              value={localItem?.parent?.id}
             />
           </div>
         )}

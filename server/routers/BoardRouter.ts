@@ -74,6 +74,19 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       return null;
     },
   );
+  server.post("/sortboards", async (req: FastifyRequest<{ Body: string }>) => {
+    const indexes: { id: string; parent: string; sort: number }[] = JSON.parse(req.body);
+    const updates = indexes.map((idx) =>
+      prisma.boards.update({
+        data: {
+          parentId: idx.parent,
+          sort: idx.sort,
+        },
+        where: { id: idx.id },
+      }),
+    );
+    await prisma.$transaction(updates);
+  });
   server.delete(
     "/deleteboard/:id",
     async (
@@ -81,15 +94,9 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
         Params: { id: string };
       }>,
     ) => {
-      await prisma.boards.deleteMany({
-        where: {
-          parent: req.params.id,
-        },
-      });
-      const newDocument = await prisma.boards.delete({
+      await prisma.boards.delete({
         where: { id: req.params.id },
       });
-      return newDocument;
     },
   );
   server.post(

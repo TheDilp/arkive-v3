@@ -135,7 +135,7 @@ function FolderTemplatePublicColumn(
 }
 function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
   // eslint-disable-next-line react/destructuring-assignment
-  const parentFolder = documents?.find((doc) => doc.id === parent);
+  const parentFolder = documents?.find((doc) => doc.id === parent?.id);
   if (parentFolder) return <div className="w-full">{parentFolder.title}</div>;
   return null;
 }

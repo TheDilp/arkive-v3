@@ -24,7 +24,6 @@ model documents {
   content     Json?    @db.JsonB
   tags        String[] @default([])
   icon        String?  @default("mdi:file")
-  parent      String?  @db.Uuid
   expanded    Boolean  @default(false)
   folder      Boolean  @default(false)
   isPublic    Boolean  @default(false)
@@ -38,6 +37,10 @@ model documents {
   project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
   project_id String   @db.Uuid
   nodes      nodes[]
+
+  parentId String?     @db.Uuid
+  parent   documents?  @relation("parentChildDocuments", fields: [parentId], references: [id], onDelete: Cascade)
+  children documents[] @relation("parentChildDocuments")
 }
 
 model maps {
@@ -48,15 +51,19 @@ model maps {
   expanded Boolean  @default(false)
   sort     Int      @default(0)
   tags     String[] @default([])
-  parent   String?  @db.Uuid
-  image    String?
-  icon     String?  @default("mdi:map")
+
+  image String?
+  icon  String? @default("mdi:map")
 
   project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
   project_id String   @db.Uuid
 
   map_pins   map_pins[]
   map_layers map_layers[]
+
+  parentId String? @db.Uuid
+  parent   maps?   @relation("parentChildMaps", fields: [parentId], references: [id], onDelete: Cascade)
+  children maps[]  @relation("parentChildMaps")
 }
 
 model map_pins {
@@ -91,8 +98,8 @@ model boards {
   expanded Boolean  @default(false)
   sort     Int      @default(0)
   tags     String[] @default([])
-  parent   String?  @db.Uuid
-  icon     String?  @default("mdi:draw")
+
+  icon String? @default("mdi:draw")
 
   defaultNodeShape String  @default("rectangle")
   defaultNodeColor String  @default("#595959")
@@ -101,6 +108,9 @@ model boards {
 
   project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
   project_id String   @db.Uuid
+  parentId   String?  @db.Uuid
+  parent     boards?  @relation("parentChildBoards", fields: [parentId], references: [id], onDelete: Cascade)
+  children   boards[] @relation("parentChildBoards")
   nodes      nodes[]
   edges      edges[]
 }

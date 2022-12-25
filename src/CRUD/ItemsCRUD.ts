@@ -237,7 +237,6 @@ export const useDeleteManyItems = (type: AvailableItemTypes, project_id: string)
   return useMutation(
     async (ids: string[]) => {
       if (ids) {
-        console.log(ids);
         const url = deleteManyURL(type);
         if (url)
           return fetch(url, {
@@ -279,7 +278,7 @@ export const useSortMutation = (project_id: string, type: AvailableItemTypes) =>
           if (prev)
             return prev.map((item) => {
               const idx = variables.findIndex((sortIndex) => sortIndex.id === item.id);
-              if (idx !== -1) return { ...item, parent: variables[idx].parent, sort: variables[idx].sort };
+              if (idx !== -1) return { ...item, parentId: variables[idx].parent, sort: variables[idx].sort };
               return item;
             });
 

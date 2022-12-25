@@ -6,7 +6,7 @@ export const DefaultDocument: DefaultDocumentType = {
   expanded: false,
   folder: false,
   icon: "mdi:file",
-  parent: null,
+  parentId: null,
   properties: [],
   isPublic: false,
   sort: 0,

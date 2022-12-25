@@ -1,6 +1,5 @@
 import { DragLayerMonitorProps, NodeModel, PlaceholderRenderParams, Tree } from "@minoru/react-dnd-treeview";
 import { useAtom } from "jotai";
-import { ConfirmDialog } from "primereact/confirmdialog";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
@@ -96,7 +95,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
             data: item,
             droppable: item.folder,
             id: item.id,
-            parent: item.parent || "0",
+            parent: item.parentId || "0",
             text: item.title,
           }))
           .sort((a, b) => a.data.sort - b.data.sort),
@@ -115,7 +114,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
       }}>
       <ContextMenu cm={cm} items={contextItems} />
       <InputText
-        className="w-full p-1 mt-1"
+        className="mt-1 w-full p-1"
         onChange={(e) => setFilter(e.target.value)}
         placeholder="Filter by Title"
         value={filter}
@@ -160,7 +159,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
           handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
           updateItemMutation?.mutate({
             id: dragSourceId as string,
-            parent: dropTargetId === "0" ? null : (dropTargetId as string),
+            parentId: dropTargetId === "0" ? null : (dropTargetId as string),
           });
         }}
         // @ts-ignore
