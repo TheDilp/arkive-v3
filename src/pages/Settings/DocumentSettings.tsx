@@ -81,7 +81,7 @@ function IconColumn({ id, icon, folder }: DocumentType) {
 function ImageColumn({ image }: DocumentType) {
   const { project_id } = useParams();
   return image ? (
-    <div className="flex justify-center w-full h-8">
+    <div className="flex h-8 w-full justify-center">
       <img alt={image || "column"} className="object-contain" src={getImageLink(image, project_id as string)} />
     </div>
   ) : null;

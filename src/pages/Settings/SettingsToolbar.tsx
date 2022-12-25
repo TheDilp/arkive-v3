@@ -7,14 +7,12 @@ import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
 import { Dispatch, forwardRef, MutableRefObject, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 import { useCreateItem, useDeleteManyItems } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { DocumentType } from "../../types/documentTypes";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
-import { getSearchTags } from "../../utils/CRUD/CRUDFunctions";
 import { toaster } from "../../utils/toast";
 
 type Props = {
@@ -75,7 +73,7 @@ function RightToolbarTemplate(
   return (
     <div className="flex flex-1 gap-x-2">
       <Button
-        className="w-48 p-button-outlined"
+        className="p-button-outlined w-48"
         icon="pi pi-filter-slash"
         label="Reset"
         onClick={() => {
@@ -137,7 +135,7 @@ const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter, selection 
   };
   return (
     <Toolbar
-      className="flex mb-1"
+      className="mb-1 flex"
       left={() => LeftToolbarTemplate(mutate, project_id as string, deleteSelected)}
       right={() => RightToolbarTemplate(ref as MutableRefObject<DataTable>, filter, type)}
     />

@@ -43,7 +43,7 @@ export default function Tags({ handleChange, localItem, type }: Props) {
   const [tags, setTags] = useState(initialTags || []);
   return (
     <AutoComplete
-      className="w-full tagsAutocomplete max-h-40 border-zinc-600"
+      className="tagsAutocomplete max-h-40 w-full border-zinc-600"
       completeMethod={(e) => filterTags(e, initialTags || [], setTags)}
       multiple
       onChange={(e) => setTags(e.value)}
