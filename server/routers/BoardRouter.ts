@@ -183,29 +183,6 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
     },
   );
   server.post(
-    "/updatemanyedges",
-    async (
-      req: FastifyRequest<{
-        Body: string;
-      }>,
-    ) => {
-      try {
-        const body: { ids: string[]; data: any } = JSON.parse(req.body);
-        await prisma.edges.updateMany({
-          where: {
-            id: {
-              in: body.ids,
-            },
-          },
-          data: removeNull(body.data) as any,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-      return null;
-    },
-  );
-  server.post(
     "/updatemanynodes",
     async (
       req: FastifyRequest<{
@@ -228,6 +205,56 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       return null;
     },
   );
+  server.post(
+    "/updatemanynodesposition",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const body: { id: string; x: number; y: number }[] = JSON.parse(req.body);
+        const updates = body.map((node) =>
+          prisma.nodes.update({
+            where: { id: node.id },
+            data: {
+              x: node.x,
+              y: node.y,
+            },
+          }),
+        );
+        await prisma.$transaction(updates);
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+  server.post(
+    "/updatemanyedges",
+    async (
+      req: FastifyRequest<{
+        Body: string;
+      }>,
+    ) => {
+      try {
+        const body: { ids: string[]; data: any } = JSON.parse(req.body);
+        await prisma.edges.updateMany({
+          where: {
+            id: {
+              in: body.ids,
+            },
+          },
+          data: removeNull(body.data) as any,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      return null;
+    },
+  );
+
   server.post(
     "/updatenode/:id",
     async (

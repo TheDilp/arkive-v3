@@ -1,4 +1,4 @@
-import { EdgeDefinition, NodeDefinition } from "cytoscape";
+import { EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -8,7 +8,8 @@ import { v4 as uuid } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateSubItem, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useUpdateManyNodesPosition, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
+import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
@@ -28,7 +29,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const { project_id, item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
-
+  const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
   const [edgeHandlesRef, setEdgeHandlesRef] = useAtom(BoardEdgeHandlesAtom);
 
   const [boardState] = useAtom(BoardStateAtom);
@@ -45,7 +46,8 @@ export default function BoardView({ isReadOnly }: Props) {
     isLoading: boolean;
   };
   const contextItems = useBoardContextMenuItems({ type: boardContext.type, item_id: item_id as string, board, boardContext });
-  const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
+  const updateManyNodesPosition = useUpdateManyNodesPosition(item_id as string);
+  const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
 
   useEffect(() => {
@@ -156,36 +158,41 @@ export default function BoardView({ isReadOnly }: Props) {
         makeEdgeCallback(sourceData.id, targetData.id, board?.defaultEdgeColor);
       });
       // Moving nodes
-      boardRef.on("free", "node", function (evt: any) {
+      boardRef.on("free", "node", function (evt: EventObject) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        evt.stopImmediatePropagation();
         const target = evt.target._private;
         boardRef.elements(":selected").select();
         evt.target.select();
-
         // Grid extenstion messes with the "grab events"
         // "Freeon" event triggers on double clicking
         // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
-        if (target.position.x !== target?.data.x || target.position.y !== target.data?.y)
-          updateNodeMutation.mutate({
-            id: target.data.id,
-            x: target.position.x,
-            y: target.position.y,
-          });
+        console.log(target.data.id);
+        addOrUpdateNode({ id: target.data.id, ...target.position });
+
+        // if (target.position.x !== target?.data.x || target.position.y !== target.data?.y)
+        // updateManyNodesPosition.mutate(
+        //   updateData.map((node) => ({ id: node.id(), x: node.position().x, y: node.position().y })),
+        // );
       });
 
       // Double Click
       boardRef.on("dbltap", "node", function (evt: any) {
         const target = evt.target._private;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { backgroundImage, classes, document, locked, parent, zIndexCompare, ...rest } = target.data;
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "nodes", drawerSize: "sm" });
       });
       boardRef.on("dbltap", "edge", function (evt: any) {
         const targetEdge = evt.target._private;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { classes, parent, zIndexCompare, source, target, ...rest } = targetEdge.data;
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "edges", drawerSize: "sm" });
       });
     }
     return () => {
-      if (!isReadOnly && boardRef) {
+      if (boardRef) {
         boardRef.removeListener("click mousedown cxttap dbltap free ehcomplete");
       }
     };

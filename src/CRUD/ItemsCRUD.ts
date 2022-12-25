@@ -381,3 +381,51 @@ export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItem
     },
   );
 };
+
+export const useUpdateManyNodesPosition = (item_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (updateItemValues: { id: string; x: number; y: number }[]) => {
+      if (updateItemValues.length) {
+        return fetch(`${baseURLS.baseServer}updatemanynodesposition`, {
+          body: JSON.stringify(updateItemValues),
+          method: "POST",
+        });
+      }
+      return null;
+    },
+    // {
+    //   onMutate: async (variables) => {
+    //     const old = queryClient.getQueryData(["boards", item_id]);
+    //     if (subType === "nodes" || subType === "edges") {
+    //       queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
+    //         if (oldData) {
+    //           if (subType === "nodes")
+    //             return {
+    //               ...oldData,
+    //               [subType]: oldData[subType].map((subItem) => {
+    //                 if (variables.ids.includes(subItem.id)) return { ...subItem, ...variables.data };
+    //                 return subItem;
+    //               }),
+    //             };
+    //           if (subType === "edges")
+    //             return {
+    //               ...oldData,
+    //               [subType]: oldData[subType].map((subItem) => {
+    //                 if (variables.ids.includes(subItem.id)) return { ...subItem, ...variables.data };
+    //                 return subItem;
+    //               }),
+    //             };
+    //         }
+    //         return oldData;
+    //       });
+    //     }
+    //     return { old };
+    //   },
+    //   onError: (error, variables, context) => {
+    //     toaster("error", "There was an error updating these items.");
+    //     queryClient.setQueryData(["boards", item_id], context?.old);
+    //   },
+    // },
+  );
+};
