@@ -68,3 +68,7 @@ export const deleteManyURL = (type: AllAvailableTypes) => {
   if (type === "edges") return `${baseURLS.baseServer}deletemanyedges`;
   return null;
 };
+
+export const getImageLink = (image: string, project_id: string) => {
+  return `${baseURLS.baseServer}getimage/images/${project_id}/${image}`;
+};
