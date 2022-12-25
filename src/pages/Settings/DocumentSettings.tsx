@@ -153,7 +153,7 @@ export default function DocumentSettings() {
 
   return (
     <div className="p-4">
-      <SettingsToolbar />
+      <SettingsToolbar type="documents" />
       <DataTable
         dataKey="id"
         editMode="cell"
