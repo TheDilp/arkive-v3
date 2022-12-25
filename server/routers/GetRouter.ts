@@ -1,4 +1,3 @@
-import { documents as prismaDocumentsType } from "@prisma/client";
 import { FastifyInstance, FastifyRequest } from "fastify";
 
 import { prisma } from "..";
@@ -143,10 +142,10 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
     const tags = await prisma.$transaction(items);
     return tags
       .flat()
-      .map((o) => o.tags)
+      .map((o: { tags: string[] }) => o.tags)
       .flat()
       .filter(onlyUniqueStrings)
-      .filter((tag) => tag?.toLowerCase()?.includes(query?.toLowerCase()));
+      .filter((tag: string) => tag?.toLowerCase()?.includes(query?.toLowerCase()));
   });
   server.post(
     "/fullsearch/:project_id/:type",
@@ -240,7 +239,7 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
         ];
         const [documents, maps, pins, boards, nodes, edges] = await prisma.$transaction(searches);
 
-        const contentSearchedDocuments = (documents as prismaDocumentsType[]).filter((doc) =>
+        const contentSearchedDocuments = [...(documents as any[])].filter((doc: any) =>
           hasValueDeep(doc.content, query as string),
         );
 

@@ -69,7 +69,7 @@ export default function DocumentProperties() {
     if (currentDocument)
       updateDocumentMutation?.mutate({
         id: currentDocument.id as string,
-        public: checked,
+        isPublic: checked,
       });
   };
 
@@ -122,7 +122,7 @@ export default function DocumentProperties() {
             <div className="flex w-full flex-nowrap items-center justify-between">
               <span className="mx-2">Public:</span>
               <Checkbox
-                checked={currentDocument?.public}
+                checked={currentDocument?.isPublic}
                 onChange={(e) => handlePublicChange(e.checked)}
                 tooltip="If checked, anyone can access the content via a public page"
                 tooltipOptions={{ position: "left", showDelay: 500 }}

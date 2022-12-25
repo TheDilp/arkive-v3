@@ -4,7 +4,7 @@ export const DefaultBoard: DefaultBoardType = {
   title: "",
   icon: "mdi:draw",
   folder: false,
-  public: false,
+  isPublic: false,
   expanded: false,
   sort: 0,
   parent: null,

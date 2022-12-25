@@ -34,7 +34,7 @@ export interface BaseItemType {
   icon: string;
   sort: number;
   folder: boolean;
-  public: boolean;
+  isPublic: boolean;
   expanded: boolean;
   tags: string[];
 }

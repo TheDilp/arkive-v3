@@ -8,7 +8,7 @@ export const DefaultDocument: DefaultDocumentType = {
   icon: "mdi:file",
   parent: null,
   properties: [],
-  public: false,
+  isPublic: false,
   sort: 0,
   tags: [],
   template: false,

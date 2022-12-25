@@ -5,7 +5,7 @@ export const DefaultMap: DefaultMapType = {
   folder: false,
   image: "",
   parent: null,
-  public: false,
+  isPublic: false,
   sort: 0,
   tags: [],
   title: "New Map",

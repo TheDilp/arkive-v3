@@ -16,7 +16,17 @@ import { AllItemsType } from "../../types/generalTypes";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { toaster } from "../../utils/toast";
 
-function IconColumn({ id, icon }: DocumentType) {
+function getCheckedValue(
+  { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
+  type: "folder" | "template" | "isPublic",
+) {
+  if (type === "folder") return folder;
+  if (type === "template") return template;
+  if (type === "isPublic") return isPublic;
+  return false;
+}
+
+function IconColumn({ id, icon, folder }: DocumentType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const updateDocumentMutation = useUpdateItem("documents");
@@ -34,7 +44,12 @@ function IconColumn({ id, icon }: DocumentType) {
             },
           );
         }}>
-        <Icon className="cursor-pointer rounded-full hover:bg-sky-400" fontSize={24} icon={icon || "mdi:file"} inline />
+        <Icon
+          className="cursor-pointer rounded-full hover:bg-sky-400"
+          fontSize={24}
+          icon={folder ? "mdi:folder" : icon || "mdi:file"}
+          inline
+        />
       </IconSelect>
     </div>
   );
@@ -87,14 +102,17 @@ function ImageEditor(
   );
 }
 
-function FolderTemplateColumn({ id, folder, template }: DocumentType, type: "folder" | "template") {
+function FolderTemplatePublicColumn(
+  { id, folder, template, isPublic }: DocumentType,
+  type: "folder" | "template" | "isPublic",
+) {
   const { project_id } = useParams();
   const updateDocumentMutation = useUpdateItem("documents");
   const queryClient = useQueryClient();
 
   return (
     <Checkbox
-      checked={type === "folder" ? folder : template}
+      checked={getCheckedValue({ folder, template, isPublic }, type)}
       disabled={type === "template"}
       onChange={(e) =>
         updateDocumentMutation?.mutate(
@@ -145,20 +163,27 @@ export default function DocumentSettings() {
           field="image"
           header="Image"
         />
+        <Column align="center" body={(data) => ParentColumn(data, documents)} className="w-10" field="parent" header="Parent" />
         <Column
           align="center"
-          body={(data) => FolderTemplateColumn(data, "folder")}
+          body={(data) => FolderTemplatePublicColumn(data, "folder")}
           className="w-10"
           field="folder"
           header="Folder"
         />
-        <Column align="center" body={(data) => ParentColumn(data, documents)} className="w-10" field="parent" header="Parent" />
         <Column
           align="center"
-          body={(data) => FolderTemplateColumn(data, "template")}
+          body={(data) => FolderTemplatePublicColumn(data, "template")}
           className="w-10"
           field="template"
           header="Template"
+        />
+        <Column
+          align="center"
+          body={(data) => FolderTemplatePublicColumn(data, "isPublic")}
+          className="w-10"
+          field="public"
+          header="Public"
         />
       </DataTable>
     </div>
