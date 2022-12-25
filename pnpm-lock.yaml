@@ -9,7 +9,6 @@ specifiers:
   '@remirror/react': ^2.0.19
   '@tanstack/react-query': ^4.19.0
   '@tanstack/react-query-devtools': ^4.16.1
-  '@tanstack/react-table': ^8.7.0
   '@types/cytoscape': ^3.19.9
   '@types/cytoscape-edgehandles': ^4.0.0
   '@types/file-saver': ^2.0.5
@@ -49,7 +48,7 @@ specifiers:
   prettier: ^2.8.0
   prettier-plugin-tailwindcss: ^0.2.0
   primeicons: ^6.0.1
-  primereact: ^8.7.1
+  primereact: ^8.7.3
   react: ^18.2.0
   react-cytoscapejs: ^2.0.0
   react-dnd: ^16.0.1
@@ -74,7 +73,6 @@ dependencies:
   '@remirror/pm': 2.0.1
   '@remirror/react': 2.0.19_z3465qfnlvf4dviab4fb3454ia
   '@tanstack/react-query': 4.19.0_biqbaboplfbrettd7655fr4n2y
-  '@tanstack/react-table': 8.7.0_biqbaboplfbrettd7655fr4n2y
   concurrently: 7.6.0
   cytoscape: 3.23.0
   cytoscape-edgehandles: 4.0.1_cytoscape@3.23.0
@@ -86,7 +84,7 @@ dependencies:
   lodash.pick: 4.4.0
   lodash.set: 4.3.2
   primeicons: 6.0.1
-  primereact: 8.7.1_esim4yelhr35vesnk67vhutmai
+  primereact: 8.7.3_esim4yelhr35vesnk67vhutmai
   react: 18.2.0
   react-cytoscapejs: 2.0.0_bwu3tuwxqgbhqogdmspjd7bfae
   react-dnd: 16.0.1_fan5qbzahqtxlm5dzefqlqx5ia
@@ -375,17 +373,24 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       core-js-pure: 3.26.1
-      regenerator-runtime: 0.13.10
+      regenerator-runtime: 0.13.11
     dev: true
 
   /@babel/runtime/7.20.1:
     resolution: {integrity: sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      regenerator-runtime: 0.13.10
+      regenerator-runtime: 0.13.11
 
   /@babel/runtime/7.20.6:
     resolution: {integrity: sha512-Q+8MqP7TiHMWzSfwiJwXCjyf4GYA4Dgw3emg/7xmwsdLJOZUp+nMqcOwOzzYheuM1rhDu8FSj2l0aoMygEuXuA==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
+
+  /@babel/runtime/7.20.7:
+    resolution: {integrity: sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
@@ -1645,7 +1650,7 @@ packages:
     peerDependencies:
       '@remirror/pm': ^2.0.1
     dependencies:
-      '@babel/runtime': 7.20.6
+      '@babel/runtime': 7.20.1
       '@remirror/core': 2.0.8_@remirror+pm@2.0.1
       '@remirror/extension-events': 2.1.8_@remirror+pm@2.0.1
       '@remirror/messages': 2.0.1
@@ -1946,7 +1951,7 @@ packages:
   /@remirror/icons/2.0.0:
     resolution: {integrity: sha512-kGQlDQ7LgsNBe5HIrqcUBrbc+E2ppZNifg40kfOigbR4iNNXgMyHQ17CFzjIgyGd3QlJzbRl2tdZc5FR8TevTg==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.6
       '@remirror/core-helpers': 2.0.0
     dev: false
 
@@ -2329,14 +2334,14 @@ packages:
   /@svgmoji/blob/3.2.0:
     resolution: {integrity: sha512-N96WOrH9GxPSPZ/FuvZl6T9Rh54stAEuUcBppIRFh9/WwkU7Hczrjabw4uunwxFLX5TgR+rHlKJl3/jaTnXJrQ==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.6
       '@svgmoji/core': 3.2.0
     dev: false
 
   /@svgmoji/core/3.2.0:
     resolution: {integrity: sha512-QsD78Op3S/5kUVsa5ierr4Wu/xwAdYuMI3Zmc/Y2ekYBEMGEUY8QxilXQRSAQ4ku4PnNV4xlB9e7xhD5hy113A==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.6
       emojibase: 5.2.0
       emojibase-regex: 5.1.3
       idb-keyval: 5.1.5
@@ -2347,21 +2352,21 @@ packages:
   /@svgmoji/noto/3.2.0:
     resolution: {integrity: sha512-JgtNciB06hMDI1Pb1N2IgLh44XRMZUUNwBANzjY5jXTPqOCu1A1VA35ENvUsRhEUZOm8I+hbdAEHkwMVqxLeIQ==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.6
       '@svgmoji/core': 3.2.0
     dev: false
 
   /@svgmoji/openmoji/3.2.0:
     resolution: {integrity: sha512-USHbG+O80HfmdoNAHbOnlO+2gppXJfHFWKSRFj53Th4aimWEx4/9MB3cFbC3KZ1NOqXaLBq9jDaw4vFuGDVTUQ==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.6
       '@svgmoji/core': 3.2.0
     dev: false
 
   /@svgmoji/twemoji/3.2.0:
     resolution: {integrity: sha512-6xqZgh9viFDKf5wvrxw56ImCR3Ni84IqwK45lxojOe1Gc1Mni1GpPfr4gb7WHDKjumfx+K7BHSvX0KXt3Nr3CQ==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.6
       '@svgmoji/core': 3.2.0
     dev: false
 
@@ -2406,23 +2411,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
-
-  /@tanstack/react-table/8.7.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-VJ+9rsymDLaSU35rWOfX0bwNXnpW1i+T14wi+sHx8lxwAsfg6IY1Yw7FPfGADvUFP5eQn2t4nlohAJd+IoEj/Q==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      react: '>=16'
-      react-dom: '>=16'
-    dependencies:
-      '@tanstack/table-core': 8.7.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@tanstack/table-core/8.7.0:
-    resolution: {integrity: sha512-DRiRbOAmDHapzUBd4/C4Yy+FTug4fdGp5sdZWWfCq4wxRoaXQraQgbzmK23a3QcbwLFtLeNezPkZrqbJWuX+VA==}
-    engines: {node: '>=12'}
-    dev: false
 
   /@types/codemirror/5.60.5:
     resolution: {integrity: sha512-TiECZmm8St5YxjFUp64LK0c8WU5bxMDt9YaAek1UqUb9swrSCoJhh92fWu1p3mTEqlHjhB5sY7OFBhWroJXZVg==}
@@ -2561,7 +2549,7 @@ packages:
   /@types/react-transition-group/4.4.5:
     resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}
     dependencies:
-      '@types/react': 18.0.25
+      '@types/react': 18.0.26
     dev: false
 
   /@types/react/18.0.25:
@@ -3355,7 +3343,7 @@ packages:
   /dom-helpers/5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.7
       csstype: 3.1.1
     dev: false
 
@@ -5126,8 +5114,8 @@ packages:
     resolution: {integrity: sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==}
     dev: false
 
-  /primereact/8.7.1_esim4yelhr35vesnk67vhutmai:
-    resolution: {integrity: sha512-2uv3t9LjcT9f4j2DgDIK0xa+lP8ysmQuD9DbBJwnfuyz362P0w2mmcDfp4UksiD1ld6oF0u3XAWVNZclaPJUjg==}
+  /primereact/8.7.3_esim4yelhr35vesnk67vhutmai:
+    resolution: {integrity: sha512-BjlIOOsVcUqX9edn7HewN/U28aUqREOvPP3fnpk7X6S7k5JTM570Dm7Z/TEPH1x/Mko1NL6iDaYWnkjKiBrtPQ==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
       primeicons: ^5.0.0 || ^6.0.0
@@ -5498,7 +5486,7 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.7
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -5580,7 +5568,7 @@ packages:
   /redux/4.2.0:
     resolution: {integrity: sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.7
     dev: false
 
   /refractor/3.6.0:
@@ -5591,12 +5579,8 @@ packages:
       prismjs: 1.27.0
     dev: false
 
-  /regenerator-runtime/0.13.10:
-    resolution: {integrity: sha512-KepLsg4dU12hryUO7bp/axHAKvwGOCV0sGloQtpagJ12ai+ojVDqkeGSiRX1zlq+kjIMZ1t7gpze+26QqtdGqw==}
-
   /regenerator-runtime/0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-    dev: false
 
   /regexp.prototype.flags/1.4.3:
     resolution: {integrity: sha512-fjggEOO3slI6Wvgjwflkc4NFRCTZAu5CnNfBd5qOMYhWdn67nJBBu34/TkD++eeFmd8C9r9jfXJ27+nSiRkSUA==}
@@ -6001,7 +5985,7 @@ packages:
   /svgmoji/3.2.0:
     resolution: {integrity: sha512-tjmdQhIju2ZQ81FLBlPngg1aWMOhQjP9ErXb2ROikM0aBGA/hqI0/DN/5J0sDsXzJPHmODpSFhWfiSsUieU3bA==}
     dependencies:
-      '@babel/runtime': 7.20.1
+      '@babel/runtime': 7.20.6
       '@svgmoji/blob': 3.2.0
       '@svgmoji/core': 3.2.0
       '@svgmoji/noto': 3.2.0
