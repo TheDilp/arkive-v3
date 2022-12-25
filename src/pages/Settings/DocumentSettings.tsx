@@ -5,6 +5,7 @@ import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { Toolbar } from "primereact/toolbar";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -15,7 +16,9 @@ import { useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/Items
 import { DocumentType } from "../../types/documentTypes";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { toaster } from "../../utils/toast";
+import SettingsToolbar from "./SettingsToolbar";
 
+// TABLE UTIL FUNCTIONS
 function getCheckedValue(
   { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
   type: "folder" | "template" | "isPublic",
@@ -25,6 +28,7 @@ function getCheckedValue(
   if (type === "isPublic") return isPublic;
   return false;
 }
+
 function TitleEditor(editorOptions: ColumnEditorOptions, updateDocument: any) {
   const { rowData, editorCallback } = editorOptions;
 
@@ -149,6 +153,7 @@ export default function DocumentSettings() {
 
   return (
     <div className="p-4">
+      <SettingsToolbar />
       <DataTable
         dataKey="id"
         editMode="cell"
