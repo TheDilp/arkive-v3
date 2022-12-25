@@ -170,7 +170,7 @@ export default function DocumentSettings() {
         sortMode="multiple"
         value={documents}>
         <Column headerClassName="w-12" selectionMode="multiple" />
-        <Column editor={(e) => TitleEditor(e, updateDocument)} field="title" header="Title" />
+        <Column editor={(e) => TitleEditor(e, updateDocument)} field="title" header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
         <Column
           align="center"
@@ -180,13 +180,22 @@ export default function DocumentSettings() {
           field="image"
           header="Image"
         />
-        <Column align="center" body={(data) => ParentColumn(data, documents)} className="w-48" field="parent" header="Parent" />
+        <Column
+          align="center"
+          body={(data) => ParentColumn(data, documents)}
+          className="w-48"
+          field="parent"
+          header="Parent"
+          sortable
+          sortField="parent"
+        />
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "folder")}
           className="w-10"
           field="folder"
           header="Folder"
+          sortable
         />
         <Column
           align="center"
@@ -194,13 +203,15 @@ export default function DocumentSettings() {
           className="w-10"
           field="template"
           header="Template"
+          sortable
         />
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "isPublic")}
           className="w-10"
-          field="public"
+          field="isPublic"
           header="Public"
+          sortable
         />
       </DataTable>
     </div>

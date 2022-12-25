@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
-import { Dispatch, ForwardedRef, forwardRef, MutableRefObject } from "react";
+import { Dispatch, forwardRef, MutableRefObject } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
@@ -66,7 +66,7 @@ const leftToolbarTemplate = (
   );
 };
 const rightToolbarTemplate = (
-  ref: ForwardedRef<MutableRefObject<DataTable>>,
+  ref: MutableRefObject<DataTable>,
   filter: {
     globalFilter: string;
     setGlobalFilter: Dispatch<SetStateAction<string>>;
@@ -99,14 +99,14 @@ const rightToolbarTemplate = (
   );
 };
 
-const SettingsToolbar = forwardRef<MutableRefObject<DataTable>, Props>(({ type, filter }, ref) => {
+const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter }, ref) => {
   const { project_id } = useParams();
   const { mutate } = useCreateItem(type);
   return (
     <Toolbar
       className="mb-2 flex justify-between"
       left={() => leftToolbarTemplate(mutate, project_id as string)}
-      right={() => rightToolbarTemplate(ref, filter)}
+      right={() => rightToolbarTemplate(ref as MutableRefObject<DataTable>, filter)}
     />
   );
 });
