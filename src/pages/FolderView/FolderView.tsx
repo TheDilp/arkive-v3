@@ -58,8 +58,8 @@ export default function FolderView() {
       <Breadcrumbs type={type} />
       <FolderViewCards
         items={data.filter((item) => {
-          if (item_id) return item.parent === item_id;
-          return !item.parent;
+          if (item_id) return item.parentId === item_id;
+          return !item.parentId;
         })}
         type={type}
       />
