@@ -15,6 +15,7 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { boardNodeShapes } from "../../../utils/boardUtils";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
+import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import Tags from "../../Tags/Tags";
@@ -27,10 +28,10 @@ export default function DrawerBoardContent() {
   const updateBoardMutation = useUpdateItem("boards");
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
   const { data: boards } = useGetAllItems(project_id as string, "boards");
-  const { data: currentBoard } = useGetItem(drawer?.id as string, "boards", { enabled: !!drawer?.id }) as { data: BoardType };
+  const { data: board } = useGetItem(drawer?.id as string, "boards", { enabled: !!drawer?.id }) as { data: BoardType };
 
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
-    currentBoard ?? {
+    board ?? {
       ...DefaultBoard,
       project_id: project_id as string,
     },
@@ -39,14 +40,14 @@ export default function DrawerBoardContent() {
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   function CreateUpdateBoard(newData: BoardCreateType) {
-    if (currentBoard) {
+    if (board) {
       if (boards?.some((item) => item.parent === newData.id) && !newData.folder) {
         toaster("warning", "Cannot convert to board if folder contains files.");
         return;
       }
       updateBoardMutation?.mutate(
         {
-          id: currentBoard.id,
+          id: board.id,
           ...changedData,
         },
         {
@@ -64,19 +65,19 @@ export default function DrawerBoardContent() {
     }
   }
   useEffect(() => {
-    if (currentBoard) {
-      setLocalItem(currentBoard);
+    if (board) {
+      setLocalItem(board);
     } else {
       setLocalItem({
         ...DefaultBoard,
         project_id: project_id as string,
       });
     }
-  }, [currentBoard, project_id]);
+  }, [board, project_id]);
 
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{currentBoard ? `Edit ${currentBoard.title}` : "Create New Board"}</h2>
+      <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
       <InputText
         autoFocus
         className="w-full"
@@ -87,9 +88,9 @@ export default function DrawerBoardContent() {
           })
         }
         onKeyDown={(e) => {
-          if (e.key === "Enter" && currentBoard) {
+          if (e.key === "Enter" && board) {
             updateBoardMutation?.mutate({
-              id: currentBoard.id,
+              id: board.id,
               ...changedData,
             });
           }
@@ -97,7 +98,22 @@ export default function DrawerBoardContent() {
         placeholder="Board Name"
         value={localItem?.title || ""}
       />
-
+      <div className="">
+        <Dropdown
+          className="w-full"
+          filter
+          onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
+          optionLabel="title"
+          options={
+            boards
+              ? [{ id: null, title: "Root" }, ...(boards as BoardType[]).filter((b) => DropdownFilter(b, board))]
+              : [{ id: null, title: "Root" }]
+          }
+          optionValue="id"
+          placeholder="Board Folder"
+          value={localItem?.parent?.id}
+        />
+      </div>
       <Tags handleChange={handleChange} localItem={localItem} type="boards" />
       <span className="w-full text-sm text-zinc-400">Node shape</span>
       <Dropdown
@@ -192,11 +208,11 @@ export default function DrawerBoardContent() {
             onClick={() => {
               if (document)
                 deleteItem(
-                  currentBoard.folder
+                  board.folder
                     ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
                     : "Are you sure you want to delete this board?",
                   () => {
-                    deleteBoardMutation?.mutate(currentBoard.id);
+                    deleteBoardMutation?.mutate(board.id);
                     handleCloseDrawer(setDrawer, "right");
                   },
                   () => toaster("info", "Item not deleted."),

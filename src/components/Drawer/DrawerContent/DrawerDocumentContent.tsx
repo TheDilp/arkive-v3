@@ -17,6 +17,7 @@ import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
+import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
@@ -94,15 +95,17 @@ export default function DrawerDocumentContent() {
     }
   }, [document]);
 
-  function DropdownFilter(item: DocumentType) {
-    if (!item.folder || (document && item.id === document.id)) return false;
-    return true;
-  }
-
   return (
-    <div className="flex h-full flex-col gap-y-8">
+    <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">
-        {document ? `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}` : "Create New Document"}
+        {document ? (
+          `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}`
+        ) : (
+          <div className="flex items-center justify-center">
+            Create New Document
+            <Icon fontSize={36} icon="mdi:file" />
+          </div>
+        )}
       </h2>
       <div className="flex flex-col gap-y-2">
         <InputText
@@ -121,28 +124,7 @@ export default function DrawerDocumentContent() {
           }}
           value={localItem?.title || ""}
         />
-        {!localItem?.template && (
-          <div className="my-2">
-            <Dropdown
-              className="w-full"
-              filter
-              onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
-              optionLabel="title"
-              options={
-                allDocuments
-                  ? [{ id: null, title: "Root" }, ...(allDocuments as DocumentType[]).filter(DropdownFilter)]
-                  : [{ id: null, title: "Root" }]
-              }
-              optionValue="id"
-              placeholder="Document Folder"
-              value={localItem?.parent?.id}
-            />
-          </div>
-        )}
-        <div className="">
-          <Tags handleChange={handleChange} localItem={localItem} type="documents" />
-        </div>
-        <div className="flex w-full flex-col items-center gap-y-0 ">
+        <div className="flex w-full flex-col items-center">
           {localItem?.image ? (
             <Image
               className="h-28 w-36 object-contain"
@@ -161,6 +143,31 @@ export default function DrawerDocumentContent() {
             valueTemplate={ImageDropdownValue({ image: localItem?.image })}
           />
         </div>
+        {!localItem?.template && (
+          <div className="">
+            <Dropdown
+              className="w-full"
+              filter
+              onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
+              optionLabel="title"
+              options={
+                allDocuments
+                  ? [
+                      { id: null, title: "Root" },
+                      ...(allDocuments as DocumentType[]).filter((d) => DropdownFilter(d, document)),
+                    ]
+                  : [{ id: null, title: "Root" }]
+              }
+              optionValue="id"
+              placeholder="Document Folder"
+              value={localItem?.parent?.id}
+            />
+          </div>
+        )}
+        <div className="">
+          <Tags handleChange={handleChange} localItem={localItem} type="documents" />
+        </div>
+
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Is Folder?</span>
           <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />

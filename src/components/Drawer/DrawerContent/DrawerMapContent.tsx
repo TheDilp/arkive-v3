@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -13,6 +14,7 @@ import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
+import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { MapImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
@@ -41,7 +43,7 @@ export default function DrawerMapContent() {
 
   function CreateUpdateMap(newData: MapCreateType) {
     if (map) {
-      if (!newData.folder && maps?.some((mapItem) => mapItem.parent === map.id)) {
+      if (!newData.folder && maps?.some((mapItem) => mapItem.parentId === map.id)) {
         toaster("warning", "Cannot turn folder into map if it contains children");
         return;
       }
@@ -81,7 +83,16 @@ export default function DrawerMapContent() {
 
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{map ? `Edit ${map.title}` : "Create New Map"}</h2>
+      <h2 className="text-center text-2xl">
+        {map ? (
+          `Edit ${map.title}`
+        ) : (
+          <div className="flex items-center justify-center">
+            Create New Map
+            <Icon fontSize={36} icon="mdi:map" />
+          </div>
+        )}
+      </h2>
       <InputText
         autoFocus
         className="w-full"
@@ -106,6 +117,22 @@ export default function DrawerMapContent() {
         value={localItem.image}
         valueTemplate={ImageDropdownValue({ image: localItem?.image })}
       />
+      <div className="">
+        <Dropdown
+          className="w-full"
+          filter
+          onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
+          optionLabel="title"
+          options={
+            maps
+              ? [{ id: null, title: "Root" }, ...(maps as MapType[]).filter((m) => DropdownFilter(m, map))]
+              : [{ id: null, title: "Root" }]
+          }
+          optionValue="id"
+          placeholder="Map Folder"
+          value={localItem?.parent?.id}
+        />
+      </div>
       <Tags handleChange={handleChange} localItem={localItem} type="maps" />
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>

@@ -7,10 +7,11 @@ import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { BoardCreateType, EdgeType, NodeType } from "../../types/boardTypes";
 import { DocumentCreateType } from "../../types/documentTypes";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { MapCreateType } from "../../types/mapTypes";
 
 type Props = {
   handleChange: ({ name, value }: { name: string; value: any }) => void;
-  localItem: AllItemsType | NodeType | EdgeType | DocumentCreateType | BoardCreateType;
+  localItem: AllItemsType | NodeType | EdgeType | DocumentCreateType | MapCreateType | BoardCreateType;
   type: AvailableItemTypes | "nodes" | "edges";
 };
 
