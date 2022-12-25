@@ -1,7 +1,10 @@
 import { UseMutateFunction } from "@tanstack/react-query";
+import { SetStateAction } from "jotai";
 import { Button } from "primereact/button";
+import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
+import { Dispatch, ForwardedRef, forwardRef, MutableRefObject } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
@@ -9,6 +12,10 @@ import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 
 type Props = {
   type: AvailableItemTypes;
+  filter: {
+    globalFilter: string;
+    setGlobalFilter: Dispatch<SetStateAction<string>>;
+  };
 };
 
 const leftToolbarTemplate = (
@@ -21,14 +28,12 @@ const leftToolbarTemplate = (
         className="p-button-success p-button-outlined"
         icon="pi pi-plus"
         label="New"
-        onClick={() => {
-          console.log(project_id);
-
+        onClick={() =>
           createItem({
             title: "New Document",
             project_id: project_id as string,
-          });
-        }}
+          })
+        }
       />
       <Button
         className="p-button-danger p-button-outlined"
@@ -60,7 +65,13 @@ const leftToolbarTemplate = (
     </div>
   );
 };
-const rightToolbarTemplate = () => {
+const rightToolbarTemplate = (
+  ref: ForwardedRef<MutableRefObject<DataTable>>,
+  filter: {
+    globalFilter: string;
+    setGlobalFilter: Dispatch<SetStateAction<string>>;
+  },
+) => {
   return (
     <div className="flex gap-x-2">
       <Button
@@ -69,7 +80,7 @@ const rightToolbarTemplate = () => {
         label="Reset"
         onClick={() => {
           // @ts-ignore
-          //   ref.current?.reset();
+          ref?.current?.reset();
         }}
         tooltip="Resets Filters, Sorting and Pagination"
         type="button"
@@ -77,25 +88,27 @@ const rightToolbarTemplate = () => {
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText
-          //   value={globalFilter}
+          onChange={(e) => {
+            filter.setGlobalFilter(e.target.value);
+          }}
           placeholder="Quick Search"
-          //   onChange={(e) => {
-          //     setGlobalFilter(e.target.value);
-          //   }}
+          value={filter.globalFilter}
         />
       </span>
     </div>
   );
 };
 
-export default function SettingsToolbar({ type }: Props) {
+const SettingsToolbar = forwardRef<MutableRefObject<DataTable>, Props>(({ type, filter }, ref) => {
   const { project_id } = useParams();
   const { mutate } = useCreateItem(type);
   return (
     <Toolbar
       className="mb-2 flex justify-between"
       left={() => leftToolbarTemplate(mutate, project_id as string)}
-      right={rightToolbarTemplate}
+      right={() => rightToolbarTemplate(ref, filter)}
     />
   );
-}
+});
+
+export default SettingsToolbar;

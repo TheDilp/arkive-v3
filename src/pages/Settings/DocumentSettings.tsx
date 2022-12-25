@@ -5,8 +5,7 @@ import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { Toolbar } from "primereact/toolbar";
-import { useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
@@ -136,7 +135,10 @@ function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
 export default function DocumentSettings() {
   const { project_id } = useParams();
 
+  const tableRef = useRef() as MutableRefObject<DataTable>;
+
   const [selected, setSelected] = useState([]);
+  const [globalFilter, setGlobalFilter] = useState("");
   const { mutate } = useUpdateItem("documents");
   const queryClient = useQueryClient();
 
@@ -153,8 +155,9 @@ export default function DocumentSettings() {
 
   return (
     <div className="p-4">
-      <SettingsToolbar type="documents" />
+      <SettingsToolbar ref={tableRef} filter={{ globalFilter, setGlobalFilter }} type="documents" />
       <DataTable
+        ref={tableRef}
         dataKey="id"
         editMode="cell"
         filterDisplay="menu"
