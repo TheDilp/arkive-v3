@@ -17,10 +17,10 @@ import { IconSelect } from "../../components/IconSelect/IconSelect";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/documentTypes";
+import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { toaster } from "../../utils/toast";
 import SettingsToolbar from "./SettingsToolbar";
-import { deleteItem } from "../../utils/Confirms/Confirm";
 // TABLE UTIL FUNCTIONS
 function getCheckedValue(
   { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
@@ -215,7 +215,7 @@ export default function DocumentSettings() {
   const tableRef = useRef() as MutableRefObject<DataTable>;
   const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   const { data: images } = useGetAllImages(project_id as string);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState<DocumentType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
 
   const { mutate } = useUpdateItem("documents");
@@ -233,7 +233,12 @@ export default function DocumentSettings() {
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   return (
     <div className="p-4">
-      <SettingsToolbar ref={tableRef} filter={{ globalFilter, setGlobalFilter }} type="documents" />
+      <SettingsToolbar
+        ref={tableRef}
+        filter={{ globalFilter, setGlobalFilter }}
+        selection={{ selected, setSelected }}
+        type="documents"
+      />
       <DataTable
         ref={tableRef}
         dataKey="id"

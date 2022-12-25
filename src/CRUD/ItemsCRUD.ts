@@ -232,6 +232,30 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
     },
   );
 };
+export const useDeleteManyItems = (type: AvailableItemTypes, project_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (ids: string[]) => {
+      if (ids) {
+        console.log(ids);
+        const url = deleteManyURL(type);
+        if (url)
+          return fetch(url, {
+            body: JSON.stringify(ids),
+            method: "DELETE",
+          });
+      }
+      return null;
+    },
+    {
+      onSuccess: () => {
+        queryClient.refetchQueries({ queryKey: ["allItems", project_id, type] });
+        toaster("success", "Items successfully deleted.");
+      },
+      onError: () => toaster("error", "There was an error deleting these items."),
+    },
+  );
+};
 
 export const useSortMutation = (project_id: string, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();

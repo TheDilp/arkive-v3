@@ -9,10 +9,13 @@ import { Dispatch, forwardRef, MutableRefObject, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 
-import { useCreateItem } from "../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteManyItems } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
+import { DocumentType } from "../../types/documentTypes";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getSearchTags } from "../../utils/CRUD/CRUDFunctions";
+import { toaster } from "../../utils/toast";
 
 type Props = {
   type: AvailableItemTypes;
@@ -20,12 +23,17 @@ type Props = {
     globalFilter: { title: string; tags: string[] };
     setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: string[] }>>;
   };
+  selection: {
+    selected: DocumentType[];
+    setSelected: Dispatch<SetStateAction<DocumentType[]>>;
+  };
 };
 
-const leftToolbarTemplate = (
+function LeftToolbarTemplate(
   createItem: UseMutateFunction<Response | null, unknown, Partial<AllItemsType>, unknown>,
   project_id: string,
-) => {
+  deletedSelected: () => void,
+) {
   return (
     <div className="flex gap-x-2">
       <Button
@@ -44,31 +52,11 @@ const leftToolbarTemplate = (
         // disabled={selectedDocuments.length === 0}
         icon="pi pi-trash"
         label="Delete Selected"
-        // onClick={() =>
-        //   confirmDialog({
-        //     message: selectAll
-        //       ? "Are you sure you want to delete all of your documents?"
-        //       : `Are you sure you want to delete ${selectedDocuments.length} documents?`,
-        //     header: `Deleting ${selectedDocuments.length} documents`,
-        //     icon: "pi pi-exclamation-triangle",
-        //     acceptClassName: "p-button-danger",
-        //     className: selectAll ? "deleteAllDocuments" : "",
-        //     accept: () => {
-        //       deleteManyDocuments(selectedDocuments).then(() => {
-        //         queryClient.setQueryData(`${project_id}-documents`, (oldData: DocumentProps[] | undefined) => {
-        //           if (oldData) {
-        //             return oldData.filter((doc) => !selectedDocuments.includes(doc.id));
-        //           }
-        //           return [];
-        //         });
-        //       });
-        //     },
-        //   })
-        // }
+        onClick={deletedSelected}
       />
     </div>
   );
-};
+}
 function RightToolbarTemplate(
   ref: MutableRefObject<DataTable>,
   filter: {
@@ -135,13 +123,22 @@ function RightToolbarTemplate(
   );
 }
 
-const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter }, ref) => {
+const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter, selection }, ref) => {
   const { project_id } = useParams();
+  const { mutate: deleteItemsMutation } = useDeleteManyItems("documents", project_id as string);
+
   const { mutate } = useCreateItem(type);
+  const deleteSelected = () => {
+    if (selection.selected.length)
+      deleteItem("Are you sure you want to delete these items?", () =>
+        deleteItemsMutation(selection.selected.map((doc) => doc.id)),
+      );
+    else toaster("warning", "No items are selected.");
+  };
   return (
     <Toolbar
       className="flex mb-1"
-      left={() => leftToolbarTemplate(mutate, project_id as string)}
+      left={() => LeftToolbarTemplate(mutate, project_id as string, deleteSelected)}
       right={() => RightToolbarTemplate(ref as MutableRefObject<DataTable>, filter, type)}
     />
   );
