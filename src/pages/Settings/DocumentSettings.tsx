@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Chips } from "primereact/chips";
 import { Column, ColumnEditorOptions } from "primereact/column";
@@ -8,7 +9,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
@@ -185,9 +186,26 @@ function AlterNamesEditor(editorOptions: ColumnEditorOptions, updateDocument: (d
   );
 }
 
+function ActionsColumn({ id, title, folder }: DocumentType, project_id: string, navigate: NavigateFunction) {
+  return (
+    <div className="flex gap-x-1">
+      <Button
+        className="p-button-success p-button-outlined"
+        icon="pi pi-fw pi-link"
+        onClick={() => {
+          navigate(`../../documents/${folder ? "folder/" : ""}${id}`);
+        }}
+        tooltip="Go to item"
+        tooltipOptions={{ showDelay: 300, position: "left" }}
+      />
+      <Button className="p-button-danger p-button-outlined" icon="pi pi-fw pi-trash" iconPos="right" onClick={() => {}} />
+    </div>
+  );
+}
+
 export default function DocumentSettings() {
   const { project_id } = useParams();
-
+  const navigate = useNavigate();
   const tableRef = useRef() as MutableRefObject<DataTable>;
   const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   const { data: images } = useGetAllImages(project_id as string);
@@ -283,6 +301,12 @@ export default function DocumentSettings() {
           header="Alternative Names"
           sortable
           sortField="alter_names"
+        />
+        <Column
+          align="center"
+          body={(data) => ActionsColumn(data, project_id as string, navigate)}
+          editor={(e) => AlterNamesEditor(e, updateDocument)}
+          header="Actions"
         />
       </DataTable>
     </div>
