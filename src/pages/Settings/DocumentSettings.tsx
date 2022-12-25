@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Checkbox } from "primereact/checkbox";
+import { Chips } from "primereact/chips";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
@@ -156,12 +157,30 @@ function TagsEditor(
   return (
     <Tags
       handleChange={({ name, value }) => {
-        if (editorCallback) editorCallback(value);
         updateDocument({ id: rowData.id, [name]: value });
         refetchTags();
+        if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
       type="documents"
+    />
+  );
+}
+
+function AlterNamesEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: Partial<DocumentType>) => void) {
+  const { rowData, editorCallback } = editorOptions;
+  return (
+    <Chips
+      allowDuplicate={false}
+      className="alterNamesChips box-border max-h-40 min-h-[48px] w-full max-w-full border-l border-zinc-600"
+      max={5}
+      onChange={(e) => {
+        const { value } = e;
+        updateDocument({ id: rowData.id, alter_names: value });
+        if (editorCallback) editorCallback(value);
+      }}
+      placeholder="Alternative names (5 max)"
+      value={rowData.alter_names}
     />
   );
 }
@@ -259,7 +278,7 @@ export default function DocumentSettings() {
         <Column
           align="center"
           body={(data) => TagsAlterNamesColumn(data, "alter_names")}
-          // editor={(e) => TagsEditor(e, updateDocument, refetchTags)}
+          editor={(e) => AlterNamesEditor(e, updateDocument)}
           field="alter_names"
           header="Alternative Names"
           sortable
