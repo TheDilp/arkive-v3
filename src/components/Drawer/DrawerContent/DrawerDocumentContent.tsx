@@ -55,11 +55,8 @@ export default function DrawerDocumentContent() {
       }
       updateDocumentMutation?.mutate(
         {
-          folder: newData.folder,
-          icon: newData.icon,
           id: document.id,
-          image: newData.image || null,
-          title: newData.title,
+          ...changedData,
         },
         {
           onSuccess: () => {
