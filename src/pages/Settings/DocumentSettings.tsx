@@ -5,6 +5,7 @@ import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -16,7 +17,6 @@ import { DocumentType } from "../../types/documentTypes";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { toaster } from "../../utils/toast";
 import SettingsToolbar from "./SettingsToolbar";
-
 // TABLE UTIL FUNCTIONS
 function getCheckedValue(
   { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
@@ -77,7 +77,7 @@ function IconColumn({ id, icon, folder }: DocumentType) {
 function ImageColumn({ image }: DocumentType) {
   const { project_id } = useParams();
   return image ? (
-    <div className="flex h-8 w-full justify-center">
+    <div className="flex justify-center w-full h-8">
       <img alt={image || "column"} className="object-contain" src={getImageLink(image, project_id as string)} />
     </div>
   ) : null;
@@ -130,6 +130,16 @@ function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
   const parentFolder = documents?.find((doc) => doc.id === parent);
   if (parentFolder) return <div className="w-full">{parentFolder.title}</div>;
   return null;
+}
+
+function TagsColumn({ tags }: DocumentType) {
+  return (
+    <div className="flex justify-center gap-x-1">
+      {tags.map((tag) => (
+        <Tag key={tag} value={tag} />
+      ))}
+    </div>
+  );
 }
 
 export default function DocumentSettings() {
@@ -189,6 +199,7 @@ export default function DocumentSettings() {
           sortable
           sortField="parent"
         />
+        <Column align="center" body={(data) => TagsColumn(data)} field="tags" header="Tags" sortable sortField="tags" />
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "folder")}

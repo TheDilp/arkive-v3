@@ -87,7 +87,7 @@ export default function DocumentProperties() {
         value={currentDocument?.alter_names}
       />
       <AutoComplete
-        className="documentTagsAutocomplete max-h-40 border-zinc-600"
+        className="tagsAutocomplete max-h-40 border-zinc-600"
         completeMethod={filterTags}
         multiple
         onChange={(e) => setTags((prev) => ({ ...prev, selected: e.value }))}
