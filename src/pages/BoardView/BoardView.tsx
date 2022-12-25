@@ -8,7 +8,7 @@ import { v4 as uuid } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
-import { useCreateSubItem, useUpdateManyNodesPosition, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
+import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
@@ -46,8 +46,6 @@ export default function BoardView({ isReadOnly }: Props) {
     isLoading: boolean;
   };
   const contextItems = useBoardContextMenuItems({ type: boardContext.type, item_id: item_id as string, board, boardContext });
-  const updateManyNodesPosition = useUpdateManyNodesPosition(item_id as string);
-  const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
 
   useEffect(() => {
@@ -168,13 +166,7 @@ export default function BoardView({ isReadOnly }: Props) {
         // Grid extenstion messes with the "grab events"
         // "Freeon" event triggers on double clicking
         // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
-        console.log(target.data.id);
         addOrUpdateNode({ id: target.data.id, ...target.position });
-
-        // if (target.position.x !== target?.data.x || target.position.y !== target.data?.y)
-        // updateManyNodesPosition.mutate(
-        //   updateData.map((node) => ({ id: node.id(), x: node.position().x, y: node.position().y })),
-        // );
       });
 
       // Double Click

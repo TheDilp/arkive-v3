@@ -394,38 +394,30 @@ export const useUpdateManyNodesPosition = (item_id: string) => {
       }
       return null;
     },
-    // {
-    //   onMutate: async (variables) => {
-    //     const old = queryClient.getQueryData(["boards", item_id]);
-    //     if (subType === "nodes" || subType === "edges") {
-    //       queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
-    //         if (oldData) {
-    //           if (subType === "nodes")
-    //             return {
-    //               ...oldData,
-    //               [subType]: oldData[subType].map((subItem) => {
-    //                 if (variables.ids.includes(subItem.id)) return { ...subItem, ...variables.data };
-    //                 return subItem;
-    //               }),
-    //             };
-    //           if (subType === "edges")
-    //             return {
-    //               ...oldData,
-    //               [subType]: oldData[subType].map((subItem) => {
-    //                 if (variables.ids.includes(subItem.id)) return { ...subItem, ...variables.data };
-    //                 return subItem;
-    //               }),
-    //             };
-    //         }
-    //         return oldData;
-    //       });
-    //     }
-    //     return { old };
-    //   },
-    //   onError: (error, variables, context) => {
-    //     toaster("error", "There was an error updating these items.");
-    //     queryClient.setQueryData(["boards", item_id], context?.old);
-    //   },
-    // },
+    {
+      onMutate: async (variables) => {
+        const old = queryClient.getQueryData(["boards", item_id]);
+        queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
+          if (oldData) {
+            return {
+              ...oldData,
+              nodes: oldData.nodes.map((subItem) => {
+                const idx = variables.findIndex((varNode) => varNode.id === subItem.id);
+                if (idx > -1) {
+                  return { ...subItem, ...variables[idx] };
+                }
+                return subItem;
+              }),
+            };
+          }
+          return oldData;
+        });
+        return { old };
+      },
+      onError: (error, variables, context) => {
+        toaster("error", "There was an error updating these items.");
+        queryClient.setQueryData(["boards", item_id], context?.old);
+      },
+    },
   );
 };
