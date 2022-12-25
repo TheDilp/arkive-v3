@@ -110,6 +110,12 @@ function FolderTemplateColumn({ id, folder, template }: DocumentType, type: "fol
     />
   );
 }
+function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
+  // eslint-disable-next-line react/destructuring-assignment
+  const parentFolder = documents?.find((doc) => doc.id === parent);
+  if (parentFolder) return <div className="w-24">{parentFolder.title}</div>;
+  return null;
+}
 
 export default function DocumentSettings() {
   const { project_id } = useParams();
@@ -146,6 +152,7 @@ export default function DocumentSettings() {
           field="folder"
           header="Folder"
         />
+        <Column align="center" body={(data) => ParentColumn(data, documents)} className="w-10" field="parent" header="Parent" />
         <Column
           align="center"
           body={(data) => FolderTemplateColumn(data, "template")}
