@@ -1,7 +1,7 @@
 import { EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
@@ -25,14 +25,15 @@ type Props = {
 };
 
 export default function BoardView({ isReadOnly }: Props) {
-  const cm = useRef() as any;
+  const cm = useRef() as MutableRefObject<any>;
+  const firstRender = useRef(true) as MutableRefObject<boolean>;
   const { project_id, item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
   const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
   const [edgeHandlesRef, setEdgeHandlesRef] = useAtom(BoardEdgeHandlesAtom);
 
-  const [boardState] = useAtom(BoardStateAtom);
+  const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -206,6 +207,19 @@ export default function BoardView({ isReadOnly }: Props) {
       }
     }, 250);
   }, [subitem_id, boardRef]);
+
+  useEffect(() => {
+    if (board && firstRender && firstRender.current) {
+      setBoardState((prev) => ({ ...prev, grid: board.defaultGrid }));
+      firstRender.current = false;
+    }
+  }, [board]);
+  useEffect(() => {
+    return () => {
+      firstRender.current = true;
+    };
+  }, [item_id]);
+
   if (isLoading) return <ProgressSpinner />;
   return (
     <div
