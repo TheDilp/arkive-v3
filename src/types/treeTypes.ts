@@ -1,9 +1,7 @@
-import { DocumentType } from "./documentTypes";
-import { AllAvailableTypes } from "./generalTypes";
-import { MapLayerType, MapType } from "./mapTypes";
+import { AllAvailableTypes, AllItemsType, AllSubItemsType } from "./generalTypes";
 
 export type SidebarTreeItemType = {
-  data?: null | Partial<DocumentType | MapType | MapLayerType>;
+  data?: null | Partial<AllItemsType | AllSubItemsType>;
   type: null | AllAvailableTypes;
   folder: boolean;
   template: boolean;

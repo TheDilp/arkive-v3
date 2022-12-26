@@ -248,7 +248,8 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
           createItemMutation?.mutate({
             ...cmType.data,
             id: crypto.randomUUID(),
-            parent: null,
+            parentId: null,
+            parent: undefined,
             project_id: project_id as string,
             template: true,
           });
