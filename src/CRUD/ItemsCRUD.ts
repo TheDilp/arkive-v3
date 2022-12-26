@@ -93,6 +93,7 @@ export const useCreateSubItem = (id: string, subType: AvailableSubItemTypes, typ
     },
     {
       onMutate: async (variables) => {
+        if (!variables.parent || !variables.id) throw new Error("NO ID OR PARENT.");
         const oldData: AllItemsType | undefined = queryClient.getQueryData([type, id]);
         if (oldData && variables) {
           if (
@@ -115,7 +116,7 @@ export const useCreateSubItem = (id: string, subType: AvailableSubItemTypes, typ
         return { oldData };
       },
       onError: (error, variables, context) => {
-        toaster("error", "There was an error updating this item.");
+        toaster("error", `There was an error updating this item. ${error}`);
         queryClient.setQueryData([type, id], context?.oldData);
       },
     },

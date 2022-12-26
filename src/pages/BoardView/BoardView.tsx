@@ -15,7 +15,7 @@ import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTy
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { AvailableItemTypes } from "../../types/generalTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
-import { edgehandlesSettings } from "../../utils/boardUtils";
+import { edgehandlesSettings, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
 import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -215,10 +215,20 @@ export default function BoardView({ isReadOnly }: Props) {
         const data: { id: string; image?: string; type: AvailableItemTypes | "image" } = JSON.parse(
           e.dataTransfer.getData("item_id"),
         );
-        if (!data) return;
+        if (!data || !boardRef) return;
+
+        const { top, left } = e.currentTarget.getBoundingClientRect();
+        const { x, y } = toModelPosition(boardRef, {
+          x: e.clientX - left,
+          y: e.clientY - top,
+        });
+
         if (data.type === "documents") {
           createNodeMutation.mutate({
             ...DefaultNode,
+            x,
+            y,
+            parent: item_id,
             type: board.defaultNodeShape,
             backgroundColor: board.defaultNodeColor,
             id: crypto.randomUUID(),
