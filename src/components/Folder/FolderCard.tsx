@@ -53,7 +53,9 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
           <img
             alt={type}
             className="object-contain"
-            src={`${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${image}`}
+            src={`${baseURLS.baseServer}${
+              type === "maps" ? getURLS.getSingleMapImage : getURLS.getSingleImage
+            }${project_id}/${image}`}
           />
         ) : (
           <Icon fontSize={80} icon={isFolder ? "mdi:folder" : icon} />
