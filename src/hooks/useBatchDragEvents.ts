@@ -23,7 +23,7 @@ const useBatchUpdateNodePositions = (item_id: string) => {
     timer.current = setTimeout(() => {
       updateManyNodePositions.mutate(batchedData.current);
       batchedData.current = [];
-    }, 800);
+    }, 500);
   };
 
   return { addOrUpdateNode };

@@ -9,7 +9,7 @@ export default function NodeFromDocument() {
   const { data: allDocuments } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   return (
     <div className="max-w-md">
-      <FolderViewCards items={allDocuments || []} type="documents" />
+      <FolderViewCards items={allDocuments?.filter((doc) => !doc.folder && !doc.template) || []} type="documents" />
     </div>
   );
 }

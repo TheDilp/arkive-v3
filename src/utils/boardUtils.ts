@@ -337,7 +337,32 @@ export const boardEdgeCaps = [
   { label: "Butt", value: "butt" },
   { label: "Square", value: "square" },
 ];
-export function updateColor(boardRef: cytoscape.Core, color: string, updateManyNodes: any, updateManyEdges: any) {
+export function updateColor(
+  boardRef: cytoscape.Core,
+  color: string,
+  updateManyNodes: UseMutationResult<
+    Response | null,
+    unknown,
+    {
+      ids: string[];
+      data: Partial<AllSubItemsType>;
+    },
+    {
+      old: unknown;
+    }
+  >,
+  updateManyEdges: UseMutationResult<
+    Response | null,
+    unknown,
+    {
+      ids: string[];
+      data: Partial<AllSubItemsType>;
+    },
+    {
+      old: unknown;
+    }
+  >,
+) {
   if (boardRef.elements(":selected")?.length > 0) {
     const nodes = boardRef.elements(":selected").nodes();
     const edges = boardRef.elements(":selected").edges();

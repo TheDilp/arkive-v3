@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useDeleteManySubItems, useUpdateManySubItems, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
+import { useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardType } from "../../types/boardTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
@@ -26,7 +26,6 @@ export default function BoardQuickBar() {
   const [edgehandles] = useAtom(BoardEdgeHandlesAtom);
   const { data: board } = useGetItem(item_id as string, "boards") as { data: BoardType };
 
-  const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
   const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const updateManyEdges = useUpdateManySubItems(item_id as string, "edges");
   const [, setUpdateManyDialog] = useState(false);
@@ -37,7 +36,7 @@ export default function BoardQuickBar() {
   const debouncedColorPick = useDebouncedCallback(
     // function
     (color) => {
-      if (boardRef) updateColor(boardRef, `#${color}`, updateNodeMutation, updateManyEdges);
+      if (boardRef) updateColor(boardRef, `#${color}`, updateManyNodes, updateManyEdges);
     },
     // delay in ms
     400,
@@ -189,7 +188,7 @@ export default function BoardQuickBar() {
       <span
         className="resetColors flex cursor-pointer hover:text-blue-300"
         onClick={() => {
-          if (boardRef) updateColor(boardRef, "#595959", updateNodeMutation, updateManyEdges);
+          if (boardRef) updateColor(boardRef, "#595959", updateManyNodes, updateManyEdges);
         }}>
         <Icon fontSize={20} icon="mdi:invert-colors-off" />
       </span>

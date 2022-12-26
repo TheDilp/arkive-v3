@@ -45,7 +45,7 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
         cm.current.show(e);
       }}
       onDragStart={(e) => {
-        e.dataTransfer.setData("item_id", JSON.stringify({ id, image, type }));
+        if (!isFolder) e.dataTransfer.setData("item_id", JSON.stringify({ id, image, type }));
       }}
       to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>
       <div className="flex h-36 w-36 cursor-pointer flex-col items-center justify-between px-4 py-2 transition-colors hover:text-blue-300">

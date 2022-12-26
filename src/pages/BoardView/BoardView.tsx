@@ -212,6 +212,8 @@ export default function BoardView({ isReadOnly }: Props) {
     <div
       className="h-full w-full"
       onDrop={(e) => {
+        const stringData = e.dataTransfer.getData("item_id");
+        if (!stringData) return;
         const data: { id: string; image?: string; type: AvailableItemTypes | "image" } = JSON.parse(
           e.dataTransfer.getData("item_id"),
         );
