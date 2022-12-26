@@ -106,6 +106,10 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
             label: "From Document",
             command: () => setDialog({ ...DefaultDialog, position: "left", type: "node_from_document", show: true }),
           },
+          {
+            label: "From Image",
+            command: () => setDialog({ ...DefaultDialog, position: "left", type: "node_from_image", show: true }),
+          },
         ],
       },
       { separator: true },

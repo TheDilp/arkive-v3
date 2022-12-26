@@ -6,7 +6,7 @@ import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import ExportBoard from "./ExportBoard";
 import InsertImageEditor from "./InsertImageEditor";
-import NodeFromDocument from "./NodeFromDocument";
+import NodeFrom from "./NodeFrom";
 import NodeSearch from "./NodeSearch";
 import QuickUploadDialog from "./QuickUploadDialog";
 import UpdateMapLayers from "./UpdateMapLayers";
@@ -22,9 +22,11 @@ export default function DialogWrapper() {
       header={() => {
         if (dialog.type === "files") return "Upload Files";
         if (dialog.type === "map_layer") return "Edit Map Layers";
-        if (dialog.type === "editor_image") return "Insert An Image";
-        if (dialog.type === "node_search") return "Search nodes";
-        if (dialog.type === "export_board") return "Export board";
+        if (dialog.type === "editor_image") return "Insert an Image";
+        if (dialog.type === "node_search") return "Search Nodes";
+        if (dialog.type === "export_board") return "Export Board";
+        if (dialog.type === "node_from_document") return "Create Node from a Document";
+        if (dialog.type === "node_from_image") return "Create Node from an Image";
         if (uploading) return "Uploading...";
         return null;
       }}
@@ -39,7 +41,8 @@ export default function DialogWrapper() {
       {dialog.type === "editor_image" && <InsertImageEditor />}
       {dialog.type === "node_search" && <NodeSearch />}
       {dialog.type === "export_board" && <ExportBoard />}
-      {dialog.type === "node_from_document" && <NodeFromDocument />}
+      {dialog.type === "node_from_document" && <NodeFrom type="documents" />}
+      {dialog.type === "node_from_image" && <NodeFrom type="images" />}
     </Dialog>
   );
 }

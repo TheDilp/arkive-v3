@@ -13,7 +13,6 @@ import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
-import { AvailableItemTypes } from "../../types/generalTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
@@ -214,11 +213,11 @@ export default function BoardView({ isReadOnly }: Props) {
       onDrop={(e) => {
         const stringData = e.dataTransfer.getData("item_id");
         if (!stringData) return;
-        const data: { id: string; image?: string; title: string; type: AvailableItemTypes | "image" } = JSON.parse(
+        const data: { id: string; image?: string; title: string; type: "documents" | "images" } = JSON.parse(
           e.dataTransfer.getData("item_id"),
         );
         if (!data || !boardRef) return;
-        const { id: doc_id, title: label, image } = data;
+        const { image } = data;
         const { top, left } = e.currentTarget.getBoundingClientRect();
         const { x, y } = toModelPosition(boardRef, {
           x: e.clientX - left,
@@ -226,6 +225,7 @@ export default function BoardView({ isReadOnly }: Props) {
         });
 
         if (data.type === "documents") {
+          const { id: doc_id, title: label } = data;
           createNodeMutation.mutate({
             ...DefaultNode,
             x,
@@ -237,6 +237,17 @@ export default function BoardView({ isReadOnly }: Props) {
             label,
             image,
             doc_id,
+          });
+        } else if (data.type === "images") {
+          createNodeMutation.mutate({
+            ...DefaultNode,
+            x,
+            y,
+            parent: item_id,
+            type: board.defaultNodeShape,
+            backgroundColor: board.defaultNodeColor,
+            id: crypto.randomUUID(),
+            image,
           });
         }
       }}>

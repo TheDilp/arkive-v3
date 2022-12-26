@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
 import { BoardType } from "../types/boardTypes";
 import { baseURLS, getURLS } from "../types/CRUDenums";
@@ -14,11 +14,13 @@ import { getItems } from "../utils/CRUD/CRUDFunctions";
 import { createURL, deleteManyURL, deleteURL, sortURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
-export const useGetAllItems = (project_id: string, type: AvailableItemTypes) => {
-  return useQuery<AllItemsType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type));
+export const useGetAllItems = (project_id: string, type: AvailableItemTypes, options?: UseQueryOptions) => {
+  return useQuery<AllItemsType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type), {
+    enabled: options?.enabled,
+  });
 };
 
-export const useGetAllImages = (project_id: string) => {
+export const useGetAllImages = (project_id: string, options?: UseQueryOptions) => {
   return useQuery<string[]>(
     ["allImages", project_id],
     async () =>
@@ -28,6 +30,7 @@ export const useGetAllImages = (project_id: string) => {
         })
       ).json(),
     {
+      enabled: options?.enabled,
       staleTime: 5 * 60 * 1000,
     },
   );
