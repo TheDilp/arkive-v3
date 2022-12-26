@@ -32,14 +32,14 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     leftAlign,
     centerAlign,
     rightAlign,
-    toggleSecret,
-    toggleColumns,
-    createTable,
-    deleteTable,
+    // toggleSecret,
+    // toggleColumns,
+    // createTable,
+    // deleteTable,
     updateNodeAttributes,
     focus,
   } = useCommands();
-  const { project_id, doc_id } = useParams();
+  const { doc_id } = useParams();
   const { getState } = useRemirrorContext();
   const active = useActive();
   const attrs = useAttrs();
@@ -171,7 +171,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
               label: "Reset",
               command: () => {
                 const node = findParentNode({
-                  predicate: (node) => true,
+                  predicate: () => true,
                   selection: getState().selection,
                 });
                 if (node) {
