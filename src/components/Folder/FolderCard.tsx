@@ -38,14 +38,11 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
             folder: isFolder,
             template: false,
           });
-        // else if (node.data && "template" in node.data && node.data?.template) {
-        //   setContextMenu({ data: node.data, type, folder: false, template: true });
-        // }
         else setContextMenu({ data: { id, title }, type, folder: false, template: false });
         cm.current.show(e);
       }}
       onDragStart={(e) => {
-        if (!isFolder) e.dataTransfer.setData("item_id", JSON.stringify({ id, image, type }));
+        if (!isFolder) e.dataTransfer.setData("item_id", JSON.stringify({ id, image, title, type }));
       }}
       to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>
       <div className="flex h-36 w-36 cursor-pointer flex-col items-center justify-between px-4 py-2 transition-colors hover:text-blue-300">

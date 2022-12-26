@@ -214,11 +214,11 @@ export default function BoardView({ isReadOnly }: Props) {
       onDrop={(e) => {
         const stringData = e.dataTransfer.getData("item_id");
         if (!stringData) return;
-        const data: { id: string; image?: string; type: AvailableItemTypes | "image" } = JSON.parse(
+        const data: { id: string; image?: string; title: string; type: AvailableItemTypes | "image" } = JSON.parse(
           e.dataTransfer.getData("item_id"),
         );
         if (!data || !boardRef) return;
-
+        const { id: doc_id, title: label, image } = data;
         const { top, left } = e.currentTarget.getBoundingClientRect();
         const { x, y } = toModelPosition(boardRef, {
           x: e.clientX - left,
@@ -234,8 +234,9 @@ export default function BoardView({ isReadOnly }: Props) {
             type: board.defaultNodeShape,
             backgroundColor: board.defaultNodeColor,
             id: crypto.randomUUID(),
-            image: data?.image,
-            doc_id: data.id,
+            label,
+            image,
+            doc_id,
           });
         }
       }}>
