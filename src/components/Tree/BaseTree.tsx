@@ -108,6 +108,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
 
   return (
     <div
+      className="flex flex-1 flex-col"
       onContextMenu={(e) => {
         setContextMenu({ data: null, type, folder: false, template: true });
         cm?.current?.show(e);
