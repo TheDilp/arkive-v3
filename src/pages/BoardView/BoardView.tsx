@@ -52,6 +52,10 @@ export default function BoardView({ isReadOnly }: Props) {
 
   useEffect(() => {
     if (board) {
+      if (firstRender && firstRender.current) {
+        setBoardState({ ...boardState, grid: board.defaultGrid });
+        firstRender.current = false;
+      }
       let temp_nodes: NodeDefinition[] = [];
       let temp_edges: EdgeDefinition[] = [];
       if (board.nodes.length > 0) {
@@ -85,6 +89,10 @@ export default function BoardView({ isReadOnly }: Props) {
       }
       setElements([...temp_nodes, ...temp_edges]);
     }
+    return () => {
+      setBoardState({ ...boardState, grid: false });
+      firstRender.current = true;
+    };
   }, [board, item_id]);
   const makeEdgeCallback = useCallback(
     (source: string, target: string, color: string) => {
@@ -207,18 +215,6 @@ export default function BoardView({ isReadOnly }: Props) {
       }
     }, 250);
   }, [subitem_id, boardRef]);
-
-  useEffect(() => {
-    if (board && firstRender && firstRender.current) {
-      setBoardState((prev) => ({ ...prev, grid: board.defaultGrid }));
-      firstRender.current = false;
-    }
-  }, [board]);
-  useEffect(() => {
-    return () => {
-      firstRender.current = true;
-    };
-  }, [item_id]);
 
   if (isLoading) return <ProgressSpinner />;
   return (
