@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
-import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
@@ -21,6 +20,7 @@ import {
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
+import ColorInput from "../../ColorInput/ColorInput";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
@@ -33,15 +33,29 @@ function FontItemTemplate(item: { label: string; value: string }) {
 export default function DrawerNodeContent() {
   const { project_id, item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const updateNodeMutation = useUpdateSubItem(item_id as string, "nodes", "boards");
+  const { mutate: updateNodeMutation } = useUpdateSubItem(item_id as string, "nodes", "boards");
   const { data: documents } = useGetAllItems(project_id as string, "documents");
   const { data: images } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<NodeType | undefined>(drawer?.data as NodeType);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
-  const handleEnter: KeyboardEventHandler = (e: any) => {
-    if (e.key === "Enter" && localItem) updateNodeMutation.mutate(localItem);
+  const updateNode = () => {
+    if (localItem)
+      updateNodeMutation(
+        { id: localItem.id, ...changedData },
+        {
+          onSuccess: () => {
+            resetChanges();
+            toaster("success", `Node ${localItem.label || ""} was successfully updated.`);
+          },
+        },
+      );
   };
+
+  const handleEnter: KeyboardEventHandler = (e: any) => {
+    if (e.key === "Enter") updateNode();
+  };
+
   useEffect(() => {
     if (drawer?.data) setLocalItem(drawer?.data as NodeType);
   }, [drawer?.data]);
@@ -95,14 +109,7 @@ export default function DrawerNodeContent() {
           </div>
           <div className="flex w-full flex-wrap items-center justify-between">
             <span className="w-full text-sm text-zinc-400">Node color</span>
-            <ColorPicker
-              onChange={(e) => handleChange({ name: "backgroundColor", value: `#${e.value}` })}
-              value={localItem.backgroundColor}
-            />
-            <InputText
-              onChange={(e) => handleChange({ name: "backgroundColor", value: `#${e.target.value}` })}
-              value={localItem.backgroundColor}
-            />
+            <ColorInput color={localItem.backgroundColor} name="backgroundColor" onChange={handleChange} />
           </div>
           <div className="w-full">
             <span className="pl-1">
@@ -166,14 +173,7 @@ export default function DrawerNodeContent() {
             {/* Label color */}
             <div className="flex w-full flex-wrap items-center justify-between">
               <span className="w-full text-sm text-zinc-400">Label color</span>
-              <ColorPicker
-                onChange={(e) => handleChange({ name: "fontColor", value: `#${e.target.value}` })}
-                value={localItem.fontColor}
-              />
-              <InputText
-                onChange={(e) => handleChange({ name: "fontColor", value: `#${e.target.value}` })}
-                value={localItem.fontColor}
-              />
+              <ColorInput color={localItem.fontColor} name="fontColor" onChange={handleChange} />
             </div>
             {/* Aligns */}
             <div className="flex w-full flex-nowrap gap-x-1">
@@ -291,15 +291,7 @@ export default function DrawerNodeContent() {
         iconPos="right"
         label="Save Node"
         onClick={() => {
-          updateNodeMutation.mutate(
-            { id: localItem.id, ...changedData },
-            {
-              onSuccess: () => {
-                resetChanges();
-                toaster("success", `Node ${localItem.label || ""} was successfully updated.`);
-              },
-            },
-          );
+          updateNode();
           // if (selectedTemplate) {
           //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
           //   //   const { show, ...restDialog } = localItem;
