@@ -1,6 +1,8 @@
 import { UseMutationResult } from "@tanstack/react-query";
-import cytoscape from "cytoscape";
+import cytoscape, { Core } from "cytoscape";
 import { saveAs } from "file-saver";
+import { DragEvent } from "react";
+import { DocumentType } from "../types/documentTypes";
 
 import { AllSubItemsType } from "../types/generalTypes";
 import { toaster } from "./toast";
@@ -409,5 +411,112 @@ export const exportBoardFunction = (
       }),
       `${boardTitle || "ArkiveBoard"}.json`,
     );
+  }
+};
+
+export const toModelPosition = (boardRef: Core, pos: { x: number; y: number }) => {
+  const pan = boardRef.pan();
+  const zoom = boardRef.zoom();
+  return {
+    x: (pos.x - pan.x) / zoom,
+    y: (pos.y - pan.y) / zoom,
+  };
+};
+
+const handleOnDrop = async (
+  e: DragEvent<HTMLDivElement>,
+  item_id: string,
+  documents: DocumentType[],
+  images: string[],
+  boardRef: Core,
+  createNodeFromDocument: () => void,
+) => {
+  const { files } = e.dataTransfer;
+  const doc_id = e.dataTransfer.getData("text");
+
+  if (doc_id) {
+    const document = documents?.find((doc) => doc.id === doc_id);
+    if (document) {
+      // @ts-ignore
+      const { top, left } = e.target.getBoundingClientRect();
+
+      // Convert mouse coordinates to canvas coordinates
+      const { x, y } = toModelPosition(boardRef, {
+        x: e.clientX - left,
+        y: e.clientY - top,
+      });
+      createNodeFromDocument();
+
+      // .mutate({
+      //   id: crypto.randomUUID(),
+      //   label: document.title,
+      //   board_id: item_id as string,
+      //   x,
+      //   y,
+      //   type: "rectangle",
+      //   doc_id: document.id,
+      //   ...defaultNode,
+      // });
+    }
+  } else if (files.length > 0) {
+    for (let i = 0; i < files.length; i += 1) {
+      let newImage;
+      // If the image exists do not upload it but assign to variable
+      const idx = images.findIndex((img) => img === files[i].name);
+      if (idx > -1) {
+        newImage = images[idx];
+
+        const id = crypto.randomUUID();
+        // @ts-ignore
+        const { top, left } = e.target.getBoundingClientRect();
+
+        // Convert mouse coordinates to canvas coordinates
+        const { x, y } = toModelPosition(boardRef, {
+          x: e.clientX - left,
+          y: e.clientY - top,
+        });
+        createNodeFromDocument();
+
+        // .mutate({
+        //   id,
+        //   board_id: item_id as string,
+        //   x,
+        //   y,
+        //   type: "rectangle",
+        //   customImage: newImage,
+        //   ...defaultNode,
+        // });
+      }
+      // If there is no image upload, then set node
+      else {
+        newImage = await uploadImageMutation.mutateAsync({
+          file: files[i],
+          type: "Image",
+        });
+        // newImage = images?.data.find((img) => img.title === files[i].name);
+
+        const id = crypto.randomUUID();
+        // @ts-ignore
+        const { top, left } = e.target.getBoundingClientRect();
+
+        // Convert mouse coordinates to canvas coordinates
+        const { x, y } = toModelPosition(boardRef, {
+          x: e.clientX - left,
+          y: e.clientY - top,
+        });
+
+        createNodeFromDocument();
+
+        // createNodeMutation.mutate({
+        //   id,
+        //   board_id: item_id as string,
+        //   x,
+        //   y,
+        //   type: "rectangle",
+        //   customImage: newImage,
+        //   ...defaultNode,
+        // });
+      }
+    }
   }
 };

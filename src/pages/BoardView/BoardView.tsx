@@ -13,10 +13,11 @@ import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
+import { AvailableItemTypes } from "../../types/generalTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge } from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -46,6 +47,7 @@ export default function BoardView({ isReadOnly }: Props) {
     isLoading: boolean;
   };
   const contextItems = useBoardContextMenuItems({ type: boardContext.type, item_id: item_id as string, board, boardContext });
+  const createNodeMutation = useCreateSubItem(item_id as string, "nodes", "boards");
   const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
 
   useEffect(() => {
@@ -207,7 +209,24 @@ export default function BoardView({ isReadOnly }: Props) {
   }, [subitem_id, boardRef]);
   if (isLoading) return <ProgressSpinner />;
   return (
-    <div className="h-full w-full">
+    <div
+      className="h-full w-full"
+      onDrop={(e) => {
+        const data: { id: string; image?: string; type: AvailableItemTypes | "image" } = JSON.parse(
+          e.dataTransfer.getData("item_id"),
+        );
+        if (!data) return;
+        if (data.type === "documents") {
+          createNodeMutation.mutate({
+            ...DefaultNode,
+            type: board.defaultNodeShape,
+            backgroundColor: board.defaultNodeColor,
+            id: crypto.randomUUID(),
+            image: data?.image,
+            doc_id: data.id,
+          });
+        }
+      }}>
       <ContextMenu cm={cm} items={contextItems} />
 
       <CytoscapeComponent
