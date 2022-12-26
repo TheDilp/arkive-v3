@@ -6,6 +6,7 @@ import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import ExportBoard from "./ExportBoard";
 import InsertImageEditor from "./InsertImageEditor";
+import NodeFromDocument from "./NodeFromDocument";
 import NodeSearch from "./NodeSearch";
 import QuickUploadDialog from "./QuickUploadDialog";
 import UpdateMapLayers from "./UpdateMapLayers";
@@ -38,6 +39,7 @@ export default function DialogWrapper() {
       {dialog.type === "editor_image" && <InsertImageEditor />}
       {dialog.type === "node_search" && <NodeSearch />}
       {dialog.type === "export_board" && <ExportBoard />}
+      {dialog.type === "node_from_document" && <NodeFromDocument />}
     </Dialog>
   );
 }

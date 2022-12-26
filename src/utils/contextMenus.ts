@@ -15,7 +15,7 @@ import { BoardReferenceAtom, DialogAtom, DrawerAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { deleteItem } from "./Confirms/Confirm";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
-import { DefaultDrawer } from "./DefaultValues/DrawerDialogDefaults";
+import { DefaultDialog, DefaultDrawer } from "./DefaultValues/DrawerDialogDefaults";
 import { toaster } from "./toast";
 
 export type BoardContextMenuType = {
@@ -27,6 +27,7 @@ export type BoardContextMenuType = {
 
 export function useBoardContextMenuItems({ type, boardContext, item_id, board }: BoardContextMenuType) {
   const [boardRef] = useAtom(BoardReferenceAtom);
+  const [, setDialog] = useAtom(DialogAtom);
   const updateManyNodes = useUpdateManySubItems(item_id, "nodes");
   const createNodeMutation = useCreateSubItem(item_id as string, "nodes", "boards");
   const deleteManyNodes = useDeleteManySubItems(item_id as string, "nodes");
@@ -103,6 +104,7 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
         items: [
           {
             label: "From Document",
+            command: () => setDialog({ ...DefaultDialog, position: "left", type: "node_from_document", show: true }),
           },
         ],
       },
@@ -196,6 +198,277 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
 }
 
 export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableItemTypes, project_id: string) {
+  const createItemMutation = useCreateItem(type);
+  const updateItemMutation = useUpdateItem(type);
+  const deleteItemMutation = useDeleteItem(type, project_id);
+  const [, setDrawer] = useAtom(DrawerAtom);
+  const [, setDialog] = useAtom(DialogAtom);
+
+  if (cmType.folder) {
+    const folderItems = [
+      {
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              exceptions: {},
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: cmType?.type,
+            });
+        },
+        icon: "pi pi-fw pi-pencil",
+        label: "Edit Folder",
+      },
+
+      {
+        command: () => {
+          if (cmType.data?.id) {
+            // if (items?.some((item) => item.parent === cmType.data?.id)) {
+            //   toaster("error", "Cannot convert to file if folder contains files.");
+            //   return;
+            // }
+            updateItemMutation?.mutate({
+              folder: false,
+              id: cmType.data.id,
+            });
+          }
+        },
+        icon: "pi pi-fw, pi-file",
+        label: "Change To File",
+      },
+      {
+        icon: "pi pi-fw pi-plus",
+        items: [
+          {
+            // command: () => {},
+            icon: "pi pi-fw pi-file",
+            label: "Insert Document",
+          },
+          {
+            // command: () => {},
+            icon: "pi pi-fw pi-folder",
+            label: "Insert Folder",
+          },
+        ],
+        label: "Insert Into Folder",
+      },
+      { separator: true },
+      {
+        command: () =>
+          deleteItem("Are you sure you want to delete this folder?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+        icon: "pi pi-fw pi-trash",
+        label: "Delete Folder",
+      },
+    ];
+    return folderItems;
+  }
+  if (cmType.template) {
+    const templateItems = [
+      {
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              exceptions: {},
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "documents",
+            });
+        },
+        icon: "pi pi-fw pi-pencil",
+        label: "Edit Document",
+      },
+
+      {
+        icon: "pi pi-fw pi-copy",
+        label: "Create Doc From Template",
+        // command: () => {},
+      },
+      { separator: true },
+      {
+        icon: "pi pi-fw pi-trash",
+        label: "Delete Document",
+        command: () =>
+          deleteItem("Are you sure you want to delete this template?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+    return templateItems;
+  }
+  if (cmType.type === "documents") {
+    const docItems = [
+      {
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "documents",
+            });
+        },
+        icon: "pi pi-fw pi-pencil",
+        label: "Edit Document",
+      },
+
+      {
+        command: () => {
+          if (cmType.data?.id) {
+            updateItemMutation?.mutate({
+              folder: true,
+              id: cmType.data.id,
+            });
+          }
+        },
+        icon: "pi pi-fw pi-folder",
+        label: "Change To Folder",
+      },
+      {
+        command: () => {
+          if (cmType.data) {
+            createItemMutation?.mutate({
+              ...cmType.data,
+              id: crypto.randomUUID(),
+              parentId: null,
+              parent: undefined,
+              project_id: project_id as string,
+              template: true,
+            });
+          }
+        },
+        icon: "pi pi-fw pi-copy",
+        label: "Covert to Template",
+      },
+      {
+        icon: "pi pi-fw pi-download",
+        label: "Export JSON",
+        // command: () => {},
+      },
+      { separator: true },
+      {
+        icon: "pi pi-fw pi-external-link",
+        label: "View Public Document",
+        // command: () => {},
+      },
+      {
+        icon: "pi pi-fw pi-link",
+        label: "Copy Public URL",
+        // command: () => {},
+      },
+      {
+        command: () =>
+          deleteItem("Are you sure you want to delete this document?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+
+        icon: "pi pi-fw pi-trash",
+        label: "Delete Document",
+      },
+    ];
+
+    return docItems;
+  }
+  if (cmType.type === "maps") {
+    const mapItems = [
+      {
+        label: "Update Map",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "maps",
+            });
+        },
+      },
+      {
+        label: "Toggle Public",
+        icon: `pi pi-fw ${"2" ? "pi-eye" : "pi-eye-slash"}`,
+      },
+      {
+        label: "Manage Layers",
+        icon: "pi pi-clone",
+        command: () =>
+          setDialog((prev) => ({ ...prev, position: "top-left", data: cmType?.data, show: true, type: "map_layer" })),
+      },
+      { separator: true },
+      {
+        label: "View Public Map",
+        icon: "pi pi-fw pi-external-link",
+      },
+      {
+        label: "Copy Public URL",
+        icon: "pi pi-fw pi-link",
+      },
+      {
+        label: "Delete Map",
+        icon: "pi pi-fw pi-trash",
+        command: () =>
+          deleteItem("Are you sure you want to delete this map?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+    return mapItems;
+  }
+  if (cmType.type === "boards") {
+    const boardItems = [
+      {
+        label: "Update Board",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "boards",
+            });
+        },
+      },
+
+      {
+        label: "Toggle Public",
+        icon: `pi pi-fw ${true ? "pi-eye" : "pi-eye-slash"}`,
+      },
+
+      { separator: true },
+      {
+        label: "View Public Board",
+        icon: "pi pi-fw pi-external-link",
+      },
+      {
+        label: "Copy Public URL",
+        icon: "pi pi-fw pi-link",
+        // command: () => {
+        //   if (navigator && navigator.clipboard) {
+        //     navigator.clipboard.writeText(`${window.location.host}/view/${project_id}/boards/${displayDialog.id}`).then(() => {
+        //       toastSuccess("URL copied! 🔗");
+        //     });
+        //   }
+        // },
+      },
+      {
+        label: "Delete Board",
+        icon: "pi pi-fw pi-trash",
+        command: () =>
+          deleteItem("Are you sure you want to delete this board?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+
+    return boardItems;
+  }
   const rootItems = [
     {
       // command: () => {},
@@ -208,265 +481,5 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       label: "New Folder",
     },
   ];
-
-  const createItemMutation = useCreateItem(type);
-  const updateItemMutation = useUpdateItem(type);
-  const deleteItemMutation = useDeleteItem(type, project_id);
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const [, setDialog] = useAtom(DialogAtom);
-  const docItems = [
-    {
-      command: () => {
-        if (cmType.data?.id)
-          setDrawer({
-            ...DefaultDrawer,
-            id: cmType.data.id,
-            position: "right",
-            show: true,
-            type: "documents",
-          });
-      },
-      icon: "pi pi-fw pi-pencil",
-      label: "Edit Document",
-    },
-
-    {
-      command: () => {
-        if (cmType.data?.id) {
-          updateItemMutation?.mutate({
-            folder: true,
-            id: cmType.data.id,
-          });
-        }
-      },
-      icon: "pi pi-fw pi-folder",
-      label: "Change To Folder",
-    },
-    {
-      command: () => {
-        if (cmType.data) {
-          createItemMutation?.mutate({
-            ...cmType.data,
-            id: crypto.randomUUID(),
-            parentId: null,
-            parent: undefined,
-            project_id: project_id as string,
-            template: true,
-          });
-        }
-      },
-      icon: "pi pi-fw pi-copy",
-      label: "Covert to Template",
-    },
-    {
-      icon: "pi pi-fw pi-download",
-      label: "Export JSON",
-      // command: () => {},
-    },
-    { separator: true },
-    {
-      icon: "pi pi-fw pi-external-link",
-      label: "View Public Document",
-      // command: () => {},
-    },
-    {
-      icon: "pi pi-fw pi-link",
-      label: "Copy Public URL",
-      // command: () => {},
-    },
-    {
-      command: () =>
-        deleteItem("Are you sure you want to delete this document?", () => {
-          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
-        }),
-
-      icon: "pi pi-fw pi-trash",
-      label: "Delete Document",
-    },
-  ];
-  const folderItems = [
-    {
-      command: () => {
-        if (cmType.data?.id)
-          setDrawer({
-            exceptions: {},
-            id: cmType.data.id,
-            position: "right",
-            show: true,
-            type: cmType?.type,
-          });
-      },
-      icon: "pi pi-fw pi-pencil",
-      label: "Edit Folder",
-    },
-
-    {
-      command: () => {
-        if (cmType.data?.id) {
-          // if (items?.some((item) => item.parent === cmType.data?.id)) {
-          //   toaster("error", "Cannot convert to file if folder contains files.");
-          //   return;
-          // }
-          updateItemMutation?.mutate({
-            folder: false,
-            id: cmType.data.id,
-          });
-        }
-      },
-      icon: "pi pi-fw, pi-file",
-      label: "Change To File",
-    },
-    {
-      icon: "pi pi-fw pi-plus",
-      items: [
-        {
-          // command: () => {},
-          icon: "pi pi-fw pi-file",
-          label: "Insert Document",
-        },
-        {
-          // command: () => {},
-          icon: "pi pi-fw pi-folder",
-          label: "Insert Folder",
-        },
-      ],
-      label: "Insert Into Folder",
-    },
-    { separator: true },
-    {
-      command: () =>
-        deleteItem("Are you sure you want to delete this folder?", () => {
-          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
-        }),
-      icon: "pi pi-fw pi-trash",
-      label: "Delete Folder",
-    },
-  ];
-  const templateItems = [
-    {
-      command: () => {
-        if (cmType.data?.id)
-          setDrawer({
-            exceptions: {},
-            id: cmType.data.id,
-            position: "right",
-            show: true,
-            type: "documents",
-          });
-      },
-      icon: "pi pi-fw pi-pencil",
-      label: "Edit Document",
-    },
-
-    {
-      icon: "pi pi-fw pi-copy",
-      label: "Create Doc From Template",
-      // command: () => {},
-    },
-    { separator: true },
-    {
-      icon: "pi pi-fw pi-trash",
-      label: "Delete Document",
-      command: () =>
-        deleteItem("Are you sure you want to delete this template?", () => {
-          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
-        }),
-    },
-  ];
-  const mapItems = [
-    {
-      label: "Update Map",
-      icon: "pi pi-fw pi-pencil",
-      command: () => {
-        if (cmType.data?.id)
-          setDrawer({
-            ...DefaultDrawer,
-            id: cmType.data.id,
-            position: "right",
-            show: true,
-            type: "maps",
-          });
-      },
-    },
-    {
-      label: "Toggle Public",
-      icon: `pi pi-fw ${"2" ? "pi-eye" : "pi-eye-slash"}`,
-    },
-    {
-      label: "Manage Layers",
-      icon: "pi pi-clone",
-      command: () =>
-        setDialog((prev) => ({ ...prev, position: "top-left", data: cmType?.data, show: true, type: "map_layer" })),
-    },
-    { separator: true },
-    {
-      label: "View Public Map",
-      icon: "pi pi-fw pi-external-link",
-    },
-    {
-      label: "Copy Public URL",
-      icon: "pi pi-fw pi-link",
-    },
-    {
-      label: "Delete Map",
-      icon: "pi pi-fw pi-trash",
-      command: () =>
-        deleteItem("Are you sure you want to delete this map?", () => {
-          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
-        }),
-    },
-  ];
-  const boardItems = [
-    {
-      label: "Update Board",
-      icon: "pi pi-fw pi-pencil",
-      command: () => {
-        if (cmType.data?.id)
-          setDrawer({
-            ...DefaultDrawer,
-            id: cmType.data.id,
-            position: "right",
-            show: true,
-            type: "boards",
-          });
-      },
-    },
-
-    {
-      label: "Toggle Public",
-      icon: `pi pi-fw ${true ? "pi-eye" : "pi-eye-slash"}`,
-    },
-
-    { separator: true },
-    {
-      label: "View Public Board",
-      icon: "pi pi-fw pi-external-link",
-    },
-    {
-      label: "Copy Public URL",
-      icon: "pi pi-fw pi-link",
-      // command: () => {
-      //   if (navigator && navigator.clipboard) {
-      //     navigator.clipboard.writeText(`${window.location.host}/view/${project_id}/boards/${displayDialog.id}`).then(() => {
-      //       toastSuccess("URL copied! 🔗");
-      //     });
-      //   }
-      // },
-    },
-    {
-      label: "Delete Board",
-      icon: "pi pi-fw pi-trash",
-      command: () =>
-        deleteItem("Are you sure you want to delete this board?", () => {
-          if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
-        }),
-    },
-  ];
-
-  if (cmType.folder) return folderItems;
-  if (cmType.template) return templateItems;
-  if (cmType.type === "documents") return docItems;
-  if (cmType.type === "maps") return mapItems;
-  if (cmType.type === "boards") return boardItems;
   return rootItems;
 }

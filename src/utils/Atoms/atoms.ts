@@ -7,7 +7,7 @@ import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
 
-export type DialogTypes = null | "files" | "map_layer" | "editor_image" | "node_search" | "export_board";
+export type DialogTypes = null | "files" | "map_layer" | "editor_image" | "node_search" | "export_board" | "node_from_document";
 
 export type DialogAtomType = {
   id: null | string;
