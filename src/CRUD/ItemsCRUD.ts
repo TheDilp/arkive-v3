@@ -160,7 +160,7 @@ export const useUpdateItem = (type: AllAvailableTypes) => {
     },
   );
 };
-export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useUpdateSubItem = (item_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -177,7 +177,7 @@ export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, typ
     },
     {
       onMutate: async (variables) => {
-        const oldData: AllItemsType | undefined = queryClient.getQueryData([type, id]);
+        const oldData: AllItemsType | undefined = queryClient.getQueryData([type, item_id]);
         if (oldData && variables) {
           if (
             type === "boards" &&
@@ -187,7 +187,7 @@ export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, typ
               if (subItem.id === variables.id) return { ...subItem, ...variables };
               return subItem;
             });
-            queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
+            queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
           }
           if (
             type === "maps" &&
@@ -197,7 +197,7 @@ export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, typ
               if (subItem.id === variables.id) return { ...subItem, ...variables };
               return subItem;
             });
-            queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
+            queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
           }
         }
 
@@ -205,7 +205,7 @@ export const useUpdateSubItem = (id: string, subType: AvailableSubItemTypes, typ
       },
       onError: (error, variables, context) => {
         toaster("error", "There was an error updating this item.");
-        queryClient.setQueryData([type, id], context?.oldData);
+        queryClient.setQueryData([type, item_id], context?.oldData);
       },
     },
   );

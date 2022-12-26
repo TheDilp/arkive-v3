@@ -2,7 +2,7 @@ import { AllAvailableTypes, AvailableItemTypes } from "./generalTypes";
 
 export type DrawerAtomType = {
   id: null | string;
-  type: null | AllAvailableTypes | "full_search";
+  type: null | AllAvailableTypes | "full_search" | "many_nodes" | "many_edges";
   drawerSize?: "sm" | "md" | "lg";
   position?: "left" | "right" | "top" | "bottom";
   modal?: boolean;

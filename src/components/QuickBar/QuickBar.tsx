@@ -5,17 +5,16 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { ColorPicker } from "primereact/colorpicker";
 import { Tooltip } from "primereact/tooltip";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardType } from "../../types/boardTypes";
-import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom } from "../../utils/Atoms/atoms";
+import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, updateColor } from "../../utils/boardUtils";
 import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
-import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
 export default function BoardQuickBar() {
@@ -23,12 +22,12 @@ export default function BoardQuickBar() {
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [, setDialog] = useAtom(DialogAtom);
+  const [, setDrawer] = useAtom(DrawerAtom);
   const [edgehandles] = useAtom(BoardEdgeHandlesAtom);
   const { data: board } = useGetItem(item_id as string, "boards") as { data: BoardType };
 
   const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
   const updateManyEdges = useUpdateManySubItems(item_id as string, "edges");
-  const [, setUpdateManyDialog] = useState(false);
 
   const [, setExportDialog] = useAtom(DialogAtom);
   const deleteManyNodesMutation = useDeleteManySubItems(item_id as string, "nodes");
@@ -198,7 +197,7 @@ export default function BoardQuickBar() {
         onClick={() => {
           if (!boardRef) return;
           if (boardRef.elements(":selected")?.length > 0) {
-            setUpdateManyDialog(true);
+            setDrawer({ ...DefaultDrawer, position: "right", type: "many_nodes", show: true });
           } else {
             toaster("warning", "No elements are selected.");
           }

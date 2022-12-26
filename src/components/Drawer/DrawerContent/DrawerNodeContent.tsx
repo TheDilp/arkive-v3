@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-// import { useGetItem } from "../../../hooks/getItemHook";
 import { NodeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
@@ -21,14 +20,10 @@ import {
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
 import ColorInput from "../../ColorInput/ColorInput";
+import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
-
-function FontItemTemplate(item: { label: string; value: string }) {
-  const { value, label } = item;
-  return <div style={{ fontFamily: value }}>{label}</div>;
-}
 
 export default function DrawerNodeContent() {
   const { project_id, item_id } = useParams();
@@ -65,9 +60,9 @@ export default function DrawerNodeContent() {
   }
 
   return (
-    <div className="flex h-full flex-col justify-between gap-y-4">
-      <div className="flex w-full flex-col gap-y-4">
-        <div className="flex w-full flex-col gap-y-4">
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex w-full flex-col gap-y-2">
+        <div className="flex w-full flex-col gap-y-2">
           <div className=" w-full">
             <span className="w-full text-sm text-zinc-400">Node shape</span>
             <Dropdown
@@ -130,8 +125,9 @@ export default function DrawerNodeContent() {
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-col gap-y-4">
-          <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-4">
+        <hr />
+        <div className="flex w-full flex-col gap-y-2">
+          <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-2">
             {/* Label text */}
             <div className="flex w-full flex-wrap">
               <span className="w-full text-sm text-zinc-400">Node label</span>
@@ -199,7 +195,7 @@ export default function DrawerNodeContent() {
           </div>
         </div>
         <hr className="my-2" />
-        <div className="flex w-full flex-col gap-y-4">
+        <div className="flex w-full flex-col gap-y-2">
           <div className="w-full">
             <span className="w-full text-sm text-zinc-400">Linked document</span>
             <Dropdown
