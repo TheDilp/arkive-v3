@@ -14,7 +14,13 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         sort: true,
         expanded: true,
         folder: true,
-        parent: true,
+        parent: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+        parentId: true,
       },
       where: {
         project_id: req.params.project_id,
