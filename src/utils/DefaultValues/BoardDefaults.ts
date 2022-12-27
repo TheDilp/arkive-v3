@@ -272,10 +272,9 @@ export const cytoscapeStylesheet = [
   {
     selector: "node[classes != 'boardNode publicBoardNode']:locked, edge[classes != 'boardEdge publicBoardEdge']:locked",
     style: {
-      "underlay-color": "red",
-      "underlay-padding": 2,
-      "underlay-opacity": 0.25,
-      "border-opacity": 0.25,
+      "border-opacity": 1,
+      "border-width": 5,
+      "border-color": "red",
     },
   },
   {
