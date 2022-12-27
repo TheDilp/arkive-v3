@@ -52,7 +52,9 @@ export default function DrawerEdgeContent() {
       <div className="flex w-full flex-col">
         <TabView renderActiveOnly>
           <TabPanel header="Edge">
-            <div className="flex w-full flex-col gap-y-3">
+            <div className="flex w-full flex-col gap-y-3 pt-3">
+              <span className="w-full text-center font-Lato text-xl font-bold text-white">Edge Style</span>
+
               <div className="flex w-full flex-nowrap gap-x-1">
                 <div className="w-full">
                   <span className="w-full text-sm text-zinc-400">Edge Curve Type</span>
@@ -104,7 +106,9 @@ export default function DrawerEdgeContent() {
                   onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                 />
               </div>
-              <hr />
+
+              <hr className="border-zinc-700" />
+              <span className="w-full text-center font-Lato text-xl font-bold text-white">Label Style</span>
 
               <div className="flex w-full flex-wrap">
                 <span className="w-full text-sm text-zinc-400">Edge label</span>
@@ -118,8 +122,6 @@ export default function DrawerEdgeContent() {
                   value={localItem.label}
                 />
               </div>
-
-              {/* Label font & size */}
 
               <div className="flex w-full flex-nowrap gap-x-1">
                 <div className="flex w-1/2 flex-col">
@@ -156,7 +158,8 @@ export default function DrawerEdgeContent() {
                 />
               </div>
 
-              <hr />
+              <hr className="border-zinc-700" />
+              <span className="w-full text-center font-Lato text-xl font-bold text-white">Miscellaneous</span>
 
               <div className="w-full">
                 <span className="pl-1">
