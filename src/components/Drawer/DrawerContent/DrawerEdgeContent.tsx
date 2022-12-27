@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
-import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputSwitch } from "primereact/inputswitch";
@@ -224,13 +223,10 @@ export default function DrawerEdgeContent() {
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
-                    <ColorPicker
-                      onChange={(e) => handleChange({ name: "targetArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.targetArrowColor}
-                    />
-                    <InputText
-                      onChange={(e) => handleChange({ name: "targetArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.targetArrowColor}
+                    <ColorInput
+                      color={localItem.targetArrowColor}
+                      name="targetArrowColor"
+                      onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                     />
                   </div>
                   <hr className="mt-1" />
@@ -260,13 +256,10 @@ export default function DrawerEdgeContent() {
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
-                    <ColorPicker
-                      onChange={(e) => handleChange({ name: "sourceArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.sourceArrowColor}
-                    />
-                    <InputText
-                      onChange={(e) => handleChange({ name: "sourceArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.sourceArrowColor}
+                    <ColorInput
+                      color={localItem.sourceArrowColor}
+                      name="sourceArrowColor"
+                      onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                     />
                   </div>
                   <hr className="mt-1" />
@@ -298,13 +291,10 @@ export default function DrawerEdgeContent() {
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
-                    <ColorPicker
-                      onChange={(e) => handleChange({ name: "midTargetArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.midTargetArrowColor}
-                    />
-                    <InputText
-                      onChange={(e) => handleChange({ name: "midTargetArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.midTargetArrowColor}
+                    <ColorInput
+                      color={localItem.midTargetArrowColor}
+                      name="midTargetArrowColor"
+                      onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                     />
                   </div>
                   <hr className="mt-1" />
@@ -336,13 +326,10 @@ export default function DrawerEdgeContent() {
                   </div>
                   <div className="flex w-full flex-wrap items-center justify-between">
                     <span className="w-full text-sm text-zinc-400">Arrow Color</span>
-                    <ColorPicker
-                      onChange={(e) => handleChange({ name: "midSourceArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.midSourceArrowColor}
-                    />
-                    <InputText
-                      onChange={(e) => handleChange({ name: "midSourceArrowColor", value: getHexColor(e.target.value) })}
-                      value={localItem.midSourceArrowColor}
+                    <ColorInput
+                      color={localItem.midSourceArrowColor}
+                      name="midSourceArrowColor"
+                      onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                     />
                   </div>
                 </div>
