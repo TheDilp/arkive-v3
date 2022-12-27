@@ -19,7 +19,7 @@ export default function MapPin({
   cm: MutableRefObject<any>;
   readOnly?: boolean;
 }) {
-  const { id, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, public: markerPublic } = markerData;
+  const { id, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, isPublic } = markerData;
   const navigate = useNavigate();
   const { project_id } = useParams();
   const updateMapPin = useUpdateSubItem(project_id as string, "map_pins", "maps");
@@ -54,7 +54,7 @@ export default function MapPin({
           id,
           lat: e.target._latlng.lat,
           lng: e.target._latlng.lng,
-          isPublic: markerPublic,
+          isPublic,
         });
       }
     },

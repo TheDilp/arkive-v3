@@ -26,7 +26,7 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
 
   const PinFilter = (mapPin: MapPinType) => {
     if (isReadOnly) {
-      if (mapPin.public) {
+      if (mapPin.isPublic) {
         if (markerFilter === "map") {
           return false;
         }
