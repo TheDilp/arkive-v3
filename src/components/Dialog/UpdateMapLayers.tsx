@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -15,7 +16,7 @@ import { MapImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 
 export default function UpdateMapLayers() {
-  const { project_id } = useParams();
+  const { project_id, item_id } = useParams();
   const [dialog] = useAtom(DialogAtom);
   const { data: currentMap } = useGetItem(dialog.data?.id as string, "maps") as { data: MapType };
   const { data: map_images } = useGetAllMapImages(project_id as string);
@@ -23,6 +24,7 @@ export default function UpdateMapLayers() {
   const updateMapLayer = useUpdateSubItem(project_id as string, "map_layers", "maps");
   const deleteMapLayer = useDeleteItem("map_layers", project_id as string);
   const [layers, setLayers] = useState<MapLayerType[]>(currentMap?.map_layers || []);
+  const queryClient = useQueryClient();
   useEffect(() => {
     if (currentMap?.map_layers) setLayers(currentMap.map_layers);
   }, [currentMap?.map_layers]);
@@ -92,7 +94,20 @@ export default function UpdateMapLayers() {
                         image: layer.image,
                       },
                       {
-                        onSuccess: () => toaster("success", "Map layer updated successfully."),
+                        onSuccess: () => {
+                          queryClient.setQueryData(["maps", item_id], (oldData: MapType | undefined) => {
+                            if (oldData)
+                              return {
+                                ...oldData,
+                                map_layers: oldData.map_layers.map((oldLayer) => {
+                                  if (oldLayer.id === layer.id) return { ...oldLayer, ...layer };
+                                  return oldLayer;
+                                }),
+                              };
+                            return oldData;
+                          });
+                          toaster("success", "Map layer updated successfully.");
+                        },
                       },
                     );
                   }}
