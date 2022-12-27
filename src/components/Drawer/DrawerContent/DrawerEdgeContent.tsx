@@ -23,6 +23,7 @@ import {
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
 import { getHexColor } from "../../../utils/transform";
+import ColorInput from "../../ColorInput/ColorInput";
 import Tags from "../../Tags/Tags";
 
 function FontItemTemplate(item: { label: string; value: string }) {
@@ -53,112 +54,111 @@ export default function DrawerEdgeContent() {
         <TabView renderActiveOnly>
           <TabPanel header="Edge">
             <div className="flex w-full flex-col gap-y-3">
-              <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-2">
-                {/* Label text */}
-
-                <div className="flex w-full flex-wrap">
-                  <span className="w-full text-sm text-zinc-400">Edge label</span>
-
-                  <InputText
-                    autoComplete="false"
+              <div className="flex w-full flex-nowrap gap-x-1">
+                <div className="w-full">
+                  <span className="w-full text-sm text-zinc-400">Edge Curve Type</span>
+                  <Dropdown
                     className="w-full"
-                    onChange={(e) => handleChange({ name: "label", value: e.target.value })}
-                    onKeyDown={handleEnter}
-                    placeholder="Edge Label"
-                    value={localItem.label}
+                    onChange={(e) => handleChange({ name: "curveStyle", value: e.value })}
+                    options={boardEdgeCurveStyles}
+                    value={localItem.curveStyle}
                   />
                 </div>
-
-                {/* Label font & size */}
-
-                <div className="flex w-full flex-nowrap gap-x-1">
-                  <div className="flex w-1/2 flex-col">
-                    <span className="w-full text-sm text-zinc-400">Label Font</span>
-                    <Dropdown
-                      className="w-full"
-                      itemTemplate={FontItemTemplate}
-                      onChange={(e) => handleChange({ name: "label", value: e.target.value })}
-                      options={BoardFontFamilies}
-                      value={localItem.fontFamily}
-                      valueTemplate={FontItemTemplate}
-                    />
-                  </div>
-
-                  <div className="flex w-1/2 flex-col">
-                    <span className="w-full text-sm text-zinc-400">Label size</span>
-                    <Dropdown
-                      className="w-full"
-                      onChange={(e) => handleChange({ name: "fontSize", value: e.target.value })}
-                      options={BoardFontSizes}
-                      placeholder="Label Font Size"
-                      value={localItem.fontSize}
-                    />
-                  </div>
-                </div>
-
-                {/* Label color */}
-                <div className="flex w-full flex-wrap items-center justify-between">
-                  <span className="w-full text-sm text-zinc-400">Label color</span>
-                  <ColorPicker
-                    onChange={(e) => handleChange({ name: "fontColor", value: getHexColor(e.value) })}
-                    value={localItem.fontColor}
+                <div className="w-full">
+                  <span className="w-full text-sm text-zinc-400">Line Style</span>
+                  <Dropdown
+                    className="w-full"
+                    onChange={(e) => handleChange({ name: "lineStyle", value: e.value })}
+                    options={boardEdgeCurveStyles}
+                    value={localItem.curveStyle}
                   />
-                  <InputText
-                    onChange={(e) => handleChange({ name: "fontColor", value: getHexColor(e.target.value) })}
-                    value={localItem.fontColor}
-                  />
-                </div>
-
-                {/* Line, Curve style */}
-                <div className="flex w-full flex-nowrap gap-x-1">
-                  <div className="w-full">
-                    <span className="w-full text-sm text-zinc-400">Edge Curve Type</span>
-                    <Dropdown
-                      className="w-full"
-                      onChange={(e) => handleChange({ name: "curveStyle", value: e.value })}
-                      options={boardEdgeCurveStyles}
-                      value={localItem.curveStyle}
-                    />
-                  </div>
-                  <div className="w-full">
-                    <span className="w-full text-sm text-zinc-400">Line Style</span>
-                    <Dropdown
-                      className="w-full"
-                      onChange={(e) => handleChange({ name: "lineStyle", value: e.value })}
-                      options={boardEdgeCurveStyles}
-                      value={localItem.curveStyle}
-                    />
-                  </div>
                 </div>
               </div>
-              <div className="flex gap-x-1 gap-y-2">
-                <div className="flex w-full flex-wrap">
-                  <span className="w-full text-sm text-zinc-400">Thickness</span>
-                  <InputNumber
-                    className="w-full"
-                    inputClassName="w-full"
-                    max={5000}
-                    min={10}
-                    onChange={(e) => handleChange({ name: "width", value: e.value })}
-                    onKeyDown={handleEnter}
-                    showButtons
-                    step={10}
-                    value={localItem.width}
-                  />
-                </div>
+              <div className="w-full">
+                <span className="w-full text-sm text-zinc-400">Line Cap</span>
+                <Dropdown
+                  className="w-full"
+                  onChange={(e) => handleChange({ name: "lineCap", value: e.value })}
+                  options={boardEdgeCaps}
+                  value={localItem.lineCap}
+                />
+              </div>
+              <div className="flex w-full flex-wrap">
+                <span className="w-full text-sm text-zinc-400">Thickness</span>
+                <InputNumber
+                  className="w-full"
+                  inputClassName="w-full"
+                  max={5000}
+                  min={1}
+                  onChange={(e) => handleChange({ name: "width", value: e.value })}
+                  onKeyDown={handleEnter}
+                  showButtons
+                  step={1}
+                  value={localItem.width}
+                />
               </div>
               <div className="flex w-full flex-wrap items-center justify-between">
                 <span className="w-full text-sm text-zinc-400">Edge color</span>
-                <ColorPicker
-                  onChange={(e) => handleChange({ name: "lineColor", value: getHexColor(e.value) })}
-                  value={localItem.lineColor}
-                />
-                <InputText
-                  onChange={(e) => handleChange({ name: "lineColor", value: getHexColor(e.target.value) })}
-                  prefix="#"
-                  value={localItem.lineColor}
+                <ColorInput
+                  color={localItem.lineColor}
+                  name="lineColor"
+                  onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                 />
               </div>
+              <hr />
+
+              <div className="flex w-full flex-wrap">
+                <span className="w-full text-sm text-zinc-400">Edge label</span>
+
+                <InputText
+                  autoComplete="false"
+                  className="w-full"
+                  onChange={(e) => handleChange({ name: "label", value: e.target.value })}
+                  onKeyDown={handleEnter}
+                  placeholder="Edge Label"
+                  value={localItem.label}
+                />
+              </div>
+
+              {/* Label font & size */}
+
+              <div className="flex w-full flex-nowrap gap-x-1">
+                <div className="flex w-1/2 flex-col">
+                  <span className="w-full text-sm text-zinc-400">Label Font</span>
+                  <Dropdown
+                    className="w-full"
+                    itemTemplate={FontItemTemplate}
+                    onChange={(e) => handleChange({ name: "label", value: e.target.value })}
+                    options={BoardFontFamilies}
+                    value={localItem.fontFamily}
+                    valueTemplate={FontItemTemplate}
+                  />
+                </div>
+
+                <div className="flex w-1/2 flex-col">
+                  <span className="w-full text-sm text-zinc-400">Label size</span>
+                  <Dropdown
+                    className="w-full"
+                    onChange={(e) => handleChange({ name: "fontSize", value: e.target.value })}
+                    options={BoardFontSizes}
+                    placeholder="Label Font Size"
+                    value={localItem.fontSize}
+                  />
+                </div>
+              </div>
+
+              {/* Label color */}
+              <div className="flex w-full flex-wrap items-center justify-between">
+                <span className="w-full text-sm text-zinc-400">Label color</span>
+                <ColorInput
+                  color={localItem.fontColor}
+                  name="fontColor"
+                  onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
+                />
+              </div>
+
+              <hr />
+
               <div className="w-full">
                 <span className="pl-1">
                   <span className="w-full text-sm text-zinc-400">Edge opacity</span>
@@ -174,17 +174,6 @@ export default function DrawerEdgeContent() {
                     showButtons
                     step={0.01}
                     value={localItem.lineOpacity}
-                  />
-                </div>
-              </div>
-              <div className="w-full">
-                <div className="w-full">
-                  <span className="w-full text-sm text-zinc-400">Line Style</span>
-                  <Dropdown
-                    className="w-full"
-                    onChange={(e) => handleChange({ name: "lineCap", value: e.value })}
-                    options={boardEdgeCaps}
-                    value={localItem.lineCap}
                   />
                 </div>
               </div>

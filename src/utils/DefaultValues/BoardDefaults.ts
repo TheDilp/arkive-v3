@@ -18,6 +18,7 @@ export const DefaultBoard: DefaultBoardType = {
 export const DefaultEdge: DefaultEdgeType = {
   id: "",
   parent: "",
+  label: "",
   curveStyle: "straight",
   lineColor: "#595959",
   lineStyle: "solid",
