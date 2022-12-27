@@ -54,7 +54,7 @@ export default function MapPin({
           id,
           lat: e.target._latlng.lat,
           lng: e.target._latlng.lng,
-          public: markerPublic,
+          isPublic: markerPublic,
         });
       }
     },

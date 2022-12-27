@@ -114,7 +114,7 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
                   if (a.title < b.title) return -1;
                   return 0;
                 })
-                .filter((layer) => layer.image && (isReadOnly ? layer.public : true))
+                .filter((layer) => layer.image && (isReadOnly ? layer.isPublic : true))
                 .map((layer) => {
                   return (
                     <LayersControl.Overlay key={layer.id + layer.title} name={layer.title}>

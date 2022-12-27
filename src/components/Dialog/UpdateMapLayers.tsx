@@ -28,19 +28,34 @@ export default function UpdateMapLayers() {
   useEffect(() => {
     if (currentMap?.map_layers) setLayers(currentMap.map_layers);
   }, [currentMap?.map_layers]);
-
   return (
     <>
       <div className="mb-2 flex w-full items-center justify-between">
         <span className="font-medium text-blue-300">New Layer</span>
         <Button
           className="p-button-outlined"
-          onClick={() =>
-            createMapLayer.mutate({
+          onClick={() => {
+            const newLayer = {
+              id: crypto.randomUUID(),
               title: "New Layer",
               parent: dialog.data?.id,
-            })
-          }>
+              image: "",
+              isPublic: false,
+            };
+            createMapLayer.mutate(newLayer, {
+              onSuccess: () => {
+                queryClient.setQueryData(["maps", item_id], (oldData: MapType | undefined) => {
+                  if (oldData)
+                    return {
+                      ...oldData,
+                      map_layers: [...oldData.map_layers, newLayer],
+                    };
+                  return oldData;
+                });
+                toaster("success", "Map layer created successfully.");
+              },
+            });
+          }}>
           <Icon icon="mdi:layers-plus" />
         </Button>
       </div>
@@ -113,26 +128,26 @@ export default function UpdateMapLayers() {
                   }}
                 />
                 <Button
-                  className={`p-button-outlined w-1/12 p-button-${layer.public ? "info" : "secondary"}`}
-                  icon={`pi pi-${layer.public ? "eye" : "eye-slash"}`}
+                  className={`p-button-outlined w-1/12 p-button-${layer.isPublic ? "info" : "secondary"}`}
+                  icon={`pi pi-${layer.isPublic ? "eye" : "eye-slash"}`}
                   onClick={() => {
                     updateMapLayer.mutate(
                       {
                         id: layer.id,
-                        public: !layer.public,
+                        isPublic: !layer.isPublic,
                       },
                       {
                         onSuccess: () =>
                           toaster(
                             "info",
-                            `Visiblity of this layer has been changed to: ${!layer.public ? "public" : "private."}`,
+                            `Visiblity of this layer has been changed to: ${!layer.isPublic ? "public" : "private."}`,
                           ),
                       },
                     );
                     setLayers((prev) =>
                       prev?.map((prevLayer) => {
                         if (prevLayer.id === layer.id) {
-                          return { ...layer, public: !layer.public };
+                          return { ...layer, isPublic: !layer.isPublic };
                         }
                         return prevLayer;
                       }),

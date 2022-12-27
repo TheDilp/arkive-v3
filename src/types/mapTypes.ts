@@ -21,7 +21,7 @@ export type MapLayerType = {
   parent: string;
   title: string;
   image: string;
-  public: boolean;
+  isPublic: boolean;
 };
 
 export interface MapType extends BaseItemType {
