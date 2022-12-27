@@ -21,6 +21,7 @@ import { DefaultNode } from "../../../utils/DefaultValues/BoardDefaults";
 import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import Tags from "../../Tags/Tags";
 
 export default function DrawerManyNodesContent() {
   const { project_id, item_id } = useParams();
@@ -36,7 +37,9 @@ export default function DrawerManyNodesContent() {
   const { data: images } = useGetAllImages(project_id as string);
 
   return (
-    <div className="flex w-full flex-col gap-y-2">
+    <div className="flex w-full flex-col gap-y-2 overflow-y-auto pt-2">
+      <span className="w-full text-center font-Lato text-xl font-bold text-white">Node Style</span>
+
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Node Shape</span>
         <div className="flex w-full justify-between">
@@ -180,7 +183,9 @@ export default function DrawerManyNodesContent() {
           />
         </div>
       </div>
-      <hr />
+      <hr className="border-zinc-700" />
+      <span className="w-full text-center font-Lato text-xl font-bold text-white">Label Style</span>
+
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Node Label</span>
         <InputText
@@ -350,7 +355,8 @@ export default function DrawerManyNodesContent() {
           type="submit"
         />
       </div>
-      <hr />
+      <hr className="border-zinc-700" />
+      <span className="w-full text-center font-Lato text-xl font-bold text-white">Miscellaneous</span>
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Linked Document</span>
         <Dropdown
@@ -417,7 +423,7 @@ export default function DrawerManyNodesContent() {
           type="submit"
         />
       </div>
-      <div className="my-2 flex w-full flex-wrap justify-between">
+      <div className="flex w-full flex-wrap justify-between">
         <div className="flex w-full flex-wrap">
           <span className="w-full text-sm text-gray-400">Node Level</span>
           <span className="w-full text-xs text-gray-400">Changes if node is above or below others</span>
@@ -441,6 +447,27 @@ export default function DrawerManyNodesContent() {
             if (!boardRef) return;
             updateManyNodes({
               zIndex: localItem.zIndex,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <div className="w-4/5">
+          <Tags
+            handleChange={({ value }) => setLocalItem((prev) => ({ ...prev, tags: value }))}
+            localItem={localItem}
+            type="edges"
+          />
+        </div>
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyNodes({
+              tags: localItem.tags,
             });
           }}
           type="submit"
