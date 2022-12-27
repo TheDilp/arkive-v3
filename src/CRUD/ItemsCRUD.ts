@@ -301,6 +301,7 @@ export const useUpdateManySubItems = (item_id: string, subType: AvailableSubItem
   return useMutation(
     async (updateItemValues: { ids: string[]; data: Partial<AllSubItemsType> }) => {
       if (updateItemValues.ids) {
+        console.log(updateItemValues);
         const url = updateManyURL(subType);
         if (url)
           return fetch(url, {

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useGetAllItems, useUpdateManySubItems } from "../../../CRUD/ItemsCRUD";
-import { NodeType } from "../../../types/boardTypes";
+import { BoardType, NodeType } from "../../../types/boardTypes";
 import { DocumentType } from "../../../types/documentTypes";
 import { BoardReferenceAtom } from "../../../utils/Atoms/atoms";
 import {
@@ -33,31 +33,36 @@ export default function DrawerManyNodesContent() {
   const { mutate: manyNodesMutation } = useUpdateManySubItems(item_id as string, "nodes");
   const queryClient = useQueryClient();
   const updateManyNodes = (value: Partial<NodeType>) => {
-    manyNodesMutation(
-      { ids: boardRef?.nodes(":selected").map((node) => node.id()) || [], data: value },
-      {
-        onSuccess: () => {
-          toaster("success", "Edges updated successfully.");
-
-          // queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
-          //   if (oldData)
-          //     return {
-          //       ...oldData,
-          //       nodes: oldData?.nodes.map((node) => {
-          //         if (node.id === localItem.id) {
-          //           const newDoc = queryClient
-          //             .getQueryData<DocumentType[]>(["allItems", project_id, "documents"])
-          //             ?.find((doc) => doc.id === changedData.doc_id);
-          //           return { ...node, document: newDoc };
-          //         }
-          //         return node;
-          //       }),
-          //     };
-          //   return oldData;
-          // });
+    const nodes = boardRef?.nodes(":selected");
+    const ids = nodes?.map((node) => node.id()) || [];
+    if (ids && ids.length) {
+      manyNodesMutation(
+        { ids, data: value },
+        {
+          onSuccess: () => {
+            toaster("success", "Nodes updated successfully.");
+            if ("doc_id" in value) {
+              queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
+                if (oldData)
+                  return {
+                    ...oldData,
+                    nodes: oldData?.nodes.map((node) => {
+                      if (ids.includes(node.id)) {
+                        const newDoc = queryClient
+                          .getQueryData<DocumentType[]>(["allItems", project_id, "documents"])
+                          ?.find((doc) => doc.id === value.doc_id);
+                        return { ...node, document: newDoc };
+                      }
+                      return node;
+                    }),
+                  };
+                return oldData;
+              });
+            }
+          },
         },
-      },
-    );
+      );
+    }
   };
 
   const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
@@ -84,7 +89,7 @@ export default function DrawerManyNodesContent() {
             value={localItem.type}
           />
           <Button
-            className="p-button-square p-button-success p-button-outlined w-1/6"
+            className="p-button-square p-button-success p-button-outlined "
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
@@ -114,7 +119,7 @@ export default function DrawerManyNodesContent() {
           value={localItem.width}
         />
         <Button
-          className="p-button-square p-button-success p-button-outlined w-1/6"
+          className="p-button-square p-button-success p-button-outlined "
           icon="pi pi-save"
           iconPos="right"
           onClick={() => {
@@ -143,7 +148,7 @@ export default function DrawerManyNodesContent() {
           value={localItem.height}
         />
         <Button
-          className="p-button-square p-button-success p-button-outlined w-1/6"
+          className="p-button-square p-button-success p-button-outlined "
           icon="pi pi-save"
           iconPos="right"
           onClick={() => {
@@ -166,7 +171,7 @@ export default function DrawerManyNodesContent() {
           />
         </div>
         <Button
-          className="p-button-square p-button-success p-button-outlined w-1/6"
+          className="p-button-square p-button-success p-button-outlined "
           icon="pi pi-save"
           iconPos="right"
           onClick={() => {
@@ -197,7 +202,7 @@ export default function DrawerManyNodesContent() {
             value={localItem.backgroundOpacity}
           />
           <Button
-            className="p-button-square p-button-success p-button-outlined w-1/6"
+            className="p-button-square p-button-success p-button-outlined "
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
@@ -228,7 +233,7 @@ export default function DrawerManyNodesContent() {
           value={localItem.label}
         />
         <Button
-          className="p-button-square p-button-success p-button-outlined w-1/6"
+          className="p-button-square p-button-success p-button-outlined "
           icon="pi pi-save"
           iconPos="right"
           onClick={() => {
@@ -257,7 +262,7 @@ export default function DrawerManyNodesContent() {
             valueTemplate={FontItemTemplate}
           />
           <Button
-            className="p-button-square p-button-success p-button-outlined w-1/6"
+            className="p-button-square p-button-success p-button-outlined "
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
@@ -287,7 +292,7 @@ export default function DrawerManyNodesContent() {
           />
 
           <Button
-            className="p-button-square p-button-success p-button-outlined w-1/6"
+            className="p-button-square p-button-success p-button-outlined "
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
@@ -311,7 +316,7 @@ export default function DrawerManyNodesContent() {
             />
           </div>
           <Button
-            className="p-button-square p-button-success p-button-outlined w-1/6"
+            className="p-button-square p-button-success p-button-outlined "
             icon="pi pi-save"
             iconPos="right"
             onClick={() => {
@@ -405,7 +410,7 @@ export default function DrawerManyNodesContent() {
           value={localItem.doc_id}
         />
         <Button
-          className="p-button-square p-button-success p-button-outlined w-1/6"
+          className="p-button-square p-button-success p-button-outlined "
           icon="pi pi-save"
           iconPos="right"
           onClick={() => {
@@ -419,24 +424,24 @@ export default function DrawerManyNodesContent() {
       </div>
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Custom Image</span>
-        <div className="text-xs text-gray-400">Note: Custom images override images from linked documents.</div>
+        <div className="text-xs text-gray-400">Note: Custom images override images of linked documents.</div>
         <Dropdown
           className="w-4/5"
           itemTemplate={ImageDropdownItem}
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value }))}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value === "None" ? null : e.value }))}
           options={["None", ...(images || [])]}
           placeholder="Select image"
           value={localItem}
           valueTemplate={ImageDropdownValue({ image: localItem?.image })}
         />
         <Button
-          className="p-button-square p-button-success p-button-outlined w-1/6"
+          className="p-button-square p-button-success p-button-outlined "
           icon="pi pi-save"
           iconPos="right"
           onClick={() => {
             if (!boardRef) return;
             updateManyNodes({
-              image: localItem.image === "None" ? undefined : localItem.image,
+              image: localItem.image === "None" || !localItem.image ? null : localItem.image,
             });
           }}
           type="submit"
@@ -459,7 +464,7 @@ export default function DrawerManyNodesContent() {
           value={localItem.zIndex}
         />
         <Button
-          className="p-button-square p-button-success p-button-outlined w-1/6"
+          className="p-button-square p-button-success p-button-outlined "
           icon="pi pi-save"
           iconPos="right"
           onClick={() => {

@@ -50,7 +50,7 @@ export type NodeType = {
   fontFamily: string;
   textHAlign: "left" | "center" | "right";
   textVAlign: "top" | "center" | "bottom";
-  image?: string;
+  image?: string | null;
   width: number;
   height: number;
   x: number;
