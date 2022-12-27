@@ -54,6 +54,7 @@ export default function Editor({ content, editable }: EditorType) {
 
   useEffect(() => {
     if (currentDocument) {
+      console.log("TEST");
       manager.view.updateState(
         manager.createState({
           content:
