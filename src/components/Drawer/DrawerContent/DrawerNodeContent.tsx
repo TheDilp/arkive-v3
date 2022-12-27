@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -8,7 +9,8 @@ import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { NodeType } from "../../../types/boardTypes";
+import { BoardType, NodeType } from "../../../types/boardTypes";
+import { DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
   BoardFontFamilies,
@@ -33,18 +35,40 @@ export default function DrawerNodeContent() {
   const { data: images } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<NodeType | undefined>(drawer?.data as NodeType);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-
+  const queryClient = useQueryClient();
   const updateNode = () => {
-    if (localItem)
-      updateNodeMutation(
-        { id: localItem.id, ...changedData },
-        {
-          onSuccess: () => {
-            resetChanges();
-            toaster("success", `Node ${localItem.label || ""} was successfully updated.`);
+    if (localItem) {
+      if (changedData) {
+        updateNodeMutation(
+          { id: localItem.id, ...changedData },
+          {
+            onSuccess: () => {
+              resetChanges();
+              toaster("success", `Node ${localItem.label || ""} was successfully updated.`);
+              if ("doc_id" in changedData)
+                queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
+                  if (oldData)
+                    return {
+                      ...oldData,
+                      nodes: oldData?.nodes.map((node) => {
+                        if (node.id === localItem.id) {
+                          const newDoc = queryClient
+                            .getQueryData<DocumentType[]>(["allItems", project_id, "documents"])
+                            ?.find((doc) => doc.id === changedData.doc_id);
+                          return { ...node, document: newDoc };
+                        }
+                        return node;
+                      }),
+                    };
+                  return oldData;
+                });
+            },
           },
-        },
-      );
+        );
+      } else {
+        toaster("info", "No data was changed.");
+      }
+    }
   };
 
   const handleEnter: KeyboardEventHandler = (e: any) => {
