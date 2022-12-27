@@ -61,7 +61,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     // active.bold(), active.italic(), etc
     <Menubar
       className="Lato w-full border-0 p-0"
-      end={() => (saving ? <ProgressSpinner className="w-2rem h-2rem" /> : "")}
+      end={() => (saving ? <ProgressSpinner className="w-2" /> : "")}
       model={[
         {
           label: "B",

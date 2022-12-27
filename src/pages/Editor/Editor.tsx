@@ -3,7 +3,7 @@ import "remirror/styles/all.css";
 import { Icon } from "@iconify/react";
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { InvalidContentHandler, RemirrorJSON } from "remirror";
 import { useDebouncedCallback } from "use-debounce";
@@ -21,6 +21,7 @@ import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
   const { item_id } = useParams();
+  const [saving, setSaving] = useState(false);
   const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents", { enabled: !!editable }) as {
     data: DocumentType;
     isLoading: boolean;
@@ -42,26 +43,29 @@ export default function Editor({ content, editable }: EditorType) {
   });
 
   const debounced = useDebouncedCallback((changedContent: RemirrorJSON, id: string) => {
-    updateDocumentMutation?.mutate({
-      content: changedContent,
-      id,
-    });
-  }, 850);
+    updateDocumentMutation?.mutate(
+      {
+        content: changedContent,
+        id,
+      },
+      {
+        onSuccess: () => setSaving(false),
+      },
+    );
+  }, 1250);
   const onChange = useCallback((changedContent: RemirrorJSON, doc_id: string) => {
     debounced(changedContent, doc_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (currentDocument) {
-      console.log("TEST");
+    if (currentDocument)
       manager.view.updateState(
         manager.createState({
           content:
             editable === false ? content || undefined : ("content" in currentDocument && currentDocument?.content) || undefined,
         }),
       );
-    }
   }, [currentDocument, item_id]);
 
   if (isLoading) return <ProgressSpinner />;
@@ -97,9 +101,10 @@ export default function Editor({ content, editable }: EditorType) {
             <OnChangeJSON
               onChange={(changedContent: RemirrorJSON) => {
                 onChange(changedContent, item_id as string);
+                setSaving(true);
               }}
             />
-            {editable ? <Menubar saving={false} /> : null}
+            {editable ? <Menubar saving={saving} /> : null}
             <EditorComponent />
             <MentionDropdownComponent />
           </Remirror>

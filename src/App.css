@@ -130,6 +130,13 @@
       @apply bg-sky-400;
     }
   }
+  .p-menubar-end {
+    @apply flex max-h-[2rem] max-w-[2rem] items-center;
+
+    .p-progress-spinner {
+      @apply w-8 !important;
+    }
+  }
 }
 
 .p-chips-multiple-container {
