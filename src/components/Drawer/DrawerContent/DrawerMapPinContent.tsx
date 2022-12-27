@@ -13,16 +13,16 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/documentTypes";
 import { MapPinCreateType, MapPinType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
-import { buttonLabelWithIcon } from "../../../utils/transform";
+import { buttonLabelWithIcon, getHexColor } from "../../../utils/transform";
 import { IconSelect } from "../../IconSelect/IconSelect";
 
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const [drawer] = useAtom(DrawerAtom);
-  const createMapPin = useCreateSubItem(project_id as string, "map_pins", "maps");
+  const createMapPin = useCreateSubItem(item_id as string, "map_pins", "maps");
   const updateMapPin = useUpdateSubItem(project_id as string, "map_pins", "maps");
-  const map = useGetItem(project_id as string, drawer?.data?.parent, "maps") as MapType;
-  const currentPin = map?.map_pins.find((pin) => pin.id === drawer.id);
+  const { data: map } = useGetItem(item_id as string, "maps") as { data: MapType };
+  const currentPin = map?.map_pins?.find((pin) => pin.id === drawer.id);
   const { data: documents } = useGetAllItems(project_id as string, "documents");
   const { data: maps } = useGetAllItems(project_id as string, "maps");
   const [localItem, setLocalItem] = useState<MapPinType | MapPinCreateType>(
@@ -33,7 +33,7 @@ export default function DrawerMapPinContent() {
       lat: drawer?.data?.lat,
       lng: drawer?.data?.lng,
       parent: item_id as string,
-      public: false,
+      isPublic: false,
       text: "",
     },
   );
@@ -60,7 +60,7 @@ export default function DrawerMapPinContent() {
           />
         </IconSelect>
         <ColorPicker
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, color: `#${e.value}` as string }))}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, color: getHexColor(e.value) }))}
           value={localItem.color}
         />
         <InputText onChange={(e) => setLocalItem((prev) => ({ ...prev, color: e.target.value }))} value={localItem.color} />
@@ -69,7 +69,7 @@ export default function DrawerMapPinContent() {
         <h4 className="w-full text-lg underline">Marker Background</h4>
 
         <ColorPicker
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, backgroundColor: `#${e.value}` as string }))}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, backgroundColor: getHexColor(e.value) }))}
           value={localItem.backgroundColor}
         />
         <InputText
@@ -79,7 +79,7 @@ export default function DrawerMapPinContent() {
       </div>
       <div className="flex flex-wrap items-center justify-between">
         <span>Public:</span>
-        <Checkbox checked={localItem.public} />
+        <Checkbox checked={localItem.isPublic} />
         <p className="w-full pt-2 text-xs text-zinc-400">
           If a document is linked, the marker will use its public setting by default.
         </p>
@@ -105,8 +105,8 @@ export default function DrawerMapPinContent() {
       <Button
         className="p-button-outlined p-button-success ml-auto"
         onClick={() => {
-          if (localItem?.id) updateMapPin.mutate(localItem);
-          else createMapPin.mutate(localItem);
+          if (currentPin) updateMapPin.mutate(localItem);
+          else createMapPin.mutate({ ...localItem, id: crypto.randomUUID() });
         }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}

@@ -98,6 +98,7 @@ export const useCreateSubItem = (id: string, subType: AvailableSubItemTypes, typ
       onMutate: async (variables) => {
         if (!variables.parent || !variables.id) throw new Error("NO ID OR PARENT.");
         const oldData: AllItemsType | undefined = queryClient.getQueryData([type, id]);
+        console.log(oldData, variables);
         if (oldData && variables) {
           if (
             type === "boards" &&
