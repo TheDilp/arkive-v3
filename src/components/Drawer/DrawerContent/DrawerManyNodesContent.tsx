@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
-import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
@@ -8,8 +7,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useGetAllItems, useUpdateManySubItems } from "../../../CRUD/ItemsCRUD";
-import { useGetItem } from "../../../hooks/useGetItem";
-import { BoardType, NodeType } from "../../../types/boardTypes";
+import { NodeType } from "../../../types/boardTypes";
 import { DocumentType } from "../../../types/documentTypes";
 import { BoardReferenceAtom } from "../../../utils/Atoms/atoms";
 import {
@@ -36,167 +34,24 @@ export default function DrawerManyNodesContent() {
 
   const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
   const { data: images } = useGetAllImages(project_id as string);
-  const { data: board } = useGetItem(project_id as string, "boards") as { data: BoardType };
-
-  //   <span className="w-full text-sm text-gray-400">Font Size</span>
-  //           <div className="flex w-full flex-wrap justify-between">
-
-  //             {/* Label color */}
-  //             <div className="mt-1 flex w-full flex-nowrap content-center items-end justify-start">
-  //               <div className="flex w-5/6 flex-wrap items-center justify-start">
-
-  //               </div>
-  //               <div className="flex w-1/6 justify-end">
-  //                 <Button
-  //                   className="p-button-square p-button-success p-button-outlined w-full"
-  //                   icon="pi pi-save"
-  //                   iconPos="right"
-  //                   onClick={() => {
-  //                     if (!boardRef) return;
-  //                     updateManyNodes({
-  //                       fontColor: `#${localItem.fontColor.replaceAll("#", "")}`,
-  //                     });
-  //                   }}
-  //                   type="submit"
-  //                 />
-  //               </div>
-  //             </div>
-
-  //             {/* Horizontal Align */}
-  //             <div className="mt-1 flex w-full flex-nowrap content-center items-end justify-between">
-  //               <div className="w-max">
-  //                 <span className="text-sm text-gray-400">Horizontal Align</span>
-  //                 <Dropdown
-  //                   className="w-full"
-  //                   onChange={(e) =>
-  //                     setLocalItem((prev) => ({
-  //                       ...prev,
-  //                       textHAlign: e.value,
-  //                     }))
-  //                   }
-  //                   options={textHAlignOptions}
-  //                   value={localItem.textHAlign}
-  //                 />
-  //               </div>
-
-  //               <div className="w-1/6">
-  //                 <Button
-  //                   className="p-button-square p-button-success p-button-outlined w-full"
-  //                   icon="pi pi-save"
-  //                   iconPos="right"
-  //                   onClick={() => {
-  //                     if (!boardRef) return;
-  //                     updateManyNodes({
-  //                       textHAlign: localItem.textHAlign,
-  //                     });
-  //                   }}
-  //                   type="submit"
-  //                 />
-  //               </div>
-  //             </div>
-  //             {/* Vertical Align */}
-  //             <div className="mt-1 flex w-full flex-nowrap content-center items-end justify-between">
-  //               <div className="w-max">
-  //                 <span className="text-sm text-gray-400">Vertical Align</span>
-  //                 <Dropdown
-  //                   className="w-full"
-  //                   onChange={(e) =>
-  //                     setLocalItem((prev) => ({
-  //                       ...prev,
-  //                       textVAlign: e.value,
-  //                     }))
-  //                   }
-  //                   options={textVAlignOptions}
-  //                   value={localItem.textVAlign}
-  //                 />
-  //               </div>
-  //   <div>
-  //     <InputText
-  //       className="w-5/6"
-  //       onChange={(e) =>
-  //         setLocalItem((prev) => ({
-  //           ...prev,
-  //           fontColor: e.target.value,
-  //         }))
-  //       }
-  //       value={localItem.fontColor}
-  //     />
-  //     <ColorPicker
-  //       className="ml-1"
-  //       onChange={(e) =>
-  //         setLocalItem((prev) => ({
-  //           ...prev,
-  //           fontColor: e.value as string,
-  //         }))
-  //       }
-  //       value={localItem.fontColor}
-  //     />
-  // </div>
-  //               <div className="w-1/6">
-  //                 <Button
-  //                   className="p-button-square p-button-success p-button-outlined w-full"
-  //                   icon="pi pi-save"
-  //                   iconPos="right"
-  //                   onClick={() => {
-  //                     if (!boardRef) return;
-  //                     updateManyNodes({
-  //                       textVAlign: localItem.textVAlign,
-  //                     });
-  //                   }}
-  //                   type="submit"
-  //                 />
-  //               </div>
-  //             </div>
-  //           </div>
 
   return (
     <div className="flex w-full flex-col gap-y-2">
-      <div className="flex w-full flex-col gap-y-2">
-        <div className="flex w-full flex-wrap justify-between">
-          <span className="w-full text-sm text-gray-400">Node Shape</span>
-          <div className="flex w-full justify-between">
-            <Dropdown
-              className="w-4/5"
-              filter
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  type: e.value,
-                }))
-              }
-              options={boardNodeShapes}
-              placeholder="Node Shape"
-              value={localItem.type}
-            />
-            <Button
-              className="p-button-square p-button-success p-button-outlined w-1/6"
-              icon="pi pi-save"
-              iconPos="right"
-              onClick={() => {
-                if (!boardRef) return;
-                updateManyNodes({
-                  type: localItem.type,
-                });
-              }}
-              type="submit"
-            />
-          </div>
-        </div>
-        <div className="flex w-full flex-wrap justify-between">
-          <span className="w-full text-sm text-gray-400">Width</span>
-          <InputNumber
-            inputClassName="w-6rem"
-            max={5000}
-            min={10}
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Node Shape</span>
+        <div className="flex w-full justify-between">
+          <Dropdown
+            className="w-4/5"
+            filter
             onChange={(e) =>
               setLocalItem((prev) => ({
                 ...prev,
-                width: e.value as number,
+                type: e.value,
               }))
             }
-            showButtons
-            step={10}
-            value={localItem.width}
+            options={boardNodeShapes}
+            placeholder="Node Shape"
+            value={localItem.type}
           />
           <Button
             className="p-button-square p-button-success p-button-outlined w-1/6"
@@ -205,48 +60,221 @@ export default function DrawerManyNodesContent() {
             onClick={() => {
               if (!boardRef) return;
               updateManyNodes({
-                width: localItem.width,
+                type: localItem.type,
               });
             }}
             type="submit"
           />
         </div>
-        <div className="flex w-full flex-wrap justify-between">
-          <span className="w-full text-sm text-gray-400">Height</span>
-          <InputNumber
-            inputClassName="w-6rem"
-            max={5000}
-            min={10}
-            onChange={(e) =>
-              setLocalItem((prev) => ({
-                ...prev,
-                height: e.value as number,
-              }))
-            }
-            showButtons
-            step={10}
-            value={localItem.height}
-          />
-          <Button
-            className="p-button-square p-button-success p-button-outlined w-1/6"
-            icon="pi pi-save"
-            iconPos="right"
-            onClick={() => {
-              if (!boardRef) return;
-              updateManyNodes({
-                height: localItem.height,
-              });
-            }}
-            type="submit"
-          />
-        </div>
-        <div className="flex w-full flex-wrap justify-between">
-          <span className="w-full text-sm text-gray-400">Node Color</span>
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Width</span>
+        <InputNumber
+          inputClassName="w-6rem"
+          max={5000}
+          min={10}
+          onChange={(e) =>
+            setLocalItem((prev) => ({
+              ...prev,
+              width: e.value as number,
+            }))
+          }
+          showButtons
+          step={10}
+          value={localItem.width}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined w-1/6"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyNodes({
+              width: localItem.width,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Height</span>
+        <InputNumber
+          inputClassName="w-6rem"
+          max={5000}
+          min={10}
+          onChange={(e) =>
+            setLocalItem((prev) => ({
+              ...prev,
+              height: e.value as number,
+            }))
+          }
+          showButtons
+          step={10}
+          value={localItem.height}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined w-1/6"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyNodes({
+              height: localItem.height,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Node Color</span>
 
-          <div className="flex w-4/5 flex-nowrap">
+        <div className="flex w-4/5 flex-nowrap">
+          <ColorInput
+            color={localItem.backgroundColor}
+            name="backgroundColor"
+            onChange={({ name, value }) => setLocalItem((prev) => ({ ...prev, [name]: value }))}
+          />
+        </div>
+        <Button
+          className="p-button-square p-button-success p-button-outlined w-1/6"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyNodes({
+              backgroundColor: localItem.backgroundColor,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Background Opacity</span>
+        <div className="flex w-full flex-wrap justify-between">
+          <InputNumber
+            inputClassName="w-full"
+            max={1}
+            min={0}
+            mode="decimal"
+            onChange={(e) =>
+              setLocalItem((prev) => ({
+                ...prev,
+                backgroundOpacity: e.value as number,
+              }))
+            }
+            showButtons
+            step={0.01}
+            value={localItem.backgroundOpacity}
+          />
+          <Button
+            className="p-button-square p-button-success p-button-outlined w-1/6"
+            icon="pi pi-save"
+            iconPos="right"
+            onClick={() => {
+              if (!boardRef) return;
+              updateManyNodes({
+                backgroundOpacity: localItem.backgroundOpacity,
+              });
+            }}
+            type="submit"
+          />
+        </div>
+      </div>
+      <hr />
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Node Label</span>
+        <InputText
+          autoComplete="false"
+          className="w-4/5"
+          onChange={(e) =>
+            setLocalItem((prev) => ({
+              ...prev,
+              label: e.target.value,
+            }))
+          }
+          placeholder="Node Label"
+          value={localItem.label}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined w-1/6"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyNodes({
+              label: localItem.label,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="text-sm text-gray-400">Font Family</span>
+        <div className="flex w-full justify-between">
+          <Dropdown
+            className="w-4/5"
+            itemTemplate={FontItemTemplate}
+            onChange={(e) =>
+              setLocalItem((prev) => ({
+                ...prev,
+                fontFamily: e.value,
+              }))
+            }
+            options={BoardFontFamilies}
+            value={localItem.fontFamily}
+            valueTemplate={FontItemTemplate}
+          />
+          <Button
+            className="p-button-square p-button-success p-button-outlined w-1/6"
+            icon="pi pi-save"
+            iconPos="right"
+            onClick={() => {
+              if (!boardRef) return;
+              updateManyNodes({
+                fontSize: localItem.fontSize,
+              });
+            }}
+            type="submit"
+          />
+        </div>
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Label Font Size</span>
+        <div className="flex w-full justify-between">
+          <Dropdown
+            className="w-4/5"
+            onChange={(e) =>
+              setLocalItem((prev) => ({
+                ...prev,
+                fontSize: e.value,
+              }))
+            }
+            options={BoardFontSizes}
+            placeholder="Label Font Size"
+            value={localItem.fontSize}
+          />
+
+          <Button
+            className="p-button-square p-button-success p-button-outlined w-1/6"
+            icon="pi pi-save"
+            iconPos="right"
+            onClick={() => {
+              if (!boardRef) return;
+              updateManyNodes({
+                fontSize: localItem.fontSize,
+              });
+            }}
+            type="submit"
+          />
+        </div>
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-gray-400">Label Font Size</span>
+        <div className="flex w-full justify-between">
+          <div className="w-4/5">
             <ColorInput
-              color={localItem.backgroundColor}
-              name="backgroundColor"
+              color={localItem.fontColor}
+              name="fontColor"
               onChange={({ name, value }) => setLocalItem((prev) => ({ ...prev, [name]: value }))}
             />
           </div>
@@ -257,138 +285,76 @@ export default function DrawerManyNodesContent() {
             onClick={() => {
               if (!boardRef) return;
               updateManyNodes({
-                backgroundColor: localItem.backgroundColor,
+                fontColor: localItem.fontColor,
               });
             }}
             type="submit"
           />
         </div>
-        <div className="flex w-full flex-wrap justify-between">
-          <span className="w-full text-sm text-gray-400">Background Opacity</span>
-          <div className="flex w-full flex-wrap justify-between">
-            <InputNumber
-              inputClassName="w-full"
-              max={1}
-              min={0}
-              mode="decimal"
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  backgroundOpacity: e.value as number,
-                }))
-              }
-              showButtons
-              step={0.01}
-              value={localItem.backgroundOpacity}
-            />
-            <Button
-              className="p-button-square p-button-success p-button-outlined w-1/6"
-              icon="pi pi-save"
-              iconPos="right"
-              onClick={() => {
-                if (!boardRef) return;
-                updateManyNodes({
-                  backgroundOpacity: localItem.backgroundOpacity,
-                });
-              }}
-              type="submit"
-            />
-          </div>
-        </div>
-        <hr />
-        <div className="flex flex-wrap justify-between">
-          <span className="w-full text-sm text-gray-400">Node Label</span>
-          <InputText
-            autoComplete="false"
-            className="w-4/5"
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="text-sm text-gray-400">Vertical Align</span>
+        <div className="w-4/5">
+          <Dropdown
+            className="w-full"
             onChange={(e) =>
               setLocalItem((prev) => ({
                 ...prev,
-                label: e.target.value,
+                textVAlign: e.value,
               }))
             }
-            placeholder="Node Label"
-            value={localItem.label}
-          />
-          <Button
-            className="p-button-square p-button-success p-button-outlined w-1/6"
-            icon="pi pi-save"
-            iconPos="right"
-            onClick={() => {
-              if (!boardRef) return;
-              updateManyNodes({
-                label: localItem.label,
-              });
-            }}
-            type="submit"
+            options={textVAlignOptions}
+            value={localItem.textVAlign}
           />
         </div>
-        <div className="flex flex-wrap justify-between">
-          <span className="w-full text-sm text-gray-400">Label Font Size</span>
-          <div className="flex w-full justify-between">
-            <Dropdown
-              className="w-4/5"
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  fontSize: e.value,
-                }))
-              }
-              options={BoardFontSizes}
-              placeholder="Label Font Size"
-              value={localItem.fontSize}
-            />
 
-            <Button
-              className="p-button-square p-button-success p-button-outlined w-1/6"
-              icon="pi pi-save"
-              iconPos="right"
-              onClick={() => {
-                if (!boardRef) return;
-                updateManyNodes({
-                  fontSize: localItem.fontSize,
-                });
-              }}
-              type="submit"
-            />
-          </div>
+        <Button
+          className="p-button-square p-button-success p-button-outlined w-full"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyNodes({
+              textVAlign: localItem.textVAlign,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="text-sm text-gray-400">Horizontal Align</span>
+        <div className="w-4/5">
+          <Dropdown
+            className="w-full"
+            onChange={(e) =>
+              setLocalItem((prev) => ({
+                ...prev,
+                textHAlign: e.value,
+              }))
+            }
+            options={textHAlignOptions}
+            value={localItem.textHAlign}
+          />
         </div>
-        <div className="flex flex-wrap justify-between">
-          <span className="text-sm text-gray-400">Font Family</span>
-          <div className="flex w-full justify-between">
-            <Dropdown
-              className="w-4/5"
-              itemTemplate={FontItemTemplate}
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  fontFamily: e.value,
-                }))
-              }
-              options={BoardFontFamilies}
-              value={localItem.fontFamily}
-              valueTemplate={FontItemTemplate}
-            />
-            <Button
-              className="p-button-square p-button-success p-button-outlined w-1/6"
-              icon="pi pi-save"
-              iconPos="right"
-              onClick={() => {
-                if (!boardRef) return;
-                updateManyNodes({
-                  fontSize: localItem.fontSize,
-                });
-              }}
-              type="submit"
-            />
-          </div>
-        </div>
+
+        <Button
+          className="p-button-square p-button-success p-button-outlined w-full"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyNodes({
+              textHAlign: localItem.textHAlign,
+            });
+          }}
+          type="submit"
+        />
       </div>
       <hr />
-      <div className="my-1 flex w-full flex-wrap justify-between">
+      <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Linked Document</span>
         <Dropdown
-          className="w-2/3"
+          className="w-4/5"
           emptyFilterMessage="No documents found"
           filter
           onChange={(e) => {
@@ -418,11 +384,11 @@ export default function DrawerManyNodesContent() {
           type="submit"
         />
       </div>
-      <div className="my-1 flex w-full flex-wrap justify-between">
+      <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Custom Image</span>
         <div className="text-xs text-gray-400">Note: Custom images override images from linked documents.</div>
         <Dropdown
-          className="w-2/3"
+          className="w-4/5"
           filter
           filterBy="title"
           itemTemplate={ImageDropdownItem}
@@ -479,74 +445,6 @@ export default function DrawerManyNodesContent() {
           }}
           type="submit"
         />
-      </div>
-      <div className="my-1 flex w-full flex-wrap items-end justify-between">
-        <div className="w-full">
-          <span className="w-full text-sm text-gray-400">Background Color</span>
-          <div className="align-items-center flex justify-between">
-            <ColorPicker
-              className="w-1"
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  backgroundColor: e.value as string,
-                }))
-              }
-              value={localItem.backgroundColor}
-            />
-            <InputText
-              className="ml-2 w-8"
-              onChange={(e) =>
-                setLocalItem((prev) => ({
-                  ...prev,
-                  backgroundColor: e.target.value,
-                }))
-              }
-              value={localItem.backgroundColor}
-            />
-
-            <Button
-              className="p-button-square p-button-success p-button-outlined w-1/6"
-              icon="pi pi-save"
-              iconPos="right"
-              onClick={() => {
-                if (!boardRef) return;
-                updateManyNodes({
-                  backgroundColor: `#${localItem.backgroundColor.replaceAll("#", "")}`,
-                });
-              }}
-              type="submit"
-            />
-          </div>
-        </div>
-
-        <div className="flex w-full flex-wrap">
-          <span className="w-full text-sm text-gray-400">Template</span>
-
-          <Dropdown
-            onChange={(e) =>
-              setLocalItem((prev) => ({
-                ...prev,
-                selectedTemplate: e.value,
-              }))
-            }
-            optionLabel="label"
-            options={board?.nodes ? [{ label: "None", value: null }, ...board.nodes.filter((node) => node.template)] : []}
-            placeholder="Select Template"
-            tooltip="Select template and save to save changes"
-            value={localItem.template}
-          />
-          <Button
-            icon="pi pi-save"
-            onClick={() => {
-              //   if (localItem.selectedTemplate && boardRef) {
-              //     const { id, item_id, template, document, label, x, y, ...restTemplate } =
-              //       localItem.selectedTemplate as BoardNodeType;
-              //     updateManyNodes(restTemplate, boardRef);
-              //   }
-            }}
-          />
-        </div>
       </div>
     </div>
   );
