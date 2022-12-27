@@ -20,7 +20,7 @@ export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const [drawer] = useAtom(DrawerAtom);
   const createMapPin = useCreateSubItem(item_id as string, "map_pins", "maps");
-  const updateMapPin = useUpdateSubItem(project_id as string, "map_pins", "maps");
+  const updateMapPin = useUpdateSubItem(item_id as string, "map_pins", "maps");
   const { data: map } = useGetItem(item_id as string, "maps") as { data: MapType };
   const currentPin = map?.map_pins?.find((pin) => pin.id === drawer.id);
   const { data: documents } = useGetAllItems(project_id as string, "documents");
@@ -79,7 +79,7 @@ export default function DrawerMapPinContent() {
       </div>
       <div className="flex flex-wrap items-center justify-between">
         <span>Public:</span>
-        <Checkbox checked={localItem.isPublic} />
+        <Checkbox checked={localItem.isPublic} onChange={(e) => setLocalItem((prev) => ({ ...prev, isPublic: e.checked }))} />
         <p className="w-full pt-2 text-xs text-zinc-400">
           If a document is linked, the marker will use its public setting by default.
         </p>
