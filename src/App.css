@@ -153,6 +153,10 @@
   @apply bg-sky-700 !important;
 }
 
+.arrowSaveButton {
+  @apply w-full !important;
+}
+
 /* Mentions */
 
 .remirror-mention-atom-popup-wrapper {

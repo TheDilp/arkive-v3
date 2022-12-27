@@ -1,5 +1,6 @@
 import { TabPanel, TabView } from "primereact/tabview";
 
+import DrawerManyArrowsContent from "./DrawerManyArrowsContent";
 import DrawerManyEdgesContent from "./DrawerManyEdgesContent";
 import DrawerManyNodesContent from "./DrawerManyNodesContent";
 
@@ -11,6 +12,9 @@ export default function DrawerBulkBoardEdit() {
       </TabPanel>
       <TabPanel header="Edges">
         <DrawerManyEdgesContent />
+      </TabPanel>
+      <TabPanel header="Arrows">
+        <DrawerManyArrowsContent />
       </TabPanel>
     </TabView>
   );
