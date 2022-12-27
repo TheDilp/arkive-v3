@@ -143,7 +143,20 @@ export default function UpdateMapLayers() {
                 <Button
                   className="p-button-outlined p-button-danger w-1/12"
                   icon="pi pi-trash"
-                  onClick={() => deleteMapLayer.mutate(layer.id)}
+                  onClick={() =>
+                    deleteMapLayer.mutate(layer.id, {
+                      onSuccess: () => {
+                        queryClient.setQueryData(["maps", item_id], (oldData: MapType | undefined) => {
+                          if (oldData)
+                            return {
+                              ...oldData,
+                              map_layers: oldData.map_layers.filter((oldLayer) => oldLayer.id !== layer.id),
+                            };
+                          return oldData;
+                        });
+                      },
+                    })
+                  }
                 />
               </div>
             </div>

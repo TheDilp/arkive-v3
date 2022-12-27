@@ -228,9 +228,9 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
 
     {
       onSuccess: async () => {
-        if (["documents", "maps"].includes(type)) queryClient.refetchQueries(["allItems", project_id, type]);
-        if (["map_pins", "map_layers"].includes(type)) queryClient.refetchQueries(["allItems", project_id, "maps"]);
-        if (["boards", "nodes", "edges"].includes(type)) queryClient.refetchQueries(["allItems", project_id, "boards"]);
+        if (["documents", "maps", "boards"].includes(type)) queryClient.refetchQueries(["allItems", project_id, type]);
+        // if (["map_pins", "map_layers"].includes(type)) queryClient.refetchQueries(["allItems", project_id, "maps"]);
+        // if (["boards", "nodes", "edges"].includes(type)) queryClient.refetchQueries(["allItems", project_id, "boards"]);
         toaster("success", "Item successfully deleted.");
       },
     },
@@ -301,7 +301,6 @@ export const useUpdateManySubItems = (item_id: string, subType: AvailableSubItem
   return useMutation(
     async (updateItemValues: { ids: string[]; data: Partial<AllSubItemsType> }) => {
       if (updateItemValues.ids) {
-        console.log(updateItemValues);
         const url = updateManyURL(subType);
         if (url)
           return fetch(url, {
