@@ -5,7 +5,7 @@ import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useCallback, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { RemirrorJSON } from "remirror";
+import { InvalidContentHandler, RemirrorJSON } from "remirror";
 import { useDebouncedCallback } from "use-debounce";
 
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
@@ -16,7 +16,7 @@ import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DocumentType } from "../../types/documentTypes";
 import { EditorType } from "../../types/generalTypes";
-import { DefaultEditorExtensions } from "../../utils/EditorExtensions";
+import { DefaultEditorExtensions } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
@@ -26,12 +26,19 @@ export default function Editor({ content, editable }: EditorType) {
     isLoading: boolean;
   };
   const updateDocumentMutation = useUpdateItem("documents");
+
+  const onError: InvalidContentHandler = useCallback(({ json, invalidContent, transformers }) => {
+    // Automatically remove all invalid nodes and marks.
+    return transformers.remove(json, invalidContent);
+  }, []);
+
   const { manager, state } = useRemirror({
     content: editable === false ? content || undefined : (currentDocument && currentDocument?.content) || undefined,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     extensions: DefaultEditorExtensions(),
     selection: "start",
+    onError,
   });
 
   const debounced = useDebouncedCallback((changedContent: RemirrorJSON, id: string) => {
