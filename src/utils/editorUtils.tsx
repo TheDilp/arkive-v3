@@ -96,17 +96,14 @@ export const DefaultEditorExtensions = () => {
     //     secret: "true",
     //     classNames: "secretBlock",
     //   }),
-    //   CustomMentionExtension,
     //   new MapPreviewExtension({
     // public_view: false,
     // type: null,
     //   }),
     new GapCursorExtension({}),
     new DropCursorExtension({}),
-    //   new TableExtension(),
   ];
 };
-
 export type TestMap = Partial<Record<string, string | ComponentType<any>>>;
 
 export const typeMap: MarkMap = {

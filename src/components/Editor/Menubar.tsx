@@ -34,7 +34,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     rightAlign,
     // toggleSecret,
     // toggleColumns,
-    // createTable,
+    createTable,
     // deleteTable,
     updateNodeAttributes,
     focus,
@@ -56,6 +56,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
       toggleCallout({ type });
     }
   }
+
   return (
     // Model is passed in directly here to ensure rerenders on change of the active booleans
     // active.bold(), active.italic(), etc
@@ -424,7 +425,10 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
         //     },
         //   ],
         // },
-        // { label: "TABLE", command: () => createTable({ columnsCount: 3, rowsCount: 3 }) },
+        {
+          icon: () => <Icon className="text-zinc-400" fontSize={22} icon="mdi:table" />,
+          command: () => createTable({ columnsCount: 3, rowsCount: 3 }),
+        },
         // { label: "DT", command: () => deleteTable() }
       ]}
       style={{

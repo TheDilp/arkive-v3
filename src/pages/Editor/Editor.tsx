@@ -67,7 +67,6 @@ export default function Editor({ content, editable }: EditorType) {
         }),
       );
   }, [currentDocument, item_id]);
-
   if (isLoading) return <ProgressSpinner />;
 
   if (!currentDocument && !isLoading) {
