@@ -1,5 +1,18 @@
-import { Callout, createLinkHandler, Doc, Heading, MarkMap, PlaceholderExtension, TextHandler } from "@remirror/react";
-import { ComponentType } from "react";
+import {
+  Callout,
+  createLinkHandler,
+  Doc,
+  Heading,
+  MarkMap,
+  PlaceholderExtension,
+  TextHandler,
+  useHelpers,
+  useKeymap,
+} from "@remirror/react";
+import { saveAs } from "file-saver";
+import { ComponentType, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import { EditorState, prosemirrorNodeToHtml } from "remirror";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -22,6 +35,10 @@ import {
 } from "remirror/extensions";
 
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
+import { useUpdateItem } from "../CRUD/ItemsCRUD";
+import { useGetItem } from "../hooks/useGetItem";
+import { DocumentType } from "../types/documentTypes";
+import { toaster } from "./toast";
 
 export const DefaultEditorExtensions = () => {
   const CustomMentionExtension = new MentionAtomExtension({
@@ -119,3 +136,41 @@ export const markMap: MarkMap = {
   link: createLinkHandler({ target: "_blank" }),
   underline: "u",
 };
+
+export const editorHooks = [
+  () => {
+    const { getJSON, getText } = useHelpers();
+    const { item_id } = useParams();
+    const saveContentMutation = useUpdateItem("documents");
+    const { data: document } = useGetItem(item_id as string, "documents") as { data: DocumentType };
+    const handleSaveShortcut = useCallback(
+      ({ state }: { state: EditorState }) => {
+        toaster("success", "Document successfully saved!");
+        saveContentMutation.mutate({
+          id: item_id as string,
+          content: getJSON(state),
+        });
+        return true; // Prevents any further key handlers from being run.
+      },
+      [getJSON, item_id],
+    );
+    const handleExportShortcut = useCallback(
+      ({ state }: { state: EditorState }) => {
+        const htmlString = prosemirrorNodeToHtml(state.doc);
+        saveAs(
+          new Blob([htmlString], {
+            type: "text/html;charset=utf-8",
+          }),
+          `${document?.title || `Arkive Document - ${item_id}`}.html`,
+        );
+        return true; // Prevents any further key handlers from being run.
+      },
+      [getText, item_id],
+    );
+
+    // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
+
+    useKeymap("Mod-s", handleSaveShortcut);
+    useKeymap("Mod-e", handleExportShortcut);
+  },
+];

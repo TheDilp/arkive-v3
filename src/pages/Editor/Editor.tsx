@@ -16,7 +16,7 @@ import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DocumentType } from "../../types/documentTypes";
 import { EditorType } from "../../types/generalTypes";
-import { DefaultEditorExtensions } from "../../utils/editorUtils";
+import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
@@ -96,6 +96,7 @@ export default function Editor({ content, editable }: EditorType) {
               `${editable ? "h-[calc(100vh-10rem)] overflow-y-auto" : "h-full"}`,
             ]}
             editable={editable || true}
+            hooks={editorHooks}
             initialContent={state}
             manager={manager}>
             <OnChangeJSON
