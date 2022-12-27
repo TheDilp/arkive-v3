@@ -85,11 +85,16 @@ export default function UpdateMapLayers() {
                   className="p-button-outlined p-button-success w-24"
                   icon="pi pi-save"
                   onClick={() => {
-                    updateMapLayer.mutate({
-                      id: layer.id,
-                      title: layer.title,
-                      image: layer.image,
-                    });
+                    updateMapLayer.mutate(
+                      {
+                        id: layer.id,
+                        title: layer.title,
+                        image: layer.image,
+                      },
+                      {
+                        onSuccess: () => toaster("success", "Map layer updated successfully."),
+                      },
+                    );
                   }}
                 />
                 <Button
@@ -104,7 +109,7 @@ export default function UpdateMapLayers() {
                       {
                         onSuccess: () =>
                           toaster(
-                            "success",
+                            "info",
                             `Visiblity of this layer has been changed to: ${!layer.public ? "public" : "private."}`,
                           ),
                       },

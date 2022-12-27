@@ -279,6 +279,7 @@ export default function DrawerNodeContent() {
               </div> */}
           <div className="flex w-full flex-col">
             <span className="w-full text-sm text-zinc-400">Custom image</span>
+            <div className="text-xs text-gray-400">Note: Custom images override images of linked documents.</div>
             <Dropdown
               itemTemplate={ImageDropdownItem}
               onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? null : e.value })}

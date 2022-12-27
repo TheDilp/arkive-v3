@@ -1,4 +1,6 @@
+import { UseMutationResult } from "@tanstack/react-query";
 import { useAtom } from "jotai";
+import { MutableRefObject } from "react";
 
 import {
   useCreateItem,
@@ -11,7 +13,7 @@ import {
 import { BoardContext, BoardContextType, BoardType } from "../types/boardTypes";
 import { AvailableItemTypes } from "../types/generalTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
-import { BoardReferenceAtom, DialogAtom, DrawerAtom } from "./Atoms/atoms";
+import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { deleteItem } from "./Confirms/Confirm";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
@@ -24,6 +26,50 @@ export type BoardContextMenuType = {
   item_id: string;
   board: BoardType;
 };
+
+export function useMapContextMenuItems({
+  mapRef,
+  bounds,
+  deleteMapPin,
+}: {
+  mapRef: MutableRefObject<any>;
+  bounds: number[][];
+  deleteMapPin: UseMutationResult<Response | null, unknown, string, unknown>;
+}) {
+  const [mapContext] = useAtom(MapContextAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const items =
+    mapContext.type === "map"
+      ? [
+          {
+            command: () => {
+              setDrawer({ ...DefaultDrawer, data: drawer?.data, position: "left", show: true, type: "map_pins" });
+            },
+            icon: "pi pi-fw pi-map-marker",
+            label: "New Token",
+          },
+          {
+            command: () => mapRef?.current?.fitBounds(bounds),
+            label: "Fit Map",
+          },
+        ]
+      : [
+          {
+            command: () => setDrawer((prev) => ({ ...prev, position: "left", show: true, type: "map_pins" })),
+            icon: "pi pi-fw pi-pencil",
+            label: "Edit Pin",
+          },
+          {
+            command: () => {
+              if (drawer?.id) deleteMapPin.mutate(drawer.id);
+            },
+            icon: "pi pi-fw pi-trash",
+            label: "Delete Pin",
+          },
+        ];
+
+  return items;
+}
 
 export function useBoardContextMenuItems({ type, boardContext, item_id, board }: BoardContextMenuType) {
   const [boardRef] = useAtom(BoardReferenceAtom);

@@ -1,4 +1,3 @@
-import { useAtom } from "jotai";
 import { CRS, LatLngBoundsExpression } from "leaflet";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useRef, useState } from "react";
@@ -11,8 +10,7 @@ import { useDeleteItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapType } from "../../types/mapTypes";
-import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
-import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { useMapContextMenuItems } from "../../utils/contextMenus";
 
 type Props = {
   isReadOnly?: boolean;
@@ -26,41 +24,14 @@ export default function MapView({ isReadOnly }: Props) {
     [0, 0],
   ]);
   const [loading, setLoading] = useState(true);
-  const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const [mapContext] = useAtom(MapContextAtom);
   const mapRef = useRef() as any;
   const imgRef = useRef() as any;
   const cm = useRef() as any;
-  const items =
-    mapContext.type === "map"
-      ? [
-          {
-            command: () => {
-              setDrawer({ ...DefaultDrawer, data: drawer?.data, position: "left", show: true, type: "map_pins" });
-            },
-            icon: "pi pi-fw pi-map-marker",
-            label: "New Token",
-          },
-          {
-            command: () => mapRef?.current?.fitBounds(bounds),
-            label: "Fit Map",
-          },
-        ]
-      : [
-          {
-            command: () => setDrawer((prev) => ({ ...prev, position: "left", show: true, type: "map_pins" })),
-            icon: "pi pi-fw pi-pencil",
-            label: "Edit Pin",
-          },
-          {
-            command: () => {
-              if (drawer?.id) deleteMapPin.mutate(drawer.id);
-            },
-            icon: "pi pi-fw pi-trash",
-            label: "Delete Pin",
-          },
-        ];
+
   const { data: currentMap, isLoading } = useGetItem(item_id as string, "maps") as { data: MapType; isLoading: boolean };
+
+  const items = useMapContextMenuItems({ mapRef, bounds, deleteMapPin });
+
   useEffect(() => {
     if (currentMap) {
       const img = new Image();
