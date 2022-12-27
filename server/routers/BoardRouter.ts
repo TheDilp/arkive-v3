@@ -32,7 +32,15 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
         id: req.params.id,
       },
       include: {
-        nodes: true,
+        nodes: {
+          include: {
+            document: {
+              select: {
+                image: true,
+              },
+            },
+          },
+        },
         edges: true,
       },
     });
@@ -46,11 +54,11 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
       }>,
     ) => {
       try {
-        const newDocument = await prisma.boards.create({
+        const newBoard = await prisma.boards.create({
           data: removeNull(JSON.parse(req.body)) as any,
         });
 
-        return newDocument;
+        return newBoard;
       } catch (error) {
         console.log(error);
       }

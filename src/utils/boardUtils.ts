@@ -2,7 +2,9 @@ import { UseMutationResult } from "@tanstack/react-query";
 import cytoscape, { Core } from "cytoscape";
 import { saveAs } from "file-saver";
 
+import { NodeType } from "../types/boardTypes";
 import { AllSubItemsType } from "../types/generalTypes";
+import { getImageLink } from "./CRUD/CRUDUrls";
 import { toaster } from "./toast";
 
 export function changeLockState(
@@ -387,13 +389,13 @@ export function updateColor(
   }
 }
 
-export const exportBoardFunction = (
+export function exportBoardFunction(
   boardRef: cytoscape.Core,
   view: "Graph" | "View",
   background: "Color" | "Transparent",
   type: "PNG" | "JPEG" | "JSON",
   boardTitle?: string,
-) => {
+) {
   if (!boardRef) return;
   if (type === "PNG") {
     saveAs(
@@ -435,13 +437,23 @@ export const exportBoardFunction = (
       `${boardTitle || "ArkiveBoard"}.json`,
     );
   }
-};
+}
 
-export const toModelPosition = (boardRef: Core, pos: { x: number; y: number }) => {
+export function toModelPosition(boardRef: Core, pos: { x: number; y: number }) {
   const pan = boardRef.pan();
   const zoom = boardRef.zoom();
   return {
     x: (pos.x - pan.x) / zoom,
     y: (pos.y - pan.y) / zoom,
   };
-};
+}
+export function getNodeImage(node: NodeType, project_id: string) {
+  let image = "";
+  if (node.image) {
+    image = node.image;
+  } else if (node.document?.image) {
+    image = node.document.image;
+  }
+  if (image !== "") return getImageLink(image, project_id);
+  return null;
+}

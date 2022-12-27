@@ -1,5 +1,6 @@
 import cytoscape, { EdgeCollection, NodeCollection } from "cytoscape";
 
+import { DocumentType } from "./documentTypes";
 import { BaseItemType } from "./generalTypes";
 
 type ArrowShape =
@@ -61,6 +62,7 @@ export type NodeType = {
   template: boolean;
   zIndex: number;
   doc_id?: string;
+  document?: DocumentType;
   parent: string;
 };
 export type EdgeType = {

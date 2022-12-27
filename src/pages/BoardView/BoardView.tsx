@@ -14,7 +14,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
-import { edgehandlesSettings, toModelPosition } from "../../utils/boardUtils";
+import { edgehandlesSettings, getNodeImage, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
 import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -67,7 +67,7 @@ export default function BoardView({ isReadOnly }: Props) {
               classes: `boardNode ${isReadOnly && "publicBoardNode"}`,
               label: node.label || "",
               zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
-              backgroundImage: node.image ? `${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${node?.image}` : [],
+              backgroundImage: getNodeImage(node, project_id as string) || [],
             },
             scratch: {
               doc_id: node?.doc_id,
