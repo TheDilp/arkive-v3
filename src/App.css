@@ -37,7 +37,7 @@
   @apply flex w-full justify-center rounded-none text-center !important;
 }
 .p-tabview-panels {
-  @apply h-12 flex-1 !important;
+  @apply h-12 flex-1 p-0 !important;
 }
 /* Editor */
 .remirror-editor-wrapper {
