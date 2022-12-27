@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -18,9 +19,11 @@ import {
   textVAlignOptions,
 } from "../../../utils/boardUtils";
 import { DefaultNode } from "../../../utils/DefaultValues/BoardDefaults";
+import { toaster } from "../../../utils/toast";
 import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
 
 export default function DrawerManyNodesContent() {
@@ -28,9 +31,33 @@ export default function DrawerManyNodesContent() {
   const [localItem, setLocalItem] = useState<NodeType>(DefaultNode);
   const [boardRef] = useAtom(BoardReferenceAtom);
   const { mutate: manyNodesMutation } = useUpdateManySubItems(item_id as string, "nodes");
-
+  const queryClient = useQueryClient();
   const updateManyNodes = (value: Partial<NodeType>) => {
-    manyNodesMutation({ ids: boardRef?.nodes(":selected").map((node) => node.id()) || [], data: value });
+    manyNodesMutation(
+      { ids: boardRef?.nodes(":selected").map((node) => node.id()) || [], data: value },
+      {
+        onSuccess: () => {
+          toaster("success", "Edges updated successfully.");
+
+          // queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
+          //   if (oldData)
+          //     return {
+          //       ...oldData,
+          //       nodes: oldData?.nodes.map((node) => {
+          //         if (node.id === localItem.id) {
+          //           const newDoc = queryClient
+          //             .getQueryData<DocumentType[]>(["allItems", project_id, "documents"])
+          //             ?.find((doc) => doc.id === changedData.doc_id);
+          //           return { ...node, document: newDoc };
+          //         }
+          //         return node;
+          //       }),
+          //     };
+          //   return oldData;
+          // });
+        },
+      },
+    );
   };
 
   const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
@@ -395,20 +422,12 @@ export default function DrawerManyNodesContent() {
         <div className="text-xs text-gray-400">Note: Custom images override images from linked documents.</div>
         <Dropdown
           className="w-4/5"
-          filter
-          filterBy="title"
           itemTemplate={ImageDropdownItem}
-          onChange={(e) =>
-            setLocalItem((prev) => ({
-              ...prev,
-              customImage: e.value,
-            }))
-          }
-          optionLabel="title"
-          options={images ? [{ title: "No image", id: null }, ...images] : []}
-          placeholder="Custom Image"
-          value={localItem.image}
-          //   virtualScrollerOptions={virtualScrollerSettings}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value }))}
+          options={["None", ...(images || [])]}
+          placeholder="Select image"
+          value={localItem}
+          valueTemplate={ImageDropdownValue({ image: localItem?.image })}
         />
         <Button
           className="p-button-square p-button-success p-button-outlined w-1/6"
@@ -417,7 +436,7 @@ export default function DrawerManyNodesContent() {
           onClick={() => {
             if (!boardRef) return;
             updateManyNodes({
-              doc_id: localItem.doc_id,
+              image: localItem.image === "None" ? undefined : localItem.image,
             });
           }}
           type="submit"

@@ -101,7 +101,7 @@ export default function DrawerDocumentContent() {
         {document ? (
           `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}`
         ) : (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center">
             Create New Document
             <Icon fontSize={36} icon="mdi:file" />
           </div>

@@ -281,8 +281,8 @@ export default function DrawerNodeContent() {
             <span className="w-full text-sm text-zinc-400">Custom image</span>
             <Dropdown
               itemTemplate={ImageDropdownItem}
-              onChange={(e) => handleChange({ name: "image", value: e.value })}
-              options={images || []}
+              onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? undefined : e.value })}
+              options={["None", ...(images || [])] || []}
               placeholder="Select image"
               value={localItem}
               valueTemplate={ImageDropdownValue({ image: localItem?.image })}
