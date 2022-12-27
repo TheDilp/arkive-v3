@@ -11,10 +11,9 @@ import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
-import { baseURLS, getURLS } from "../../types/CRUDenums";
+import { BoardContext, BoardType } from "../../types/boardTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
-import { edgehandlesSettings, getNodeImage, toModelPosition } from "../../utils/boardUtils";
+import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
 import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -59,33 +58,10 @@ export default function BoardView({ isReadOnly }: Props) {
       let temp_nodes: NodeDefinition[] = [];
       let temp_edges: EdgeDefinition[] = [];
       if (board.nodes.length > 0) {
-        temp_nodes = board.nodes
-          .filter((node) => !node.template)
-          .map((node: NodeType) => ({
-            data: {
-              ...node,
-              classes: `boardNode ${isReadOnly && "publicBoardNode"}`,
-              label: node.label || "",
-              zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
-              backgroundImage: getNodeImage(node, project_id as string) || [],
-            },
-            scratch: {
-              doc_id: node?.doc_id,
-            },
-            locked: node.locked,
-            position: { x: node.x, y: node.y },
-          }));
+        temp_nodes = mapNodes(board.nodes, project_id as string, isReadOnly);
       }
       if (board.edges.length > 0) {
-        temp_edges = board.edges.map((edge: EdgeType) => ({
-          data: {
-            ...edge,
-            source: edge.source_id,
-            target: edge.target_id,
-            classes: `boardEdge ${isReadOnly && "publicBoardEdge"}`,
-            label: edge.label || "",
-          },
-        }));
+        temp_edges = mapEdges(board.edges, isReadOnly);
       }
       setElements([...temp_nodes, ...temp_edges]);
     }

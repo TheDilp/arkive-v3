@@ -2,7 +2,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import cytoscape, { Core } from "cytoscape";
 import { saveAs } from "file-saver";
 
-import { NodeType } from "../types/boardTypes";
+import { EdgeType, NodeType } from "../types/boardTypes";
 import { AllSubItemsType } from "../types/generalTypes";
 import { getImageLink } from "./CRUD/CRUDUrls";
 import { toaster } from "./toast";
@@ -456,4 +456,34 @@ export function getNodeImage(node: NodeType, project_id: string) {
   }
   if (image !== "") return getImageLink(image, project_id);
   return null;
+}
+
+export function mapNodes(nodes: NodeType[], project_id: string, isReadOnly?: boolean) {
+  return nodes
+    .filter((node) => !node.template)
+    .map((node: NodeType) => ({
+      data: {
+        ...node,
+        classes: `boardNode ${isReadOnly && "publicBoardNode"}`,
+        label: node.label || "",
+        zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
+        backgroundImage: getNodeImage(node, project_id as string) || [],
+      },
+      scratch: {
+        doc_id: node?.doc_id,
+      },
+      locked: node.locked,
+      position: { x: node.x, y: node.y },
+    }));
+}
+export function mapEdges(edges: EdgeType[], isReadOnly?: boolean) {
+  return edges.map((edge: EdgeType) => ({
+    data: {
+      ...edge,
+      source: edge.source_id,
+      target: edge.target_id,
+      classes: `boardEdge ${isReadOnly && "publicBoardEdge"}`,
+      label: edge.label || "",
+    },
+  }));
 }
