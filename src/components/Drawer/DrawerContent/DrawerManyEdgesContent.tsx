@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -8,9 +9,19 @@ import { useParams } from "react-router-dom";
 import { useUpdateManySubItems } from "../../../CRUD/ItemsCRUD";
 import { EdgeType } from "../../../types/boardTypes";
 import { BoardReferenceAtom } from "../../../utils/Atoms/atoms";
-import { BoardFontFamilies, BoardFontSizes } from "../../../utils/boardUtils";
+import {
+  boardEdgeCaps,
+  boardEdgeCurveStyles,
+  boardEdgeLineStyles,
+  BoardFontFamilies,
+  BoardFontSizes,
+} from "../../../utils/boardUtils";
 import { DefaultEdge } from "../../../utils/DefaultValues/BoardDefaults";
+import { toaster } from "../../../utils/toast";
+import { getHexColor } from "../../../utils/transform";
+import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
+import Tags from "../../Tags/Tags";
 
 export default function DrawerManyEdgesContent() {
   const { item_id } = useParams();
@@ -18,11 +29,133 @@ export default function DrawerManyEdgesContent() {
   const [localItem, setLocalItem] = useState(DefaultEdge);
   const { mutate: manyEdgesMutation } = useUpdateManySubItems(item_id as string, "edges");
 
-  const updateManyNodes = (value: Partial<EdgeType>) => {
-    manyEdgesMutation({ ids: boardRef?.edges(":selected").map((edge) => edge.id()) || [], data: value });
+  const updateManyEdges = (value: Partial<EdgeType>) => {
+    const edges = boardRef?.edges(":selected");
+    if (edges?.length)
+      manyEdgesMutation(
+        { ids: edges.map((edge) => edge.id()) || [], data: value },
+        {
+          onSuccess: () => toaster("success", "Edges updated successfully."),
+        },
+      );
   };
   return (
-    <div className="flex w-full flex-col gap-y-2">
+    <div className="flex w-full flex-col gap-y-2 pt-2">
+      <span className="w-full text-center font-Lato text-xl font-bold text-white">Edge Style</span>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Edge Curve Type</span>
+        <Dropdown
+          className="w-4/5"
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, curveStyle: e.value }))}
+          options={boardEdgeCurveStyles}
+          value={localItem.curveStyle}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              curveStyle: localItem.curveStyle,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Line Style</span>
+        <Dropdown
+          className="w-4/5"
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, lineStyle: e.value }))}
+          options={boardEdgeLineStyles}
+          value={localItem.lineStyle}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              lineStyle: localItem.lineStyle,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Line Cap</span>
+        <Dropdown
+          className="w-4/5"
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, lineCap: e.value }))}
+          options={boardEdgeCaps}
+          value={localItem.lineCap}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              lineStyle: localItem.lineStyle,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Thickness</span>
+        <InputNumber
+          className="w-4/5"
+          inputClassName="w-full"
+          max={5000}
+          min={1}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, width: e.value as number }))}
+          showButtons
+          step={1}
+          value={localItem.width}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              lineStyle: localItem.lineStyle,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap items-center justify-between">
+        <span className="w-full text-sm text-zinc-400">Edge color</span>
+        <div className="w-4/5">
+          <ColorInput
+            color={localItem.lineColor}
+            name="lineColor"
+            onChange={(e) => setLocalItem((prev) => ({ ...prev, lineColor: getHexColor(e.value) }))}
+          />
+        </div>
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              lineColor: localItem.lineColor,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+
+      <hr className="border-zinc-700" />
+      <span className="w-full text-center font-Lato text-xl font-bold text-white">Label Style</span>
+
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Edge Label</span>
         <InputText
@@ -43,7 +176,7 @@ export default function DrawerManyEdgesContent() {
           iconPos="right"
           onClick={() => {
             if (!boardRef) return;
-            updateManyNodes({
+            updateManyEdges({
               label: localItem.label,
             });
           }}
@@ -72,7 +205,7 @@ export default function DrawerManyEdgesContent() {
             iconPos="right"
             onClick={() => {
               if (!boardRef) return;
-              updateManyNodes({
+              updateManyEdges({
                 fontSize: localItem.fontSize,
               });
             }}
@@ -102,13 +235,110 @@ export default function DrawerManyEdgesContent() {
             iconPos="right"
             onClick={() => {
               if (!boardRef) return;
-              updateManyNodes({
+              updateManyEdges({
                 fontSize: localItem.fontSize,
               });
             }}
             type="submit"
           />
         </div>
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Label color</span>
+        <div className="w-4/5">
+          <ColorInput
+            color={localItem.fontColor}
+            name="fontColor"
+            onChange={(e) => setLocalItem((prev) => ({ ...prev, fontColor: getHexColor(e.value) }))}
+          />
+        </div>
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              fontColor: localItem.fontColor,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <hr className="border-zinc-700" />
+      <span className="w-full text-center font-Lato text-xl font-bold text-white">Miscellaneous</span>
+
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Edge opacity</span>
+        <InputNumber
+          className="w-4/5"
+          max={1}
+          min={0}
+          mode="decimal"
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, lineOpacity: e.value as number }))}
+          // onKeyDown={handleEnter}
+          showButtons
+          step={0.01}
+          value={localItem.lineOpacity}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              lineOpacity: localItem.lineOpacity,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Edge level</span>
+        <InputNumber
+          className="w-4/5"
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, zIndex: e.value as number }))}
+          //   onKeyDown={handleEnter}
+          showButtons
+          tooltip="Changes if edge is above or below others"
+          tooltipOptions={{ position: "left" }}
+          value={localItem.zIndex}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              zIndex: localItem.zIndex,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <div className="w-4/5">
+          <Tags
+            handleChange={({ value }) => setLocalItem((prev) => ({ ...prev, tags: value }))}
+            localItem={localItem}
+            type="edges"
+          />
+        </div>
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              tags: localItem.tags,
+            });
+          }}
+          type="submit"
+        />
       </div>
     </div>
   );

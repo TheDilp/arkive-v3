@@ -16,6 +16,7 @@ import {
   boardEdgeArrowShapes,
   boardEdgeCaps,
   boardEdgeCurveStyles,
+  boardEdgeLineStyles,
   BoardFontFamilies,
   BoardFontSizes,
 } from "../../../utils/boardUtils";
@@ -70,8 +71,8 @@ export default function DrawerEdgeContent() {
                   <Dropdown
                     className="w-full"
                     onChange={(e) => handleChange({ name: "lineStyle", value: e.value })}
-                    options={boardEdgeCurveStyles}
-                    value={localItem.curveStyle}
+                    options={boardEdgeLineStyles}
+                    value={localItem.lineStyle}
                   />
                 </div>
               </div>

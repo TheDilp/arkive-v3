@@ -4,14 +4,22 @@ import { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { BoardCreateType, EdgeType, NodeType } from "../../types/boardTypes";
+import { BoardCreateType, DefaultEdgeType, DefaultNodeType, EdgeType, NodeType } from "../../types/boardTypes";
 import { DocumentCreateType } from "../../types/documentTypes";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { MapCreateType } from "../../types/mapTypes";
 
 type Props = {
   handleChange: ({ name, value }: { name: string; value: any }) => void;
-  localItem: AllItemsType | NodeType | EdgeType | DocumentCreateType | MapCreateType | BoardCreateType;
+  localItem:
+    | AllItemsType
+    | NodeType
+    | EdgeType
+    | DocumentCreateType
+    | MapCreateType
+    | BoardCreateType
+    | DefaultNodeType
+    | DefaultEdgeType;
   type: AvailableItemTypes | "nodes" | "edges";
 };
 
