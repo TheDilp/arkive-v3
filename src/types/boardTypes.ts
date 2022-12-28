@@ -70,7 +70,7 @@ export type EdgeType = {
   label?: string;
   tags: string[];
 
-  curveStyle: "straight" | "bezier" | "taxi";
+  curveStyle: "straight" | "unbundled-bezier" | "taxi";
   lineStyle: "solid" | "dashed" | "dotted";
   lineCap: "butt" | "round" | "square";
   lineFill: "solid" | "linear-gradient";

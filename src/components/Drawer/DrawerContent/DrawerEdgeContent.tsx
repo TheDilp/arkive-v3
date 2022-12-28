@@ -4,6 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
+import { Slider } from "primereact/slider";
 import { TabPanel, TabView } from "primereact/tabview";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -17,6 +18,7 @@ import {
   boardEdgeCaps,
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
+  boardEdgeTaxiDirections,
   BoardFontFamilies,
   BoardFontSizes,
 } from "../../../utils/boardUtils";
@@ -49,7 +51,7 @@ export default function DrawerEdgeContent() {
     return null;
   }
   return (
-    <div className="flex h-full flex-col justify-between overflow-y-auto">
+    <div className="flex h-full flex-col justify-between overflow-y-auto overflow-x-hidden">
       <div className="flex w-full flex-col">
         <TabView renderActiveOnly>
           <TabPanel header="Edge">
@@ -76,6 +78,63 @@ export default function DrawerEdgeContent() {
                   />
                 </div>
               </div>
+
+              {localItem.curveStyle === "unbundled-bezier" && (
+                <div className="flex w-full flex-wrap">
+                  <div className="w-full px-3">
+                    <span className="w-full text-sm text-gray-400">Curve Strength: {localItem.controlPointDistances}</span>
+                    <Slider
+                      className="mt-2 w-full"
+                      max={1000}
+                      min={-1000}
+                      onChange={(e) => handleChange({ name: "controlPointDistances", value: e.value })}
+                      step={10}
+                      value={localItem.controlPointDistances}
+                    />
+                  </div>
+                  <div className="w-full px-3">
+                    <span className="w-full text-sm text-gray-400">Curve Center: {localItem.controlPointWeights}</span>
+                    <Slider
+                      className="mt-2 w-full"
+                      max={1}
+                      min={0}
+                      onChange={(e) => handleChange({ name: "controlPointWeights", value: e.value })}
+                      step={0.1}
+                      value={localItem.controlPointWeights}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {localItem.curveStyle === "taxi" && (
+                <div className="flex w-full flex-nowrap items-center gap-x-1">
+                  <div className="w-1/2">
+                    <span className="w-full text-sm text-gray-400"> Edge Direction</span>
+                    <div className="w-full">
+                      <Dropdown
+                        className="w-full"
+                        onChange={(e) => handleChange({ name: "taxiDirection", value: e.value })}
+                        options={boardEdgeTaxiDirections}
+                        value={localItem.taxiDirection}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-1/2">
+                    <span className="w-full text-right text-sm text-gray-400">Break Distance</span>
+                    <InputNumber
+                      className="w-full"
+                      inputClassName="w-full"
+                      max={1000}
+                      min={-1000}
+                      onChange={(e) => handleChange({ name: "taxiTurn", value: e.value })}
+                      onKeyDown={handleEnter}
+                      showButtons
+                      step={5}
+                      value={localItem.taxiTurn}
+                    />
+                  </div>
+                </div>
+              )}
               <div className="w-full">
                 <span className="w-full text-sm text-zinc-400">Line Cap</span>
                 <Dropdown
