@@ -54,6 +54,10 @@ export default function DrawerDocumentContent() {
         toaster("warning", "Cannot convert to file if folder contains files.");
         return;
       }
+      if (!changedData) {
+        toaster("info", "No data was changed.");
+        return;
+      }
       updateDocumentMutation?.mutate(
         {
           id: document.id,
@@ -63,6 +67,7 @@ export default function DrawerDocumentContent() {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
             if ("tags" in changedData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
+            toaster("success", "Document successfully updated.");
           },
         },
       );
@@ -75,7 +80,7 @@ export default function DrawerDocumentContent() {
         {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
-            if ("tags" in changedData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
+            if ("tags" in newData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
           },
         },
       );
