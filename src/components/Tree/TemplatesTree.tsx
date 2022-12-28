@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { SplitButton } from "primereact/splitbutton";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
+
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -35,8 +36,8 @@ export default function TemplatesTree() {
     <div className="flex flex-col">
       <SplitButton
         className="p-button-outlined"
-        label="Quick Create"
         icon="pi pi-bolt"
+        label="Quick Create"
         model={items}
         onClick={() => {
           createDocumentMutation?.mutate({

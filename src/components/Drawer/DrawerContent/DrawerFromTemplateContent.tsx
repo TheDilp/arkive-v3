@@ -23,7 +23,7 @@ export default function DrawerFromTemplateContent() {
   }
   return (
     <div className="my-2 flex flex-col gap-y-8">
-      <h2 className="text-center text-2xl">{document ? `Edit ${document.title}` : "Create New Document"}</h2>
+      <h2 className="text-center text-2xl">Create New Document From Template</h2>
       <div className="flex flex-col gap-y-2">
         <div className="my-2">
           <Dropdown
