@@ -38,3 +38,28 @@ export interface BaseItemType {
   expanded: boolean;
   tags: string[];
 }
+
+export type slashMenuItem = {
+  name: string;
+  type:
+    | "heading"
+    | "list"
+    | "quote"
+    | "callout"
+    | "image"
+    | "divider"
+    | "columns_select"
+    | "columns"
+    | "secret"
+    | "map_select"
+    | "map"
+    | "board_select"
+    | "board";
+  icon: string;
+  map_id?: string;
+  board_id?: string;
+  level?: number;
+  callout_type?: string;
+  color?: string;
+  column_count?: number;
+};

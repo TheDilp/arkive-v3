@@ -138,7 +138,9 @@
     }
   }
 }
-
+.commandMenu {
+  @apply z-[100] !important;
+}
 .p-chips-multiple-container {
   @apply max-w-full rounded-none border-t-0 !important;
 }

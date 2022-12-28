@@ -9,6 +9,7 @@ import { InvalidContentHandler, RemirrorJSON } from "remirror";
 import { useDebouncedCallback } from "use-debounce";
 
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
+import { CommandMenu } from "../../components/Editor/CommandMenu";
 import Menubar from "../../components/Editor/Menubar";
 import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
 import DocumentProperties from "../../components/PropertiesBar/DocumentProperties";
@@ -107,6 +108,7 @@ export default function Editor({ content, editable }: EditorType) {
             {editable ? <Menubar saving={saving} /> : null}
             <EditorComponent />
             <MentionDropdownComponent />
+            <CommandMenu />
           </Remirror>
         </div>
         {editable ? (
