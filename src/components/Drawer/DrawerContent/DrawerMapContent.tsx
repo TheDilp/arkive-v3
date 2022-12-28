@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -30,7 +31,7 @@ export default function DrawerMapContent() {
   const createMapMutation = useCreateItem("maps");
   const updateMapMutation = useUpdateItem("maps");
   const deleteMapMutation = useDeleteItem("maps", project_id as string);
-
+  const queryClient = useQueryClient();
   const { data: map } = useGetItem(drawer?.id as string, "maps", { enabled: !!drawer?.id }) as { data: MapType };
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {
@@ -55,6 +56,7 @@ export default function DrawerMapContent() {
         {
           onSuccess: () => {
             toaster("success", "Your map was successfully updated.");
+            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] });
             resetChanges();
           },
         },

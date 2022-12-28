@@ -1,22 +1,39 @@
 import { MentionAtomPopupComponent, MentionState } from "@remirror/react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { BoardType } from "../../types/boardTypes";
 import { DocumentType } from "../../types/documentTypes";
 import { MapType } from "../../types/mapTypes";
+import { getItems } from "../../utils/CRUD/CRUDFunctions";
 
 export default function MentionDropdownComponent() {
   const [mentionState, setMentionState] = useState<MentionState | null>();
   const queryClient = useQueryClient();
   const { project_id } = useParams();
 
+  const [{ data: maps }, { data: boards }]: [{ data: MapType[] | undefined }, { data: BoardType[] | undefined }] = useQueries({
+    queries: [
+      {
+        queryKey: ["allItems", project_id, "maps"],
+        queryFn: async () => getItems(project_id as string, "maps"),
+        staleTime: 5 * 60 * 1000,
+      },
+      {
+        queryKey: ["allItems", project_id, "boards"],
+        queryFn: async () => getItems(project_id as string, "boards"),
+        staleTime: 5 * 60 * 1000,
+      },
+    ],
+  });
+
   const items = useMemo(() => {
     if (!mentionState) {
       return [];
     }
     const query = mentionState.query.full.toLowerCase() ?? "";
-    if (mentionState.name === "at") {
+    if (mentionState.name === "docs") {
       const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
       const only_documents = documents?.filter((doc) => !doc.folder && !doc.template) ?? [];
       const document_titles = only_documents.map((doc) => ({
@@ -30,6 +47,7 @@ export default function MentionDropdownComponent() {
           return doc.alter_names.map((name, index) => ({
             id: `alter-${index} ${doc.id}`,
             label: name,
+            test: "TEST",
           }));
         })
         .flat();
@@ -40,8 +58,8 @@ export default function MentionDropdownComponent() {
         .slice(0, 5)
         .sort();
     }
-    if (mentionState.name === "hash") {
-      const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
+    if (mentionState.name === "map") {
+      // const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
       const mapItems = (maps?.filter((map) => !map.folder) ?? []).map((map) => ({
         id: map.id,
         label: map.title,
@@ -51,24 +69,19 @@ export default function MentionDropdownComponent() {
         .slice(0, 5)
         .sort();
     }
+    if (mentionState.name === "boards") {
+      // const boards: BoardType[] | undefined = queryClient.getQueryData(["allItems", project_id, "boards"]);
 
-    // else if (mentionState.name === "dollah") {
-    //   const boards: BoardType[] | undefined = queryClient.getQueryData(
-    //     `${project_id}-boards`,
-    //   );
+      const boardItems = (boards?.filter((board) => !board.folder) ?? []).map((board) => ({
+        id: board.id,
+        label: board.title,
+      }));
 
-    //   const boardItems = (boards?.filter((board) => !board.folder) ?? []).map(
-    //     (board) => ({
-    //       id: board.id,
-    //       label: board.title,
-    //     }),
-    //   );
-
-    //   return boardItems
-    //     .filter((item) => item.label.toLowerCase().includes(query))
-    //     .slice(0, 5)
-    //     .sort();
-    // }
+      return boardItems
+        .filter((item) => item.label.toLowerCase().includes(query))
+        .slice(0, 5)
+        .sort();
+    }
 
     return [];
   }, [mentionState]);

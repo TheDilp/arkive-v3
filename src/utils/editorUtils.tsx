@@ -46,17 +46,16 @@ export const DefaultEditorExtensions = () => {
     matchers: [
       {
         char: "@",
-        name: "at",
+        name: "docs",
       },
       {
-        name: "hash",
+        name: "maps",
         char: "#",
       },
-      // {
-      //   name: "dollah",
-      //   char: "$",
-      //   appendText: "",
-      // },
+      {
+        name: "boards",
+        char: "$",
+      },
     ],
   });
   CustomMentionExtension.ReactComponent = MentionReactComponent;
