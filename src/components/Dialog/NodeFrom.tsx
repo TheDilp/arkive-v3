@@ -1,6 +1,7 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
-import { useGetAllImages, useGetAllItems } from "../../CRUD/ItemsCRUD";
+import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { FolderViewCards } from "../../pages/FolderView/FolderViewCards";
 import { DocumentType } from "../../types/documentTypes";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
@@ -10,15 +11,14 @@ type Props = {
 };
 
 export default function NodeFrom({ type }: Props) {
+  const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const { data: allDocuments } = useGetAllItems(project_id as string, "documents", { enabled: type === "documents" }) as {
-    data: DocumentType[];
-  };
+  const data: DocumentType[] | undefined = queryClient.getQueryData(["allitems", project_id, type]);
   const { data: allImages } = useGetAllImages(project_id as string, { enabled: type === "images" });
   return (
     <div className="max-w-md">
       {type === "documents" ? (
-        <FolderViewCards items={allDocuments?.filter((doc) => !doc.folder && !doc.template) || []} type="documents" />
+        <FolderViewCards items={data?.filter((doc) => !doc.folder && !doc.template) || []} type="documents" />
       ) : (
         <div className="flex w-full flex-wrap gap-2 overflow-y-auto">
           {allImages?.map((image) => (

@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteItem, useGetAllImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../../types/CRUDenums";
@@ -31,7 +31,7 @@ export default function DrawerDocumentContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const queryClient = useQueryClient();
-  const { data: allDocuments } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
+  const allDocuments: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
   const { data: document } = useGetItem(drawer?.id as string, "documents", { enabled: !!drawer?.id }) as { data: DocumentType };
   const { data: images } = useGetAllImages(project_id as string);
 

@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -7,7 +8,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useDeleteItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { BoardCreateType, BoardType } from "../../../types/boardTypes";
@@ -23,11 +24,12 @@ import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerBoardContent() {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createBoardMutation = useCreateItem("boards");
   const updateBoardMutation = useUpdateItem("boards");
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
-  const { data: boards } = useGetAllItems(project_id as string, "boards");
+  const boards: BoardType[] | undefined = queryClient.getQueryData(["allitems", project_id, "boards"]);
   const { data: board } = useGetItem(drawer?.id as string, "boards", { enabled: !!drawer?.id }) as { data: BoardType };
 
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
