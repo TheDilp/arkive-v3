@@ -490,7 +490,18 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         label: "Toggle Public",
         icon: `pi pi-fw ${true ? "pi-eye" : "pi-eye-slash"}`,
       },
-
+      {
+        label: "Templates",
+        icon: "pi pi-copy",
+        items: [
+          {
+            label: "Node Templates",
+          },
+          {
+            label: "Edge Templates",
+          },
+        ],
+      },
       { separator: true },
       {
         label: "View Public Board",
