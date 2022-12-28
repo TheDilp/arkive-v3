@@ -9,7 +9,7 @@ type Props = {
 export default function BoardMention({ title, nodeId, nodeLabel }: Props) {
   return nodeId ? (
     <Link
-      className="inline-flex font-Lato text-sm font-bold text-white transition-colors hover:text-sky-400"
+      className="inline-flex font-Lato text-sm font-bold text-white underline transition-colors hover:text-sky-400"
       id={`link-${nodeId}`}
       to={`../../boards/${nodeId}`}>
       <Icon icon="mdi:draw" />

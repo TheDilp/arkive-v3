@@ -7,8 +7,8 @@ type Props = {
 };
 export default function MapMention({ title, nodeId, nodeLabel }: Props) {
   return nodeId ? (
-    <Link className="font-Lato text-base font-bold text-white" to={`../../maps/${nodeId}`}>
-      <i className="pi pi-map-marker" />
+    <Link className="font-Lato text-sm font-bold text-white underline" to={`../../maps/${nodeId}`}>
+      <i className="pi pi-map-marker mentionMapIcon" />
       {title || nodeLabel}
     </Link>
   ) : (

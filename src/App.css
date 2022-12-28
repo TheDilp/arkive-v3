@@ -196,6 +196,10 @@
 
 .remirror-mention-atom {
   @apply p-0 !important;
+
+  .mentionMapIcon {
+    @apply text-sm !important;
+  }
 }
 .remirror-suggest-atom.suggest-at {
   @apply text-white;
