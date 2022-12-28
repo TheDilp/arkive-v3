@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { KeyboardEventHandler, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetAllImages, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useGetAllImages, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { BoardType, NodeType } from "../../../types/boardTypes";
 import { DocumentType } from "../../../types/documentTypes";
@@ -29,13 +29,14 @@ import Tags from "../../Tags/Tags";
 
 export default function DrawerNodeContent() {
   const { project_id, item_id } = useParams();
+  const queryClient = useQueryClient();
+
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id as string, "documents"]);
   const { mutate: updateNodeMutation } = useUpdateSubItem(item_id as string, "nodes", "boards");
-  const { data: documents } = useGetAllItems(project_id as string, "documents");
   const { data: images } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<NodeType | undefined>(drawer?.data as NodeType);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-  const queryClient = useQueryClient();
   const updateNode = () => {
     if (localItem) {
       if (changedData) {
@@ -232,7 +233,7 @@ export default function DrawerNodeContent() {
                 documents
                   ? [
                       { title: "No document", id: null },
-                      ...documents.filter((doc) => {
+                      ...(documents || []).filter((doc) => {
                         if ("template" in doc) return !doc.template && !doc.folder;
                         return false;
                       }),

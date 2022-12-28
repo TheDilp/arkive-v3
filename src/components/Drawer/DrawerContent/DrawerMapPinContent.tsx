@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -8,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/documentTypes";
 import { MapPinCreateType, MapPinType, MapType } from "../../../types/mapTypes";
@@ -18,13 +19,14 @@ import { IconSelect } from "../../IconSelect/IconSelect";
 
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
+  const queryClient = useQueryClient();
   const [drawer] = useAtom(DrawerAtom);
   const createMapPin = useCreateSubItem(item_id as string, "map_pins", "maps");
   const updateMapPin = useUpdateSubItem(item_id as string, "map_pins", "maps");
   const { data: map } = useGetItem(item_id as string, "maps") as { data: MapType };
   const currentPin = map?.map_pins?.find((pin) => pin.id === drawer.id);
-  const { data: documents } = useGetAllItems(project_id as string, "documents");
-  const { data: maps } = useGetAllItems(project_id as string, "maps");
+  const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
+  const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
   const [localItem, setLocalItem] = useState<MapPinType | MapPinCreateType>(
     currentPin ?? {
       backgroundColor: "#000000",

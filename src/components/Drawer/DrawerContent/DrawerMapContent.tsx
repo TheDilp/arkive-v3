@@ -8,7 +8,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useDeleteItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
@@ -27,11 +27,11 @@ export default function DrawerMapContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
-  const { data: maps } = useGetAllItems(project_id as string, "maps");
+  const queryClient = useQueryClient();
+  const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
   const createMapMutation = useCreateItem("maps");
   const updateMapMutation = useUpdateItem("maps");
   const deleteMapMutation = useDeleteItem("maps", project_id as string);
-  const queryClient = useQueryClient();
   const { data: map } = useGetItem(drawer?.id as string, "maps", { enabled: !!drawer?.id }) as { data: MapType };
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {

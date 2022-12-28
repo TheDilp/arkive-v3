@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetAllImages, useGetAllItems, useUpdateManySubItems } from "../../../CRUD/ItemsCRUD";
+import { useGetAllImages, useUpdateManySubItems } from "../../../CRUD/ItemsCRUD";
 import { BoardType, NodeType } from "../../../types/boardTypes";
 import { DocumentType } from "../../../types/documentTypes";
 import { BoardReferenceAtom } from "../../../utils/Atoms/atoms";
@@ -65,7 +65,7 @@ export default function DrawerManyNodesContent() {
     }
   };
 
-  const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
+  const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
   const { data: images } = useGetAllImages(project_id as string);
 
   return (
