@@ -34,6 +34,7 @@ import {
   UnderlineExtension,
 } from "remirror/extensions";
 
+import { SecretExtension } from "../components/Editor/Extensions/SecretsExtension";
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
 import { useUpdateItem } from "../CRUD/ItemsCRUD";
 import { useGetItem } from "../hooks/useGetItem";
@@ -61,6 +62,9 @@ export const DefaultEditorExtensions = () => {
   CustomMentionExtension.ReactComponent = MentionReactComponent;
 
   return [
+    new SecretExtension({
+      secret: "true",
+    }),
     new PlaceholderExtension({
       placeholder: "Write something awesome! 📜",
     }),
@@ -89,17 +93,6 @@ export const DefaultEditorExtensions = () => {
     new HardBreakExtension({}),
     new MarkdownExtension({}),
     CustomMentionExtension,
-    //   new SecretExtension({
-    //     extraAttributes: {
-    //       class: "secretBlock",
-    //     },
-    //     secret: "true",
-    //     classNames: "secretBlock",
-    //   }),
-    //   new MapPreviewExtension({
-    // public_view: false,
-    // type: null,
-    //   }),
     new GapCursorExtension({}),
     new DropCursorExtension({}),
   ];

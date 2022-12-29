@@ -34,7 +34,7 @@ export function CommandMenu() {
       } else if (cmd.type === "secret") {
         chain.delete(range).toggleSecret().run();
       } else if (cmd.type === "image") {
-        chain.delete(range).toggleSecret().run();
+        // chain.delete(range).toggleSecret().run();
       } else if (cmd.type === "divider") {
         chain.delete(range).insertHorizontalRule().run();
       }

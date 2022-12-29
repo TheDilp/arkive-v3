@@ -5,6 +5,7 @@ specifiers:
   '@floating-ui/react-dom-interactions': ^0.10.3
   '@iconify/react': ^4.0.0
   '@minoru/react-dnd-treeview': ^3.3.0
+  '@remirror/core': ^2.0.10
   '@remirror/pm': ^2.0.2
   '@remirror/react': ^2.0.23
   '@tanstack/react-query': ^4.19.0
@@ -25,6 +26,7 @@ specifiers:
   '@vitejs/plugin-react': ^2.2.0
   autoprefixer: ^10.4.13
   concurrently: ^7.6.0
+  core: link:@types/@remirror/core
   cytoscape: ^3.23.0
   cytoscape-edgehandles: ^4.0.1
   cytoscape-grid-guide: ^2.3.3
@@ -70,6 +72,7 @@ dependencies:
   '@floating-ui/react-dom-interactions': 0.10.3_2zx2umvpluuhvlq44va5bta2da
   '@iconify/react': 4.0.0_react@18.2.0
   '@minoru/react-dnd-treeview': 3.3.0_b57ckgxx77373rey5kttpzfpiu
+  '@remirror/core': 2.0.10_@remirror+pm@2.0.2
   '@remirror/pm': 2.0.2
   '@remirror/react': 2.0.23_zg7b4gzxv4mscuix3l2ebutkwm
   '@tanstack/react-query': 4.19.0_biqbaboplfbrettd7655fr4n2y
@@ -115,6 +118,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.45.0_s5ps7njkmjlaqajutnox5ntcla
   '@vitejs/plugin-react': 2.2.0_vite@3.2.2
   autoprefixer: 10.4.13_postcss@8.4.18
+  core: link:@types/@remirror/core
   eslint: 8.29.0
   eslint-config-airbnb: 19.0.4_fqyy6ysbfsayf7xq35ouj5x2j4
   eslint-config-prettier: 8.5.0_eslint@8.29.0
