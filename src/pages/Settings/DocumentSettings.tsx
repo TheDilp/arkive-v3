@@ -252,8 +252,8 @@ export default function DocumentSettings() {
         size="small"
         sortMode="multiple"
         value={documents
-          .filter((doc) => (globalFilter.title ? doc.title.toLowerCase().includes(globalFilter.title.toLowerCase()) : true))
-          .filter((doc) => (globalFilter.tags.length ? globalFilter.tags.every((tag) => doc.tags.includes(tag)) : true))}>
+          ?.filter((doc) => (globalFilter.title ? doc.title.toLowerCase().includes(globalFilter.title.toLowerCase()) : true))
+          ?.filter((doc) => (globalFilter.tags.length ? globalFilter.tags.every((tag) => doc.tags.includes(tag)) : true))}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column editor={(e) => TitleEditor(e, updateDocument)} field="title" header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />

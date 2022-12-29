@@ -34,7 +34,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     rightAlign,
     // toggleSecret,
     // toggleColumns,
-    createTable,
+    // createTable,
     // deleteTable,
     updateNodeAttributes,
     focus,
@@ -425,10 +425,10 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
         //     },
         //   ],
         // },
-        {
-          icon: () => <Icon className="text-zinc-400" fontSize={22} icon="mdi:table" />,
-          command: () => createTable({ columnsCount: 3, rowsCount: 3 }),
-        },
+        // {
+        //   icon: () => <Icon className="text-zinc-400" fontSize={22} icon="mdi:table" />,
+        //   command: () => createTable({ columnsCount: 3, rowsCount: 3 }),
+        // },
         // { label: "DT", command: () => deleteTable() }
       ]}
       style={{
