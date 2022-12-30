@@ -46,6 +46,12 @@ const typeMap: MarkMap = {
     }
     return null;
   },
+  secret: (...props: any) => (
+    <div className="secretBlock">
+      <i className="pi pi-eye slash" />
+      {props?.[0] ? props[0].children : null}
+    </div>
+  ),
 };
 
 const markMap: MarkMap = {
