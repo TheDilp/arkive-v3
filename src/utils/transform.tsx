@@ -7,7 +7,7 @@ import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "..
 import { MapPinType, MapType } from "../types/mapTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
-  <div className="flex w-full items-center justify-center gap-x-1">
+  <div className="flex items-center justify-center w-full gap-x-1">
     <div className="ml-0 text-center">{title}</div>
     <Icon className="" fontSize={size || 20} icon={icon} />
   </div>
@@ -45,4 +45,16 @@ export function getIconForFullSearch(item: DocumentType | MapType | MapPinType |
 
 export function getHexColor(value: string | ColorPickerValueType) {
   return `#${value?.toString().replaceAll("#", "")}`;
+}
+
+export function removeKeys(obj: { [key: string]: any }, keys: string[]): object {
+  if (Array.isArray(obj)) return obj.map((item) => removeKeys(item, keys));
+
+  if (typeof obj === "object" && obj !== null) {
+    return Object.keys(obj).reduce((previousValue, key) => {
+      return keys.includes(key) ? previousValue : { ...previousValue, [key]: removeKeys(obj[key], keys) };
+    }, {});
+  }
+
+  return obj;
 }

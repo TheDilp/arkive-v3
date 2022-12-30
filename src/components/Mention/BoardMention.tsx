@@ -12,7 +12,7 @@ export default function BoardMention({ title, nodeId, nodeLabel }: Props) {
       className="inline-flex font-Lato text-sm font-bold text-white underline transition-colors hover:text-sky-400"
       id={`link-${nodeId}`}
       to={`../../boards/${nodeId}`}>
-      <Icon icon="mdi:draw" />
+      <Icon fontSize={15} icon="mdi:draw" />
       {title || nodeLabel}
     </Link>
   ) : (

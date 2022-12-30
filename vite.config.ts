@@ -12,4 +12,17 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        // eslint-disable-next-line consistent-return
+        manualChunks(id) {
+          // @ts-ignore
+          if (id.includes("node_modules")) {
+            return id.toString().split("node_modules/")[1].split("/")[0].toString();
+          }
+        },
+      },
+    },
+  },
 });

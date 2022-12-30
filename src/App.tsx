@@ -21,6 +21,7 @@ import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor/Editor";
 import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
+import PublicDocumentView from "./pages/PublicView/PublicDocumentView";
 import DocumentSettings from "./pages/Settings/DocumentSettings";
 import ProjectSettings from "./pages/Settings/ProjectSettings";
 
@@ -39,7 +40,7 @@ function App() {
   });
 
   return (
-    <main className="flex h-screen flex-col overflow-hidden">
+    <main className="flex flex-col h-screen overflow-hidden">
       <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
@@ -74,6 +75,9 @@ function App() {
                 <Route element={<ProjectSettings />} path="project-settings" />
                 <Route element={<DocumentSettings />} path="document-settings" />
               </Route>
+            </Route>
+            <Route path="view/*">
+              <Route element={<PublicDocumentView />} path="document/:item_id" />
             </Route>
           </Routes>
         </DndProvider>

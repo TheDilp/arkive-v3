@@ -1,10 +1,10 @@
 import { Icon } from "@iconify/react";
 import { DragLayerMonitorProps } from "@minoru/react-dnd-treeview";
 
-import { TreeDataType } from "../../types/treeTypes";
+import { AllItemsType } from "../../types/generalTypes";
 
 type Props = {
-  monitorProps?: DragLayerMonitorProps<TreeDataType>;
+  monitorProps?: DragLayerMonitorProps<AllItemsType>;
 };
 
 export default function DragPreview({ monitorProps }: Props) {

@@ -3,8 +3,8 @@ import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Link } from "react-router-dom";
 
-import Editor from "../../pages/Editor/Editor";
 import { getSingleURL } from "../../utils/CRUD/CRUDUrls";
+import StaticRender from "../Editor/StaticRender";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
@@ -29,22 +29,20 @@ function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
 
       return null;
     },
-
-    staleTime: 5 * 60 * 1000,
   });
   return (
     <Card className="h-96 w-96 overflow-y-auto" title={<div className="p-0 text-center">{title}</div>}>
       <div className="whitespace-pre-line">
         {isLoading ? <ProgressSpinner /> : null}
-        {data?.content && !isLoading ? <Editor content={data.content} editable={false} /> : "This document has no content."}
+        {data?.content && !isLoading ? <StaticRender content={data.content} /> : null}
       </div>
     </Card>
   );
 }
 export default function DocumentMention({ title, id, label, isDisabledTooltip }: Props) {
   return (
-    <Tooltip disabled={isDisabledTooltip ?? false} label={<TooltipContent id={id} title={title} />}>
-      <Link className="font-Lato text-sm font-bold text-white" to={`../doc/${id}`}>
+    <Tooltip disabled={isDisabledTooltip ?? false} label={<TooltipContent id={id} title={title || label} />}>
+      <Link className="font-Lato text-sm font-bold text-white underline" to={`../${id}`}>
         {title || label}
       </Link>
     </Tooltip>

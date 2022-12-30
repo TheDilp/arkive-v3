@@ -1,6 +1,7 @@
 import { UseMutationResult } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   useCreateItem,
@@ -253,6 +254,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
   const deleteItemMutation = useDeleteItem(type, project_id);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setDialog] = useAtom(DialogAtom);
+  const navigate = useNavigate();
 
   if (cmType.folder) {
     const folderItems = [
@@ -403,7 +405,9 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         icon: "pi pi-fw pi-external-link",
         label: "View Public Document",
-        // command: () => {},
+        command: () => {
+          if (cmType.data?.id) navigate(`/view/document/${cmType.data?.id}`);
+        },
       },
       {
         icon: "pi pi-fw pi-link",

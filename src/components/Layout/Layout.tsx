@@ -31,20 +31,20 @@ export default function Layout() {
   });
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-col flex-1">
       <ConfirmDialog />
 
       <DialogWrapper />
       <div className="w-full">
         <Navbar />
       </div>
-      <div className="flex w-full flex-1">
+      <div className="flex flex-1 w-full">
         <Drawer />
         <div className="flex w-1/6 max-w-[20%] flex-col">
           <Sidebar />
         </div>
-        <div className="flex h-full flex-1">
-          <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 h-full">
+          <div className="flex flex-col flex-1">
             <Outlet />
           </div>
         </div>

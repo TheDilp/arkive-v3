@@ -18,7 +18,7 @@ export default function MentionReactComponent({ node }: Props) {
   const { project_id } = useParams();
   if (node?.attrs) {
     const { id, name, label } = node.attrs;
-    if (name === "docs") {
+    if (name === "documents") {
       let docId: string = id;
 
       // Detect if it's an alter_name by checking the id

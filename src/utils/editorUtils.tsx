@@ -47,15 +47,15 @@ export const DefaultEditorExtensions = () => {
     matchers: [
       {
         char: "@",
-        name: "docs",
+        name: "documents",
       },
       {
-        name: "maps",
         char: "#",
+        name: "maps",
       },
       {
-        name: "boards",
         char: "$",
+        name: "boards",
       },
     ],
   });

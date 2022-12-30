@@ -46,7 +46,8 @@
 .remirror-editor.ProseMirror {
   @apply overflow-y-auto !important;
 }
-.editor {
+.editor,
+.staticRendererContainer {
   @apply p-4 font-Lato;
 
   :is(h1, h2, h3, h4, h5, h6) {
@@ -81,7 +82,7 @@
     @apply list-disc;
   }
   blockquote {
-    @apply border-0 p-0;
+    @apply border-0 p-0 italic;
   }
   blockquote > * {
     @apply border-l-[3px] pl-2 font-Merriweather text-2xl font-normal text-zinc-300 !important;

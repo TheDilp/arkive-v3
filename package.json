@@ -6,6 +6,7 @@
   "scripts": {
     "client": "vite",
     "build": "tsc && vite build",
+    "serve": "serve dist",
     "preview": "vite preview",
     "serverinstall": "cd server && pnpm install",
     "installall": "pnpm install && pnpm serverinstall",

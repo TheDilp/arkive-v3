@@ -17,7 +17,7 @@ export default function MentionDropdownComponent() {
       return [];
     }
     const query = mentionState.query.full.toLowerCase() ?? "";
-    if (mentionState.name === "docs") {
+    if (mentionState.name === "documents") {
       const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
       const only_documents = documents?.filter((doc) => !doc.folder && !doc.template) ?? [];
       const document_titles = only_documents.map((doc) => ({
