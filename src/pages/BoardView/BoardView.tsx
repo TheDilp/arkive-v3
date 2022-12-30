@@ -12,6 +12,7 @@ import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardContext, BoardType } from "../../types/boardTypes";
+import { DragItem } from "../../types/generalTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
@@ -199,9 +200,7 @@ export default function BoardView({ isReadOnly }: Props) {
       onDrop={(e) => {
         const stringData = e.dataTransfer.getData("item_id");
         if (!stringData) return;
-        const data: { id: string; image?: string; title: string; type: "documents" | "images" } = JSON.parse(
-          e.dataTransfer.getData("item_id"),
-        );
+        const data: DragItem = JSON.parse(e.dataTransfer.getData("item_id"));
         if (!data || !boardRef) return;
         const { image } = data;
         const { top, left } = e.currentTarget.getBoundingClientRect();

@@ -63,3 +63,5 @@ export type slashMenuItem = {
   color?: string;
   column_count?: number;
 };
+
+export type DragItem = { id: string; image?: string; title: string; type: "documents" | "images" };

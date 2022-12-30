@@ -3,8 +3,9 @@ import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { useSortMutation } from "../../CRUD/ItemsCRUD";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
-import { AvailableItemTypes } from "../../types/generalTypes";
+import { AvailableItemTypes, DragItem } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 
 type Props = {
@@ -28,6 +29,7 @@ const getCardURL = ({ id, isFolder, type }: { id: string; type: AvailableItemTyp
 export default function FolderCard({ id, title, type, isFolder, icon, image, cm }: Props) {
   const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const { project_id } = useParams();
+  const sortItemsMutation = useSortMutation(project_id as string, type);
   return (
     <Link
       onContextMenu={(e) => {
@@ -43,6 +45,14 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
       }}
       onDragStart={(e) => {
         if (!isFolder) e.dataTransfer.setData("item_id", JSON.stringify({ id, image, title, type }));
+      }}
+      onDrop={(e) => {
+        if (!isFolder) return;
+        const data = e.dataTransfer.getData("item_id");
+        if (data) {
+          const parsedData: DragItem = JSON.parse(data);
+          sortItemsMutation.mutate([{ id: parsedData.id, parent: id, sort: 0 }]);
+        }
       }}
       to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>
       <div className="flex h-36 w-36 cursor-pointer flex-col items-center justify-between px-4 py-2 transition-colors hover:text-blue-300">

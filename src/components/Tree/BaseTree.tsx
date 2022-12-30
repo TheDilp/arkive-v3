@@ -57,7 +57,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const [treeData, setTreeData] = useState<NodeModel<AllItemsType>[]>([]);
   const [filter, setFilter] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
   useLayoutEffect(() => {
     if (items) {
       if (filter || selectedTags.length > 0) {
@@ -159,7 +158,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
         insertDroppableFirst={false}
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;
-          handleDrop(tree, setTreeData, dropTargetId as string, sortItemMutation);
+          handleDrop(tree, dropTargetId as string, sortItemMutation);
           updateItemMutation?.mutate({
             id: dragSourceId as string,
             parentId: dropTargetId === "0" ? null : (dropTargetId as string),

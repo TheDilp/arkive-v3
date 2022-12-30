@@ -1,6 +1,4 @@
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { SetStateAction } from "jotai";
-import { Dispatch } from "react";
 
 import { AllItemsType } from "../types/generalTypes";
 
@@ -14,12 +12,7 @@ export const getDepth = (tree: NodeModel[], id: number | string, depth = 0): num
   return depth;
 };
 
-export const handleDrop = async (
-  newTree: NodeModel<AllItemsType>[],
-  setTreeData: Dispatch<SetStateAction<NodeModel<AllItemsType>[]>>,
-  dropTargetId: string,
-  sortItemsMutation: any,
-) => {
+export const handleDrop = async (newTree: NodeModel<AllItemsType>[], dropTargetId: string, sortItemsMutation: any) => {
   // setTreeData(newTree);
   const indexes = newTree
     .filter(
