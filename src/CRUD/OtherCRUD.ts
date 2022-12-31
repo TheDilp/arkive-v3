@@ -8,8 +8,9 @@ export const useGetAllTags = (project_id: string, type: AvailableItemTypes | "no
     ["allTags", project_id, type],
     async () =>
       (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllTags}${type}/${project_id}`, {
-          method: "GET",
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllTags}${project_id}`, {
+          method: "POST",
+          body: JSON.stringify({}),
         })
       ).json(),
     {

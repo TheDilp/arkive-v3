@@ -30,7 +30,7 @@ export default function DrawerMapContent() {
   const queryClient = useQueryClient();
   const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
   const createMapMutation = useCreateItem("maps");
-  const updateMapMutation = useUpdateItem("maps");
+  const updateMapMutation = useUpdateItem("maps", project_id as string);
   const deleteMapMutation = useDeleteItem("maps", project_id as string);
   const { data: map } = useGetItem(drawer?.id as string, "maps", { enabled: !!drawer?.id }) as { data: MapType };
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
