@@ -3,7 +3,7 @@ import { ComponentType } from "react";
 import { Link } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 
-import { removeKeys, toLowerKeys } from "../../utils/transform";
+import { removeKeys } from "../../utils/transform";
 import BoardMention from "../Mention/BoardMention";
 import DocumentMention from "../Mention/DocumentMention";
 import MapMention from "../Mention/MapMention";

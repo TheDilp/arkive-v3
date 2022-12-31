@@ -134,9 +134,6 @@
     padding: 1rem;
     border-radius: 0.1rem;
     overflow: auto;
-    .secretBlockToggleIcon {
-      @apply cursor-pointer transition-colors hover:text-sky-400;
-    }
   }
 }
 .editor:focus {

@@ -47,11 +47,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
       const contentDOM = document.createElement("div");
 
       const secretIcon = document.createElement("i");
-      secretIcon.classList.add("pi", "pi-eye-slash", "secretBlockToggleIcon");
-
-      secretIcon.onclick = () => {
-        this.store.commands.toggleSecret();
-      };
+      secretIcon.classList.add("pi", "pi-eye-slash");
 
       dom.append(secretIcon);
       dom.append(contentDOM);
