@@ -13,7 +13,7 @@ export default function FolderView() {
   const { data } = useGetAllItems(project_id as string, type, { staleTime: 10 * 1000 });
 
   return (
-    <div className="flex max-h-full flex-1 flex-col gap-4 overflow-y-auto px-8">
+    <div className="flex h-[90%] flex-col gap-4 overflow-hidden px-8">
       <Breadcrumbs type={type} />
       <FolderViewCards
         items={

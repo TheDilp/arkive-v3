@@ -109,7 +109,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
 
   return (
     <div
-      className="flex flex-1 flex-col"
+      className="flex flex-col overflow-hidden"
       onContextMenu={(e) => {
         setContextMenu({ data: null, type, folder: false, template: true });
         cm?.current?.show(e);
@@ -146,16 +146,16 @@ export default function BaseTree({ isTemplates, type }: Props) {
           return true;
         }}
         classes={{
-          container: "list-none flex-1 flex flex-col",
+          container: "list-none flex flex-col",
           listItem: "w-full",
           placeholder: "relative",
-          root: "w-full mt-1 overflow-y-scroll flex flex-col px-2 max-h-[80%]",
+          root: "w-full mt-1 flex flex-col px-2  max-h-full overflow-y-auto",
           dropTarget: "bg-zinc-800",
         }}
         dragPreviewRender={DragPreviewComponent}
         dropTargetOffset={10}
+        enableAnimateExpand
         initialOpen={items?.filter((item) => item.expanded).map((doc) => doc.id) || false}
-        insertDroppableFirst={false}
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;
           handleDrop(tree, dropTargetId as string, sortItemMutation);
@@ -165,6 +165,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
           });
         }}
         // @ts-ignore
+        insertDroppableFirst={false}
         placeholderRender={Placeholder}
         render={(node: NodeModel<AllItemsType>, { depth, isOpen, onToggle }) => (
           <TreeItem cm={cm} depth={depth} isOpen={isOpen} node={node} onToggle={onToggle} type={type} />

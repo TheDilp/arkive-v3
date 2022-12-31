@@ -34,7 +34,7 @@ export default function Layout() {
   if (!results.every((res) => res.isSuccess)) return <ProgressSpinner />;
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col overflow-hidden">
       <ConfirmDialog />
 
       <DialogWrapper />
