@@ -52,7 +52,7 @@ function TitleEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: 
 function IconColumn({ id, icon, folder }: DocumentType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const updateDocumentMutation = useUpdateItem("documents");
+  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
   return (
     <div className="flex justify-center">
       <IconSelect
@@ -112,7 +112,7 @@ function FolderTemplatePublicColumn(
   type: "folder" | "template" | "isPublic",
 ) {
   const { project_id } = useParams();
-  const updateDocumentMutation = useUpdateItem("documents");
+  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
   const queryClient = useQueryClient();
 
   return (
@@ -164,7 +164,6 @@ function TagsEditor(
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
-      type="documents"
     />
   );
 }
@@ -218,7 +217,7 @@ export default function DocumentSettings() {
   const [selected, setSelected] = useState<DocumentType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
 
-  const { mutate } = useUpdateItem("documents");
+  const { mutate } = useUpdateItem("documents", project_id as string);
   const { mutate: deleteMutation } = useDeleteItem("documents", project_id as string);
   const queryClient = useQueryClient();
 

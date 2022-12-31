@@ -5,8 +5,9 @@ import { Button } from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
-import { Dispatch, forwardRef, MutableRefObject, useState } from "react";
+import { Dispatch, forwardRef, MutableRefObject, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 import { useCreateItem, useDeleteManyItems } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
@@ -67,7 +68,19 @@ function RightToolbarTemplate(
   const { globalFilter, setGlobalFilter } = filter;
 
   const { data: tags } = useGetAllTags(project_id as string);
+  const [localFilter, setLocalFilter] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const [filteredTags, setFilteredTags] = useState<string[]>([]);
+
+  const updateFilterTitle = useDebouncedCallback((title: string) => {
+    setGlobalFilter({ title, tags: globalFilter.tags });
+    setLoading(false);
+  }, 850);
+
+  useEffect(() => {
+    setLoading(true);
+    updateFilterTitle(localFilter);
+  }, [localFilter]);
 
   return (
     <div className="flex flex-1 gap-x-2">
@@ -107,15 +120,9 @@ function RightToolbarTemplate(
         suggestions={filteredTags}
         value={globalFilter.tags}
       />
-      <span className="p-input-icon-left">
-        <i className="pi pi-search" />
-        <InputText
-          onChange={(e) => {
-            setGlobalFilter({ title: e.currentTarget.value, tags: globalFilter.tags });
-          }}
-          placeholder="Quick Search"
-          value={globalFilter.title}
-        />
+      <span className="p-input-icon-right">
+        {loading ? <i className="pi pi-spin pi-spinner" /> : <i className="pi pi-search" />}
+        <InputText onChange={(e) => setLocalFilter(e.currentTarget.value)} placeholder="Quick Search" value={localFilter} />
       </span>
     </div>
   );
