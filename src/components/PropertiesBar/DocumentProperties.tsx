@@ -11,6 +11,7 @@ import { useGetAllImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { DocumentType } from "../../types/documentTypes";
+import { toaster } from "../../utils/toast";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 import Tags from "../Tags/Tags";
@@ -40,10 +41,15 @@ export default function DocumentProperties() {
   };
   const handlePublicChange = (checked: boolean) => {
     if (currentDocument)
-      updateDocumentMutation?.mutate({
-        id: currentDocument.id as string,
-        isPublic: checked,
-      });
+      updateDocumentMutation?.mutate(
+        {
+          id: currentDocument.id as string,
+          isPublic: checked,
+        },
+        {
+          onSuccess: () => toaster("info", `Document changed to ${checked ? "PUBLIC" : "PRIVATE"}.`),
+        },
+      );
   };
 
   return (
