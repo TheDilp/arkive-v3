@@ -406,7 +406,11 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         icon: "pi pi-fw pi-external-link",
         label: "View Public Document",
         command: () => {
-          if (cmType.data?.id) navigate(`/view/document/${cmType.data?.id}`);
+          if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+            toaster("warning", "Document is set to private.");
+            return;
+          }
+          if (cmType.data?.id) navigate(`/view/documents/${cmType.data?.id}`);
         },
       },
       {
@@ -457,6 +461,13 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         label: "View Public Map",
         icon: "pi pi-fw pi-external-link",
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+            toaster("warning", "Map is set to private.");
+            return;
+          }
+          if (cmType.data?.id) navigate(`/view/maps/${cmType.data?.id}`);
+        },
       },
       {
         label: "Copy Public URL",
@@ -498,6 +509,13 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         label: "View Public Board",
         icon: "pi pi-fw pi-external-link",
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+            toaster("warning", "Board is set to private.");
+            return;
+          }
+          if (cmType.data?.id) navigate(`/view/boards/${cmType.data?.id}`);
+        },
       },
       {
         label: "Copy Public URL",

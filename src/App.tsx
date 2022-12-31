@@ -68,7 +68,9 @@ function App() {
               </Route>
             </Route>
             <Route path="view/*">
-              <Route element={<PublicDocumentView />} path="document/:item_id" />
+              <Route element={<PublicDocumentView />} path="documents/:item_id" />
+              <Route element={<PublicDocumentView />} path="maps/:item_id" />
+              <Route element={<PublicDocumentView />} path="boards/:item_id" />
             </Route>
           </Routes>
         </DndProvider>

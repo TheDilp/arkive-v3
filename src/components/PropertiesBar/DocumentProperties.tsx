@@ -47,7 +47,17 @@ export default function DocumentProperties() {
           isPublic: checked,
         },
         {
-          onSuccess: () => toaster("info", `Document changed to ${checked ? "PUBLIC" : "PRIVATE"}.`),
+          onSuccess: () => {
+            queryClient.setQueryData(["allItems", project_id, "documents"], (oldData: DocumentType[] | undefined) => {
+              if (oldData)
+                return oldData.map((item) => {
+                  if (item.id === currentDocument.id) return { ...item, isPublic: checked };
+                  return item;
+                });
+              return oldData;
+            });
+            toaster("info", `Document changed to ${checked ? "PUBLIC" : "PRIVATE"}.`);
+          },
         },
       );
   };
