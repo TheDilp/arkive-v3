@@ -32,7 +32,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     leftAlign,
     centerAlign,
     rightAlign,
-    // toggleSecret,
+    toggleSecret,
     // toggleColumns,
     // createTable,
     // deleteTable,
@@ -357,20 +357,20 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
           },
           icon: "pi pi-fw pi-save",
         },
-        // {
-        //   className: active.secret() ? "menuBarButtonActive" : "",
-        //   template: (item: any, options: any) => (
-        //     <span className={`${options.className} text-center `} onClick={options.onClick}>
-        //       <div className="flex justify-content-center m-0 customMenuBarIconContainer">
-        //         <i className={`pi pi-eye${active.secret() ? "-slash" : ""}`}></i>
-        //       </div>
-        //     </span>
-        //   ),
-        //   command: () => {
-        //     toggleSecret();
-        //     focus();
-        //   },
-        // },
+        {
+          className: active.secret() ? "menuBarButtonActive" : "",
+          template: (_: any, options: any) => (
+            <span className={`${options.className} text-center `} onClick={options.onClick}>
+              <div className="justify-content-center customMenuBarIconContainer m-0 flex">
+                <i className={`pi pi-eye${active.secret() ? "-slash" : ""}`} />
+              </div>
+            </span>
+          ),
+          command: () => {
+            toggleSecret();
+            focus();
+          },
+        },
         // {
         //   className: active.columns() ? "menuBarButtonActive" : "",
         //   icon: "pi pi-fw pi-pause",

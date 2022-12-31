@@ -15,22 +15,18 @@ import {
   NodeSpecOverride,
   NodeViewMethod,
   omitExtraAttributes,
-  ProsemirrorNode,
   toggleWrap,
 } from "@remirror/core";
 import { TextSelection } from "@remirror/pm/state";
 
 interface SecretOptions {
-  secret?: string;
+  secret?: boolean;
   classNames?: string;
 }
 
-/**
- * Adds a callout to the editor.
- */
 @extension<SecretOptions>({
   defaultOptions: {
-    secret: "true",
+    secret: true,
     classNames: "secretBlock",
   },
 })
@@ -42,7 +38,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
   readonly tags = [ExtensionTag.Block];
 
   createNodeViews(): NodeViewMethod {
-    return (node: ProsemirrorNode) => {
+    return (node) => {
       const { secret, classNames } = node.attrs;
       const dom = document.createElement("div");
       dom.setAttribute("secret", secret);
@@ -51,9 +47,15 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
       const contentDOM = document.createElement("div");
 
       const secretIcon = document.createElement("i");
-      secretIcon.classList.add("pi", "pi-eye-slash");
+      secretIcon.classList.add("pi", "pi-eye-slash", "secretBlockToggleIcon");
+
+      secretIcon.onclick = () => {
+        this.store.commands.toggleSecret();
+      };
+
       dom.append(secretIcon);
       dom.append(contentDOM);
+
       return { dom, contentDOM };
     };
   }
@@ -61,6 +63,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
   createNodeSpec(extra: ApplySchemaAttributes, override: NodeSpecOverride): NodeExtensionSpec {
     //    @ts-ignore
     const { classNames, secret } = this.options;
+
     return {
       content: "block+",
       defining: true,
@@ -71,6 +74,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
         classNames: { default: classNames },
         secret: { default: secret },
       },
+
       parseDOM: [
         {
           tag: `p[secret="${secret}"]`,
@@ -80,12 +84,17 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
             }
 
             const content = node.textContent;
-            return { ...extra.parse(node), secret, classNames, content };
+            return {
+              ...extra.parse(node),
+              secret,
+              classNames,
+              content,
+            };
           },
         },
         ...(override.parseDOM ?? []),
       ],
-      toDOM: (node: any) => {
+      toDOM: (node) => {
         const { ...rest } = omitExtraAttributes(node.attrs, extra);
         const attributes = {
           ...extra.dom(node),
@@ -108,7 +117,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
         },
         getAttributes: () => {
           return {
-            secret: "true",
+            secret: true,
           };
         },
       }),
@@ -116,7 +125,7 @@ export class SecretExtension extends NodeExtension<SecretOptions> {
   }
 
   @command()
-  toggleSecret(attributes?: { secret: string; classNames: string }): CommandFunction {
+  toggleSecret(attributes?: { secret: boolean; classNames: string }): CommandFunction {
     return toggleWrap(this.type, attributes);
   }
 

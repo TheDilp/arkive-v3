@@ -1,18 +1,8 @@
-import {
-  Callout,
-  createLinkHandler,
-  Doc,
-  Heading,
-  MarkMap,
-  PlaceholderExtension,
-  TextHandler,
-  useHelpers,
-  useKeymap,
-} from "@remirror/react";
+import { PlaceholderExtension, useHelpers, useKeymap } from "@remirror/react";
 import { saveAs } from "file-saver";
-import { ComponentType, useCallback } from "react";
+import { useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { EditorState, prosemirrorNodeToHtml } from "remirror";
+import { EditorState, prosemirrorNodeToHtml, RemirrorJSON } from "remirror";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -42,6 +32,8 @@ import { DocumentType } from "../types/documentTypes";
 import { slashMenuItem } from "../types/generalTypes";
 import { toaster } from "./toast";
 
+export type StaticRendererType = { content: RemirrorJSON };
+
 export const DefaultEditorExtensions = () => {
   const CustomMentionExtension = new MentionAtomExtension({
     matchers: [
@@ -63,7 +55,7 @@ export const DefaultEditorExtensions = () => {
 
   return [
     new SecretExtension({
-      secret: "true",
+      secret: true,
     }),
     new PlaceholderExtension({
       placeholder: "Write something awesome! 📜",
@@ -96,35 +88,6 @@ export const DefaultEditorExtensions = () => {
     new GapCursorExtension({}),
     new DropCursorExtension({}),
   ];
-};
-export type TestMap = Partial<Record<string, string | ComponentType<any>>>;
-
-export const typeMap: MarkMap = {
-  blockquote: "blockquote",
-  bulletList: (props) => {
-    return <div>{props.children}</div>;
-  },
-  callout: Callout,
-  doc: Doc,
-  hardBreak: "br",
-  heading: Heading,
-  horizontalRule: "hr",
-  image: "img",
-  listItem: "li",
-  mentionAtom: (props) => {
-    return <MentionReactComponent {...props.node.attrs} disableTooltip />;
-  },
-  orderedList: "ol",
-  paragraph: "p",
-  text: TextHandler,
-};
-
-export const markMap: MarkMap = {
-  bold: "strong",
-  code: "code",
-  italic: "em",
-  link: createLinkHandler({ target: "_blank" }),
-  underline: "u",
 };
 
 export const editorHooks = [

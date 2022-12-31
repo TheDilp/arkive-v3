@@ -10,7 +10,7 @@ export default function PublicDocumentView() {
 
   return (
     <div className="min-h-full px-[16.67%]">
-      <h1 className="w-full pt-3 pb-2 text-4xl text-center font-Merriweather">{documentData?.title}</h1>
+      <h1 className="w-full pt-3 pb-2 text-center font-Merriweather text-4xl">{documentData?.title}</h1>
       <div className="max-h-full min-h-full overflow-y-auto bg-zinc-700">
         {documentData?.content ? <StaticRender content={documentData.content} /> : null}
       </div>

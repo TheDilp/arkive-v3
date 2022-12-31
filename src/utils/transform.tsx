@@ -7,7 +7,7 @@ import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "..
 import { MapPinType, MapType } from "../types/mapTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
-  <div className="flex items-center justify-center w-full gap-x-1">
+  <div className="flex w-full items-center justify-center gap-x-1">
     <div className="ml-0 text-center">{title}</div>
     <Icon className="" fontSize={size || 20} icon={icon} />
   </div>

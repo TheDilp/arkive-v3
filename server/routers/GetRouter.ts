@@ -187,6 +187,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
               id: true,
               text: true,
               parent: true,
+              maps: {
+                select: {
+                  title: true,
+                },
+              },
             },
           }),
           prisma.boards.findMany({
@@ -218,6 +223,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
               id: true,
               label: true,
               parent: true,
+              board: {
+                select: {
+                  title: true,
+                },
+              },
             },
           }),
           prisma.edges.findMany({
@@ -234,6 +244,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
               id: true,
               label: true,
               parent: true,
+              board: {
+                select: {
+                  title: true,
+                },
+              },
             },
           }),
         ];
