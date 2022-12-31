@@ -17,7 +17,7 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
 
   const menuItems = useTreeMenuItems(contextMenu, type, project_id as string);
   return (
-    <div className="flex flex-wrap">
+    <div className="flex max-h-96 flex-1 flex-wrap ">
       <ContextMenu cm={cm} items={menuItems} />
 
       {items?.length ? (

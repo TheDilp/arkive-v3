@@ -46,8 +46,8 @@ export default function Layout() {
         <div className="flex w-1/6 max-w-[20%] flex-col">
           <Sidebar />
         </div>
-        <div className="flex h-full flex-1">
-          <div className="flex flex-1 flex-col">
+        <div className="flex h-full flex-1 overflow-hidden">
+          <div className="flex flex-1 flex-col overflow-hidden">
             <Outlet />
           </div>
         </div>

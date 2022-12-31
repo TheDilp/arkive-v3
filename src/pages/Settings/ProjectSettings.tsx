@@ -1,6 +1,7 @@
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -14,7 +15,7 @@ import { ProjectType } from "../../types/projectTypes";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
-  const { data } = useGetSingleProject(project_id as string);
+  const { data, isLoading } = useGetSingleProject(project_id as string);
   const { data: allImages } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
 
@@ -22,6 +23,7 @@ export default function ProjectSettings() {
     if (data) setLocalItem(data);
   }, [data]);
   const updateProject = useUpdateProject();
+  if (isLoading) return <ProgressSpinner />;
   return (
     <div className="flex flex-col gap-y-4 p-4">
       <div>
@@ -59,7 +61,8 @@ export default function ProjectSettings() {
         <Dropdown
           itemTemplate={ImageDropdownItem}
           onChange={(e) => {
-            if (localItem) setLocalItem({ ...localItem, id: data?.id as string, image: e.value });
+            // if (localItem) setLocalItem({ ...localItem, id: data?.id as string, image: e.value });
+            updateProject.mutate({ id: data?.id, image: e.value });
           }}
           options={allImages || []}
           placeholder="Select image"

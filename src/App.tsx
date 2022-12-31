@@ -31,7 +31,7 @@ function App() {
   });
 
   return (
-    <main className="flex h-screen flex-col overflow-hidden">
+    <main className="flex h-screen flex-col">
       <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />

@@ -4,7 +4,13 @@ import { prisma } from "..";
 
 export const projectRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getallprojects", async () => {
-    const data = await prisma.projects.findMany({});
+    const data = await prisma.projects.findMany({
+      select: {
+        id: true,
+        title: true,
+        image: true,
+      },
+    });
     return data;
   });
   server.get("/getsingleproject/:id", async (req: FastifyRequest<{ Params: { id: string } }>) => {
