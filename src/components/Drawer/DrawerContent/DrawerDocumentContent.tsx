@@ -36,7 +36,7 @@ export default function DrawerDocumentContent() {
   const { data: images } = useGetAllImages(project_id as string);
 
   const createDocumentMutation = useCreateItem("documents");
-  const updateDocumentMutation = useUpdateItem("documents");
+  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
   const deleteDocumentMutation = useDeleteItem("documents", project_id as string);
   // Use item if editing or use a blank document (default values) if not to create new one
   const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(
@@ -170,7 +170,7 @@ export default function DrawerDocumentContent() {
           </div>
         )}
         <div className="">
-          <Tags handleChange={handleChange} localItem={localItem} type="documents" />
+          <Tags handleChange={handleChange} localItem={localItem} />
         </div>
 
         <div className="flex items-center justify-between">

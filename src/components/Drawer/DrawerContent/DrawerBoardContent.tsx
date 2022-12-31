@@ -27,7 +27,7 @@ export default function DrawerBoardContent() {
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createBoardMutation = useCreateItem("boards");
-  const updateBoardMutation = useUpdateItem("boards");
+  const updateBoardMutation = useUpdateItem("boards", project_id as string);
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
   const boards: BoardType[] | undefined = queryClient.getQueryData(["allitems", project_id, "boards"]);
   const { data: board } = useGetItem(drawer?.id as string, "boards", { enabled: !!drawer?.id }) as { data: BoardType };
@@ -116,7 +116,7 @@ export default function DrawerBoardContent() {
           value={localItem?.parent?.id}
         />
       </div>
-      <Tags handleChange={handleChange} localItem={localItem} type="boards" />
+      <Tags handleChange={handleChange} localItem={localItem} />
       <span className="w-full text-sm text-zinc-400">Node shape</span>
       <Dropdown
         className="w-full"

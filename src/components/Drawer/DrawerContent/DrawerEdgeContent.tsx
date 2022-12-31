@@ -253,7 +253,7 @@ export default function DrawerEdgeContent() {
                 />
               </div>
               <div className="mb-2 w-full">
-                <Tags handleChange={handleChange} localItem={localItem} type="edges" />
+                <Tags handleChange={handleChange} localItem={localItem} />
               </div>
             </div>
           </TabPanel>

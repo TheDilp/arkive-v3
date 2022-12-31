@@ -104,7 +104,6 @@ export default function DocumentProperties() {
           )
         }
         localItem={currentDocument}
-        type="documents"
       />
 
       <Accordion>

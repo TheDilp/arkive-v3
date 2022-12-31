@@ -45,13 +45,13 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const items: AllItemsType[] | undefined = queryClient.getQueryData(["allItems", project_id, type]);
-  const updateItemMutation = useUpdateItem(type);
+  const updateItemMutation = useUpdateItem(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
 
   const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const contextItems = useTreeMenuItems(contextMenu, type, project_id as string);
 
-  const { data: tags } = useGetAllTags(project_id as string, type);
+  const { data: tags } = useGetAllTags(project_id as string);
 
   const cm = useRef() as MutableRefObject<any>;
   const [treeData, setTreeData] = useState<NodeModel<AllItemsType>[]>([]);

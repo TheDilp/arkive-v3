@@ -61,13 +61,12 @@ function RightToolbarTemplate(
     globalFilter: { title: string; tags: string[] };
     setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: string[] }>>;
   },
-  type: AvailableItemTypes,
 ) {
   const { project_id } = useParams();
   const { current } = ref;
   const { globalFilter, setGlobalFilter } = filter;
 
-  const { data: tags } = useGetAllTags(project_id as string, type);
+  const { data: tags } = useGetAllTags(project_id as string);
   const [filteredTags, setFilteredTags] = useState<string[]>([]);
 
   return (
@@ -138,7 +137,7 @@ const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter, selection 
     <Toolbar
       className="mb-1 flex"
       left={() => LeftToolbarTemplate(mutate, project_id as string, deleteSelected)}
-      right={() => RightToolbarTemplate(ref as MutableRefObject<DataTable>, filter, type)}
+      right={() => RightToolbarTemplate(ref as MutableRefObject<DataTable>, filter)}
     />
   );
 });

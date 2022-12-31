@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { BoardCreateType, DefaultEdgeType, DefaultNodeType, EdgeType, NodeType } from "../../types/boardTypes";
 import { DocumentCreateType } from "../../types/documentTypes";
-import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { AllItemsType } from "../../types/generalTypes";
 import { MapCreateType } from "../../types/mapTypes";
 
 type Props = {
@@ -20,7 +20,6 @@ type Props = {
     | BoardCreateType
     | DefaultNodeType
     | DefaultEdgeType;
-  type: AvailableItemTypes | "nodes" | "edges";
 };
 
 const handleTagsChange = async (
@@ -46,9 +45,9 @@ const filterTags = (
   if (!query && initialTags) setTags(initialTags);
 };
 
-export default function Tags({ handleChange, localItem, type }: Props) {
+export default function Tags({ handleChange, localItem }: Props) {
   const { project_id } = useParams();
-  const { data: initialTags } = useGetAllTags(project_id as string, type);
+  const { data: initialTags } = useGetAllTags(project_id as string);
   const [tags, setTags] = useState(initialTags || []);
   return (
     <AutoComplete
