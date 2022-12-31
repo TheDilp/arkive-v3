@@ -72,6 +72,14 @@ export default function Sidebar() {
             <Icon fontSize={18} icon="mdi:draw" />
             Board Settings
           </Link>
+          <Link
+            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
+              pathname.includes("tags") ? "bg-sky-700 text-white" : "text-zinc-500"
+            }`}
+            to="./settings/tags">
+            <Icon fontSize={18} icon="mdi:tags" />
+            Tags
+          </Link>
         </ul>
       </div>
     );
