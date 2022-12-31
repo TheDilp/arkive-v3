@@ -59,7 +59,7 @@ export default function BoardView({ isReadOnly }: Props) {
       let temp_nodes: NodeDefinition[] = [];
       let temp_edges: EdgeDefinition[] = [];
       if (board.nodes.length > 0) {
-        temp_nodes = mapNodes(board.nodes, project_id as string, isReadOnly);
+        temp_nodes = mapNodes(board.nodes, board?.project_id || (project_id as string), isReadOnly);
       }
       if (board.edges.length > 0) {
         temp_edges = mapEdges(board.edges, isReadOnly);
