@@ -33,10 +33,24 @@ export default function DocumentProperties() {
 
   const handleAlterNamesChange = (value: string[]) => {
     if (currentDocument) {
-      updateDocumentMutation?.mutate({
-        alter_names: value,
-        id: currentDocument.id,
-      });
+      updateDocumentMutation?.mutate(
+        {
+          alter_names: value,
+          id: currentDocument.id,
+        },
+        {
+          onSuccess: () => {
+            queryClient.setQueryData(["allItems", project_id, "documents"], (oldData: DocumentType[] | undefined) => {
+              if (oldData)
+                return oldData.map((item) => {
+                  if (item.id === currentDocument.id) return { ...item, alter_names: value };
+                  return item;
+                });
+              return oldData;
+            });
+          },
+        },
+      );
     }
   };
   const handlePublicChange = (checked: boolean) => {
