@@ -127,7 +127,7 @@ export const useCreateSubItem = (id: string, subType: AvailableSubItemTypes, typ
   );
 };
 
-export const useUpdateItem = (type: AllAvailableTypes) => {
+export const useUpdateItem = (type: AllAvailableTypes, project_id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -147,12 +147,26 @@ export const useUpdateItem = (type: AllAvailableTypes) => {
         const oldData = queryClient.getQueryData([type, variables.id]);
         // Don't update in case of documents, messes with editor saving and updating
         if (type === "documents" && "content" in variables) return { oldData };
-        if (variables)
+        if (variables) {
           // @ts-ignore
           queryClient.setQueryData([type, variables.id], (old: AllItemsType | undefined) => {
             if (old) return { ...old, ...variables };
             return old;
           });
+
+          if ("isPublic" in variables) {
+            queryClient.setQueryData(["allItems", project_id, type], (oldAllItems: AllItemsType[] | undefined) => {
+              if (oldAllItems) {
+                return oldAllItems.map((item) => {
+                  if (item.id === variables.id) return { ...item, isPublic: variables.isPublic as boolean };
+                  return item;
+                });
+              }
+              return oldAllItems;
+            });
+            toaster("info", `Item changed to ${variables.isPublic ? "PUBLIC" : "PRIVATE"}.`);
+          }
+        }
 
         return { oldData };
       },

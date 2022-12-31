@@ -14,6 +14,7 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         sort: true,
         expanded: true,
         folder: true,
+        isPublic: true,
         parent: {
           select: {
             id: true,

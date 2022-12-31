@@ -13,7 +13,7 @@ export const buttonLabelWithIcon = (title: string, icon: string, size?: number) 
   </div>
 );
 
-export function getType(pathname: string) {
+export function getItemTypeFromURL(pathname: string) {
   if (pathname.includes("documents")) return "documents";
   if (pathname.includes("maps")) return "maps";
   if (pathname.includes("boards")) return "boards";

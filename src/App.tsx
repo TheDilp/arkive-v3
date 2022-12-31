@@ -17,7 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor/Editor";
 import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
-import PublicDocumentView from "./pages/PublicView/PublicDocumentView";
+import PublicWrapper from "./pages/PublicView/PublicWrapper";
 import DocumentSettings from "./pages/Settings/DocumentSettings";
 import ProjectSettings from "./pages/Settings/ProjectSettings";
 
@@ -67,10 +67,10 @@ function App() {
                 <Route element={<DocumentSettings />} path="document-settings" />
               </Route>
             </Route>
-            <Route path="view/*">
-              <Route element={<PublicDocumentView />} path="documents/:item_id" />
-              <Route element={<PublicDocumentView />} path="maps/:item_id" />
-              <Route element={<PublicDocumentView />} path="boards/:item_id" />
+            <Route element={<PublicWrapper />} path="view/*">
+              <Route path="documents/:item_id" />
+              <Route path="maps/:item_id" />
+              <Route path="boards/:item_id" />
             </Route>
           </Routes>
         </DndProvider>

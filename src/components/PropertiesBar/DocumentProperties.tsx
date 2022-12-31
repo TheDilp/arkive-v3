@@ -29,7 +29,7 @@ export default function DocumentProperties() {
   const { data: images } = useGetAllImages(project_id as string);
   const queryClient = useQueryClient();
 
-  const updateDocumentMutation = useUpdateItem("documents");
+  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
 
   const handleAlterNamesChange = (value: string[]) => {
     if (currentDocument) {

@@ -250,7 +250,7 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
 
 export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableItemTypes, project_id: string) {
   const createItemMutation = useCreateItem(type);
-  const updateItemMutation = useUpdateItem(type);
+  const updateItemMutation = useUpdateItem(type, project_id as string);
   const deleteItemMutation = useDeleteItem(type, project_id);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setDialog] = useAtom(DialogAtom);
@@ -449,7 +449,12 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       },
       {
         label: "Toggle Public",
-        icon: `pi pi-fw ${"2" ? "pi-eye" : "pi-eye-slash"}`,
+        icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data) {
+            updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+          }
+        },
       },
       {
         label: "Manage Layers",
