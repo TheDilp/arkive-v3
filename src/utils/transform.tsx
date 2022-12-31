@@ -52,9 +52,8 @@ export function removeKeys(obj: { [key: string]: any }, keys: string[]): object 
 
   if (typeof obj === "object" && obj !== null) {
     return Object.keys(obj).reduce((previousValue, key) => {
-      return keys.includes(key) ? previousValue : { ...previousValue, [key]: removeKeys(obj[key], keys) };
+      return keys.includes(key) ? previousValue : { ...previousValue, [key.toLowerCase()]: removeKeys(obj[key], keys) };
     }, {});
   }
-
   return obj;
 }

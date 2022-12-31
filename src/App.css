@@ -92,12 +92,17 @@
     @apply float-none;
   }
 
-  *[data-node-text-align="left"]:not(blockquote) {
+  *[data-node-text-align="left"]:not(blockquote),
+  [nodetextalignment="left"]:not(blockquote) {
     @apply float-left mr-4;
   }
 
-  *[data-node-text-align="right"]:not(blockquote) {
+  *[data-node-text-align="right"]:not(blockquote),
+  *[nodetextalignment="right"]:not(blockquote) {
     @apply float-right ml-4;
+  }
+  *[nodetextalignment="center"]:not(blockquote) {
+    @apply text-center;
   }
 
   div[data-callout-type="error"],

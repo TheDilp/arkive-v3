@@ -3,7 +3,7 @@ import { ComponentType } from "react";
 import { Link } from "react-router-dom";
 import { RemirrorJSON } from "remirror";
 
-import { removeKeys } from "../../utils/transform";
+import { removeKeys, toLowerKeys } from "../../utils/transform";
 import BoardMention from "../Mention/BoardMention";
 import DocumentMention from "../Mention/DocumentMention";
 import MapMention from "../Mention/MapMention";
@@ -46,12 +46,7 @@ const typeMap: MarkMap = {
     }
     return null;
   },
-  secret: (...props: any) => (
-    <div className="secretBlock">
-      <i className="pi pi-eye slash" />
-      {props?.[0] ? props[0].children : null}
-    </div>
-  ),
+  secret: () => null,
 };
 
 const markMap: MarkMap = {
@@ -61,9 +56,10 @@ const markMap: MarkMap = {
 };
 
 export default function StaticRender({ content }: { content: RemirrorJSON }) {
+  const parsedContent = removeKeys(content, ["style"]);
   return (
     <div className="staticRendererContainer">
-      <RemirrorRenderer json={removeKeys(content, ["style"]) as RemirrorJSON} markMap={markMap} typeMap={typeMap} />
+      <RemirrorRenderer json={parsedContent as RemirrorJSON} markMap={markMap} typeMap={typeMap} />
     </div>
   );
 }
