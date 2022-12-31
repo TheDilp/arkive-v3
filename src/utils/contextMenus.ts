@@ -508,14 +508,19 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
 
       {
         label: "Toggle Public",
-        icon: `pi pi-fw ${true ? "pi-eye" : "pi-eye-slash"}`,
+        icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data) {
+            updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+          }
+        },
       },
       { separator: true },
       {
         label: "View Public Board",
         icon: "pi pi-fw pi-external-link",
         command: () => {
-          if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+          if (cmType?.data && "isPublic" in cmType.data && !cmType?.data?.isPublic) {
             toaster("warning", "Board is set to private.");
             return;
           }
@@ -525,13 +530,13 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         label: "Copy Public URL",
         icon: "pi pi-fw pi-link",
-        // command: () => {
-        //   if (navigator && navigator.clipboard) {
-        //     navigator.clipboard.writeText(`${window.location.host}/view/${project_id}/boards/${displayDialog.id}`).then(() => {
-        //       toastSuccess("URL copied! 🔗");
-        //     });
-        //   }
-        // },
+        command: () => {
+          if (navigator && navigator.clipboard) {
+            navigator.clipboard.writeText(`${window.location.host}/view/${project_id}/boards/${cmType?.data?.id}`).then(() => {
+              toaster("success", "URL copied! 🔗");
+            });
+          }
+        },
       },
       {
         label: "Delete Board",

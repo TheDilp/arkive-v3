@@ -472,7 +472,7 @@ export function mapNodes(nodes: NodeType[], project_id: string, isReadOnly?: boo
       scratch: {
         doc_id: node?.doc_id,
       },
-      locked: node.locked,
+      locked: isReadOnly || node.locked,
       position: { x: node.x, y: node.y },
     }));
 }

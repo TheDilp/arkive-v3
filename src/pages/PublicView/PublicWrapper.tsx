@@ -5,6 +5,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { AllItemsType } from "../../types/generalTypes";
 import { toaster } from "../../utils/toast";
 import { getItemTypeFromURL } from "../../utils/transform";
+import BoardView from "../BoardView/BoardView";
 import MapView from "../MapView/MapView";
 import PublicDocumentView from "./PublicDocumentView";
 
@@ -23,6 +24,7 @@ export default function PublicWrapper() {
   if (data) {
     if (type === "documents") return <PublicDocumentView data={data} />;
     if (type === "maps") return <MapView isReadOnly />;
+    if (type === "boards") return <BoardView isReadOnly />;
   }
   return null;
 }

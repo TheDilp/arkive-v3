@@ -109,11 +109,11 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       }>,
     ) => {
       try {
-        const updatedMapPin = await prisma.map_pins.update({
+        await prisma.map_pins.update({
           data: removeNull(JSON.parse(req.body)) as any,
           where: { id: req.params.id },
         });
-        return updatedMapPin;
+        return true;
       } catch (error: any) {
         console.log(error);
         return new Error(error);
@@ -129,11 +129,11 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       }>,
     ) => {
       try {
-        const updatedMapLayer = await prisma.map_layers.update({
+        await prisma.map_layers.update({
           data: removeNull(JSON.parse(req.body)) as any,
           where: { id: req.params.id },
         });
-        return updatedMapLayer;
+        return true;
       } catch (error: any) {
         console.log(error);
         return new Error(error);
@@ -149,11 +149,11 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       }>,
     ) => {
       try {
-        const updatedMap = await prisma.maps.update({
+        await prisma.maps.update({
           data: removeNull(JSON.parse(req.body)) as any,
           where: { id: req.params.id },
         });
-        return updatedMap;
+        return true;
       } catch (error: any) {
         console.log(error);
         return new Error(error);

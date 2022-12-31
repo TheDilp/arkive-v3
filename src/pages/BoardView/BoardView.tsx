@@ -128,7 +128,7 @@ export default function BoardView({ isReadOnly }: Props) {
       });
       // Creating edges
       // @ts-ignore
-      boardRef.on("ehcomplete", function (event: any, sourceNode: any, targetNode: any, addedEdge: any) {
+      boardRef.on("ehcomplete", function (_, sourceNode: any, targetNode: any, addedEdge: any) {
         const sourceData = sourceNode._private.data;
         const targetData = targetNode._private.data;
 
