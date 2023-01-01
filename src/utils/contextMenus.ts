@@ -293,12 +293,28 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         icon: "pi pi-fw pi-plus",
         items: [
           {
-            // command: () => {},
+            command: () => {
+              if (cmType.data?.id)
+                createItemMutation.mutate({
+                  title: "New Document",
+                  project_id: project_id as string,
+                  folder: false,
+                  parentId: cmType.data?.id,
+                });
+            },
             icon: "pi pi-fw pi-file",
             label: "Insert Document",
           },
           {
-            // command: () => {},
+            command: () => {
+              if (cmType.data?.id)
+                createItemMutation.mutate({
+                  title: "New Folder",
+                  project_id: project_id as string,
+                  folder: true,
+                  parentId: cmType.data?.id,
+                });
+            },
             icon: "pi pi-fw pi-folder",
             label: "Insert Folder",
           },
