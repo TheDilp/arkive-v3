@@ -37,7 +37,7 @@ function getCheckedValue(
 function IconColumn({ id, icon, folder }: DocumentType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
+  const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
   return (
     <div className="flex justify-center">
       <IconSelect

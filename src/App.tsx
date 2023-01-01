@@ -18,6 +18,7 @@ import Editor from "./pages/Editor/Editor";
 import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
 import PublicWrapper from "./pages/PublicView/PublicWrapper";
+import BoardSettings from "./pages/Settings/BoardSettings";
 import DocumentSettings from "./pages/Settings/DocumentSettings";
 import MapSettings from "./pages/Settings/MapSettings";
 import ProjectSettings from "./pages/Settings/ProjectSettings";
@@ -67,6 +68,7 @@ function App() {
                 <Route element={<ProjectSettings />} path="project-settings" />
                 <Route element={<DocumentSettings />} path="document-settings" />
                 <Route element={<MapSettings />} path="map-settings" />
+                <Route element={<BoardSettings />} path="board-settings" />
               </Route>
             </Route>
             <Route element={<PublicWrapper />} path="view/*">
