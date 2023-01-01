@@ -20,11 +20,12 @@ import { toaster } from "../../utils/toast";
 import SettingsToolbar from "./SettingsToolbar";
 // TABLE UTIL FUNCTIONS
 function getCheckedValue(
-  { folder, isPublic }: { folder: boolean; isPublic: boolean },
-  type: "folder" | "template" | "isPublic",
+  { folder, isPublic, defaultGrid }: { folder: boolean; isPublic: boolean; defaultGrid: boolean },
+  type: "folder" | "defaultGrid" | "isPublic",
 ) {
   if (type === "folder") return folder;
   if (type === "isPublic") return isPublic;
+  if (type === "defaultGrid") return defaultGrid;
   return false;
 }
 
@@ -58,14 +59,14 @@ function IconColumn({ id, icon, folder }: BoardType) {
   );
 }
 
-function FolderPublicColumn({ id, folder, isPublic }: BoardType, type: "folder" | "isPublic") {
+function FolderPublicGridColumn({ id, folder, isPublic, defaultGrid }: BoardType, type: "folder" | "isPublic" | "defaultGrid") {
   const { project_id } = useParams();
   const updateDocumentMutation = useUpdateItem("boards", project_id as string);
   const queryClient = useQueryClient();
 
   return (
     <Checkbox
-      checked={getCheckedValue({ folder, isPublic }, type)}
+      checked={getCheckedValue({ folder, isPublic, defaultGrid }, type)}
       onChange={(e) =>
         updateDocumentMutation?.mutate(
           { [type]: e.checked, id },
@@ -158,6 +159,7 @@ export default function BoardSettings() {
     });
   const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "boards"] });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
+  console.log(boards);
   if (!boards && isLoading) return <ProgressSpinner />;
   if (!boards) return null;
   return (
@@ -198,7 +200,7 @@ export default function BoardSettings() {
         />
         <Column
           align="center"
-          body={(data) => FolderPublicColumn(data, "folder")}
+          body={(data) => FolderPublicGridColumn(data, "folder")}
           className="w-10"
           field="folder"
           header="Folder"
@@ -207,10 +209,18 @@ export default function BoardSettings() {
 
         <Column
           align="center"
-          body={(data) => FolderPublicColumn(data, "isPublic")}
+          body={(data) => FolderPublicGridColumn(data, "isPublic")}
           className="w-10"
           field="isPublic"
           header="Public"
+          sortable
+        />
+        <Column
+          align="center"
+          body={(data) => FolderPublicGridColumn(data, "defaultGrid")}
+          className="w-10"
+          field="defaultGrid"
+          header="Grid"
           sortable
         />
 

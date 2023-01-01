@@ -121,13 +121,13 @@ export default function DrawerBoardContent() {
         />
       </div>
       <Tags handleChange={handleChange} localItem={localItem} />
-      <span className="w-full text-sm text-zinc-400">Node shape</span>
+      <h4 className="w-full text-lg underline">Default Node Shape</h4>
       <Dropdown
         className="w-full"
         filter
         onChange={(e) => handleChange({ name: "defaultNodeShape", value: e.value })}
         options={boardNodeShapes}
-        placeholder="Node Shape"
+        placeholder="Default Node Shape"
         value={localItem.defaultNodeShape}
       />
       <div className="flex flex-wrap items-center justify-between">
