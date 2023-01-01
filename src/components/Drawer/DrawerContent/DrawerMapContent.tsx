@@ -48,6 +48,10 @@ export default function DrawerMapContent() {
         toaster("warning", "Cannot turn folder into map if it contains children");
         return;
       }
+      if (!changedData) {
+        toaster("info", "No data was changed.");
+        return;
+      }
       updateMapMutation?.mutate(
         {
           id: localItem.id,

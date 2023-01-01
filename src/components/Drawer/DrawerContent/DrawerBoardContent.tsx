@@ -47,6 +47,10 @@ export default function DrawerBoardContent() {
         toaster("warning", "Cannot convert to board if folder contains files.");
         return;
       }
+      if (!changedData) {
+        toaster("info", "No data was changed.");
+        return;
+      }
       updateBoardMutation?.mutate(
         {
           id: board.id,
