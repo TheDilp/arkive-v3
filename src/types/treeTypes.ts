@@ -9,6 +9,6 @@ export type SidebarTreeItemType = {
 
 export type SortIndexes = {
   id: string;
-  parent: string | null;
+  parentId: string | null;
   sort: number;
 }[];

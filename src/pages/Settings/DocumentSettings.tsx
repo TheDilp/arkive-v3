@@ -6,6 +6,7 @@ import { Chips } from "primereact/chips";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -197,7 +198,7 @@ export default function DocumentSettings() {
   const { project_id } = useParams();
   const navigate = useNavigate();
   const tableRef = useRef() as MutableRefObject<DataTable>;
-  const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents");
+  const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents");
   const { data: images } = useGetAllImages(project_id as string);
   const [selected, setSelected] = useState<DocumentType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
@@ -215,6 +216,8 @@ export default function DocumentSettings() {
     });
   const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
+  if (!documents && isLoading) return <ProgressSpinner />;
+  if (!documents) return null;
   return (
     <div className="p-4">
       <SettingsToolbar

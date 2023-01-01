@@ -51,7 +51,7 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
         const data = e.dataTransfer.getData("item_id");
         if (data) {
           const parsedData: DragItem = JSON.parse(data);
-          sortItemsMutation.mutate([{ id: parsedData.id, parent: id, sort: 0 }]);
+          sortItemsMutation.mutate([{ id: parsedData.id, parentId: id, sort: 0 }]);
         }
       }}
       to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>

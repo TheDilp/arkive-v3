@@ -2,13 +2,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstac
 
 import { BoardType } from "../types/boardTypes";
 import { baseURLS, getURLS } from "../types/CRUDenums";
-import {
-  AllAvailableTypes,
-  AllItemsType,
-  AllSubItemsType,
-  AvailableItemTypes,
-  AvailableSubItemTypes,
-} from "../types/generalTypes";
+import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
 import { createURL, deleteManyURL, deleteURL, sortURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
@@ -81,7 +75,11 @@ export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
   );
 };
 
-export const useCreateSubItem = <SubItemType>(id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useCreateSubItem = <SubItemType extends { id: string; parentId: string }>(
+  id: string,
+  subType: AvailableSubItemTypes,
+  type: AvailableItemTypes,
+) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -97,7 +95,7 @@ export const useCreateSubItem = <SubItemType>(id: string, subType: AvailableSubI
     },
     {
       onMutate: async (variables) => {
-        if (!variables.parent || !variables.id) throw new Error("NO ID OR PARENT.");
+        if (!variables.parentId || !variables.id) throw new Error("NO ID OR PARENT.");
         const oldData: AllItemsType | undefined = queryClient.getQueryData([type, id]);
         if (oldData && variables) {
           if (
@@ -127,7 +125,7 @@ export const useCreateSubItem = <SubItemType>(id: string, subType: AvailableSubI
   );
 };
 
-export const useUpdateItem = <ItemType>(type: AllAvailableTypes, project_id: string) => {
+export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailableTypes, project_id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -182,7 +180,11 @@ export const useUpdateItem = <ItemType>(type: AllAvailableTypes, project_id: str
     },
   );
 };
-export const useUpdateSubItem = <SubItemType>(item_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useUpdateSubItem = <SubItemType extends { id: string }>(
+  item_id: string,
+  subType: AvailableSubItemTypes,
+  type: AvailableItemTypes,
+) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -286,11 +288,11 @@ export const useDeleteManyItems = (type: AvailableItemTypes, project_id: string)
 export const useSortMutation = (project_id: string, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
   return useMutation(
-    async (updateDocumentValues: SortIndexes) => {
+    async (updateValues: SortIndexes) => {
       const url = sortURL(type);
       if (url) {
         return fetch(url, {
-          body: JSON.stringify(updateDocumentValues),
+          body: JSON.stringify(updateValues),
           method: "POST",
         });
       }
@@ -305,7 +307,7 @@ export const useSortMutation = (project_id: string, type: AvailableItemTypes) =>
           if (prev)
             return prev.map((item) => {
               const idx = variables.findIndex((sortIndex) => sortIndex.id === item.id);
-              if (idx !== -1) return { ...item, parentId: variables[idx].parent, sort: variables[idx].sort };
+              if (idx !== -1) return { ...item, parentId: variables[idx].parentId, sort: variables[idx].sort };
               return item;
             });
 
