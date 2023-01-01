@@ -24,6 +24,9 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
         },
         expanded: true,
       },
+      orderBy: {
+        sort: "asc",
+      },
     });
     return data;
   });

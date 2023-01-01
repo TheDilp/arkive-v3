@@ -30,6 +30,9 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         image: true,
         tags: true,
       },
+      orderBy: {
+        sort: "asc",
+      },
     });
     return data;
   });

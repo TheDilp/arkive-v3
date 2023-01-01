@@ -23,6 +23,9 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         },
         parentId: true,
       },
+      orderBy: {
+        sort: "asc",
+      },
       where: {
         project_id: req.params.project_id,
       },
