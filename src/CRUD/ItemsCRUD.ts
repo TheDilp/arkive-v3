@@ -14,8 +14,8 @@ import { getItems } from "../utils/CRUD/CRUDFunctions";
 import { createURL, deleteManyURL, deleteURL, sortURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
 
-export const useGetAllItems = (project_id: string, type: AvailableItemTypes, options?: UseQueryOptions) => {
-  return useQuery<AllItemsType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type), {
+export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItemTypes, options?: UseQueryOptions) => {
+  return useQuery<ItemType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type), {
     enabled: options?.enabled,
     staleTime: options?.staleTime,
   });

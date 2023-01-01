@@ -6,7 +6,6 @@ import { Chips } from "primereact/chips";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
-import { InputText } from "primereact/inputtext";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -14,7 +13,8 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../components/IconSelect/IconSelect";
-import SettingsTable from "../../components/SettingsTable/SettingsTable";
+import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
+import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/documentTypes";
@@ -33,23 +33,6 @@ function getCheckedValue(
   return false;
 }
 
-function TitleEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: Partial<DocumentType>) => void) {
-  const { rowData, editorCallback } = editorOptions;
-
-  return (
-    <InputText
-      onChange={(e) => {
-        if (rowData.id && e.currentTarget.value && editorCallback) editorCallback(e.target.value);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          updateDocument({ id: rowData.id, title: e.currentTarget.value });
-        }
-      }}
-      value={rowData.title}
-    />
-  );
-}
 function IconColumn({ id, icon, folder }: DocumentType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();

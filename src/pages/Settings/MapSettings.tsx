@@ -5,7 +5,7 @@ import { Checkbox } from "primereact/checkbox";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
-import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -13,7 +13,8 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { MapImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../components/IconSelect/IconSelect";
-import SettingsTable from "../../components/SettingsTable/SettingsTable";
+import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
+import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { MapType } from "../../types/mapTypes";
@@ -31,23 +32,6 @@ function getCheckedValue(
   return false;
 }
 
-function TitleEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: Partial<MapType>) => void) {
-  const { rowData, editorCallback } = editorOptions;
-
-  return (
-    <InputText
-      onChange={(e) => {
-        if (rowData.id && e.currentTarget.value && editorCallback) editorCallback(e.target.value);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          updateDocument({ id: rowData.id, title: e.currentTarget.value });
-        }
-      }}
-      value={rowData.title}
-    />
-  );
-}
 function IconColumn({ id, icon, folder }: MapType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
@@ -186,7 +170,7 @@ export default function MapSettings() {
   const { project_id } = useParams();
   const navigate = useNavigate();
   const tableRef = useRef() as MutableRefObject<DataTable>;
-  const { data: maps } = useGetAllItems(project_id as string, "maps") as { data: MapType[] };
+  const { data: maps, isLoading } = useGetAllItems<MapType>(project_id as string, "maps");
   const { data: images } = useGetAllMapImages(project_id as string);
   const [selected, setSelected] = useState<MapType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
@@ -204,6 +188,8 @@ export default function MapSettings() {
     });
   const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "maps"] });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
+  if (!maps && isLoading) return <ProgressSpinner />;
+  if (!maps) return null;
   return (
     <div className="p-4">
       <SettingsToolbar
