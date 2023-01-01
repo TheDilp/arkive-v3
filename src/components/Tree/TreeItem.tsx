@@ -64,6 +64,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         {node.droppable && (
           <span
             onClick={(e) => {
+              // Toggle expanded state for the folders
               e.preventDefault();
               e.stopPropagation();
               updateMutation?.mutate({

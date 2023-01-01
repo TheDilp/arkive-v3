@@ -154,23 +154,28 @@ export const useUpdateItem = (type: AllAvailableTypes, project_id: string) => {
             return old;
           });
 
-          if ("isPublic" in variables) {
+          if ("isPublic" in variables || "expanded" in variables) {
             queryClient.setQueryData(["allItems", project_id, type], (oldAllItems: AllItemsType[] | undefined) => {
               if (oldAllItems) {
                 return oldAllItems.map((item) => {
-                  if (item.id === variables.id) return { ...item, isPublic: variables.isPublic as boolean };
+                  if (item.id === variables.id)
+                    return {
+                      ...item,
+                      isPublic: "isPublic" in variables ? (variables.isPublic as boolean) : item.isPublic,
+                      expanded: "expanded" in variables ? (variables.expanded as boolean) : item.expanded,
+                    };
                   return item;
                 });
               }
               return oldAllItems;
             });
-            toaster("info", `Item changed to ${variables.isPublic ? "PUBLIC" : "PRIVATE"}.`);
+            if ("isPublic" in variables) toaster("info", `Item changed to ${variables.isPublic ? "PUBLIC" : "PRIVATE"}.`);
           }
         }
 
         return { oldData };
       },
-      onError: (error, variables, context) => {
+      onError: (_, variables, context) => {
         toaster("error", "There was an error updating this item.");
         queryClient.setQueryData([type, variables.id], context?.oldData);
       },
