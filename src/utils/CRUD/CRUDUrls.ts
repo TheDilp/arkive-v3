@@ -72,3 +72,7 @@ export const deleteManyURL = (type: AllAvailableTypes) => {
 export const getImageLink = (image: string, project_id: string) => {
   return `${baseURLS.baseServer}getimage/images/${project_id}/${image}`;
 };
+
+export const getMapImageLink = (image: string, project_id: string) => {
+  return `${baseURLS.baseServer}getimage/maps/${project_id}/${image}`;
+};

@@ -11,7 +11,6 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useCreateItem, useDeleteManyItems } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { DocumentType } from "../../types/documentTypes";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { toaster } from "../../utils/toast";
@@ -23,8 +22,8 @@ type Props = {
     setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: string[] }>>;
   };
   selection: {
-    selected: DocumentType[];
-    setSelected: Dispatch<SetStateAction<DocumentType[]>>;
+    selected: AllItemsType[];
+    setSelected: Dispatch<SetStateAction<any[]>>;
   };
 };
 

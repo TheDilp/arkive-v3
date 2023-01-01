@@ -19,6 +19,7 @@ import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
 import PublicWrapper from "./pages/PublicView/PublicWrapper";
 import DocumentSettings from "./pages/Settings/DocumentSettings";
+import MapSettings from "./pages/Settings/MapSettings";
 import ProjectSettings from "./pages/Settings/ProjectSettings";
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
               <Route path="settings/*">
                 <Route element={<ProjectSettings />} path="project-settings" />
                 <Route element={<DocumentSettings />} path="document-settings" />
+                <Route element={<MapSettings />} path="map-settings" />
               </Route>
             </Route>
             <Route element={<PublicWrapper />} path="view/*">

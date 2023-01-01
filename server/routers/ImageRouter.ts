@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { existsSync, mkdirSync, readdirSync, writeFile } from "fs";
 
-export const imagesRouter = (server: FastifyInstance, _: any, done: any) => {
+export const imageRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getallimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
     const dir = `./assets/images/${req.params.project_id}`;
     // check if folder already exists

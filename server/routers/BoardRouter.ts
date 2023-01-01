@@ -16,6 +16,7 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
         sort: true,
         parentId: true,
         isPublic: true,
+        tags: true,
         parent: {
           select: {
             id: true,

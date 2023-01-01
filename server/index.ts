@@ -8,7 +8,7 @@ import path from "path";
 import { boardRouter } from "./routers/BoardRouter";
 import { documentRouter } from "./routers/DocumentRouter";
 import { getRouter } from "./routers/GetRouter";
-import { imagesRouter } from "./routers/ImagesRouter";
+import { imageRouter } from "./routers/ImageRouter";
 import { mapRouter } from "./routers/MapRouter";
 import { projectRouter } from "./routers/ProjectRouter";
 
@@ -29,7 +29,7 @@ server.register(getRouter);
 server.register(documentRouter);
 server.register(mapRouter);
 server.register(boardRouter);
-server.register(imagesRouter);
+server.register(imageRouter);
 if (process.env.VITE_BE_PORT) {
   server.listen({ port: parseInt(process.env.VITE_BE_PORT, 10) as number }, (err, address) => {
     if (err) {
