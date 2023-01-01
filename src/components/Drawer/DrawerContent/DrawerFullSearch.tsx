@@ -126,7 +126,7 @@ export default function DrawerFullSearch() {
                       {"label" in item && (item.label || "Node/Edge")}
                     </Link>
                   ))
-                : null,
+                : "No items match this query.",
             )
           : (query && "No items match this query.") || "Type something to search for documents, maps, pins, boards or nodes!"}
       </div>

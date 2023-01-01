@@ -1,3 +1,4 @@
+import { documents } from "@prisma/client";
 import { FastifyInstance, FastifyRequest } from "fastify";
 
 import { prisma } from "..";
@@ -70,7 +71,7 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
       if (type === "namecontent") {
         const searches = [
           prisma.$queryRaw`
-          select id,title,icon, content from documents where (project_id::text = ${project_id} and ( lower(content->>'content'::text) like lower(${`%${query}%`}) or (lower(title) like lower(${`%${query}%`}) ) ) and folder = false)
+          select id,title,content,icon from documents where (project_id::text = ${project_id} and ( lower(content->>'content'::text) like lower(${`%${query}%`}) or (lower(title) like lower(${`%${query}%`}) ) ) and folder = false)
           ;`,
           prisma.maps.findMany({
             where: {
@@ -166,13 +167,19 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
             },
           }),
         ];
-        const [documents, maps, pins, boards, nodes, edges] = await prisma.$transaction(searches);
-
-        const contentSearchedDocuments = [...(documents as any[])].filter((doc: any) =>
-          hasValueDeep(doc.content, query as string),
+        const [titleDocuments, maps, pins, boards, nodes, edges] = await prisma.$transaction(searches);
+        const contentSearchedDocuments = [...(titleDocuments as documents[])].filter(
+          (doc: documents) =>
+            doc.title.toLowerCase().includes((query as string).toLowerCase()) || hasValueDeep(doc.content, query as string),
         );
 
-        return { documents: contentSearchedDocuments, maps, pins, boards, nodes, edges };
+        // Remove and do not return content
+        const final = contentSearchedDocuments.map((doc) => ({
+          id: doc.id,
+          title: doc.title,
+          icon: doc.icon,
+        }));
+        return { documents: final, maps, pins, boards, nodes, edges };
       }
       if (type === "tags") {
         const searches = [
@@ -235,8 +242,8 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
             },
           }),
         ];
-        const [documents, maps, boards, nodes, edges] = await prisma.$transaction(searches);
-        return { documents, maps, boards, nodes, edges };
+        const [titleDocuments, maps, boards, nodes, edges] = await prisma.$transaction(searches);
+        return { titleDocuments, maps, boards, nodes, edges };
       }
       return {};
     },
