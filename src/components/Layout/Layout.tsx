@@ -43,7 +43,7 @@ export default function Layout() {
       </div>
       <div className="flex w-full flex-1">
         <Drawer />
-        <div className="flex w-1/6 max-w-[20%] flex-col">
+        <div className="flex w-1/6 max-w-[20%] flex-col overflow-hidden">
           <Sidebar />
         </div>
         <div className="flex h-full flex-1 overflow-hidden">

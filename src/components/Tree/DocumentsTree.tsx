@@ -44,9 +44,9 @@ export default function DocumentsTree() {
   );
 
   return (
-    <>
+    <div className="h-screen">
       <SplitButton
-        className="p-button-outlined"
+        className="p-button-outlined w-full"
         icon="pi pi-bolt"
         label="Quick Create"
         model={items}
@@ -59,6 +59,6 @@ export default function DocumentsTree() {
       />
 
       <BaseTree type="documents" />
-    </>
+    </div>
   );
 }
