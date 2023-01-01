@@ -36,6 +36,8 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
   template: false,
 });
 
+export const SidebarCollapseAtom = atom<boolean>(true);
+
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
 
 export const DialogAtom = atom<DialogAtomType>(DefaultDialog);

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
-import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom, SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 export default function Navbar() {
@@ -13,6 +13,7 @@ export default function Navbar() {
   const { project_id } = useParams();
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
+  const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const projectData = useGetSingleProject(project_id as string);
   function navbarShortcuts(e: KeyboardEvent) {
     if (e.ctrlKey && project_id) {
@@ -46,6 +47,14 @@ export default function Navbar() {
   return (
     <div className="flex flex-nowrap border-b border-zinc-600 bg-zinc-800 py-2 shadow">
       <div className="flex w-full items-center gap-x-2 px-2">
+        <Icon
+          className="cursor-pointer hover:text-blue-300"
+          fontSize={20}
+          icon={`mdi:${sidebarToggle ? "menu-open" : "menu"}`}
+          onClick={async () => {
+            setSidebarToggle(!sidebarToggle);
+          }}
+        />
         <Icon
           className="cursor-pointer hover:text-blue-300"
           fontSize={20}

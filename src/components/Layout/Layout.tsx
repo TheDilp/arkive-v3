@@ -1,8 +1,10 @@
 import { useQueries } from "@tanstack/react-query";
+import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Outlet, useParams } from "react-router-dom";
 
+import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { getItems } from "../../utils/CRUD/CRUDFunctions";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
@@ -11,6 +13,8 @@ import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
   const { project_id } = useParams();
+  const [sidebarToggle] = useAtom(SidebarCollapseAtom);
+
   const results = useQueries({
     queries: [
       {
@@ -41,10 +45,14 @@ export default function Layout() {
       <div className="w-full">
         <Navbar />
       </div>
-      <div className="flex w-full flex-1">
+      <div className="relative flex w-full flex-1">
         <Drawer />
-        <div className="flex w-1/6 max-w-[20%] flex-col overflow-hidden">
-          <Sidebar />
+
+        <div
+          className={`flex ${
+            sidebarToggle ? "w-1/6 opacity-100" : "w-0 opacity-0"
+          }  max-w-[20%] flex-col overflow-hidden bg-zinc-800 transition-all`}>
+          {sidebarToggle ? <Sidebar /> : null}
         </div>
         <div className="flex h-full flex-1 overflow-hidden">
           <div className="flex flex-1 flex-col overflow-hidden">
