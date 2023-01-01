@@ -408,15 +408,19 @@ export default function DrawerEdgeContent() {
           iconPos="right"
           label="Save Edge"
           onClick={() => {
-            updateEdgeMutaiton.mutate(
-              { id: localItem.id, ...changedData },
-              {
-                onSuccess: () => {
-                  toaster("success", `Edge ${localItem?.label || ""} was successfully updated.`);
-                  resetChanges();
+            if (changedData) {
+              updateEdgeMutaiton.mutate(
+                { id: localItem.id, ...changedData },
+                {
+                  onSuccess: () => {
+                    toaster("success", `Edge ${localItem?.label || ""} was successfully updated.`);
+                    resetChanges();
+                  },
                 },
-              },
-            );
+              );
+            } else {
+              toaster("info", "No data was changed.");
+            }
           }}
           type="submit"
         />
