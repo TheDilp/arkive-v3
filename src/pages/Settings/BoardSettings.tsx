@@ -134,7 +134,22 @@ function NodeShapeEditor(editorOptions: ColumnEditorOptions, updateBoard: (data:
     />
   );
 }
-
+// function ColorEditor(
+//   editorOptions: ColumnEditorOptions,
+//   updateBoard: (data: Partial<BoardType>) => void,
+//   colorType: "defaultNodeColor" | "defaultEdgeColor",
+// ) {
+//   const { rowData, editorCallback } = editorOptions;
+//   return (
+//     <ColorInput
+//       color={rowData[colorType]}
+//       name={colorType}
+//       onChange={({ name, value }) => {
+//         // if (editorCallback) editorCallback(value);
+//       }}
+//     />
+//   );
+// }
 function ActionsColumn({ id, folder }: BoardType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
@@ -250,6 +265,24 @@ export default function BoardSettings() {
           sortable
           sortField="defaultNodeShape"
         />
+        {/* <Column
+          align="center"
+          body={(data: BoardType) => capitalCase(data.defaultNodeColor)}
+          editor={(e) => ColorEditor(e, updateBoard, "defaultNodeColor")}
+          field="defaultNodeColor"
+          header="Default Node Color"
+          sortable
+          sortField="defaultNodeColor"
+        />
+        <Column
+          align="center"
+          body={(data: BoardType) => capitalCase(data.defaultEdgeColor)}
+          editor={(e) => ColorEditor(e, updateBoard, "defaultEdgeColor")}
+          field="defaultEdgeColor"
+          header="Default Edge Color"
+          sortable
+          sortField="defaultEdgeColor"
+        /> */}
 
         <Column align="center" body={(data) => ActionsColumn(data, navigate, deleteAction)} header="Actions" />
       </SettingsTable>
