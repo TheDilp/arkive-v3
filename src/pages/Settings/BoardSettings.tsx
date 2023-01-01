@@ -4,10 +4,12 @@ import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { Dropdown } from "primereact/dropdown";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { capitalCase } from "remirror";
 
 import { IconSelect } from "../../components/IconSelect/IconSelect";
 import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
@@ -15,6 +17,7 @@ import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { BoardType } from "../../types/boardTypes";
+import { boardNodeShapes } from "../../utils/boardUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { toaster } from "../../utils/toast";
 import SettingsToolbar from "./SettingsToolbar";
@@ -115,6 +118,22 @@ function TagsEditor(
     />
   );
 }
+function NodeShapeEditor(editorOptions: ColumnEditorOptions, updateBoard: (data: Partial<BoardType>) => void) {
+  const { rowData, editorCallback } = editorOptions;
+  return (
+    <Dropdown
+      className="w-full"
+      filter
+      onChange={(e) => {
+        updateBoard({ id: rowData.id, defaultNodeShape: e.value });
+        if (editorCallback) editorCallback(e.value);
+      }}
+      options={boardNodeShapes}
+      placeholder="Default Node Shape"
+      value={rowData.defaultNodeShape}
+    />
+  );
+}
 
 function ActionsColumn({ id, folder }: BoardType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
@@ -159,7 +178,6 @@ export default function BoardSettings() {
     });
   const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "boards"] });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
-  console.log(boards);
   if (!boards && isLoading) return <ProgressSpinner />;
   if (!boards) return null;
   return (
@@ -222,6 +240,15 @@ export default function BoardSettings() {
           field="defaultGrid"
           header="Grid"
           sortable
+        />
+        <Column
+          align="center"
+          body={(data: BoardType) => capitalCase(data.defaultNodeShape)}
+          editor={(e) => NodeShapeEditor(e, updateBoard)}
+          field="defaultNodeShape"
+          header="Default Node"
+          sortable
+          sortField="defaultNodeShape"
         />
 
         <Column align="center" body={(data) => ActionsColumn(data, navigate, deleteAction)} header="Actions" />

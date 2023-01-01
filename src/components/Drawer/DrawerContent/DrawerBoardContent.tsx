@@ -19,6 +19,7 @@ import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import ColorInput from "../../ColorInput/ColorInput";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
 
@@ -132,25 +133,7 @@ export default function DrawerBoardContent() {
       />
       <div className="flex flex-wrap items-center justify-between">
         <h4 className="w-full text-lg underline">Default Node Color</h4>
-
-        <ColorPicker
-          onChange={(e) =>
-            handleChange({
-              name: "defaultNodeColor",
-              value: `#${e.target.value}`,
-            })
-          }
-          value={localItem.defaultNodeColor}
-        />
-        <InputText
-          onChange={(e) =>
-            handleChange({
-              name: "defaultNodeColor",
-              value: e.target.value,
-            })
-          }
-          value={localItem.defaultNodeColor || ""}
-        />
+        <ColorInput color={localItem.defaultNodeColor as string} name="defaultNodeColor" onChange={handleChange} />
       </div>
       <div className="flex flex-wrap items-center justify-between">
         <h4 className="w-full text-lg underline">Default Edge & Arrow Color</h4>
