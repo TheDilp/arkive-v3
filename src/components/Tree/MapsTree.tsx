@@ -13,7 +13,7 @@ export default function MapsTree() {
   const createMapMutation = useCreateItem("maps");
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-screen flex-1 flex-col">
       <div className="flex items-center justify-between gap-x-2 border-b border-zinc-600 pb-2">
         <Button
           className="p-button-outlined p-button-secondary w-full"

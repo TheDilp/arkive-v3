@@ -14,7 +14,7 @@ export default function BoardsTree() {
   const createBoardMutation = useCreateItem("boards");
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-screen flex-1 flex-col">
       <div className="flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 xl:flex-nowrap xl:gap-x-2">
         <Button
           className="p-button-outlined p-button-secondary w-full"
