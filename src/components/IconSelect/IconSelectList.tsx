@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { InputText } from "primereact/inputtext";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useVirtual } from "react-virtual";
 
 import { IconSelectMenuType } from "../../types/generalTypes";
 import { iconList } from "../../utils/iconsList";
@@ -10,16 +10,16 @@ export default function IconSelectList({ close, setIcon }: IconSelectMenuType) {
   const [search, setSearch] = useState<string | null>(null);
   const [filteredIconList, setFilteredIconList] = useState(iconList);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
-  const rowVirtualizer = useVirtual({
-    size: Math.ceil(iconList.filter((icon) => (search ? icon.includes(search.toLowerCase()) : true)).length / 6),
-    parentRef,
+  const rowVirtualizer = useVirtualizer({
+    count: Math.ceil(iconList.filter((icon) => (search ? icon.includes(search.toLowerCase()) : true)).length / 6),
+    getScrollElement: () => parentRef.current,
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
-  const columnVirtualizer = useVirtual({
+  const columnVirtualizer = useVirtualizer({
     horizontal: true,
-    size: 6,
-    parentRef,
+    count: 6,
+    getScrollElement: () => parentRef.current,
     estimateSize: useCallback(() => 30, []),
     overscan: 5,
   });
@@ -41,12 +41,12 @@ export default function IconSelectList({ close, setIcon }: IconSelectMenuType) {
         <div
           style={{
             width: "100%",
-            height: `${rowVirtualizer.totalSize}px`,
+            height: `${rowVirtualizer.getTotalSize()}px`,
             position: "relative",
           }}>
-          {rowVirtualizer.virtualItems.map((virtualRow) => (
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => (
             <React.Fragment key={virtualRow.index}>
-              {columnVirtualizer.virtualItems.map((virtualColumn) => (
+              {columnVirtualizer.getVirtualItems().map((virtualColumn) => (
                 <div
                   key={virtualColumn.index}
                   className="justify-content-center mx-2"
