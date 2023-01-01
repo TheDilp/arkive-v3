@@ -464,7 +464,7 @@ export function mapNodes(nodes: NodeType[], project_id: string, isReadOnly?: boo
     .map((node: NodeType) => ({
       data: {
         ...node,
-        classes: `boardNode ${isReadOnly && "publicBoardNode"}`,
+        classes: `${isReadOnly ? "publicBoardNode" : "boardNode"}`,
         label: node.label || "",
         zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
         backgroundImage: getNodeImage(node, project_id as string) || [],

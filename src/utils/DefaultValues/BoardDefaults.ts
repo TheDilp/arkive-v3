@@ -270,6 +270,14 @@ export const cytoscapeStylesheet = [
   },
 
   {
+    selector: "node[classes != 'publicBoardNode']:locked, edge[classes != 'publicBoardEdge']:locked",
+    style: {
+      "border-opacity": 0.5,
+      "border-width": 2.5,
+      "border-color": "red",
+    },
+  },
+  {
     selector: ":grabbed",
     style: {
       "line-color": "green",
