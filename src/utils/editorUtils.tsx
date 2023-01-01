@@ -93,9 +93,9 @@ export const DefaultEditorExtensions = () => {
 export const editorHooks = [
   () => {
     const { getJSON, getText } = useHelpers();
-    const { item_id } = useParams();
-    const saveContentMutation = useUpdateItem("documents");
-    const { data: document } = useGetItem(item_id as string, "documents") as { data: DocumentType };
+    const { project_id, item_id } = useParams();
+    const saveContentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
+    const { data: document } = useGetItem<DocumentType>(item_id as string, "documents");
     const handleSaveShortcut = useCallback(
       ({ state }: { state: EditorState }) => {
         toaster("success", "Document successfully saved!");

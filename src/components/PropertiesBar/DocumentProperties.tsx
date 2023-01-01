@@ -25,11 +25,11 @@ function DocumentOptionsHeader({ icon, title }: { icon: string; title: string })
 }
 export default function DocumentProperties() {
   const { project_id, item_id } = useParams();
-  const { data: currentDocument } = useGetItem(item_id as string, "documents") as { data: DocumentType };
+  const { data: currentDocument } = useGetItem<DocumentType>(item_id as string, "documents");
   const { data: images } = useGetAllImages(project_id as string);
   const queryClient = useQueryClient();
 
-  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
+  const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
 
   const handleAlterNamesChange = (value: string[]) => {
     if (currentDocument) {
@@ -75,7 +75,7 @@ export default function DocumentProperties() {
         },
       );
   };
-
+  if (!currentDocument) return null;
   return (
     <span className="p-fluid propertiesBar overflow-hidden">
       <Chips

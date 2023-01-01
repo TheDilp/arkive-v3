@@ -12,10 +12,10 @@ export default function NodeSearch() {
   const { item_id } = useParams();
   const [, setDialog] = useAtom(DialogAtom);
   const [boardRef] = useAtom(BoardReferenceAtom);
-  const { data: board } = useGetItem(item_id as string, "boards") as { data: BoardType };
+  const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
   const [search, setSearch] = useState("");
   const [filteredNodes, setFilteredNodes] = useState<NodeType[]>(board?.nodes.filter((node) => node.label) || []);
-
+  if (!board) return null;
   return (
     <div className="flex flex-col justify-center">
       <AutoComplete

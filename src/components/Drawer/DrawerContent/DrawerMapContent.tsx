@@ -28,11 +28,11 @@ export default function DrawerMapContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const queryClient = useQueryClient();
-  const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
-  const createMapMutation = useCreateItem("maps");
-  const updateMapMutation = useUpdateItem("maps", project_id as string);
+  const maps = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"]);
+  const createMapMutation = useCreateItem<MapType>("maps");
+  const updateMapMutation = useUpdateItem<MapType>("maps", project_id as string);
   const deleteMapMutation = useDeleteItem("maps", project_id as string);
-  const { data: map } = useGetItem(drawer?.id as string, "maps", { enabled: !!drawer?.id }) as { data: MapType };
+  const { data: map } = useGetItem<MapType>(drawer?.id as string, "maps", { enabled: !!drawer?.id });
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {
       ...DefaultMap,
@@ -86,7 +86,7 @@ export default function DrawerMapContent() {
       });
     }
   }, [map, project_id]);
-
+  if (!map) return null;
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">

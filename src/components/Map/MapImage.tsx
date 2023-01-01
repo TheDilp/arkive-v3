@@ -21,7 +21,7 @@ type Props = {
 
 export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
   const { project_id, item_id, subitem_id } = useParams();
-  const { data: currentMap } = useGetItem(item_id as string, "maps") as { data: MapType };
+  const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps");
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
 
   const PinFilter = (mapPin: MapPinType) => {
@@ -83,13 +83,14 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
   }, []);
 
   useEffect(() => {
-    if (subitem_id) {
+    if (subitem_id && currentMap) {
       const pin = currentMap.map_pins.find((map_pin) => map_pin.id === subitem_id);
       if (pin) map.panTo([pin.lat, pin.lng], {});
     } else {
       map.fitBounds(bounds);
     }
   }, [subitem_id, bounds]);
+  if (!map) return null;
   return (
     <div>
       <LayersControl position="topright">

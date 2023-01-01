@@ -51,11 +51,11 @@ export const useGetAllMapImages = (project_id: string) => {
   );
 };
 
-export const useCreateItem = (type: AvailableItemTypes) => {
+export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (newItemValues: Partial<AllItemsType>) => {
+    async (newItemValues: Partial<ItemType>) => {
       const url = createURL(type);
       if (url)
         return fetch(url, {
@@ -81,11 +81,11 @@ export const useCreateItem = (type: AvailableItemTypes) => {
   );
 };
 
-export const useCreateSubItem = (id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useCreateSubItem = <SubItemType>(id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (newSubItemValues: Partial<AllSubItemsType>) => {
+    async (newSubItemValues: Partial<SubItemType>) => {
       const url = createURL(subType);
       if (url)
         return fetch(url, {
@@ -127,11 +127,11 @@ export const useCreateSubItem = (id: string, subType: AvailableSubItemTypes, typ
   );
 };
 
-export const useUpdateItem = (type: AllAvailableTypes, project_id: string) => {
+export const useUpdateItem = <ItemType>(type: AllAvailableTypes, project_id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (updateItemValues: Partial<AllItemsType>) => {
+    async (updateItemValues: Partial<ItemType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, type);
         if (url)
@@ -182,11 +182,11 @@ export const useUpdateItem = (type: AllAvailableTypes, project_id: string) => {
     },
   );
 };
-export const useUpdateSubItem = (item_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+export const useUpdateSubItem = <SubItemType>(item_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (updateItemValues: Partial<AllSubItemsType>) => {
+    async (updateItemValues: Partial<SubItemType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, subType);
         if (url)
@@ -319,10 +319,10 @@ export const useSortMutation = (project_id: string, type: AvailableItemTypes) =>
   );
 };
 
-export const useUpdateManySubItems = (item_id: string, subType: AvailableSubItemTypes) => {
+export const useUpdateManySubItems = <SubItemType>(item_id: string, subType: AvailableSubItemTypes) => {
   const queryClient = useQueryClient();
   return useMutation(
-    async (updateItemValues: { ids: string[]; data: Partial<AllSubItemsType> }) => {
+    async (updateItemValues: { ids: string[]; data: Partial<SubItemType> }) => {
       if (updateItemValues.ids) {
         const url = updateManyURL(subType);
         if (url)

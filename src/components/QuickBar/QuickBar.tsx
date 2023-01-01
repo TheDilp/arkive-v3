@@ -10,7 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardType } from "../../types/boardTypes";
+import { BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, updateColor } from "../../utils/boardUtils";
 import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
@@ -24,10 +24,10 @@ export default function BoardQuickBar() {
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [edgehandles] = useAtom(BoardEdgeHandlesAtom);
-  const { data: board } = useGetItem(item_id as string, "boards") as { data: BoardType };
+  const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
 
-  const updateManyNodes = useUpdateManySubItems(item_id as string, "nodes");
-  const updateManyEdges = useUpdateManySubItems(item_id as string, "edges");
+  const updateManyNodes = useUpdateManySubItems<NodeType>(item_id as string, "nodes");
+  const updateManyEdges = useUpdateManySubItems<EdgeType>(item_id as string, "edges");
 
   const [, setExportDialog] = useAtom(DialogAtom);
   const deleteManyNodesMutation = useDeleteManySubItems(item_id as string, "nodes");
@@ -64,6 +64,7 @@ export default function BoardQuickBar() {
   //       reject: () => {},
   //     });
   //   };
+  if (!board) return null;
   return (
     <div
       className="absolute left-1/2 z-10 flex h-12 w-1/6 items-center justify-around rounded bg-zinc-800 text-white shadow-md"

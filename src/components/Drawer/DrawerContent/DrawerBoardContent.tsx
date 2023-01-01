@@ -26,11 +26,11 @@ export default function DrawerBoardContent() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const createBoardMutation = useCreateItem("boards");
-  const updateBoardMutation = useUpdateItem("boards", project_id as string);
+  const createBoardMutation = useCreateItem<BoardType>("boards");
+  const updateBoardMutation = useUpdateItem<BoardType>("boards", project_id as string);
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
-  const boards: BoardType[] | undefined = queryClient.getQueryData(["allitems", project_id, "boards"]);
-  const { data: board } = useGetItem(drawer?.id as string, "boards", { enabled: !!drawer?.id }) as { data: BoardType };
+  const boards = queryClient.getQueryData<BoardType[]>(["allitems", project_id, "boards"]);
+  const { data: board } = useGetItem<BoardType>(drawer?.id as string, "boards", { enabled: !!drawer?.id });
 
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     board ?? {
@@ -80,7 +80,7 @@ export default function DrawerBoardContent() {
       });
     }
   }, [board, project_id]);
-
+  if (!board) return null;
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>

@@ -18,10 +18,10 @@ import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 export default function UpdateMapLayers() {
   const { project_id, item_id } = useParams();
   const [dialog] = useAtom(DialogAtom);
-  const { data: currentMap } = useGetItem(dialog.data?.id as string, "maps") as { data: MapType };
+  const { data: currentMap } = useGetItem<MapType>(dialog.data?.id as string, "maps");
   const { data: map_images } = useGetAllMapImages(project_id as string);
-  const createMapLayer = useCreateSubItem(project_id as string, "map_layers", "maps");
-  const updateMapLayer = useUpdateSubItem(project_id as string, "map_layers", "maps");
+  const createMapLayer = useCreateSubItem<MapLayerType>(project_id as string, "map_layers", "maps");
+  const updateMapLayer = useUpdateSubItem<MapLayerType>(project_id as string, "map_layers", "maps");
   const deleteMapLayer = useDeleteItem("map_layers", project_id as string);
   const [layers, setLayers] = useState<MapLayerType[]>(currentMap?.map_layers || []);
   const queryClient = useQueryClient();

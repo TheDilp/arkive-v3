@@ -197,7 +197,7 @@ export default function DocumentSettings() {
   const { project_id } = useParams();
   const navigate = useNavigate();
   const tableRef = useRef() as MutableRefObject<DataTable>;
-  const { data: documents } = useGetAllItems(project_id as string, "documents") as { data: DocumentType[] };
+  const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents");
   const { data: images } = useGetAllImages(project_id as string);
   const [selected, setSelected] = useState<DocumentType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });

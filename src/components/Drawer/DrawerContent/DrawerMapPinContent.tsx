@@ -21,11 +21,11 @@ export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const queryClient = useQueryClient();
   const [drawer] = useAtom(DrawerAtom);
-  const createMapPin = useCreateSubItem(item_id as string, "map_pins", "maps");
-  const updateMapPin = useUpdateSubItem(item_id as string, "map_pins", "maps");
-  const { data: map } = useGetItem(item_id as string, "maps") as { data: MapType };
+  const createMapPin = useCreateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
+  const updateMapPin = useUpdateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
+  const { data: map } = useGetItem<MapType>(item_id as string, "maps");
   const currentPin = map?.map_pins?.find((pin) => pin.id === drawer.id);
-  const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
+  const documents = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
   const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
   const [localItem, setLocalItem] = useState<MapPinType | MapPinCreateType>(
     currentPin ?? {
@@ -39,6 +39,7 @@ export default function DrawerMapPinContent() {
       text: "",
     },
   );
+  if (!map) return null;
   return (
     <div className="flex w-full flex-col gap-y-5">
       <div className="flex flex-wrap items-center">

@@ -31,12 +31,12 @@ export default function DrawerDocumentContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const queryClient = useQueryClient();
-  const allDocuments: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
-  const { data: document } = useGetItem(drawer?.id as string, "documents", { enabled: !!drawer?.id }) as { data: DocumentType };
+  const allDocuments = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
+  const { data: document } = useGetItem<DocumentType>(drawer?.id as string, "documents", { enabled: !!drawer?.id });
   const { data: images } = useGetAllImages(project_id as string);
 
-  const createDocumentMutation = useCreateItem("documents");
-  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
+  const createDocumentMutation = useCreateItem<DocumentType>("documents");
+  const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
   const deleteDocumentMutation = useDeleteItem("documents", project_id as string);
   // Use item if editing or use a blank document (default values) if not to create new one
   const [localItem, setLocalItem] = useState<DocumentType | DocumentCreateType>(

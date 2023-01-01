@@ -28,7 +28,7 @@ export default function MapView({ isReadOnly }: Props) {
   const imgRef = useRef() as any;
   const cm = useRef() as any;
 
-  const { data: currentMap, isLoading } = useGetItem(item_id as string, "maps") as { data: MapType; isLoading: boolean };
+  const { data: currentMap, isLoading } = useGetItem<MapType>(item_id as string, "maps");
 
   const items = useMapContextMenuItems({ mapRef, bounds, deleteMapPin });
 
@@ -53,6 +53,7 @@ export default function MapView({ isReadOnly }: Props) {
   }, [currentMap, project_id]);
 
   if (loading || isLoading) return <ProgressSpinner />;
+  if (!currentMap) return null;
   return (
     <div className="flex h-full w-full flex-col">
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />

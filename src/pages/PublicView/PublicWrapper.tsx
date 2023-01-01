@@ -13,7 +13,7 @@ export default function PublicWrapper() {
   const { item_id } = useParams();
   const { pathname } = useLocation();
   const type = getItemTypeFromURL(pathname);
-  const { data, isLoading } = useGetItem(item_id as string, type) as { data: AllItemsType; isLoading: boolean };
+  const { data, isLoading } = useGetItem<AllItemsType>(item_id as string, type);
 
   if (isLoading) return <ProgressSpinner />;
 
