@@ -10,6 +10,7 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         id: true,
         title: true,
         project_id: true,
+        icon: true,
         image: true,
         sort: true,
         expanded: true,

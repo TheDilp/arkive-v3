@@ -14,6 +14,7 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../components/IconSelect/IconSelect";
+import SettingsTable from "../../components/SettingsTable/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/documentTypes";
@@ -239,21 +240,12 @@ export default function DocumentSettings() {
         selection={{ selected, setSelected }}
         type="documents"
       />
-      <DataTable
-        ref={tableRef}
-        dataKey="id"
-        editMode="cell"
-        filterDisplay="menu"
-        onSelectionChange={(e) => setSelected(e.value)}
-        removableSort
-        selection={selected}
-        selectionMode="checkbox"
-        showGridlines
-        size="small"
-        sortMode="multiple"
-        value={documents
-          ?.filter((doc) => (globalFilter.title ? doc.title.toLowerCase().includes(globalFilter.title.toLowerCase()) : true))
-          ?.filter((doc) => (globalFilter.tags.length ? globalFilter.tags.every((tag) => doc.tags.includes(tag)) : true))}>
+      <SettingsTable
+        data={documents}
+        globalFilter={globalFilter}
+        selected={selected}
+        setSelected={setSelected}
+        tableRef={tableRef}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column editor={(e) => TitleEditor(e, updateDocument)} field="title" header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
@@ -307,6 +299,7 @@ export default function DocumentSettings() {
           header="Public"
           sortable
         />
+
         <Column
           align="center"
           body={(data) => TagsAlterNamesColumn(data, "alter_names")}
@@ -317,7 +310,7 @@ export default function DocumentSettings() {
           sortField="alter_names"
         />
         <Column align="center" body={(data) => ActionsColumn(data, navigate, deleteAction)} header="Actions" />
-      </DataTable>
+      </SettingsTable>
     </div>
   );
 }

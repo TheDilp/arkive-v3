@@ -13,6 +13,7 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { MapImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../components/IconSelect/IconSelect";
+import SettingsTable from "../../components/SettingsTable/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { MapType } from "../../types/mapTypes";
@@ -50,13 +51,13 @@ function TitleEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: 
 function IconColumn({ id, icon, folder }: MapType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const updateDocumentMutation = useUpdateItem("maps", project_id as string);
+  const updateMapMutation = useUpdateItem("maps", project_id as string);
   return (
     <div className="flex justify-center">
       <IconSelect
         disabled={folder}
         setIcon={(newIcon) => {
-          updateDocumentMutation?.mutate(
+          updateMapMutation?.mutate(
             { icon: newIcon, id },
             {
               onSuccess: () => {
@@ -211,21 +212,7 @@ export default function MapSettings() {
         selection={{ selected, setSelected }}
         type="maps"
       />
-      <DataTable
-        ref={tableRef}
-        dataKey="id"
-        editMode="cell"
-        filterDisplay="menu"
-        onSelectionChange={(e) => setSelected(e.value)}
-        removableSort
-        selection={selected}
-        selectionMode="checkbox"
-        showGridlines
-        size="small"
-        sortMode="multiple"
-        value={maps
-          ?.filter((doc) => (globalFilter.title ? doc.title.toLowerCase().includes(globalFilter.title.toLowerCase()) : true))
-          ?.filter((doc) => (globalFilter.tags.length ? globalFilter.tags.every((tag) => doc.tags.includes(tag)) : true))}>
+      <SettingsTable data={maps} globalFilter={globalFilter} selected={selected} setSelected={setSelected} tableRef={tableRef}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column editor={(e) => TitleEditor(e, updateMap)} field="title" header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
@@ -274,7 +261,7 @@ export default function MapSettings() {
         />
 
         <Column align="center" body={(data) => ActionsColumn(data, navigate, deleteAction)} header="Actions" />
-      </DataTable>
+      </SettingsTable>
     </div>
   );
 }
