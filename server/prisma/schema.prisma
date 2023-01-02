@@ -16,13 +16,13 @@ model projects {
   maps      maps[]
   boards    boards[]
   image     String?
+  tags      tags[]
 }
 
 model documents {
   id          String   @id @default(uuid()) @db.Uuid
   title       String   @default("New Document")
   content     Json?    @db.JsonB
-  tags        String[] @default([])
   icon        String?  @default("mdi:file")
   expanded    Boolean  @default(false)
   folder      Boolean  @default(false)
@@ -41,16 +41,18 @@ model documents {
   parentId String?     @db.Uuid
   parent   documents?  @relation("parentChildDocuments", fields: [parentId], references: [id], onDelete: Cascade)
   children documents[] @relation("parentChildDocuments")
+
+  tags   tags[]
+  tagsId String? @db.Uuid
 }
 
 model maps {
-  id       String   @id @default(uuid()) @db.Uuid
-  title    String   @default("New Map")
-  folder   Boolean  @default(false)
-  isPublic Boolean  @default(false)
-  expanded Boolean  @default(false)
-  sort     Int      @default(0)
-  tags     String[] @default([])
+  id       String  @id @default(uuid()) @db.Uuid
+  title    String  @default("New Map")
+  folder   Boolean @default(false)
+  isPublic Boolean @default(false)
+  expanded Boolean @default(false)
+  sort     Int     @default(0)
 
   image String?
   icon  String? @default("mdi:map")
@@ -64,6 +66,7 @@ model maps {
   parentId String? @db.Uuid
   parent   maps?   @relation("parentChildMaps", fields: [parentId], references: [id], onDelete: Cascade)
   children maps[]  @relation("parentChildMaps")
+  tags     tags[]
 }
 
 model map_pins {
@@ -79,6 +82,7 @@ model map_pins {
   map_link        String? @db.Uuid
   doc_id          String? @db.Uuid
   maps            maps?   @relation(fields: [parent], references: [id], onDelete: Cascade)
+  tags            tags[]
 }
 
 model map_layers {
@@ -91,13 +95,12 @@ model map_layers {
 }
 
 model boards {
-  id       String   @id @default(uuid()) @db.Uuid
-  title    String   @default("New Board")
-  folder   Boolean  @default(false)
-  isPublic Boolean  @default(false)
-  expanded Boolean  @default(false)
-  sort     Int      @default(0)
-  tags     String[] @default([])
+  id       String  @id @default(uuid()) @db.Uuid
+  title    String  @default("New Board")
+  folder   Boolean @default(false)
+  isPublic Boolean @default(false)
+  expanded Boolean @default(false)
+  sort     Int     @default(0)
 
   icon String? @default("mdi:draw")
 
@@ -113,12 +116,12 @@ model boards {
   children   boards[] @relation("parentChildBoards")
   nodes      nodes[]
   edges      edges[]
+  tags       tags[]
 }
 
 model nodes {
-  id    String   @id @default(uuid()) @db.Uuid
+  id    String  @id @default(uuid()) @db.Uuid
   label String?
-  tags  String[] @default([])
 
   type   String @default("rectangle")
   width  Int    @default(50)
@@ -146,12 +149,12 @@ model nodes {
   parent       String     @db.Uuid
   edges_source edges[]    @relation("edges_source")
   edges_target edges[]    @relation("edges_target")
+  tags         tags[]
 }
 
 model edges {
-  id    String   @id @default(uuid()) @db.Uuid
+  id    String  @id @default(uuid()) @db.Uuid
   label String?
-  tags  String[] @default([])
 
   curveStyle  String @default("straight")
   lineStyle   String @default("solid")
@@ -197,4 +200,22 @@ model edges {
   source_id String @db.Uuid
   target_id String @db.Uuid
   parent    String @db.Uuid
+  tags      tags[]
+}
+
+model tags {
+  id    String @id @default(uuid()) @db.Uuid
+  title String
+
+  project    projects @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  project_id String   @db.Uuid
+
+  documents documents[]
+  maps      maps[]
+  map_pins  map_pins[]
+  boards    boards[]
+  nodes     nodes[]
+  edges     edges[]
+
+  @@unique([title, project_id])
 }

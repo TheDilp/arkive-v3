@@ -19,7 +19,11 @@ export type IconSelectMenuType = {
   setIcon: (newIcon: string) => void;
   close: () => void;
 };
-
+export type TagType = {
+  id: string;
+  title: string;
+  project_id: string;
+};
 export type EditorType = {
   content?: RemirrorJSON | undefined;
   editable?: boolean;
@@ -36,7 +40,7 @@ export interface BaseItemType {
   folder: boolean;
   isPublic: boolean;
   expanded: boolean;
-  tags: string[];
+  tags: TagType[];
 }
 
 export type slashMenuItem = {
@@ -65,3 +69,14 @@ export type slashMenuItem = {
 };
 
 export type DragItem = { id: string; image?: string; title: string; type: "documents" | "images" };
+
+export interface SettingsTagsResults {
+  documents: DocumentType[];
+  maps: MapType[];
+  boards: BoardType[];
+  nodes: NodeType[];
+  edges: EdgeType[];
+}
+export interface FullSearchResults extends SettingsTagsResults {
+  pins: MapPinType[];
+}

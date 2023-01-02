@@ -2,66 +2,9 @@ import { documents } from "@prisma/client";
 import { FastifyInstance, FastifyRequest } from "fastify";
 
 import { prisma } from "..";
-import { hasValueDeep, onlyUniqueStrings } from "../utils/transform";
+import { hasValueDeep } from "../utils/transform";
 
-export const getRouter = (server: FastifyInstance, _: any, done: any) => {
-  server.post("/alltags/:project_id", async (req: FastifyRequest<{ Params: { project_id: string }; Body: string }>) => {
-    const { project_id } = req.params;
-    const { query } = JSON.parse(req.body);
-    const items = [
-      prisma.documents.findMany({
-        where: {
-          project_id,
-        },
-        select: {
-          tags: true,
-        },
-      }),
-      prisma.maps.findMany({
-        where: {
-          project_id,
-        },
-        select: {
-          tags: true,
-        },
-      }),
-      prisma.boards.findMany({
-        where: {
-          project_id,
-        },
-        select: {
-          tags: true,
-        },
-      }),
-      prisma.nodes.findMany({
-        where: {
-          board: {
-            project_id,
-          },
-        },
-        select: {
-          tags: true,
-        },
-      }),
-      prisma.edges.findMany({
-        where: {
-          board: {
-            project_id,
-          },
-        },
-        select: {
-          tags: true,
-        },
-      }),
-    ];
-    const tags = await prisma.$transaction(items);
-    return tags
-      .flat()
-      .map((o: { tags: string[] }) => o.tags)
-      .flat()
-      .filter(onlyUniqueStrings)
-      .filter((tag: string) => (query ? tag?.toLowerCase()?.includes(query?.toLowerCase()) : true));
-  });
+export const searchRouter = (server: FastifyInstance, _: any, done: any) => {
   server.post(
     "/fullsearch/:project_id/:type",
     async (req: FastifyRequest<{ Params: { project_id: string; type: "tags" | "namecontent" }; Body: string }>) => {
@@ -187,7 +130,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
             where: {
               folder: false,
               tags: {
-                hasEvery: query,
+                some: {
+                  title: {
+                    in: query,
+                  },
+                },
               },
             },
             select: {
@@ -200,7 +147,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
             where: {
               folder: false,
               tags: {
-                hasEvery: query,
+                some: {
+                  title: {
+                    in: query,
+                  },
+                },
               },
             },
             select: {
@@ -209,10 +160,30 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
               icon: true,
             },
           }),
+          prisma.map_pins.findMany({
+            where: {
+              tags: {
+                some: {
+                  title: {
+                    in: query,
+                  },
+                },
+              },
+            },
+            select: {
+              id: true,
+              text: true,
+              icon: true,
+            },
+          }),
           prisma.nodes.findMany({
             where: {
               tags: {
-                hasEvery: query,
+                some: {
+                  title: {
+                    in: query,
+                  },
+                },
               },
             },
             select: {
@@ -224,7 +195,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
           prisma.boards.findMany({
             where: {
               tags: {
-                hasEvery: query,
+                some: {
+                  title: {
+                    in: query,
+                  },
+                },
               },
               folder: false,
             },
@@ -237,7 +212,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
           prisma.edges.findMany({
             where: {
               tags: {
-                hasEvery: query,
+                some: {
+                  title: {
+                    in: query,
+                  },
+                },
               },
             },
             select: {
@@ -247,91 +226,12 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
             },
           }),
         ];
-        const [titleDocuments, maps, boards, nodes, edges] = await prisma.$transaction(searches);
-        return { titleDocuments, maps, boards, nodes, edges };
+        const [titleDocuments, maps, map_pins, boards, nodes, edges] = await prisma.$transaction(searches);
+        return { titleDocuments, maps, map_pins, boards, nodes, edges };
       }
       return {};
     },
   );
-  server.get("/alltags/settings/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
-    const { project_id } = req.params;
-    const transactions = [
-      prisma.documents.findMany({
-        where: {
-          project_id,
-          tags: {
-            isEmpty: false,
-          },
-        },
 
-        select: {
-          id: true,
-          title: true,
-          icon: true,
-          tags: true,
-        },
-      }),
-      prisma.maps.findMany({
-        where: {
-          project_id,
-          tags: {
-            isEmpty: false,
-          },
-        },
-        select: {
-          id: true,
-          title: true,
-          icon: true,
-          tags: true,
-        },
-      }),
-      prisma.boards.findMany({
-        where: {
-          project_id,
-          tags: {
-            isEmpty: false,
-          },
-        },
-        select: {
-          id: true,
-          title: true,
-          icon: true,
-          tags: true,
-        },
-      }),
-      prisma.nodes.findMany({
-        where: {
-          board: {
-            project_id,
-          },
-          tags: {
-            isEmpty: false,
-          },
-        },
-        select: {
-          id: true,
-          label: true,
-          tags: true,
-        },
-      }),
-      prisma.edges.findMany({
-        where: {
-          board: {
-            project_id,
-          },
-          tags: {
-            isEmpty: false,
-          },
-        },
-        select: {
-          id: true,
-          label: true,
-          tags: true,
-        },
-      }),
-    ];
-    const results = await prisma.$transaction(transactions);
-    return results.flat();
-  });
   done();
 };

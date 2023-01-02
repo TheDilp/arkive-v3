@@ -9,10 +9,7 @@ import { Link, useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useFullSearch } from "../../../CRUD/OtherCRUD";
-import { BoardType, EdgeType, NodeType } from "../../../types/boardTypes";
-import { DocumentType } from "../../../types/documentTypes";
-import { AvailableSearchResultTypes } from "../../../types/generalTypes";
-import { MapPinType, MapType } from "../../../types/mapTypes";
+import { AvailableSearchResultTypes, FullSearchResults } from "../../../types/generalTypes";
 import { BoardReferenceAtom, DrawerAtom } from "../../../utils/Atoms/atoms";
 import { getSearchTags } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
@@ -39,14 +36,7 @@ export default function DrawerFullSearch() {
   const [filteredTags, setFilteredTags] = useState([]);
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [menuIndex, setMenuIndex] = useState(0);
-  const [results, setResults] = useState<{
-    documents: DocumentType[];
-    maps: MapType[];
-    pins: MapPinType[];
-    boards: BoardType[];
-    nodes: NodeType[];
-    edges: EdgeType[];
-  }>(SearchDefault);
+  const [results, setResults] = useState<FullSearchResults>(SearchDefault);
   const [, setDrawer] = useAtom(DrawerAtom);
   const { project_id, subitem_id } = useParams();
   const { mutate } = useFullSearch(project_id as string);

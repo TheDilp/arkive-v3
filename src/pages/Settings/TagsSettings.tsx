@@ -7,16 +7,55 @@ import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetAllTags, useGetTagSettings } from "../../CRUD/OtherCRUD";
-import { EdgeType, NodeType } from "../../types/boardTypes";
-import { AllItemsType } from "../../types/generalTypes";
+import { useDeleteTagsFromAllItems, useGetAllTags, useGetTagSettings } from "../../CRUD/OtherCRUD";
+import { SettingsTagsResults } from "../../types/generalTypes";
 
-function ActionsColumn(tag: string, type: "items" | "delete") {
+function removeTag(tag: string, tagToRemove: string) {
+  return tag !== tagToRemove;
+}
+function deleteTagsFromAllItems(tag: string, items: SettingsTagsResults | undefined, deleteTags: any) {
+  if (!items) return null;
+  const { documents, maps, boards, nodes, edges } = items;
+  const final = [];
+  final.push(
+    documents
+      .filter((doc) => doc.tags.includes(tag))
+      .map((doc) => ({ id: doc.id, type: "documents", tags: doc.tags.filter((itemTag) => removeTag(itemTag, tag)) })),
+  );
+  final.push(
+    maps
+      .filter((map) => map.tags.includes(tag))
+      .map((map) => ({ id: map.id, type: "maps", tags: map.tags.filter((itemTag) => removeTag(itemTag, tag)) })),
+  );
+  final.push(
+    boards
+      .filter((board) => board.tags.includes(tag))
+      .map((board) => ({
+        id: board.id,
+        type: "boards",
+        tags: board.tags.filter((itemTag) => removeTag(itemTag, tag)),
+      })),
+  );
+  final.push(
+    nodes
+      .filter((node) => node.tags.includes(tag))
+      .map((node) => ({ id: node.id, type: "nodes", tags: node.tags.filter((itemTag) => removeTag(itemTag, tag)) })),
+  );
+  final.push(
+    edges
+      .filter((edge) => edge.tags.includes(tag))
+      .map((edge) => ({ id: edge.id, type: "edges", tags: edge.tags.filter((itemTag) => removeTag(itemTag, tag)) })),
+  );
+  deleteTags(final);
+  return null;
+}
+function DeleteColumn(tag: string, items: SettingsTagsResults | undefined, deleteTags: any) {
   return (
     <div className="flex justify-center gap-x-1">
       <Button
-        className={`p-button-outlined ${type === "items" ? "p-button-success" : "p-button-danger"}`}
-        icon={`pi pi-fw pi-${type === "items" ? "link" : "trash"}`}
+        className="p-button-outlined p-button-danger"
+        icon="pi pi-fw pi-trash"
+        onClick={() => deleteTagsFromAllItems(tag, items, deleteTags)}
         tooltip="Go to item"
         tooltipOptions={{ showDelay: 300, position: "left" }}
       />
@@ -24,11 +63,11 @@ function ActionsColumn(tag: string, type: "items" | "delete") {
   );
 }
 
-function ExpandedSection(tag: string, items: (AllItemsType | NodeType | EdgeType)[] | undefined) {
+function ExpandedSection(tag: string, items: SettingsTagsResults | undefined) {
   if (!items) return null;
-
+  const { documents, maps, boards, nodes, edges } = items;
   // eslint-disable-next-line react/destructuring-assignment
-  const filteredItems = items.filter((item) => item.tags.includes(tag));
+  const filteredItems = [...documents, ...maps, ...boards, ...nodes, ...edges].filter((item) => item.tags.includes(tag));
   return (
     <div className="ml-28 flex w-full flex-col">
       <h4 className="text-lg font-semibold">Items containing this tag</h4>
@@ -55,7 +94,7 @@ export default function TagsSettings() {
   const [expandedRows, setExpandedRows] = useState<any[] | DataTableExpandedRows>([]);
   const { data: tags, isLoading: isLoadingTags } = useGetAllTags(project_id as string);
   const { data: itemsWithTags, isLoading: isLoadingItems } = useGetTagSettings(project_id as string);
-
+  const { mutate: deleteTags } = useDeleteTagsFromAllItems(project_id as string);
   if (isLoadingTags || isLoadingItems) return <ProgressSpinner />;
   return (
     <DataTable
@@ -75,7 +114,12 @@ export default function TagsSettings() {
       <Column headerClassName="w-12" selectionMode="multiple" />
       <Column className="w-8" expander />
       <Column body={TagTitle} header="Tag" sortable />
-      <Column align="center" body={(data) => ActionsColumn(data, "delete")} className="w-28" header="Delete Tag" />
+      <Column
+        align="center"
+        body={(data) => DeleteColumn(data, itemsWithTags, deleteTags)}
+        className="w-28"
+        header="Delete Tag"
+      />
     </DataTable>
   );
 }

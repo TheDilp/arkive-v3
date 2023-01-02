@@ -61,6 +61,7 @@ export const deleteURLs = {
   deleteBoard: "deleteboard/",
   deleteNode: "deletenode/",
   deleteEdge: "deleteedge/",
+  deleteTagsFromAllItems: "deletetagsfromallitems/",
 };
 
 export const MainToSubType = {

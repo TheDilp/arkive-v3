@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import { EdgeType, NodeType } from "../types/boardTypes";
-import { baseURLS, getURLS } from "../types/CRUDenums";
-import { AllItemsType } from "../types/generalTypes";
+import { baseURLS, deleteURLs, getURLS } from "../types/CRUDenums";
+import { AvailableItemTypes, SettingsTagsResults } from "../types/generalTypes";
 
 export const useGetAllTags = (project_id: string) => {
   return useQuery<string[]>(
@@ -10,8 +9,7 @@ export const useGetAllTags = (project_id: string) => {
     async () =>
       (
         await fetch(`${baseURLS.baseServer}${getURLS.getAllTags}${project_id}`, {
-          method: "POST",
-          body: JSON.stringify({}),
+          method: "GET",
         })
       ).json(),
     {
@@ -32,7 +30,7 @@ export const useFullSearch = (project_id: string) => {
 };
 
 export const useGetTagSettings = (project_id: string) => {
-  return useQuery<(AllItemsType | NodeType | EdgeType)[]>(
+  return useQuery<SettingsTagsResults>(
     ["tagsSettings", project_id],
     async () =>
       (
@@ -43,5 +41,14 @@ export const useGetTagSettings = (project_id: string) => {
     {
       staleTime: 5 * 60 * 1000,
     },
+  );
+};
+
+export const useDeleteTagsFromAllItems = (project_id: string) => {
+  return useMutation(async (items: { id: string; tags: string[]; type: AvailableItemTypes | "nodes" | "edges" }[]) =>
+    fetch(`${baseURLS.baseServer}${deleteURLs.deleteTagsFromAllItems}${project_id}`, {
+      method: "DELETE",
+      body: JSON.stringify({ items }),
+    }),
   );
 };

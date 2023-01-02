@@ -7,10 +7,11 @@ import path from "path";
 
 import { boardRouter } from "./routers/BoardRouter";
 import { documentRouter } from "./routers/DocumentRouter";
-import { getRouter } from "./routers/GetRouter";
 import { imageRouter } from "./routers/ImageRouter";
 import { mapRouter } from "./routers/MapRouter";
 import { projectRouter } from "./routers/ProjectRouter";
+import { searchRouter } from "./routers/SearchRouter";
+import { tagRouter } from "./routers/TagRouter";
 
 export const prisma = new PrismaClient();
 
@@ -25,7 +26,8 @@ server.register(cors, {
   origin: true,
 });
 server.register(projectRouter);
-server.register(getRouter);
+server.register(searchRouter);
+server.register(tagRouter);
 server.register(documentRouter);
 server.register(mapRouter);
 server.register(boardRouter);
