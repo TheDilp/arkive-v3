@@ -58,10 +58,11 @@ export default function DrawerDocumentContent() {
         toaster("info", "No data was changed.");
         return;
       }
+      const { tags, ...rest } = changedData;
       updateDocumentMutation?.mutate(
         {
           id: document.id,
-          ...changedData,
+          ...rest,
         },
         {
           onSuccess: () => {
@@ -170,7 +171,7 @@ export default function DrawerDocumentContent() {
           </div>
         )}
         <div className="">
-          <Tags handleChange={handleChange} localItem={localItem} />
+          <Tags handleChange={handleChange} localItem={localItem} type="documents" />
         </div>
 
         <div className="flex items-center justify-between">

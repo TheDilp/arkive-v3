@@ -1,7 +1,7 @@
 import cytoscape, { EdgeCollection, NodeCollection } from "cytoscape";
 
 import { DocumentType } from "./documentTypes";
-import { BaseItemType } from "./generalTypes";
+import { BaseItemType, TagType } from "./generalTypes";
 
 type ArrowShape =
   | "none"
@@ -43,7 +43,7 @@ type NodeShape =
 export type NodeType = {
   id: string;
   label?: string;
-  tags: string[];
+  tags: TagType[];
 
   fontSize: number;
   fontColor: string;
@@ -68,7 +68,7 @@ export type NodeType = {
 export type EdgeType = {
   id: string;
   label?: string;
-  tags: string[];
+  tags: TagType[];
 
   curveStyle: "straight" | "unbundled-bezier" | "taxi";
   lineStyle: "solid" | "dashed" | "dotted";

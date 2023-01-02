@@ -40,6 +40,14 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
   server.get("/getsingledocument/:id", async (req: FastifyRequest<{ Params: { id: string } }>) => {
     const doc = await prisma.documents.findUnique({
       where: { id: req.params.id },
+      include: {
+        tags: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
     });
     return doc;
   });

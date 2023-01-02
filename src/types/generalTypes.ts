@@ -24,6 +24,19 @@ export type TagType = {
   title: string;
   project_id: string;
 };
+export type TagCreateType = {
+  title: string;
+  docId?: string;
+  mapId?: string;
+  mapPinId?: string;
+  boardId?: string;
+  nodeId?: string;
+  edgeId?: string;
+};
+export type TagUpdateType = {
+  title: string;
+  [key: string]: any;
+};
 export type EditorType = {
   content?: RemirrorJSON | undefined;
   editable?: boolean;

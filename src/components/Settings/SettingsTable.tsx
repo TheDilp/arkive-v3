@@ -2,14 +2,14 @@ import { SetStateAction } from "jotai";
 import { DataTable } from "primereact/datatable";
 import { Dispatch, MutableRefObject } from "react";
 
-import { AllItemsType } from "../../types/generalTypes";
+import { AllItemsType, TagType } from "../../types/generalTypes";
 
 type Props = {
   children: JSX.Element | JSX.Element[];
   data: AllItemsType[];
   globalFilter: {
     title: string;
-    tags: string[];
+    tags: TagType[];
   };
   selected: AllItemsType[];
   setSelected: Dispatch<SetStateAction<any>>;

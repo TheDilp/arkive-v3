@@ -35,6 +35,7 @@ export const createURLS = {
   createBoard: "createboard",
   createNode: "createnode",
   createEdge: "createedge",
+  createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",
 };
@@ -48,6 +49,7 @@ export const updateURLs = {
   updateBoard: "updateboard/",
   updateNode: "updatenode/",
   updateEdge: "updateedge/",
+  updateTag: "updatetag/",
 
   sortDocuments: "sortdocuments",
   sortMaps: "sortmaps",
