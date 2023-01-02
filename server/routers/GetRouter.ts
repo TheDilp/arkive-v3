@@ -190,6 +190,11 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
                 hasEvery: query,
               },
             },
+            select: {
+              id: true,
+              title: true,
+              icon: true,
+            },
           }),
           prisma.maps.findMany({
             where: {
@@ -248,5 +253,85 @@ export const getRouter = (server: FastifyInstance, _: any, done: any) => {
       return {};
     },
   );
+  server.get("/alltags/settings/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
+    const { project_id } = req.params;
+    const transactions = [
+      prisma.documents.findMany({
+        where: {
+          project_id,
+          tags: {
+            isEmpty: false,
+          },
+        },
+
+        select: {
+          id: true,
+          title: true,
+          icon: true,
+          tags: true,
+        },
+      }),
+      prisma.maps.findMany({
+        where: {
+          project_id,
+          tags: {
+            isEmpty: false,
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+          icon: true,
+          tags: true,
+        },
+      }),
+      prisma.boards.findMany({
+        where: {
+          project_id,
+          tags: {
+            isEmpty: false,
+          },
+        },
+        select: {
+          id: true,
+          title: true,
+          icon: true,
+          tags: true,
+        },
+      }),
+      prisma.nodes.findMany({
+        where: {
+          board: {
+            project_id,
+          },
+          tags: {
+            isEmpty: false,
+          },
+        },
+        select: {
+          id: true,
+          label: true,
+          tags: true,
+        },
+      }),
+      prisma.edges.findMany({
+        where: {
+          board: {
+            project_id,
+          },
+          tags: {
+            isEmpty: false,
+          },
+        },
+        select: {
+          id: true,
+          label: true,
+          tags: true,
+        },
+      }),
+    ];
+    const results = await prisma.$transaction(transactions);
+    return results.flat();
+  });
   done();
 };

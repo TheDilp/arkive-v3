@@ -22,6 +22,7 @@ export const getURLS = {
   getSingleMapImage: "getimage/maps/",
   // Misc
   getAllTags: "alltags/",
+  getAllSettingsTags: "alltags/settings/",
   getFullSearch: "fullsearch/",
 };
 

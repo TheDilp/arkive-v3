@@ -22,6 +22,7 @@ import BoardSettings from "./pages/Settings/BoardSettings";
 import DocumentSettings from "./pages/Settings/DocumentSettings";
 import MapSettings from "./pages/Settings/MapSettings";
 import ProjectSettings from "./pages/Settings/ProjectSettings";
+import TagsSettings from "./pages/Settings/TagsSettings";
 
 function App() {
   const queryClient = new QueryClient({
@@ -69,6 +70,7 @@ function App() {
                 <Route element={<DocumentSettings />} path="document-settings" />
                 <Route element={<MapSettings />} path="map-settings" />
                 <Route element={<BoardSettings />} path="board-settings" />
+                <Route element={<TagsSettings />} path="tags-settings" />
               </Route>
             </Route>
             <Route element={<PublicWrapper />} path="view/*">
