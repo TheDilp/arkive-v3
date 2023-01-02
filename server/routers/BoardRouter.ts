@@ -49,9 +49,24 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
                 image: true,
               },
             },
+            tags: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
           },
         },
-        edges: true,
+        edges: {
+          include: {
+            tags: {
+              select: {
+                id: true,
+                title: true,
+              },
+            },
+          },
+        },
       },
     });
     return data;

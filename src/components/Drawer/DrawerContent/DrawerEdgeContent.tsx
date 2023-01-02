@@ -36,11 +36,13 @@ function FontItemTemplate(item: { label: string; value: string }) {
 export default function DrawerEdgeContent() {
   const { item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const updateEdgeMutaiton = useUpdateSubItem(item_id as string, "edges", "boards");
+  const updateEdgeMutation = useUpdateSubItem(item_id as string, "edges", "boards");
   const [localItem, setLocalItem] = useState<EdgeType | undefined>(drawer?.data as EdgeType);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
   const handleEnter: KeyboardEventHandler = (e: any) => {
-    if (e.key === "Enter" && localItem) updateEdgeMutaiton.mutate({ id: localItem.id, ...changedData });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { tags, ...rest } = changedData;
+    if (e.key === "Enter" && localItem) updateEdgeMutation.mutate({ id: localItem.id, ...rest });
   };
 
   useEffect(() => {
@@ -253,7 +255,7 @@ export default function DrawerEdgeContent() {
                 />
               </div>
               <div className="mb-2 w-full">
-                <Tags handleChange={handleChange} localItem={localItem} />
+                <Tags handleChange={handleChange} localItem={localItem} type="edges" />
               </div>
             </div>
           </TabPanel>
@@ -409,8 +411,10 @@ export default function DrawerEdgeContent() {
           label="Save Edge"
           onClick={() => {
             if (changedData) {
-              updateEdgeMutaiton.mutate(
-                { id: localItem.id, ...changedData },
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { tags, ...rest } = changedData;
+              updateEdgeMutation.mutate(
+                { id: localItem.id, ...rest },
                 {
                   onSuccess: () => {
                     toaster("success", `Edge ${localItem?.label || ""} was successfully updated.`);

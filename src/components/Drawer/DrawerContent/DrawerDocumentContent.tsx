@@ -58,6 +58,8 @@ export default function DrawerDocumentContent() {
         toaster("info", "No data was changed.");
         return;
       }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tags, ...rest } = changedData;
       updateDocumentMutation?.mutate(
         {

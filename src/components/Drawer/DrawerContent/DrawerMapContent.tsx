@@ -52,10 +52,13 @@ export default function DrawerMapContent() {
         toaster("info", "No data was changed.");
         return;
       }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { tags, ...rest } = changedData;
       updateMapMutation?.mutate(
         {
           id: localItem.id,
-          ...changedData,
+          ...rest,
         },
         {
           onSuccess: () => {
@@ -139,7 +142,7 @@ export default function DrawerMapContent() {
           value={localItem?.parent?.id}
         />
       </div>
-      <Tags handleChange={handleChange} localItem={localItem} />
+      <Tags handleChange={handleChange} localItem={localItem} type="maps" />
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />

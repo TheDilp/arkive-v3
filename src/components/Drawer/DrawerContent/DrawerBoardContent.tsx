@@ -52,10 +52,12 @@ export default function DrawerBoardContent() {
         toaster("info", "No data was changed.");
         return;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { tags, ...rest } = changedData;
       updateBoardMutation?.mutate(
         {
           id: board.id,
-          ...changedData,
+          ...rest,
         },
         {
           onSuccess: () => {
@@ -121,7 +123,7 @@ export default function DrawerBoardContent() {
           value={localItem?.parent?.id}
         />
       </div>
-      <Tags handleChange={handleChange} localItem={localItem} />
+      <Tags handleChange={handleChange} localItem={localItem} type="boards" />
       <h4 className="w-full text-lg underline">Default Node Shape</h4>
       <Dropdown
         className="w-full"

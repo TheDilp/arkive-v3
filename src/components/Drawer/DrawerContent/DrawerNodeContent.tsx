@@ -40,8 +40,10 @@ export default function DrawerNodeContent() {
   const updateNode = () => {
     if (localItem) {
       if (changedData) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { tags, ...rest } = changedData;
         updateNodeMutation(
-          { id: localItem.id, ...changedData },
+          { id: localItem.id, ...rest },
           {
             onSuccess: () => {
               resetChanges();
@@ -303,7 +305,7 @@ export default function DrawerNodeContent() {
             />
           </div>
           <div className="mb-2 w-full">
-            <Tags handleChange={handleChange} localItem={localItem} />
+            <Tags handleChange={handleChange} localItem={localItem} type="nodes" />
           </div>
         </div>
       </div>
