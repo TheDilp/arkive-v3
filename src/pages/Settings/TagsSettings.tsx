@@ -5,15 +5,15 @@ import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-import { useDeleteTagsFromAllItems, useGetAllTags, useGetTagSettings } from "../../CRUD/OtherCRUD";
-import { SettingsTagsResults } from "../../types/generalTypes";
+import { useDeleteTagsFromAllItems, useGetTagSettings } from "../../CRUD/OtherCRUD";
+import { TagSettingsType, TagType } from "../../types/generalTypes";
 
 function removeTag(tag: string, tagToRemove: string) {
   return tag !== tagToRemove;
 }
-function deleteTagsFromAllItems(tag: string, items: SettingsTagsResults | undefined, deleteTags: any) {
+function deleteTagsFromAllItems(tag: string, items: TagSettingsType[] | undefined, deleteTags: any) {
   if (!items) return null;
   const { documents, maps, boards, nodes, edges } = items;
   const final = [];
@@ -49,7 +49,7 @@ function deleteTagsFromAllItems(tag: string, items: SettingsTagsResults | undefi
   deleteTags(final);
   return null;
 }
-function DeleteColumn(tag: string, items: SettingsTagsResults | undefined, deleteTags: any) {
+function DeleteColumn(tag: string, items: TagSettingsType | undefined, deleteTags: any) {
   return (
     <div className="flex justify-center gap-x-1">
       <Button
@@ -63,39 +63,76 @@ function DeleteColumn(tag: string, items: SettingsTagsResults | undefined, delet
   );
 }
 
-function ExpandedSection(tag: string, items: SettingsTagsResults | undefined) {
-  if (!items) return null;
-  const { documents, maps, boards, nodes, edges } = items;
-  // eslint-disable-next-line react/destructuring-assignment
-  const filteredItems = [...documents, ...maps, ...boards, ...nodes, ...edges].filter((item) => item.tags.includes(tag));
+function ExpandedSection(tag: TagSettingsType) {
+  if (!tag) return null;
+  const { documents, maps, boards, nodes, edges } = tag;
+
   return (
     <div className="ml-28 flex w-full flex-col">
       <h4 className="text-lg font-semibold">Items containing this tag</h4>
-      {filteredItems.map((item) => {
-        return (
-          <div
-            key={item.id}
-            className="flex cursor-pointer items-center gap-x-2 border-zinc-700 py-1 font-medium odd:border-t hover:text-sky-400">
-            {"icon" in item ? <Icon icon={item.icon} /> : null}
-            {"title" in item ? item.title : null}
-            {"label" in item ? item?.label || "Unlabeled node/edge." : null}
-          </div>
-        );
-      })}
+      <h5 className="font-medium underline">Documents</h5>
+      {documents.map((doc) => (
+        <Link
+          key={doc.id}
+          className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+          to={`../../documents${doc.folder ? "/folder" : ""}/${doc.id}`}>
+          <Icon icon={doc.icon} />
+          {doc.title}
+        </Link>
+      ))}
+      <h5 className="font-medium underline">Maps</h5>
+      {maps.map((map) => (
+        <Link
+          key={map.id}
+          className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+          to={`../../maps${map.folder ? "/folder" : ""}/${map.id}`}>
+          <Icon icon={map.icon} />
+          {map.title}
+        </Link>
+      ))}
+      <h5 className="font-medium underline">Boards</h5>
+      {boards.map((board) => (
+        <Link
+          key={board.id}
+          className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+          to={`../../boards${board.folder ? "/folder" : ""}/${board.id}`}>
+          {board.title}
+        </Link>
+      ))}
+      <h5 className="font-medium underline">Nodes</h5>
+      {nodes.map((node) => (
+        <Link
+          key={node.id}
+          className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+          to={`../../boards/${node.parent}/${node.id}`}>
+          <Icon icon="ph:graph-light" />
+          {node.label || "Unlabeled node"}
+        </Link>
+      ))}
+      <h5>Edges</h5>
+      {edges.map((edge) => (
+        <Link
+          key={edge.id}
+          className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+          to={`../../boards/${edge.parent}/${edge.id}`}>
+          <Icon icon="ph:graph-light" />
+          {edge.label || "Unlabeled edge"}
+        </Link>
+      ))}
     </div>
   );
 }
-function TagTitle(tag: string) {
-  return <Tag value={tag} />;
+function TagTitle(tag: TagType) {
+  const { title } = tag;
+  return <Tag value={title} />;
 }
 export default function TagsSettings() {
   const { project_id } = useParams();
   const [selected, setSelected] = useState<string[]>([]);
   const [expandedRows, setExpandedRows] = useState<any[] | DataTableExpandedRows>([]);
-  const { data: tags, isLoading: isLoadingTags } = useGetAllTags(project_id as string);
-  const { data: itemsWithTags, isLoading: isLoadingItems } = useGetTagSettings(project_id as string);
+  const { data: tags, isLoading: isLoadingTags } = useGetTagSettings(project_id as string);
   const { mutate: deleteTags } = useDeleteTagsFromAllItems(project_id as string);
-  if (isLoadingTags || isLoadingItems) return <ProgressSpinner />;
+  if (isLoadingTags || isLoadingTags) return <ProgressSpinner />;
   return (
     <DataTable
       editMode="cell"
@@ -104,7 +141,7 @@ export default function TagsSettings() {
       onSelectionChange={(e) => setSelected(e.value)}
       paginator
       removableSort
-      rowExpansionTemplate={(data) => ExpandedSection(data, itemsWithTags)}
+      rowExpansionTemplate={(data) => ExpandedSection(data)}
       rows={10}
       selection={selected}
       selectionMode="checkbox"
@@ -116,7 +153,7 @@ export default function TagsSettings() {
       <Column body={TagTitle} header="Tag" sortable />
       <Column
         align="center"
-        body={(data) => DeleteColumn(data, itemsWithTags, deleteTags)}
+        // body={(data) => DeleteColumn(data, itemsWithTags, deleteTags)}
         className="w-28"
         header="Delete Tag"
       />

@@ -13,11 +13,11 @@ export default function Dashboard() {
 
   if (error) return <span>An error has occurred</span>;
   return (
-    <div className="flex h-full w-full flex-col overflow-y-auto">
-      <div className="align-start flex w-full flex-1">
+    <div className="flex flex-col w-full h-full overflow-y-auto">
+      <div className="flex flex-1 w-full align-start">
         <div className="w-16">
-          <div className="h-full w-full flex-wrap bg-zinc-800 py-5 text-white">
-            <div className="my-auto flex w-full justify-center ">
+          <div className="flex-wrap w-full h-full py-5 text-white bg-zinc-800">
+            <div className="flex justify-center w-full my-auto ">
               <Button
                 className="p-button-outlined p-button-rounded p-button-plain"
                 icon={<Icon fontSize={24} icon="mdi:plus" />}
@@ -27,9 +27,9 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-wrap items-start justify-start gap-x-6 px-6 py-4 pl-6">
-          {projects.length
-            ? projects.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
+        <div className="flex flex-wrap items-start justify-start w-full px-6 py-4 pl-6 gap-x-6">
+          {projects?.length
+            ? projects?.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
             : "Click the button on the left to create a new project."}
         </div>
       </div>

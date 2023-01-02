@@ -58,5 +58,62 @@ export const tagRouter = (server: FastifyInstance, _: any, done: any) => {
     return true;
   });
 
+  server.get("/alltags/settings/:project_id", async (req: FastifyRequest<{ Params: { project_id: string }; Body: string }>) => {
+    const { project_id } = req.params;
+    const tags = await prisma.tags.findMany({
+      where: {
+        project_id,
+      },
+      include: {
+        documents: {
+          select: {
+            id: true,
+            title: true,
+            icon: true,
+            folder: true,
+          },
+        },
+        maps: {
+          select: {
+            id: true,
+            title: true,
+            icon: true,
+            folder: true,
+          },
+        },
+        map_pins: {
+          select: {
+            id: true,
+            text: true,
+            icon: true,
+          },
+        },
+        boards: {
+          select: {
+            id: true,
+            title: true,
+            icon: true,
+            folder: true,
+          },
+        },
+        nodes: {
+          select: {
+            id: true,
+            label: true,
+            parent: true,
+          },
+        },
+        edges: {
+          select: {
+            id: true,
+            label: true,
+            parent: true,
+          },
+        },
+      },
+    });
+    return tags;
+  });
+
   done();
 };

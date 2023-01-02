@@ -44,7 +44,7 @@ function App() {
             <Route element={<Layout />} path="/project/:project_id/*">
               <Route path="documents/*">
                 <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:type/:item_id" />
+                <Route element={<FolderView />} path="folder/:item_id" />
                 <Route element={<Editor editable />} path=":item_id" />
               </Route>
               <Route path="maps/*">

@@ -42,6 +42,12 @@ export const boardRouter = (server: FastifyInstance, _: any, done: any) => {
         id: req.params.id,
       },
       include: {
+        tags: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
         nodes: {
           include: {
             document: {

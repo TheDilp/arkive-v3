@@ -28,7 +28,12 @@ export const documentRouter = (server: FastifyInstance, _: any, done: any) => {
         project_id: true,
         alter_names: true,
         image: true,
-        tags: true,
+        tags: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
       },
       orderBy: {
         sort: "asc",

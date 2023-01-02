@@ -16,7 +16,12 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
         expanded: true,
         folder: true,
         isPublic: true,
-        tags: true,
+        tags: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
         parent: {
           select: {
             id: true,
@@ -43,6 +48,12 @@ export const mapRouter = (server: FastifyInstance, _: any, done: any) => {
       include: {
         map_pins: true,
         map_layers: true,
+        tags: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
       },
     });
     return data;

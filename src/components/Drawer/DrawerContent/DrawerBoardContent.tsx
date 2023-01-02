@@ -32,7 +32,7 @@ export default function DrawerBoardContent() {
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
   const boards = queryClient.getQueryData<BoardType[]>(["allitems", project_id, "boards"]);
   const { data: board } = useGetItem<BoardType>(drawer?.id as string, "boards", { enabled: !!drawer?.id });
-
+  console.log(board);
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     board ?? {
       ...DefaultBoard,

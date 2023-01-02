@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
-import { AvailableItemTypes, SettingsTagsResults, TagCreateType, TagType, TagUpdateType } from "../types/generalTypes";
+import { AvailableItemTypes, TagCreateType, TagSettingsType, TagType, TagUpdateType } from "../types/generalTypes";
 
 export const useGetAllTags = (project_id: string) => {
   return useQuery<TagType[]>(
@@ -30,7 +30,7 @@ export const useFullSearch = (project_id: string) => {
 };
 
 export const useGetTagSettings = (project_id: string) => {
-  return useQuery<SettingsTagsResults>(
+  return useQuery<TagSettingsType[]>(
     ["tagsSettings", project_id],
     async () =>
       (
