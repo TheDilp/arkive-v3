@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { Button } from "primereact/button";
 // import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableExpandedRows } from "primereact/datatable";
@@ -10,19 +11,19 @@ import { Link, useParams } from "react-router-dom";
 import { useGetTagSettings } from "../../CRUD/OtherCRUD";
 import { TagSettingsType, TagType } from "../../types/generalTypes";
 
-// function DeleteColumn(tag: string, items: TagSettingsType | undefined, deleteTags: any) {
-//   return (
-//     <div className="flex justify-center gap-x-1">
-//       <Button
-//         className="p-button-outlined p-button-danger"
-//         icon="pi pi-fw pi-trash"
-//         onClick={() => deleteTagsFromAllItems(tag, items, deleteTags)}
-//         tooltip="Go to item"
-//         tooltipOptions={{ showDelay: 300, position: "left" }}
-//       />
-//     </div>
-//   );
-// }
+function DeleteColumn() {
+  return (
+    <div className="flex justify-center gap-x-1">
+      <Button
+        className="p-button-outlined p-button-danger"
+        icon="pi pi-fw pi-trash"
+        // onClick={() => deleteTagsFromAllItems(tag, items, deleteTags)}
+        tooltip="Go to item"
+        tooltipOptions={{ showDelay: 300, position: "left" }}
+      />
+    </div>
+  );
+}
 
 function ExpandedSection(tag: TagSettingsType) {
   if (!tag) return null;
@@ -139,12 +140,7 @@ export default function TagsSettings() {
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column className="w-8" expander />
         <Column body={TagTitle} header="Tag" sortable />
-        <Column
-          align="center"
-          // body={(data) => DeleteColumn(data, itemsWithTags, deleteTags)}
-          className="w-28"
-          header="Delete Tag"
-        />
+        <Column align="center" body={DeleteColumn} className="w-28" header="Delete Tag" />
       </DataTable>
     </div>
   );
