@@ -29,61 +29,77 @@ function ExpandedSection(tag: TagSettingsType) {
   const { documents, maps, boards, nodes, edges } = tag;
 
   return (
-    <div className="ml-28 flex w-full flex-col gap-y-2">
-      <h4 className="text-lg font-semibold">Items containing this tag</h4>
-      <div>
-        <h5 className="mb-1 font-medium underline">Documents</h5>
+    <div className="ml-28 flex w-full flex-wrap gap-y-3">
+      <h4 className="w-full text-xl font-semibold">Items containing this tag</h4>
+      <div className="w-1/2">
+        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
+          <Icon icon="mdi:files" />
+          Documents
+        </h5>
         {documents.map((doc) => (
           <Link
             key={doc.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
             to={`../../documents${doc.folder ? "/folder" : ""}/${doc.id}`}>
             <Icon icon={doc.icon} />
             {doc.title}
           </Link>
         ))}
       </div>
-      <div>
-        <h5 className="font-medium underline">Maps</h5>
+      <div className="w-1/2">
+        <h5 className="flex items-center gap-x-2 text-lg font-medium underline ">
+          <Icon icon="mdi:map" />
+          Maps
+        </h5>
         {maps.map((map) => (
           <Link
             key={map.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
             to={`../../maps${map.folder ? "/folder" : ""}/${map.id}`}>
             <Icon icon={map.icon} />
             {map.title}
           </Link>
         ))}
       </div>
-      <div>
-        <h5 className="font-medium underline">Boards</h5>
+      <div className="w-1/2">
+        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
+          <Icon icon="mdi:draw" />
+          Boards
+        </h5>
         {boards.map((board) => (
           <Link
             key={board.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
             to={`../../boards${board.folder ? "/folder" : ""}/${board.id}`}>
+            <Icon icon={board.icon} />
             {board.title}
           </Link>
         ))}
       </div>
-      <div>
-        <h5 className="font-medium underline">Nodes</h5>
+      <div className="w-1/2">
+        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
+          <Icon icon="ph:graph-light" />
+          Nodes
+        </h5>
         {nodes.map((node) => (
           <Link
             key={node.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
             to={`../../boards/${node.parent}/${node.id}`}>
             <Icon icon="ph:graph-light" />
             {node.label || "Unlabeled node"}
           </Link>
         ))}
       </div>
-      <div>
-        <h5>Edges</h5>
+      <div className="w-1/2">
+        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
+          <Icon icon="ph:graph-light" />
+          Edges
+        </h5>
         {edges.map((edge) => (
           <Link
             key={edge.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
             to={`../../boards/${edge.parent}/${edge.id}`}>
             <Icon icon="ph:graph-light" />
             {edge.label || "Unlabeled edge"}
@@ -115,8 +131,6 @@ export default function TagsSettings() {
         removableSort
         rowExpansionTemplate={(data) => ExpandedSection(data)}
         rows={10}
-        scrollable
-        scrollHeight="flex"
         selection={selected}
         selectionMode="checkbox"
         size="small"
