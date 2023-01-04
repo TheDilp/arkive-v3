@@ -31,30 +31,37 @@ function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core
 
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<TagType[]>([]);
   const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [menuIndex, setMenuIndex] = useState(0);
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
   const [, setDrawer] = useAtom(DrawerAtom);
   const { project_id, subitem_id } = useParams();
-  const { mutate } = useFullSearch(project_id as string);
+  const { mutate: searchMutation } = useFullSearch(project_id as string);
   const { data: allTags } = useGetAllTags(project_id as string);
-  const debounceSearch = useDebouncedCallback((searchQuery: string, type: "namecontent" | "tags") => {
-    if (searchQuery && searchQuery.length >= 3)
-      mutate(
-        { query: searchQuery, type },
-        {
-          onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: []; edges: [] }) => setResults(data),
-        },
-      );
-    else setResults(SearchDefault);
+
+  const debounceSearch = useDebouncedCallback((searchQuery: string | TagType[], type: "namecontent" | "tags") => {
+    console.log(searchQuery);
+    if (searchQuery) {
+      const finalQuery = Array.isArray(searchQuery) ? searchQuery.map((tag) => tag.title) : searchQuery;
+
+      if ((!Array.isArray(searchQuery) && searchQuery.length >= 3) || Array.isArray(searchQuery)) {
+        searchMutation(
+          { query: finalQuery, type },
+          {
+            onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: []; edges: [] }) => setResults(data),
+          },
+        );
+      }
+    } else setResults(SearchDefault);
   }, 500);
 
   const debounceTags = useDebouncedCallback(async (tagsQuery: string) => {
     const t = allTags?.filter((tag) => tag.title.toLowerCase().includes(tagsQuery.toLowerCase()));
     if (t && t.length) setFilteredTags(t);
   }, 500);
+
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-col gap-y-2">
@@ -87,7 +94,13 @@ export default function DrawerFullSearch() {
               field="title"
               multiple
               onChange={(e) => setTags(e.value)}
-              onSelect={(e) => debounceSearch(e.value, "tags")}
+              onSelect={(e) => debounceSearch([...tags, e.value], "tags")}
+              onUnselect={(e) =>
+                debounceSearch(
+                  tags.filter((tag) => tag.id !== e.value.id),
+                  "tags",
+                )
+              }
               suggestions={filteredTags}
               value={tags}
             />
@@ -118,7 +131,7 @@ export default function DrawerFullSearch() {
                       {"label" in item && (item.label || "Node/Edge")}
                     </Link>
                   ))
-                : "No items match this query.",
+                : null,
             )
           : (query && "No items match this query.") || "Type something to search for documents, maps, pins, boards or nodes!"}
       </div>

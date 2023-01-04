@@ -124,51 +124,57 @@ export const searchRouter = (server: FastifyInstance, _: any, done: any) => {
         }));
         return { documents: final, maps, pins, boards, nodes, edges };
       }
-      if (type === "tags") {
+      if (type === "tags" && Array.isArray(query) && query.length) {
         const searches = [
           prisma.documents.findMany({
             where: {
-              folder: false,
-              tags: {
-                some: {
-                  title: {
-                    in: query,
+              AND: query.map((tagTitle) => ({
+                tags: {
+                  some: {
+                    title: {
+                      contains: tagTitle,
+                    },
                   },
                 },
-              },
+              })),
             },
             select: {
               id: true,
               title: true,
               icon: true,
+              folder: true,
             },
           }),
           prisma.maps.findMany({
             where: {
-              folder: false,
-              tags: {
-                some: {
-                  title: {
-                    in: query,
+              AND: query.map((tagTitle) => ({
+                tags: {
+                  some: {
+                    title: {
+                      contains: tagTitle,
+                    },
                   },
                 },
-              },
+              })),
             },
             select: {
               id: true,
               title: true,
               icon: true,
+              folder: true,
             },
           }),
           prisma.map_pins.findMany({
             where: {
-              tags: {
-                some: {
-                  title: {
-                    in: query,
+              AND: query.map((tagTitle) => ({
+                tags: {
+                  some: {
+                    title: {
+                      contains: tagTitle,
+                    },
                   },
                 },
-              },
+              })),
             },
             select: {
               id: true,
@@ -178,13 +184,15 @@ export const searchRouter = (server: FastifyInstance, _: any, done: any) => {
           }),
           prisma.nodes.findMany({
             where: {
-              tags: {
-                some: {
-                  title: {
-                    in: query,
+              AND: query.map((tagTitle) => ({
+                tags: {
+                  some: {
+                    title: {
+                      contains: tagTitle,
+                    },
                   },
                 },
-              },
+              })),
             },
             select: {
               id: true,
@@ -194,30 +202,34 @@ export const searchRouter = (server: FastifyInstance, _: any, done: any) => {
           }),
           prisma.boards.findMany({
             where: {
-              tags: {
-                some: {
-                  title: {
-                    in: query,
+              AND: query.map((tagTitle) => ({
+                tags: {
+                  some: {
+                    title: {
+                      contains: tagTitle,
+                    },
                   },
                 },
-              },
-              folder: false,
+              })),
             },
             select: {
               id: true,
               title: true,
               icon: true,
+              folder: true,
             },
           }),
           prisma.edges.findMany({
             where: {
-              tags: {
-                some: {
-                  title: {
-                    in: query,
+              AND: query.map((tagTitle) => ({
+                tags: {
+                  some: {
+                    title: {
+                      contains: tagTitle,
+                    },
                   },
                 },
-              },
+              })),
             },
             select: {
               id: true,

@@ -35,6 +35,7 @@ export function getLinkForFullSearch(id: string, parent: string, type: Available
 }
 
 export function getIconForFullSearch(item: DocumentType | MapType | MapPinType | BoardType | NodeType | EdgeType) {
+  if ("folder" in item && item.folder) return "mdi:folder";
   let icon = "mdi:file";
   if ("icon" in item) icon = item.icon || "mdi:file";
   if ("text" in item) icon = "mdi:map_marker";
