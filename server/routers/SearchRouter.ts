@@ -182,24 +182,7 @@ export const searchRouter = (server: FastifyInstance, _: any, done: any) => {
               icon: true,
             },
           }),
-          prisma.nodes.findMany({
-            where: {
-              AND: query.map((tagTitle) => ({
-                tags: {
-                  some: {
-                    title: {
-                      contains: tagTitle,
-                    },
-                  },
-                },
-              })),
-            },
-            select: {
-              id: true,
-              label: true,
-              parent: true,
-            },
-          }),
+
           prisma.boards.findMany({
             where: {
               AND: query.map((tagTitle) => ({
@@ -217,6 +200,24 @@ export const searchRouter = (server: FastifyInstance, _: any, done: any) => {
               title: true,
               icon: true,
               folder: true,
+            },
+          }),
+          prisma.nodes.findMany({
+            where: {
+              AND: query.map((tagTitle) => ({
+                tags: {
+                  some: {
+                    title: {
+                      contains: tagTitle,
+                    },
+                  },
+                },
+              })),
+            },
+            select: {
+              id: true,
+              label: true,
+              parent: true,
             },
           }),
           prisma.edges.findMany({
