@@ -55,24 +55,6 @@ export default function Tags({ handleChange, localItem, type }: Props) {
 
   const { mutate: updateTag } = useUpdateTag();
 
-  // const handleTagsChange = async (allTags: TagType[] | undefined, value: TagType | string) => {
-  //   if (!allTags?.some((tag) => tag.title.includes("title" in value ? value?.title : value))) {
-  //     mutateAsync(
-  //       { title: value.title, ...getTagRelationId(localItem.id, type) },
-  //       {
-  //         onSuccess: () => {
-  //           handleChange({ name: "tags", value: [...(localItem?.tags || []), value] });
-  //         },
-  //       },
-  //     );
-  //   } else if (localItem?.tags?.includes(value)) {
-  //     handleChange({ name: "tags", value: (localItem?.tags || []).filter((tag) => tag.title !== value) });
-  //   } else {
-  //     updateTag({ id: value });
-  //     handleChange({ name: "tags", value: [...(localItem?.tags || []), value] });
-  //   }
-  // };
-
   return (
     <AutoComplete
       className="tagsAutocomplete max-h-40 w-full border-zinc-600"

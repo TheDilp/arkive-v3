@@ -11,15 +11,15 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useCreateItem, useDeleteManyItems } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { toaster } from "../../utils/toast";
 
 type Props = {
   type: AvailableItemTypes;
   filter: {
-    globalFilter: { title: string; tags: string[] };
-    setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: string[] }>>;
+    globalFilter: { title: string; tags: TagType[] };
+    setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: TagType[] }>>;
   };
   selection: {
     selected: AllItemsType[];
@@ -58,8 +58,8 @@ function LeftToolbarTemplate(
 function RightToolbarTemplate(
   ref: MutableRefObject<DataTable>,
   filter: {
-    globalFilter: { title: string; tags: string[] };
-    setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: string[] }>>;
+    globalFilter: { title: string; tags: TagType[] };
+    setGlobalFilter: Dispatch<SetStateAction<{ title: string; tags: TagType[] }>>;
   },
 ) {
   const { project_id } = useParams();
@@ -69,7 +69,7 @@ function RightToolbarTemplate(
   const { data: tags } = useGetAllTags(project_id as string);
   const [localFilter, setLocalFilter] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [filteredTags, setFilteredTags] = useState<string[]>([]);
+  const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
 
   const updateFilterTitle = useDebouncedCallback((title: string) => {
     setGlobalFilter({ title, tags: globalFilter.tags });
@@ -97,22 +97,15 @@ function RightToolbarTemplate(
       />
       <AutoComplete
         className="w-full"
-        completeMethod={(e) => setFilteredTags(tags?.filter((tag) => tag.toLowerCase().includes(e.query.toLowerCase())) || [])}
+        completeMethod={(e) =>
+          setFilteredTags(tags?.filter((tag) => tag.title.toLowerCase().includes(e.query.toLowerCase())) || [])
+        }
+        field="title"
         multiple
         onChange={(e) => setGlobalFilter({ title: globalFilter.title, tags: e.value })}
-        onKeyPress={(e) => {
-          if (e.key === "Enter") {
-            if (globalFilter.tags.includes(e.currentTarget.value))
-              setGlobalFilter({
-                title: globalFilter.title,
-                tags: globalFilter.tags.filter((tag) => tag !== e.currentTarget.value),
-              });
-            else setGlobalFilter({ title: globalFilter.title, tags: [...globalFilter.tags, e.currentTarget.value] });
-          }
-        }}
         onSelect={(e) => {
-          if (globalFilter.tags.includes(e.value))
-            setGlobalFilter({ title: globalFilter.title, tags: globalFilter.tags.filter((tag) => tag !== e.value) });
+          if (globalFilter.tags.includes(e.value.id))
+            setGlobalFilter({ title: globalFilter.title, tags: globalFilter.tags.filter((tag) => tag.id !== e.value.id) });
           else setGlobalFilter({ title: globalFilter.title, tags: [...globalFilter.tags, e.value] });
         }}
         placeholder="Search by tags"

@@ -19,6 +19,7 @@ import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/documentTypes";
+import { TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { toaster } from "../../utils/toast";
@@ -129,9 +130,8 @@ function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
 function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" | "alter_names") {
   return (
     <div className={`flex justify-center gap-x-1 ${type}Tags`}>
-      {(type === "tags" ? tags : alter_names)?.map((tag) => (
-        <Tag key={tag} value={tag} />
-      ))}
+      {type === "tags" ? tags.map((tag) => <Tag key={tag.id} value={tag.title} />) : null}
+      {type === "alter_names" ? alter_names.map((tag: string) => <Tag key={tag} value={tag} />) : null}
     </div>
   );
 }
@@ -150,6 +150,7 @@ function TagsEditor(
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
+      type="documents"
     />
   );
 }
@@ -201,7 +202,7 @@ export default function DocumentSettings() {
   const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents");
   const { data: images } = useGetAllImages(project_id as string);
   const [selected, setSelected] = useState<DocumentType[]>([]);
-  const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
+  const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 
   const { mutate } = useUpdateItem("documents", project_id as string);
   const { mutate: deleteMutation } = useDeleteItem("documents", project_id as string);
@@ -218,6 +219,7 @@ export default function DocumentSettings() {
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   if (!documents && isLoading) return <ProgressSpinner />;
   if (!documents) return null;
+
   return (
     <div className="p-4">
       <SettingsToolbar

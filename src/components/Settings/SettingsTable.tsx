@@ -34,7 +34,9 @@ export default function SettingsTable({ children, data, selected, setSelected, g
       sortMode="multiple"
       value={data
         ?.filter((item) => (globalFilter.title ? item.title.toLowerCase().includes(globalFilter.title.toLowerCase()) : true))
-        ?.filter((doc) => (globalFilter.tags.length ? globalFilter.tags.every((tag) => doc.tags.includes(tag)) : true))}>
+        ?.filter((doc) =>
+          globalFilter.tags.length ? globalFilter.tags.every((tag) => doc.tags.some((docTag) => docTag.id === tag.id)) : true,
+        )}>
       {children}
     </DataTable>
   );
