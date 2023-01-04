@@ -27,8 +27,15 @@ export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
   return "mdi:file";
 }
 
-export function getLinkForFullSearch(id: string, parent: string, type: AvailableSearchResultTypes, project_id: string) {
-  if (["documents", "maps", "boards"].includes(type)) return `/project/${project_id}/${type}/${id}`;
+export function getLinkForFullSearch(
+  id: string,
+  parent: string,
+  type: AvailableSearchResultTypes | "folder",
+  project_id: string,
+  folder: boolean,
+) {
+  console.log(`/project/${project_id}/${type}/${folder ? "folder/" : ""}${id}`);
+  if (["documents", "maps", "boards"].includes(type)) return `/project/${project_id}/${type}/${folder ? "folder/" : ""}${id}`;
   if (type === "pins") return `/project/${project_id}/maps/${parent}/${id}`;
   if (type === "nodes" || type === "edges") return `/project/${project_id}/boards/${parent}/${id}`;
   return "./";

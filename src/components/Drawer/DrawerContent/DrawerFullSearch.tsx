@@ -42,7 +42,6 @@ export default function DrawerFullSearch() {
   const { data: allTags } = useGetAllTags(project_id as string);
 
   const debounceSearch = useDebouncedCallback((searchQuery: string | TagType[], type: "namecontent" | "tags") => {
-    console.log(searchQuery);
     if (searchQuery) {
       const finalQuery = Array.isArray(searchQuery) ? searchQuery.map((tag) => tag.title) : searchQuery;
 
@@ -125,6 +124,7 @@ export default function DrawerFullSearch() {
                         item.parent as string,
                         key as AvailableSearchResultTypes,
                         project_id as string,
+                        "folder" in item ? item.folder : false,
                       )}>
                       <Icon fontSize={24} icon={getIconForFullSearch(item)} />
                       {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
