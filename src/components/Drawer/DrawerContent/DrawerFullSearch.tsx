@@ -8,10 +8,9 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useFullSearch } from "../../../CRUD/OtherCRUD";
-import { AvailableSearchResultTypes, FullSearchResults } from "../../../types/generalTypes";
+import { useFullSearch, useGetAllTags } from "../../../CRUD/OtherCRUD";
+import { AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
 import { BoardReferenceAtom, DrawerAtom } from "../../../utils/Atoms/atoms";
-import { getSearchTags } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
 
@@ -33,13 +32,14 @@ function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState([]);
-  const [filteredTags, setFilteredTags] = useState([]);
+  const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [menuIndex, setMenuIndex] = useState(0);
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
   const [, setDrawer] = useAtom(DrawerAtom);
   const { project_id, subitem_id } = useParams();
   const { mutate } = useFullSearch(project_id as string);
+  const { data: allTags } = useGetAllTags(project_id as string);
   const debounceSearch = useDebouncedCallback((searchQuery: string, type: "namecontent" | "tags") => {
     if (searchQuery && searchQuery.length >= 3)
       mutate(
@@ -50,9 +50,10 @@ export default function DrawerFullSearch() {
       );
     else setResults(SearchDefault);
   }, 500);
+
   const debounceTags = useDebouncedCallback(async (tagsQuery: string) => {
-    const t = await getSearchTags(project_id as string, tagsQuery);
-    setFilteredTags(t);
+    const t = allTags?.filter((tag) => tag.title.toLowerCase().includes(tagsQuery.toLowerCase()));
+    if (t && t.length) setFilteredTags(t);
   }, 500);
   return (
     <div className="flex flex-col gap-y-4">

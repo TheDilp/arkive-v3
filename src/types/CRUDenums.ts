@@ -23,6 +23,7 @@ export const getURLS = {
   // Misc
   getAllTags: "alltags/",
   getAllSettingsTags: "alltags/settings/",
+  getSearchTags: "searchtags/",
   getFullSearch: "fullsearch/",
 };
 
