@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 import { useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { useTreeMenuItems } from "../../utils/contextMenus";
 import { getDepth, handleDrop } from "../../utils/tree";
@@ -45,7 +45,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const items: AllItemsType[] | undefined = queryClient.getQueryData(["allItems", project_id, type]);
-  const updateItemMutation = useUpdateItem(type, project_id as string);
+  const updateItemMutation = useUpdateItem<AllItemsType>(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
 
   const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
@@ -56,7 +56,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const cm = useRef() as MutableRefObject<any>;
   const [treeData, setTreeData] = useState<NodeModel<AllItemsType>[]>([]);
   const [filter, setFilter] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
   useLayoutEffect(() => {
     if (items) {
       if (filter || selectedTags.length > 0) {
@@ -71,7 +71,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
               .filter(
                 (filterItems: AllItemsType) =>
                   filterItems.title.toLowerCase().includes(filter.toLowerCase()) &&
-                  selectedTags.every((tag) => filterItems.tags.includes(tag)),
+                  selectedTags.every((tag) => filterItems.tags.some((itemTag) => itemTag.id === tag.id)),
               )
               .map((doc: AllItemsType) => ({
                 data: doc,
@@ -106,7 +106,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
-
   return (
     <div
       className="flex h-full flex-col overflow-hidden"
@@ -132,7 +131,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
             setSelectedTags(e.value);
           }
         }}
-        options={tags ?? []}
+        optionLabel="title"
+        options={tags || []}
+        optionValue="id"
         placeholder="Filter by Tags"
         showClear
         value={selectedTags}

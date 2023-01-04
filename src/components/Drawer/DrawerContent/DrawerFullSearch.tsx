@@ -83,6 +83,7 @@ export default function DrawerFullSearch() {
             <AutoComplete
               className="w-full"
               completeMethod={(e) => debounceTags(e.query)}
+              field="title"
               multiple
               onChange={(e) => setTags(e.value)}
               onSelect={(e) => debounceSearch(e.value, "tags")}
