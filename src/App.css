@@ -1,9 +1,3 @@
-.p-tag {
-  @apply bg-sky-700 text-white !important;
-}
-.alter_namesTags .p-tag {
-  @apply bg-orange-600 !important;
-}
 .p-breadcrumb {
   @apply border-transparent bg-transparent !important;
 }
@@ -18,20 +12,33 @@
 }
 /* Sidebar */
 
-.wikiTabs .p-tabview-nav li {
-  @apply h-12 w-full p-0 !important;
+.wikiTabs {
+  .p-tabview-nav {
+    li {
+      @apply h-12 w-full p-0 !important;
+    }
+  }
 }
 
-.wikiTabs .p-tabview-nav li a {
-  @apply h-12 rounded-none !important;
+.wikiTabs {
+  .p-tabview-nav {
+    li {
+      a {
+        @apply h-12 rounded-none !important;
+      }
+    }
+  }
 }
-
 .p-tabview-nav-link {
   @apply h-12 rounded-none !important;
 }
 
-.wikiTabs .p-tabview-nav span {
-  @apply w-full text-center !important;
+.wikiTabs {
+  .p-tabview-nav {
+    span {
+      @apply w-full text-center !important;
+    }
+  }
 }
 .p-tabview-nav-link {
   @apply flex w-full justify-center rounded-none text-center !important;
@@ -178,8 +185,18 @@
 .p-chips-token-label {
   @apply truncate;
 }
-.alterNamesChips .p-chips-token {
-  @apply max-w-full bg-orange-600 !important;
+.alterNamesChips {
+  .p-chips-token {
+    @apply max-w-full bg-orange-600 !important;
+  }
+}
+.p-tag {
+  @apply bg-sky-700 text-white !important;
+}
+.alter_namesTags {
+  .p-tag {
+    @apply bg-orange-600 !important;
+  }
 }
 .documentTagsAutocomplete,
 .mapTagsAutocomplete {
@@ -188,8 +205,10 @@
     @apply w-full;
   }
 }
-.tagsAutocomplete .p-autocomplete-token {
-  @apply bg-sky-700 !important;
+.tagsAutocomplete {
+  .p-autocomplete-token {
+    @apply bg-sky-700 !important;
+  }
 }
 
 .arrowSaveButton {
