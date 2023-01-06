@@ -56,7 +56,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const cm = useRef() as MutableRefObject<any>;
   const [treeData, setTreeData] = useState<NodeModel<AllItemsType>[]>([]);
   const [filter, setFilter] = useState("");
-  const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   useLayoutEffect(() => {
     if (items) {
       if (filter || selectedTags.length > 0) {
@@ -65,14 +65,15 @@ export default function BaseTree({ isTemplates, type }: Props) {
           if (type === "documents" && isTemplates) tempItems = tempItems.filter((item) => "template" in item && item.template);
           else if (type === "documents" && !isTemplates)
             tempItems = tempItems.filter((item) => "template" in item && !item.template);
-
           setTreeData(
             tempItems
-              .filter(
-                (filterItems: AllItemsType) =>
-                  filterItems.title.toLowerCase().includes(filter.toLowerCase()) &&
-                  selectedTags.every((tag) => filterItems.tags.some((itemTag) => itemTag.id === tag.id)),
-              )
+              .filter((item: AllItemsType) => {
+                if (item.tags.length) console.log(item);
+                return (
+                  item.title.toLowerCase().includes(filter.toLowerCase()) &&
+                  selectedTags.every((tagId) => item.tags.some((itemTag) => itemTag.id === tagId))
+                );
+              })
               .map((doc: AllItemsType) => ({
                 data: doc,
                 droppable: doc.folder,
@@ -129,6 +130,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
             setSelectedTags([]);
           } else {
             setSelectedTags(e.value);
+            console.log(e.value);
           }
         }}
         optionLabel="title"
