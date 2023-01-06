@@ -143,7 +143,7 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
     {
       onMutate: async (variables) => {
         const oldData = queryClient.getQueryData([type, variables.id]);
-        // Don't update in case of documents, messes with editor saving and updating
+        // Don't update in case of documents when saving content, messes with editor saving and updating
         if (type === "documents" && "content" in variables) return { oldData };
         if (variables) {
           // @ts-ignore

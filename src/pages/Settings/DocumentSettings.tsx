@@ -136,17 +136,11 @@ function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" 
   );
 }
 
-function TagsEditor(
-  editorOptions: ColumnEditorOptions,
-  updateDocument: (data: Partial<DocumentType>) => void,
-  refetchTags: () => void,
-) {
+function TagsEditor(editorOptions: ColumnEditorOptions) {
   const { rowData, editorCallback } = editorOptions;
   return (
     <Tags
-      handleChange={({ name, value }) => {
-        updateDocument({ id: rowData.id, [name]: value });
-        refetchTags();
+      handleChange={({ value }) => {
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
@@ -215,7 +209,6 @@ export default function DocumentSettings() {
         toaster("success", "Item updated successfully.");
       },
     });
-  const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   if (!documents && isLoading) return <ProgressSpinner />;
   if (!documents) return null;
@@ -257,7 +250,7 @@ export default function DocumentSettings() {
         <Column
           align="center"
           body={(data) => TagsAlterNamesColumn(data, "tags")}
-          editor={(e) => TagsEditor(e, updateDocument, refetchTags)}
+          editor={TagsEditor}
           field="tags"
           header="Tags"
           sortable

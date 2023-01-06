@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 import { useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { useTreeMenuItems } from "../../utils/contextMenus";
 import { getDepth, handleDrop } from "../../utils/tree";

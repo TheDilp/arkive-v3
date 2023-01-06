@@ -32,6 +32,7 @@ export default function SettingsTable({ children, data, selected, setSelected, g
       showGridlines
       size="small"
       sortMode="multiple"
+      rowEditValidator={(data, options) => console.log(data, options)}
       value={data
         ?.filter((item) => (globalFilter.title ? item.title.toLowerCase().includes(globalFilter.title.toLowerCase()) : true))
         ?.filter((doc) =>

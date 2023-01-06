@@ -17,6 +17,7 @@ import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { MapType } from "../../types/mapTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getMapImageLink } from "../../utils/CRUD/CRUDUrls";
@@ -124,22 +125,25 @@ function TagsColumn({ tags }: MapType, type: "tags") {
   return (
     <div className={`flex justify-center gap-x-1 ${type}Tags`}>
       {tags?.map((tag) => (
-        <Tag key={tag} value={tag} />
+        <Tag key={tag.id} value={tag.title} />
       ))}
     </div>
   );
 }
 
-function TagsEditor(editorOptions: ColumnEditorOptions, updateMap: (data: Partial<MapType>) => void, refetchTags: () => void) {
+function TagsEditor(
+  editorOptions: ColumnEditorOptions,
+  updateItemTags: <ItemType>(type: AvailableItemTypes, id: string, variables: Partial<ItemType>) => void,
+) {
   const { rowData, editorCallback } = editorOptions;
   return (
     <Tags
       handleChange={({ name, value }) => {
-        updateMap({ id: rowData.id, [name]: value });
-        refetchTags();
+        updateItemTags<MapType>("maps", rowData.id, { [name]: value });
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
+      type="maps"
     />
   );
 }
@@ -173,20 +177,33 @@ export default function MapSettings() {
   const { data: maps, isLoading } = useGetAllItems<MapType>(project_id as string, "maps");
   const { data: images } = useGetAllMapImages(project_id as string);
   const [selected, setSelected] = useState<MapType[]>([]);
-  const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
+  const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 
   const { mutate } = useUpdateItem("maps", project_id as string);
   const { mutate: deleteMutation } = useDeleteItem("maps", project_id as string);
   const queryClient = useQueryClient();
 
-  const updateMap = (data: Partial<MapType>) =>
+  function updateMap(data: Partial<MapType>) {
     mutate(data, {
       onSuccess: async () => {
         await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] });
         toaster("success", "Item updated successfully.");
       },
     });
-  const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "maps"] });
+  }
+
+  function updateItemTags<ItemType extends { id: string }>(type: AvailableItemTypes, id: string, variables: Partial<ItemType>) {
+    queryClient.setQueryData(["allItems", project_id, type], (old: ItemType[] | undefined) => {
+      if (old)
+        return old.map((item) => {
+          if (item.id === id) {
+            return { ...item, ...variables };
+          }
+          return item;
+        });
+      return old;
+    });
+  }
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   if (!maps && isLoading) return <ProgressSpinner />;
   if (!maps) return null;
@@ -222,7 +239,7 @@ export default function MapSettings() {
         <Column
           align="center"
           body={(data) => TagsColumn(data, "tags")}
-          editor={(e) => TagsEditor(e, updateMap, refetchTags)}
+          editor={(e) => TagsEditor(e, updateItemTags)}
           field="tags"
           header="Tags"
           sortable
