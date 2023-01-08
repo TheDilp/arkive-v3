@@ -5,7 +5,6 @@ export default function BooleanFilter(options: ColumnFilterElementTemplateOption
   const { value, filterCallback } = options;
   return (
     <div className="flex w-full justify-evenly">
-      Template:
       <Checkbox
         checked={value}
         className="p-column-filter"

@@ -17,11 +17,16 @@ import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { MapType } from "../../types/mapTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getMapImageLink } from "../../utils/CRUD/CRUDUrls";
+import { tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
+import { ParentColumn } from "./Columns";
+import BooleanFilter from "./Filters/BooleanFilter";
+import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
 // TABLE UTIL FUNCTIONS
 function getCheckedValue(
@@ -45,10 +50,7 @@ function IconColumn({ id, icon, folder }: MapType) {
           updateMapMutation?.mutate(
             { icon: newIcon, id },
             {
-              onSuccess: () => {
-                queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] });
-                toaster("success", "Icon updated successfully.");
-              },
+              onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] }),
             },
           );
         }}>
@@ -114,12 +116,6 @@ function FolderPublicColumn({ id, folder, isPublic }: MapType, type: "folder" | 
     />
   );
 }
-function ParentColumn({ parent }: MapType, maps: MapType[]) {
-  // eslint-disable-next-line react/destructuring-assignment
-  const parentFolder = maps?.find((doc) => doc.id === parent?.id);
-  if (parentFolder) return <div className="w-full">{parentFolder.title}</div>;
-  return null;
-}
 
 function TagsColumn({ tags }: MapType, type: "tags") {
   return (
@@ -176,6 +172,7 @@ export default function MapSettings() {
   const tableRef = useRef() as MutableRefObject<DataTable>;
   const { data: maps, isLoading } = useGetAllItems<MapType>(project_id as string, "maps");
   const { data: images } = useGetAllMapImages(project_id as string);
+  const { data: tags } = useGetAllTags(project_id as string);
   const [selected, setSelected] = useState<MapType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 
@@ -217,31 +214,37 @@ export default function MapSettings() {
       />
       <SettingsTable data={maps} globalFilter={globalFilter} selected={selected} setSelected={setSelected} tableRef={tableRef}>
         <Column headerClassName="w-12" selectionMode="multiple" />
-        <Column editor={(e) => TitleEditor(e, updateMap)} field="title" header="Title" sortable />
+        <Column editor={(e) => TitleEditor(e, updateMap)} field="title" filter header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
         <Column
           align="center"
           body={ImageColumn}
-          className="w-36"
+          className="w-8"
           editor={(e) => ImageEditor(e, images, updateMap)}
           field="image"
           header="Image"
         />
         <Column
           align="center"
-          body={(data) => ParentColumn(data, maps)}
+          body={ParentColumn}
           className="w-48"
-          field="parent"
+          field="parent.title"
+          filter
           header="Parent"
           sortable
-          sortField="parent"
+          sortField="parent.title"
         />
         <Column
           align="center"
           body={(data) => TagsColumn(data, "tags")}
           editor={(e) => TagsEditor(e, updateItemTags)}
           field="tags"
+          filter
+          filterElement={(options) => TagsFilter(options, tags ?? [])}
+          filterFunction={tagsFilterFunction}
+          filterMatchMode="custom"
           header="Tags"
+          showFilterMatchModes={false}
           sortable
           sortField="tags"
         />
@@ -249,7 +252,11 @@ export default function MapSettings() {
           align="center"
           body={(data) => FolderPublicColumn(data, "folder")}
           className="w-10"
+          dataType="boolean"
           field="folder"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Folder"
           sortable
         />
@@ -258,7 +265,11 @@ export default function MapSettings() {
           align="center"
           body={(data) => FolderPublicColumn(data, "isPublic")}
           className="w-10"
+          dataType="boolean"
           field="isPublic"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Public"
           sortable
         />

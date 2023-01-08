@@ -9,6 +9,8 @@ export default function TagsFilter(options: ColumnFilterElementTemplateOptions, 
     <MultiSelect
       className="p-column-filter w-full"
       display="chip"
+      filter
+      filterBy="title"
       onChange={(e) => filterCallback(e.value)}
       optionLabel="title"
       options={tags}

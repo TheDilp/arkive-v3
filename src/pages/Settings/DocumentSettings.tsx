@@ -25,6 +25,7 @@ import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { getCheckedValue, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
+import { ParentColumn } from "./Columns";
 import BooleanFilter from "./Filters/BooleanFilter";
 import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
@@ -42,10 +43,7 @@ function IconColumn({ id, icon, folder }: DocumentType) {
           updateDocumentMutation?.mutate(
             { icon: newIcon, id },
             {
-              onSuccess: () => {
-                queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
-                toaster("success", "Icon updated successfully.");
-              },
+              onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] }),
             },
           );
         }}>
@@ -105,21 +103,12 @@ function FolderTemplatePublicColumn(
         updateDocumentMutation?.mutate(
           { [type]: e.checked, id },
           {
-            onSuccess: () => {
-              queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
-              toaster("success", "Item updated successfully.");
-            },
+            onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] }),
           },
         )
       }
     />
   );
-}
-function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
-  // eslint-disable-next-line react/destructuring-assignment
-  const parentFolder = documents?.find((doc) => doc.id === parent?.id);
-  if (parentFolder) return <div className="w-full">{parentFolder.title}</div>;
-  return null;
 }
 
 function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" | "alter_names") {
@@ -242,13 +231,13 @@ export default function DocumentSettings() {
         />
         <Column
           align="center"
-          body={(data) => ParentColumn(data, documents)}
+          body={ParentColumn}
           className="w-48"
           field="parent.title"
           filter
           header="Parent"
           sortable
-          sortField="parent"
+          sortField="parent.title"
         />
         <Column
           align="center"
