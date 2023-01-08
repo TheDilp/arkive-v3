@@ -33,9 +33,9 @@ function LeftToolbarTemplate(
   deletedSelected: () => void,
 ) {
   return (
-    <div className="flex gap-x-2">
+    <div className="flex gap-x-2 lg:w-full">
       <Button
-        className="p-button-success p-button-outlined"
+        className="p-button-success p-button-outlined w-24"
         icon="pi pi-plus"
         label="New"
         onClick={() =>
@@ -82,7 +82,7 @@ function RightToolbarTemplate(
   }, [localFilter]);
 
   return (
-    <div className="flex flex-1 gap-x-2">
+    <div className="flex flex-1 gap-x-2 lg:w-full">
       <Button
         className="p-button-outlined w-48"
         icon="pi pi-filter-slash"
@@ -134,7 +134,7 @@ const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter, selection 
   };
   return (
     <Toolbar
-      className="mb-1 flex p-0"
+      className="mb-1 flex gap-y-1 p-0 lg:flex-wrap"
       left={() => LeftToolbarTemplate(mutate, project_id as string, deleteSelected)}
       right={() => RightToolbarTemplate(ref as MutableRefObject<DataTable>, filter)}
     />
