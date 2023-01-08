@@ -12,12 +12,14 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Layout from "./components/Layout/Layout";
+import GridAssets from "./pages/AssetBrowser/GridAssets";
 import BoardView from "./pages/BoardView/BoardView";
 import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor/Editor";
 import FolderView from "./pages/FolderView/FolderView";
 import MapView from "./pages/MapView/MapView";
 import PublicWrapper from "./pages/PublicView/PublicWrapper";
+import AssetSettings from "./pages/Settings/Assets/AssetSettings";
 import BoardSettings from "./pages/Settings/BoardSettings";
 import DocumentSettings from "./pages/Settings/DocumentSettings";
 import MapSettings from "./pages/Settings/MapSettings";
@@ -71,8 +73,13 @@ function App() {
                 <Route element={<MapSettings />} path="map-settings" />
                 <Route element={<BoardSettings />} path="board-settings" />
                 <Route element={<TagsSettings />} path="tags-settings" />
+                <Route path="assets-settings/*">
+                  <Route element={<GridAssets />} path="grid" />
+                  <Route element={<AssetSettings />} path="list" />
+                </Route>
               </Route>
             </Route>
+
             <Route element={<PublicWrapper />} path="view/*">
               <Route path="documents/:item_id" />
               <Route path="maps/:item_id" />

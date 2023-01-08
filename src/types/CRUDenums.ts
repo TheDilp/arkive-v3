@@ -20,6 +20,7 @@ export const getURLS = {
   getSingleImage: "getimage/images/",
   getAllMapImages: "getallmapimages/",
   getSingleMapImage: "getimage/maps/",
+  getAllSettingsImages: "getsettingsimages/",
   // Misc
   getAllTags: "alltags/",
   getAllSettingsTags: "alltags/settings/",

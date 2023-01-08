@@ -44,6 +44,20 @@ export const useGetAllMapImages = (project_id: string) => {
     },
   );
 };
+export const useGetAllSettingsImages = (project_id: string) => {
+  return useQuery<{ images: string[]; maps: string[] }>(
+    ["allMapImages", project_id],
+    async () =>
+      (
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, {
+          method: "GET",
+        })
+      ).json(),
+    {
+      staleTime: 5 * 60 * 1000,
+    },
+  );
+};
 
 export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
@@ -75,7 +89,7 @@ export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
   );
 };
 
-export const useCreateSubItem = <SubItemType extends { id: string; parentId: string }>(
+export const useCreateSubItem = <SubItemType extends { id: string; parent: string }>(
   id: string,
   subType: AvailableSubItemTypes,
   type: AvailableItemTypes,
@@ -95,7 +109,7 @@ export const useCreateSubItem = <SubItemType extends { id: string; parentId: str
     },
     {
       onMutate: async (variables) => {
-        if (!variables.parentId || !variables.id) throw new Error("NO ID OR PARENT.");
+        if (!variables.parent || !variables.id) throw new Error("NO ID OR PARENT.");
         const oldData: AllItemsType | undefined = queryClient.getQueryData([type, id]);
         if (oldData && variables) {
           if (

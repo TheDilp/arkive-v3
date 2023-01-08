@@ -93,14 +93,6 @@ export default function Navbar() {
                 navigate("./boards");
               }}
             />
-            {/* <Icon
-              className="cursor-pointer hover:text-blue-300"
-              fontSize={20}
-              icon="mdi:chart-timeline-variant"
-              onClick={async () => {
-                navigate("./timelines");
-              }}
-            /> */}
             <span className="ml-auto flex items-center gap-x-2">
               <Icon
                 className="cursor-pointer hover:text-blue-300"
@@ -113,14 +105,6 @@ export default function Navbar() {
                 fontSize={20}
                 icon="ion:upload"
                 onClick={async () => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
-              />
-              <Icon
-                className="cursor-pointer hover:text-blue-300"
-                fontSize={20}
-                icon="ion:images"
-                onClick={async () => {
-                  navigate("./filebrowser");
-                }}
               />
               <Icon
                 className="cursor-pointer hover:text-blue-300"

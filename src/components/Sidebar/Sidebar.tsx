@@ -11,12 +11,12 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   if (pathname.includes("documents"))
     return (
-      <div className="flex flex-col flex-1">
-        <TabView className="flex flex-col flex-1" renderActiveOnly>
-          <TabPanel className="flex flex-col flex-1 w-full h-full" header="Documents">
+      <div className="flex flex-1 flex-col">
+        <TabView className="flex flex-1 flex-col" renderActiveOnly>
+          <TabPanel className="flex h-full w-full flex-1 flex-col" header="Documents">
             <DocumentsTree />
           </TabPanel>
-          <TabPanel className="flex flex-col flex-1 w-full h-full" header="Templates">
+          <TabPanel className="flex h-full w-full flex-1 flex-col" header="Templates">
             <TemplatesTree />
           </TabPanel>
         </TabView>
@@ -24,22 +24,22 @@ export default function Sidebar() {
     );
   if (pathname.includes("maps"))
     return (
-      <div className="flex flex-col flex-1 h-full p-4 bg-zinc-800">
+      <div className="flex h-full flex-1 flex-col bg-zinc-800 p-4">
         <MapsTree />
       </div>
     );
   if (pathname.includes("boards"))
     return (
-      <div className="flex flex-col flex-1 p-4 bg-zinc-800">
+      <div className="flex flex-1 flex-col bg-zinc-800 p-4">
         <BoardsTree />
       </div>
     );
 
-  if (pathname.includes("timelines")) return <div className="flex flex-col flex-1 bg-zinc-800">TIMELINES</div>;
+  if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-800">TIMELINES</div>;
   if (pathname.includes("settings"))
     return (
-      <div className="flex flex-col flex-1 p-4 bg-zinc-800">
-        <ul className="flex flex-col w-full text-sm gap-y-1 font-Lato">
+      <div className="flex flex-1 flex-col bg-zinc-800 p-4">
+        <ul className="flex w-full flex-col gap-y-1 font-Lato text-sm">
           <Link
             className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
               pathname.includes("project-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
@@ -79,6 +79,14 @@ export default function Sidebar() {
             to="./settings/tags-settings">
             <Icon fontSize={18} icon="mdi:tags" />
             Tags
+          </Link>
+          <Link
+            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
+              pathname.includes("tags-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
+            }`}
+            to="./settings/assets-settings/list">
+            <Icon fontSize={18} icon="ion:images" />
+            Assets
           </Link>
         </ul>
       </div>
