@@ -33,6 +33,7 @@ export default function IconSelectList({ close, setIcon }: IconSelectMenuType) {
     <div ref={ref} className="h-80 w-52 rounded-sm bg-zinc-800">
       <div ref={parentRef} className="h-full w-full overflow-auto">
         <InputText
+          autoFocus
           className="mb-2 w-full py-1"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search icons"
