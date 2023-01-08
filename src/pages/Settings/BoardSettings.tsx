@@ -17,6 +17,7 @@ import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { BoardType } from "../../types/boardTypes";
+import { TagType } from "../../types/generalTypes";
 import { boardNodeShapes } from "../../utils/boardUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { toaster } from "../../utils/toast";
@@ -95,7 +96,7 @@ function TagsColumn({ tags }: BoardType, type: "tags") {
   return (
     <div className={`flex justify-center gap-x-1 ${type}Tags`}>
       {tags?.map((tag) => (
-        <Tag key={tag} value={tag} />
+        <Tag key={tag.id} value={tag.title} />
       ))}
     </div>
   );
@@ -115,6 +116,7 @@ function TagsEditor(
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
+      type="boards"
     />
   );
 }
@@ -178,7 +180,7 @@ export default function BoardSettings() {
   const tableRef = useRef() as MutableRefObject<DataTable>;
   const { data: boards, isLoading } = useGetAllItems<BoardType>(project_id as string, "boards");
   const [selected, setSelected] = useState<BoardType[]>([]);
-  const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: string[] }>({ title: "", tags: [] });
+  const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 
   const { mutate } = useUpdateItem("boards", project_id as string);
   const { mutate: deleteMutation } = useDeleteItem("boards", project_id as string);

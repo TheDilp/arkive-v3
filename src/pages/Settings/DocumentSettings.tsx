@@ -129,7 +129,7 @@ function ParentColumn({ parent }: DocumentType, documents: DocumentType[]) {
 
 function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" | "alter_names") {
   return (
-    <div className={`flex justify-center gap-x-1 ${type}Tags`}>
+    <div className={`flex w-[10rem] flex-wrap justify-center gap-1 truncate ${type}Tags`}>
       {type === "tags" ? tags.map((tag) => <Tag key={tag.id} value={tag.title} />) : null}
       {type === "alter_names" ? alter_names.map((tag: string) => <Tag key={tag} value={tag} />) : null}
     </div>
@@ -214,7 +214,7 @@ export default function DocumentSettings() {
   if (!documents) return null;
 
   return (
-    <div className="p-4">
+    <div className="h-[95vh] overflow-y-auto p-4">
       <SettingsToolbar
         ref={tableRef}
         filter={{ globalFilter, setGlobalFilter }}

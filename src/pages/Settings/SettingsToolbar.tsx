@@ -134,7 +134,7 @@ const SettingsToolbar = forwardRef<DataTable, Props>(({ type, filter, selection 
   };
   return (
     <Toolbar
-      className="mb-1 flex"
+      className="mb-1 flex p-0"
       left={() => LeftToolbarTemplate(mutate, project_id as string, deleteSelected)}
       right={() => RightToolbarTemplate(ref as MutableRefObject<DataTable>, filter)}
     />

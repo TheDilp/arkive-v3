@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
+import { UseMutateFunction } from "@tanstack/react-query";
 import { Button } from "primereact/button";
-// import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -8,17 +8,26 @@ import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { useGetTagSettings } from "../../CRUD/OtherCRUD";
+import { useDeleteTags, useGetTagSettings } from "../../CRUD/OtherCRUD";
 import { TagSettingsType, TagType } from "../../types/generalTypes";
+import { deleteItem } from "../../utils/Confirms/Confirm";
+import { toaster } from "../../utils/toast";
 
-function DeleteColumn() {
+function DeleteColumn(item: TagType, deleteTags: UseMutateFunction<any, unknown, string[], unknown>) {
+  const { id } = item;
   return (
     <div className="flex justify-center gap-x-1">
       <Button
         className="p-button-outlined p-button-danger"
         icon="pi pi-fw pi-trash"
-        // onClick={() => deleteTagsFromAllItems(tag, items, deleteTags)}
-        tooltip="Go to item"
+        onClick={() =>
+          deleteItem("Are you sure you want to delete this tag?", () =>
+            deleteTags([id], {
+              onSuccess: () => toaster("success", "Tag successfully deleted."),
+            }),
+          )
+        }
+        tooltip="Delete tag"
         tooltipOptions={{ showDelay: 300, position: "left" }}
       />
     </div>
@@ -119,7 +128,7 @@ export default function TagsSettings() {
   const [selected, setSelected] = useState<string[]>([]);
   const [expandedRows, setExpandedRows] = useState<any[] | DataTableExpandedRows>([]);
   const { data: tags, isLoading: isLoadingTags } = useGetTagSettings(project_id as string);
-  // const { mutate: deleteTags } = useDeleteTagsFromAllItems(project_id as string);
+  const { mutate: deleteTags } = useDeleteTags(project_id as string);
   if (isLoadingTags || isLoadingTags) return <ProgressSpinner />;
   return (
     <div className="h-screen px-4 pt-4 pb-16">
@@ -140,7 +149,7 @@ export default function TagsSettings() {
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column className="w-8" expander />
         <Column body={TagTitle} header="Tag" sortable />
-        <Column align="center" body={DeleteColumn} className="w-28" header="Delete Tag" />
+        <Column align="center" body={(e) => DeleteColumn(e, deleteTags)} className="w-28" header="Delete Tag" />
       </DataTable>
     </div>
   );

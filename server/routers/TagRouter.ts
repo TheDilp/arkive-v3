@@ -57,7 +57,18 @@ export const tagRouter = (server: FastifyInstance, _: any, done: any) => {
     }
     return true;
   });
+  server.delete("/deletetags", async (req: FastifyRequest<{ Body: string }>) => {
+    const { ids } = JSON.parse(req.body) as { ids: string[] };
 
+    await prisma.tags.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+    return true;
+  });
   server.get("/alltags/settings/:project_id", async (req: FastifyRequest<{ Params: { project_id: string }; Body: string }>) => {
     const { project_id } = req.params;
     const tags = await prisma.tags.findMany({

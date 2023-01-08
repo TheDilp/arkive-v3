@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
-import { AvailableItemTypes, TagCreateType, TagSettingsType, TagType, TagUpdateType } from "../types/generalTypes";
+import { TagCreateType, TagSettingsType, TagType, TagUpdateType } from "../types/generalTypes";
 
 export const useGetAllTags = (project_id: string) => {
   return useQuery<TagType[]>(
@@ -62,12 +62,32 @@ export const useUpdateTag = () => {
     ).json(),
   );
 };
+export const useDeleteTags = (project_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (ids: string[]) =>
+      (
+        await fetch(`${baseURLS.baseServer}${deleteURLs.deleteTags}`, {
+          method: "DELETE",
+          body: JSON.stringify({ ids }),
+        })
+      ).json(),
+    {
+      onMutate: (variables) => {
+        const oldData = queryClient.getQueryData(["tagsSettings", project_id]);
 
-export const useDeleteTagsFromAllItems = (project_id: string) => {
-  return useMutation(async (items: { id: string; tags: string[]; type: AvailableItemTypes | "nodes" | "edges" }[]) =>
-    fetch(`${baseURLS.baseServer}${deleteURLs.deleteTagsFromAllItems}${project_id}`, {
-      method: "DELETE",
-      body: JSON.stringify({ items }),
-    }),
+        queryClient.setQueryData(["tagsSettings", project_id], (old: TagType[] | undefined) => {
+          if (old) {
+            return old.filter((tag) => !variables.includes(tag.id));
+          }
+          return old;
+        });
+        queryClient.refetchQueries(["allItems", project_id]);
+        return { oldData };
+      },
+      onError: (_, __, context) => {
+        return context?.oldData;
+      },
+    },
   );
 };

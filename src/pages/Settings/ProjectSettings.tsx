@@ -25,7 +25,7 @@ export default function ProjectSettings() {
   const updateProject = useUpdateProject();
   if (isLoading) return <ProgressSpinner />;
   return (
-    <div className="flex flex-col gap-y-4 p-4">
+    <div className="flex h-[95vh] flex-col gap-y-4 overflow-y-auto p-4">
       <div>
         <h2 className="font-Merriweather text-2xl font-bold">{data?.title} - Settings</h2>
       </div>
