@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
 import { TagCreateType, TagSettingsType, TagType, TagUpdateType } from "../types/generalTypes";
+import { toaster } from "../utils/toast";
 
 export const useGetAllTags = (project_id: string) => {
   return useQuery<TagType[]>(
@@ -52,14 +53,40 @@ export const useCreateTag = (project_id: string) => {
     }),
   );
 };
-export const useUpdateTag = () => {
-  return useMutation(async (variables: Partial<Omit<TagUpdateType, "project_id">> & { id: string }) =>
-    (
-      await fetch(`${baseURLS.baseServer}${updateURLs.updateTag}${variables.id}`, {
-        method: "POST",
-        body: JSON.stringify({ ...variables }),
-      })
-    ).json(),
+export const useUpdateTag = (project_id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (variables: Partial<Omit<TagUpdateType, "project_id">> & { id?: string }) =>
+      (
+        await fetch(`${baseURLS.baseServer}${updateURLs.updateTag}${variables.id}`, {
+          method: "POST",
+          body: JSON.stringify({ ...variables }),
+        })
+      ).json(),
+    {
+      onSuccess: () => toaster("success", "This tag has been successfully updated."),
+      onMutate: (variables) => {
+        const oldData = queryClient.getQueryData(["tagsSettings", project_id]);
+
+        queryClient.setQueryData(["tagsSettings", project_id], (old: TagType[] | undefined) => {
+          if (old) {
+            return old.map((tag) => {
+              if (tag.id === variables.id) {
+                return { ...tag, ...variables };
+              }
+              return tag;
+            });
+          }
+          return old;
+        });
+        queryClient.refetchQueries(["allItems", project_id]);
+        return { oldData };
+      },
+      onError: (_, __, context) => {
+        return context?.oldData;
+      },
+    },
   );
 };
 export const useDeleteTags = (project_id: string) => {
@@ -86,6 +113,7 @@ export const useDeleteTags = (project_id: string) => {
         return { oldData };
       },
       onError: (_, __, context) => {
+        toaster("error", "There was an error deleting these items.");
         return context?.oldData;
       },
     },

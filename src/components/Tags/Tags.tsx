@@ -53,7 +53,7 @@ export default function Tags({ handleChange, localItem, type }: Props) {
   const [tags, setTags] = useState(initialTags || []);
   const { mutate } = useCreateTag(project_id as string);
 
-  const { mutate: updateTag } = useUpdateTag();
+  const { mutate: updateTag } = useUpdateTag(project_id as string);
 
   return (
     <AutoComplete

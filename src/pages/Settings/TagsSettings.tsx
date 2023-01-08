@@ -8,7 +8,8 @@ import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { useDeleteTags, useGetTagSettings } from "../../CRUD/OtherCRUD";
+import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
+import { useDeleteTags, useGetTagSettings, useUpdateTag } from "../../CRUD/OtherCRUD";
 import { TagSettingsType, TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { toaster } from "../../utils/toast";
@@ -128,6 +129,7 @@ export default function TagsSettings() {
   const [selected, setSelected] = useState<string[]>([]);
   const [expandedRows, setExpandedRows] = useState<any[] | DataTableExpandedRows>([]);
   const { data: tags, isLoading: isLoadingTags } = useGetTagSettings(project_id as string);
+  const { mutate: updateTag } = useUpdateTag(project_id as string);
   const { mutate: deleteTags } = useDeleteTags(project_id as string);
   if (isLoadingTags || isLoadingTags) return <ProgressSpinner />;
   return (
@@ -148,7 +150,7 @@ export default function TagsSettings() {
         value={tags}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column className="w-8" expander />
-        <Column body={TagTitle} header="Tag" sortable />
+        <Column body={TagTitle} editor={(e) => TitleEditor(e, updateTag)} field="title" header="Tag" sortable />
         <Column align="center" body={(e) => DeleteColumn(e, deleteTags)} className="w-28" header="Delete Tag" />
       </DataTable>
     </div>
