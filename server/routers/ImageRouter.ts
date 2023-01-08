@@ -47,7 +47,25 @@ export const imageRouter = (server: FastifyInstance, _: any, done: any) => {
         .sendFile(`${type}/${project_id}/${image_name}`);
     },
   );
-
+  server.get("/getallsettingsimages/:project_id", async (req: FastifyRequest<{ Params: { project_id: string } }>) => {
+    const imagesDir = `./assets/images/${req.params.project_id}`;
+    // check if folder already exists
+    if (!existsSync(imagesDir)) {
+      mkdirSync(imagesDir, {
+        recursive: true,
+      }); // creating folder
+    }
+    const mapsDir = `./assets/maps/${req.params.project_id}`;
+    // check if folder already exists
+    if (!existsSync(mapsDir)) {
+      mkdirSync(mapsDir, {
+        recursive: true,
+      }); // creating folder
+    }
+    const images = readdirSync(`./assets/images/${req.params.project_id}`);
+    const maps = readdirSync(`./assets/maps/${req.params.project_id}`);
+    return { images, maps };
+  });
   server.post(
     "/uploadimage/:type/:project_id",
     async (

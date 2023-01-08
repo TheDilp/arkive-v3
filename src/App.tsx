@@ -12,7 +12,6 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Layout from "./components/Layout/Layout";
-import GridAssets from "./pages/AssetBrowser/GridAssets";
 import BoardView from "./pages/BoardView/BoardView";
 import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor/Editor";
@@ -73,10 +72,7 @@ function App() {
                 <Route element={<MapSettings />} path="map-settings" />
                 <Route element={<BoardSettings />} path="board-settings" />
                 <Route element={<TagsSettings />} path="tags-settings" />
-                <Route path="assets-settings/*">
-                  <Route element={<GridAssets />} path="grid" />
-                  <Route element={<AssetSettings />} path="list" />
-                </Route>
+                <Route element={<AssetSettings />} path="assets-settings/*" />
               </Route>
             </Route>
 

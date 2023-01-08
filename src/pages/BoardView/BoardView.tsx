@@ -11,7 +11,7 @@ import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardContext, BoardType } from "../../types/boardTypes";
+import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
 import { DragItem } from "../../types/generalTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
@@ -47,8 +47,8 @@ export default function BoardView({ isReadOnly }: Props) {
     isLoading: boolean;
   };
   const contextItems = useBoardContextMenuItems({ type: boardContext.type, item_id: item_id as string, board, boardContext });
-  const createNodeMutation = useCreateSubItem(item_id as string, "nodes", "boards");
-  const createEdgeMutation = useCreateSubItem(item_id as string, "edges", "boards");
+  const createNodeMutation = useCreateSubItem<NodeType>(item_id as string, "nodes", "boards");
+  const createEdgeMutation = useCreateSubItem<EdgeType>(item_id as string, "edges", "boards");
 
   useEffect(() => {
     if (board) {
