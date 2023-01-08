@@ -18,22 +18,17 @@ import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { DocumentType } from "../../types/documentTypes";
 import { TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
+import { getCheckedValue, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
+import BooleanFilter from "./Filters/BooleanFilter";
+import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
 // TABLE UTIL FUNCTIONS
-function getCheckedValue(
-  { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
-  type: "folder" | "template" | "isPublic",
-) {
-  if (type === "folder") return folder;
-  if (type === "template") return template;
-  if (type === "isPublic") return isPublic;
-  return false;
-}
 
 function IconColumn({ id, icon, folder }: DocumentType) {
   const { project_id } = useParams();
@@ -194,10 +189,10 @@ export default function DocumentSettings() {
   const navigate = useNavigate();
   const tableRef = useRef() as MutableRefObject<DataTable>;
   const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents");
+  const { data: tags } = useGetAllTags(project_id as string);
   const { data: images } = useGetAllImages(project_id as string);
   const [selected, setSelected] = useState<DocumentType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
-
   const { mutate } = useUpdateItem("documents", project_id as string);
   const { mutate: deleteMutation } = useDeleteItem("documents", project_id as string);
   const queryClient = useQueryClient();
@@ -232,6 +227,7 @@ export default function DocumentSettings() {
           className="max-w-[15rem] truncate"
           editor={(e) => TitleEditor(e, updateDocument)}
           field="title"
+          filter
           header="Title"
           sortable
         />
@@ -248,7 +244,8 @@ export default function DocumentSettings() {
           align="center"
           body={(data) => ParentColumn(data, documents)}
           className="w-48"
-          field="parent"
+          field="parent.title"
+          filter
           header="Parent"
           sortable
           sortField="parent"
@@ -258,7 +255,12 @@ export default function DocumentSettings() {
           body={(data) => TagsAlterNamesColumn(data, "tags")}
           editor={TagsEditor}
           field="tags"
+          filter
+          filterElement={(options) => TagsFilter(options, tags ?? [])}
+          filterFunction={tagsFilterFunction}
+          filterMatchMode="custom"
           header="Tags"
+          showFilterMatchModes={false}
           sortable
           sortField="tags"
         />
@@ -266,7 +268,11 @@ export default function DocumentSettings() {
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "folder")}
           className="max-w-min"
+          dataType="boolean"
           field="folder"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Folder"
           sortable
         />
@@ -274,7 +280,11 @@ export default function DocumentSettings() {
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "template")}
           className="max-w-min"
+          dataType="boolean"
           field="template"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Template"
           sortable
         />
@@ -282,7 +292,11 @@ export default function DocumentSettings() {
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "isPublic")}
           className="max-w-min"
+          dataType="boolean"
           field="isPublic"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Public"
           sortable
         />
