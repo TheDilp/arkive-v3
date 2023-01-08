@@ -1,5 +1,7 @@
-import { ColorPicker } from "primereact/colorpicker";
 import { InputText } from "primereact/inputtext";
+import { HexColorPicker } from "react-colorful";
+
+import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
   color: string;
@@ -9,8 +11,20 @@ type Props = {
 
 export default function ColorInput({ name, color, onChange }: Props) {
   return (
-    <div className="flex items-center justify-between w-full">
-      <ColorPicker onChange={(e) => onChange({ name, value: `#${e.value?.toString().replaceAll("#", "")}` })} value={color} />
+    <div className="relative flex w-full items-center justify-between">
+      <Tooltip
+        content={
+          <HexColorPicker
+            color={color}
+            onChange={(newColor) => {
+              onChange({ name, value: newColor });
+            }}
+          />
+        }
+        isClickable>
+        <div className="h-8 w-8 cursor-pointer rounded" style={{ backgroundColor: color }} />
+      </Tooltip>
+
       <InputText onChange={(e) => onChange({ name, value: `#${e.target.value.replaceAll("#", "")}` })} value={color} />
     </div>
   );

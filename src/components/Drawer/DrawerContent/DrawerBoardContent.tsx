@@ -2,7 +2,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import { ColorPicker } from "primereact/colorpicker";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
@@ -32,7 +31,6 @@ export default function DrawerBoardContent() {
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
   const boards = queryClient.getQueryData<BoardType[]>(["allitems", project_id, "boards"]);
   const { data: board } = useGetItem<BoardType>(drawer?.id as string, "boards", { enabled: !!drawer?.id });
-  console.log(board);
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     board ?? {
       ...DefaultBoard,
@@ -139,25 +137,7 @@ export default function DrawerBoardContent() {
       </div>
       <div className="flex flex-wrap items-center justify-between">
         <h4 className="w-full text-lg underline">Default Edge & Arrow Color</h4>
-
-        <ColorPicker
-          onChange={(e) =>
-            handleChange({
-              name: "defaultEdgeColor",
-              value: `#${e.target.value}`,
-            })
-          }
-          value={localItem.defaultEdgeColor}
-        />
-        <InputText
-          onChange={(e) =>
-            handleChange({
-              name: "defaultNodeColor",
-              value: e.target.value,
-            })
-          }
-          value={localItem.defaultEdgeColor || ""}
-        />
+        <ColorInput color={localItem.defaultEdgeColor as string} name="defaultEdgeColor" onChange={handleChange} />
       </div>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>

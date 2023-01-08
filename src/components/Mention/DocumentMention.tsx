@@ -41,7 +41,7 @@ function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
 }
 export default function DocumentMention({ title, id, label, isDisabledTooltip }: Props) {
   return (
-    <Tooltip disabled={isDisabledTooltip ?? false} label={<TooltipContent id={id} title={title || label} />}>
+    <Tooltip disabled={isDisabledTooltip ?? false} content={<TooltipContent id={id} title={title || label} />}>
       <Link className="font-Lato text-sm font-bold text-white underline hover:text-sky-400" to={`../${id}`}>
         {title || label}
       </Link>

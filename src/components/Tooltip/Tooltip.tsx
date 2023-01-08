@@ -3,6 +3,7 @@ import {
   autoUpdate,
   inline,
   safePolygon,
+  useClick,
   useDismiss,
   useFloating,
   useFocus,
@@ -13,12 +14,13 @@ import {
 import { cloneElement, useState } from "react";
 
 interface Props {
-  label: string | JSX.Element;
+  content: string | JSX.Element;
   children: JSX.Element;
   disabled?: boolean;
+  isClickable?: boolean;
 }
 
-export function Tooltip({ children, label, disabled }: Props) {
+export function Tooltip({ children, content, disabled, isClickable }: Props) {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, context } = useFloating({
@@ -30,10 +32,14 @@ export function Tooltip({ children, label, disabled }: Props) {
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     useHover(context, {
+      enabled: !isClickable ?? true,
       handleClose: safePolygon(),
       delay: {
         open: 500,
       },
+    }),
+    useClick(context, {
+      enabled: isClickable || false,
     }),
     useFocus(context),
     useRole(context, { role: "tooltip" }),
@@ -49,14 +55,13 @@ export function Tooltip({ children, label, disabled }: Props) {
             ref: floating,
             className: "Tooltip",
             style: {
-              width: "30rem",
               position: "fixed",
               top: y ?? "",
               left: x ?? "",
               zIndex: 9999,
             },
           })}>
-          {label}
+          {content}
         </div>
       )}
     </>

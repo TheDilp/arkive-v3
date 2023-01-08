@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import { ProjectType } from "../types/projectTypes";
+import { toaster } from "../utils/toast";
 
 export const useGetAllProjects = () => {
   return useQuery(["allProjects"], async () =>
@@ -42,6 +43,7 @@ export const useUpdateProject = () => {
     {
       onSuccess: async (data, variables) => {
         queryClient.refetchQueries({ queryKey: ["singleProject", variables?.id] });
+        toaster("success", "This project has been successfully updated.");
       },
     },
   );

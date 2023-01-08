@@ -141,6 +141,7 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
       return null;
     },
     {
+      onSuccess: () => toaster("success", "Item successfully updated."),
       onMutate: async (variables) => {
         const oldData = queryClient.getQueryData([type, variables.id]);
         // Don't update in case of documents when saving content, messes with editor saving and updating

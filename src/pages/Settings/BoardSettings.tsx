@@ -10,7 +10,9 @@ import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { capitalCase } from "remirror";
+import { DebouncedState, useDebouncedCallback } from "use-debounce";
 
+import ColorInput from "../../components/ColorInput/ColorInput";
 import { IconSelect } from "../../components/IconSelect/IconSelect";
 import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
@@ -102,17 +104,12 @@ function TagsColumn({ tags }: BoardType, type: "tags") {
   );
 }
 
-function TagsEditor(
-  editorOptions: ColumnEditorOptions,
-  updateBoard: (data: Partial<BoardType>) => void,
-  refetchTags: () => void,
-) {
+function TagsEditor(editorOptions: ColumnEditorOptions, updateBoard: (data: Partial<BoardType>) => void) {
   const { rowData, editorCallback } = editorOptions;
   return (
     <Tags
       handleChange={({ name, value }) => {
         updateBoard({ id: rowData.id, [name]: value });
-        refetchTags();
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
@@ -136,22 +133,23 @@ function NodeShapeEditor(editorOptions: ColumnEditorOptions, updateBoard: (data:
     />
   );
 }
-// function ColorEditor(
-//   editorOptions: ColumnEditorOptions,
-//   updateBoard: (data: Partial<BoardType>) => void,
-//   colorType: "defaultNodeColor" | "defaultEdgeColor",
-// ) {
-//   const { rowData, editorCallback } = editorOptions;
-//   return (
-//     <ColorInput
-//       color={rowData[colorType]}
-//       name={colorType}
-//       onChange={({ name, value }) => {
-//         // if (editorCallback) editorCallback(value);
-//       }}
-//     />
-//   );
-// }
+function ColorEditor(
+  editorOptions: ColumnEditorOptions,
+  updateBoard: DebouncedState<(id: string, newColor: string, name: string) => void>,
+  colorType: "defaultNodeColor" | "defaultEdgeColor",
+) {
+  const { rowData, editorCallback } = editorOptions;
+  return (
+    <ColorInput
+      color={rowData[colorType]}
+      name={colorType}
+      onChange={({ value }) => {
+        if (editorCallback) editorCallback(value);
+        updateBoard(rowData.id, value, colorType);
+      }}
+    />
+  );
+}
 function ActionsColumn({ id, folder }: BoardType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
@@ -182,18 +180,27 @@ export default function BoardSettings() {
   const [selected, setSelected] = useState<BoardType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 
-  const { mutate } = useUpdateItem("boards", project_id as string);
+  const { mutate } = useUpdateItem<BoardType>("boards", project_id as string);
   const { mutate: deleteMutation } = useDeleteItem("boards", project_id as string);
   const queryClient = useQueryClient();
+
+  const debouncedColorUpdate = useDebouncedCallback((id: string, newColor: string, name: string) => {
+    mutate(
+      { id, [name]: newColor },
+      {
+        onSuccess: async () => {
+          await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "boards"] });
+        },
+      },
+    );
+  }, 850);
 
   const updateBoard = (data: Partial<BoardType>) =>
     mutate(data, {
       onSuccess: async () => {
         await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "boards"] });
-        toaster("success", "Item updated successfully.");
       },
     });
-  const refetchTags = async () => queryClient.refetchQueries({ queryKey: ["allTags", project_id, "boards"] });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   if (!boards && isLoading) return <ProgressSpinner />;
   if (!boards) return null;
@@ -227,7 +234,7 @@ export default function BoardSettings() {
         <Column
           align="center"
           body={(data) => TagsColumn(data, "tags")}
-          editor={(e) => TagsEditor(e, updateBoard, refetchTags)}
+          editor={(e) => TagsEditor(e, updateBoard)}
           field="tags"
           header="Tags"
           sortable
@@ -267,10 +274,10 @@ export default function BoardSettings() {
           sortable
           sortField="defaultNodeShape"
         />
-        {/* <Column
+        <Column
           align="center"
-          body={(data: BoardType) => capitalCase(data.defaultNodeColor)}
-          editor={(e) => ColorEditor(e, updateBoard, "defaultNodeColor")}
+          body={(data: BoardType) => data.defaultNodeColor}
+          editor={(e) => ColorEditor(e, debouncedColorUpdate, "defaultNodeColor")}
           field="defaultNodeColor"
           header="Default Node Color"
           sortable
@@ -278,13 +285,13 @@ export default function BoardSettings() {
         />
         <Column
           align="center"
-          body={(data: BoardType) => capitalCase(data.defaultEdgeColor)}
-          editor={(e) => ColorEditor(e, updateBoard, "defaultEdgeColor")}
+          body={(data: BoardType) => data.defaultEdgeColor}
+          editor={(e) => ColorEditor(e, debouncedColorUpdate, "defaultEdgeColor")}
           field="defaultEdgeColor"
           header="Default Edge Color"
           sortable
           sortField="defaultEdgeColor"
-        /> */}
+        />
 
         <Column align="center" body={(data) => ActionsColumn(data, navigate, deleteAction)} header="Actions" />
       </SettingsTable>
