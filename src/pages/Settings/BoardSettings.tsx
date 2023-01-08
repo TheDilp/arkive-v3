@@ -18,11 +18,16 @@ import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { BoardType } from "../../types/boardTypes";
 import { TagType } from "../../types/generalTypes";
 import { boardNodeShapes } from "../../utils/boardUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { defaultNodeFilterFunction, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
+import BooleanFilter from "./Filters/BooleanFilter";
+import DefaultNodeFilter from "./Filters/DefaultNodeFilter";
+import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
 // TABLE UTIL FUNCTIONS
 function getCheckedValue(
@@ -177,6 +182,8 @@ export default function BoardSettings() {
   const navigate = useNavigate();
   const tableRef = useRef() as MutableRefObject<DataTable>;
   const { data: boards, isLoading } = useGetAllItems<BoardType>(project_id as string, "boards");
+  const { data: tags } = useGetAllTags(project_id as string);
+
   const [selected, setSelected] = useState<BoardType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 
@@ -219,24 +226,30 @@ export default function BoardSettings() {
         setSelected={setSelected}
         tableRef={tableRef}>
         <Column headerClassName="w-12" selectionMode="multiple" />
-        <Column editor={(e) => TitleEditor(e, updateBoard)} field="title" header="Title" sortable />
+        <Column editor={(e) => TitleEditor(e, updateBoard)} field="title" filter header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
 
         <Column
           align="center"
           body={(data) => ParentColumn(data, boards)}
           className="w-48"
-          field="parent"
+          field="parent.title"
+          filter
           header="Parent"
           sortable
-          sortField="parent"
+          sortField="parent.title"
         />
         <Column
           align="center"
           body={(data) => TagsColumn(data, "tags")}
           editor={(e) => TagsEditor(e, updateBoard)}
           field="tags"
+          filter
+          filterElement={(options) => TagsFilter(options, tags ?? [])}
+          filterFunction={tagsFilterFunction}
+          filterMatchMode="custom"
           header="Tags"
+          showFilterMatchModes={false}
           sortable
           sortField="tags"
         />
@@ -244,7 +257,11 @@ export default function BoardSettings() {
           align="center"
           body={(data) => FolderPublicGridColumn(data, "folder")}
           className="w-10"
+          dataType="boolean"
           field="folder"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Folder"
           sortable
         />
@@ -253,7 +270,11 @@ export default function BoardSettings() {
           align="center"
           body={(data) => FolderPublicGridColumn(data, "isPublic")}
           className="w-10"
+          dataType="boolean"
           field="isPublic"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Public"
           sortable
         />
@@ -261,7 +282,11 @@ export default function BoardSettings() {
           align="center"
           body={(data) => FolderPublicGridColumn(data, "defaultGrid")}
           className="w-10"
+          dataType="boolean"
           field="defaultGrid"
+          filter
+          filterElement={BooleanFilter}
+          filterMatchMode="equals"
           header="Grid"
           sortable
         />
@@ -270,7 +295,12 @@ export default function BoardSettings() {
           body={(data: BoardType) => capitalCase(data.defaultNodeShape)}
           editor={(e) => NodeShapeEditor(e, updateBoard)}
           field="defaultNodeShape"
+          filter
+          filterElement={DefaultNodeFilter}
+          filterFunction={defaultNodeFilterFunction}
+          filterMatchMode="custom"
           header="Default Node"
+          showFilterMatchModes={false}
           sortable
           sortField="defaultNodeShape"
         />

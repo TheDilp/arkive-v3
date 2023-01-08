@@ -7,6 +7,13 @@ export function tagsFilterFunction(value: TagType[], filter: TagType[] | null) {
   }
   return false;
 }
+export function defaultNodeFilterFunction(value: string, filter: string[] | null) {
+  if (!filter || !value) return true;
+  if (filter.some((f) => value === f)) {
+    return true;
+  }
+  return false;
+}
 
 export function getCheckedValue(
   { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
