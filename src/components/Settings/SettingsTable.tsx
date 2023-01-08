@@ -20,15 +20,16 @@ export default function SettingsTable({ children, data, selected, setSelected, g
   return (
     <DataTable
       ref={tableRef}
-      cellClassName={() => "truncate py-0"}
-      className="w-full max-w-[100%]"
+      className="h-full w-full"
       dataKey="id"
       editMode="cell"
       filterDisplay="menu"
       onSelectionChange={(e) => setSelected(e.value)}
       paginator
       removableSort
+      responsiveLayout="scroll"
       rows={10}
+      scrollHeight="80%"
       selection={selected}
       selectionMode="checkbox"
       showGridlines

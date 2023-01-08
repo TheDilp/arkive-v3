@@ -214,7 +214,7 @@ export default function DocumentSettings() {
   if (!documents) return null;
 
   return (
-    <div className="h-[95vh] overflow-y-auto p-4">
+    <div className="h-[95vh] w-full overflow-hidden p-4">
       <SettingsToolbar
         ref={tableRef}
         filter={{ globalFilter, setGlobalFilter }}
@@ -228,12 +228,18 @@ export default function DocumentSettings() {
         setSelected={setSelected}
         tableRef={tableRef}>
         <Column headerClassName="w-12" selectionMode="multiple" />
-        <Column editor={(e) => TitleEditor(e, updateDocument)} field="title" header="Title" sortable />
-        <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
+        <Column
+          className="max-w-[15rem] truncate"
+          editor={(e) => TitleEditor(e, updateDocument)}
+          field="title"
+          header="Title"
+          sortable
+        />
+        <Column align="center" body={IconColumn} className="w-8" field="icon" header="Icon" />
         <Column
           align="center"
           body={ImageColumn}
-          className="w-36"
+          className="w-20"
           editor={(e) => ImageEditor(e, images, updateDocument)}
           field="image"
           header="Image"
@@ -259,7 +265,7 @@ export default function DocumentSettings() {
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "folder")}
-          className="w-10"
+          className="max-w-min"
           field="folder"
           header="Folder"
           sortable
@@ -267,7 +273,7 @@ export default function DocumentSettings() {
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "template")}
-          className="w-10"
+          className="max-w-min"
           field="template"
           header="Template"
           sortable
@@ -275,7 +281,7 @@ export default function DocumentSettings() {
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "isPublic")}
-          className="w-10"
+          className="max-w-min"
           field="isPublic"
           header="Public"
           sortable
