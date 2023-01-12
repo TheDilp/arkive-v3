@@ -1,64 +1,69 @@
-import { DataView } from "primereact/dataview";
-import { Dropdown } from "primereact/dropdown";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { Button } from "primereact/button";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import { Image } from "primereact/image";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllSettingsImages } from "../../../CRUD/ItemsCRUD";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { getImageLink, getMapImageLink } from "../../../utils/CRUD/CRUDUrls";
+import { toaster } from "../../../utils/toast";
+import SettingsToolbar from "../SettingsToolbar";
 
-type Props = {};
-
-function Header() {
-  const [sortKey, setSortKey] = useState(null);
-  const [sortOrder, setSortOrder] = useState(null);
-  const [sortField, setSortField] = useState(null);
-  const sortOptions = [
-    { label: "Price High to Low", value: "!price" },
-    { label: "Price Low to High", value: "price" },
-  ];
-
+function ImageColumn(rowData: { image: string; type: string }) {
+  const { project_id } = useParams();
+  const { image, type } = rowData;
+  return image ? (
+    <div className="flex h-8 w-full justify-center">
+      <Image
+        alt={image || "column"}
+        className="h-full w-16"
+        imageClassName="object-contain"
+        preview
+        src={type === "image" ? getImageLink(image, project_id as string) : getMapImageLink(image, project_id as string)}
+      />
+    </div>
+  ) : null;
+}
+function DeleteColumn(item: { image: string; type: string }, deleteTags: UseMutateFunction<any, unknown, string[], unknown>) {
+  const { id } = item;
   return (
-    <div className="grid-nogutter grid">
-      <div className="col-6" style={{ textAlign: "left" }}>
-        <Dropdown
-          onChange={onSortChange}
-          optionLabel="label"
-          options={sortOptions}
-          placeholder="Sort By Price"
-          value={sortKey}
-        />
-      </div>
-      <div className="col-6" style={{ textAlign: "right" }}>
-        <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
-      </div>
+    <div className="flex justify-center gap-x-1">
+      <Button
+        className="p-button-outlined p-button-danger"
+        icon="pi pi-fw pi-trash"
+        onClick={() =>
+          deleteItem("Are you sure you want to delete this image?", () =>
+            deleteTags([id], {
+              onSuccess: () => toaster("success", "Image successfully deleted."),
+            }),
+          )
+        }
+        tooltip="Delete tag"
+        tooltipOptions={{ showDelay: 300, position: "left" }}
+      />
     </div>
   );
 }
-const itemTemplate = (product, layout): string | null => {
-  console.log(product, layout);
-  if (!product) {
-    return null;
-  }
 
-  if (layout === "list") return "LIST";
-  if (layout === "grid") return "GRID";
-  return null;
-};
-export default function AssetSettings({}: Props) {
+export default function AssetSettings() {
   const { project_id } = useParams();
-  const { data: images } = useGetAllSettingsImages(project_id as string);
-  const [layout, setLayout] = useState("list");
-  const [sortOrder, setSortOrder] = useState(null);
-  const [sortField, setSortField] = useState(null);
-  return (
-    <DataView
-      // header={Header}
-      itemTemplate={itemTemplate}
-      layout={layout}
-      paginator
-      rows={9}
-      sortField={sortField}
-      sortOrder={sortOrder}
-      value={images}
-    />
+  const { data: images, isFetching } = useGetAllSettingsImages(project_id as string);
+  const [selected, setSelected] = useState<DocumentType[]>([]);
+  return isFetching ? (
+    <ProgressSpinner />
+  ) : (
+    <div className="p-4">
+      <DataTable value={images}>
+        <Column headerClassName="w-12" selectionMode="multiple" />
+        <Column field="image" header="Title" sortable />
+        <Column body={ImageColumn} className="max-w-[15rem] truncate" field="image" header="Image" sortable />
+
+        {/* <Column align="center" body={(data) => DeleteColumn(data, deleteAction)} header="Actions" /> */}
+      </DataTable>
+    </div>
   );
 }
