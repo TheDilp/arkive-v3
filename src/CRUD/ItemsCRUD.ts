@@ -45,7 +45,7 @@ export const useGetAllMapImages = (project_id: string) => {
   );
 };
 export const useGetAllSettingsImages = (project_id: string) => {
-  return useQuery<{ images: string[]; maps: string[] }>(
+  return useQuery<{ image: string; type: "image" | "map" }[]>(
     ["allMapImages", project_id],
     async () =>
       (

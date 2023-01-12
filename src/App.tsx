@@ -30,6 +30,7 @@ function App() {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
+        networkMode: "always",
       },
     },
   });

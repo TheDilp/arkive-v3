@@ -64,7 +64,7 @@ export const imageRouter = (server: FastifyInstance, _: any, done: any) => {
     }
     const images = readdirSync(`./assets/images/${req.params.project_id}`);
     const maps = readdirSync(`./assets/maps/${req.params.project_id}`);
-    return { images, maps };
+    return [...images.map((image) => ({ image, type: "image" })), ...maps.map((map) => ({ image: map, type: "map" }))];
   });
   server.post(
     "/uploadimage/:type/:project_id",
