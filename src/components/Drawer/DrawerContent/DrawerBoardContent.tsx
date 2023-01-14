@@ -15,6 +15,7 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { boardNodeShapes } from "../../../utils/boardUtils";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
+import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -70,6 +71,7 @@ export default function DrawerBoardContent() {
         ...newData,
       });
     }
+    setDrawer({ ...DefaultDrawer, position: "right" });
   }
   useEffect(() => {
     if (board) {

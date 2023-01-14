@@ -14,9 +14,9 @@ export default function MapsTree() {
 
   return (
     <div className="flex h-screen flex-1 flex-col">
-      <div className="flex items-center justify-between gap-x-2 border-b border-zinc-600 pb-2">
+      <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2 2xl:flex-nowrap">
         <Button
-          className="p-button-outlined p-button-secondary w-full"
+          className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
           label="New Folder"
           onClick={() => {
@@ -28,7 +28,7 @@ export default function MapsTree() {
           }}
         />
         <Button
-          className="p-button-outlined w-full"
+          className="p-button-outlined w-full truncate"
           icon="pi pi-map"
           iconPos="right"
           label="New Map"

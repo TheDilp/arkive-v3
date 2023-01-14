@@ -32,6 +32,7 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
   const sortItemsMutation = useSortMutation(project_id as string, type);
   return (
     <Link
+      className="cursor-pointer"
       onContextMenu={(e) => {
         if (isFolder)
           setContextMenu({

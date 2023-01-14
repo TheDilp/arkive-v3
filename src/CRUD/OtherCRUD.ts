@@ -65,7 +65,6 @@ export const useUpdateTag = (project_id: string) => {
         })
       ).json(),
     {
-      onSuccess: () => toaster("success", "This tag has been successfully updated."),
       onMutate: (variables) => {
         const oldData = queryClient.getQueryData(["tagsSettings", project_id]);
 

@@ -14,6 +14,7 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
@@ -78,6 +79,7 @@ export default function DrawerMapContent() {
         ...newData,
       });
     }
+    setDrawer({ ...DefaultDrawer, position: "right" });
   }
   useEffect(() => {
     if (map) {

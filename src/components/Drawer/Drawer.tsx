@@ -40,7 +40,6 @@ function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void
 
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  console.log(drawer);
   return (
     <PrimeDrawer
       className={`p-sidebar-${drawer.drawerSize || "sm"} max-h-full overflow-y-auto`}

@@ -71,11 +71,13 @@ export default function Tags({ handleChange, localItem, type }: Props) {
         }
       }}
       onSelect={(e) => {
-        updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "connect") });
+        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "connect") });
+
         handleChange({ name: "tags", value: [...(localItem?.tags || []), e.value] });
       }}
       onUnselect={(e) => {
-        updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "disconnect") });
+        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "disconnect") });
+
         handleChange({
           name: "tags",
           value: [...(localItem?.tags || []).filter((tag) => tag.id !== e.value.id)],
