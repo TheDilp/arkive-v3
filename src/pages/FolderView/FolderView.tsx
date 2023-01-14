@@ -2,6 +2,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
+import { AllItemsType } from "../../types/generalTypes";
 import { getItemTypeFromURL } from "../../utils/transform";
 import { FolderViewCards } from "./FolderViewCards";
 
@@ -10,8 +11,7 @@ export default function FolderView() {
 
   const { pathname } = useLocation();
   const type = getItemTypeFromURL(pathname);
-  const { data } = useGetAllItems(project_id as string, type, { staleTime: 10 * 1000 });
-
+  const { data } = useGetAllItems<AllItemsType>(project_id as string, type, { staleTime: 10 * 1000 });
   return (
     <div className="flex flex-col gap-4 overflow-hidden px-8">
       <Breadcrumbs type={type} />

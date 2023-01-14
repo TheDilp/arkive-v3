@@ -13,25 +13,27 @@ import { getIcon } from "../../utils/transform";
 export function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: AllItemsType[] }) {
   const { project_id } = useParams();
 
+  const count = 12;
+
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
   const cm = useRef() as MutableRefObject<any>;
   const [contextMenu] = useAtom(SidebarTreeContextAtom);
 
   const menuItems = useTreeMenuItems(contextMenu, type, project_id as string);
   const rowVirtualizer = useVirtualizer({
-    count: Math.ceil(items.length / 5),
+    count: Math.ceil(items.length / count),
     getScrollElement: () => parentRef.current,
     // Height of individual row
     estimateSize: () => 144,
-    overscan: 5,
+    overscan: 10,
   });
 
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
-    count: 5,
+    count,
     getScrollElement: () => parentRef.current,
     // Width of individual column
-    estimateSize: () => 250,
+    estimateSize: () => 120,
     overscan: 5,
   });
 
@@ -62,16 +64,16 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
                     height: `${virtualRow.size}px`,
                     transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
                   }}>
-                  {items[virtualRow.index * 5 + virtualColumn.index] && (
+                  {items[virtualRow.index * count + virtualColumn.index] && (
                     <FolderCard
-                      key={items[virtualRow.index * 5 + virtualColumn.index].id}
+                      key={items[virtualRow.index * count + virtualColumn.index].id}
                       cm={cm}
-                      icon={getIcon(type, items[virtualRow.index * 5 + virtualColumn.index])}
-                      id={items[virtualRow.index * 5 + virtualColumn.index].id}
+                      icon={getIcon(type, items[virtualRow.index * count + virtualColumn.index])}
+                      id={items[virtualRow.index * count + virtualColumn.index].id}
                       // @ts-ignore
-                      image={items[virtualRow.index * 5 + virtualColumn.index]?.image || undefined}
-                      isFolder={items[virtualRow.index * 5 + virtualColumn.index].folder}
-                      title={items[virtualRow.index * 5 + virtualColumn.index].title}
+                      image={items[virtualRow.index * count + virtualColumn.index]?.image || undefined}
+                      isFolder={items[virtualRow.index * count + virtualColumn.index].folder}
+                      title={items[virtualRow.index * count + virtualColumn.index].title}
                       type={type}
                     />
                   )}
