@@ -68,6 +68,7 @@ export default function DrawerNodeContent() {
             },
           },
         );
+        setDrawer({ ...DefaultDrawer, position: "right" });
       } else {
         toaster("info", "No data was changed.");
       }
@@ -316,6 +317,7 @@ export default function DrawerNodeContent() {
         label="Save Node"
         onClick={() => {
           updateNode();
+
           // if (selectedTemplate) {
           //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
           //   //   const { show, ...restDialog } = localItem;

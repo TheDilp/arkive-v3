@@ -11,8 +11,8 @@ import {
   useUpdateItem,
   useUpdateManySubItems,
 } from "../CRUD/ItemsCRUD";
-import { BoardContext, BoardContextType, BoardType } from "../types/boardTypes";
-import { AvailableItemTypes } from "../types/generalTypes";
+import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/boardTypes";
+import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
@@ -76,7 +76,7 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [, setDialog] = useAtom(DialogAtom);
   const updateManyNodes = useUpdateManySubItems(item_id, "nodes");
-  const createNodeMutation = useCreateSubItem(item_id as string, "nodes", "boards");
+  const createNodeMutation = useCreateSubItem<NodeType>(item_id as string, "nodes", "boards");
   const deleteManyNodes = useDeleteManySubItems(item_id as string, "nodes");
 
   const deleteManyEdges = useDeleteManySubItems(item_id as string, "edges");
@@ -249,8 +249,8 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
 }
 
 export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableItemTypes, project_id: string) {
-  const createItemMutation = useCreateItem(type);
-  const updateItemMutation = useUpdateItem(type, project_id as string);
+  const createItemMutation = useCreateItem<AllItemsType>(type);
+  const updateItemMutation = useUpdateItem<AllItemsType>(type, project_id as string);
   const deleteItemMutation = useDeleteItem(type, project_id);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setDialog] = useAtom(DialogAtom);

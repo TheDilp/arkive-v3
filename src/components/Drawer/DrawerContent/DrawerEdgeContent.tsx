@@ -422,6 +422,7 @@ export default function DrawerEdgeContent() {
                   },
                 },
               );
+              setDrawer({ ...DefaultDrawer, position: "right" });
             } else {
               toaster("info", "No data was changed.");
             }

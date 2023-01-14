@@ -66,11 +66,7 @@ export default function BoardQuickBar() {
   //   };
   if (!board) return null;
   return (
-    <div
-      className="absolute left-1/2 z-10 flex h-12 w-1/6 items-center justify-around rounded bg-zinc-800 text-white shadow-md"
-      style={{
-        top: "95.6vh",
-      }}>
+    <div className="absolute left-1/2 bottom-0 z-10 flex h-12 w-1/6 items-center justify-around rounded bg-zinc-800 text-white shadow-md">
       <span>
         <Tooltip autoHide content="Toggle grid display" position="top" target=".drawGrid" />
         <Tooltip autoHide content="Lock selected nodes" position="top" target=".lockSelected" />
