@@ -68,7 +68,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
           setTreeData(
             tempItems
               .filter((item: AllItemsType) => {
-                if (item.tags.length) console.log(item);
                 return (
                   item.title.toLowerCase().includes(filter.toLowerCase()) &&
                   selectedTags.every((tagId) => item.tags.some((itemTag) => itemTag.id === tagId))
@@ -130,7 +129,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
             setSelectedTags([]);
           } else {
             setSelectedTags(e.value);
-            console.log(e.value);
           }
         }}
         optionLabel="title"

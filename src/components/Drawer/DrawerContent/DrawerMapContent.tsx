@@ -89,7 +89,6 @@ export default function DrawerMapContent() {
       });
     }
   }, [map, project_id]);
-  if (!map) return null;
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">

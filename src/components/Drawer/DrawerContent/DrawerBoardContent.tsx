@@ -81,7 +81,6 @@ export default function DrawerBoardContent() {
       });
     }
   }, [board, project_id]);
-  if (!board) return null;
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
@@ -177,7 +176,7 @@ export default function DrawerBoardContent() {
           <Button
             className=" p-button-outlined p-button-danger w-full"
             onClick={() => {
-              if (document)
+              if (board)
                 deleteItem(
                   board.folder
                     ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
