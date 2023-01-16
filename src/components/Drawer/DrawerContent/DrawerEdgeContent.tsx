@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -11,7 +12,7 @@ import { useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { EdgeType } from "../../../types/boardTypes";
+import { BoardType, EdgeType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
   boardEdgeArrowShapes,
@@ -35,6 +36,7 @@ function FontItemTemplate(item: { label: string; value: string }) {
 
 export default function DrawerEdgeContent() {
   const { item_id } = useParams();
+  const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const updateEdgeMutation = useUpdateSubItem(item_id as string, "edges", "boards");
   const [localItem, setLocalItem] = useState<EdgeType | undefined>(drawer?.data as EdgeType);
@@ -53,8 +55,8 @@ export default function DrawerEdgeContent() {
     return null;
   }
   return (
-    <div className="flex h-full flex-col justify-between overflow-y-auto overflow-x-hidden">
-      <div className="flex w-full flex-col">
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex w-full flex-1 flex-col overflow-y-scroll">
         <h2 className="text-center font-Lato text-3xl font-medium">{localItem?.label}</h2>
         <TabView renderActiveOnly>
           <TabPanel header="Edge">
@@ -420,10 +422,24 @@ export default function DrawerEdgeContent() {
                   onSuccess: () => {
                     toaster("success", `Edge ${localItem?.label || ""} was successfully updated.`);
                     resetChanges();
+                    if (tags)
+                      queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
+                        if (oldData)
+                          return {
+                            ...oldData,
+                            edges: oldData?.edges.map((edge) => {
+                              if (edge.id === localItem.id) {
+                                return { ...edge, tags };
+                              }
+                              return edge;
+                            }),
+                          };
+                        return oldData;
+                      });
+                    setDrawer({ ...DefaultDrawer, position: "right" });
                   },
                 },
               );
-              setDrawer({ ...DefaultDrawer, position: "right" });
             } else {
               toaster("info", "No data was changed.");
             }
