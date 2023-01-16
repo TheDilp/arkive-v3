@@ -66,7 +66,7 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
             }${project_id}/${image}`}
           />
         ) : (
-          <Icon fontSize={80} icon={isFolder ? "mdi:folder" : icon} />
+          <Icon fontSize={150} icon={isFolder ? "mdi:folder" : icon} />
         )}
 
         <h3 className="text-center text-lg">{title}</h3>

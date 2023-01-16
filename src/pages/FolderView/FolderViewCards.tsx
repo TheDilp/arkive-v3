@@ -1,4 +1,3 @@
-import { useVirtualizer } from "@tanstack/react-virtual";
 import { useAtom } from "jotai";
 import { MutableRefObject, useRef } from "react";
 import { useParams } from "react-router-dom";
@@ -13,35 +12,51 @@ import { getIcon } from "../../utils/transform";
 export function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: AllItemsType[] }) {
   const { project_id } = useParams();
 
-  const count = 12;
-
-  const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
   const cm = useRef() as MutableRefObject<any>;
   const [contextMenu] = useAtom(SidebarTreeContextAtom);
-
   const menuItems = useTreeMenuItems(contextMenu, type, project_id as string);
-  const rowVirtualizer = useVirtualizer({
-    count: Math.ceil(items.length / count),
-    getScrollElement: () => parentRef.current,
-    // Height of individual row
-    estimateSize: () => 144,
-    overscan: 10,
-  });
+  // const rowVirtualizer = useVirtualizer({
+  //   count: Math.ceil(items.length / count),
+  //   getScrollElement: () => parentRef.current,
+  //   // Height of individual row
+  //   estimateSize: () => 144,
+  //   overscan: 10,
+  // });
 
-  const columnVirtualizer = useVirtualizer({
-    horizontal: true,
-    count,
-    getScrollElement: () => parentRef.current,
-    // Width of individual column
-    estimateSize: () => 120,
-    overscan: 5,
-  });
+  // const columnVirtualizer = useVirtualizer({
+  //   horizontal: true,
+  //   count,
+  //   getScrollElement: () => parentRef.current,
+  //   // Width of individual column
+  //   estimateSize: () => 120,
+  //   overscan: 5,
+  // });
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="flex h-[92%] flex-col ">
       <ContextMenu cm={cm} items={menuItems} />
+      <div className="flex flex-wrap overflow-auto">
+        {items.length
+          ? items.map((item) => (
+              <FolderCard
+                key={item.id}
+                cm={cm}
+                icon={getIcon(type, item)}
+                id={item.id}
+                // @ts-ignore
+                image={item?.image || undefined}
+                isFolder={item.folder}
+                title={item.title}
+                type={type}
+              />
+            ))
+          : null}
+      </div>
 
-      <div ref={parentRef} className="h-[90%] w-full overflow-auto">
+      {/* <div ref={parentRef} className="h-[90%] w-full overflow-auto">
+
+// USE THIS TO ACCESS INDIVIDUAL ITEM
+      [virtualRow.index * count + virtualColumn.index]
         <div
           className="flex w-full gap-1"
           style={{
@@ -64,25 +79,13 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
                     height: `${virtualRow.size}px`,
                     transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
                   }}>
-                  {items[virtualRow.index * count + virtualColumn.index] && (
-                    <FolderCard
-                      key={items[virtualRow.index * count + virtualColumn.index].id}
-                      cm={cm}
-                      icon={getIcon(type, items[virtualRow.index * count + virtualColumn.index])}
-                      id={items[virtualRow.index * count + virtualColumn.index].id}
-                      // @ts-ignore
-                      image={items[virtualRow.index * count + virtualColumn.index]?.image || undefined}
-                      isFolder={items[virtualRow.index * count + virtualColumn.index].folder}
-                      title={items[virtualRow.index * count + virtualColumn.index].title}
-                      type={type}
-                    />
-                  )}
+                 
                 </div>
               ))}
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

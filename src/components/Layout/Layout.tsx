@@ -38,14 +38,14 @@ export default function Layout() {
   if (!results.every((res) => res.isSuccess)) return <ProgressSpinner />;
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden">
+    <div className="flex h-screen flex-col overflow-hidden">
       <ConfirmDialog />
 
       <DialogWrapper />
       <div className="w-full">
         <Navbar />
       </div>
-      <div className="relative flex w-full flex-1">
+      <div className="relative flex h-full w-full">
         <Drawer />
 
         <div

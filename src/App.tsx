@@ -61,10 +61,6 @@ function App() {
                 <Route element={<BoardView />} path=":item_id" />
                 <Route element={<BoardView />} path=":item_id/:subitem_id" />
               </Route>
-              <Route path="timelines/*">
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<div>TIMELINE</div>} path=":item_id" />
-              </Route>
               <Route element={<FolderView />} path=":type/folder/:item_id" />
 
               <Route path="settings/*">

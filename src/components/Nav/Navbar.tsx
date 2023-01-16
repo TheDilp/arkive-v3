@@ -51,7 +51,7 @@ export default function Navbar() {
           className="cursor-pointer hover:text-blue-300"
           fontSize={20}
           icon={`mdi:${sidebarToggle ? "menu-open" : "menu"}`}
-          onClick={async () => {
+          onClick={() => {
             setSidebarToggle(!sidebarToggle);
           }}
         />
@@ -125,7 +125,7 @@ export default function Navbar() {
           style={{
             top: "0.25rem",
           }}>
-          <h2 className="mx-auto my-0 font-Merriweather text-3xl">{projectData?.data?.title}</h2>
+          <h2 className="mx-auto my-0 select-none font-Merriweather text-3xl">{projectData?.data?.title}</h2>
         </div>
       )}
     </div>
