@@ -11,7 +11,7 @@ export default function FolderView() {
 
   const { pathname } = useLocation();
   const type = getItemTypeFromURL(pathname);
-  const { data } = useGetAllItems<AllItemsType>(project_id as string, type, { staleTime: 10 * 1000 });
+  const { data } = useGetAllItems<AllItemsType>(project_id as string, type);
   return (
     <div className="flex flex-col gap-4 overflow-hidden px-8">
       <Breadcrumbs type={type} />

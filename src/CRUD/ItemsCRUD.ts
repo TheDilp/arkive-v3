@@ -245,7 +245,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
 
         return { oldData };
       },
-      onError: (error, variables, context) => {
+      onError: (_, __, context) => {
         toaster("error", "There was an error updating this item.");
         queryClient.setQueryData([type, item_id], context?.oldData);
       },

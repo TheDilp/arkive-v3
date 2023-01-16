@@ -14,6 +14,7 @@ import { BoardCreateType, BoardType } from "../../../types/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { boardNodeShapes } from "../../../utils/boardUtils";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DropdownFilter } from "../../../utils/filters";
@@ -30,7 +31,7 @@ export default function DrawerBoardContent() {
   const createBoardMutation = useCreateItem<BoardType>("boards");
   const updateBoardMutation = useUpdateItem<BoardType>("boards", project_id as string);
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
-  const boards = queryClient.getQueryData<BoardType[]>(["allitems", project_id, "boards"]);
+  const allBoards = queryClient.getQueryData<BoardType[]>(["allitems", project_id, "boards"]);
   const { data: board } = useGetItem<BoardType>(drawer?.id as string, "boards", { enabled: !!drawer?.id });
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     board ?? {
@@ -41,38 +42,6 @@ export default function DrawerBoardContent() {
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
-  function CreateUpdateBoard(newData: BoardCreateType) {
-    if (board) {
-      if (boards?.some((item) => item.parent === newData.id) && !newData.folder) {
-        toaster("warning", "Cannot convert to board if folder contains files.");
-        return;
-      }
-      if (!changedData) {
-        toaster("info", "No data was changed.");
-        return;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { tags, ...rest } = changedData;
-      updateBoardMutation?.mutate(
-        {
-          id: board.id,
-          ...rest,
-        },
-        {
-          onSuccess: () => {
-            toaster("success", "Your board was successfully updated.");
-            resetChanges();
-          },
-        },
-      );
-    } else {
-      createBoardMutation.mutate({
-        ...DefaultBoard,
-        ...newData,
-      });
-    }
-    setDrawer({ ...DefaultDrawer, position: "right" });
-  }
   useEffect(() => {
     if (board) {
       setLocalItem(board);
@@ -113,8 +82,8 @@ export default function DrawerBoardContent() {
           onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
           optionLabel="title"
           options={
-            boards
-              ? [{ id: null, title: "Root" }, ...(boards as BoardType[]).filter((b) => DropdownFilter(b, board))]
+            allBoards
+              ? [{ id: null, title: "Root" }, ...(allBoards as BoardType[]).filter((b) => DropdownFilter(b, board))]
               : [{ id: null, title: "Root" }]
           }
           optionValue="id"
@@ -167,9 +136,21 @@ export default function DrawerBoardContent() {
 
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() => {
-          CreateUpdateBoard(localItem);
-        }}
+        onClick={() =>
+          createUpdateItem<BoardType>(
+            board,
+            localItem,
+            changedData,
+            "boards",
+            project_id as string,
+            queryClient,
+            DefaultBoard,
+            allBoards,
+            resetChanges,
+            createBoardMutation.mutate,
+            updateBoardMutation.mutate,
+          )
+        }
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>

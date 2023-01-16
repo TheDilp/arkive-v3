@@ -14,6 +14,7 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
@@ -41,47 +42,6 @@ export default function DrawerMapContent() {
   );
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-
-  function CreateUpdateMap(newData: MapCreateType) {
-    if (map) {
-      if (maps?.some((item) => item?.parent?.id === newData.id) && !newData.folder) {
-        toaster("warning", "Cannot convert to file if folder contains files.");
-        return;
-      }
-      if (!changedData) {
-        toaster("info", "No data was changed.");
-        return;
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { tags, ...rest } = changedData;
-      updateMapMutation?.mutate(
-        {
-          id: map.id,
-          ...rest,
-        },
-        {
-          onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] });
-            toaster("success", "Map successfully updated.");
-          },
-        },
-      );
-    } else {
-      createMapMutation?.mutate(
-        {
-          ...DefaultMap,
-          ...newData,
-        },
-        {
-          onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] });
-          },
-        },
-      );
-    }
-    resetChanges();
-  }
 
   useEffect(() => {
     if (map) {
@@ -152,9 +112,21 @@ export default function DrawerMapContent() {
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() => {
-          CreateUpdateMap(localItem);
-        }}
+        onClick={() =>
+          createUpdateItem<MapType>(
+            map,
+            localItem,
+            changedData,
+            "maps",
+            project_id as string,
+            queryClient,
+            DefaultMap,
+            maps,
+            resetChanges,
+            createMapMutation.mutate,
+            updateMapMutation.mutate,
+          )
+        }
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
@@ -163,7 +135,7 @@ export default function DrawerMapContent() {
           <Button
             className=" p-button-outlined p-button-danger w-full"
             onClick={() => {
-              if (document)
+              if (map)
                 deleteItem(
                   map.folder
                     ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"

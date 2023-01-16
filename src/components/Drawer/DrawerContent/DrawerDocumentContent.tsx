@@ -16,6 +16,7 @@ import { baseURLS, getURLS } from "../../../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
@@ -47,47 +48,6 @@ export default function DrawerDocumentContent() {
     },
   );
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-
-  function CreateUpdateDocument(newData: DocumentCreateType) {
-    if (document) {
-      if (allDocuments?.some((item) => item?.parent?.id === newData.id) && !newData.folder) {
-        toaster("warning", "Cannot convert to file if folder contains files.");
-        return;
-      }
-      if (!changedData) {
-        toaster("info", "No data was changed.");
-        return;
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { tags, ...rest } = changedData;
-      updateDocumentMutation?.mutate(
-        {
-          id: document.id,
-          ...rest,
-        },
-        {
-          onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
-            toaster("success", "Document successfully updated.");
-          },
-        },
-      );
-    } else {
-      createDocumentMutation?.mutate(
-        {
-          ...DefaultDocument,
-          ...newData,
-        },
-        {
-          onSuccess: () => {
-            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
-          },
-        },
-      );
-    }
-    resetChanges();
-  }
 
   useEffect(() => {
     if (document) {
@@ -188,7 +148,21 @@ export default function DrawerDocumentContent() {
 
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() => CreateUpdateDocument(localItem)}
+        onClick={() =>
+          createUpdateItem<DocumentType>(
+            document,
+            localItem,
+            changedData,
+            "documents",
+            project_id as string,
+            queryClient,
+            DefaultDocument,
+            allDocuments,
+            resetChanges,
+            createDocumentMutation.mutate,
+            updateDocumentMutation.mutate,
+          )
+        }
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
