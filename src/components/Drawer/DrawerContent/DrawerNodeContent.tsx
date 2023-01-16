@@ -47,19 +47,15 @@ export default function DrawerNodeContent() {
           {
             onSuccess: () => {
               toaster("success", `Node ${localItem.label || ""} was successfully updated.`);
-
               resetChanges();
-              if ("doc_id" in changedData)
+              if (tags)
                 queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
                   if (oldData)
                     return {
                       ...oldData,
                       nodes: oldData?.nodes.map((node) => {
                         if (node.id === localItem.id) {
-                          const newDoc = queryClient
-                            .getQueryData<DocumentType[]>(["allItems", project_id, "documents"])
-                            ?.find((doc) => doc.id === changedData.doc_id);
-                          return { ...node, document: newDoc };
+                          return { ...node, tags };
                         }
                         return node;
                       }),
