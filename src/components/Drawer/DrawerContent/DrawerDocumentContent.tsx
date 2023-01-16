@@ -69,7 +69,6 @@ export default function DrawerDocumentContent() {
         {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
-            if ("tags" in changedData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
             toaster("success", "Document successfully updated.");
           },
         },
@@ -83,7 +82,6 @@ export default function DrawerDocumentContent() {
         {
           onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] });
-            if ("tags" in newData) queryClient.refetchQueries({ queryKey: ["allTags", project_id, "documents"] });
           },
         },
       );

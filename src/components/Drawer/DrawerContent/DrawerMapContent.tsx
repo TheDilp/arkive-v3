@@ -14,7 +14,6 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { MapCreateType, MapType } from "../../../types/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
-import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
@@ -45,8 +44,8 @@ export default function DrawerMapContent() {
 
   function CreateUpdateMap(newData: MapCreateType) {
     if (map) {
-      if (!newData.folder && maps?.some((mapItem) => mapItem.parentId === map.id)) {
-        toaster("warning", "Cannot turn folder into map if it contains children");
+      if (maps?.some((item) => item?.parent?.id === newData.id) && !newData.folder) {
+        toaster("warning", "Cannot convert to file if folder contains files.");
         return;
       }
       if (!changedData) {
@@ -58,29 +57,32 @@ export default function DrawerMapContent() {
       const { tags, ...rest } = changedData;
       updateMapMutation?.mutate(
         {
-          id: localItem.id,
+          id: map.id,
           ...rest,
         },
         {
           onSuccess: () => {
-            toaster("success", "Your map was successfully updated.");
             queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] });
-            resetChanges();
+            toaster("success", "Map successfully updated.");
           },
         },
       );
     } else {
-      if (!localItem.folder && !localItem.image) {
-        toaster("warning", "Maps must have a map image.");
-        return;
-      }
-      createMapMutation.mutate({
-        ...DefaultMap,
-        ...newData,
-      });
+      createMapMutation?.mutate(
+        {
+          ...DefaultMap,
+          ...newData,
+        },
+        {
+          onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: ["allItems", project_id, "maps"] });
+          },
+        },
+      );
     }
-    setDrawer({ ...DefaultDrawer, position: "right" });
+    resetChanges();
   }
+
   useEffect(() => {
     if (map) {
       setLocalItem(map);
