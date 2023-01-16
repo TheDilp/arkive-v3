@@ -89,7 +89,7 @@ export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
   );
 };
 
-export const useCreateSubItem = <SubItemType extends { id: string; parent: string }>(
+export const useCreateSubItem = <SubItemType extends { id: string; parentId: string }>(
   id: string,
   subType: AvailableSubItemTypes,
   type: AvailableItemTypes,
@@ -109,7 +109,7 @@ export const useCreateSubItem = <SubItemType extends { id: string; parent: strin
     },
     {
       onMutate: async (variables) => {
-        if (!variables.parent || !variables.id) throw new Error("NO ID OR PARENT.");
+        if (!variables.parentId || !variables.id) throw new Error("NO ID OR PARENT.");
         const oldData: AllItemsType | undefined = queryClient.getQueryData([type, id]);
         if (oldData && variables) {
           if (

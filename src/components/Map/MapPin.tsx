@@ -22,7 +22,7 @@ export default function MapPin({
   const { id, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, isPublic } = markerData;
   const navigate = useNavigate();
   const { project_id } = useParams();
-  const updateMapPin = useUpdateSubItem(project_id as string, "map_pins", "maps");
+  const updateMapPin = useUpdateSubItem<MapPinType>(project_id as string, "map_pins", "maps");
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setMapContext] = useAtom(MapContextAtom);
@@ -33,17 +33,17 @@ export default function MapPin({
       if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
       if (e.originalEvent.shiftKey && map_link) {
         e.originalEvent.preventDefault();
-        navigate(`../../${map_link}`);
+        navigate(`../${map_link}`);
       } else if (e.originalEvent.altKey && doc_id) {
         e.originalEvent.preventDefault();
-        navigate(`../../../documents/${doc_id}`);
+        navigate(`../../documents/${doc_id}`);
       }
     },
     contextmenu: (e: any) => {
       if (!readOnly) {
         setMapContext({ type: "pin" });
         cm.current.show(e.originalEvent);
-        setDrawer({ ...DefaultDrawer, id, data: { ...markerData, ...e.latlng } });
+        setDrawer({ ...DefaultDrawer, position: "right", id, data: { ...markerData, ...e.latlng } });
       }
     },
     dragend(e: any) {

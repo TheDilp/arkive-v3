@@ -44,7 +44,7 @@ export default function DocumentsTree() {
   );
 
   return (
-    <div className="h-screen">
+    <div className="h-screen p-2">
       <SplitButton
         className="p-button-outlined w-full"
         icon="pi pi-bolt"

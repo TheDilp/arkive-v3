@@ -46,8 +46,9 @@ export default function DrawerNodeContent() {
           { id: localItem.id, ...rest },
           {
             onSuccess: () => {
-              resetChanges();
               toaster("success", `Node ${localItem.label || ""} was successfully updated.`);
+
+              resetChanges();
               if ("doc_id" in changedData)
                 queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
                   if (oldData)
@@ -65,10 +66,10 @@ export default function DrawerNodeContent() {
                     };
                   return oldData;
                 });
+              setDrawer({ ...DefaultDrawer, position: "right" });
             },
           },
         );
-        setDrawer({ ...DefaultDrawer, position: "right" });
       } else {
         toaster("info", "No data was changed.");
       }
@@ -311,31 +312,33 @@ export default function DrawerNodeContent() {
           </div>
         </div>
       </div>
-      <Button
-        className="p-button-outlined p-button-success"
-        icon="pi pi-save"
-        iconPos="right"
-        label="Save Node"
-        onClick={() => {
-          updateNode();
+      <div className="w-full">
+        <Button
+          className="p-button-outlined p-button-success w-full"
+          icon="pi pi-save"
+          iconPos="right"
+          label="Save Node"
+          onClick={() => {
+            updateNode();
 
-          // if (selectedTemplate) {
-          //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
-          //   //   const { show, ...restDialog } = localItem;
-          //   //   updateNodeMutation.mutate({
-          //   //     ...restDialog,
-          //   //     ...restTemplate,
-          //   //     board_id: board_id as string,
-          //   //   });
-          //   //   setSelectedTemplate(null);
-          //   //   toastSuccess("Template Applied");
-          //   // } else {
+            // if (selectedTemplate) {
+            //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
+            //   //   const { show, ...restDialog } = localItem;
+            //   //   updateNodeMutation.mutate({
+            //   //     ...restDialog,
+            //   //     ...restTemplate,
+            //   //     board_id: board_id as string,
+            //   //   });
+            //   //   setSelectedTemplate(null);
+            //   //   toastSuccess("Template Applied");
+            //   // } else {
 
-          //   setSelectedTemplate(null);
-          // }
-        }}
-        type="submit"
-      />
+            //   setSelectedTemplate(null);
+            // }
+          }}
+          type="submit"
+        />
+      </div>
     </div>
   );
 }

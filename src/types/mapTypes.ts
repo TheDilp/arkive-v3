@@ -3,7 +3,7 @@ import { BaseItemType } from "./generalTypes";
 // Map Pins
 export type MapPinType = {
   id: string;
-  parent: string;
+  parentId: string;
   lat: number;
   lng: number;
   color: string;
@@ -37,7 +37,5 @@ export type MapCreateType = Partial<Omit<MapType, "project_id">> & {
 
 export type DefaultMapType = Omit<MapType, "id" | "project_id" | "map_layers" | "map_pins">;
 
-export type MapPinCreateType = Partial<Omit<MapPinType, "parent">> & {
-  parent: string;
-};
+export type MapPinCreateType = Partial<Omit<MapPinType, "parent">>;
 export type DefaultMapPinType = Omit<MapPinType, "id">;
