@@ -57,7 +57,7 @@ export default function Tags({ handleChange, localItem, type }: Props) {
 
   return (
     <AutoComplete
-      className="tagsAutocomplete max-h-40 w-full overflow-y-scroll border-zinc-600"
+      className="tagsAutocomplete max-h-40 w-full overflow-y-auto border-zinc-600"
       completeMethod={(e) => filterTags(e, initialTags || [], setTags)}
       field="title"
       multiple

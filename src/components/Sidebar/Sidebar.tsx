@@ -12,7 +12,7 @@ export default function Sidebar() {
   if (pathname.includes("documents"))
     return (
       <div className="flex flex-1 flex-col">
-        <TabView className="flex flex-1 flex-col" renderActiveOnly>
+        <TabView className="wikiTabs flex flex-1 flex-col" renderActiveOnly>
           <TabPanel className="flex h-full w-full flex-1 flex-col" header="Documents">
             <DocumentsTree />
           </TabPanel>
