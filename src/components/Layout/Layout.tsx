@@ -50,7 +50,7 @@ export default function Layout() {
 
         <div
           className={`flex ${
-            sidebarToggle ? "w-1/6 opacity-100" : "w-0 opacity-0"
+            sidebarToggle ? "w-1/5 opacity-100" : "w-0 opacity-0"
           }  max-w-[20%] flex-col overflow-hidden bg-zinc-800 transition-all`}>
           {sidebarToggle ? <Sidebar /> : null}
         </div>

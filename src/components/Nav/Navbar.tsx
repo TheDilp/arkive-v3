@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
+import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { DialogAtom, DrawerAtom, SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const projectData = useGetSingleProject(project_id as string);
+  const { isSm } = useBreakpoint();
   function navbarShortcuts(e: KeyboardEvent) {
     if (e.ctrlKey && project_id) {
       if (e.key === "1") {
@@ -119,7 +121,7 @@ export default function Navbar() {
         )}
       </div>
       {/* Use project title only if in project */}
-      {project_id && (
+      {project_id && !isSm && (
         <div
           className="h-2rem align-items-start pointer-events-none fixed flex w-full overflow-hidden"
           style={{

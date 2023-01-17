@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
+import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
@@ -11,14 +12,14 @@ export default function MapsTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const createMapMutation = useCreateItem("maps");
-
+  const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2 2xl:flex-nowrap">
+      <div className="flex  items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2 ">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
-          label="New Folder"
+          label={isMd ? "" : "New Folder"}
           onClick={() => {
             createMapMutation?.mutate({
               folder: true,
@@ -31,7 +32,7 @@ export default function MapsTree() {
           className="p-button-outlined w-full truncate"
           icon="pi pi-map"
           iconPos="right"
-          label="New Map"
+          label={isMd ? "" : "New Map"}
           onClick={() => {
             setDrawer({
               ...DefaultDrawer,

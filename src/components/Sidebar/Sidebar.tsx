@@ -1,14 +1,35 @@
 import { Icon } from "@iconify/react";
+import { useAtom } from "jotai";
+import { Sidebar as PrimeSidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Link, useLocation } from "react-router-dom";
 
+import { useBreakpoint } from "../../hooks/useMediaQuery";
+import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import BoardsTree from "../Tree/BoardsTree";
 import DocumentsTree from "../Tree/DocumentsTree";
 import MapsTree from "../Tree/MapsTree";
 import TemplatesTree from "../Tree/TemplatesTree";
 
-export default function Sidebar() {
+type Props = {
+  children: JSX.Element | null;
+};
+function SidebarContainer({ children }: Props) {
+  const { isMd } = useBreakpoint();
+  const [sidebar, setSidebar] = useAtom(SidebarCollapseAtom);
+
+  return isMd ? (
+    <PrimeSidebar className="treeSidebar bg-zinc-800" onHide={() => setSidebar(false)} visible={sidebar}>
+      {children}
+    </PrimeSidebar>
+  ) : (
+    children
+  );
+}
+
+function SidebarContent() {
   const { pathname } = useLocation();
+
   if (pathname.includes("documents"))
     return (
       <div className="flex flex-1 flex-col">
@@ -92,4 +113,11 @@ export default function Sidebar() {
       </div>
     );
   return null;
+}
+export default function Sidebar() {
+  return (
+    <SidebarContainer>
+      <SidebarContent />
+    </SidebarContainer>
+  );
 }
