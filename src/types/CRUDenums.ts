@@ -1,5 +1,5 @@
 export const baseURLS = {
-  baseServer: `http://localhost:${import.meta.env.VITE_BE_PORT}/`,
+  baseServer: `${import.meta.env.VITE_HOST}:${import.meta.env.VITE_BE_PORT}/`,
 };
 export const getURLS = {
   //  Projects
