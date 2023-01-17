@@ -96,7 +96,7 @@ function ExpandedSection(tag: TagSettingsType) {
           <Link
             key={node.id}
             className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
-            to={`../../boards/${node.parent}/${node.id}`}>
+            to={`../../boards/${node.parentId}/${node.id}`}>
             <Icon icon="ph:graph-light" />
             {node.label || "Unlabeled node"}
           </Link>
@@ -111,7 +111,7 @@ function ExpandedSection(tag: TagSettingsType) {
           <Link
             key={edge.id}
             className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
-            to={`../../boards/${edge.parent}/${edge.id}`}>
+            to={`../../boards/${edge.parentId}/${edge.id}`}>
             <Icon icon="ph:graph-light" />
             {edge.label || "Unlabeled edge"}
           </Link>

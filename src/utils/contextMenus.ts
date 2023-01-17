@@ -94,7 +94,7 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
               backgroundColor: board?.defaultNodeColor,
               x: boardContext.x,
               y: boardContext.y,
-              parent: item_id as string,
+              parentId: item_id as string,
               id: crypto.randomUUID(),
             });
           else toaster("error", "There was an error creating your node (missing X and Y).");

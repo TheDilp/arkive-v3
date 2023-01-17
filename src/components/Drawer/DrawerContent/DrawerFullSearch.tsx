@@ -121,7 +121,7 @@ export default function DrawerFullSearch() {
                       }}
                       to={getLinkForFullSearch(
                         item.id,
-                        item.parent as string,
+                        item.parentId as string,
                         key as AvailableSearchResultTypes,
                         project_id as string,
                         "folder" in item ? item.folder : false,

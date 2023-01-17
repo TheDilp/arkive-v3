@@ -43,8 +43,8 @@ export interface TagSettingsType extends TagType {
   maps: Pick<MapType, "id" | "title" | "icon" | "folder">[];
   map_pins: Pick<MapPinType, "id" | "text" | "icon">[];
   boards: Pick<BoardType, "id" | "title" | "icon" | "folder">[];
-  nodes: Pick<NodeType, "id" | "label" | "parent">[];
-  edges: Pick<EdgeType, "id" | "label" | "parent">[];
+  nodes: Pick<NodeType, "id" | "label" | "parentId">[];
+  edges: Pick<EdgeType, "id" | "label" | "parentId">[];
 }
 
 export type EditorType = {

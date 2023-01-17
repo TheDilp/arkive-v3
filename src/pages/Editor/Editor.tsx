@@ -21,13 +21,13 @@ import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
-  const { item_id } = useParams();
+  const { project_id, item_id } = useParams();
   const [saving, setSaving] = useState(false);
   const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents", { enabled: !!editable }) as {
     data: DocumentType;
     isLoading: boolean;
   };
-  const updateDocumentMutation = useUpdateItem("documents");
+  const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
 
   const onError: InvalidContentHandler = useCallback(({ json, invalidContent, transformers }) => {
     // Automatically remove all invalid nodes and marks.

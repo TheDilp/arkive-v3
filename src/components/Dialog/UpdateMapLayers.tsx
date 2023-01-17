@@ -38,7 +38,7 @@ export default function UpdateMapLayers() {
             const newLayer = {
               id: crypto.randomUUID(),
               title: "New Layer",
-              parent: dialog.data?.id,
+              parentId: dialog.data?.id,
               image: "",
               isPublic: false,
             };

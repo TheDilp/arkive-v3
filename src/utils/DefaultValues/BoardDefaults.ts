@@ -17,7 +17,7 @@ export const DefaultBoard: DefaultBoardType = {
 
 export const DefaultEdge: DefaultEdgeType = {
   id: "",
-  parent: "",
+  parentId: "",
   label: "",
   curveStyle: "straight",
   lineColor: "#595959",
@@ -57,7 +57,7 @@ export const DefaultEdge: DefaultEdgeType = {
 };
 export const DefaultNode: DefaultNodeType = {
   id: "",
-  parent: "",
+  parentId: "",
   width: 50,
   height: 50,
   x: 0,

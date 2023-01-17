@@ -18,7 +18,7 @@ export type MapPinType = {
 // Map Layers
 export type MapLayerType = {
   id: string;
-  parent: string;
+  parentId: string;
   title: string;
   image: string;
   isPublic: boolean;

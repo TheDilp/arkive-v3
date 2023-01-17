@@ -27,7 +27,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
   const navigate = useNavigate();
   const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
-  const updateMutation = useUpdateItem(type, project_id as string);
+  const updateMutation = useUpdateItem<AllItemsType>(type, project_id as string);
   const deleteMutation = useDeleteItem(type, project_id as string);
   if (!node.data) return null;
   return (

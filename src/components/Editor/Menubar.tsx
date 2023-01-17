@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { findParentNode, RemirrorJSON } from "remirror";
 
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { DocumentType } from "../../types/documentTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
@@ -39,12 +40,12 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     updateNodeAttributes,
     focus,
   } = useCommands();
-  const { doc_id } = useParams();
+  const { project_id, item_id } = useParams();
   const { getState } = useRemirrorContext();
   const active = useActive();
   const attrs = useAttrs();
   const [, setDialog] = useAtom(DialogAtom);
-  const updateDocumentMutation = useUpdateItem("documents");
+  const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
   function calloutToggle(type: string) {
     if (active.callout()) {
       if (!active.callout({ type })) {
@@ -348,7 +349,7 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
             try {
               await updateDocumentMutation?.mutateAsync({
                 content: getState().doc.toJSON() as RemirrorJSON,
-                id: doc_id as string,
+                id: item_id as string,
               });
               toaster("success", "Document successfully saved!");
             } catch (error) {

@@ -63,7 +63,7 @@ export type NodeType = {
   zIndex: number;
   doc_id?: string;
   document?: DocumentType;
-  parent: string;
+  parentId: string;
 };
 export type EdgeType = {
   id: string;
@@ -106,7 +106,7 @@ export type EdgeType = {
   zIndex: number;
   source_id: string;
   target_id: string;
-  parent: string;
+  parentId: string;
 };
 export interface BoardType extends BaseItemType {
   defaultNodeShape: NodeShape;
