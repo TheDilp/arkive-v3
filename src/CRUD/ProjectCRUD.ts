@@ -4,13 +4,18 @@ import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import { ProjectType } from "../types/projectTypes";
 import { toaster } from "../utils/toast";
 
-export const useGetAllProjects = () => {
-  return useQuery(["allProjects"], async () =>
-    (
-      await fetch(`${baseURLS.baseServer}${getURLS.getAllProjects}`, {
-        method: "GET",
-      })
-    ).json(),
+export const useGetAllProjects = (enabled: boolean) => {
+  return useQuery(
+    ["allProjects"],
+    async () =>
+      (
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllProjects}`, {
+          method: "GET",
+        })
+      ).json(),
+    {
+      enabled,
+    },
   );
 };
 

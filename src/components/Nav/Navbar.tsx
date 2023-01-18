@@ -1,7 +1,7 @@
+import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Tooltip } from "primereact/tooltip";
-import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
@@ -17,54 +17,33 @@ export default function Navbar() {
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const projectData = useGetSingleProject(project_id as string);
   const { isSm } = useBreakpoint();
-  function navbarShortcuts(e: KeyboardEvent) {
-    if (e.ctrlKey && project_id) {
-      if (e.key === "1") {
-        e.preventDefault();
-        e.stopPropagation();
-        navigate("/");
-      } else if (e.key === "2") {
-        e.preventDefault();
-        e.stopPropagation();
-        navigate("./documents");
-      } else if (e.key === "3") {
-        e.preventDefault();
-        e.stopPropagation();
-        navigate("./maps");
-      } else if (e.key === "4") {
-        e.preventDefault();
-        e.stopPropagation();
-        navigate("./boards");
-      }
-    }
-  }
 
-  useEffect(() => {
-    window.addEventListener("keydown", navbarShortcuts);
-    return () => {
-      window.removeEventListener("keydown", navbarShortcuts);
-    };
-  }, []);
+  const { logout } = useAuthorizer();
 
   return (
-    <div className="flex flex-nowrap border-b border-zinc-600 bg-zinc-800 py-2 shadow">
+    <div className="min-h-8 flex h-8 flex-nowrap border-b border-zinc-600 bg-zinc-800 py-2 shadow">
       <div className="flex w-full items-center gap-x-2 px-2">
-        <Icon
-          className="cursor-pointer hover:text-blue-300"
-          fontSize={20}
-          icon={`mdi:${sidebarToggle ? "menu-open" : "menu"}`}
-          onClick={() => {
-            setSidebarToggle(!sidebarToggle);
-          }}
-        />
-        <Icon
-          className="cursor-pointer hover:text-blue-300"
-          fontSize={20}
-          icon="mdi:home"
-          onClick={async () => {
-            navigate("/");
-          }}
-        />
+        {project_id ? (
+          <>
+            <Icon
+              className="cursor-pointer hover:text-blue-300"
+              fontSize={20}
+              icon={`mdi:${sidebarToggle ? "menu-open" : "menu"}`}
+              onClick={() => {
+                setSidebarToggle(!sidebarToggle);
+              }}
+            />
+            <Icon
+              className="cursor-pointer hover:text-blue-300"
+              fontSize={20}
+              icon="mdi:home"
+              onClick={async () => {
+                navigate("/");
+              }}
+            />
+          </>
+        ) : null}
+
         {project_id && (
           <>
             <Tooltip autoHide content="Documents" position="bottom" target=".documentsIcon" />{" "}
@@ -83,7 +62,7 @@ export default function Navbar() {
               className="mapsIcon cursor-pointer hover:text-blue-300"
               fontSize={20}
               icon="mdi:map-marker"
-              onClick={async () => {
+              onClick={() => {
                 navigate("./maps");
               }}
             />
@@ -91,34 +70,40 @@ export default function Navbar() {
               className="boardsIcon cursor-pointer hover:text-blue-300"
               fontSize={20}
               icon="mdi:draw"
-              onClick={async () => {
+              onClick={() => {
                 navigate("./boards");
               }}
             />
-            <span className="ml-auto flex items-center gap-x-2">
+          </>
+        )}
+        <span className="ml-auto flex items-center gap-x-2">
+          {project_id ? (
+            <>
               <Icon
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
                 icon="ion:search"
-                onClick={async () => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "full_search" })}
+                onClick={() => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "full_search" })}
               />
               <Icon
                 className="fileBrowserIcon cursor-pointer hover:text-blue-300"
                 fontSize={20}
                 icon="ion:upload"
-                onClick={async () => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
+                onClick={() => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
               />
               <Icon
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
                 icon="mdi:cog"
-                onClick={async () => {
+                onClick={() => {
                   navigate("./settings/project-settings");
                 }}
               />
-            </span>
-          </>
-        )}
+            </>
+          ) : null}
+
+          <Icon className="cursor-pointer hover:text-blue-300" fontSize={20} icon="mdi:log-out" onClick={() => logout()} />
+        </span>
       </div>
       {/* Use project title only if in project */}
       {project_id && !isSm && (
