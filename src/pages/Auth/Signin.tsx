@@ -2,6 +2,7 @@ import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { toaster } from "../../utils/toast";
 
@@ -42,6 +43,12 @@ export default function Signin() {
         placeholder="Password"
         type="password"
       />
+      <Link className="flex w-full justify-end " to="/auth/signup">
+        <small className="group cursor-pointer text-right text-xs text-zinc-500 transition-colors hover:text-sky-200">
+          Don&apos;t have an account?
+          <span className="text-zinc-500 transition-colors group-hover:text-sky-200"> Sign up</span>
+        </small>
+      </Link>
       <Button
         className="p-button-success p-button-outlined"
         icon="pi pi-sign-in"
