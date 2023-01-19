@@ -5,6 +5,7 @@ import backgroundImage from "../../assets/earthimg.jpg";
 
 export default function AuthLayout() {
   const { user } = useAuthorizer();
+
   if (user) return <Navigate to="/" />;
   return (
     <article className="flex h-full w-full items-center justify-center">

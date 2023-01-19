@@ -8,6 +8,7 @@ import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { DialogAtom, DrawerAtom, SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { removeItem } from "../../utils/storage";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -102,7 +103,17 @@ export default function Navbar() {
             </>
           ) : null}
 
-          <Icon className="cursor-pointer hover:text-blue-300" fontSize={20} icon="mdi:log-out" onClick={() => logout()} />
+          <Icon
+            className="cursor-pointer hover:text-blue-300"
+            fontSize={20}
+            icon="mdi:log-out"
+            onClick={async () => {
+              await logout();
+              removeItem("user");
+              removeItem("authTokens");
+              navigate("/auth/signin");
+            }}
+          />
         </span>
       </div>
       {/* Use project title only if in project */}

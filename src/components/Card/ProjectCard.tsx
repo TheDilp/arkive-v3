@@ -35,7 +35,7 @@ export default function ProjectCard({ ...project }: ProjectType) {
   );
   return (
     <Card
-      className="Merriweather mx-2 flex h-[25rem] w-80 flex-col justify-between text-center"
+      className="Merriweather mx-2 flex h-[25rem] w-80 flex-col justify-between rounded-md border border-zinc-700 text-center shadow-sm"
       footer={footer}
       header={header}
       title={<div className="font-Merriweather">{project.title}</div>}

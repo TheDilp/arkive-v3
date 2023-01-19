@@ -2,13 +2,15 @@ import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
+import { getItem, setItem } from "../../utils/storage";
 import { toaster } from "../../utils/toast";
 
 export default function Signin() {
   const auth = useAuthorizer();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const user = getItem("user");
 
   function changeLoginData({ name, value }: { name: string; value: string }) {
     setLoginData((prev) => ({ ...prev, [name]: value }));
@@ -17,6 +19,17 @@ export default function Signin() {
     if (loginData.email && loginData.password) {
       const res = await auth.authorizerRef.login(loginData);
       if (res && res?.user) {
+        setItem("user", res.user, res.expires_in);
+        setItem(
+          "authTokens",
+          {
+            access_token: res.access_token,
+            refresh_token: res.refresh_token,
+            id_token: res.id_token,
+            expires_in: res.expires_in,
+          },
+          res.expires_in,
+        );
         auth.setToken({
           access_token: res.access_token,
           refresh_token: res.refresh_token,
@@ -30,7 +43,7 @@ export default function Signin() {
       if (!loginData.password) toaster("error", "No password entered.");
     }
   }
-
+  if (user) return <Navigate to="/" />;
   return (
     <div className="flex flex-col gap-y-2">
       <InputText name="email" onChange={(e) => changeLoginData(e.target)} placeholder="Email" type="email" />

@@ -1,4 +1,3 @@
-import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -8,9 +7,10 @@ import ProjectCard from "../components/Card/ProjectCard";
 import Navbar from "../components/Nav/Navbar";
 import { useCreateProject, useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { ProjectType } from "../types/projectTypes";
+import { getItem } from "../utils/storage";
 
 export default function Dashboard() {
-  const { user } = useAuthorizer();
+  const user = getItem("user");
   const { isLoading, error, data: projects } = useGetAllProjects(!!user);
 
   const createProjectMutation = useCreateProject();

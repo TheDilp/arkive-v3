@@ -27,6 +27,7 @@
     "file-saver": "^2.0.5",
     "jotai": "^1.9.1",
     "leaflet": "^1.9.3",
+    "localstorage-slim": "^2.3.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.pick": "^4.4.0",
     "lodash.set": "^4.3.2",

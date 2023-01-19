@@ -1,4 +1,3 @@
-import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { useQueries } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
@@ -7,6 +6,7 @@ import { Navigate, Outlet, useParams } from "react-router-dom";
 
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { getItems } from "../../utils/CRUD/CRUDFunctions";
+import { getItem } from "../../utils/storage";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import Navbar from "../Nav/Navbar";
@@ -15,7 +15,7 @@ import Sidebar from "../Sidebar/Sidebar";
 export default function Layout() {
   const { project_id } = useParams();
   const [sidebarToggle] = useAtom(SidebarCollapseAtom);
-  const { user } = useAuthorizer();
+  const user = getItem("user");
 
   const results = useQueries({
     queries: [
