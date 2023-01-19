@@ -29,34 +29,34 @@ import MapSettings from "./pages/Settings/MapSettings";
 import ProjectSettings from "./pages/Settings/ProjectSettings";
 import TagsSettings from "./pages/Settings/TagsSettings";
 
-function App() {
-  const navigate = useNavigate();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        networkMode: "always",
-        retry: (failureCount) => {
-          if (failureCount >= 1) return false;
-          return true;
-        },
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      networkMode: "always",
+      retry: (failureCount) => {
+        if (failureCount >= 1) return false;
+        return true;
       },
     },
-  });
+  },
+});
+function App() {
+  const navigate = useNavigate();
 
   return (
-    <main className="flex h-screen flex-col">
-      <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
-      <AuthorizerProvider
-        config={{
-          authorizerURL: "https://authorizer-production-ad3e.up.railway.app/",
-          redirectURL: window.location.origin,
-          clientID: import.meta.env.VITE_AUTH_ID, // obtain your client id from authorizer dashboard
-        }}
-        onStateChangeCallback={async (res) => {
-          if (res.user) navigate("/");
-        }}>
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <main className="flex h-screen flex-col">
+        <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
+        <AuthorizerProvider
+          config={{
+            authorizerURL: "https://authorizer-production-ad3e.up.railway.app/",
+            redirectURL: window.location.origin,
+            clientID: import.meta.env.VITE_AUTH_ID, // obtain your client id from authorizer dashboard
+          }}
+          onStateChangeCallback={async (res) => {
+            if (res.user) navigate("/");
+          }}>
           <ReactQueryDevtools initialIsOpen={false} />
           <DndProvider backend={MultiBackend} options={getBackendOptions()}>
             <Routes>
@@ -102,9 +102,9 @@ function App() {
               </Route>
             </Routes>
           </DndProvider>
-        </QueryClientProvider>
-      </AuthorizerProvider>
-    </main>
+        </AuthorizerProvider>
+      </main>
+    </QueryClientProvider>
   );
 }
 

@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { buttonLabelWithIcon } from "../../utils/transform";
 import BaseTree from "./BaseTree";
 
 export default function BoardsTree() {
@@ -20,8 +19,8 @@ export default function BoardsTree() {
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
-          label="New Folder"
           iconPos="right"
+          label="New Folder"
           onClick={() => {
             createBoardMutation?.mutate({
               folder: true,

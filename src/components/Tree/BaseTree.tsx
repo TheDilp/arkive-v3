@@ -106,9 +106,10 @@ export default function BaseTree({ isTemplates, type }: Props) {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
+  console.log(treeData);
   return (
     <div
-      className="flex h-full flex-col overflow-hidden"
+      className="flex h-full flex-col "
       onContextMenu={(e) => {
         setContextMenu({ data: null, type, folder: false, template: true });
         cm?.current?.show(e);

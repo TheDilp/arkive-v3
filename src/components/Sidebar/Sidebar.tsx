@@ -11,9 +11,9 @@ const navItems = [
     icon: "mdi:home",
     navigate: "/",
   },
-  { icon: "ion:documents-outline", navigate: "documents" },
-  { icon: "mdi:map-outline", navigate: "maps" },
-  { icon: "ph:graph", navigate: "boards" },
+  { icon: "ion:documents-outline", navigate: "./documents" },
+  { icon: "mdi:map-outline", navigate: "./maps" },
+  { icon: "ph:graph", navigate: "./boards" },
 ];
 
 export default function Sidebar() {

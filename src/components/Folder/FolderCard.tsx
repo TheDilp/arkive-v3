@@ -4,7 +4,7 @@ import { MutableRefObject } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { useSortMutation } from "../../CRUD/ItemsCRUD";
-import { baseURLS, getURLS } from "../../types/CRUDenums";
+import { baseURLS } from "../../types/CRUDenums";
 import { AvailableItemTypes, DragItem } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 
@@ -58,13 +58,7 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
       to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>
       <div className="flex h-36 w-36 cursor-pointer flex-col items-center justify-between px-4 py-2 transition-colors hover:text-blue-300">
         {image && !isFolder ? (
-          <img
-            alt={type}
-            className="object-contain"
-            src={`${baseURLS.baseServer}${
-              type === "maps" ? getURLS.getSingleMapImage : getURLS.getSingleImage
-            }${project_id}/${image}`}
-          />
+          <img alt={type} className="object-contain" src={`${baseURLS.baseImageHost}${image}`} />
         ) : (
           <Icon fontSize={150} icon={isFolder ? "mdi:folder" : icon} />
         )}

@@ -1,13 +1,11 @@
 import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Navigate } from "react-router-dom";
 
 import ProjectCard from "../components/Card/ProjectCard";
 import Navbar from "../components/Nav/Navbar";
 import { useCreateProject, useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { ProjectType } from "../types/projectTypes";
-import { getItem } from "../utils/storage";
 
 export default function Dashboard() {
   // const user = getItem("user");

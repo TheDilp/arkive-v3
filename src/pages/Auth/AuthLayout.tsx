@@ -6,7 +6,7 @@ import backgroundImage from "../../assets/earthimg.jpg";
 export default function AuthLayout() {
   const { user } = useAuthorizer();
 
-  if (user) return <Navigate to="/" />;
+  // if (user) return <Navigate to="/" />;
   return (
     <article className="flex h-full w-full items-center justify-center">
       <div className="relative h-fit w-fit max-w-lg overflow-hidden rounded-md border border-zinc-700  p-4">

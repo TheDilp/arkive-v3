@@ -15,22 +15,6 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
   const cm = useRef() as MutableRefObject<any>;
   const [contextMenu] = useAtom(SidebarTreeContextAtom);
   const menuItems = useTreeMenuItems(contextMenu, type, project_id as string);
-  // const rowVirtualizer = useVirtualizer({
-  //   count: Math.ceil(items.length / count),
-  //   getScrollElement: () => parentRef.current,
-  //   // Height of individual row
-  //   estimateSize: () => 144,
-  //   overscan: 10,
-  // });
-
-  // const columnVirtualizer = useVirtualizer({
-  //   horizontal: true,
-  //   count,
-  //   getScrollElement: () => parentRef.current,
-  //   // Width of individual column
-  //   estimateSize: () => 120,
-  //   overscan: 5,
-  // });
 
   return (
     <div className="flex h-full flex-col ">

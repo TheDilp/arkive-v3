@@ -1,12 +1,11 @@
 import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
-import { Tooltip } from "primereact/tooltip";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { DialogAtom, DrawerAtom, SidebarCollapseAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { removeItem } from "../../utils/storage";
 

@@ -35,7 +35,7 @@ export default function MapView({ isReadOnly }: Props) {
   useEffect(() => {
     if (currentMap) {
       const img = new Image();
-      img.src = `${baseURLS.baseServer}${getURLS.getSingleMapImage}${currentMap?.project_id}/${currentMap.image}`;
+      img.src = `${baseURLS.baseImageHost}${currentMap.image}`;
       img.onload = () => {
         setBounds([
           [0, 0],
