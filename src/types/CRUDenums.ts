@@ -1,5 +1,6 @@
 export const baseURLS = {
   baseServer: `${import.meta.env.VITE_BASE_SERVER}/`,
+  baseImageHost: `${import.meta.env.VITE_S3_CDN_HOST}/`,
 };
 export const getURLS = {
   //  Projects

@@ -12,13 +12,13 @@ import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/projectTypes";
+import { virtualScrollerSettings } from "../../utils/uiUtils";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const { data: allImages } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
-  console.log(allImages);
   useEffect(() => {
     if (data) setLocalItem(data);
   }, [data]);
@@ -27,7 +27,7 @@ export default function ProjectSettings() {
   return (
     <div className="flex h-[95vh] flex-col gap-y-4 overflow-y-auto p-4">
       <div>
-        <h2 className="text-2xl font-bold font-Merriweather">{data?.title} - Settings</h2>
+        <h2 className="font-Merriweather text-2xl font-bold">{data?.title} - Settings</h2>
       </div>
       <h3 className="text-lg font-semibold">Update Project Name</h3>
       <div className="flex gap-x-4">
@@ -50,24 +50,24 @@ export default function ProjectSettings() {
         />
       </div>
       <h3 className="text-lg font-semibold">Update Project Card Image</h3>
-      <div className="flex flex-col w-48 h-48 gap-x-4">
-        <img
-          alt="Project cover"
-          className="object-contain mb-2"
-          src={
-            localItem?.image ? `${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${localItem?.image}` : defaultImage
-          }
-        />
+      <div className="flex h-48 w-48 flex-col gap-x-4">
+        <div className=" max-h-36 max-w-[9rem] ">
+          <img
+            alt="Project cover"
+            className="mb-2 object-cover"
+            src={localItem?.image ? `${baseURLS.baseImageHost}${localItem?.image}` : defaultImage}
+          />
+        </div>
         <Dropdown
           itemTemplate={ImageDropdownItem}
           onChange={(e) => {
-            // if (localItem) setLocalItem({ ...localItem, id: data?.id as string, image: e.value });
             updateProject.mutate({ id: data?.id, image: e.value });
           }}
           options={allImages?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`) || []}
           placeholder="Select image"
           value={localItem}
           valueTemplate={ImageDropdownValue({ image: localItem?.image || "" })}
+          virtualScrollerOptions={virtualScrollerSettings}
         />
       </div>
       <hr />

@@ -16,7 +16,7 @@ export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItem
 };
 
 export const useGetAllImages = (project_id: string, options?: UseQueryOptions) => {
-  return useQuery<string[]>(
+  return useQuery<{ Key: string }[]>(
     ["allImages", project_id],
     async () =>
       (
@@ -31,7 +31,7 @@ export const useGetAllImages = (project_id: string, options?: UseQueryOptions) =
   );
 };
 export const useGetAllMapImages = (project_id: string) => {
-  return useQuery<string[]>(
+  return useQuery<{ Key: string }[]>(
     ["allMapImages", project_id],
     async () =>
       (

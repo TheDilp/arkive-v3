@@ -53,7 +53,7 @@ export const useUpdateProject = () => {
     },
   );
 };
-export const useGetSingleProject = (id: string, enabled: boolean) => {
+export const useGetSingleProject = (id: string, enabled?: boolean) => {
   return useQuery<ProjectType>(
     ["singleProject", id],
     async () =>
