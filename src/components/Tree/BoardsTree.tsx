@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
@@ -15,11 +16,12 @@ export default function BoardsTree() {
 
   return (
     <div className="flex h-screen flex-1 flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 xl:flex-nowrap xl:gap-x-2">
+      <div className="flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 ">
         <Button
-          className="p-button-outlined p-button-secondary w-full"
+          className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
           label="New Folder"
+          iconPos="right"
           onClick={() => {
             createBoardMutation?.mutate({
               folder: true,
@@ -29,7 +31,7 @@ export default function BoardsTree() {
           }}
         />
         <Button
-          className="p-button-outlined w-full"
+          className="p-button-outlined w-full truncate"
           onClick={() => {
             setDrawer({
               ...DefaultDrawer,
@@ -38,7 +40,12 @@ export default function BoardsTree() {
               type: "boards",
             });
           }}>
-          {buttonLabelWithIcon("New Board", "mdi:draw")}
+          <div className="flex w-full items-center justify-center gap-x-1">
+            <div className="w-full">New Board</div>
+            <div className="ml-auto">
+              <Icon className="" fontSize={20} icon="ph:graph" />
+            </div>
+          </div>
         </Button>
       </div>
 

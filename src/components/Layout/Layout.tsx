@@ -2,21 +2,21 @@ import { useQueries } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Navigate, Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { getItems } from "../../utils/CRUD/CRUDFunctions";
-import { getItem } from "../../utils/storage";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import Navbar from "../Nav/Navbar";
+import SecondarySidebar from "../Sidebar/SecondarySidebar";
 import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
   const { project_id } = useParams();
   const [sidebarToggle] = useAtom(SidebarCollapseAtom);
-  const user = getItem("user");
-
+  // const user = getItem("user");
+  const user = true;
   const results = useQueries({
     queries: [
       {
@@ -39,25 +39,27 @@ export default function Layout() {
       },
     ],
   });
-  if (!user) return <Navigate to="/auth/signin" />;
+  // if (!user) return <Navigate to="/auth/signin" />;
   if (!results.every((res) => res.isSuccess)) return <ProgressSpinner />;
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       <ConfirmDialog />
 
       <DialogWrapper />
-      <div className="w-full">
-        <Navbar />
-      </div>
-      <div className="relative flex h-full w-full">
+      <Sidebar />
+
+      <div className="relative flex h-full w-full flex-wrap">
+        <div className="w-full">
+          <Navbar />
+        </div>
         <Drawer />
 
         <div
           className={`flex ${
-            sidebarToggle ? "w-1/5 max-w-[10rem] opacity-100" : "w-0 opacity-0"
-          }  max-w-[20%] flex-col overflow-hidden bg-zinc-800 transition-all`}>
-          {sidebarToggle ? <Sidebar /> : null}
+            sidebarToggle ? "w-1/5  opacity-100" : "w-0 opacity-0"
+          } max-w-[20rem] flex-col overflow-hidden bg-zinc-800 transition-all`}>
+          {sidebarToggle ? <SecondarySidebar /> : null}
         </div>
         <div className="flex h-full flex-1 overflow-hidden">
           <div className="flex flex-1 flex-col overflow-hidden">

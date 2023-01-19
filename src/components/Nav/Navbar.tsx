@@ -15,67 +15,19 @@ export default function Navbar() {
   const { project_id } = useParams();
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const projectData = useGetSingleProject(project_id as string, !!project_id);
   const { isSm } = useBreakpoint();
 
   const { logout } = useAuthorizer();
 
   return (
-    <div className="min-h-8 flex h-8 flex-nowrap border-b border-zinc-600 bg-zinc-800 py-2 shadow">
-      <div className="flex w-full items-center gap-x-2 px-2">
-        {project_id ? (
-          <>
-            <Icon
-              className="cursor-pointer hover:text-blue-300"
-              fontSize={20}
-              icon={`mdi:${sidebarToggle ? "menu-open" : "menu"}`}
-              onClick={() => {
-                setSidebarToggle(!sidebarToggle);
-              }}
-            />
-            <Icon
-              className="cursor-pointer hover:text-blue-300"
-              fontSize={20}
-              icon="mdi:home"
-              onClick={async () => {
-                navigate("/");
-              }}
-            />
-          </>
-        ) : null}
-
-        {project_id && (
-          <>
-            <Tooltip autoHide content="Documents" position="bottom" target=".documentsIcon" />{" "}
-            <Tooltip autoHide content="Maps" position="bottom" target=".mapsIcon" />{" "}
-            <Tooltip autoHide content="Boards" position="bottom" target=".boardsIcon" />
-            <Tooltip autoHide content="Files" position="bottom" target=".filebrowserIcon" />
-            <Icon
-              className="documentsIcon cursor-pointer hover:text-blue-300"
-              fontSize={20}
-              icon="mdi:books"
-              onClick={async () => {
-                navigate("./documents");
-              }}
-            />
-            <Icon
-              className="mapsIcon cursor-pointer hover:text-blue-300"
-              fontSize={20}
-              icon="mdi:map-marker"
-              onClick={() => {
-                navigate("./maps");
-              }}
-            />
-            <Icon
-              className="boardsIcon cursor-pointer hover:text-blue-300"
-              fontSize={20}
-              icon="mdi:draw"
-              onClick={() => {
-                navigate("./boards");
-              }}
-            />
-          </>
+    <div className="min-h-8 flex h-14 flex-nowrap items-center border-b border-zinc-600 bg-zinc-800 py-2 shadow">
+      <div className="flex w-full items-center justify-center gap-x-2 px-2">
+        {/* Use project title only if in project */}
+        {project_id && !isSm && (
+          <div className="pointer-events-none sticky top-0 flex h-full flex-1 items-center justify-center">
+            <h2 className="my-0 select-none font-Merriweather text-3xl">{projectData?.data?.title}</h2>
+          </div>
         )}
         <span className="ml-auto flex items-center gap-x-2">
           {project_id ? (
@@ -116,16 +68,6 @@ export default function Navbar() {
           />
         </span>
       </div>
-      {/* Use project title only if in project */}
-      {project_id && !isSm && (
-        <div
-          className="h-2rem align-items-start pointer-events-none fixed flex w-full overflow-hidden"
-          style={{
-            top: "0.25rem",
-          }}>
-          <h2 className="mx-auto my-0 select-none font-Merriweather text-3xl">{projectData?.data?.title}</h2>
-        </div>
-      )}
     </div>
   );
 }

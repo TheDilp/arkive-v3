@@ -10,11 +10,10 @@ import { ProjectType } from "../types/projectTypes";
 import { getItem } from "../utils/storage";
 
 export default function Dashboard() {
-  const user = getItem("user");
-  const { isLoading, error, data: projects } = useGetAllProjects(!!user);
+  // const user = getItem("user");
+  const { isLoading, error, data: projects } = useGetAllProjects(!!true);
 
   const createProjectMutation = useCreateProject();
-  if (!user) return <Navigate to="auth/signin" />;
   if (isLoading)
     return (
       <div className="flex h-full w-full items-center justify-center">
@@ -26,7 +25,7 @@ export default function Dashboard() {
   return (
     <div className="flex h-full w-full flex-col overflow-y-auto">
       <div className="align-start flex w-full flex-1">
-        <div className="w-16 border-r  border-zinc-700">
+        <div className="w-16 border-r  border-zinc-800">
           <div className="h-full w-full flex-wrap bg-zinc-800 py-5 text-white">
             <div className="my-auto flex w-full justify-center ">
               <Button

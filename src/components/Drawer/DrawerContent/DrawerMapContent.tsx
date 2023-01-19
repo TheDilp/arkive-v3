@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
@@ -19,6 +18,7 @@ import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import { MapImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
@@ -55,14 +55,7 @@ export default function DrawerMapContent() {
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center text-2xl">
-        {map ? (
-          `Edit ${map.title}`
-        ) : (
-          <div className="flex items-center justify-center">
-            Create New Map
-            <Icon fontSize={36} icon="mdi:map" />
-          </div>
-        )}
+        {map ? `Edit ${map.title}` : <div className="flex items-center justify-center">Create New Map</div>}
       </h2>
       <InputText
         autoFocus
@@ -102,6 +95,7 @@ export default function DrawerMapContent() {
           optionValue="id"
           placeholder="Map Folder"
           value={localItem?.parent?.id}
+          virtualScrollerOptions={virtualScrollerSettings}
         />
       </div>
       <Tags handleChange={handleChange} localItem={localItem} type="maps" />

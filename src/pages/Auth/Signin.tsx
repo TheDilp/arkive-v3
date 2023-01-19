@@ -10,7 +10,7 @@ import { toaster } from "../../utils/toast";
 export default function Signin() {
   const auth = useAuthorizer();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const user = getItem("user");
+  // const user = getItem("user");
 
   function changeLoginData({ name, value }: { name: string; value: string }) {
     setLoginData((prev) => ({ ...prev, [name]: value }));
@@ -43,7 +43,7 @@ export default function Signin() {
       if (!loginData.password) toaster("error", "No password entered.");
     }
   }
-  if (user) return <Navigate to="/" />;
+  // if (user) return <Navigate to="/" />;
   return (
     <div className="flex flex-col gap-y-2">
       <InputText name="email" onChange={(e) => changeLoginData(e.target)} placeholder="Email" type="email" />
