@@ -42,7 +42,6 @@ export default function DrawerMapContent() {
   );
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-
   useEffect(() => {
     if (map) {
       setLocalItem(map);

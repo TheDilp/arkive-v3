@@ -63,7 +63,7 @@ export default function ProjectSettings() {
           onChange={(e) => {
             updateProject.mutate({ id: data?.id, image: e.value });
           }}
-          options={allImages?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`) || []}
+          options={allImages || []}
           placeholder="Select image"
           value={localItem}
           valueTemplate={ImageDropdownValue({ image: localItem?.image || "" })}

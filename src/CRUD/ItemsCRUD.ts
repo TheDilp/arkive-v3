@@ -16,7 +16,7 @@ export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItem
 };
 
 export const useGetAllImages = (project_id: string, options?: UseQueryOptions) => {
-  return useQuery<{ Key: string }[]>(
+  return useQuery<{ Key: string }[], unknown, string[]>(
     ["allImages", project_id],
     async () =>
       (
@@ -27,11 +27,14 @@ export const useGetAllImages = (project_id: string, options?: UseQueryOptions) =
     {
       enabled: options?.enabled,
       staleTime: 5 * 60 * 1000,
+      select: (data) => {
+        return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
+      },
     },
   );
 };
 export const useGetAllMapImages = (project_id: string) => {
-  return useQuery<{ Key: string }[]>(
+  return useQuery<{ Key: string }[], unknown, string[]>(
     ["allMapImages", project_id],
     async () =>
       (
@@ -41,6 +44,9 @@ export const useGetAllMapImages = (project_id: string) => {
       ).json(),
     {
       staleTime: 5 * 60 * 1000,
+      select: (data) => {
+        return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
+      },
     },
   );
 };
