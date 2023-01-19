@@ -20,7 +20,7 @@ export default function Navbar() {
   const { logout } = useAuthorizer();
 
   return (
-    <div className="min-h-8 flex h-14 flex-nowrap items-center border-b border-zinc-600 bg-zinc-800 py-2 shadow">
+    <div className="min-h-8 flex h-[49px] flex-nowrap items-center border-b border-zinc-800 bg-zinc-900 py-2 shadow">
       <div className="flex w-full items-center justify-center gap-x-2 px-2">
         {/* Use project title only if in project */}
         {project_id && !isSm && (

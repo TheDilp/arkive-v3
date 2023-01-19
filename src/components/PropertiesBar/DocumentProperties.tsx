@@ -77,7 +77,7 @@ export default function DocumentProperties() {
   };
   if (!currentDocument) return null;
   return (
-    <span className="p-fluid propertiesBar overflow-hidden">
+    <span className="p-fluid propertiesBar overflow-hidden bg-zinc-900">
       <Chips
         allowDuplicate={false}
         className="alterNamesChips box-border max-h-40 min-h-[48px] w-full max-w-full border-l border-zinc-600"

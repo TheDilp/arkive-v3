@@ -22,11 +22,11 @@
 }
 .wikiTabs {
   .p-tabview-panels {
-    @apply bg-zinc-800 !important;
+    @apply bg-zinc-900 !important;
   }
 }
 .p-tabview-nav-link {
-  @apply m-0 flex w-full justify-center rounded-none border-0 text-center !important;
+  @apply m-0 flex w-full justify-center rounded-none border-0 bg-zinc-900 text-center !important;
   &[aria-selected="true"] {
     @apply border-b-2 border-blue-400 !important;
   }

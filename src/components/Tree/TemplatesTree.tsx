@@ -11,7 +11,7 @@ import BaseTree from "./BaseTree";
 export default function TemplatesTree() {
   const { project_id } = useParams();
   const createDocumentMutation = useCreateItem("documents");
-  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [, setDrawer] = useAtom(DrawerAtom);
   const items = useMemo(
     () => [
       {
@@ -33,7 +33,7 @@ export default function TemplatesTree() {
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-2">
       <SplitButton
         className="p-button-outlined"
         icon="pi pi-bolt"

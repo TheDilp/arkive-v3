@@ -49,20 +49,20 @@ export default function Layout() {
       <DialogWrapper />
       <Sidebar />
 
+      <div
+        className={`flex ${
+          sidebarToggle ? "w-[25rem]  opacity-100" : "w-0 opacity-0"
+        } max-w-[25rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
+        {sidebarToggle ? <SecondarySidebar /> : null}
+      </div>
       <div className="relative flex h-full w-full flex-wrap">
         <div className="w-full">
           <Navbar />
+          <Drawer />
         </div>
-        <Drawer />
 
-        <div
-          className={`flex ${
-            sidebarToggle ? "w-1/5  opacity-100" : "w-0 opacity-0"
-          } max-w-[20rem] flex-col overflow-hidden bg-zinc-800 transition-all`}>
-          {sidebarToggle ? <SecondarySidebar /> : null}
-        </div>
-        <div className="flex h-full flex-1 overflow-hidden">
-          <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="flex h-full flex-1">
+          <div className="flex flex-1 flex-col ">
             <Outlet />
           </div>
         </div>
