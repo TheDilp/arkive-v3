@@ -15,7 +15,7 @@ export default function Navbar() {
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
-  const projectData = useGetSingleProject(project_id as string);
+  const projectData = useGetSingleProject(project_id as string, !!project_id);
   const { isSm } = useBreakpoint();
 
   const { logout } = useAuthorizer();

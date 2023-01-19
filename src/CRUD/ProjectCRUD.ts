@@ -53,7 +53,7 @@ export const useUpdateProject = () => {
     },
   );
 };
-export const useGetSingleProject = (id: string) => {
+export const useGetSingleProject = (id: string, enabled: boolean) => {
   return useQuery<ProjectType>(
     ["singleProject", id],
     async () =>
@@ -63,6 +63,7 @@ export const useGetSingleProject = (id: string) => {
         })
       ).json(),
     {
+      enabled,
       staleTime: 60 * 5 * 1000,
     },
   );

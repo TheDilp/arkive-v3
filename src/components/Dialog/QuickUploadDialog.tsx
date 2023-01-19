@@ -20,7 +20,7 @@ function FileUploadItemTemplate(
 ) {
   const { name, objectURL } = file;
   return (
-    <div className="flex w-full items-center justify-between">
+    <div className="flex items-center justify-between w-full">
       <img alt="Error" className="w-12" src={objectURL} />
       <p className="truncate">{name}</p>
       <SelectButton

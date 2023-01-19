@@ -1,5 +1,5 @@
 export const baseURLS = {
-  baseServer: "https://arkive-v3-server-production.up.railway.app/",
+  baseServer: `${import.meta.env.VITE_BASE_SERVER}/`,
 };
 export const getURLS = {
   //  Projects
