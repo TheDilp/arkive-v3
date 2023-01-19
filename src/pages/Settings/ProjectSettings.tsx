@@ -10,7 +10,7 @@ import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
-import { baseURLS, getURLS } from "../../types/CRUDenums";
+import { baseURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/projectTypes";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
 

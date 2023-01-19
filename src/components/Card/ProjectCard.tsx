@@ -3,8 +3,8 @@ import { Card } from "primereact/card";
 import { Link } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
+import { baseURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/projectTypes";
-import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { buttonLabelWithIcon } from "../../utils/transform";
 
 export default function ProjectCard({ ...project }: ProjectType) {
@@ -13,7 +13,7 @@ export default function ProjectCard({ ...project }: ProjectType) {
       <img
         alt="Card"
         className="h-60 w-full cursor-pointer"
-        src={project?.image ? getImageLink(project.image, project.id) : defaultImage}
+        src={project?.image ? `${baseURLS.baseImageHost.concat(project.image)}` : defaultImage}
         style={{ objectFit: "fill" }}
       />
     </Link>
