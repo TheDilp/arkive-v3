@@ -1,4 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
+import { getAuth } from "firebase/auth";
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -15,8 +16,8 @@ import Sidebar from "../Sidebar/Sidebar";
 export default function Layout() {
   const { project_id } = useParams();
   const [sidebarToggle] = useAtom(SidebarCollapseAtom);
-  // const user = getItem("user");
-  const user = true;
+  const auth = getAuth();
+  const user = auth.currentUser;
   const results = useQueries({
     queries: [
       {

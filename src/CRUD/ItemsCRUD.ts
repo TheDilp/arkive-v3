@@ -4,6 +4,7 @@ import { BoardType } from "../types/boardTypes";
 import { baseURLS, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { SortIndexes } from "../types/treeTypes";
+import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
 import { createURL, deleteManyURL, deleteURL, sortURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
 import { toaster } from "../utils/toast";
@@ -18,12 +19,9 @@ export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItem
 export const useGetAllImages = (project_id: string, options?: UseQueryOptions) => {
   return useQuery<{ Key: string }[], unknown, string[]>(
     ["allImages", project_id],
-    async () =>
-      (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, {
-          method: "GET",
-        })
-      ).json(),
+    async () => {
+      return (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, method: "GET" })).json();
+    },
     {
       enabled: options?.enabled,
       staleTime: 5 * 60 * 1000,

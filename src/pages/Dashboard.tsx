@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 import ProjectCard from "../components/Card/ProjectCard";
@@ -7,7 +8,8 @@ import { useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { ProjectType } from "../types/projectTypes";
 
 export default function Dashboard() {
-  const { isLoading, error, data: projects } = useGetAllProjects(!!true);
+  const auth = getAuth();
+  const { isLoading, error, data: projects } = useGetAllProjects(!!auth?.currentUser);
 
   if (isLoading)
     return (

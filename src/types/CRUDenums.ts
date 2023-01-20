@@ -41,6 +41,7 @@ export const createURLS = {
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",
+  createUser: "createuser",
 };
 
 export const updateURLs = {

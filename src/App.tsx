@@ -8,7 +8,8 @@ import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -45,17 +46,14 @@ const queryClient = new QueryClient({
 function App() {
   const auth = getAuth();
   const navigate = useNavigate();
+  const [authenticating, setAuthenticating] = useState(true);
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate("/");
-        // const uid = user.uid;
-      } else {
-        navigate("/auth/signin");
-      }
+      if (!user) navigate("/auth/signin");
+      if (user) setAuthenticating(false);
     });
   }, []);
-
+  if (authenticating) return <ProgressSpinner />;
   return (
     <QueryClientProvider client={queryClient}>
       <main className="flex h-screen flex-col">

@@ -4,12 +4,19 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useCreateUser } from "../../CRUD/AuthCRUD";
 import { toaster } from "../../utils/toast";
+
+type SignUpDataType = { email: string; password: string; confirm_password: string; nickname: string };
+
+function checkIfValid(signUpData: SignUpDataType) {
+  return signUpData.email && signUpData.nickname && signUpData.password && signUpData.password === signUpData.confirm_password;
+}
 
 export default function Signup() {
   const auth = getAuth();
-
-  const [signUpData, setSignUpData] = useState({ email: "", password: "", confirm_password: "" });
+  const { mutate } = useCreateUser();
+  const [signUpData, setSignUpData] = useState({ email: "", password: "", confirm_password: "", nickname: "" });
 
   function changeSignUpData({ name, value }: { name: string; value: string }) {
     setSignUpData((prev) => ({ ...prev, [name]: value }));
@@ -20,12 +27,20 @@ export default function Signup() {
   const matchesRequirements = signUpData.password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{6,}$/g);
 
   async function signUpUser() {
-    if (signUpData.email && signUpData.password && signUpData.password === signUpData.confirm_password) {
-      createUserWithEmailAndPassword(auth, signUpData.email, signUpData.password).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        toaster("error", `${errorCode}: ${errorMessage}`);
-      });
+    if (checkIfValid(signUpData)) {
+      createUserWithEmailAndPassword(auth, signUpData.email, signUpData.password)
+        .then((res) => {
+          mutate({
+            email: res.user.email || signUpData.email,
+            nickname: signUpData.nickname,
+            auth_id: res.user.uid,
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toaster("error", `${errorCode}: ${errorMessage}`);
+        });
     } else {
       if (signUpData.password !== signUpData.confirm_password) toaster("error", "Passwords do not match.");
       if (!signUpData.email) toaster("error", "No email entered.");
@@ -50,6 +65,13 @@ export default function Signup() {
         placeholder="Email"
         type="email"
         value={signUpData.email}
+      />
+      <InputText
+        name="nickname"
+        onChange={(e) => changeSignUpData(e.target)}
+        placeholder="Nickname"
+        type="text"
+        value={signUpData.nickname}
       />
       <InputText
         className={passwordsDontMatch ? "p-invalid" : ""}
