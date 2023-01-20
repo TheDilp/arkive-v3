@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { lazy, useEffect, useState } from "react";
+import { lazy, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -58,17 +58,14 @@ function App() {
   // Initialize Firebase
 
   const navigate = useNavigate();
-  const [authenticating, setAuthenticating] = useState(true);
   initializeApp(firebaseConfig);
   useEffect(() => {
     const auth = getAuth();
 
     onAuthStateChanged(auth, (user) => {
       if (!user) navigate("/auth/signin");
-      if (user) setAuthenticating(false);
     });
   }, []);
-  // if (authenticating) return <ProgressSpinner />;
   return (
     <QueryClientProvider client={queryClient}>
       <main className="flex h-screen flex-col">
