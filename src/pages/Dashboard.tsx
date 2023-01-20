@@ -1,17 +1,15 @@
-import { Icon } from "@iconify/react";
-import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 import ProjectCard from "../components/Card/ProjectCard";
 import Navbar from "../components/Nav/Navbar";
-import { useCreateProject, useGetAllProjects } from "../CRUD/ProjectCRUD";
+import Sidebar from "../components/Sidebar/Sidebar";
+import { useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { ProjectType } from "../types/projectTypes";
 
 export default function Dashboard() {
   // const user = getItem("user");
   const { isLoading, error, data: projects } = useGetAllProjects(!!true);
 
-  const createProjectMutation = useCreateProject();
   if (isLoading)
     return (
       <div className="flex h-full w-full items-center justify-center">
@@ -23,19 +21,7 @@ export default function Dashboard() {
   return (
     <div className="flex h-full w-full flex-col overflow-y-auto">
       <div className="align-start flex w-full flex-1">
-        <div className="w-16 border-r  border-zinc-800">
-          <div className="h-full w-full flex-wrap bg-zinc-800 py-5 text-white">
-            <div className="my-auto flex w-full justify-center ">
-              <Button
-                className="p-button-outlined p-button-rounded p-button-plain"
-                icon={<Icon fontSize={24} icon="mdi:plus" />}
-                onClick={() => createProjectMutation.mutate()}
-                tooltip="New Project"
-              />
-            </div>
-          </div>
-        </div>
-
+        <Sidebar />
         <div className="w-full">
           <Navbar />
           <div className="flex w-full flex-wrap items-start justify-start gap-x-6 px-6 py-4 pl-6">
