@@ -12,7 +12,6 @@ export default function DocumentsTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const createDocumentMutation = useCreateItem("documents");
-
   const items = useMemo(
     () => [
       {
@@ -49,6 +48,7 @@ export default function DocumentsTree() {
         className="p-button-outlined w-full"
         icon="pi pi-bolt"
         label="Quick Create"
+        loading={createDocumentMutation?.isLoading}
         model={items}
         onClick={() => {
           createDocumentMutation?.mutate({

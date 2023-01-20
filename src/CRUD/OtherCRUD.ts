@@ -2,17 +2,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
 import { TagCreateType, TagSettingsType, TagType, TagUpdateType } from "../types/generalTypes";
+import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
 export const useGetAllTags = (project_id: string) => {
   return useQuery<TagType[]>(
     ["allTags", project_id],
     async () =>
-      (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllTags}${project_id}`, {
-          method: "GET",
-        })
-      ).json(),
+      (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllTags}${project_id}`, method: "GET" })).json(),
     {
       staleTime: 5 * 60 * 1000,
     },

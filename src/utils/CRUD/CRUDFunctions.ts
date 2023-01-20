@@ -3,16 +3,12 @@ import { QueryClient, UseMutateFunction } from "@tanstack/react-query";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { toaster } from "../toast";
+import { FetchFunction } from "./CRUDFetch";
 import { getURL } from "./CRUDUrls";
 
 export const getItems = async (project_id: string, type: AvailableItemTypes) => {
   const url = getURL(project_id as string, type);
-  if (url)
-    return (
-      await fetch(url, {
-        method: "GET",
-      })
-    ).json();
+  if (url) return (await FetchFunction({ url, method: "GET" })).json();
   return null;
 };
 export const getTags = async (project_id: string, type: AvailableItemTypes) =>

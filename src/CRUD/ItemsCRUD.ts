@@ -16,64 +16,13 @@ export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItem
   });
 };
 
-export const useGetAllImages = (project_id: string, options?: UseQueryOptions) => {
-  return useQuery<{ Key: string }[], unknown, string[]>(
-    ["allImages", project_id],
-    async () => {
-      return (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, method: "GET" })).json();
-    },
-    {
-      enabled: options?.enabled,
-      staleTime: 5 * 60 * 1000,
-      select: (data) => {
-        return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
-      },
-    },
-  );
-};
-export const useGetAllMapImages = (project_id: string) => {
-  return useQuery<{ Key: string }[], unknown, string[]>(
-    ["allMapImages", project_id],
-    async () =>
-      (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, {
-          method: "GET",
-        })
-      ).json(),
-    {
-      staleTime: 5 * 60 * 1000,
-      select: (data) => {
-        return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
-      },
-    },
-  );
-};
-export const useGetAllSettingsImages = (project_id: string) => {
-  return useQuery<{ image: string; type: "image" | "map" }[]>(
-    ["allMapImages", project_id],
-    async () =>
-      (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, {
-          method: "GET",
-        })
-      ).json(),
-    {
-      staleTime: 5 * 60 * 1000,
-    },
-  );
-};
-
 export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
   const queryClient = useQueryClient();
 
   return useMutation(
     async (newItemValues: Partial<ItemType>) => {
       const url = createURL(type);
-      if (url)
-        return fetch(url, {
-          body: JSON.stringify(newItemValues),
-          method: "POST",
-        });
+      if (url) return FetchFunction({ url, body: JSON.stringify(newItemValues), method: "POST" });
 
       return null;
     },
@@ -150,11 +99,7 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
     async (updateItemValues: Partial<ItemType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, type);
-        if (url)
-          return fetch(url, {
-            body: JSON.stringify(updateItemValues),
-            method: "POST",
-          });
+        if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
       }
       return null;
     },
@@ -468,6 +413,53 @@ export const useUpdateManyNodesPosition = (item_id: string) => {
         toaster("error", "There was an error updating these items.");
         queryClient.setQueryData(["boards", item_id], context?.old);
       },
+    },
+  );
+};
+
+export const useGetAllImages = (project_id: string, options?: UseQueryOptions) => {
+  return useQuery<{ Key: string }[], unknown, string[]>(
+    ["allImages", project_id],
+    async () => {
+      return (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, method: "GET" })).json();
+    },
+    {
+      enabled: options?.enabled,
+      staleTime: 5 * 60 * 1000,
+      select: (data) => {
+        return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
+      },
+    },
+  );
+};
+export const useGetAllMapImages = (project_id: string) => {
+  return useQuery<{ Key: string }[], unknown, string[]>(
+    ["allMapImages", project_id],
+    async () =>
+      (
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, {
+          method: "GET",
+        })
+      ).json(),
+    {
+      staleTime: 5 * 60 * 1000,
+      select: (data) => {
+        return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
+      },
+    },
+  );
+};
+export const useGetAllSettingsImages = (project_id: string) => {
+  return useQuery<{ image: string; type: "image" | "map" }[]>(
+    ["allMapImages", project_id],
+    async () =>
+      (
+        await fetch(`${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, {
+          method: "GET",
+        })
+      ).json(),
+    {
+      staleTime: 5 * 60 * 1000,
     },
   );
 };
