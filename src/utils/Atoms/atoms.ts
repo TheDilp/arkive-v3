@@ -1,6 +1,5 @@
 import cytoscape from "cytoscape";
 import { EdgeHandlesInstance } from "cytoscape-edgehandles";
-import { initializeApp } from "firebase/app";
 import { atom } from "jotai";
 import { DialogPositionType } from "primereact/dialog";
 
@@ -56,18 +55,3 @@ export const BoardStateAtom = atom<{
 });
 
 export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "the-arkive-v3.firebaseapp.com",
-  projectId: "the-arkive-v3",
-  storageBucket: "the-arkive-v3.appspot.com",
-  messagingSenderId: "427542209724",
-  appId: "1:427542209724:web:762016985ceab84cf49cb9",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-export const FirebaseAtom = atom(app);

@@ -67,10 +67,7 @@ export default function DrawerDocumentContent() {
         {document ? (
           `Edit ${document.title} ${document.template ? "[TEMPLATE]" : ""}`
         ) : (
-          <div className="flex items-center">
-            Create New Document
-            <Icon fontSize={36} icon="mdi:file" />
-          </div>
+          <div className="flex items-center">Create New Document</div>
         )}
       </h2>
       <div className="flex flex-col gap-y-2">
@@ -170,6 +167,7 @@ export default function DrawerDocumentContent() {
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"
+            loading={createDocumentMutation.isLoading}
             onClick={() => {
               if (document)
                 deleteItem(

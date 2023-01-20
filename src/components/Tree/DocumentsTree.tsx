@@ -23,7 +23,7 @@ export default function DocumentsTree() {
             type: "documents",
           }),
         icon: "pi pi-file",
-        label: "Create Document",
+        label: "Create Document (Form)",
       },
       {
         command: () => {
@@ -46,8 +46,8 @@ export default function DocumentsTree() {
     <div className="h-screen p-2">
       <SplitButton
         className="p-button-outlined w-full"
-        icon="pi pi-bolt"
-        label="Quick Create"
+        icon="pi pi-plus"
+        label="Create Document"
         loading={createDocumentMutation?.isLoading}
         model={items}
         onClick={() => {

@@ -7,29 +7,31 @@ import "./App.css";
 import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-import Layout from "./components/Layout/Layout";
-import AuthLayout from "./pages/Auth/AuthLayout";
-import Signin from "./pages/Auth/Signin";
-import Signup from "./pages/Auth/Signup";
-import BoardView from "./pages/BoardView/BoardView";
-import Dashboard from "./pages/Dashboard";
-import Editor from "./pages/Editor/Editor";
-import FolderView from "./pages/FolderView/FolderView";
-import MapView from "./pages/MapView/MapView";
-import PublicWrapper from "./pages/PublicView/PublicWrapper";
-import AssetSettings from "./pages/Settings/Assets/AssetSettings";
-import BoardSettings from "./pages/Settings/BoardSettings";
-import DocumentSettings from "./pages/Settings/DocumentSettings";
-import MapSettings from "./pages/Settings/MapSettings";
-import ProjectSettings from "./pages/Settings/ProjectSettings";
-import TagsSettings from "./pages/Settings/TagsSettings";
+const Layout = lazy(() => import("./components/Layout/Layout"));
+const AuthLayout = lazy(() => import("./pages/Auth/AuthLayout"));
+const Signin = lazy(() => import("./pages/Auth/Signin"));
+const Signup = lazy(() => import("./pages/Auth/Signup"));
+const BoardView = lazy(() => import("./pages/BoardView/BoardView"));
+const Editor = lazy(() => import("./pages/Editor/Editor"));
+const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
+const MapView = lazy(() => import("./pages/MapView/MapView"));
+const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
+const AssetSettings = lazy(() => import("./pages/Settings/Assets/AssetSettings"));
+const BoardSettings = lazy(() => import("./pages/Settings/BoardSettings"));
+const DocumentSettings = lazy(() => import("./pages/Settings/DocumentSettings"));
+const MapSettings = lazy(() => import("./pages/Settings/MapSettings"));
+const ProjectSettings = lazy(() => import("./pages/Settings/ProjectSettings"));
+const TagsSettings = lazy(() => import("./pages/Settings/TagsSettings"));
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,10 +46,24 @@ const queryClient = new QueryClient({
   },
 });
 function App() {
-  const auth = getAuth();
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: "the-arkive-v3.firebaseapp.com",
+    projectId: "the-arkive-v3",
+    storageBucket: "the-arkive-v3.appspot.com",
+    messagingSenderId: "427542209724",
+    appId: "1:427542209724:web:762016985ceab84cf49cb9",
+  };
+
+  // Initialize Firebase
+
   const navigate = useNavigate();
   const [authenticating, setAuthenticating] = useState(true);
   useEffect(() => {
+    initializeApp(firebaseConfig);
+    const auth = getAuth();
+
     onAuthStateChanged(auth, (user) => {
       if (!user) navigate("/auth/signin");
       if (user) setAuthenticating(false);
@@ -56,55 +72,57 @@ function App() {
   if (authenticating) return <ProgressSpinner />;
   return (
     <QueryClientProvider client={queryClient}>
-      <main className="flex h-screen flex-col">
-        <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
+      <Suspense fallback={<ProgressSpinner />}>
+        <main className="flex h-screen flex-col">
+          <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
 
-        <ReactQueryDevtools initialIsOpen={false} />
-        <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-          <Routes>
-            <Route element={<AuthLayout />} path="auth/*">
-              <Route element={<Signup />} path="signup" />
-              <Route element={<Signin />} path="signin" />
-            </Route>
-            <Route element={<Dashboard />} path="/" />
-            <Route element={<Layout />} path="/project/:project_id/*">
-              <Route path="documents/*">
-                <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<Editor editable />} path=":item_id" />
+          <ReactQueryDevtools initialIsOpen={false} />
+          <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+            <Routes>
+              <Route element={<AuthLayout />} path="auth/*">
+                <Route element={<Signup />} path="signup" />
+                <Route element={<Signin />} path="signin" />
               </Route>
-              <Route path="maps/*">
-                <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<MapView />} path=":item_id" />
-                <Route element={<MapView />} path=":item_id/:subitem_id" />
-              </Route>
-              <Route path="boards/*">
-                <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<BoardView />} path=":item_id" />
-                <Route element={<BoardView />} path=":item_id/:subitem_id" />
-              </Route>
-              <Route element={<FolderView />} path=":type/folder/:item_id" />
+              <Route element={<Dashboard />} path="/" />
+              <Route element={<Layout />} path="/project/:project_id/*">
+                <Route path="documents/*">
+                  <Route element={<FolderView />} path="" />
+                  <Route element={<FolderView />} path="folder/:item_id" />
+                  <Route element={<Editor editable />} path=":item_id" />
+                </Route>
+                <Route path="maps/*">
+                  <Route element={<FolderView />} path="" />
+                  <Route element={<FolderView />} path="folder/:item_id" />
+                  <Route element={<MapView />} path=":item_id" />
+                  <Route element={<MapView />} path=":item_id/:subitem_id" />
+                </Route>
+                <Route path="boards/*">
+                  <Route element={<FolderView />} path="" />
+                  <Route element={<FolderView />} path="folder/:item_id" />
+                  <Route element={<BoardView />} path=":item_id" />
+                  <Route element={<BoardView />} path=":item_id/:subitem_id" />
+                </Route>
+                <Route element={<FolderView />} path=":type/folder/:item_id" />
 
-              <Route path="settings/*">
-                <Route element={<ProjectSettings />} path="project-settings" />
-                <Route element={<DocumentSettings />} path="document-settings" />
-                <Route element={<MapSettings />} path="map-settings" />
-                <Route element={<BoardSettings />} path="board-settings" />
-                <Route element={<TagsSettings />} path="tags-settings" />
-                <Route element={<AssetSettings />} path="assets-settings/*" />
+                <Route path="settings/*">
+                  <Route element={<ProjectSettings />} path="project-settings" />
+                  <Route element={<DocumentSettings />} path="document-settings" />
+                  <Route element={<MapSettings />} path="map-settings" />
+                  <Route element={<BoardSettings />} path="board-settings" />
+                  <Route element={<TagsSettings />} path="tags-settings" />
+                  <Route element={<AssetSettings />} path="assets-settings/*" />
+                </Route>
               </Route>
-            </Route>
 
-            <Route element={<PublicWrapper />} path="view/*">
-              <Route path="documents/:item_id" />
-              <Route path="maps/:item_id" />
-              <Route path="boards/:item_id" />
-            </Route>
-          </Routes>
-        </DndProvider>
-      </main>
+              <Route element={<PublicWrapper />} path="view/*">
+                <Route path="documents/:item_id" />
+                <Route path="maps/:item_id" />
+                <Route path="boards/:item_id" />
+              </Route>
+            </Routes>
+          </DndProvider>
+        </main>
+      </Suspense>
     </QueryClientProvider>
   );
 }
