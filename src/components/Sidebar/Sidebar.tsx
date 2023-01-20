@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
+import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
@@ -43,6 +44,15 @@ export default function Sidebar() {
               <Icon fontSize={28} icon={item.icon} />
             </li>
           ))}
+          <hr className="mb-2 w-full border-zinc-800" />
+          <li className=" h-14">
+            <Button
+              className="p-button-text p-button-secondary"
+              tooltip="Create new section"
+              tooltipOptions={{ position: "right" }}>
+              <Icon className="newSectionButton text-white" fontSize={28} icon="mdi:plus" />
+            </Button>
+          </li>
           <li className="mt-auto h-14">
             <Icon fontSize={28} icon="mdi:cog" />
           </li>
