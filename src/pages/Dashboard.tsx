@@ -7,7 +7,6 @@ import { useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { ProjectType } from "../types/projectTypes";
 
 export default function Dashboard() {
-  // const user = getItem("user");
   const { isLoading, error, data: projects } = useGetAllProjects(!!true);
 
   if (isLoading)

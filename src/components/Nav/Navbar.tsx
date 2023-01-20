@@ -1,5 +1,5 @@
-import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Icon } from "@iconify/react";
+import { getAuth, signOut } from "firebase/auth";
 import { useAtom } from "jotai";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -7,7 +7,6 @@ import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { removeItem } from "../../utils/storage";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function Navbar() {
   const projectData = useGetSingleProject(project_id as string, !!project_id);
   const { isSm } = useBreakpoint();
 
-  const { logout } = useAuthorizer();
+  const auth = getAuth();
 
   return (
     <div className="min-h-8 flex h-[49px] flex-nowrap items-center border-b border-zinc-800 bg-zinc-900 py-2 shadow">
@@ -59,9 +58,7 @@ export default function Navbar() {
             fontSize={20}
             icon="mdi:log-out"
             onClick={async () => {
-              await logout();
-              removeItem("user");
-              removeItem("authTokens");
+              await signOut(auth);
               navigate("/auth/signin");
             }}
           />

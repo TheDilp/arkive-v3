@@ -1,3 +1,4 @@
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
@@ -6,6 +7,8 @@ import { Link } from "react-router-dom";
 import { toaster } from "../../utils/toast";
 
 export default function Signup() {
+  const auth = getAuth();
+
   const [signUpData, setSignUpData] = useState({ email: "", password: "", confirm_password: "" });
 
   function changeSignUpData({ name, value }: { name: string; value: string }) {
@@ -17,8 +20,12 @@ export default function Signup() {
   const matchesRequirements = signUpData.password.match(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{6,}$/g);
 
   async function signUpUser() {
-    if (signUpData.email && signUpData.password) {
-      //
+    if (signUpData.email && signUpData.password && signUpData.password === signUpData.confirm_password) {
+      createUserWithEmailAndPassword(auth, signUpData.email, signUpData.password).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        toaster("error", `${errorCode}: ${errorMessage}`);
+      });
     } else {
       if (signUpData.password !== signUpData.confirm_password) toaster("error", "Passwords do not match.");
       if (!signUpData.email) toaster("error", "No email entered.");
@@ -28,7 +35,7 @@ export default function Signup() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      {(!matchesRequirements && signUpData.password) || signUpData.confirm_password ? (
+      {!matchesRequirements && (signUpData.password || signUpData.confirm_password) ? (
         <>
           <small className="p-error block">Password must be at least 6 characters and not more than 36.</small>
           <small className="p-error block">

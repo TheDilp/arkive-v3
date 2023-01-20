@@ -23,6 +23,7 @@
     "cytoscape-edgehandles": "^4.0.1",
     "cytoscape-grid-guide": "^2.3.3",
     "file-saver": "^2.0.5",
+    "firebase": "^9.16.0",
     "jotai": "^1.9.1",
     "leaflet": "^1.9.3",
     "localstorage-slim": "^2.3.0",

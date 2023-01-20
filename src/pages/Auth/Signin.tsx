@@ -1,3 +1,4 @@
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
@@ -7,14 +8,18 @@ import { toaster } from "../../utils/toast";
 
 export default function Signin() {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  // const user = getItem("user");
+  const auth = getAuth();
 
   function changeLoginData({ name, value }: { name: string; value: string }) {
     setLoginData((prev) => ({ ...prev, [name]: value }));
   }
   async function loginUser() {
     if (loginData.email && loginData.password) {
-      //
+      signInWithEmailAndPassword(auth, loginData.email, loginData.password).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        toaster("error", `${errorCode}: ${errorMessage}`);
+      });
     } else {
       if (!loginData.email) toaster("error", "No email entered.");
       if (!loginData.password) toaster("error", "No password entered.");
