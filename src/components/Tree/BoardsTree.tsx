@@ -15,7 +15,8 @@ export default function BoardsTree() {
 
   return (
     <div className="flex h-screen flex-1 flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 ">
+      <h2 className="h-8 text-center font-Lato text-2xl">Boards</h2>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 ">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
