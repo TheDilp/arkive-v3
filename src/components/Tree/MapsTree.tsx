@@ -15,7 +15,7 @@ export default function MapsTree() {
   const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">
-      <div className="flex  flex-col items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2">
+      <div className="flex flex-col items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"

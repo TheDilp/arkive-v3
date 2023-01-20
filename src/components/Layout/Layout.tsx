@@ -55,14 +55,14 @@ export default function Layout() {
         } max-w-[25rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
         {sidebarToggle ? <SecondarySidebar /> : null}
       </div>
-      <div className="relative flex h-full w-full flex-wrap">
-        <div className="w-full">
+      <div className="relative flex h-full w-full flex-col">
+        <div className="">
           <Navbar />
           <Drawer />
         </div>
 
-        <div className="flex h-full flex-1">
-          <div className="flex flex-1 flex-col ">
+        <div className="flex h-full w-full flex-1">
+          <div className="flex h-full w-full flex-1 flex-col">
             <Outlet />
           </div>
         </div>

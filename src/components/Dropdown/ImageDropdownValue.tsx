@@ -3,5 +3,6 @@ type Props = {
 };
 
 export default function ImageDropdownValue({ image }: Props) {
-  return <div>{image || "Select Image / Map"}</div>;
+  const name = image?.split("/")?.pop();
+  return <div>{name || image || "Select Image / Map"}</div>;
 }

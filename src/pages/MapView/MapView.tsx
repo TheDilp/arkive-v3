@@ -8,7 +8,6 @@ import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
 import { useDeleteItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapType } from "../../types/mapTypes";
 import { useMapContextMenuItems } from "../../utils/contextMenus";
 
@@ -33,9 +32,9 @@ export default function MapView({ isReadOnly }: Props) {
   const items = useMapContextMenuItems({ mapRef, bounds, deleteMapPin });
 
   useEffect(() => {
-    if (currentMap) {
+    if (currentMap && currentMap?.image) {
       const img = new Image();
-      img.src = `${baseURLS.baseImageHost}${currentMap.image}`;
+      img.src = currentMap.image;
       img.onload = () => {
         setBounds([
           [0, 0],
@@ -78,7 +77,7 @@ export default function MapView({ isReadOnly }: Props) {
               cm={cm}
               imgRef={imgRef}
               isReadOnly={isReadOnly}
-              src={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${currentMap?.project_id}/${currentMap?.image}`}
+              src={currentMap?.image || ""}
             />
           </MapContainer>
         </div>

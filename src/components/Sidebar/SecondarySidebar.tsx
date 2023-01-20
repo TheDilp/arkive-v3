@@ -45,21 +45,21 @@ function SidebarContent() {
     );
   if (pathname.includes("maps"))
     return (
-      <div className="flex h-full flex-1 flex-col bg-zinc-800 p-4">
+      <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
         <MapsTree />
       </div>
     );
   if (pathname.includes("boards"))
     return (
-      <div className="flex flex-1 flex-col bg-zinc-800 p-4">
+      <div className="flex flex-1 flex-col bg-zinc-900 p-4">
         <BoardsTree />
       </div>
     );
 
-  if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-800">TIMELINES</div>;
+  if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-900">TIMELINES</div>;
   if (pathname.includes("settings"))
     return (
-      <div className="flex flex-1 flex-col bg-zinc-800 p-4">
+      <div className="flex flex-1 flex-col bg-zinc-900 p-4">
         <ul className="flex w-full flex-col gap-y-1 font-Lato text-sm">
           <Link
             className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
