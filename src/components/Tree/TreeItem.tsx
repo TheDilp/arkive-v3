@@ -32,7 +32,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
   if (!node.data) return null;
   return (
     <button
-      className="text-md group inline-flex w-full cursor-pointer items-center gap-x-1 py-1 text-left hover:bg-sky-700"
+      className="group inline-flex w-full cursor-pointer items-center gap-x-1 py-1 text-left text-lg hover:bg-sky-700"
       onClick={() => {
         // Navigate if not a folder
         if (!node.data?.folder) navigate(`./${type}/${node.id}`);

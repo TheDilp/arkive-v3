@@ -3,7 +3,7 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 
@@ -20,6 +20,7 @@ const navItems = [
 export default function Sidebar() {
   const navigate = useNavigate();
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
+  const { pathname } = useLocation();
   return (
     <div className="flex w-16 flex-col border-r border-zinc-800 bg-zinc-900">
       <nav className="flex flex-1 flex-col">
@@ -37,7 +38,9 @@ export default function Sidebar() {
           {navItems.map((item) => (
             <li
               key={item.icon}
-              className="flex h-14 cursor-pointer items-center justify-center transition-colors hover:text-sky-400"
+              className={`flex h-14 cursor-pointer items-center justify-center transition-colors hover:text-sky-400 ${
+                item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400" : ""
+              }`}
               onClick={() => {
                 navigate(item.navigate);
               }}>
@@ -45,14 +48,14 @@ export default function Sidebar() {
             </li>
           ))}
           <hr className="mb-2 w-full border-zinc-800" />
-          <li className=" h-14">
+          {/* <li className=" h-14">
             <Button
               className="p-button-text p-button-secondary"
               tooltip="Create new section"
               tooltipOptions={{ position: "right" }}>
               <Icon className="newSectionButton text-white" fontSize={28} icon="mdi:plus" />
             </Button>
-          </li>
+          </li> */}
           <li className="mt-auto h-14">
             <Icon fontSize={28} icon="mdi:cog" />
           </li>
