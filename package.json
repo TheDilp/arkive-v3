@@ -10,9 +10,7 @@
     "start": "vite"
   },
   "dependencies": {
-    "@authorizerdev/authorizer-react": "^1.1.7",
-    "@floating-ui/react-dom": "^1.0.0",
-    "@floating-ui/react-dom-interactions": "^0.10.3",
+    "@floating-ui/react": "^0.18.0",
     "@iconify/react": "^4.0.0",
     "@minoru/react-dnd-treeview": "^3.4.1",
     "@remirror/core": "^2.0.11",

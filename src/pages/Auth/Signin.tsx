@@ -1,14 +1,11 @@
-import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { getItem, setItem } from "../../utils/storage";
 import { toaster } from "../../utils/toast";
 
 export default function Signin() {
-  const auth = useAuthorizer();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   // const user = getItem("user");
 
@@ -17,27 +14,7 @@ export default function Signin() {
   }
   async function loginUser() {
     if (loginData.email && loginData.password) {
-      const res = await auth.authorizerRef.login(loginData);
-      if (res && res?.user) {
-        setItem("user", res.user, res.expires_in);
-        setItem(
-          "authTokens",
-          {
-            access_token: res.access_token,
-            refresh_token: res.refresh_token,
-            id_token: res.id_token,
-            expires_in: res.expires_in,
-          },
-          res.expires_in,
-        );
-        auth.setToken({
-          access_token: res.access_token,
-          refresh_token: res.refresh_token,
-          id_token: res.id_token,
-          expires_in: res.expires_in,
-        });
-        auth.setUser(res.user);
-      }
+      //
     } else {
       if (!loginData.email) toaster("error", "No email entered.");
       if (!loginData.password) toaster("error", "No password entered.");

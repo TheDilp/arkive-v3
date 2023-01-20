@@ -10,7 +10,7 @@ import {
   useFloating,
   useInteractions,
   useRole,
-} from "@floating-ui/react-dom-interactions";
+} from "@floating-ui/react";
 import { cloneElement, useMemo, useState } from "react";
 import { mergeRefs } from "react-merge-refs";
 import { v4 } from "uuid";

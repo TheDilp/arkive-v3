@@ -1,4 +1,3 @@
-import { useAuthorizer } from "@authorizerdev/authorizer-react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
@@ -7,7 +6,6 @@ import { Link } from "react-router-dom";
 import { toaster } from "../../utils/toast";
 
 export default function Signup() {
-  const auth = useAuthorizer();
   const [signUpData, setSignUpData] = useState({ email: "", password: "", confirm_password: "" });
 
   function changeSignUpData({ name, value }: { name: string; value: string }) {
@@ -20,16 +18,7 @@ export default function Signup() {
 
   async function signUpUser() {
     if (signUpData.email && signUpData.password) {
-      const res = await auth.authorizerRef.signup(signUpData);
-      if (res && res?.user) {
-        auth.setToken({
-          access_token: res.access_token,
-          refresh_token: res.refresh_token,
-          id_token: res.id_token,
-          expires_in: res.expires_in,
-        });
-        auth.setUser(res.user);
-      }
+      //
     } else {
       if (signUpData.password !== signUpData.confirm_password) toaster("error", "Passwords do not match.");
       if (!signUpData.email) toaster("error", "No email entered.");
