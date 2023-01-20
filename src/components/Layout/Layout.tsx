@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Suspense } from "react";
 import { Outlet, useParams } from "react-router-dom";
 
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
@@ -40,8 +41,7 @@ export default function Layout() {
       },
     ],
   });
-  // if (!user) return <Navigate to="/auth/signin" />;
-  if (!results.every((res) => res.isSuccess)) return <ProgressSpinner />;
+  const allFetched = results.every((res) => res.isSuccess);
 
   return (
     <div className="flex h-full overflow-hidden">
@@ -54,7 +54,7 @@ export default function Layout() {
         className={`flex ${
           sidebarToggle ? "w-[25rem]  opacity-100" : "w-0 opacity-0"
         } max-w-[25rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
-        {sidebarToggle ? <SecondarySidebar /> : null}
+        {sidebarToggle && allFetched ? <SecondarySidebar /> : <ProgressSpinner />}
       </div>
       <div className="relative flex h-full w-full flex-col">
         <div className="">
@@ -64,7 +64,11 @@ export default function Layout() {
 
         <div className="flex h-full w-full flex-1">
           <div className="flex h-full w-full flex-1 flex-col">
-            <Outlet />
+            {allFetched ? (
+              <Suspense fallback={<ProgressSpinner />}>
+                <Outlet />
+              </Suspense>
+            ) : null}
           </div>
         </div>
       </div>
