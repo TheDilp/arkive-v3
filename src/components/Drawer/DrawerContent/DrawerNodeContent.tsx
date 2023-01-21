@@ -62,7 +62,6 @@ export default function DrawerNodeContent() {
                     };
                   return oldData;
                 });
-              setDrawer({ ...DefaultDrawer, position: "right" });
             },
           },
         );

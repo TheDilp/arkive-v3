@@ -436,7 +436,6 @@ export default function DrawerEdgeContent() {
                           };
                         return oldData;
                       });
-                    setDrawer({ ...DefaultDrawer, position: "right" });
                   },
                 },
               );
