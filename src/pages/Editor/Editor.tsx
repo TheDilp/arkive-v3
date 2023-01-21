@@ -1,6 +1,5 @@
 import "remirror/styles/all.css";
 
-import { Icon } from "@iconify/react";
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useCallback, useEffect, useState } from "react";
@@ -78,13 +77,6 @@ export default function Editor({ content, editable }: EditorType) {
     return (
       <div className="flex w-full flex-1">
         <div className={`${editable ? "" : "h-96"}  relative flex w-full flex-col content-start`}>
-          {editable ? (
-            <h1 className=" sticky top-0 z-20 mb-0 flex h-12 w-full items-center justify-center border-b-2 border-zinc-700 bg-[#1e1e1e] pr-20 font-Merriweather text-2xl">
-              <Icon className="mr-2" fontSize={30} icon={currentDocument.icon} />
-              {currentDocument.title}
-              {currentDocument?.template ? "[TEMPLATE]" : ""}
-            </h1>
-          ) : null}
           {editable ? <Breadcrumbs type="documents" /> : null}
           <Remirror
             classNames={[

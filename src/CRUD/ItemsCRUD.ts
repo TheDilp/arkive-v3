@@ -52,11 +52,7 @@ export const useCreateSubItem = <SubItemType extends { id: string; parentId: str
   return useMutation(
     async (newSubItemValues: Partial<SubItemType>) => {
       const url = createURL(subType);
-      if (url)
-        return fetch(url, {
-          body: JSON.stringify(newSubItemValues),
-          method: "POST",
-        });
+      if (url) return FetchFunction({ url, body: JSON.stringify(newSubItemValues), method: "POST" });
 
       return null;
     },

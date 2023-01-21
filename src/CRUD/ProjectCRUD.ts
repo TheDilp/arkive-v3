@@ -35,7 +35,7 @@ export const useCreateProject = () => {
       return { oldData };
     },
     onError: (_, __, context) => {
-      toaster("error", "There was an error updating this project");
+      toaster("error", "There was an error creating this project");
       if (context?.oldData) queryClient.setQueryData(["allProjects"], context.oldData);
     },
     onSuccess: async () => {

@@ -7,6 +7,7 @@ export async function FetchFunction({ url, method, body }: { url: string; method
     method,
     body,
     headers: {
+      "Access-Control-Allow-Origin": "*",
       Authorization: `Bearer ${token}`,
     },
   });

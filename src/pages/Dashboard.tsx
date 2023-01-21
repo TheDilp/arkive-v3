@@ -5,11 +5,12 @@ import ProjectCard from "../components/Card/ProjectCard";
 import Navbar from "../components/Nav/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { useGetAllProjects } from "../CRUD/ProjectCRUD";
+import { useAuth } from "../hooks/useAuth";
 import { ProjectType } from "../types/projectTypes";
 
 export default function Dashboard() {
-  const auth = getAuth();
-  const { isLoading, error, data: projects } = useGetAllProjects(!!auth?.currentUser);
+  const user = useAuth();
+  const { isLoading, error, data: projects } = useGetAllProjects(!!user);
 
   if (isLoading)
     return (
@@ -19,6 +20,7 @@ export default function Dashboard() {
     );
 
   if (error) return <span>An error has occurred</span>;
+
   return (
     <div className="flex h-full w-full flex-col overflow-y-auto">
       <div className="align-start flex w-full flex-1">
