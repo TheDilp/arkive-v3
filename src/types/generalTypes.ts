@@ -25,6 +25,7 @@ export interface TagType {
   project_id: string;
 }
 export type TagCreateType = {
+  id: string;
   title: string;
   docId?: string;
   mapId?: string;

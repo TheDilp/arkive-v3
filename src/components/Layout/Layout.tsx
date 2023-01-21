@@ -53,7 +53,7 @@ export default function Layout() {
         className={`flex ${
           sidebarToggle ? "w-[25rem]  opacity-100" : "w-0 opacity-0"
         } max-w-[25rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
-        {sidebarToggle && allFetched ? <SecondarySidebar /> : <ProgressSpinner />}
+        <SecondarySidebar isLoading={!allFetched} />
       </div>
       <div className="relative flex h-full w-full flex-col">
         <div className="">

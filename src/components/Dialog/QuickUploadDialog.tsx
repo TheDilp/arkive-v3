@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { baseURLS, createURLS } from "../../types/CRUDenums";
+import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 
 function FileUploadItemTemplate(
   file: any,
@@ -20,7 +21,7 @@ function FileUploadItemTemplate(
 ) {
   const { name, objectURL } = file;
   return (
-    <div className="flex items-center justify-between w-full">
+    <div className="flex w-full items-center justify-between">
       <img alt="Error" className="w-12" src={objectURL} />
       <p className="truncate">{name}</p>
       <SelectButton
@@ -104,6 +105,7 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
       emptyTemplate={<p className="text-center text-gray-400">Drag and Drop image files here!</p>}
       headerTemplate={headerTemplate}
       itemTemplate={(files: any) => FileUploadItemTemplate(files, types, setTypes)}
+      maxFileSize={5000000}
       multiple
       name="quickupload[]"
       onSelect={onTemplateSelect}
@@ -117,14 +119,16 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
           if (types[index].type === "Map") mapsFormData.append(file.name, file);
         });
         if (types.some((type) => type.type === "Image")) {
-          await fetch(`${baseURLS.baseServer}${createURLS.uploadImage}${project_id}`, {
+          await FetchFunction({
+            url: `${baseURLS.baseServer}${createURLS.uploadImage}${project_id}`,
             body: imageFormData,
             method: "POST",
           });
           queryClient.refetchQueries({ queryKey: ["allImages", project_id] });
         }
         if (types.some((type) => type.type === "Map")) {
-          await fetch(`${baseURLS.baseServer}${createURLS.uploadMap}${project_id}`, {
+          await FetchFunction({
+            url: `${baseURLS.baseServer}${createURLS.uploadMap}${project_id}`,
             body: mapsFormData,
             method: "POST",
           });

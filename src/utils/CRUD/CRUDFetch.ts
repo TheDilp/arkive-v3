@@ -1,6 +1,14 @@
 import { getAuth } from "firebase/auth";
 
-export async function FetchFunction({ url, method, body }: { url: string; method: "GET" | "POST" | "DELETE"; body?: string }) {
+export async function FetchFunction({
+  url,
+  method,
+  body,
+}: {
+  url: string;
+  method: "GET" | "POST" | "DELETE";
+  body?: string | FormData;
+}) {
   const auth = getAuth();
   const token = await auth.currentUser?.getIdToken();
   return fetch(url, {

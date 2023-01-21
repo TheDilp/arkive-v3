@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Sidebar as PrimeSidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Link, useLocation } from "react-router-dom";
@@ -114,7 +115,9 @@ function SidebarContent() {
     );
   return null;
 }
-export default function SecondarySidebar() {
+export default function SecondarySidebar({ isLoading }: { isLoading: boolean }) {
+  const { pathname } = useLocation();
+  if (!pathname.includes("settings") && isLoading) return <ProgressSpinner />;
   return (
     <SidebarContainer>
       <SidebarContent />

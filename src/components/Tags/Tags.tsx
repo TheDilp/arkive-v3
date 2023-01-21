@@ -65,8 +65,9 @@ export default function Tags({ handleChange, localItem, type }: Props) {
       onKeyPress={(e) => {
         // For adding completely new tags
         if (e.key === "Enter" && e.currentTarget.value !== "" && e.currentTarget.value !== undefined) {
-          handleChange({ name: "tags", value: [...(localItem?.tags || []), e?.currentTarget?.value] });
-          mutate({ title: e.currentTarget.value, ...getTagRelationId(localItem.id, type, "connect") });
+          const id = crypto.randomUUID();
+          handleChange({ name: "tags", value: [...(localItem?.tags || []), { id, title: e?.currentTarget?.value }] });
+          mutate({ id, title: e.currentTarget.value, ...getTagRelationId(localItem.id, type, "connect") });
           e.currentTarget.value = "";
         }
       }}
