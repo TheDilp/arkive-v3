@@ -90,7 +90,8 @@ export const useDeleteTags = (project_id: string) => {
   return useMutation(
     async (ids: string[]) =>
       (
-        await fetch(`${baseURLS.baseServer}${deleteURLs.deleteTags}`, {
+        await FetchFunction({
+          url: `${baseURLS.baseServer}${deleteURLs.deleteTags}`,
           method: "DELETE",
           body: JSON.stringify({ ids }),
         })

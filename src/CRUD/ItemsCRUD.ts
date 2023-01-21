@@ -201,10 +201,7 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
     async (id: string) => {
       if (id) {
         const url = deleteURL(id, type);
-        if (url)
-          return fetch(url, {
-            method: "DELETE",
-          });
+        if (url) return FetchFunction({ url, method: "DELETE" });
       }
       return null;
     },
@@ -225,11 +222,7 @@ export const useDeleteManyItems = (type: AvailableItemTypes, project_id: string)
     async (ids: string[]) => {
       if (ids) {
         const url = deleteManyURL(type);
-        if (url)
-          return fetch(url, {
-            body: JSON.stringify(ids),
-            method: "DELETE",
-          });
+        if (url) return FetchFunction({ url, body: JSON.stringify(ids), method: "DELETE" });
       }
       return null;
     },
@@ -249,10 +242,7 @@ export const useSortMutation = (project_id: string, type: AvailableItemTypes) =>
     async (updateValues: SortIndexes) => {
       const url = sortURL(type);
       if (url) {
-        return fetch(url, {
-          body: JSON.stringify(updateValues),
-          method: "POST",
-        });
+        return FetchFunction({ url, body: JSON.stringify(updateValues), method: "POST" });
       }
 
       return null;
@@ -285,11 +275,7 @@ export const useUpdateManySubItems = <SubItemType>(item_id: string, subType: Ava
     async (updateItemValues: { ids: string[]; data: Partial<SubItemType> }) => {
       if (updateItemValues.ids) {
         const url = updateManyURL(subType);
-        if (url)
-          return fetch(url, {
-            body: JSON.stringify(updateItemValues),
-            method: "POST",
-          });
+        if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
       }
       return null;
     },
@@ -334,11 +320,7 @@ export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItem
     async (ids: string[]) => {
       if (ids) {
         const url = deleteManyURL(subType);
-        if (url)
-          return fetch(url, {
-            body: JSON.stringify(ids),
-            method: "DELETE",
-          });
+        if (url) return FetchFunction({ url, body: JSON.stringify(ids), method: "DELETE" });
       }
       return null;
     },
@@ -374,7 +356,8 @@ export const useUpdateManyNodesPosition = (item_id: string) => {
   return useMutation(
     async (updateItemValues: { id: string; x: number; y: number }[]) => {
       if (updateItemValues.length) {
-        return fetch(`${baseURLS.baseServer}updatemanynodesposition`, {
+        return FetchFunction({
+          url: `${baseURLS.baseServer}updatemanynodesposition`,
           body: JSON.stringify(updateItemValues),
           method: "POST",
         });
@@ -428,11 +411,7 @@ export const useGetAllMapImages = (project_id: string) => {
   return useQuery<{ Key: string }[], unknown, string[]>(
     ["allMapImages", project_id],
     async () =>
-      (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, {
-          method: "GET",
-        })
-      ).json(),
+      (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, method: "GET" })).json(),
     {
       staleTime: 5 * 60 * 1000,
       select: (data) => {
@@ -446,9 +425,7 @@ export const useGetAllSettingsImages = (project_id: string) => {
     ["allMapImages", project_id],
     async () =>
       (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, {
-          method: "GET",
-        })
+        await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, method: "GET" })
       ).json(),
     {
       staleTime: 5 * 60 * 1000,
