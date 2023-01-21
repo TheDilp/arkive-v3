@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
+import { setItem } from "../../utils/storage";
 
 type NavItemType = {
   icon: string;
@@ -35,6 +36,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
           icon={`mdi:${sidebarToggle ? "menu-open" : "menu"}`}
           onClick={() => {
             setSidebarToggle(!sidebarToggle);
+            setItem("sidebarState", !sidebarToggle);
           }}
         />
       </li>

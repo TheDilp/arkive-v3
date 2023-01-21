@@ -11,7 +11,6 @@ export default function Navbar() {
   const { project_id } = useParams();
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
-
   const auth = getAuth();
 
   return (

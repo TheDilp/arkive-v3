@@ -6,6 +6,7 @@ import { DialogPositionType } from "primereact/dialog";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
+import { getItem } from "../storage";
 
 export type DialogTypes =
   | null
@@ -36,7 +37,9 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
   template: false,
 });
 
-export const SidebarCollapseAtom = atom<boolean>(true);
+const sidebarState = getItem("sidebarState") as boolean | undefined;
+
+export const SidebarCollapseAtom = atom<boolean>(sidebarState ?? true);
 
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
 

@@ -1,6 +1,6 @@
 import ls from "localstorage-slim";
 
-export const setItem = (key: string, value: any, ttl: number) => {
+export const setItem = (key: string, value: any, ttl?: number) => {
   if (ttl) {
     ls.set(key, value, { ttl });
   } else {
