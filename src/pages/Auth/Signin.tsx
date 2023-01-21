@@ -1,6 +1,7 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -33,13 +34,15 @@ export default function Signin() {
   return (
     <div className="flex flex-col gap-y-2">
       <InputText name="email" onChange={(e) => changeLoginData(e.target)} placeholder="Email" type="email" />
-      <InputText
+      <Password
+        inputClassName="w-full"
         name="password"
         onChange={(e) => changeLoginData(e.target)}
         onKeyDown={async (e) => {
           if (e.key === "Enter") await loginUser();
         }}
         placeholder="Password"
+        toggleMask
         type="password"
       />
       <Link className="flex w-full justify-end " to="/auth/signup">

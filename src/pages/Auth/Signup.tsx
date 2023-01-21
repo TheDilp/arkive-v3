@@ -1,8 +1,9 @@
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useCreateUser } from "../../CRUD/AuthCRUD";
 import { toaster } from "../../utils/toast";
@@ -17,7 +18,7 @@ export default function Signup() {
   const auth = getAuth();
   const { mutate } = useCreateUser();
   const [signUpData, setSignUpData] = useState({ email: "", password: "", confirm_password: "", nickname: "" });
-
+  const navigate = useNavigate();
   function changeSignUpData({ name, value }: { name: string; value: string }) {
     setSignUpData((prev) => ({ ...prev, [name]: value }));
   }
@@ -35,6 +36,7 @@ export default function Signup() {
             nickname: signUpData.nickname,
             auth_id: res.user.uid,
           });
+          navigate("/");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -73,25 +75,29 @@ export default function Signup() {
         type="text"
         value={signUpData.nickname}
       />
-      <InputText
+      <Password
         className={passwordsDontMatch ? "p-invalid" : ""}
+        inputClassName="w-full"
         name="password"
         onChange={(e) => changeSignUpData(e.target)}
         onKeyDown={async (e) => {
           if (e.key === "Enter") await signUpUser();
         }}
         placeholder="Password"
+        toggleMask
         type="password"
         value={signUpData.password}
       />
-      <InputText
+      <Password
         className={passwordsDontMatch ? "p-invalid" : ""}
+        inputClassName="w-full"
         name="confirm_password"
         onChange={(e) => changeSignUpData(e.target)}
         onKeyDown={async (e) => {
           if (e.key === "Enter") await signUpUser();
         }}
         placeholder="Confirm password"
+        toggleMask
         type="password"
         value={signUpData.confirm_password}
       />
