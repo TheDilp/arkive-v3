@@ -153,11 +153,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
     async (updateItemValues: Partial<SubItemType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, subType);
-        if (url)
-          return fetch(url, {
-            body: JSON.stringify(updateItemValues),
-            method: "POST",
-          });
+        if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
       }
       return null;
     },

@@ -19,7 +19,8 @@ export const useGetAllTags = (project_id: string) => {
 export const useFullSearch = (project_id: string) => {
   return useMutation(async ({ query, type }: { query: string | string[]; type: "namecontent" | "tags" }) =>
     (
-      await fetch(`${baseURLS.baseServer}${getURLS.getFullSearch}${project_id}/${type}`, {
+      await FetchFunction({
+        url: `${baseURLS.baseServer}${getURLS.getFullSearch}${project_id}/${type}`,
         method: "POST",
         body: JSON.stringify({ query }),
       })
@@ -31,11 +32,7 @@ export const useGetTagSettings = (project_id: string) => {
   return useQuery<TagSettingsType[]>(
     ["tagsSettings", project_id],
     async () =>
-      (
-        await fetch(`${baseURLS.baseServer}${getURLS.getAllSettingsTags}${project_id}`, {
-          method: "GET",
-        })
-      ).json(),
+      (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsTags}${project_id}`, method: "GET" })).json(),
     {
       staleTime: 5 * 60 * 1000,
     },
@@ -44,7 +41,8 @@ export const useGetTagSettings = (project_id: string) => {
 
 export const useCreateTag = (project_id: string) => {
   return useMutation(async (variables: TagCreateType) =>
-    fetch(`${baseURLS.baseServer}${createURLS.createTag}`, {
+    FetchFunction({
+      url: `${baseURLS.baseServer}${createURLS.createTag}`,
       method: "POST",
       body: JSON.stringify({ project_id, ...variables }),
     }),
@@ -56,7 +54,8 @@ export const useUpdateTag = (project_id: string) => {
   return useMutation(
     async (variables: Partial<Omit<TagUpdateType, "project_id">> & { id?: string }) =>
       (
-        await fetch(`${baseURLS.baseServer}${updateURLs.updateTag}${variables.id}`, {
+        await FetchFunction({
+          url: `${baseURLS.baseServer}${updateURLs.updateTag}${variables.id}`,
           method: "POST",
           body: JSON.stringify({ ...variables }),
         })
@@ -80,6 +79,7 @@ export const useUpdateTag = (project_id: string) => {
         return { oldData };
       },
       onError: (_, __, context) => {
+        toaster("error", "There was an error creating this tag.");
         return context?.oldData;
       },
     },
