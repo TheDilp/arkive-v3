@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
+import { useAtom } from "jotai";
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Link } from "react-router-dom";
 
+import { MentionContextAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { getSingleURL } from "../../utils/CRUD/CRUDUrls";
 import StaticRender from "../Editor/StaticRender";
@@ -39,9 +41,18 @@ function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
   );
 }
 export default function DocumentMention({ title, id, label, isDisabledTooltip }: Props) {
+  const [mention, setMention] = useAtom(MentionContextAtom);
   return (
     <Tooltip content={<TooltipContent id={id} title={title || label} />} disabled={isDisabledTooltip ?? false}>
-      <Link className="font-Lato text-sm font-bold text-white underline hover:text-sky-400" to={`../${id}`}>
+      <Link
+        className="font-Lato text-sm font-bold text-white underline hover:text-sky-400"
+        onContextMenu={(e) => {
+          if (id) {
+            setMention((prev) => ({ ...prev, data: { id } }));
+            mention.cm.current.show(e);
+          }
+        }}
+        to={`../${id}`}>
         {title || label}
       </Link>
     </Tooltip>

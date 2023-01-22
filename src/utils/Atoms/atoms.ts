@@ -36,6 +36,15 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
   folder: false,
   template: false,
 });
+export const MentionContextAtom = atom<{
+  data: null | { id: string };
+  cm: any;
+  show: boolean;
+}>({
+  data: null,
+  cm: null,
+  show: false,
+});
 
 const sidebarState = getItem("sidebarState") as boolean | undefined;
 

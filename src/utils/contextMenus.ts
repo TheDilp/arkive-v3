@@ -14,7 +14,7 @@ import {
 import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/boardTypes";
 import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
-import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom } from "./Atoms/atoms";
+import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom, MentionContextAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { deleteItem } from "./Confirms/Confirm";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
@@ -579,4 +579,18 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
     },
   ];
   return rootItems;
+}
+
+export function useMentionMenuItems() {
+  const [, setDrawer] = useAtom(DrawerAtom);
+  const [mentionContext] = useAtom(MentionContextAtom);
+  return [
+    {
+      command: () => {
+        setDrawer({ ...DefaultDrawer, data: mentionContext, position: "right", drawerSize: "lg", show: true, type: "mention" });
+      },
+      icon: "pi pi-fw pi-book",
+      label: "Show in drawer",
+    },
+  ];
 }

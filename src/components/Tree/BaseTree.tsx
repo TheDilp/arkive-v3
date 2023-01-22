@@ -59,7 +59,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   useLayoutEffect(() => {
     if (items) {
-      if (filter || selectedTags.length > 0) {
+      if (filter || selectedTags?.length > 0) {
         const timeout = setTimeout(() => {
           let tempItems = [...items];
           if (type === "documents" && isTemplates) tempItems = tempItems.filter((item) => "template" in item && item.template);

@@ -1,13 +1,15 @@
 import "remirror/styles/all.css";
 
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
+import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { InvalidContentHandler, RemirrorJSON } from "remirror";
 import { useDebouncedCallback } from "use-debounce";
 
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
+import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import { CommandMenu } from "../../components/Editor/CommandMenu";
 import Menubar from "../../components/Editor/Menubar";
 import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
@@ -15,6 +17,8 @@ import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DocumentType } from "../../types/documentTypes";
 import { EditorType } from "../../types/generalTypes";
+import { MentionContextAtom } from "../../utils/Atoms/atoms";
+import { useMentionMenuItems } from "../../utils/contextMenus";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
 
@@ -25,6 +29,8 @@ export default function Editor({ content, editable }: EditorType) {
     data: DocumentType;
     isLoading: boolean;
   };
+  const cm = useRef();
+  const [, setMention] = useAtom(MentionContextAtom);
   const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
 
   const onError: InvalidContentHandler = useCallback(({ json, invalidContent, transformers }) => {
@@ -56,6 +62,12 @@ export default function Editor({ content, editable }: EditorType) {
     debounced(changedContent, doc_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const items = useMentionMenuItems();
+
+  useEffect(() => {
+    console.log(cm);
+    setMention((prev) => ({ ...prev, cm }));
+  }, [cm, setMention]);
 
   useEffect(() => {
     if (currentDocument)
@@ -76,6 +88,7 @@ export default function Editor({ content, editable }: EditorType) {
   if (currentDocument)
     return (
       <div className="flex w-full flex-1">
+        <ContextMenu cm={cm} items={items} />
         <div className={`${editable ? "" : "h-96"}  relative flex w-full flex-col content-start`}>
           {editable ? <Breadcrumbs type="documents" /> : null}
           <Remirror

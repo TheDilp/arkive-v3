@@ -15,6 +15,7 @@ import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent
 import DrawerFullSearch from "./DrawerContent/DrawerFullSearch";
 import DrawerMapContent from "./DrawerContent/DrawerMapContent";
 import DrawerMapPinContent from "./DrawerContent/DrawerMapPinContent";
+import DrawerMentionContent from "./DrawerContent/DrawerMentionContent";
 import DrawerNodeContent from "./DrawerContent/DrawerNodeContent";
 
 export function handleCloseDrawer(
@@ -59,6 +60,7 @@ export default function Drawer() {
       {drawer.type === "edges" ? <DrawerEdgeContent /> : null}
       {drawer.type === "many_nodes" || drawer.type === "many_edges" ? <DrawerBulkBoardEdit /> : null}
       {drawer.type === "full_search" ? <DrawerFullSearch /> : null}
+      {drawer.type === "mention" ? <DrawerMentionContent /> : null}
     </PrimeDrawer>
   );
 }
