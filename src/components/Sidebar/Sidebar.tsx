@@ -97,7 +97,7 @@ function SidebarDashBoardItems() {
 export default function Sidebar() {
   const { pathname } = useLocation();
   return (
-    <div className="flex w-16 flex-col border-r border-zinc-800 bg-zinc-900">
+    <div className="flex w-16 min-w-[4rem] flex-col border-r border-zinc-800 bg-zinc-900">
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col items-center">
           {pathname === "/" ? <SidebarDashBoardItems /> : <SidebarProjectItems items={navItems} pathname={pathname} />}
