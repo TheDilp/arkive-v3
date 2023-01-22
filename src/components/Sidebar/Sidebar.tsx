@@ -25,7 +25,7 @@ const navItems: NavItemType[] = [
   { icon: "ion:documents-outline", navigate: "./documents", tooltip: "Documents" },
   { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
   { icon: "ph:graph", navigate: "./boards", tooltip: "Boards" },
-  { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
+  // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
