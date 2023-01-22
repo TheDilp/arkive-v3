@@ -3,6 +3,7 @@ import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Link } from "react-router-dom";
 
+import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { getSingleURL } from "../../utils/CRUD/CRUDUrls";
 import StaticRender from "../Editor/StaticRender";
 import { Tooltip } from "../Tooltip/Tooltip";
@@ -20,9 +21,7 @@ function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
     queryFn: async () => {
       const url = getSingleURL("documents", id as string);
       if (url) {
-        const res = await fetch(url, {
-          method: "GET",
-        });
+        const res = await FetchFunction({ url, method: "GET" });
         const resData = await res.json();
         return resData;
       }
@@ -41,7 +40,7 @@ function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
 }
 export default function DocumentMention({ title, id, label, isDisabledTooltip }: Props) {
   return (
-    <Tooltip disabled={isDisabledTooltip ?? false} content={<TooltipContent id={id} title={title || label} />}>
+    <Tooltip content={<TooltipContent id={id} title={title || label} />} disabled={isDisabledTooltip ?? false}>
       <Link className="font-Lato text-sm font-bold text-white underline hover:text-sky-400" to={`../${id}`}>
         {title || label}
       </Link>

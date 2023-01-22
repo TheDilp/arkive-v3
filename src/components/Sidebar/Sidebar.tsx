@@ -3,6 +3,8 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { Tooltip } from "primereact/tooltip";
+import { Fragment } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
@@ -12,15 +14,18 @@ import { setItem } from "../../utils/storage";
 type NavItemType = {
   icon: string;
   navigate: string;
+  tooltip: string;
 };
 const navItems: NavItemType[] = [
   {
     icon: "mdi:home",
     navigate: "/",
+    tooltip: "Projects",
   },
-  { icon: "ion:documents-outline", navigate: "./documents" },
-  { icon: "mdi:map-outline", navigate: "./maps" },
-  { icon: "ph:graph", navigate: "./boards" },
+  { icon: "ion:documents-outline", navigate: "./documents", tooltip: "Documents" },
+  { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
+  { icon: "ph:graph", navigate: "./boards", tooltip: "Boards" },
+  { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
@@ -41,16 +46,20 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         />
       </li>
       {items.map((item) => (
-        <li
-          key={item.icon}
-          className={`flex h-14 cursor-pointer items-center justify-center transition-colors hover:text-sky-400 ${
-            item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400" : ""
-          }`}
-          onClick={() => {
-            navigate(item.navigate);
-          }}>
-          <Icon fontSize={28} icon={item.icon} />
-        </li>
+        <Fragment key={item.icon}>
+          <Tooltip content={item.tooltip} position="right" target={`.${item.tooltip}`} />
+          <li
+            className={` ${
+              item.tooltip
+            } flex h-14 cursor-pointer items-center justify-center transition-colors hover:text-sky-400 ${
+              item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400" : ""
+            }`}
+            onClick={() => {
+              navigate(item.navigate);
+            }}>
+            <Icon fontSize={28} icon={item.icon} />
+          </li>
+        </Fragment>
       ))}
       <hr className="mb-2 w-full border-zinc-800" />
       {/* <li className=" h-14">

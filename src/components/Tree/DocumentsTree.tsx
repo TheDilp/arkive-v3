@@ -23,7 +23,7 @@ export default function DocumentsTree() {
             type: "documents",
           }),
         icon: "pi pi-file",
-        label: "Create Document (Form)",
+        label: "Create Document (Drawer)",
       },
       {
         command: () => {

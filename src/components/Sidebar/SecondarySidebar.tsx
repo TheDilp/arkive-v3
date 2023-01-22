@@ -9,6 +9,7 @@ import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import BoardsTree from "../Tree/BoardsTree";
 import DocumentsTree from "../Tree/DocumentsTree";
+import FormsTree from "../Tree/FormsTree";
 import MapsTree from "../Tree/MapsTree";
 import TemplatesTree from "../Tree/TemplatesTree";
 
@@ -56,7 +57,12 @@ function SidebarContent() {
         <BoardsTree />
       </div>
     );
-
+  if (pathname.includes("forms"))
+    return (
+      <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
+        <FormsTree />
+      </div>
+    );
   if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-900">TIMELINES</div>;
   if (pathname.includes("settings"))
     return (
