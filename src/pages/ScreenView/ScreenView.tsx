@@ -100,16 +100,18 @@ export default function ScreenView() {
   }, [data]);
 
   return (
-    <div className="flex overflow-hidden">
-      <div className="flex max-w-full flex-1 gap-x-4 overflow-auto">
+    <div className="flex overflow-hidden p-4 pb-8">
+      <div className="flex w-[calc(100vw-30rem)] max-w-full flex-1 gap-x-4 overflow-x-auto overflow-y-hidden pb-8">
         {sections.map((section, sectionIndex) => (
-          <div key={section.id} className="flex min-w-[20rem] max-w-xs flex-1 flex-col gap-y-2 ">
+          <div
+            key={section.id}
+            className="scrollbar-hidden flex min-w-[20rem] max-w-xs flex-1 flex-col gap-y-2 overflow-y-auto">
             <h3 className="text-Lato select-none rounded p-1 text-center font-Lato text-2xl font-medium underline">
               {section.title}
             </h3>
             <div className="flex w-full max-w-full flex-col gap-y-4">
               {(section.cards || []).map((card, cardIndex) => (
-                <div key={card.id} className="w-full bg-zinc-800">
+                <div key={card.id} className="w-full rounded-sm bg-zinc-800">
                   <h4 className="flex items-center justify-center gap-x-2 py-2 text-xl">
                     <span className="ml-auto select-none">{card.title}</span>
                     <Icon

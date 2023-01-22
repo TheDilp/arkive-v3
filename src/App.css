@@ -284,6 +284,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.scrollbar-hidden::-webkit-scrollbar {
+  @apply hidden;
+}
 
 /* Maps */
 .leaflet-container {
