@@ -9,8 +9,8 @@ import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import BoardsTree from "../Tree/BoardsTree";
 import DocumentsTree from "../Tree/DocumentsTree";
-import FormsTree from "../Tree/FormsTree";
 import MapsTree from "../Tree/MapsTree";
+import ScreensTree from "../Tree/ScreensTree";
 import TemplatesTree from "../Tree/TemplatesTree";
 
 type Props = {
@@ -57,10 +57,10 @@ function SidebarContent() {
         <BoardsTree />
       </div>
     );
-  if (pathname.includes("forms"))
+  if (pathname.includes("screens"))
     return (
       <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
-        <FormsTree />
+        <ScreensTree />
       </div>
     );
   if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-900">TIMELINES</div>;

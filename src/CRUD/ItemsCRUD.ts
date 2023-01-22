@@ -15,6 +15,28 @@ export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItem
     staleTime: options?.staleTime,
   });
 };
+export const useGetManyItems = <ItemType>(
+  project_id: string,
+  type: AvailableItemTypes,
+  ids: string[],
+  options?: UseQueryOptions,
+) => {
+  return useQuery<ItemType[]>({
+    queryKey: [type, project_id, "manyItems"],
+    queryFn: async () => {
+      const url = `${baseURLS.baseServer}${getURLS.getManyDocuments}`;
+      if (url) {
+        const res = await FetchFunction({ url, method: "POST", body: JSON.stringify(ids) });
+        const resData = await res.json();
+        return resData;
+      }
+
+      return null;
+    },
+    enabled: options?.enabled,
+    staleTime: options?.staleTime,
+  });
+};
 
 export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
   const queryClient = useQueryClient();

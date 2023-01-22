@@ -15,6 +15,7 @@ const typeMap: MarkMap = {
   doc: Doc,
   hardBreak: "br",
   heading: Heading,
+  link: "a",
   listItem: "li",
   paragraph: "p",
   orderedList: "ol",
@@ -53,6 +54,7 @@ const markMap: MarkMap = {
   italic: "em",
   bold: "strong",
   underline: "u",
+  link: "a",
 };
 
 export default function StaticRender({ content }: { content: RemirrorJSON }) {

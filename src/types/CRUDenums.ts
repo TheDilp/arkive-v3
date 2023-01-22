@@ -10,6 +10,7 @@ export const getURLS = {
   // Documents
   getAllDocuments: "getalldocuments/",
   getSingleDocument: "getsingledocument/",
+  getManyDocuments: "getmanydocuments",
   // Maps
   getAllMaps: "getallmaps/",
   getSingleMap: "getsinglemap/",

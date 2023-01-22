@@ -61,8 +61,11 @@ export const useUpdateProject = () => {
         });
         return { oldData };
       },
-      onSuccess: async () => {
-        toaster("success", "This project has been successfully updated.");
+      onSuccess: async (_, variables) => {
+        toaster(
+          "success",
+          !variables.title ? "Project successfully updated." : `Project "${variables.title}" has been updated.`,
+        );
       },
       onError: (_, variables, context) => {
         toaster("error", "There was an error updating this project");

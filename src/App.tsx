@@ -17,6 +17,7 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
+import ScreenView from "./pages/ScreenView/ScreenView";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const Signup = lazy(() => import("./pages/Auth/Signup"));
@@ -93,6 +94,12 @@ function App() {
               </Route>
               <Route path="boards/*">
                 <Route element={<FolderView />} path="" />
+                <Route element={<FolderView />} path="folder/:item_id" />
+                <Route element={<BoardView />} path=":item_id" />
+                <Route element={<BoardView />} path=":item_id/:subitem_id" />
+              </Route>
+              <Route path="screens/*">
+                <Route element={<ScreenView />} path="" />
                 <Route element={<FolderView />} path="folder/:item_id" />
                 <Route element={<BoardView />} path=":item_id" />
                 <Route element={<BoardView />} path=":item_id/:subitem_id" />

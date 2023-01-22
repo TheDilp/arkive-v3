@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
+import { Chips } from "primereact/chips";
 import { Dropdown } from "primereact/dropdown";
 import { Image } from "primereact/image";
 import { InputText } from "primereact/inputtext";
@@ -12,7 +13,7 @@ import { useParams } from "react-router-dom";
 import { useCreateItem, useDeleteItem, useGetAllImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
-import { baseURLS, getURLS } from "../../../types/CRUDenums";
+import { baseURLS } from "../../../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
@@ -74,15 +75,23 @@ export default function DrawerDocumentContent() {
         <InputText
           autoFocus
           className="w-full"
-          onChange={(e) => handleChange({ name: "title", value: e.target.value })}
+          name="title"
+          onChange={(e) => handleChange(e.target)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              if (document)
-                updateDocumentMutation?.mutate({
-                  id: document.id,
-                  parent: localItem.parent,
-                  title: localItem.title,
-                });
+            if (e.key === "Enter" && localItem.title) {
+              createUpdateItem<DocumentType>(
+                document,
+                localItem,
+                changedData,
+                "documents",
+                project_id as string,
+                queryClient,
+                DefaultDocument,
+                allDocuments,
+                resetChanges,
+                createDocumentMutation.mutate,
+                updateDocumentMutation.mutate,
+              );
             }
           }}
           value={localItem?.title || ""}
@@ -93,12 +102,13 @@ export default function DrawerDocumentContent() {
               className="h-28 w-36 object-contain"
               imageClassName="object-fit"
               preview
-              src={`${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${localItem?.image}`}
+              src={`${baseURLS.baseImageHost}${localItem?.image}`}
             />
           ) : null}
           <Dropdown
             className="w-full"
             itemTemplate={ImageDropdownItem}
+            name="image"
             onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? undefined : e.value })}
             options={["None", ...(images || [])] || []}
             placeholder="Select map"
@@ -111,7 +121,8 @@ export default function DrawerDocumentContent() {
             <Dropdown
               className="w-full"
               filter
-              onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
+              name="parentId"
+              onChange={(e) => handleChange(e.target)}
               optionLabel="title"
               options={
                 allDocuments
@@ -127,6 +138,18 @@ export default function DrawerDocumentContent() {
             />
           </div>
         )}
+        <div className="w-full">
+          <Chips
+            allowDuplicate={false}
+            className="alterNamesChips"
+            max={5}
+            name="alter_names"
+            onChange={(e) => handleChange(e.target)}
+            placeholder="Alternative names (5 max)"
+            value={localItem?.alter_names}
+          />
+        </div>
+
         <div className="">
           <Tags handleChange={handleChange} localItem={localItem} type="documents" />
         </div>
@@ -135,6 +158,18 @@ export default function DrawerDocumentContent() {
           <span className="p-checkbox-label">Is Folder?</span>
           <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />
         </div>
+        {!localItem?.template ? (
+          <div className="flex items-center justify-between">
+            <span className="p-checkbox-label">Is Public?</span>
+            <Checkbox
+              checked={localItem?.isPublic}
+              name="isPublic"
+              onChange={(e) => handleChange({ name: e.target.name, value: e.target.checked })}
+              tooltip="If checked, anyone can access the content via a public page"
+              tooltipOptions={{ position: "left", showDelay: 500 }}
+            />
+          </div>
+        ) : null}
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Icon</span>
           <IconSelect setIcon={(newIcon: string) => handleChange({ name: "icon", value: newIcon })}>

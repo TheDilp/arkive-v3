@@ -26,5 +26,5 @@ export default function PublicWrapper() {
     if (type === "maps") return <MapView isReadOnly />;
     if (type === "boards") return <BoardView isReadOnly />;
   }
-  return null;
+  return <div>TEST</div>;
 }

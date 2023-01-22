@@ -14,7 +14,7 @@ export default function Navbar() {
   const auth = getAuth();
 
   return (
-    <div className="min-h-8 flex h-[49px] flex-nowrap items-center border-b border-zinc-800 bg-zinc-900 py-2 shadow">
+    <div className="min-h-8 flex h-14 flex-nowrap items-center border-b border-zinc-800 bg-zinc-900 py-2 shadow">
       <div className="flex w-full items-center justify-center gap-x-2 px-2">
         <span className="ml-auto flex items-center gap-x-2">
           {project_id ? (

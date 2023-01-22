@@ -25,6 +25,7 @@ const navItems: NavItemType[] = [
   { icon: "ion:documents-outline", navigate: "./documents", tooltip: "Documents" },
   { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
   { icon: "ph:graph", navigate: "./boards", tooltip: "Boards" },
+  { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 
