@@ -8,15 +8,11 @@ import { getURL } from "./CRUDUrls";
 
 export const getItems = async (project_id: string, type: AvailableItemTypes) => {
   const url = getURL(project_id as string, type);
-  if (url) return (await FetchFunction({ url, method: "GET" })).json();
+  if (url) return FetchFunction({ url, method: "GET" });
   return null;
 };
 export const getTags = async (project_id: string, type: AvailableItemTypes) =>
-  (
-    await fetch(`${baseURLS.baseServer}${getURLS.getAllTags}${type}/${project_id}`, {
-      method: "GET",
-    })
-  ).json();
+  FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllTags}${type}/${project_id}`, method: "GET" });
 
 export function createUpdateItem<ItemType extends { id: string; folder: boolean; parentId: string | null; tags: TagType[] }>(
   item: ItemType | undefined,

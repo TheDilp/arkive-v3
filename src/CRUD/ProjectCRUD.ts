@@ -10,7 +10,7 @@ export const useGetAllProjects = (enabled: boolean) => {
     ["allProjects"],
     async () => {
       try {
-        return await (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllProjects}`, method: "GET" })).json();
+        return FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllProjects}`, method: "GET" });
       } catch (error) {
         return [];
       }
@@ -77,7 +77,7 @@ export const useUpdateProject = () => {
 export const useGetSingleProject = (id: string, enabled?: boolean) => {
   return useQuery<ProjectType>(
     ["singleProject", id],
-    async () => (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getSingeProject}/${id}`, method: "GET" })).json(),
+    async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getSingeProject}/${id}`, method: "GET" }),
     {
       enabled,
       staleTime: 60 * 5 * 1000,

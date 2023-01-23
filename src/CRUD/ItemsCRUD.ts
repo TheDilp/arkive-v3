@@ -26,9 +26,7 @@ export const useGetManyItems = <ItemType>(
     queryFn: async () => {
       const url = `${baseURLS.baseServer}${getURLS.getManyDocuments}`;
       if (url) {
-        const res = await FetchFunction({ url, method: "POST", body: JSON.stringify(ids) });
-        const resData = await res.json();
-        return resData;
+        return FetchFunction({ url, method: "POST", body: JSON.stringify(ids) });
       }
 
       return null;
@@ -51,7 +49,7 @@ export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
     {
       onError: () => toaster("error", "There was an error creating this item."),
       onSuccess: async (data) => {
-        const newData: AllItemsType = await data?.json();
+        const newData: AllItemsType = data;
         if (newData) {
           queryClient.setQueryData(["allItems", newData.project_id, type], (old: AllItemsType[] | undefined) => {
             if (old) return [...old, newData];

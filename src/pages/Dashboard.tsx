@@ -1,4 +1,3 @@
-import { getAuth } from "firebase/auth";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 import ProjectCard from "../components/Card/ProjectCard";
@@ -11,7 +10,6 @@ import { ProjectType } from "../types/projectTypes";
 export default function Dashboard() {
   const user = useAuth();
   const { isLoading, error, data: projects } = useGetAllProjects(!!user);
-
   if (isLoading)
     return (
       <div className="flex h-full w-full items-center justify-center">

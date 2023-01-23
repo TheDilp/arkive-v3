@@ -17,14 +17,14 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
-import ScreenView from "./pages/ScreenView/ScreenView";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const Signup = lazy(() => import("./pages/Auth/Signup"));
-const BoardView = lazy(() => import("./pages/BoardView/BoardView"));
-const Editor = lazy(() => import("./pages/Editor/Editor"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
+const Editor = lazy(() => import("./pages/Editor/Editor"));
 const MapView = lazy(() => import("./pages/MapView/MapView"));
+const BoardView = lazy(() => import("./pages/BoardView/BoardView"));
+const ScreenView = lazy(() => import("./pages/ScreenView/ScreenView"));
 const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
 const AssetSettings = lazy(() => import("./pages/Settings/Assets/AssetSettings"));
 const BoardSettings = lazy(() => import("./pages/Settings/BoardSettings"));
@@ -99,10 +99,10 @@ function App() {
                 <Route element={<BoardView />} path=":item_id/:subitem_id" />
               </Route>
               <Route path="screens/*">
-                <Route element={<ScreenView />} path="" />
+                <Route element={<FolderView />} path="" />
                 <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<BoardView />} path=":item_id" />
-                <Route element={<BoardView />} path=":item_id/:subitem_id" />
+                <Route element={<ScreenView />} path=":item_id" />
+                <Route element={<ScreenView />} path=":item_id/:subitem_id" />
               </Route>
 
               <Route element={<FolderView />} path=":type/folder/:item_id" />

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
+import { MapType } from "../../types/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
@@ -11,7 +12,7 @@ import BaseTree from "./BaseTree";
 export default function MapsTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const createMapMutation = useCreateItem("maps");
+  const createMapMutation = useCreateItem<MapType>("maps");
   const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">

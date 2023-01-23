@@ -17,7 +17,7 @@ export function getItemTypeFromURL(pathname: string) {
   if (pathname.includes("documents")) return "documents";
   if (pathname.includes("maps")) return "maps";
   if (pathname.includes("boards")) return "boards";
-  if (pathname.includes("timelines")) return "timelines";
+  if (pathname.includes("screens")) return "screens";
   return "documents";
 }
 export function getIcon(type: AvailableItemTypes, item: AllItemsType) {

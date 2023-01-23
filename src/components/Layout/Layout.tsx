@@ -38,6 +38,12 @@ export default function Layout() {
         staleTime: 5 * 60 * 1000,
         enabled: !!user,
       },
+      {
+        queryKey: ["allItems", project_id, "screens"],
+        queryFn: async () => getItems(project_id as string, "screens"),
+        staleTime: 5 * 60 * 1000,
+        enabled: !!user,
+      },
     ],
   });
   const allFetched = results.every((res) => res.isSuccess);
@@ -51,7 +57,7 @@ export default function Layout() {
 
       <div
         className={`flex ${
-          sidebarToggle ? "w-[20rem] min-w-[20rem] opacity-100" : "w-0 opacity-0"
+          sidebarToggle ? "w-[20rem] min-w-[20rem] opacity-100" : "w-0"
         } max-w-[20rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
         <SecondarySidebar isLoading={!allFetched} />
       </div>

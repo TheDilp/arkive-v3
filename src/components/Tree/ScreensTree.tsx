@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
+import { ScreenType } from "../../types/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
@@ -12,7 +13,7 @@ import BaseTree from "./BaseTree";
 export default function ScreensTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const createMapMutation = useCreateItem("maps");
+  const createScreenMutation = useCreateItem<ScreenType>("screens");
   const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">
@@ -25,7 +26,7 @@ export default function ScreensTree() {
           iconPos="right"
           label={isMd ? "" : "New Folder"}
           onClick={() => {
-            createMapMutation?.mutate({
+            createScreenMutation?.mutate({
               folder: true,
               project_id: project_id as string,
               title: "New Folder",
@@ -39,7 +40,7 @@ export default function ScreensTree() {
               ...DefaultDrawer,
               position: "right",
               show: true,
-              type: "boards",
+              type: "screens",
             });
           }}>
           <div className="flex w-full items-center justify-center gap-x-1">
@@ -51,7 +52,7 @@ export default function ScreensTree() {
         </Button>
       </div>
 
-      <BaseTree type="maps" />
+      <BaseTree type="screens" />
     </div>
   );
 }

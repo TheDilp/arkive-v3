@@ -4,15 +4,16 @@ import { RemirrorJSON } from "remirror";
 import { BoardType, EdgeType, NodeType } from "./boardTypes";
 import { DocumentType } from "./documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./mapTypes";
+import { CardType, ScreenType, SectionType } from "./screenTypes";
 
-export type AvailableItemTypes = "documents" | "maps" | "boards" | "timelines";
-export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges";
+export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens";
+export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "section" | "cards";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
-export type AllItemsType = DocumentType | MapType | BoardType;
-export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType;
+export type AllItemsType = DocumentType | MapType | BoardType | ScreenType;
+export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType | SectionType | CardType;
 
-export type AvailableSearchResultTypes = "documents" | "maps" | "boards" | "pins" | "nodes" | "edges";
+export type AvailableSearchResultTypes = "documents" | "maps" | "boards" | "pins" | "nodes" | "edges" | "screens" | "sections";
 
 export type IconSelectMenuType = {
   // eslint-disable-next-line no-unused-vars
@@ -33,6 +34,7 @@ export type TagCreateType = {
   boardId?: string;
   nodeId?: string;
   edgeId?: string;
+  screenId?: string;
 };
 export type TagUpdateType = {
   title: string;
@@ -46,6 +48,7 @@ export interface TagSettingsType extends TagType {
   boards: Pick<BoardType, "id" | "title" | "icon" | "folder">[];
   nodes: Pick<NodeType, "id" | "label" | "parentId">[];
   edges: Pick<EdgeType, "id" | "label" | "parentId">[];
+  screens: Pick<ScreenType, "id" | "title" | "icon" | "folder">[];
 }
 
 export type EditorType = {

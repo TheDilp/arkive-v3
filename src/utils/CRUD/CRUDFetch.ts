@@ -11,7 +11,7 @@ export async function FetchFunction({
 }) {
   const auth = getAuth();
   const token = await auth.currentUser?.getIdToken();
-  return fetch(url, {
+  const res = await fetch(url, {
     method,
     body,
     headers: {
@@ -19,4 +19,9 @@ export async function FetchFunction({
       Authorization: `Bearer ${token}`,
     },
   });
+  if (!res.ok) {
+    return new Error("error");
+  }
+  const data = await res.json();
+  return data;
 }

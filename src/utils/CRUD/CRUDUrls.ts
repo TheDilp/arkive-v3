@@ -5,6 +5,7 @@ export const getURL = (project_id: string, type: AvailableItemTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${getURLS.getAllDocuments}${project_id}`;
   if (type === "maps") return `${baseURLS.baseServer}${getURLS.getAllMaps}${project_id}`;
   if (type === "boards") return `${baseURLS.baseServer}${getURLS.getAllBoards}${project_id}`;
+  if (type === "screens") return `${baseURLS.baseServer}${getURLS.getAllScreens}${project_id}`;
   return null;
 };
 export const getSingleURL = (type: AvailableItemTypes, id: string) => {
@@ -22,6 +23,7 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "map_layers") return `${baseURLS.baseServer}${createURLS.createMapLayer}`;
   if (type === "nodes") return `${baseURLS.baseServer}${createURLS.createNode}`;
   if (type === "edges") return `${baseURLS.baseServer}${createURLS.createEdge}`;
+  if (type === "screens") return `${baseURLS.baseServer}${createURLS.createScreen}`;
   return null;
 };
 export const updateURL = (id: string, type: AllAvailableTypes) => {

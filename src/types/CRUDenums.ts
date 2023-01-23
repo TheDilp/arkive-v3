@@ -17,6 +17,9 @@ export const getURLS = {
   // Boards
   getAllBoards: "getallboards/",
   getSingleBoard: "getsingleboard/",
+  // Screens
+  getAllScreens: "getallscreens/",
+  getSingleScreen: "getsinglescreen/",
   // Images
   getAllImages: "getallimages/",
   getSingleImage: "getimage/images/",
@@ -39,6 +42,7 @@ export const createURLS = {
   createBoard: "createboard",
   createNode: "createnode",
   createEdge: "createedge",
+  createScreen: "createscreen",
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",

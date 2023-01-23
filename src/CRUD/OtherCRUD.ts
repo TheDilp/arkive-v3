@@ -8,8 +8,7 @@ import { toaster } from "../utils/toast";
 export const useGetAllTags = (project_id: string) => {
   return useQuery<TagType[]>(
     ["allTags", project_id],
-    async () =>
-      (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllTags}${project_id}`, method: "GET" })).json(),
+    async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllTags}${project_id}`, method: "GET" }),
     {
       staleTime: 5 * 60 * 1000,
     },
@@ -18,21 +17,18 @@ export const useGetAllTags = (project_id: string) => {
 
 export const useFullSearch = (project_id: string) => {
   return useMutation(async ({ query, type }: { query: string | string[]; type: "namecontent" | "tags" }) =>
-    (
-      await FetchFunction({
-        url: `${baseURLS.baseServer}${getURLS.getFullSearch}${project_id}/${type}`,
-        method: "POST",
-        body: JSON.stringify({ query }),
-      })
-    ).json(),
+    FetchFunction({
+      url: `${baseURLS.baseServer}${getURLS.getFullSearch}${project_id}/${type}`,
+      method: "POST",
+      body: JSON.stringify({ query }),
+    }),
   );
 };
 
 export const useGetTagSettings = (project_id: string) => {
   return useQuery<TagSettingsType[]>(
     ["tagsSettings", project_id],
-    async () =>
-      (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsTags}${project_id}`, method: "GET" })).json(),
+    async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsTags}${project_id}`, method: "GET" }),
     {
       staleTime: 5 * 60 * 1000,
     },
@@ -53,13 +49,11 @@ export const useUpdateTag = (project_id: string) => {
 
   return useMutation(
     async (variables: Partial<Omit<TagUpdateType, "project_id">> & { id?: string }) =>
-      (
-        await FetchFunction({
-          url: `${baseURLS.baseServer}${updateURLs.updateTag}${variables.id}`,
-          method: "POST",
-          body: JSON.stringify({ ...variables }),
-        })
-      ).json(),
+      FetchFunction({
+        url: `${baseURLS.baseServer}${updateURLs.updateTag}${variables.id}`,
+        method: "POST",
+        body: JSON.stringify({ ...variables }),
+      }),
     {
       onMutate: (variables) => {
         const oldData = queryClient.getQueryData(["tagsSettings", project_id]);
@@ -89,13 +83,11 @@ export const useDeleteTags = (project_id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
     async (ids: string[]) =>
-      (
-        await FetchFunction({
-          url: `${baseURLS.baseServer}${deleteURLs.deleteTags}`,
-          method: "DELETE",
-          body: JSON.stringify({ ids }),
-        })
-      ).json(),
+      FetchFunction({
+        url: `${baseURLS.baseServer}${deleteURLs.deleteTags}`,
+        method: "DELETE",
+        body: JSON.stringify({ ids }),
+      }),
     {
       onMutate: (variables) => {
         const oldData = queryClient.getQueryData(["tagsSettings", project_id]);

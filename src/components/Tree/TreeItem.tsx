@@ -101,7 +101,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
                 ("icon" in node.data && (node.data?.icon as string)) ||
                 (type === "maps" && "mdi:map") ||
                 (type === "boards" && "mdi:draw") ||
-                (type === "timelines" && "mdi:file") ||
+                (type === "screens" && "fluent:board-24-regular") ||
                 "mdi:file"
               }
               inline
