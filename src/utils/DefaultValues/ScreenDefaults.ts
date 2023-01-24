@@ -5,6 +5,8 @@ export const DefaultScreen: DefaultScreenType = {
   project_id: "",
 };
 export const DefaultSection: DefaultSectionType = {
+  id: "",
+  parentId: "",
   title: "New Section",
   size: "xs",
 };

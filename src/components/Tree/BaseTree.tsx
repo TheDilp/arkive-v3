@@ -154,7 +154,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
         }}
         dragPreviewRender={DragPreviewComponent}
         dropTargetOffset={10}
-        initialOpen={(items || [])?.filter((item) => item.expanded).map((doc) => doc.id) || false}
+        initialOpen={[...(items || [])]?.filter((item) => item.expanded).map((doc) => doc.id) || false}
         insertDroppableFirst={false}
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;

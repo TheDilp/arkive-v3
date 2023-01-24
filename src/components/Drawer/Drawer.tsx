@@ -18,6 +18,7 @@ import DrawerMapPinContent from "./DrawerContent/DrawerMapPinContent";
 import DrawerMentionContent from "./DrawerContent/DrawerMentionContent";
 import DrawerNodeContent from "./DrawerContent/DrawerNodeContent";
 import DrawerScreensContent from "./DrawerContent/DrawerScreensContent";
+import DrawerSectionContent from "./DrawerContent/DrawerSectionContent";
 
 export function handleCloseDrawer(
   setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,
@@ -63,6 +64,7 @@ export default function Drawer() {
       {drawer.type === "full_search" ? <DrawerFullSearch /> : null}
       {drawer.type === "mention" ? <DrawerMentionContent /> : null}
       {drawer.type === "screens" ? <DrawerScreensContent /> : null}
+      {drawer.type === "sections" ? <DrawerSectionContent /> : null}
     </PrimeDrawer>
   );
 }
