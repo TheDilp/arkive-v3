@@ -12,6 +12,7 @@ export const getSingleURL = (type: AvailableItemTypes, id: string) => {
   if (type === "documents") return `${baseURLS.baseServer}${getURLS.getSingleDocument}${id}`;
   if (type === "maps") return `${baseURLS.baseServer}${getURLS.getSingleMap}${id}`;
   if (type === "boards") return `${baseURLS.baseServer}${getURLS.getSingleBoard}${id}`;
+  if (type === "screens") return `${baseURLS.baseServer}${getURLS.getSingleScreen}${id}`;
 
   return null;
 };
@@ -24,6 +25,8 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "nodes") return `${baseURLS.baseServer}${createURLS.createNode}`;
   if (type === "edges") return `${baseURLS.baseServer}${createURLS.createEdge}`;
   if (type === "screens") return `${baseURLS.baseServer}${createURLS.createScreen}`;
+  if (type === "sections") return `${baseURLS.baseServer}${createURLS.createSection}`;
+  if (type === "cards") return `${baseURLS.baseServer}${createURLS.createCard}`;
   return null;
 };
 export const updateURL = (id: string, type: AllAvailableTypes) => {

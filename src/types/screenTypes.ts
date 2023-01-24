@@ -15,8 +15,10 @@ export type SectionType = {
   id: string;
   title: string;
   size: string;
+  parentId: string;
   cards: CardType[];
 };
+export type DefaultSectionType = Pick<SectionType, "title" | "size">;
 
 export interface ScreenType extends BaseItemType {
   id: string;

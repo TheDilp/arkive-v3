@@ -43,6 +43,8 @@ export const createURLS = {
   createNode: "createnode",
   createEdge: "createedge",
   createScreen: "createscreen",
+  createSection: "createsection",
+  createCard: "createcard",
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",

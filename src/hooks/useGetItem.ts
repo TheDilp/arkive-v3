@@ -10,9 +10,7 @@ export function useGetItem<ItemType>(id: string, type: AvailableItemTypes, optio
     queryFn: async () => {
       const url = getSingleURL(type, id);
       if (url) {
-        const res = await FetchFunction({ url, method: "GET" });
-        const resData = await res.json();
-        return resData;
+        return FetchFunction({ url, method: "GET" });
       }
 
       return null;

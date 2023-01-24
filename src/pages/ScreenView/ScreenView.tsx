@@ -1,18 +1,30 @@
 import { Icon } from "@iconify/react";
 import set from "lodash.set";
+import { Button } from "primereact/button";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import StaticRender from "../../components/Editor/StaticRender";
+import { useCreateItem, useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { ScreenType } from "../../types/screenTypes";
+import { ScreenType, SectionType } from "../../types/screenTypes";
+import { DefaultSection } from "../../utils/DefaultValues/ScreenDefaults";
 
 export default function ScreenView() {
-  const { project_id, item_id } = useParams();
+  const { item_id } = useParams();
   const { data } = useGetItem<ScreenType>(item_id as string, "screens");
-
+  const { mutate } = useCreateSubItem<SectionType>(item_id as string, "sections", "screens");
   return (
-    <div className="flex overflow-hidden p-4 pb-8">
+    <div className="flex flex-col gap-y-4 overflow-hidden p-4 pb-8">
+      <div className="w-full">
+        <Button
+          className="p-button-outlined"
+          icon="pi pi-plus"
+          iconPos="right"
+          label="New Section"
+          onClick={() => mutate({ id: crypto.randomUUID(), parentId: item_id as string, ...DefaultSection })}
+        />
+      </div>
       <div className="flex w-[calc(100vw-30rem)] max-w-full flex-1 gap-x-4 overflow-x-auto overflow-y-hidden pb-8">
         {data?.sections
           ? data?.sections?.map((section, sectionIndex) => (

@@ -7,7 +7,7 @@ import { MapLayerType, MapPinType, MapType } from "./mapTypes";
 import { CardType, ScreenType, SectionType } from "./screenTypes";
 
 export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens";
-export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "section" | "cards";
+export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "sections" | "cards";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
 export type AllItemsType = DocumentType | MapType | BoardType | ScreenType;
