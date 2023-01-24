@@ -119,6 +119,7 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
     async (updateItemValues: Partial<ItemType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, type);
+        console.log(url);
         if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
       }
       return null;
@@ -224,7 +225,9 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
   return useMutation(
     async (id: string) => {
       if (id) {
+        console.log(id, type);
         const url = deleteURL(id, type);
+        console.log(url);
         if (url) return FetchFunction({ url, method: "DELETE" });
       }
       return null;
@@ -232,9 +235,8 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
 
     {
       onSuccess: async () => {
-        if (["documents", "maps", "boards"].includes(type)) queryClient.refetchQueries(["allItems", project_id, type]);
-        // if (["map_pins", "map_layers"].includes(type)) queryClient.refetchQueries(["allItems", project_id, "maps"]);
-        // if (["boards", "nodes", "edges"].includes(type)) queryClient.refetchQueries(["allItems", project_id, "boards"]);
+        if (["documents", "maps", "boards", "screens"].includes(type))
+          queryClient.refetchQueries(["allItems", project_id, type]);
         toaster("success", "Item successfully deleted.");
       },
     },

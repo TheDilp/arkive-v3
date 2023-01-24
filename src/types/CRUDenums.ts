@@ -60,6 +60,8 @@ export const updateURLs = {
   updateBoard: "updateboard/",
   updateNode: "updatenode/",
   updateEdge: "updateedge/",
+  updateScreen: "updatescreen/",
+  updateSection: "updatesection/",
   updateTag: "updatetag/",
 
   sortDocuments: "sortdocuments",
@@ -74,6 +76,8 @@ export const deleteURLs = {
   deleteBoard: "deleteboard/",
   deleteNode: "deletenode/",
   deleteEdge: "deleteedge/",
+  deleteScreen: "deletescreen/",
+  deleteSection: "deletesection/",
   deleteTags: "deletetags",
 };
 

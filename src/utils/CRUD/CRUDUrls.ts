@@ -37,6 +37,8 @@ export const updateURL = (id: string, type: AllAvailableTypes) => {
   if (type === "map_layers") return `${baseURLS.baseServer}${updateURLs.updateMapLayer}${id}`;
   if (type === "nodes") return `${baseURLS.baseServer}${updateURLs.updateNode}${id}`;
   if (type === "edges") return `${baseURLS.baseServer}${updateURLs.updateEdge}${id}`;
+  if (type === "screens") return `${baseURLS.baseServer}${updateURLs.updateScreen}${id}`;
+  if (type === "sections") return `${baseURLS.baseServer}${updateURLs.updateSection}${id}`;
   return null;
 };
 
@@ -48,6 +50,8 @@ export const deleteURL = (id: string, type: AllAvailableTypes) => {
   if (type === "boards") return `${baseURLS.baseServer}${deleteURLs.deleteBoard}${id}`;
   if (type === "nodes") return `${baseURLS.baseServer}${deleteURLs.deleteNode}${id}`;
   if (type === "edges") return `${baseURLS.baseServer}${deleteURLs.deleteEdge}${id}`;
+  if (type === "screens") return `${baseURLS.baseServer}${deleteURLs.deleteScreen}${id}`;
+  if (type === "sections") return `${baseURLS.baseServer}${deleteURLs.deleteSection}${id}`;
   return null;
 };
 

@@ -10,10 +10,13 @@ import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { ScreenCreateType, ScreenType } from "../../../types/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DefaultScreen } from "../../../utils/DefaultValues/ScreenDefaults";
+import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerScreensContent() {
   const queryClient = useQueryClient();
@@ -52,11 +55,20 @@ export default function DrawerScreensContent() {
         name="title"
         onChange={(e) => handleChange(e.target)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && screen) {
-            updateScreenMutation?.mutate({
-              id: screen.id,
-              ...changedData,
-            });
+          if (e.key === "Enter") {
+            createUpdateItem<ScreenType>(
+              screen,
+              localItem,
+              changedData,
+              "screens",
+              project_id as string,
+              queryClient,
+              DefaultScreen,
+              allScreens,
+              resetChanges,
+              createScreenMutation.mutate,
+              updateScreenMutation.mutate,
+            );
           }
         }}
         placeholder="Screen Name"
@@ -81,6 +93,7 @@ export default function DrawerScreensContent() {
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
+        loading={createScreenMutation.isLoading || updateScreenMutation.isLoading}
         onClick={() => {
           createUpdateItem<ScreenType>(
             screen,
@@ -99,6 +112,32 @@ export default function DrawerScreensContent() {
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
+      <div className="mt-auto flex w-full">
+        {document ? (
+          <Button
+            className=" p-button-outlined p-button-danger w-full"
+            loading={deleteScreenMutation.isLoading}
+            onClick={() => {
+              if (screen)
+                deleteItem(
+                  screen.folder
+                    ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
+                    : "Are you sure you want to delete this screen?",
+                  () => {
+                    deleteScreenMutation?.mutate(screen.id, {
+                      onSuccess: () => {
+                        handleCloseDrawer(setDrawer, "right");
+                      },
+                    });
+                  },
+                  () => toaster("info", "Item not deleted."),
+                );
+            }}
+            type="submit">
+            {buttonLabelWithIcon("Delete", "mdi:trash")}
+          </Button>
+        ) : null}
+      </div>
     </div>
   );
 }
