@@ -12,7 +12,6 @@ import { ScreenCreateType, ScreenType } from "../../../types/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
-import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DefaultScreen } from "../../../utils/DefaultValues/ScreenDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -74,23 +73,7 @@ export default function DrawerScreensContent() {
         placeholder="Screen Name"
         value={localItem?.title || ""}
       />
-      <div className="flex max-h-96 w-full flex-col  gap-y-2 overflow-y-auto">
-        {localItem?.sections
-          ? localItem?.sections?.map((section) => (
-              <div key={section.id} className="flex w-full items-center justify-between">
-                <h5 className="text-lg">{section.title}</h5>
-                <div className="flex gap-x-2">
-                  <Button
-                    className="p-button-outlined p-button-primary"
-                    icon="pi pi-pencil"
-                    onClick={() => setDrawer({ ...DefaultDrawer, data: section, show: true, type: "sections" })}
-                  />
-                  <Button className="p-button-outlined p-button-danger" icon="pi pi-trash" />
-                </div>
-              </div>
-            ))
-          : null}
-      </div>
+
       <Button
         className="p-button-outlined p-button-success ml-auto"
         loading={createScreenMutation.isLoading || updateScreenMutation.isLoading}

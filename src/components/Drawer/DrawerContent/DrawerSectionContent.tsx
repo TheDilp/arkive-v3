@@ -15,6 +15,7 @@ import { DefaultSection } from "../../../utils/DefaultValues/ScreenDefaults";
 import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerSectionContent() {
   const queryClient = useQueryClient();
@@ -67,7 +68,7 @@ export default function DrawerSectionContent() {
                     return oldData;
                   });
 
-                setDrawer(DefaultDrawer);
+                handleCloseDrawer(setDrawer, "right");
               },
             },
           );
@@ -78,7 +79,7 @@ export default function DrawerSectionContent() {
             {
               onSuccess: () => {
                 toaster("success", `Section ${localItem?.title || ""} was successfully created.`);
-                setDrawer(DefaultDrawer);
+                handleCloseDrawer(setDrawer, "right");
               },
             },
           );
@@ -114,9 +115,9 @@ export default function DrawerSectionContent() {
       <Dropdown name="size" onChange={(e) => handleChange(e.target)} options={SectionSizeOptions} value={localItem?.size} />
       <Button
         className="p-button-outlined p-button-success ml-auto"
+        loading={isLoadingCreate || isLoadingUpdate}
         onClick={createUpdateSection}
-        type="submit"
-        loading={isLoadingCreate || isLoadingUpdate}>
+        type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
     </div>

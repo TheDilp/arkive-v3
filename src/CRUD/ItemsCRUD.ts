@@ -119,7 +119,6 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
     async (updateItemValues: Partial<ItemType>) => {
       if (updateItemValues.id) {
         const url = updateURL(updateItemValues.id, type);
-        console.log(url);
         if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
       }
       return null;
@@ -201,6 +200,13 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
             type === "maps" &&
             ((subType === "map_layers" && "map_layers" in oldData) || (subType === "map_pins" && "map_pins" in oldData))
           ) {
+            const updatedData = (oldData[subType] || []).map((subItem) => {
+              if (subItem.id === variables.id) return { ...subItem, ...variables };
+              return subItem;
+            });
+            queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
+          }
+          if (type === "screens" && subType === "sections" && "sections" in oldData) {
             const updatedData = (oldData[subType] || []).map((subItem) => {
               if (subItem.id === variables.id) return { ...subItem, ...variables };
               return subItem;

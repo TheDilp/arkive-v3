@@ -24,20 +24,27 @@ export default function ScreenView() {
           onClick={() => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "sections" })}
         />
       </div>
-      <div className="flex w-[calc(100vw-30rem)] max-w-full flex-1 gap-x-4 overflow-x-auto overflow-y-hidden pb-8">
+      <div className="flex w-fit max-w-full flex-1 gap-x-4 overflow-x-auto overflow-y-hidden pb-8">
         {data?.sections
           ? data?.sections?.map((section) => (
               <div
                 key={section.id}
                 className="scrollbar-hidden flex min-w-[20rem] max-w-xs flex-1 flex-col gap-y-2 overflow-y-auto">
-                <h3 className="text-Lato select-none rounded bg-zinc-800 p-1 text-center font-Lato text-2xl font-medium">
-                  {section.title}
+                <h3 className="text-Lato group flex select-none items-center rounded bg-zinc-800 p-1 text-center font-Lato text-2xl font-medium">
+                  <span className="flex-1">{section.title}</span>
+                  <Icon
+                    className="ml-auto w-min cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
+                    icon="mdi:pencil"
+                    onClick={() =>
+                      setDrawer({ ...DefaultDrawer, data: section, position: "right", show: true, type: "sections" })
+                    }
+                  />
                 </h3>
                 <div className="flex w-full max-w-full flex-col gap-y-4">
                   {(section.cards || []).map((card) => (
                     <div key={card.id} className="w-full rounded-sm bg-zinc-800">
                       <h4 className="flex items-center justify-center gap-x-2 py-2 text-xl">
-                        <span className="ml-auto select-none">{card?.title}</span>
+                        {/* <span className="ml-auto select-none">{card?.title}</span> */}
                         <Icon
                           className="ml-auto cursor-pointer"
                           fontSize={28}
