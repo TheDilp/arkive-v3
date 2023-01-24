@@ -231,9 +231,7 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
   return useMutation(
     async (id: string) => {
       if (id) {
-        console.log(id, type);
         const url = deleteURL(id, type);
-        console.log(url);
         if (url) return FetchFunction({ url, method: "DELETE" });
       }
       return null;
@@ -268,7 +266,7 @@ export const useDeleteManyItems = (type: AvailableItemTypes, project_id: string)
   );
 };
 
-export const useSortMutation = (project_id: string, type: AvailableItemTypes) => {
+export const useSortMutation = (project_id: string, type: AvailableItemTypes | AvailableSubItemTypes) => {
   const queryClient = useQueryClient();
   return useMutation(
     async (updateValues: SortIndexes) => {

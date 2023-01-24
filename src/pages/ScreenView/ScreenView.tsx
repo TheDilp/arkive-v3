@@ -1,18 +1,32 @@
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
+import set from "lodash.set";
 import { Button } from "primereact/button";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import StaticRender from "../../components/Editor/StaticRender";
+import { useSortMutation } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { ScreenType } from "../../types/screenTypes";
+import { ScreenType, SectionType } from "../../types/screenTypes";
+import { SortIndexes } from "../../types/treeTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 export default function ScreenView() {
-  const { item_id } = useParams();
+  const { project_id, item_id } = useParams();
   const { data } = useGetItem<ScreenType>(item_id as string, "screens");
+  const sortSectionsMutation = useSortMutation(project_id as string, "sections");
+
   const [, setDrawer] = useAtom(DrawerAtom);
+
+  const [sections, setSections] = useState<SectionType[]>(data?.sections || []);
+
+  useEffect(() => {
+    if (data?.sections) setSections(data?.sections);
+  }, [data?.sections]);
+
   return (
     <div className="flex min-h-full flex-col gap-y-4 overflow-hidden p-4 pb-8">
       <div className="w-full">
@@ -24,47 +38,88 @@ export default function ScreenView() {
           onClick={() => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "sections" })}
         />
       </div>
-      <div className="flex w-fit max-w-full flex-1 gap-x-4 overflow-x-auto overflow-y-hidden pb-8">
-        {data?.sections
-          ? data?.sections?.map((section) => (
-              <div
-                key={section.id}
-                className="scrollbar-hidden flex min-w-[20rem] max-w-xs flex-1 flex-col gap-y-2 overflow-y-auto">
-                <h3 className="text-Lato group flex select-none items-center rounded bg-zinc-800 p-1 text-center font-Lato text-2xl font-medium">
-                  <span className="flex-1">{section.title}</span>
-                  <Icon
-                    className="ml-auto w-min cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
-                    icon="mdi:pencil"
-                    onClick={() =>
-                      setDrawer({ ...DefaultDrawer, data: section, position: "right", show: true, type: "sections" })
-                    }
-                  />
-                </h3>
-                <div className="flex w-full max-w-full flex-col gap-y-4">
-                  {(section.cards || []).map((card) => (
-                    <div key={card.id} className="w-full rounded-sm bg-zinc-800">
-                      <h4 className="flex items-center justify-center gap-x-2 py-2 text-xl">
-                        {/* <span className="ml-auto select-none">{card?.title}</span> */}
-                        <Icon
-                          className="ml-auto cursor-pointer"
-                          fontSize={28}
-                          icon="mdi:chevron-up"
-                          // onClick={() => {
-                          //   const tempSections = [...data.sections];
-                          //   set(tempSections, `[${sectionIndex}].cards[${cardIndex}].expanded`, !card.expanded);
-                          //   setSections(tempSections);
-                          // }}
-                        />
-                      </h4>
-                      <div className="max-h-64 overflow-auto">
-                        {card?.document?.content ? <StaticRender content={card.document.content} /> : null}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+      <div className="h-full w-full overflow-x-auto ">
+        <DragDropContext
+          onDragEnd={(result) => {
+            if (!result) return;
+            const tempSections = [...sections];
+            if (typeof result.destination?.index === "number" && result.source.index !== result.destination?.index) {
+              const removedSection = tempSections.splice(result.source.index, 1);
+              tempSections.splice(result.destination.index, 0, removedSection[0]);
+              setSections(tempSections);
+              const sortIndexes: SortIndexes = tempSections.map((section, index) => ({
+                id: section.id,
+                parentId: section.parentId,
+                sort: index,
+              }));
+              sortSectionsMutation.mutate(sortIndexes);
+            }
+          }}>
+          <Droppable direction="horizontal" droppableId="sceneDroppable">
+            {(providedDroppable) => (
+              <div ref={providedDroppable.innerRef} {...providedDroppable.droppableProps} className="flex w-full gap-x-4 ">
+                {sections?.length
+                  ? sections?.map((section, sectionIndex) => (
+                      <Draggable key={section.id} draggableId={section.id} index={sectionIndex}>
+                        {(provided, snapshot) => (
+                          <div
+                            key={section.id}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            className="scrollbar-hidden flex min-w-[20rem] flex-col gap-y-2">
+                            <h3
+                              {...provided.dragHandleProps}
+                              className="text-Lato group flex select-none items-center rounded bg-zinc-800 p-1 text-center font-Lato text-2xl font-medium">
+                              <span className="flex-1">{section.title}</span>
+                              <Icon
+                                className="ml-auto w-min cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
+                                icon="mdi:pencil"
+                                onClick={() =>
+                                  setDrawer({
+                                    ...DefaultDrawer,
+                                    data: section,
+                                    position: "right",
+                                    show: true,
+                                    type: "sections",
+                                  })
+                                }
+                              />
+                            </h3>
+                            {snapshot.isDragging ? null : (
+                              <div className="flex w-full max-w-full flex-col gap-y-4">
+                                TEST
+                                {(section.cards || []).map((card) => (
+                                  <div key={card.id} className="w-full rounded-sm bg-zinc-800">
+                                    <h4 className="flex items-center justify-center gap-x-2 py-2 text-xl">
+                                      {/* <span className="ml-auto select-none">{card?.title}</span> */}
+                                      <Icon
+                                        className="ml-auto cursor-pointer"
+                                        fontSize={28}
+                                        icon="mdi:chevron-up"
+                                        // onClick={() => {
+                                        //   const tempSections = [...data.sections];
+                                        //   set(tempSections, `[${sectionIndex}].cards[${cardIndex}].expanded`, !card.expanded);
+                                        //   setSections(tempSections);
+                                        // }}
+                                      />
+                                    </h4>
+                                    <div className="max-h-64 overflow-auto">
+                                      {card?.document?.content ? <StaticRender content={card.document.content} /> : null}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                  : null}
+                <div className="w-[20rem]">{providedDroppable.placeholder}</div>
               </div>
-            ))
-          : null}
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
     </div>
   );

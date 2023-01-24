@@ -58,6 +58,9 @@ export const deleteURL = (id: string, type: AllAvailableTypes) => {
 export const sortURL = (type: AllAvailableTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${updateURLs.sortDocuments}`;
   if (type === "maps") return `${baseURLS.baseServer}${updateURLs.sortMaps}`;
+  if (type === "boards") return `${baseURLS.baseServer}${updateURLs.sortBoards}`;
+  if (type === "screens") return `${baseURLS.baseServer}${updateURLs.sortScreens}`;
+  if (type === "sections") return `${baseURLS.baseServer}${updateURLs.sortSections}`;
   return null;
 };
 

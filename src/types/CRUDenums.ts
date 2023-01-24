@@ -66,6 +66,9 @@ export const updateURLs = {
 
   sortDocuments: "sortdocuments",
   sortMaps: "sortmaps",
+  sortBoards: "sortboards",
+  sortScreens: "sortscreens",
+  sortSections: "sortsections",
 };
 
 export const deleteURLs = {
