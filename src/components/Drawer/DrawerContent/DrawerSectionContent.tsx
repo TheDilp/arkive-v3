@@ -20,8 +20,16 @@ export default function DrawerSectionContent() {
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { project_id, item_id } = useParams();
-  const { mutate: createSectionMutation } = useCreateSubItem<SectionCreateType>(item_id as string, "sections", "screens");
-  const { mutate: updateSectionMutation } = useUpdateSubItem<SectionType>(item_id as string, "sections", "screens");
+  const { mutate: createSectionMutation, isLoading: isLoadingCreate } = useCreateSubItem<SectionCreateType>(
+    item_id as string,
+    "sections",
+    "screens",
+  );
+  const { mutate: updateSectionMutation, isLoading: isLoadingUpdate } = useUpdateSubItem<SectionType>(
+    item_id as string,
+    "sections",
+    "screens",
+  );
   const deleteScreenMutation = useDeleteItem("screens", project_id as string);
   const screen = queryClient.getQueryData<ScreenType>(["screens", item_id as string]);
   const section = screen?.sections?.find((screenSection) => screenSection.id === drawer?.data?.id);
@@ -58,10 +66,22 @@ export default function DrawerSectionContent() {
                       };
                     return oldData;
                   });
+
+                setDrawer(DefaultDrawer);
               },
             },
           );
-        else createSectionMutation({ ...DefaultSection, ...changedData, id: crypto.randomUUID(), parentId: item_id as string });
+        else
+          createSectionMutation(
+            { ...DefaultSection, ...changedData, id: crypto.randomUUID(), parentId: item_id as string },
+
+            {
+              onSuccess: () => {
+                toaster("success", `Section ${localItem?.title || ""} was successfully created.`);
+                setDrawer(DefaultDrawer);
+              },
+            },
+          );
       } else {
         toaster("info", "No data was changed.");
       }
@@ -92,7 +112,11 @@ export default function DrawerSectionContent() {
         value={localItem?.title || ""}
       />
       <Dropdown name="size" onChange={(e) => handleChange(e.target)} options={SectionSizeOptions} value={localItem?.size} />
-      <Button className="p-button-outlined p-button-success ml-auto" onClick={createUpdateSection} type="submit">
+      <Button
+        className="p-button-outlined p-button-success ml-auto"
+        onClick={createUpdateSection}
+        type="submit"
+        loading={isLoadingCreate || isLoadingUpdate}>
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
     </div>

@@ -7,7 +7,7 @@ export const DefaultDrawer: DrawerAtomType = {
   fullscreen: false,
   id: null,
   modal: false,
-  position: "left",
+  position: "right",
   show: false,
   type: null,
 };

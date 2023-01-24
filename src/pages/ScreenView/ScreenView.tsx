@@ -1,23 +1,18 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
-import set from "lodash.set";
 import { Button } from "primereact/button";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import StaticRender from "../../components/Editor/StaticRender";
-import { useCreateItem, useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { ScreenType, SectionType } from "../../types/screenTypes";
+import { ScreenType } from "../../types/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { DefaultSection } from "../../utils/DefaultValues/ScreenDefaults";
 
 export default function ScreenView() {
   const { item_id } = useParams();
   const { data } = useGetItem<ScreenType>(item_id as string, "screens");
   const [, setDrawer] = useAtom(DrawerAtom);
-  const { mutate } = useCreateSubItem<SectionType>(item_id as string, "sections", "screens");
   return (
     <div className="flex min-h-full flex-col gap-y-4 overflow-hidden p-4 pb-8">
       <div className="w-full">
@@ -31,18 +26,18 @@ export default function ScreenView() {
       </div>
       <div className="flex w-[calc(100vw-30rem)] max-w-full flex-1 gap-x-4 overflow-x-auto overflow-y-hidden pb-8">
         {data?.sections
-          ? data?.sections?.map((section, sectionIndex) => (
+          ? data?.sections?.map((section) => (
               <div
                 key={section.id}
                 className="scrollbar-hidden flex min-w-[20rem] max-w-xs flex-1 flex-col gap-y-2 overflow-y-auto">
-                <h3 className="text-Lato select-none rounded p-1 text-center font-Lato text-2xl font-medium underline">
+                <h3 className="text-Lato select-none rounded bg-zinc-800 p-1 text-center font-Lato text-2xl font-medium">
                   {section.title}
                 </h3>
                 <div className="flex w-full max-w-full flex-col gap-y-4">
-                  {(section.cards || []).map((card, cardIndex) => (
+                  {(section.cards || []).map((card) => (
                     <div key={card.id} className="w-full rounded-sm bg-zinc-800">
                       <h4 className="flex items-center justify-center gap-x-2 py-2 text-xl">
-                        <span className="ml-auto select-none">{card.title}</span>
+                        <span className="ml-auto select-none">{card?.title}</span>
                         <Icon
                           className="ml-auto cursor-pointer"
                           fontSize={28}
