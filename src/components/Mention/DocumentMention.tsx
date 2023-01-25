@@ -17,19 +17,18 @@ type Props = {
   isDisabledTooltip?: boolean;
 };
 
-function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
+export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title">) {
   const { data, isLoading } = useQuery({
-    queryKey: [id as string, "documents"],
+    queryKey: ["documents", id],
     queryFn: async () => {
       const url = getSingleURL("documents", id as string);
       if (url) {
-        const res = await FetchFunction({ url, method: "GET" });
-        const resData = await res.json();
-        return resData;
+        return FetchFunction({ url, method: "GET" });
       }
 
       return null;
     },
+    staleTime: 5 * 60 * 1000,
   });
   return (
     <Card className="h-96 w-96 overflow-y-auto" title={<div className="p-0 text-center">{title}</div>}>
@@ -43,7 +42,7 @@ function TooltipContent({ title, id }: Pick<Props, "title" | "id">) {
 export default function DocumentMention({ title, id, label, isDisabledTooltip }: Props) {
   const [mention, setMention] = useAtom(MentionContextAtom);
   return (
-    <Tooltip content={<TooltipContent id={id} title={title || label} />} disabled={isDisabledTooltip ?? false}>
+    <Tooltip content={<DocumentMentionTooltip id={id} title={title || label} />} disabled={isDisabledTooltip ?? false}>
       <Link
         className="font-Lato text-sm font-bold text-white underline hover:text-sky-400"
         onContextMenu={(e) => {

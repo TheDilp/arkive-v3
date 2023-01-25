@@ -2,11 +2,12 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Tooltip } from "primereact/tooltip";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import StaticRender from "../../components/Editor/StaticRender";
+import SectionCard from "../../components/Card/SectionCard";
 import { useSortMutation } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { ScreenType, SectionType } from "../../types/screenTypes";
@@ -17,17 +18,35 @@ import { getSectionSizeClass } from "../../utils/screenUtils";
 
 export default function ScreenView() {
   const { project_id, item_id } = useParams();
-  const { data } = useGetItem<ScreenType>(item_id as string, "screens");
+  const { data, isLoading } = useGetItem<ScreenType>(item_id as string, "screens");
   const sortSectionsMutation = useSortMutation(project_id as string, "sections");
 
   const [, setDrawer] = useAtom(DrawerAtom);
 
   const [sections, setSections] = useState<SectionType[]>(data?.sections || []);
 
+  function updateCard(sectionId: string, cardId: string, expanded: boolean) {
+    setSections((prev) =>
+      prev.map((section) => {
+        if (section.id === sectionId) {
+          return {
+            ...section,
+            cards: section.cards.map((card) => {
+              if (card.id === cardId) return { ...card, expanded };
+              return card;
+            }),
+          };
+        }
+        return section;
+      }),
+    );
+  }
+
   useEffect(() => {
     if (data?.sections) setSections(data?.sections);
   }, [data?.sections]);
 
+  if (isLoading) return <ProgressSpinner />;
   return (
     <div className="flex min-h-full w-full flex-col gap-y-4 overflow-hidden p-4 pb-8">
       <div className="w-full">
@@ -103,27 +122,9 @@ export default function ScreenView() {
                               />
                             </h3>
                             {snapshot.isDragging ? null : (
-                              <div className="flex w-full max-w-full flex-col gap-y-4">
-                                TEST
+                              <div className="flex w-full max-w-full flex-col gap-y-2">
                                 {(section.cards || []).map((card) => (
-                                  <div key={card.id} className="w-full rounded-sm bg-zinc-800">
-                                    <h4 className="flex items-center justify-center gap-x-2 py-2 text-xl">
-                                      {/* <span className="ml-auto select-none">{card?.title}</span> */}
-                                      <Icon
-                                        className="ml-auto cursor-pointer"
-                                        fontSize={28}
-                                        icon="mdi:chevron-up"
-                                        // onClick={() => {
-                                        //   const tempSections = [...data.sections];
-                                        //   set(tempSections, `[${sectionIndex}].cards[${cardIndex}].expanded`, !card.expanded);
-                                        //   setSections(tempSections);
-                                        // }}
-                                      />
-                                    </h4>
-                                    <div className="max-h-64 overflow-auto">
-                                      {card?.document?.content ? <StaticRender content={card.document.content} /> : null}
-                                    </div>
-                                  </div>
+                                  <SectionCard key={card.id} card={card} updateCard={updateCard} />
                                 ))}
                               </div>
                             )}
@@ -132,6 +133,7 @@ export default function ScreenView() {
                       </Draggable>
                     ))
                   : null}
+
                 <div className="w-[20rem]">{providedDroppable.placeholder}</div>
               </div>
             )}

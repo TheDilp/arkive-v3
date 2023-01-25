@@ -4,6 +4,7 @@ import { BaseItemType } from "./generalTypes";
 export type CardType = {
   id: string;
   sort: number;
+  expanded: boolean;
 
   document: DocumentType;
   documentsId: string;

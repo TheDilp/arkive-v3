@@ -62,6 +62,7 @@ export const updateURLs = {
   updateEdge: "updateedge/",
   updateScreen: "updatescreen/",
   updateSection: "updatesection/",
+  updateCard: "updatecard/",
   updateTag: "updatetag/",
 
   sortDocuments: "sortdocuments",

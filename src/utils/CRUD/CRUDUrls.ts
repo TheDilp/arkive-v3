@@ -39,6 +39,7 @@ export const updateURL = (id: string, type: AllAvailableTypes) => {
   if (type === "edges") return `${baseURLS.baseServer}${updateURLs.updateEdge}${id}`;
   if (type === "screens") return `${baseURLS.baseServer}${updateURLs.updateScreen}${id}`;
   if (type === "sections") return `${baseURLS.baseServer}${updateURLs.updateSection}${id}`;
+  if (type === "cards") return `${baseURLS.baseServer}${updateURLs.updateCard}${id}`;
   return null;
 };
 
