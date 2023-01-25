@@ -2,6 +2,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { Tooltip } from "primereact/tooltip";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -73,6 +74,20 @@ export default function ScreenView() {
                                 section.size,
                               )} select-none items-center rounded bg-zinc-800 p-1 text-center font-Lato text-xl font-medium`}>
                               <span className="flex-1 truncate">{section.title}</span>
+                              <Tooltip content="Add card" position="bottom" target=".addCard" />
+                              <Icon
+                                className="addCard ml-auto w-min cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
+                                icon="mdi:plus"
+                                onClick={() =>
+                                  setDrawer({
+                                    ...DefaultDrawer,
+                                    data: section,
+                                    position: "right",
+                                    show: true,
+                                    type: "cards",
+                                  })
+                                }
+                              />
                               <Icon
                                 className="ml-auto w-min cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
                                 icon="mdi:pencil"

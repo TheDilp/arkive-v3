@@ -1,12 +1,10 @@
 import { useQueries } from "@tanstack/react-query";
-import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Suspense } from "react";
 import { Outlet, useParams } from "react-router-dom";
 
 import { useAuth } from "../../hooks/useAuth";
-import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { getItems } from "../../utils/CRUD/CRUDFunctions";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
@@ -16,7 +14,6 @@ import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
   const { project_id } = useParams();
-  const [sidebarToggle] = useAtom(SidebarCollapseAtom);
   const user = useAuth();
   const results = useQueries({
     queries: [
@@ -49,33 +46,21 @@ export default function Layout() {
   const allFetched = results.every((res) => res.isSuccess);
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex h-full max-w-full overflow-hidden">
       <ConfirmDialog />
 
       <DialogWrapper />
       <Sidebar />
+      <SecondarySidebar isLoading={!allFetched} />
+      <Drawer />
 
-      <div
-        className={`flex ${
-          sidebarToggle ? "w-[20rem] min-w-[20rem] opacity-100" : "w-0"
-        } max-w-[20rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
-        <SecondarySidebar isLoading={!allFetched} />
-      </div>
-      <div className="relative flex h-full w-full flex-col">
-        <div className="">
-          <Navbar />
-          <Drawer />
-        </div>
-
-        <div className="flex h-full w-full flex-1">
-          <div className="flex h-full w-full flex-1 flex-col">
-            {allFetched ? (
-              <Suspense fallback={<ProgressSpinner />}>
-                <Outlet />
-              </Suspense>
-            ) : null}
-          </div>
-        </div>
+      <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
+        <Navbar />
+        {allFetched ? (
+          <Suspense fallback={<ProgressSpinner />}>
+            <Outlet />
+          </Suspense>
+        ) : null}
       </div>
     </div>
   );

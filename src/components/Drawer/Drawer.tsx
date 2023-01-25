@@ -9,6 +9,7 @@ import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import DrawerBoardContent from "./DrawerContent/DrawerBoardContent";
 import DrawerBulkBoardEdit from "./DrawerContent/DrawerBulkBoardEdit";
+import DrawerCardContent from "./DrawerContent/DrawerCardContent";
 import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
 import DrawerEdgeContent from "./DrawerContent/DrawerEdgeContent";
 import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent";
@@ -65,6 +66,7 @@ export default function Drawer() {
       {drawer.type === "mention" ? <DrawerMentionContent /> : null}
       {drawer.type === "screens" ? <DrawerScreensContent /> : null}
       {drawer.type === "sections" ? <DrawerSectionContent /> : null}
+      {drawer.type === "cards" ? <DrawerCardContent /> : null}
     </PrimeDrawer>
   );
 }

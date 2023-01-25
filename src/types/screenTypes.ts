@@ -8,8 +8,10 @@ export type CardType = {
   document: DocumentType;
   documentsId: string;
 
-  sectionsId: string;
+  parentId: string;
 };
+export type CardCreateType = Partial<Omit<CardType, "cards" | "parentId">> & { id: string; parentId: string };
+export type DefaultCardType = Pick<CardType, "id" | "parentId">;
 
 export type SectionType = {
   id: string;

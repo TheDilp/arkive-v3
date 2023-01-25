@@ -21,11 +21,16 @@ function SidebarContainer({ children }: Props) {
   const [sidebar, setSidebar] = useAtom(SidebarCollapseAtom);
 
   return isMd ? (
-    <PrimeSidebar className="treeSidebar bg-zinc-800" onHide={() => setSidebar(false)} visible={sidebar}>
+    <PrimeSidebar className="treeSidebar bg-zinc-800 transition-all" onHide={() => setSidebar(false)} visible={sidebar}>
       {children}
     </PrimeSidebar>
   ) : (
-    children
+    <div
+      className={`flex ${
+        sidebar ? "w-[20rem] min-w-[20rem] opacity-100" : "w-0"
+      } max-w-[20rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
+      {children}
+    </div>
   );
 }
 

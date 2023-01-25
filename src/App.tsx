@@ -69,7 +69,7 @@ function App() {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <main className="flex h-screen flex-col">
+      <main className="flex h-screen w-screen flex-col">
         <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
 
         <ReactQueryDevtools initialIsOpen={false} />
