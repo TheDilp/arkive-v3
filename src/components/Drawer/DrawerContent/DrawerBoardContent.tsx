@@ -135,7 +135,7 @@ export default function DrawerBoardContent() {
 
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() =>
+        onClick={async () =>
           createUpdateItem<BoardType>(
             board,
             localItem,
@@ -146,8 +146,9 @@ export default function DrawerBoardContent() {
             DefaultBoard,
             allBoards,
             resetChanges,
-            createBoardMutation.mutate,
-            updateBoardMutation.mutate,
+            createBoardMutation.mutateAsync,
+            updateBoardMutation.mutateAsync,
+            setDrawer,
           )
         }
         type="submit">

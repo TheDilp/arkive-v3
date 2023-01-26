@@ -55,9 +55,9 @@ export default function DrawerScreensContent() {
         className="w-full"
         name="title"
         onChange={(e) => handleChange(e.target)}
-        onKeyDown={(e) => {
+        onKeyDown={async (e) => {
           if (e.key === "Enter") {
-            createUpdateItem<ScreenType>(
+            await createUpdateItem<ScreenType>(
               screen,
               localItem,
               changedData,
@@ -67,8 +67,9 @@ export default function DrawerScreensContent() {
               DefaultScreen,
               allScreens,
               resetChanges,
-              createScreenMutation.mutate,
-              updateScreenMutation.mutate,
+              createScreenMutation.mutateAsync,
+              updateScreenMutation.mutateAsync,
+              setDrawer,
             );
           }
         }}
@@ -78,7 +79,7 @@ export default function DrawerScreensContent() {
       <div className="flex w-full flex-col">
         <span className="w-full text-sm text-zinc-400">Section size</span>
         <Dropdown
-          name="size"
+          name="sectionSize"
           onChange={(e) => handleChange(e.target)}
           options={SectionSizeOptions}
           title="Section size"
@@ -88,8 +89,8 @@ export default function DrawerScreensContent() {
       <Button
         className="p-button-outlined p-button-success ml-auto"
         loading={createScreenMutation.isLoading || updateScreenMutation.isLoading}
-        onClick={() => {
-          createUpdateItem<ScreenType>(
+        onClick={async () => {
+          await createUpdateItem<ScreenType>(
             screen,
             localItem,
             changedData,
@@ -99,8 +100,9 @@ export default function DrawerScreensContent() {
             DefaultScreen,
             allScreens,
             resetChanges,
-            createScreenMutation.mutate,
-            updateScreenMutation.mutate,
+            createScreenMutation.mutateAsync,
+            updateScreenMutation.mutateAsync,
+            setDrawer,
           );
         }}
         type="submit">

@@ -105,7 +105,7 @@ export default function DrawerMapContent() {
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() =>
+        onClick={async () =>
           createUpdateItem<MapType>(
             map,
             localItem,
@@ -116,8 +116,9 @@ export default function DrawerMapContent() {
             DefaultMap,
             maps,
             resetChanges,
-            createMapMutation.mutate,
-            updateMapMutation.mutate,
+            createMapMutation.mutateAsync,
+            updateMapMutation.mutateAsync,
+            setDrawer,
           )
         }
         type="submit">

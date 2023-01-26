@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
@@ -9,23 +8,22 @@ import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem } from "../../../CRUD/ItemsCRUD";
 import { baseURLS, createURLS } from "../../../types/CRUDenums";
 import { DocumentType } from "../../../types/documentTypes";
-import { CardType } from "../../../types/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { DocumentMentionTooltip } from "../../Mention/DocumentMention";
 import { Tooltip } from "../../Tooltip/Tooltip";
+import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerCardContent() {
-  const { project_id, item_id } = useParams();
+  const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const [drawer] = useAtom(DrawerAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [loading, setLoading] = useState(false);
   const [selectedDocuments, setSelectedDocuments] = useState<DocumentType[]>([]);
   const documents = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
-  const createCardMutation = useCreateSubItem<CardType>(item_id as string, "cards", "screens");
   return (
     <div className=" flex flex-col gap-y-2">
       <h2 className="font-Lato text-2xl font-medium">Add card</h2>
@@ -35,7 +33,7 @@ export default function DrawerCardContent() {
         onChange={(e) => setSelectedDocuments(e.value)}
         optionLabel="title"
         options={(documents || []).filter((doc) => !doc.template && !doc.folder)}
-        placeholder="Select a Document"
+        placeholder="Select documents"
         value={selectedDocuments}
       />
       <div className="flex flex-wrap gap-2">
@@ -49,9 +47,12 @@ export default function DrawerCardContent() {
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
+        loading={loading}
         onClick={async () => {
-          if (drawer?.data?.id)
-            FetchFunction({
+          if (drawer?.data?.id) {
+            setLoading(true);
+
+            await FetchFunction({
               url: `${baseURLS.baseServer}${createURLS.createCard}`,
               method: "POST",
               body: JSON.stringify(
@@ -62,6 +63,10 @@ export default function DrawerCardContent() {
                 })),
               ),
             });
+            await queryClient.refetchQueries({ queryKey: ["screens", drawer.data?.parentId] });
+            setLoading(false);
+            handleCloseDrawer(setDrawer, "right");
+          }
         }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}

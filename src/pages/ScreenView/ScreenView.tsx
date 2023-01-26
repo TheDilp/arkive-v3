@@ -102,11 +102,18 @@ export default function ScreenView() {
                       {...droppableProvided.droppableProps}>
                       <h3 className="group mb-1 flex max-w-full items-center justify-between truncate rounded bg-zinc-800 py-1 px-2 font-Merriweather text-xl">
                         <span>{section.title}</span>
-                        <Icon
-                          className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
-                          icon="mdi:pencil"
-                          onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections", data: section })}
-                        />
+                        <div className="item-center flex">
+                          <Icon
+                            className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
+                            icon="mdi:plus"
+                            onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "cards", data: section })}
+                          />
+                          <Icon
+                            className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
+                            icon="mdi:pencil"
+                            onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections", data: section })}
+                          />
+                        </div>
                       </h3>
                       <div className="scrollbar-hidden flex h-full max-w-full flex-col gap-y-2 overflow-x-hidden">
                         {section?.cards
