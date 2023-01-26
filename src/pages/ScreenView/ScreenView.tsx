@@ -1,52 +1,146 @@
 /* eslint-disable react/jsx-no-bind */
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
+import { Icon } from "@iconify/react";
+import { useAtom } from "jotai";
+import set from "lodash.set";
+import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import SectionCard from "../../components/Card/SectionCard";
+import { useCreateSubItem, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { ScreenType } from "../../types/screenTypes";
+import { CardType, ScreenType, SectionType } from "../../types/screenTypes";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getSectionSizeClass } from "../../utils/screenUtils";
 
 export default function ScreenView() {
   const { item_id } = useParams();
   const { data, isLoading } = useGetItem<ScreenType>(item_id as string, "screens");
-  function onDragEnd(result) {}
+  const [sections, setSections] = useState<SectionType[]>([]);
+  const [, setDrawer] = useAtom(DrawerAtom);
+  const updateCardMutation = useUpdateSubItem<CardType>(item_id as string, "cards", "screens");
+  const updateCard = useCallback((sectionId: string, cardId: string, expanded: boolean) => {
+    updateCardMutation.mutate({ id: cardId, expanded });
+    setSections((prev) =>
+      prev.map((section) => {
+        if (section.id !== sectionId) return section;
+        return {
+          ...section,
+          cards: section.cards.map((card) => {
+            if (card.id !== cardId) return card;
+            return { ...card, expanded };
+          }),
+        };
+      }),
+    );
+  }, []);
+
+  function onDragEnd(result: DropResult) {
+    const tempSections = [...sections];
+    const sourceIdx = tempSections.findIndex((section) => section.id === result.source.droppableId);
+    const targetIdx = tempSections.findIndex((section) => section.id === result.destination?.droppableId);
+    if (!result) return;
+    const sourceSection = tempSections[sourceIdx];
+    const movedCard = tempSections[sourceIdx].cards.find((card) => card.id === result.draggableId);
+    if (typeof targetIdx === "number" && movedCard) {
+      const { source, destination } = result;
+      if (sourceIdx === targetIdx) {
+        // Do something only if it is not placed in the exact same space
+        if (source.index !== destination?.index) {
+          // SORT WITHIN COLUMN
+        }
+      } else {
+        const targetSection = tempSections[targetIdx];
+        set(
+          sourceSection,
+          "cards",
+          sourceSection.cards.filter((card) => card.id !== result.draggableId),
+        );
+
+        targetSection.cards.splice(destination?.index || 0, 0, movedCard);
+
+        updateCardMutation.mutate({ id: movedCard.id, parentId: targetSection.id, sort: destination?.index || 0 });
+
+        tempSections[sourceIdx] = sourceSection;
+        tempSections[targetIdx] = targetSection;
+        setSections(tempSections);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (data?.sections) setSections(data.sections);
+  }, [data]);
+
   return (
-    <div className="flex h-full gap-x-2 overflow-auto p-4">
-      <DragDropContext onDragEnd={onDragEnd}>
-        {!isLoading ? (
-          data?.sections.map((section) => (
-            <Droppable key={section.id} droppableId={section.id}>
-              {(provided) => (
-                <div className={`max-w-min ${getSectionSizeClass(section.size)}`}>
-                  <div ref={provided.innerRef} className="flex h-full max-w-full flex-col" {...provided.droppableProps}>
-                    <h3 className="mb-1 max-w-full truncate rounded bg-zinc-800 py-1 px-2">{section.title}</h3>
-                    <div className="scrollbar-hidden flex h-full max-w-full flex-col gap-y-2 overflow-x-hidden">
-                      {section.cards.map((card, index) => (
-                        <Draggable key={card.id} draggableId={card.id} index={index}>
-                          {(providedDraggable) => (
-                            <div
-                              className="w-full max-w-full"
-                              {...providedDraggable.dragHandleProps}
-                              {...providedDraggable.draggableProps}
-                              ref={providedDraggable.innerRef}>
-                              <SectionCard card={card} />
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
+    <div className="flex h-full flex-col gap-y-2 overflow-auto p-4">
+      <div>
+        <Button
+          className="p-button-outlined"
+          icon="pi pi-plus"
+          iconPos="right"
+          label="Create Section"
+          onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections", data })}
+        />
+      </div>
+      <div className="flex h-full gap-x-2 overflow-auto ">
+        <DragDropContext onDragEnd={onDragEnd}>
+          {!isLoading ? (
+            sections?.map((section) => (
+              <Droppable key={section.id} direction="vertical" droppableId={section.id}>
+                {(droppableProvided, droppableSnapshot) => (
+                  <div
+                    className={`max-w-min ${getSectionSizeClass(data?.sectionSize || "md")} ${
+                      droppableSnapshot.isDraggingOver ? "border border-dashed border-zinc-600" : ""
+                    }`}>
+                    <div
+                      ref={droppableProvided.innerRef}
+                      className="flex h-full max-w-full flex-col"
+                      {...droppableProvided.droppableProps}>
+                      <h3 className="group mb-1 flex max-w-full items-center justify-between truncate rounded bg-zinc-800 py-1 px-2 font-Merriweather text-xl">
+                        <span>{section.title}</span>
+                        <Icon
+                          className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
+                          icon="mdi:pencil"
+                          onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections", data: section })}
+                        />
+                      </h3>
+                      <div className="scrollbar-hidden flex h-full max-w-full flex-col gap-y-2 overflow-x-hidden">
+                        {section?.cards
+                          ? section.cards.map((card, index) => (
+                              <Draggable key={card.id} draggableId={card.id} index={index}>
+                                {(providedDraggable, draggableSnapshot) => (
+                                  <div
+                                    className={`${
+                                      draggableSnapshot.isDragging ? " bg-blue-300 " : "w-full max-w-full"
+                                    } transition-all`}
+                                    style={{
+                                      maxWidth: "15rem",
+                                    }}
+                                    {...providedDraggable.dragHandleProps}
+                                    {...providedDraggable.draggableProps}
+                                    ref={providedDraggable.innerRef}>
+                                    <SectionCard card={card} updateCard={updateCard} />
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))
+                          : null}
+                      </div>
                     </div>
+                    {droppableProvided.placeholder}
                   </div>
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          ))
-        ) : (
-          <ProgressSpinner />
-        )}
-      </DragDropContext>
+                )}
+              </Droppable>
+            ))
+          ) : (
+            <ProgressSpinner />
+          )}
+        </DragDropContext>
+      </div>
     </div>
   );
 }

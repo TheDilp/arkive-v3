@@ -104,7 +104,7 @@ export const useCreateSubItem = <SubItemType extends { id: string; parentId: str
 
         return { oldData };
       },
-      onError: (error, variables, context) => {
+      onError: (error, _, context) => {
         toaster("error", `There was an error updating this item. ${error}`);
         queryClient.setQueryData([type, id], context?.oldData);
       },
@@ -238,10 +238,10 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
     },
 
     {
-      onSuccess: async () => {
+      onSuccess: () => {
         if (["documents", "maps", "boards", "screens"].includes(type))
           queryClient.refetchQueries(["allItems", project_id, type]);
-        toaster("success", "Item successfully deleted.");
+        toaster("success", "Item successfully deleted. 🗑️");
       },
     },
   );

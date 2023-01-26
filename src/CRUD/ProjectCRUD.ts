@@ -24,21 +24,14 @@ export const useGetAllProjects = (enabled: boolean) => {
 export const useCreateProject = () => {
   const queryClient = useQueryClient();
   return useMutation(async () => FetchFunction({ url: `${baseURLS.baseServer}${createURLS.createProject}`, method: "POST" }), {
-    onMutate: async () => {
-      const oldData = queryClient.getQueryData(["allProjects"]);
-
-      queryClient.setQueryData(["allProjects"], (old: ProjectType[] | undefined) => {
-        if (old) return [...old, { id: crypto.randomUUID(), title: "New Project" }];
-        return [{ id: crypto.randomUUID(), title: "New Project" }];
-      });
-
-      return { oldData };
-    },
-    onError: (_, __, context) => {
+    onError: () => {
       toaster("error", "There was an error creating this project");
-      if (context?.oldData) queryClient.setQueryData(["allProjects"], context.oldData);
     },
-    onSuccess: async () => {
+    onSuccess: (data) => {
+      queryClient.setQueryData(["allProjects"], (old: ProjectType[] | undefined) => {
+        if (old) return [...old, { ...data }];
+        return [data];
+      });
       toaster("success", "Your project has been successfully updated.");
     },
   });

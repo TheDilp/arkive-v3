@@ -16,13 +16,18 @@
   @apply p-0 !important;
 }
 /* Sidebar */
+.p-tabview-nav-container,
+.p-tabview-nav-content,
+.p-tabview-nav {
+  @apply h-14 !important;
+}
 
 .p-tabview-panels {
   @apply h-12 flex-1 p-0 !important;
 }
 .wikiTabs {
   .p-tabview-panels {
-    @apply bg-zinc-900 !important;
+    @apply h-14 bg-zinc-900 !important;
   }
 }
 .p-tabview-nav-link {
@@ -32,9 +37,10 @@
   }
 }
 .p-tabview-nav {
+  @apply border-b border-zinc-800 !important;
   li {
     a {
-      @apply h-12 rounded-none !important;
+      @apply h-14 rounded-none !important;
     }
   }
   span {

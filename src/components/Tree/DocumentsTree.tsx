@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { SplitButton } from "primereact/splitbutton";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
@@ -58,7 +59,9 @@ export default function DocumentsTree() {
         }}
       />
 
-      <BaseTree type="documents" />
+      <Suspense fallback={<ProgressSpinner />}>
+        <BaseTree type="documents" />
+      </Suspense>
     </div>
   );
 }

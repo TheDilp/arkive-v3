@@ -1,6 +1,9 @@
-import { QueryClient, UseMutateFunction } from "@tanstack/react-query";
+import { QueryClient, UseMutateAsyncFunction } from "@tanstack/react-query";
+import { SetStateAction } from "jotai";
 
+import { handleCloseDrawer } from "../../components/Drawer/Drawer";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
+import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { toaster } from "../toast";
 import { FetchFunction } from "./CRUDFetch";
@@ -14,7 +17,9 @@ export const getItems = async (project_id: string, type: AvailableItemTypes) => 
 export const getTags = async (project_id: string, type: AvailableItemTypes) =>
   FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllTags}${type}/${project_id}`, method: "GET" });
 
-export function createUpdateItem<ItemType extends { id: string; folder: boolean; parentId: string | null; tags: TagType[] }>(
+export async function createUpdateItem<
+  ItemType extends { id: string; folder: boolean; parentId: string | null; tags: TagType[] },
+>(
   item: ItemType | undefined,
   newData: Partial<ItemType>,
   changedData: Partial<ItemType>,
@@ -24,8 +29,8 @@ export function createUpdateItem<ItemType extends { id: string; folder: boolean;
   defaultItem: Partial<ItemType>,
   allItems: ItemType[] | undefined,
   resetChanges: () => void,
-  createMutation: UseMutateFunction<Response | null, unknown, Partial<ItemType>, unknown>,
-  updateMutation: UseMutateFunction<
+  createMutation: UseMutateAsyncFunction<Response | null, unknown, Partial<ItemType>, unknown>,
+  updateMutation: UseMutateAsyncFunction<
     Response | null,
     unknown,
     Partial<ItemType>,
@@ -33,6 +38,7 @@ export function createUpdateItem<ItemType extends { id: string; folder: boolean;
       oldData: unknown;
     }
   >,
+  setDrawer: (update: SetStateAction<DrawerAtomType>) => void,
 ) {
   if (item) {
     if (allItems?.some((sItem) => sItem?.parentId === newData.id) && !newData.folder) {
@@ -46,7 +52,7 @@ export function createUpdateItem<ItemType extends { id: string; folder: boolean;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { tags, ...rest } = changedData;
-    updateMutation(
+    await updateMutation(
       {
         id: item.id,
         ...rest,
@@ -55,11 +61,12 @@ export function createUpdateItem<ItemType extends { id: string; folder: boolean;
         onSuccess: () => {
           queryClient.refetchQueries({ queryKey: ["allItems", project_id, type] });
           toaster("success", "Item successfully updated.");
+          handleCloseDrawer(setDrawer, "right");
         },
       },
     );
   } else {
-    createMutation(
+    await createMutation(
       {
         ...defaultItem,
         ...newData,
@@ -67,6 +74,7 @@ export function createUpdateItem<ItemType extends { id: string; folder: boolean;
       {
         onSuccess: () => {
           queryClient.refetchQueries({ queryKey: ["allItems", project_id, type] });
+          handleCloseDrawer(setDrawer, "right");
         },
       },
     );

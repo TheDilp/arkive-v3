@@ -28,6 +28,7 @@ specifiers:
   autoprefixer: ^10.4.13
   concurrently: ^7.6.0
   core: link:@types/@remirror/core
+  css-box-model: ^1.2.1
   cytoscape: ^3.23.0
   cytoscape-edgehandles: ^4.0.1
   cytoscape-grid-guide: ^2.3.3
@@ -81,6 +82,7 @@ dependencies:
   '@tanstack/react-query': 4.19.0_biqbaboplfbrettd7655fr4n2y
   '@tanstack/react-virtual': 3.0.0-beta.32_react@18.2.0
   concurrently: 7.6.0
+  css-box-model: 1.2.1
   cytoscape: 3.23.0
   cytoscape-edgehandles: 4.0.1_cytoscape@3.23.0
   cytoscape-grid-guide: 2.3.3_cytoscape@3.23.0

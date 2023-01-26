@@ -58,7 +58,7 @@ const markMap: MarkMap = {
 };
 
 export default function StaticRender({ content }: { content: RemirrorJSON }) {
-  const parsedContent = removeKeys(content, ["style"]);
+  const parsedContent = removeKeys(content, ["style", "resizable"]);
   return (
     <div className="staticRendererContainer">
       <RemirrorRenderer json={parsedContent as RemirrorJSON} markMap={markMap} typeMap={typeMap} />

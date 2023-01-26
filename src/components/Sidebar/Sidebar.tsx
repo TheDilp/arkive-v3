@@ -80,16 +80,17 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
 }
 
 function SidebarDashBoardItems() {
-  const { mutate: createProjectMutation } = useCreateProject();
+  const { mutate: createProjectMutation, isLoading } = useCreateProject();
 
   return (
     <li className="mt-14">
       <Button
         className="p-button-text p-button-secondary"
+        loading={isLoading}
         onClick={() => createProjectMutation()}
         tooltip="Create new project"
         tooltipOptions={{ position: "right" }}>
-        <Icon className="newSectionButton text-white" fontSize={28} icon="mdi:plus" />
+        {isLoading ? null : <Icon className="newSectionButton text-white" fontSize={28} icon="mdi:plus" />}
       </Button>
     </li>
   );

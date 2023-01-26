@@ -1,6 +1,7 @@
 import "remirror/styles/all.css";
 
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -29,6 +30,7 @@ export default function Editor({ content, editable }: EditorType) {
     data: DocumentType;
     isLoading: boolean;
   };
+  const queryClient = useQueryClient();
   const cm = useRef();
   const [, setMention] = useAtom(MentionContextAtom);
   const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
@@ -65,7 +67,6 @@ export default function Editor({ content, editable }: EditorType) {
   const items = useMentionMenuItems();
 
   useEffect(() => {
-    console.log(cm);
     setMention((prev) => ({ ...prev, cm }));
   }, [cm, setMention]);
 
@@ -77,6 +78,10 @@ export default function Editor({ content, editable }: EditorType) {
             editable === false ? content || undefined : ("content" in currentDocument && currentDocument?.content) || undefined,
         }),
       );
+
+    return () => {
+      queryClient.refetchQueries({ queryKey: ["documents", item_id] });
+    };
   }, [currentDocument, item_id]);
   if (isLoading) return <ProgressSpinner />;
 

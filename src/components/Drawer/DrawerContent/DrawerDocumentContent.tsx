@@ -77,9 +77,9 @@ export default function DrawerDocumentContent() {
           className="w-full"
           name="title"
           onChange={(e) => handleChange(e.target)}
-          onKeyDown={(e) => {
+          onKeyDown={async (e) => {
             if (e.key === "Enter" && localItem.title) {
-              createUpdateItem<DocumentType>(
+              await createUpdateItem<DocumentType>(
                 document,
                 localItem,
                 changedData,
@@ -89,8 +89,9 @@ export default function DrawerDocumentContent() {
                 DefaultDocument,
                 allDocuments,
                 resetChanges,
-                createDocumentMutation.mutate,
-                updateDocumentMutation.mutate,
+                createDocumentMutation.mutateAsync,
+                updateDocumentMutation.mutateAsync,
+                setDrawer,
               );
             }
           }}
@@ -134,7 +135,7 @@ export default function DrawerDocumentContent() {
               }
               optionValue="id"
               placeholder="Document Folder"
-              value={localItem?.parent?.id}
+              value={localItem?.parentId}
             />
           </div>
         )}
@@ -180,8 +181,10 @@ export default function DrawerDocumentContent() {
 
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() =>
-          createUpdateItem<DocumentType>(
+        disabled={!localItem.title}
+        loading={createDocumentMutation.isLoading || updateDocumentMutation.isLoading}
+        onClick={async () => {
+          await createUpdateItem<DocumentType>(
             document,
             localItem,
             changedData,
@@ -191,10 +194,11 @@ export default function DrawerDocumentContent() {
             DefaultDocument,
             allDocuments,
             resetChanges,
-            createDocumentMutation.mutate,
-            updateDocumentMutation.mutate,
-          )
-        }
+            createDocumentMutation.mutateAsync,
+            updateDocumentMutation.mutateAsync,
+            setDrawer,
+          );
+        }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
@@ -202,7 +206,6 @@ export default function DrawerDocumentContent() {
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"
-            loading={createDocumentMutation.isLoading}
             onClick={() => {
               if (document)
                 deleteItem(

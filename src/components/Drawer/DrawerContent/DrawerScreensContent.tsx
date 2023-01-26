@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -13,6 +14,7 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultScreen } from "../../../utils/DefaultValues/ScreenDefaults";
+import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
@@ -73,7 +75,16 @@ export default function DrawerScreensContent() {
         placeholder="Screen Name"
         value={localItem?.title || ""}
       />
-
+      <div className="flex w-full flex-col">
+        <span className="w-full text-sm text-zinc-400">Section size</span>
+        <Dropdown
+          name="size"
+          onChange={(e) => handleChange(e.target)}
+          options={SectionSizeOptions}
+          title="Section size"
+          value={localItem?.sectionSize}
+        />
+      </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
         loading={createScreenMutation.isLoading || updateScreenMutation.isLoading}
