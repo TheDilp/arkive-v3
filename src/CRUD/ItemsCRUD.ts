@@ -426,7 +426,7 @@ export const useGetAllImages = (project_id: string, options?: UseQueryOptions) =
   return useQuery<{ Key: string }[], unknown, string[]>(
     ["allImages", project_id],
     async () => {
-      return (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, method: "GET" })).json();
+      return FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllImages}${project_id}`, method: "GET" });
     },
     {
       enabled: options?.enabled,
@@ -440,8 +440,7 @@ export const useGetAllImages = (project_id: string, options?: UseQueryOptions) =
 export const useGetAllMapImages = (project_id: string) => {
   return useQuery<{ Key: string }[], unknown, string[]>(
     ["allMapImages", project_id],
-    async () =>
-      (await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, method: "GET" })).json(),
+    async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllMapImages}${project_id}`, method: "GET" }),
     {
       staleTime: 5 * 60 * 1000,
       select: (data) => {
@@ -453,10 +452,7 @@ export const useGetAllMapImages = (project_id: string) => {
 export const useGetAllSettingsImages = (project_id: string) => {
   return useQuery<{ image: string; type: "image" | "map" }[]>(
     ["allMapImages", project_id],
-    async () =>
-      (
-        await FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, method: "GET" })
-      ).json(),
+    async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, method: "GET" }),
     {
       staleTime: 5 * 60 * 1000,
     },

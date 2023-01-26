@@ -1,3 +1,4 @@
+import { Draggable } from "@hello-pangea/dnd";
 import { Icon } from "@iconify/react";
 import { useParams } from "react-router-dom";
 
@@ -15,8 +16,8 @@ export default function SectionCard({ card, updateCard }: Props) {
   const { item_id } = useParams();
   const updateSubItemMutation = useUpdateSubItem<CardType>(item_id as string, "cards", "screens");
   return (
-    <div key={card.id} className="w-full rounded-sm bg-zinc-700">
-      <h4 className="flex items-center justify-center gap-x-2 py-2 text-xl">
+    <div key={card.id} className="w-full max-w-full rounded-sm bg-zinc-700">
+      <h4 className="flex items-center justify-center gap-x-2 py-2 font-Lato text-xl">
         <span className="ml-auto select-none">{card.document.title}</span>
         <Icon
           className="ml-auto cursor-pointer"

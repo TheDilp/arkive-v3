@@ -31,7 +31,7 @@ export default function InsertImageEditor() {
         icon="pi pi-image"
         iconPos="right"
         onClick={() => {
-          dialog.data?.insertImage({ src: `${baseURLS.baseServer}getimage/images/${project_id}/${localImage}` });
+          dialog.data?.insertImage({ src: `${baseURLS.baseImageHost}${localImage}` });
         }}
       />
     </div>

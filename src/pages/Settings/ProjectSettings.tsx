@@ -59,6 +59,7 @@ export default function ProjectSettings() {
           />
         </div>
         <Dropdown
+          className="w-64"
           itemTemplate={ImageDropdownItem}
           onChange={(e) => {
             updateProject.mutate({ id: data?.id, image: e.value });
