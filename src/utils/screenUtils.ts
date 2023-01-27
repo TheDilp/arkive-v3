@@ -1,12 +1,11 @@
 import { DropResult } from "@hello-pangea/dnd";
-import { UseMutationResult } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import { SetStateAction } from "jotai";
 import set from "lodash.set";
 import { Dispatch } from "react";
 
 import { baseURLS, updateURLs } from "../types/CRUDenums";
-import { SectionType } from "../types/screenTypes";
-import { SortIndexes } from "../types/treeTypes";
+import { ScreenType, SectionType } from "../types/screenTypes";
 import { FetchFunction } from "./CRUD/CRUDFetch";
 import { toaster } from "./toast";
 
@@ -47,14 +46,9 @@ export function onDragEnd(
   result: DropResult,
   sections: SectionType[],
   setSections: Dispatch<SetStateAction<SectionType[]>>,
-  sortSectionsMutation: UseMutationResult<
-    any,
-    unknown,
-    SortIndexes,
-    {
-      oldData: unknown;
-    }
-  >,
+  queryClient: QueryClient,
+  project_id: string,
+  item_id: string,
 ) {
   const tempSections = [...sections];
   if (!result || !result.destination) return;
@@ -123,9 +117,23 @@ export function onDragEnd(
       if (sourceSection) {
         tempSections.splice(source.index, 1);
         tempSections.splice(destination.index, 0, sourceSection);
-        sortSectionsMutation.mutate(
-          tempSections.map((section, index) => ({ id: section.id, parentId: section.parentId, sort: index })),
-        );
+        queryClient.setQueryData<ScreenType>(["screens", item_id], (oldData) => {
+          if (oldData)
+            return {
+              ...oldData,
+              sections: tempSections.map((section, index) => ({ ...section, sort: index })),
+            };
+
+          return oldData;
+        });
+
+        FetchFunction({
+          url: `${baseURLS.baseServer}${updateURLs.sortSections}`,
+          method: "POST",
+          body: JSON.stringify(
+            tempSections.map((section, index) => ({ id: section.id, parentId: section.parentId, sort: index })),
+          ),
+        });
         setSections(tempSections);
       }
     }

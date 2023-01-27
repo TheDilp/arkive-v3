@@ -18,6 +18,7 @@ export type SectionType = {
   id: string;
   title: string;
   parentId: string;
+  expanded: boolean;
   cards: CardType[];
 };
 export type SectionCreateType = Partial<Omit<SectionType, "cards" | "parentId">> & {
