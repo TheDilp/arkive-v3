@@ -70,6 +70,7 @@ export const updateURLs = {
   sortBoards: "sortboards",
   sortScreens: "sortscreens",
   sortSections: "sortsections",
+  sortCards: "sortcards",
 };
 
 export const deleteURLs = {

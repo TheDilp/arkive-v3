@@ -11,8 +11,10 @@ import { useParams } from "react-router-dom";
 import SectionCard from "../../components/Card/SectionCard";
 import { useCreateSubItem, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
+import { baseURLS, updateURLs } from "../../types/CRUDenums";
 import { CardType, ScreenType, SectionType } from "../../types/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getSectionSizeClass } from "../../utils/screenUtils";
 
@@ -52,14 +54,18 @@ export default function ScreenView() {
         // Do something only if it is not placed in the exact same space
         if (destination?.index && source.index !== destination?.index) {
           tempSections[sourceIdx].cards[cardIndex].sort = destination.index;
-          const tempSectionCards = tempSections[sourceIdx].cards.sort((a, b) => {
-            if (a.sort < b.sort) return -1;
-            if (a.sort > b.sort) return 1;
-            return 0;
-          });
-          set(tempSections, `[${sourceIdx}].cards`, tempSectionCards);
-          console.log(tempSections[sourceIdx]);
+          tempSections[sourceIdx].cards.splice(cardIndex, 1);
+          tempSections[sourceIdx].cards.splice(destination.index, 0, movedCard);
+
           setSections(tempSections);
+          FetchFunction({
+            url: `${baseURLS.baseServer}${updateURLs.sortCards}`,
+            method: "POST",
+            body: JSON.stringify(
+              // Use the card's parentId because the card is moved within the same column (same parentId)
+              tempSections[sourceIdx].cards.map((card, index) => ({ id: card.id, parentId: card.parentId, sort: index })),
+            ),
+          });
         }
       } else {
         const targetSection = tempSections[targetIdx];
@@ -71,7 +77,18 @@ export default function ScreenView() {
 
         targetSection.cards.splice(destination?.index || 0, 0, movedCard);
 
-        updateCardMutation.mutate({ id: movedCard.id, parentId: targetSection.id, sort: destination?.index || 0 });
+        FetchFunction({
+          url: `${baseURLS.baseServer}${updateURLs.sortCards}`,
+          method: "POST",
+          body: JSON.stringify(
+            tempSections[targetIdx].cards.map((card, index) => ({
+              id: card.id,
+              // Change id because the card is moved to a different column but also sort at the same time
+              parentId: tempSections[targetIdx].id,
+              sort: index,
+            })),
+          ),
+        });
 
         tempSections[sourceIdx] = sourceSection;
         tempSections[targetIdx] = targetSection;
@@ -85,7 +102,7 @@ export default function ScreenView() {
   }, [data]);
 
   return (
-    <div className="flex h-full flex-col gap-y-2 overflow-auto p-4">
+    <div className="flex h-full flex-col gap-y-2 overflow-hidden p-4">
       <div>
         <Button
           className="p-button-outlined"

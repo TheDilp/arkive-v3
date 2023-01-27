@@ -62,6 +62,7 @@ export const sortURL = (type: AllAvailableTypes) => {
   if (type === "boards") return `${baseURLS.baseServer}${updateURLs.sortBoards}`;
   if (type === "screens") return `${baseURLS.baseServer}${updateURLs.sortScreens}`;
   if (type === "sections") return `${baseURLS.baseServer}${updateURLs.sortSections}`;
+  if (type === "cards") return `${baseURLS.baseServer}${updateURLs.sortCards}`;
   return null;
 };
 
