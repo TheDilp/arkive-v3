@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateSubItem, useDeleteItem, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
@@ -30,10 +30,8 @@ export default function DrawerSectionContent() {
     "screens",
   );
   const deleteScreenMutation = useDeleteItem("screens", project_id as string);
-  const screen = queryClient.getQueryData<ScreenType>(["screens", item_id as string]);
-  const section = screen?.sections?.find((screenSection) => screenSection.id === drawer?.data?.id);
   const [localItem, setLocalItem] = useState<SectionType | SectionCreateType>(
-    section ?? {
+    (drawer?.data as SectionType) ?? {
       ...DefaultSection,
     },
   );
@@ -87,16 +85,13 @@ export default function DrawerSectionContent() {
     }
   };
 
-  useEffect(() => {
-    if (section) setLocalItem(section);
-  }, [section]);
   if (!localItem) {
     setDrawer(DefaultDrawer);
     return null;
   }
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{section ? `Edit ${section.title}` : "Create New Section"}</h2>
+      <h2 className="text-center text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Section"}</h2>
       <div className="flex w-full flex-col">
         <span className="w-full text-sm text-zinc-400">Section title</span>
         <InputText
@@ -105,7 +100,7 @@ export default function DrawerSectionContent() {
           name="title"
           onChange={(e) => handleChange(e.target)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && section) {
+            if (e.key === "Enter" && localItem) {
               createUpdateSection();
             }
           }}

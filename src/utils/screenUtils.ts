@@ -91,7 +91,7 @@ export function onDragEnd(
           sourceSection.cards.filter((card) => card.id !== result.draggableId),
         );
 
-        targetSection.cards.splice(destination?.index || 0, 0, movedCard);
+        targetSection.cards.splice(destination?.index || 0, 0, { ...movedCard, parentId: targetSection.id });
 
         FetchFunction({
           url: `${baseURLS.baseServer}${updateURLs.sortCards}`,

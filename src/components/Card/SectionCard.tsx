@@ -11,8 +11,8 @@ type Props = {
 export default function SectionCard({ card, updateCard }: Props) {
   return (
     <div key={card.id} className="w-full max-w-full rounded-sm bg-zinc-700">
-      <h4 className="flex h-10 items-center justify-center gap-x-2 py-2 font-Lato text-lg ">
-        <span className="ml-auto select-none">{card.document.title}</span>
+      <h4 className="flex h-10 w-full items-center justify-center gap-x-2  py-2 font-Lato text-lg ">
+        <span className="ml-auto select-none truncate px-2">{card.document.title}</span>
         <Icon
           className="ml-auto cursor-pointer"
           fontSize={28}
