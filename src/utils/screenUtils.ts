@@ -1,3 +1,14 @@
+import { DropResult } from "@hello-pangea/dnd";
+import { UseMutationResult } from "@tanstack/react-query";
+import { SetStateAction } from "jotai";
+import set from "lodash.set";
+import { Dispatch } from "react";
+
+import { baseURLS, updateURLs } from "../types/CRUDenums";
+import { SectionType } from "../types/screenTypes";
+import { SortIndexes } from "../types/treeTypes";
+import { FetchFunction } from "./CRUD/CRUDFetch";
+
 export const SectionSizeOptions = [
   {
     label: "Extra small",
@@ -30,3 +41,88 @@ export const getSectionSizeClass = (size: string) => {
   if (size === "xxl") return "min-w-[40rem] max-w-[40rem] w-[40rem]";
   return "min-w-[25rem] max-w-[25rem] w-[25rem]";
 };
+
+export function onDragEnd(
+  result: DropResult,
+  sections: SectionType[],
+  setSections: Dispatch<SetStateAction<SectionType[]>>,
+  sortSectionsMutation: UseMutationResult<
+    any,
+    unknown,
+    SortIndexes,
+    {
+      oldData: unknown;
+    }
+  >,
+) {
+  const tempSections = [...sections];
+  if (!result || !result.destination) return;
+  if (result.type === "CARD") {
+    const sourceIdx = tempSections.findIndex((section) => section.id === result.source.droppableId);
+    const targetIdx = tempSections.findIndex((section) => section.id === result.destination?.droppableId);
+    const cardIndex = tempSections[sourceIdx].cards.findIndex((card) => card.id === result.draggableId);
+
+    const sourceSection = tempSections[sourceIdx];
+    const movedCard = tempSections[sourceIdx].cards[cardIndex];
+    if (typeof targetIdx === "number" && movedCard) {
+      const { source, destination } = result;
+      if (sourceIdx === targetIdx) {
+        // Do something only if it is not placed in the exact same space
+        if (destination?.index && source.index !== destination?.index) {
+          tempSections[sourceIdx].cards[cardIndex].sort = destination.index;
+          tempSections[sourceIdx].cards.splice(cardIndex, 1);
+          tempSections[sourceIdx].cards.splice(destination.index, 0, movedCard);
+
+          setSections(tempSections);
+          FetchFunction({
+            url: `${baseURLS.baseServer}${updateURLs.sortCards}`,
+            method: "POST",
+            body: JSON.stringify(
+              // Use the card's parentId because the card is moved within the same column (same parentId)
+              tempSections[sourceIdx].cards.map((card, index) => ({ id: card.id, parentId: card.parentId, sort: index })),
+            ),
+          });
+        }
+      } else {
+        const targetSection = tempSections[targetIdx];
+        set(
+          sourceSection,
+          "cards",
+          sourceSection.cards.filter((card) => card.id !== result.draggableId),
+        );
+
+        targetSection.cards.splice(destination?.index || 0, 0, movedCard);
+
+        FetchFunction({
+          url: `${baseURLS.baseServer}${updateURLs.sortCards}`,
+          method: "POST",
+          body: JSON.stringify(
+            tempSections[targetIdx].cards.map((card, index) => ({
+              id: card.id,
+              // Change id because the card is moved to a different column but also sort at the same time
+              parentId: tempSections[targetIdx].id,
+              sort: index,
+            })),
+          ),
+        });
+
+        tempSections[sourceIdx] = sourceSection;
+        tempSections[targetIdx] = targetSection;
+        setSections(tempSections);
+      }
+    }
+  } else if (result.type === "SECTION") {
+    const { source, destination } = result;
+    if (typeof source.index === "number" && typeof destination?.index === "number" && source.index !== destination.index) {
+      const sourceSection = tempSections.find((section) => section.id === result.draggableId);
+      if (sourceSection) {
+        tempSections.splice(source.index, 1);
+        tempSections.splice(destination.index, 0, sourceSection);
+        sortSectionsMutation.mutate(
+          tempSections.map((section, index) => ({ id: section.id, parentId: section.parentId, sort: index })),
+        );
+        setSections(tempSections);
+      }
+    }
+  }
+}
