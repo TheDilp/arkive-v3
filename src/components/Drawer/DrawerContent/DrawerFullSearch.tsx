@@ -14,7 +14,7 @@ import { BoardReferenceAtom, DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
 
-const SearchDefault = { documents: [], maps: [], boards: [], pins: [], nodes: [], edges: [] };
+const SearchDefault = { documents: [], maps: [], boards: [], pins: [], nodes: [], edges: [], screens: [], sections: [] };
 
 function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core) {
   if (subitem_id === id) {
@@ -49,7 +49,16 @@ export default function DrawerFullSearch() {
         searchMutation(
           { query: finalQuery, type },
           {
-            onSuccess: (data: { documents: []; maps: []; boards: []; pins: []; nodes: []; edges: [] }) => setResults(data),
+            onSuccess: (data: {
+              documents: [];
+              maps: [];
+              boards: [];
+              pins: [];
+              nodes: [];
+              edges: [];
+              screens: [];
+              sections: [];
+            }) => setResults(data),
           },
         );
       }
@@ -60,7 +69,6 @@ export default function DrawerFullSearch() {
     const t = allTags?.filter((tag) => tag.title.toLowerCase().includes(tagsQuery.toLowerCase()));
     if (t && t.length) setFilteredTags(t);
   }, 500);
-
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-col gap-y-2">

@@ -3,19 +3,21 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { useGetAllImages } from "../../CRUD/ItemsCRUD";
-import { useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
+import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/projectTypes";
+import { deleteItem } from "../../utils/Confirms/Confirm";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
+  const navigate = useNavigate();
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const { data: allImages } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
@@ -23,6 +25,7 @@ export default function ProjectSettings() {
     if (data) setLocalItem(data);
   }, [data]);
   const updateProject = useUpdateProject();
+  const deleteProjectMutation = useDeleteProject();
   if (isLoading) return <ProgressSpinner />;
   return (
     <div className="flex h-[95vh] flex-col gap-y-4 overflow-y-auto p-4">
@@ -94,7 +97,18 @@ export default function ProjectSettings() {
         </h4>
         <h5 className="text-sm font-semibold">You can export a project before deleting it via the button above.</h5>
 
-        <Button className="p-button-outlined p-button-danger w-fit" icon="pi pi-trash" iconPos="right" label="Delete Project" />
+        <Button
+          className="p-button-outlined p-button-danger w-fit"
+          icon="pi pi-trash"
+          iconPos="right"
+          label="Delete Project"
+          onClick={() =>
+            deleteItem("Are you sure you want to delete this project?", async () => {
+              await deleteProjectMutation.mutateAsync(project_id as string);
+              navigate("/");
+            })
+          }
+        />
       </div>
     </div>
   );

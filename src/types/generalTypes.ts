@@ -104,4 +104,6 @@ export type FullSearchResults = {
   nodes: NodeType[];
   edges: EdgeType[];
   pins: MapPinType[];
+  screens: ScreenType[];
+  sections: SectionType[];
 };

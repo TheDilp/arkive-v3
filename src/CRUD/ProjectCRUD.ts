@@ -77,3 +77,36 @@ export const useGetSingleProject = (id: string, enabled?: boolean) => {
     },
   );
 };
+
+export const useDeleteProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (id: string) => {
+      if (id) {
+        const url = `${baseURLS.baseServer}deleteproject`;
+        if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id }) });
+      }
+      return null;
+    },
+    {
+      onMutate: (variables) => {
+        const oldData = queryClient.getQueryData(["allProjects"]);
+        queryClient.setQueryData(["allProjects"], (old: ProjectType[] | undefined) => {
+          if (old) {
+            return old.filter((project) => project.id !== variables);
+          }
+          return old;
+        });
+        return { oldData };
+      },
+      onError: (error, _, context) => {
+        queryClient.setQueryData(["allProjects"], context?.oldData);
+        toaster("error", error as string);
+      },
+      onSuccess: () => {
+        toaster("success", "Project successfully deleted. 🗑️");
+      },
+    },
+  );
+};

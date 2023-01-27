@@ -5,6 +5,7 @@ import { BoardType, EdgeType, NodeType } from "../types/boardTypes";
 import { DocumentType } from "../types/documentTypes";
 import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
 import { MapPinType, MapType } from "../types/mapTypes";
+import { ScreenType, SectionType } from "../types/screenTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
   <div className="flex w-full items-center justify-center gap-x-1">
@@ -29,18 +30,22 @@ export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
 
 export function getLinkForFullSearch(
   id: string,
-  parent: string,
+  parentId: string,
   type: AvailableSearchResultTypes | "folder",
   project_id: string,
   folder: boolean,
 ) {
-  if (["documents", "maps", "boards"].includes(type)) return `/project/${project_id}/${type}/${folder ? "folder/" : ""}${id}`;
-  if (type === "pins") return `/project/${project_id}/maps/${parent}/${id}`;
-  if (type === "nodes" || type === "edges") return `/project/${project_id}/boards/${parent}/${id}`;
+  if (["documents", "maps", "boards", "screens"].includes(type))
+    return `/project/${project_id}/${type}/${folder ? "folder/" : ""}${id}`;
+  if (type === "pins") return `/project/${project_id}/maps/${parentId}/${id}`;
+  if (type === "nodes" || type === "edges") return `/project/${project_id}/boards/${parentId}/${id}`;
+  if (type === "sections") return `/project/${project_id}/screens/${parentId}/${id}`;
   return "./";
 }
 
-export function getIconForFullSearch(item: DocumentType | MapType | MapPinType | BoardType | NodeType | EdgeType) {
+export function getIconForFullSearch(
+  item: DocumentType | MapType | MapPinType | BoardType | NodeType | EdgeType | ScreenType | SectionType,
+) {
   if ("folder" in item && item.folder) return "mdi:folder";
   let icon = "mdi:file";
   if ("icon" in item) icon = item.icon || "mdi:file";

@@ -42,15 +42,24 @@ export default function ScreenView() {
     const tempSections = [...sections];
     const sourceIdx = tempSections.findIndex((section) => section.id === result.source.droppableId);
     const targetIdx = tempSections.findIndex((section) => section.id === result.destination?.droppableId);
-    if (!result) return;
+    const cardIndex = tempSections[sourceIdx].cards.findIndex((card) => card.id === result.draggableId);
+    if (!result || cardIndex === -1) return;
     const sourceSection = tempSections[sourceIdx];
-    const movedCard = tempSections[sourceIdx].cards.find((card) => card.id === result.draggableId);
+    const movedCard = tempSections[sourceIdx].cards[cardIndex];
     if (typeof targetIdx === "number" && movedCard) {
       const { source, destination } = result;
       if (sourceIdx === targetIdx) {
         // Do something only if it is not placed in the exact same space
-        if (source.index !== destination?.index) {
-          // SORT WITHIN COLUMN
+        if (destination?.index && source.index !== destination?.index) {
+          tempSections[sourceIdx].cards[cardIndex].sort = destination.index;
+          const tempSectionCards = tempSections[sourceIdx].cards.sort((a, b) => {
+            if (a.sort < b.sort) return -1;
+            if (a.sort > b.sort) return 1;
+            return 0;
+          });
+          set(tempSections, `[${sourceIdx}].cards`, tempSectionCards);
+          console.log(tempSections[sourceIdx]);
+          setSections(tempSections);
         }
       } else {
         const targetSection = tempSections[targetIdx];
