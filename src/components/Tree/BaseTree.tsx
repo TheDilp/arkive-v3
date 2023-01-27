@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 
 import { useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
+import { DocumentType } from "../../types/documentTypes";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { useTreeMenuItems } from "../../utils/contextMenus";
@@ -45,7 +46,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const items: AllItemsType[] | undefined = queryClient.getQueryData(["allItems", project_id, type]);
-  const updateItemMutation = useUpdateItem<AllItemsType>(type, project_id as string);
+  const updateItemMutation = useUpdateItem<DocumentType>(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
   const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const contextItems = useTreeMenuItems(contextMenu, type, project_id as string);
@@ -159,6 +160,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;
           handleDrop(tree, dropTargetId as string, sortItemMutation);
+          console.log(dropTargetId);
           updateItemMutation?.mutate({
             id: dragSourceId as string,
             parentId: dropTargetId === "0" ? null : (dropTargetId as string),

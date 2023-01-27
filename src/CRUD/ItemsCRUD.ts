@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstac
 import { BoardType } from "../types/boardTypes";
 import { baseURLS, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
+import { ScreenType } from "../types/screenTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
@@ -365,6 +366,16 @@ export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItem
                 return { ...oldData, [subType]: oldData[subType].filter((subItem) => !ids.includes(subItem.id)) };
               }
               if (subType === "edges") {
+                return { ...oldData, [subType]: oldData[subType].filter((subItem) => !ids.includes(subItem.id)) };
+              }
+            }
+            return oldData;
+          });
+        }
+        if (subType === "sections") {
+          queryClient.setQueryData(["screens", item_id], (oldData: ScreenType | undefined) => {
+            if (oldData) {
+              if (subType === "sections") {
                 return { ...oldData, [subType]: oldData[subType].filter((subItem) => !ids.includes(subItem.id)) };
               }
             }

@@ -36,7 +36,7 @@ export default function SectionCard({ card, deleteCard, updateCard }: Props) {
       </h4>
       {card?.expanded ? (
         <div className="max-h-64 overflow-auto border-t border-zinc-600">
-          {card?.document?.content ? <StaticRender content={card.document.content} /> : null}
+          {card?.document?.content ? <StaticRender content={card.document.content} isPublic={false} /> : null}
         </div>
       ) : null}
     </div>

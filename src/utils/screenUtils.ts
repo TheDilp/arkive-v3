@@ -69,7 +69,7 @@ export function onDragEnd(
       const { source, destination } = result;
       if (sourceIdx === targetIdx) {
         // Do something only if it is not placed in the exact same space
-        if (destination?.index && source.index !== destination?.index) {
+        if (typeof destination?.index === "number" && source.index !== destination?.index) {
           tempSections[sourceIdx].cards[cardIndex].sort = destination.index;
           tempSections[sourceIdx].cards.splice(cardIndex, 1);
           tempSections[sourceIdx].cards.splice(destination.index, 0, movedCard);

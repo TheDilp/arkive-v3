@@ -81,6 +81,7 @@ export const deleteManyURL = (type: AllAvailableTypes) => {
   if (type === "boards") return `${baseURLS.baseServer}deletemanyboards`;
   if (type === "nodes") return `${baseURLS.baseServer}deletemanynodes`;
   if (type === "edges") return `${baseURLS.baseServer}deletemanyedges`;
+  if (type === "sections") return `${baseURLS.baseServer}deletemanysections`;
   return null;
 };
 

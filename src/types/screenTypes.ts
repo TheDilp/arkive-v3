@@ -20,7 +20,11 @@ export type SectionType = {
   parentId: string;
   cards: CardType[];
 };
-export type SectionCreateType = Partial<Omit<SectionType, "cards" | "parentId">> & { id: string; parentId: string };
+export type SectionCreateType = Partial<Omit<SectionType, "cards" | "parentId">> & {
+  id: string;
+  parentId: string;
+  sort: number;
+};
 export type DefaultSectionType = Pick<SectionType, "id" | "parentId" | "title">;
 
 export interface ScreenType extends BaseItemType {

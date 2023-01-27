@@ -65,7 +65,7 @@ export default function ScreenView() {
           icon="pi pi-plus"
           iconPos="right"
           label="Create Section"
-          onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections", data })}
+          onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections" })}
         />
       </div>
       <div className="flex h-full gap-x-2 overflow-hidden">

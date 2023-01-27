@@ -33,6 +33,8 @@ export default function DrawerCardContent() {
 
       <MultiSelect
         display="chip"
+        filter
+        filterBy="title"
         onChange={(e) => setSelectedDocuments(e.value)}
         optionLabel="title"
         options={(documents || [])

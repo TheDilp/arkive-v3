@@ -13,7 +13,6 @@ export const getDepth = (tree: NodeModel[], id: number | string, depth = 0): num
 };
 
 export const handleDrop = async (newTree: NodeModel<AllItemsType>[], dropTargetId: string, sortItemsMutation: any) => {
-  // setTreeData(newTree);
   const indexes = newTree
     .filter(
       (doc) =>
@@ -25,7 +24,7 @@ export const handleDrop = async (newTree: NodeModel<AllItemsType>[], dropTargetI
     .map((doc, index) => {
       return {
         id: doc.id as string,
-        parent: doc.parent === "0" ? null : (doc.parent as string),
+        parentId: doc.parent === "0" ? null : (doc.parent as string),
         sort: index,
       };
     });

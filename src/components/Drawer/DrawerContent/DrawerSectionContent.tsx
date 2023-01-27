@@ -5,10 +5,11 @@ import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem, useDeleteItem, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useDeleteManySubItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { ScreenType, SectionCreateType, SectionType } from "../../../types/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DefaultSection } from "../../../utils/DefaultValues/ScreenDefaults";
 import { toaster } from "../../../utils/toast";
@@ -18,7 +19,8 @@ import { handleCloseDrawer } from "../Drawer";
 export default function DrawerSectionContent() {
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const { project_id, item_id } = useParams();
+  const { item_id } = useParams();
+
   const { mutate: createSectionMutation, isLoading: isLoadingCreate } = useCreateSubItem<SectionCreateType>(
     item_id as string,
     "sections",
@@ -29,7 +31,7 @@ export default function DrawerSectionContent() {
     "sections",
     "screens",
   );
-  const deleteScreenMutation = useDeleteItem("screens", project_id as string);
+  const deleteSectionMutation = useDeleteManySubItems(item_id as string, "sections");
   const [localItem, setLocalItem] = useState<SectionType | SectionCreateType>(
     (drawer?.data as SectionType) ?? {
       ...DefaultSection,
@@ -70,7 +72,7 @@ export default function DrawerSectionContent() {
           );
         else
           createSectionMutation(
-            { ...DefaultSection, ...changedData, id: crypto.randomUUID(), parentId: item_id as string },
+            { ...DefaultSection, ...changedData, id: crypto.randomUUID(), parentId: item_id as string, sort: 999 },
 
             {
               onSuccess: () => {
@@ -117,6 +119,26 @@ export default function DrawerSectionContent() {
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
+      <div className="mt-auto flex w-full">
+        {localItem?.id ? (
+          <Button
+            className=" p-button-outlined p-button-danger w-full"
+            onClick={() => {
+              if (document)
+                deleteItem(
+                  "Are you sure you want to delete this section?",
+                  () => {
+                    deleteSectionMutation?.mutate([localItem.id]);
+                    handleCloseDrawer(setDrawer, "right");
+                  },
+                  () => toaster("info", "Item not deleted."),
+                );
+            }}
+            type="submit">
+            {buttonLabelWithIcon("Delete", "mdi:trash")}
+          </Button>
+        ) : null}
+      </div>
     </div>
   );
 }

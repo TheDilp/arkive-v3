@@ -15,6 +15,8 @@ type Props = {
   id: string | undefined;
   label: string;
   isDisabledTooltip?: boolean;
+  isPublic?: boolean;
+  project_id: string;
 };
 
 export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title">) {
@@ -39,7 +41,7 @@ export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title"
     </Card>
   );
 }
-export default function DocumentMention({ title, id, label, isDisabledTooltip }: Props) {
+export default function DocumentMention({ title, id, label, isDisabledTooltip, project_id, isPublic = true }: Props) {
   const [mention, setMention] = useAtom(MentionContextAtom);
   return (
     <Tooltip content={<DocumentMentionTooltip id={id} title={title || label} />} disabled={isDisabledTooltip ?? false}>
@@ -51,7 +53,7 @@ export default function DocumentMention({ title, id, label, isDisabledTooltip }:
             mention.cm.current.show(e);
           }
         }}
-        to={`../${id}`}>
+        to={isPublic ? `/view/documents/${id}` : `/project/${project_id}/documents/${id}`}>
         {title || label}
       </Link>
     </Tooltip>
