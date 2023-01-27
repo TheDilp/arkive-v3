@@ -83,6 +83,7 @@ export const deleteURLs = {
   deleteEdge: "deleteedge/",
   deleteScreen: "deletescreen/",
   deleteSection: "deletesection/",
+  deleteCard: "deletecard/",
   deleteTags: "deletetags",
 };
 

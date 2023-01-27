@@ -166,6 +166,7 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
     },
   );
 };
+
 export const useUpdateSubItem = <SubItemType extends { id: string }>(
   item_id: string,
   subType: AvailableSubItemTypes,

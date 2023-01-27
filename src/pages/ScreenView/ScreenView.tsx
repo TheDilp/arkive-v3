@@ -10,8 +10,10 @@ import { useParams } from "react-router-dom";
 import SectionCard from "../../components/Card/SectionCard";
 import { useSortMutation, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
+import { baseURLS, deleteURLs } from "../../types/CRUDenums";
 import { CardType, ScreenType, SectionType } from "../../types/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getSectionSizeClass, onDragEnd } from "../../utils/screenUtils";
 
@@ -23,8 +25,7 @@ export default function ScreenView() {
   const updateCardMutation = useUpdateSubItem<CardType>(item_id as string, "cards", "screens");
   const sortSectionsMutation = useSortMutation(project_id as string, "sections");
 
-  function updateCard(sectionId: string, cardId: string, expanded: boolean) {
-    console.log(sectionId);
+  const updateCard = useCallback((sectionId: string, cardId: string, expanded: boolean) => {
     updateCardMutation.mutate({ id: cardId, expanded });
     setSections((prev) =>
       prev.map((section) => {
@@ -38,11 +39,23 @@ export default function ScreenView() {
         };
       }),
     );
-  }
+  }, []);
+  const deleteCard = useCallback((id: string, sectionId: string) => {
+    FetchFunction({ url: `${baseURLS.baseServer}${deleteURLs.deleteCard}${id}`, method: "DELETE" });
+    setSections((prev) =>
+      prev.map((section) => {
+        if (section.id !== sectionId) return section;
+        return {
+          ...section,
+          cards: section.cards.filter((card) => card.id !== id),
+        };
+      }),
+    );
+  }, []);
 
   useEffect(() => {
     if (data?.sections) setSections(data.sections);
-  }, [data]);
+  }, [data, item_id]);
 
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-hidden p-4">
@@ -92,27 +105,24 @@ export default function ScreenView() {
                           <Droppable direction="vertical" droppableId={section.id} type="CARD">
                             {(droppableProvided, droppableSnapshot) => (
                               <div
-                                className={`h-full max-w-min ${getSectionSizeClass(data?.sectionSize || "md")} ${
+                                className={`h-full max-w-min  ${getSectionSizeClass(data?.sectionSize || "md")} ${
                                   droppableSnapshot.isDraggingOver ? "border border-dashed border-zinc-600" : ""
                                 }`}>
                                 <div
                                   ref={droppableProvided.innerRef}
                                   className="flex h-full max-w-full flex-col"
                                   {...droppableProvided.droppableProps}>
-                                  <div className="scrollbar-hidden flex h-full max-w-full flex-col overflow-x-hidden">
+                                  <div className="scrollbar-hidden flex h-full max-w-full flex-col overflow-x-hidden ">
                                     {section?.cards
                                       ? section.cards.map((card, index) => (
                                           <Draggable key={card.id} draggableId={card.id} index={index}>
                                             {(providedDraggable) => (
                                               <div
-                                                className="my-1 w-full max-w-full transition-all"
-                                                style={{
-                                                  maxWidth: "15rem",
-                                                }}
+                                                className="my-1 w-full max-w-full"
                                                 {...providedDraggable.dragHandleProps}
                                                 {...providedDraggable.draggableProps}
                                                 ref={providedDraggable.innerRef}>
-                                                <SectionCard card={card} updateCard={updateCard} />
+                                                <SectionCard card={card} deleteCard={deleteCard} updateCard={updateCard} />
                                               </div>
                                             )}
                                           </Draggable>

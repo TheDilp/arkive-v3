@@ -53,6 +53,7 @@ export const deleteURL = (id: string, type: AllAvailableTypes) => {
   if (type === "edges") return `${baseURLS.baseServer}${deleteURLs.deleteEdge}${id}`;
   if (type === "screens") return `${baseURLS.baseServer}${deleteURLs.deleteScreen}${id}`;
   if (type === "sections") return `${baseURLS.baseServer}${deleteURLs.deleteSection}${id}`;
+  if (type === "cards") return `${baseURLS.baseServer}${deleteURLs.deleteCard}${id}`;
   return null;
 };
 

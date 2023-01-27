@@ -12,6 +12,7 @@ import { baseURLS, createURLS } from "../../../types/CRUDenums";
 import { DocumentType } from "../../../types/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
+import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { DocumentMentionTooltip } from "../../Mention/DocumentMention";
 import { Tooltip } from "../../Tooltip/Tooltip";
@@ -64,6 +65,12 @@ export default function DrawerCardContent() {
               ),
             });
             await queryClient.refetchQueries({ queryKey: ["screens", drawer.data?.parentId] });
+            toaster(
+              "success",
+              `Successfully added ${selectedDocuments.length} ${
+                selectedDocuments.length === 1 ? "card" : "cards"
+              }  to section "${drawer.data?.title ?? ""}."`,
+            );
             setLoading(false);
             handleCloseDrawer(setDrawer, "right");
           }
