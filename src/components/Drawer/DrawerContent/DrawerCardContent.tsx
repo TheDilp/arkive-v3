@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 
 import { baseURLS, createURLS } from "../../../types/CRUDenums";
 import { DocumentType } from "../../../types/documentTypes";
+import { CardType } from "../../../types/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { toaster } from "../../../utils/toast";
@@ -25,6 +26,7 @@ export default function DrawerCardContent() {
   const [loading, setLoading] = useState(false);
   const [selectedDocuments, setSelectedDocuments] = useState<DocumentType[]>([]);
   const documents = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
+  if (!drawer?.data || !documents) return null;
   return (
     <div className=" flex flex-col gap-y-2">
       <h2 className="font-Lato text-2xl font-medium">Add card</h2>
@@ -33,7 +35,11 @@ export default function DrawerCardContent() {
         display="chip"
         onChange={(e) => setSelectedDocuments(e.value)}
         optionLabel="title"
-        options={(documents || []).filter((doc) => !doc.template && !doc.folder)}
+        options={(documents || [])
+          .filter(
+            (doc) => !doc.template && !doc.folder && !drawer.data?.cards?.some((card: CardType) => card.documentsId === doc.id),
+          )
+          .map((doc) => ({ id: doc.id, title: doc.title }))}
         placeholder="Select documents"
         value={selectedDocuments}
       />
@@ -57,11 +63,13 @@ export default function DrawerCardContent() {
               url: `${baseURLS.baseServer}${createURLS.createCard}`,
               method: "POST",
               body: JSON.stringify(
-                selectedDocuments.map((doc) => ({
-                  id: crypto.randomUUID(),
-                  documentsId: doc.id,
-                  parentId: drawer.data?.id,
-                })),
+                selectedDocuments
+                  .filter((doc) => !drawer?.data?.cards.some((card: CardType) => card.documentsId === doc.id))
+                  .map((doc) => ({
+                    id: crypto.randomUUID(),
+                    documentsId: doc.id,
+                    parentId: drawer.data?.id,
+                  })),
               ),
             });
             await queryClient.refetchQueries({ queryKey: ["screens", drawer.data?.parentId] });

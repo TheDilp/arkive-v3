@@ -8,6 +8,7 @@ import { baseURLS, updateURLs } from "../types/CRUDenums";
 import { SectionType } from "../types/screenTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { FetchFunction } from "./CRUD/CRUDFetch";
+import { toaster } from "./toast";
 
 export const SectionSizeOptions = [
   {
@@ -85,6 +86,10 @@ export function onDragEnd(
         }
       } else {
         const targetSection = tempSections[targetIdx];
+        if (targetSection.cards.some((card) => card.documentsId === movedCard.documentsId)) {
+          toaster("warning", "Sections cannot contain duplicate cards.");
+          return;
+        }
         set(
           sourceSection,
           "cards",
