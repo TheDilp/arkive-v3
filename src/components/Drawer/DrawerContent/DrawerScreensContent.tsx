@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { useGetItem } from "../../../hooks/useGetItem";
 import { ScreenCreateType, ScreenType } from "../../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
@@ -26,8 +25,8 @@ export default function DrawerScreensContent() {
   const createScreenMutation = useCreateItem<ScreenType>("screens");
   const updateScreenMutation = useUpdateItem<ScreenType>("screens", project_id as string);
   const deleteScreenMutation = useDeleteItem("screens", project_id as string);
-  const allScreens = queryClient.getQueryData<ScreenType[]>(["allitems", project_id, "screens"]);
-  const { data: screen } = useGetItem<ScreenType>(drawer?.id as string, "screens", { enabled: !!drawer?.id });
+  const allScreens = queryClient.getQueryData<ScreenType[]>(["allItems", project_id, "screens"]);
+  const screen = allScreens?.find((scrn) => scrn.id === drawer.id);
   const [localItem, setLocalItem] = useState<ScreenType | ScreenCreateType>(
     screen ?? {
       ...DefaultScreen,

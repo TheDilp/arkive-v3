@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
-import { BoardType } from "../types/ItemTypes/boardTypes";
 import { baseURLS, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
+import { BoardType } from "../types/ItemTypes/boardTypes";
 import { ScreenType } from "../types/ItemTypes/screenTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
@@ -119,7 +119,7 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
   return useMutation(
     async (updateItemValues: Partial<ItemType>) => {
       if (updateItemValues.id) {
-        const url = updateURL(updateItemValues.id, type);
+        const url = updateURL(type);
         if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
       }
       return null;
@@ -233,8 +233,8 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
   return useMutation(
     async (id: string) => {
       if (id) {
-        const url = deleteURL(id, type);
-        if (url) return FetchFunction({ url, method: "DELETE" });
+        const url = deleteURL(type);
+        if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id }) });
       }
       return null;
     },

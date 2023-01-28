@@ -9,17 +9,20 @@ export const getURLS = {
 
   // Documents
   getAllDocuments: "getalldocuments/",
-  getSingleDocument: "getsingledocument/",
+  getSingleDocument: "getsingledocument",
   getManyDocuments: "getmanydocuments",
   // Maps
   getAllMaps: "getallmaps/",
   getSingleMap: "getsinglemap/",
   // Boards
   getAllBoards: "getallboards/",
-  getSingleBoard: "getsingleboard/",
+  getSingleBoard: "getsingleboard",
   // Screens
   getAllScreens: "getallscreens/",
-  getSingleScreen: "getsinglescreen/",
+  getSingleScreen: "getsinglescreen",
+  // Dictionaries
+  getAllDictionaries: "getalldictionaries/",
+  getSingleDictionary: "getsingledictionary",
   // Images
   getAllImages: "getallimages/",
   getSingleImage: "getimage/images/",
@@ -45,6 +48,8 @@ export const createURLS = {
   createScreen: "createscreen",
   createSection: "createsection",
   createCard: "createcard",
+  createDictionary: "createdictionary",
+  createWord: "createword",
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",
@@ -63,6 +68,8 @@ export const updateURLs = {
   updateScreen: "updatescreen/",
   updateSection: "updatesection/",
   updateCard: "updatecard/",
+  updateDictionary: "updatedictionary",
+  updateWord: "updateword",
   updateTag: "updatetag/",
 
   sortDocuments: "sortdocuments",
@@ -83,6 +90,8 @@ export const deleteURLs = {
   deleteEdge: "deleteedge/",
   deleteScreen: "deletescreen/",
   deleteSection: "deletesection/",
+  deleteDictionary: "deletedictionary",
+  deleteWord: "deleteword",
   deleteCard: "deletecard/",
   deleteTags: "deletetags",
 };

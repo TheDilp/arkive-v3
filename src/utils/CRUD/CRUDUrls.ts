@@ -6,13 +6,15 @@ export const getURL = (project_id: string, type: AvailableItemTypes) => {
   if (type === "maps") return `${baseURLS.baseServer}${getURLS.getAllMaps}${project_id}`;
   if (type === "boards") return `${baseURLS.baseServer}${getURLS.getAllBoards}${project_id}`;
   if (type === "screens") return `${baseURLS.baseServer}${getURLS.getAllScreens}${project_id}`;
+  if (type === "dictionaries") return `${baseURLS.baseServer}${getURLS.getAllDictionaries}${project_id}`;
   return null;
 };
-export const getSingleURL = (type: AvailableItemTypes, id: string) => {
-  if (type === "documents") return `${baseURLS.baseServer}${getURLS.getSingleDocument}${id}`;
-  if (type === "maps") return `${baseURLS.baseServer}${getURLS.getSingleMap}${id}`;
-  if (type === "boards") return `${baseURLS.baseServer}${getURLS.getSingleBoard}${id}`;
-  if (type === "screens") return `${baseURLS.baseServer}${getURLS.getSingleScreen}${id}`;
+export const getSingleURL = (type: AvailableItemTypes) => {
+  if (type === "documents") return `${baseURLS.baseServer}${getURLS.getSingleDocument}`;
+  if (type === "maps") return `${baseURLS.baseServer}${getURLS.getSingleMap}`;
+  if (type === "boards") return `${baseURLS.baseServer}${getURLS.getSingleBoard}`;
+  if (type === "screens") return `${baseURLS.baseServer}${getURLS.getSingleScreen}`;
+  if (type === "dictionaries") return `${baseURLS.baseServer}${getURLS.getSingleDictionary}`;
 
   return null;
 };
@@ -29,31 +31,31 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "cards") return `${baseURLS.baseServer}${createURLS.createCard}`;
   return null;
 };
-export const updateURL = (id: string, type: AllAvailableTypes) => {
-  if (type === "documents") return `${baseURLS.baseServer}${updateURLs.updateDocument}${id}`;
-  if (type === "maps") return `${baseURLS.baseServer}${updateURLs.updateMap}${id}`;
-  if (type === "boards") return `${baseURLS.baseServer}${updateURLs.updateBoard}${id}`;
-  if (type === "map_pins") return `${baseURLS.baseServer}${updateURLs.updateMapPin}${id}`;
-  if (type === "map_layers") return `${baseURLS.baseServer}${updateURLs.updateMapLayer}${id}`;
-  if (type === "nodes") return `${baseURLS.baseServer}${updateURLs.updateNode}${id}`;
-  if (type === "edges") return `${baseURLS.baseServer}${updateURLs.updateEdge}${id}`;
-  if (type === "screens") return `${baseURLS.baseServer}${updateURLs.updateScreen}${id}`;
-  if (type === "sections") return `${baseURLS.baseServer}${updateURLs.updateSection}${id}`;
-  if (type === "cards") return `${baseURLS.baseServer}${updateURLs.updateCard}${id}`;
+export const updateURL = (type: AllAvailableTypes) => {
+  if (type === "documents") return `${baseURLS.baseServer}${updateURLs.updateDocument}`;
+  if (type === "maps") return `${baseURLS.baseServer}${updateURLs.updateMap}`;
+  if (type === "boards") return `${baseURLS.baseServer}${updateURLs.updateBoard}`;
+  if (type === "map_pins") return `${baseURLS.baseServer}${updateURLs.updateMapPin}`;
+  if (type === "map_layers") return `${baseURLS.baseServer}${updateURLs.updateMapLayer}`;
+  if (type === "nodes") return `${baseURLS.baseServer}${updateURLs.updateNode}`;
+  if (type === "edges") return `${baseURLS.baseServer}${updateURLs.updateEdge}`;
+  if (type === "screens") return `${baseURLS.baseServer}${updateURLs.updateScreen}`;
+  if (type === "sections") return `${baseURLS.baseServer}${updateURLs.updateSection}`;
+  if (type === "cards") return `${baseURLS.baseServer}${updateURLs.updateCard}`;
   return null;
 };
 
-export const deleteURL = (id: string, type: AllAvailableTypes) => {
-  if (type === "documents") return `${baseURLS.baseServer}${deleteURLs.deleteDocument}${id}`;
-  if (type === "maps") return `${baseURLS.baseServer}${deleteURLs.deleteMap}${id}`;
-  if (type === "map_pins") return `${baseURLS.baseServer}${deleteURLs.deleteMapPin}${id}`;
-  if (type === "map_layers") return `${baseURLS.baseServer}${deleteURLs.deleteMapLayer}${id}`;
-  if (type === "boards") return `${baseURLS.baseServer}${deleteURLs.deleteBoard}${id}`;
-  if (type === "nodes") return `${baseURLS.baseServer}${deleteURLs.deleteNode}${id}`;
-  if (type === "edges") return `${baseURLS.baseServer}${deleteURLs.deleteEdge}${id}`;
-  if (type === "screens") return `${baseURLS.baseServer}${deleteURLs.deleteScreen}${id}`;
-  if (type === "sections") return `${baseURLS.baseServer}${deleteURLs.deleteSection}${id}`;
-  if (type === "cards") return `${baseURLS.baseServer}${deleteURLs.deleteCard}${id}`;
+export const deleteURL = (type: AllAvailableTypes) => {
+  if (type === "documents") return `${baseURLS.baseServer}${deleteURLs.deleteDocument}`;
+  if (type === "maps") return `${baseURLS.baseServer}${deleteURLs.deleteMap}`;
+  if (type === "map_pins") return `${baseURLS.baseServer}${deleteURLs.deleteMapPin}`;
+  if (type === "map_layers") return `${baseURLS.baseServer}${deleteURLs.deleteMapLayer}`;
+  if (type === "boards") return `${baseURLS.baseServer}${deleteURLs.deleteBoard}`;
+  if (type === "nodes") return `${baseURLS.baseServer}${deleteURLs.deleteNode}`;
+  if (type === "edges") return `${baseURLS.baseServer}${deleteURLs.deleteEdge}`;
+  if (type === "screens") return `${baseURLS.baseServer}${deleteURLs.deleteScreen}`;
+  if (type === "sections") return `${baseURLS.baseServer}${deleteURLs.deleteSection}`;
+  if (type === "cards") return `${baseURLS.baseServer}${deleteURLs.deleteCard}`;
   return null;
 };
 

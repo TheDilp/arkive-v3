@@ -9,7 +9,6 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { useGetItem } from "../../../hooks/useGetItem";
 import { MapCreateType, MapType } from "../../../types/ItemTypes/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
@@ -29,11 +28,11 @@ export default function DrawerMapContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: map_images } = useGetAllMapImages(project_id as string);
   const queryClient = useQueryClient();
-  const maps = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"]);
+  const allMaps = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"]);
   const createMapMutation = useCreateItem<MapType>("maps");
   const updateMapMutation = useUpdateItem<MapType>("maps", project_id as string);
   const deleteMapMutation = useDeleteItem("maps", project_id as string);
-  const { data: map } = useGetItem<MapType>(drawer?.id as string, "maps", { enabled: !!drawer?.id });
+  const map = allMaps?.find((m) => m.id === drawer.id);
   const [localItem, setLocalItem] = useState<MapType | MapCreateType>(
     map ?? {
       ...DefaultMap,
@@ -88,8 +87,8 @@ export default function DrawerMapContent() {
           onChange={(e) => handleChange({ name: "parentId", value: e.target.value })}
           optionLabel="title"
           options={
-            maps
-              ? [{ id: null, title: "Root" }, ...(maps as MapType[]).filter((m) => DropdownFilter(m, map))]
+            allMaps
+              ? [{ id: null, title: "Root" }, ...(allMaps as MapType[]).filter((m) => DropdownFilter(m, map))]
               : [{ id: null, title: "Root" }]
           }
           optionValue="id"
@@ -114,7 +113,7 @@ export default function DrawerMapContent() {
             project_id as string,
             queryClient,
             DefaultMap,
-            maps,
+            allMaps,
             resetChanges,
             createMapMutation.mutateAsync,
             updateMapMutation.mutateAsync,

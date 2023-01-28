@@ -9,7 +9,6 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { useGetItem } from "../../../hooks/useGetItem";
 import { BoardCreateType, BoardType } from "../../../types/ItemTypes/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { boardNodeShapes } from "../../../utils/boardUtils";
@@ -30,8 +29,8 @@ export default function DrawerBoardContent() {
   const createBoardMutation = useCreateItem<BoardType>("boards");
   const updateBoardMutation = useUpdateItem<BoardType>("boards", project_id as string);
   const deleteBoardMutation = useDeleteItem("boards", project_id as string);
-  const allBoards = queryClient.getQueryData<BoardType[]>(["allitems", project_id, "boards"]);
-  const { data: board } = useGetItem<BoardType>(drawer?.id as string, "boards", { enabled: !!drawer?.id });
+  const allBoards = queryClient.getQueryData<BoardType[]>(["allItems", project_id, "boards"]);
+  const board = allBoards?.find((b) => b.id === drawer.id);
   const [localItem, setLocalItem] = useState<BoardType | BoardCreateType>(
     board ?? {
       ...DefaultBoard,

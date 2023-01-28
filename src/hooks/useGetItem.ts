@@ -8,9 +8,9 @@ export function useGetItem<ItemType>(id: string, type: AvailableItemTypes, optio
   const { data, isLoading } = useQuery<ItemType>({
     queryKey: [type, id],
     queryFn: async () => {
-      const url = getSingleURL(type, id);
+      const url = getSingleURL(type);
       if (url) {
-        return FetchFunction({ url, method: "GET" });
+        return FetchFunction({ url, method: "POST", body: JSON.stringify({ id }) });
       }
 
       return null;
