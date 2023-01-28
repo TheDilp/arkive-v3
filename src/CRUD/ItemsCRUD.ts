@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstac
 import { baseURLS, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { BoardType } from "../types/ItemTypes/boardTypes";
+import { DictionaryType } from "../types/ItemTypes/dictionaryTypes";
 import { ScreenType } from "../types/ItemTypes/screenTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
@@ -345,6 +346,46 @@ export const useUpdateManySubItems = <SubItemType>(item_id: string, subType: Ava
       },
       onError: (error, variables, context) => {
         toaster("error", "There was an error updating these items.");
+        queryClient.setQueryData(["boards", item_id], context?.old);
+      },
+    },
+  );
+};
+
+export const useDeleteSubItem = (item_id: string, subType: AvailableSubItemTypes, type: AvailableItemTypes) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (id: string) => {
+      if (id) {
+        const url = deleteURL(subType);
+        if (url) return FetchFunction({ url, body: JSON.stringify(id), method: "DELETE" });
+      }
+      return null;
+    },
+    {
+      onMutate: async (id) => {
+        const old = queryClient.getQueryData([type, item_id]);
+        if (subType === "words" && type === "dictionaries") {
+          queryClient.setQueryData([type, item_id], (oldData: DictionaryType | undefined) => {
+            if (oldData) {
+              return { ...oldData, [subType]: oldData[subType].filter((subItem) => subItem.id !== id) };
+            }
+            return oldData;
+          });
+        }
+        if (subType === "sections" && type === "screens") {
+          queryClient.setQueryData([type, item_id], (oldData: ScreenType | undefined) => {
+            if (oldData) {
+              return { ...oldData, [subType]: oldData[subType].filter((subItem) => subItem.id !== id) };
+            }
+            return oldData;
+          });
+        }
+        return { old };
+      },
+      onSuccess: () => toaster("success", "Items successfully deleted."),
+      onError: (_, __, context) => {
+        toaster("error", "There was an error deleting these items.");
         queryClient.setQueryData(["boards", item_id], context?.old);
       },
     },

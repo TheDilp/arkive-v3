@@ -9,6 +9,12 @@ export default function DrawerMentionContent() {
   const [mention] = useAtom(MentionContextAtom);
 
   const { data, isLoading } = useGetItem<DocumentType>(mention?.data?.id as string, "documents");
-  if (data?.content && !isLoading) return <StaticRender content={data.content} />;
+  if (data?.content && !isLoading)
+    return (
+      <div>
+        <h2 className="text-center font-Merriweather text-3xl">{data.title}</h2>
+        <StaticRender content={data.content} />
+      </div>
+    );
   return null;
 }

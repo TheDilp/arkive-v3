@@ -5,6 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Toolbar } from "primereact/toolbar";
 import { useParams } from "react-router-dom";
 
+import { useDeleteSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DictionaryType, WordType } from "../../types/ItemTypes/dictionaryTypes";
@@ -47,13 +48,6 @@ function LeftToolbarTemplate() {
         label="New Word"
         onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "words" })}
       />
-      {/* <Button
-        className="p-button-danger p-button-outlined"
-        // disabled={!selectedProducts || !selectedProducts.length}
-        icon="pi pi-trash"
-        label="Delete"
-        // onClick={confirmDeleteSelected}
-      /> */}
     </div>
   );
 }
@@ -61,6 +55,8 @@ function LeftToolbarTemplate() {
 export default function DictionaryView() {
   const { item_id } = useParams();
   const { data: dictionary, isLoading } = useGetItem<DictionaryType>(item_id as string, "dictionaries");
+
+  const deleteWordMutation = useDeleteSubItem(item_id as string, "words", "dictionaries");
   const [, setDrawer] = useAtom(DrawerAtom);
 
   return (
@@ -81,7 +77,7 @@ export default function DictionaryView() {
               row,
               (wordId: string) => {
                 deleteItem("Are you sure you want to delete this word?", () => {
-                  console.log(wordId);
+                  deleteWordMutation.mutate(wordId);
                 });
               },
               setDrawer,

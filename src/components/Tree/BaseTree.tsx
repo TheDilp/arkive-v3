@@ -2,6 +2,7 @@ import { DragLayerMonitorProps, NodeModel, PlaceholderRenderParams, Tree } from 
 import { useAtom } from "jotai";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -43,7 +44,7 @@ function Placeholder(args: PlaceholderRenderParams) {
 
 export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
-  const { data: items } = useGetAllItems<AllItemsType>(project_id as string, type);
+  const { data: items, isLoading: isLoadingItems } = useGetAllItems<AllItemsType>(project_id as string, type);
   const updateItemMutation = useUpdateItem<DocumentType>(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
   const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
@@ -104,6 +105,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
+
+  if (isLoadingItems) return <ProgressSpinner />;
+
   return (
     <div
       className="flex h-full flex-col "
@@ -158,7 +162,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;
           handleDrop(tree, dropTargetId as string, sortItemMutation);
-          console.log(dropTargetId);
           updateItemMutation?.mutate({
             id: dragSourceId as string,
             parentId: dropTargetId === "0" ? null : (dropTargetId as string),
