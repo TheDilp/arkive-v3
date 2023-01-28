@@ -6,7 +6,7 @@ import { Marker, Tooltip } from "react-leaflet";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
-import { MapPinType } from "../../types/mapTypes";
+import { MapPinType } from "../../types/ItemTypes/mapTypes";
 import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 

@@ -8,7 +8,7 @@ import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
 import { useDeleteItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { MapType } from "../../types/mapTypes";
+import { MapType } from "../../types/ItemTypes/mapTypes";
 import { useMapContextMenuItems } from "../../utils/contextMenus";
 
 type Props = {

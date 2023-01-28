@@ -11,7 +11,7 @@ import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS } from "../../types/CRUDenums";
-import { ProjectType } from "../../types/projectTypes";
+import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
 

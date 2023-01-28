@@ -5,7 +5,7 @@ import Navbar from "../components/Nav/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { useAuth } from "../hooks/useAuth";
-import { ProjectType } from "../types/projectTypes";
+import { ProjectType } from "../types/ItemTypes/projectTypes";
 
 export default function Dashboard() {
   const user = useAuth();

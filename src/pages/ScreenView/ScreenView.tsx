@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-no-bind */
@@ -11,10 +12,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import SectionCard from "../../components/Card/SectionCard";
-import { useSortMutation, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
+import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, deleteURLs } from "../../types/CRUDenums";
-import { CardType, ScreenType, SectionType } from "../../types/screenTypes";
+import { CardType, ScreenType, SectionType } from "../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";

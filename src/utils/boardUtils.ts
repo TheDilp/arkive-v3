@@ -2,7 +2,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import cytoscape, { Core } from "cytoscape";
 import { saveAs } from "file-saver";
 
-import { EdgeType, NodeType } from "../types/boardTypes";
+import { EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
 import { AllSubItemsType } from "../types/generalTypes";
 import { getImageLink } from "./CRUD/CRUDUrls";
 import { toaster } from "./toast";

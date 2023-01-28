@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateSubItem, useDeleteManySubItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { ScreenType, SectionCreateType, SectionType } from "../../../types/screenTypes";
+import { ScreenType, SectionCreateType, SectionType } from "../../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";

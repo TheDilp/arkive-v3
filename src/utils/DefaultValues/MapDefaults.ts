@@ -1,4 +1,4 @@
-import { DefaultMapType } from "../../types/mapTypes";
+import { DefaultMapType } from "../../types/ItemTypes/mapTypes";
 
 export const DefaultMap: DefaultMapType = {
   expanded: false,

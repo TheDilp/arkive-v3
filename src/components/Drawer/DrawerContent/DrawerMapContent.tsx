@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { useCreateItem, useDeleteItem, useGetAllMapImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
-import { MapCreateType, MapType } from "../../../types/mapTypes";
+import { MapCreateType, MapType } from "../../../types/ItemTypes/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";

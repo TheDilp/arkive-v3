@@ -3,13 +3,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { BoardType } from "../../types/boardTypes";
-import { DocumentType } from "../../types/documentTypes";
-import { MapType } from "../../types/mapTypes";
+import { BoardType } from "../../types/ItemTypes/boardTypes";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
+import { MapType } from "../../types/ItemTypes/mapTypes";
 
 export default function MentionDropdownComponent() {
   const [mentionState, setMentionState] = useState<MentionState | null>();
   const queryClient = useQueryClient();
+  // const {data: words, isFetching} = useQuery([""])
   const { project_id } = useParams();
 
   const items = useMemo(() => {
@@ -66,6 +67,22 @@ export default function MentionDropdownComponent() {
         .slice(0, 5)
         .sort();
     }
+    // if (mentionState.name === "dictionary") {
+    //   const languages = [
+    //     { title: "Elvish", words: [{ word: "Maat", translation: "Order" }] },
+    //     { title: "Old Imperial", words: [{ word: "Pheagon", translation: "Protector" }] },
+    //   ];
+
+    //   // const languageItems = languages?.map(lang => ({...lang}))?.map((lang) => ({
+    //   //   id: board.id,
+    //   //   label: `${}`
+    //   // }));
+
+    //   return boardItems
+    //     .filter((item) => item.label.toLowerCase().includes(query))
+    //     .slice(0, 5)
+    //     .sort();
+    // }
 
     return [];
   }, [mentionState]);

@@ -1,11 +1,11 @@
 import { Icon } from "@iconify/react";
 import { ColorPickerValueType } from "primereact/colorpicker";
 
-import { BoardType, EdgeType, NodeType } from "../types/boardTypes";
-import { DocumentType } from "../types/documentTypes";
+import { BoardType, EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
+import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
-import { MapPinType, MapType } from "../types/mapTypes";
-import { ScreenType, SectionType } from "../types/screenTypes";
+import { MapPinType, MapType } from "../types/ItemTypes/mapTypes";
+import { ScreenType, SectionType } from "../types/ItemTypes/screenTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
   <div className="flex w-full items-center justify-center gap-x-1">

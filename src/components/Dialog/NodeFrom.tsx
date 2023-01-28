@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { FolderViewCards } from "../../pages/FolderView/FolderViewCards";
-import { DocumentType } from "../../types/documentTypes";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 
 type Props = {

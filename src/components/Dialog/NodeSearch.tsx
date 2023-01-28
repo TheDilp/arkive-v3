@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardType, NodeType } from "../../types/boardTypes";
+import { BoardType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { BoardReferenceAtom, DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 

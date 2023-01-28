@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { SelectButton } from "primereact/selectbutton";
 import { useState } from "react";
 
-import { BoardExportType } from "../../types/boardTypes";
+import { BoardExportType } from "../../types/ItemTypes/boardTypes";
 import { BoardReferenceAtom, DialogAtom } from "../../utils/Atoms/atoms";
 import { exportBoardFunction } from "../../utils/boardUtils";
 import { toaster } from "../../utils/toast";

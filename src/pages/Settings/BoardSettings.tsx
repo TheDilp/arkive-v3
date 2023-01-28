@@ -19,7 +19,7 @@ import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { BoardType } from "../../types/boardTypes";
+import { BoardType } from "../../types/ItemTypes/boardTypes";
 import { TagType } from "../../types/generalTypes";
 import { boardNodeShapes } from "../../utils/boardUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";

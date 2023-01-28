@@ -8,8 +8,8 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useUpdateManySubItems } from "../../../CRUD/ItemsCRUD";
-import { BoardType, NodeType } from "../../../types/boardTypes";
-import { DocumentType } from "../../../types/documentTypes";
+import { BoardType, NodeType } from "../../../types/ItemTypes/boardTypes";
+import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { BoardReferenceAtom } from "../../../utils/Atoms/atoms";
 import {
   BoardFontFamilies,

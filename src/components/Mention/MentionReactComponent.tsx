@@ -1,9 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
-import { BoardType } from "../../types/boardTypes";
-import { DocumentType } from "../../types/documentTypes";
-import { MapType } from "../../types/mapTypes";
+import { BoardType } from "../../types/ItemTypes/boardTypes";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
+import { MapType } from "../../types/ItemTypes/mapTypes";
 import BoardMention from "./BoardMention";
 import DocumentMention from "./DocumentMention";
 import MapMention from "./MapMention";
@@ -41,26 +41,26 @@ export default function MentionReactComponent({ node }: Props) {
         else {
           title = docItem.title;
         }
-        return <DocumentMention id={docId} label={label} title={title} />;
+        return <DocumentMention id={docId} label={label} project_id={project_id} title={title} />;
       }
-      return <DocumentMention id={undefined} label={label} title={label} />;
+      return <DocumentMention id={undefined} label={label} project_id={project_id} title={label} />;
     }
     if (name === "maps") {
       const maps: MapType[] | undefined = queryClient.getQueryData<MapType[]>(["allItems", project_id, "maps"]);
 
       const mapItem: MapType | undefined = maps ? maps.find((map) => map.id === id) : undefined;
       if (mapItem) {
-        return <MapMention nodeId={id} nodeLabel={label} title={mapItem.title} />;
+        return <MapMention nodeId={id} nodeLabel={label} project_id={project_id} title={mapItem.title} />;
       }
-      return <MapMention nodeId={undefined} nodeLabel={label} />;
+      return <MapMention nodeId={undefined} nodeLabel={label} project_id={project_id} />;
     }
     if (name === "boards") {
       const boards: BoardType[] | undefined = queryClient.getQueryData<BoardType[]>(["allItems", project_id, "boards"]);
       const boardItem = boards ? boards.find((board) => board.id === id) : undefined;
       if (boardItem) {
-        return <BoardMention nodeId={id} nodeLabel={label} title={boardItem.title} />;
+        return <BoardMention nodeId={id} nodeLabel={label} project_id={project_id} title={boardItem.title} />;
       }
-      <BoardMention nodeId={undefined} nodeLabel={label} />;
+      <BoardMention nodeId={undefined} nodeLabel={label} project_id={project_id} />;
     }
 
     return <span>{label}</span>;

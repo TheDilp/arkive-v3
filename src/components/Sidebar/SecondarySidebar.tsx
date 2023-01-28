@@ -1,17 +1,18 @@
-import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Sidebar as PrimeSidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import BoardsTree from "../Tree/BoardsTree";
+import DictionariesTree from "../Tree/DictionariesTree";
 import DocumentsTree from "../Tree/DocumentsTree";
 import MapsTree from "../Tree/MapsTree";
 import ScreensTree from "../Tree/ScreensTree";
 import TemplatesTree from "../Tree/TemplatesTree";
+import SettingsSidebar from "./SecondarySidebarContent/SettingsSidebar";
 
 type Props = {
   children: JSX.Element | null;
@@ -50,82 +51,19 @@ function SidebarContent() {
         </TabView>
       </div>
     );
-  if (pathname.includes("maps"))
-    return (
-      <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
-        <MapsTree />
-      </div>
-    );
-  if (pathname.includes("boards"))
-    return (
-      <div className="flex flex-1 flex-col bg-zinc-900 p-4">
-        <BoardsTree />
-      </div>
-    );
-  if (pathname.includes("screens"))
-    return (
-      <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
-        <ScreensTree />
-      </div>
-    );
-  if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-900">TIMELINES</div>;
-  if (pathname.includes("settings"))
-    return (
-      <div className="flex flex-1 flex-col bg-zinc-900 p-4">
-        <ul className="flex w-full flex-col gap-y-1 font-Lato text-sm">
-          <Link
-            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("project-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-            }`}
-            to="./settings/project-settings">
-            <Icon fontSize={18} icon="mdi:cogs" />
-            Project Settings
-          </Link>
-          <Link
-            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("document-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-            }`}
-            to="./settings/document-settings">
-            <Icon fontSize={18} icon="mdi:files" />
-            Document Settings
-          </Link>
-          <Link
-            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("map-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-            }`}
-            to="./settings/map-settings">
-            <Icon fontSize={18} icon="mdi:map" />
-            Map Settings
-          </Link>
-          <Link
-            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("board-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-            }`}
-            to="./settings/board-settings">
-            <Icon fontSize={18} icon="mdi:draw" />
-            Board Settings
-          </Link>
-          <Link
-            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("tags-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-            }`}
-            to="./settings/tags-settings">
-            <Icon fontSize={18} icon="mdi:tags" />
-            Tags
-          </Link>
-          <Link
-            className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-              pathname.includes("assets-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-            }`}
-            to="./settings/assets-settings">
-            <Icon fontSize={18} icon="ion:images" />
-            Assets
-          </Link>
-        </ul>
-      </div>
-    );
-  return null;
+  if (pathname.includes("settings")) return <SettingsSidebar />;
+  return (
+    <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
+      {pathname.includes("maps") ? <MapsTree /> : null}
+      {pathname.includes("boards") ? <BoardsTree /> : null}
+      {pathname.includes("screens") ? <ScreensTree /> : null}
+      {pathname.includes("dictionaries") ? <DictionariesTree /> : null}
+    </div>
+  );
+
+  // if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-900">TIMELINES</div>;
 }
+
 export default function SecondarySidebar({ isLoading }: { isLoading: boolean }) {
   const { pathname } = useLocation();
   if (!pathname.includes("settings") && isLoading) return <ProgressSpinner />;

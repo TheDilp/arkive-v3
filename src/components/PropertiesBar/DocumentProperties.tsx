@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { useGetAllImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
-import { DocumentType } from "../../types/documentTypes";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { toaster } from "../../utils/toast";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";

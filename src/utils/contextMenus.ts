@@ -11,7 +11,7 @@ import {
   useUpdateItem,
   useUpdateManySubItems,
 } from "../CRUD/ItemsCRUD";
-import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/boardTypes";
+import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/ItemTypes/boardTypes";
 import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom, MentionContextAtom } from "./Atoms/atoms";

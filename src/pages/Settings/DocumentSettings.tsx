@@ -19,7 +19,7 @@ import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { DocumentType } from "../../types/documentTypes";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";

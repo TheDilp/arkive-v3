@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
 
 import { useCreateItem } from "../../../CRUD/ItemsCRUD";
-import { DocumentType } from "../../../types/documentTypes";
+import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 
 export default function DrawerFromTemplateContent() {

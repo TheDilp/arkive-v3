@@ -18,13 +18,10 @@ import Layout from "./components/Layout/Layout";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 
+const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const Signup = lazy(() => import("./pages/Auth/Signup"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
-const Editor = lazy(() => import("./pages/Editor/Editor"));
-const MapView = lazy(() => import("./pages/MapView/MapView"));
-const BoardView = lazy(() => import("./pages/BoardView/BoardView"));
-const ScreenView = lazy(() => import("./pages/ScreenView/ScreenView"));
 const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
 const AssetSettings = lazy(() => import("./pages/Settings/Assets/AssetSettings"));
 const BoardSettings = lazy(() => import("./pages/Settings/BoardSettings"));
@@ -81,31 +78,11 @@ function App() {
             </Route>
             <Route element={<Dashboard />} path="/" />
             <Route element={<Layout />} path="/project/:project_id/*">
-              <Route path="documents/*">
+              <Route path=":type/*">
                 <Route element={<FolderView />} path="" />
                 <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<Editor editable />} path=":item_id" />
+                <Route element={<ContentView />} path=":item_id" />
               </Route>
-              <Route path="maps/*">
-                <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<MapView />} path=":item_id" />
-                <Route element={<MapView />} path=":item_id/:subitem_id" />
-              </Route>
-              <Route path="boards/*">
-                <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<BoardView />} path=":item_id" />
-                <Route element={<BoardView />} path=":item_id/:subitem_id" />
-              </Route>
-              <Route path="screens/*">
-                <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<ScreenView />} path=":item_id" />
-                <Route element={<ScreenView />} path=":item_id/:subitem_id" />
-              </Route>
-
-              <Route element={<FolderView />} path=":type/folder/:item_id" />
 
               <Route path="settings/*">
                 <Route element={<ProjectSettings />} path="project-settings" />

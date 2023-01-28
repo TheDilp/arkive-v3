@@ -1,4 +1,4 @@
-import { ProjectType } from "./projectTypes";
+import { ProjectType } from "./ItemTypes/projectTypes";
 
 export type UserType = {
   id: string;

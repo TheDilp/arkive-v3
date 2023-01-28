@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
-import { BoardType } from "../types/boardTypes";
+import { BoardType } from "../types/ItemTypes/boardTypes";
 import { baseURLS, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
-import { ScreenType } from "../types/screenTypes";
+import { ScreenType } from "../types/ItemTypes/screenTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { getItems } from "../utils/CRUD/CRUDFunctions";

@@ -9,8 +9,8 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { baseURLS, createURLS } from "../../../types/CRUDenums";
-import { DocumentType } from "../../../types/documentTypes";
-import { CardType } from "../../../types/screenTypes";
+import { DocumentType } from "../../../types/ItemTypes/documentTypes";
+import { CardType } from "../../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { toaster } from "../../../utils/toast";

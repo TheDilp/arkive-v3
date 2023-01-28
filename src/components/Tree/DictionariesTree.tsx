@@ -5,15 +5,15 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { ScreenType } from "../../types/ItemTypes/screenTypes";
+import { DictionaryType } from "../../types/ItemTypes/dictionaryTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
 
-export default function ScreensTree() {
+export default function DictionariesTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const createScreenMutation = useCreateItem<ScreenType>("screens");
+  const createDictionaryMutation = useCreateItem<DictionaryType>("dictionaries");
   const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">
@@ -26,7 +26,7 @@ export default function ScreensTree() {
           iconPos="right"
           label={isMd ? "" : "New Folder"}
           onClick={() => {
-            createScreenMutation?.mutate({
+            createDictionaryMutation?.mutate({
               folder: true,
               project_id: project_id as string,
               title: "New Folder",
@@ -40,13 +40,13 @@ export default function ScreensTree() {
               ...DefaultDrawer,
               position: "right",
               show: true,
-              type: "screens",
+              type: "dictionaries",
             });
           }}>
           <div className="flex w-full items-center justify-center gap-x-1">
-            <div className="w-full">New Screen</div>
+            <div className="w-full">New Dictionary</div>
             <div className="ml-auto">
-              <Icon className="" fontSize={20} icon="fluent:board-24-regular" />
+              <Icon className="" fontSize={20} icon="mdi-light:book" />
             </div>
           </div>
         </Button>

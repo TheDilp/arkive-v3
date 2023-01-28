@@ -1,4 +1,4 @@
-import { DefaultScreenType, DefaultSectionType } from "../../types/screenTypes";
+import { DefaultScreenType, DefaultSectionType } from "../../types/ItemTypes/screenTypes";
 
 export const DefaultScreen: DefaultScreenType = {
   title: "New Screen",

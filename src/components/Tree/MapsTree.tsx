@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { MapType } from "../../types/mapTypes";
+import { MapType } from "../../types/ItemTypes/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";

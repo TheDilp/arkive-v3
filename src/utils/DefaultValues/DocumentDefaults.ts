@@ -1,4 +1,4 @@
-import { DefaultDocumentType } from "../../types/documentTypes";
+import { DefaultDocumentType } from "../../types/ItemTypes/documentTypes";
 
 export const DefaultDocument: DefaultDocumentType = {
   alter_names: [],

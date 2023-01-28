@@ -1,4 +1,4 @@
-import { DocumentType } from "../types/documentTypes";
+import { DocumentType } from "../types/ItemTypes/documentTypes";
 
 export function recursiveDescendantFilter(
   doc: DocumentType,

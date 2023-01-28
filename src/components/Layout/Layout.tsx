@@ -1,6 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
 import { ConfirmDialog } from "primereact/confirmdialog";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Suspense } from "react";
 import { Outlet, useParams } from "react-router-dom";
 

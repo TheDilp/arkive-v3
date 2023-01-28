@@ -1,4 +1,4 @@
-import { DefaultBoardType, DefaultEdgeType, DefaultNodeType } from "../../types/boardTypes";
+import { DefaultBoardType, DefaultEdgeType, DefaultNodeType } from "../../types/ItemTypes/boardTypes";
 
 export const DefaultBoard: DefaultBoardType = {
   title: "",

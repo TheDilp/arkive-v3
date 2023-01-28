@@ -5,7 +5,7 @@ import set from "lodash.set";
 import { Dispatch } from "react";
 
 import { baseURLS, updateURLs } from "../types/CRUDenums";
-import { ScreenType, SectionType } from "../types/screenTypes";
+import { ScreenType, SectionType } from "../types/ItemTypes/screenTypes";
 import { FetchFunction } from "./CRUD/CRUDFetch";
 import { toaster } from "./toast";
 

@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { findParentNode, RemirrorJSON } from "remirror";
 
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
-import { DocumentType } from "../../types/documentTypes";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";

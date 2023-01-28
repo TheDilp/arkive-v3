@@ -19,7 +19,7 @@ import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useGetAllMapImages, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { AvailableItemTypes, TagType } from "../../types/generalTypes";
-import { MapType } from "../../types/mapTypes";
+import { MapType } from "../../types/ItemTypes/mapTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getMapImageLink } from "../../utils/CRUD/CRUDUrls";
 import { tagsFilterFunction } from "../../utils/settingsUtils";

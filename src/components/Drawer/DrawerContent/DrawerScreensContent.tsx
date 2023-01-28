@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
-import { ScreenCreateType, ScreenType } from "../../../types/screenTypes";
+import { ScreenCreateType, ScreenType } from "../../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";

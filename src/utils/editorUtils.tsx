@@ -28,7 +28,7 @@ import { SecretExtension } from "../components/Editor/Extensions/SecretsExtensio
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
 import { useUpdateItem } from "../CRUD/ItemsCRUD";
 import { useGetItem } from "../hooks/useGetItem";
-import { DocumentType } from "../types/documentTypes";
+import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { slashMenuItem } from "../types/generalTypes";
 import { toaster } from "./toast";
 
@@ -48,6 +48,10 @@ export const DefaultEditorExtensions = () => {
       {
         char: "$",
         name: "boards",
+      },
+      {
+        char: "::d",
+        name: "dictionary",
       },
     ],
   });

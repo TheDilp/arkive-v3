@@ -14,7 +14,7 @@ import { useCreateItem, useDeleteItem, useGetAllImages, useUpdateItem } from "..
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS } from "../../../types/CRUDenums";
-import { DocumentCreateType, DocumentType } from "../../../types/documentTypes";
+import { DocumentCreateType, DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";

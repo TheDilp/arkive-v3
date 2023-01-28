@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateSubItem, useDeleteItem, useGetAllMapImages, useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { MapLayerType, MapType } from "../../types/mapTypes";
+import { MapLayerType, MapType } from "../../types/ItemTypes/mapTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { toaster } from "../../utils/toast";
 import { MapImageDropdownItem } from "../Dropdown/ImageDropdownItem";

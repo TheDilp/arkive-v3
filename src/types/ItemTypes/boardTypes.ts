@@ -1,7 +1,7 @@
 import cytoscape, { EdgeCollection, NodeCollection } from "cytoscape";
 
 import { DocumentType } from "./documentTypes";
-import { BaseItemType, TagType } from "./generalTypes";
+import { BaseItemType, TagType } from "../generalTypes";
 
 type ArrowShape =
   | "none"

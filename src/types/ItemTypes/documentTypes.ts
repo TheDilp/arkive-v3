@@ -1,6 +1,6 @@
 import { RemirrorJSON } from "remirror";
 
-import { BaseItemType } from "./generalTypes";
+import { BaseItemType } from "../generalTypes";
 
 export interface DocumentType extends BaseItemType {
   content: undefined | RemirrorJSON;

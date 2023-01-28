@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { BoardType, EdgeType } from "../../../types/boardTypes";
+import { BoardType, EdgeType } from "../../../types/ItemTypes/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
   boardEdgeArrowShapes,

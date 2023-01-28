@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
-import { MapPinType, MapType } from "../../types/mapTypes";
+import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
 import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import MapPin from "./MapPin";

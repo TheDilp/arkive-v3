@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { baseURLS } from "../../types/CRUDenums";
-import { ProjectType } from "../../types/projectTypes";
+import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { buttonLabelWithIcon } from "../../utils/transform";
 
 export default function ProjectCard({ ...project }: ProjectType) {

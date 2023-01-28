@@ -11,7 +11,7 @@ import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/boardTypes";
+import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { DragItem } from "../../types/generalTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";

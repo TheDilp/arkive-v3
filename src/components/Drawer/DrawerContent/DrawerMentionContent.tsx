@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 
 import { useGetItem } from "../../../hooks/useGetItem";
-import { DocumentType } from "../../../types/documentTypes";
+import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { MentionContextAtom } from "../../../utils/Atoms/atoms";
 import StaticRender from "../../Editor/StaticRender";
 

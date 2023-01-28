@@ -1,19 +1,28 @@
 import React from "react";
 import { RemirrorJSON } from "remirror";
 
-import { BoardType, EdgeType, NodeType } from "./boardTypes";
-import { DocumentType } from "./documentTypes";
-import { MapLayerType, MapPinType, MapType } from "./mapTypes";
-import { CardType, ScreenType, SectionType } from "./screenTypes";
+import { BoardType, EdgeType, NodeType } from "./ItemTypes/boardTypes";
+import { DocumentType } from "./ItemTypes/documentTypes";
+import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
+import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
 
-export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens";
-export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "sections" | "cards";
+export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens" | "dictionaries";
+export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "sections" | "cards" | "words";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
 export type AllItemsType = DocumentType | MapType | BoardType | ScreenType;
 export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType | SectionType | CardType;
 
-export type AvailableSearchResultTypes = "documents" | "maps" | "boards" | "pins" | "nodes" | "edges" | "screens" | "sections";
+export type AvailableSearchResultTypes =
+  | "documents"
+  | "maps"
+  | "boards"
+  | "pins"
+  | "nodes"
+  | "edges"
+  | "screens"
+  | "sections"
+  | "words";
 
 export type IconSelectMenuType = {
   // eslint-disable-next-line no-unused-vars

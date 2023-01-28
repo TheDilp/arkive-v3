@@ -9,8 +9,8 @@ import { useParams } from "react-router-dom";
 
 import { useGetAllImages, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { BoardType, NodeType } from "../../../types/boardTypes";
-import { DocumentType } from "../../../types/documentTypes";
+import { BoardType, NodeType } from "../../../types/ItemTypes/boardTypes";
+import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
   BoardFontFamilies,

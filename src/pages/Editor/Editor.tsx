@@ -16,7 +16,7 @@ import Menubar from "../../components/Editor/Menubar";
 import MentionDropdownComponent from "../../components/Mention/MentionDropdownComponent";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { DocumentType } from "../../types/documentTypes";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { EditorType } from "../../types/generalTypes";
 import { MentionContextAtom } from "../../utils/Atoms/atoms";
 import { useMentionMenuItems } from "../../utils/contextMenus";

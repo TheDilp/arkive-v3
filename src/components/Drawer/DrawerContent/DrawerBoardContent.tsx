@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
-import { BoardCreateType, BoardType } from "../../../types/boardTypes";
+import { BoardCreateType, BoardType } from "../../../types/ItemTypes/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { boardNodeShapes } from "../../../utils/boardUtils";
 import { deleteItem } from "../../../utils/Confirms/Confirm";

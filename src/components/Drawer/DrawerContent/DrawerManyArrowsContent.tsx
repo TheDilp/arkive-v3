@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useUpdateManySubItems } from "../../../CRUD/ItemsCRUD";
-import { EdgeType } from "../../../types/boardTypes";
+import { EdgeType } from "../../../types/ItemTypes/boardTypes";
 import { BoardReferenceAtom } from "../../../utils/Atoms/atoms";
 import { boardEdgeArrowShapes } from "../../../utils/boardUtils";
 import { DefaultEdge } from "../../../utils/DefaultValues/BoardDefaults";

@@ -1,4 +1,4 @@
-import { BaseItemType } from "./generalTypes";
+import { BaseItemType } from "../generalTypes";
 
 // Map Pins
 export type MapPinType = {

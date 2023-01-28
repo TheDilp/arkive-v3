@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 
-import { CardType } from "../../types/screenTypes";
+import { CardType } from "../../types/ItemTypes/screenTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import StaticRender from "../Editor/StaticRender";
 
