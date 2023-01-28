@@ -42,7 +42,6 @@ export default function Signin() {
           if (e.key === "Enter") await loginUser();
         }}
         placeholder="Password"
-        toggleMask
         type="password"
       />
       <Link className="flex w-full justify-end " to="/auth/signup">

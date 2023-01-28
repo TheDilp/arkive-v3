@@ -70,7 +70,8 @@ export const useUpdateProject = () => {
 export const useGetSingleProject = (id: string, enabled?: boolean) => {
   return useQuery<ProjectType>(
     ["singleProject", id],
-    async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getSingeProject}/${id}`, method: "GET" }),
+    async () =>
+      FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getSingeProject}`, method: "POST", body: JSON.stringify({ id }) }),
     {
       enabled,
       staleTime: 60 * 5 * 1000,
