@@ -38,6 +38,7 @@ export default function TemplatesTree() {
         className="p-button-outlined"
         icon="pi pi-bolt"
         label="Quick Create"
+        loading={createDocumentMutation.isLoading}
         model={items}
         onClick={() => {
           createDocumentMutation?.mutate({

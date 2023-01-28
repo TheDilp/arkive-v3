@@ -17,10 +17,17 @@ export default function FolderView() {
       <Breadcrumbs type={type} />
       <FolderViewCards
         items={
-          data?.filter((item) => {
-            if (item_id) return item.parentId === item_id;
-            return !item.parentId;
-          }) || []
+          data
+            ?.filter((item) => {
+              if ("template" in item) {
+                return !item.template;
+              }
+              return true;
+            })
+            ?.filter((item) => {
+              if (item_id) return item.parentId === item_id;
+              return !item.parentId;
+            }) || []
         }
         type={type}
       />
