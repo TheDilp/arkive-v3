@@ -44,6 +44,7 @@ export const updateURL = (type: AllAvailableTypes) => {
   if (type === "screens") return `${baseURLS.baseServer}${updateURLs.updateScreen}`;
   if (type === "sections") return `${baseURLS.baseServer}${updateURLs.updateSection}`;
   if (type === "cards") return `${baseURLS.baseServer}${updateURLs.updateCard}`;
+  if (type === "words") return `${baseURLS.baseServer}${updateURLs.updateWord}`;
   return null;
 };
 

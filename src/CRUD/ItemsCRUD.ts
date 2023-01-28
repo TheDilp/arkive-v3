@@ -101,6 +101,10 @@ export const useCreateSubItem = <SubItemType extends { id: string; parentId: str
             const updatedData = [...(oldData[subType] || []), variables];
             queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
           }
+          if (type === "dictionaries" && subType === "words" && "words" in oldData) {
+            const updatedData = [...(oldData[subType] || []), variables];
+            queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
+          }
         }
 
         return { oldData };
