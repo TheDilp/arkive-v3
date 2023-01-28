@@ -30,6 +30,7 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "sections") return `${baseURLS.baseServer}${createURLS.createSection}`;
   if (type === "cards") return `${baseURLS.baseServer}${createURLS.createCard}`;
   if (type === "dictionaries") return `${baseURLS.baseServer}${createURLS.createDictionary}`;
+  if (type === "words") return `${baseURLS.baseServer}${createURLS.createWord}`;
   return null;
 };
 export const updateURL = (type: AllAvailableTypes) => {

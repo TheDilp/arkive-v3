@@ -26,7 +26,9 @@ const navItems: NavItemType[] = [
   { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
   { icon: "ph:graph", navigate: "./boards", tooltip: "Boards" },
   { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
-  { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionary" },
+  { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionaries" },
+  // { icon: "ph:calendar-blank-thin", navigate: "./calendars", tooltip: "Calendars" },
+  // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 

@@ -7,6 +7,7 @@ import { Dispatch, lazy, SetStateAction } from "react";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerWordContent from "./DrawerContent/DrawerWordContent";
 
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
 const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
@@ -68,8 +69,9 @@ export default function Drawer() {
       {drawer.type === "mention" ? <DrawerMentionContent /> : null}
       {drawer.type === "screens" ? <DrawerScreensContent /> : null}
       {drawer.type === "sections" ? <DrawerSectionContent /> : null}
-      {drawer.type === "dictionaries" ? <DrawerDictionaryContent /> : null}
       {drawer.type === "cards" ? <DrawerCardContent /> : null}
+      {drawer.type === "dictionaries" ? <DrawerDictionaryContent /> : null}
+      {drawer.type === "words" ? <DrawerWordContent /> : null}
     </PrimeDrawer>
   );
 }

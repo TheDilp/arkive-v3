@@ -9,6 +9,7 @@ const DictionaryView = lazy(() => import("../DictionaryView/DictionaryView"));
 
 export default function ContentView() {
   const { type } = useParams();
+  console.log(type);
   if (type === "documents") return <Editor editable />;
   if (type === "maps") return <MapView />;
   if (type === "boards") return <BoardView />;

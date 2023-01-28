@@ -1,12 +1,11 @@
 import { DragLayerMonitorProps, NodeModel, PlaceholderRenderParams, Tree } from "@minoru/react-dnd-treeview";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
+import { useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
@@ -44,8 +43,7 @@ function Placeholder(args: PlaceholderRenderParams) {
 
 export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
-  const queryClient = useQueryClient();
-  const items: AllItemsType[] | undefined = queryClient.getQueryData(["allItems", project_id, type]);
+  const { data: items } = useGetAllItems<AllItemsType>(project_id as string, type);
   const updateItemMutation = useUpdateItem<DocumentType>(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
   const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);

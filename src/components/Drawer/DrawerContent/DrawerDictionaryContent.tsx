@@ -31,7 +31,6 @@ export default function DrawerDictionaryContent() {
       project_id: project_id as string,
     },
   );
-  console.log(localItem);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   useEffect(() => {

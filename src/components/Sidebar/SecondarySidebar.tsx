@@ -1,5 +1,4 @@
 import { useAtom } from "jotai";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Sidebar as PrimeSidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
 import { useLocation } from "react-router-dom";
@@ -64,9 +63,7 @@ function SidebarContent() {
   // if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-900">TIMELINES</div>;
 }
 
-export default function SecondarySidebar({ isLoading }: { isLoading: boolean }) {
-  const { pathname } = useLocation();
-  if (!pathname.includes("settings") && isLoading) return <ProgressSpinner />;
+export default function SecondarySidebar() {
   return (
     <SidebarContainer>
       <SidebarContent />

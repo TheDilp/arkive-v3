@@ -5,8 +5,12 @@ export type WordType = {
   id: string;
   title: string;
   translation: string;
-  language: DictionaryType;
+  dictionary: DictionaryType;
+  parentId: string;
 };
+export type DefaultWordType = Pick<WordType, "title" | "parentId">;
+
+export type WordCreateType = Partial<Omit<WordType, "parentId">>;
 
 export interface DictionaryType extends BaseItemType {
   words: WordType[];

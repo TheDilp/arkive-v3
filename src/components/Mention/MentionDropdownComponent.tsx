@@ -1,90 +1,96 @@
-import { MentionAtomPopupComponent, MentionState } from "@remirror/react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { FloatingWrapper, useMentionAtom } from "@remirror/react";
+import { useQuery } from "@tanstack/react-query";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { BoardType } from "../../types/ItemTypes/boardTypes";
-import { DocumentType } from "../../types/ItemTypes/documentTypes";
-import { MapType } from "../../types/ItemTypes/mapTypes";
+import { baseURLS } from "../../types/CRUDenums";
+import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 
 export default function MentionDropdownComponent() {
-  const [mentionState, setMentionState] = useState<MentionState | null>();
-  const queryClient = useQueryClient();
-  // const {data: words, isFetching} = useQuery([""])
   const { project_id } = useParams();
+  const [options, setOptions] = useState<{ id: string; label: string; displayLabel?: string }[]>([]);
 
-  const items = useMemo(() => {
-    if (!mentionState) {
+  const { state, getMenuProps, getItemProps, indexIsHovered, indexIsSelected } = useMentionAtom({
+    items: options,
+  });
+
+  const enabled = Boolean(!!state?.name && state?.query?.full?.length && state.query.full.length > 0);
+
+  const { data: items, isFetching } = useQuery<
+    { id: string; title: string; translation?: string }[],
+    unknown,
+    { id: string; label: string; displayLabel?: string }[]
+  >(
+    ["mentionItems", project_id, state?.name],
+    async () => {
+      if (state)
+        return FetchFunction({
+          url: `${baseURLS.baseServer}search`,
+          method: "POST",
+          body: JSON.stringify({
+            project_id,
+            query: state?.query?.full,
+            type: state?.name,
+          }),
+        });
       return [];
+    },
+    {
+      enabled,
+      select: (res) => {
+        return res.map((item) => {
+          if (item?.translation) return { id: item.id, label: item.title, displayLabel: `${item.title} (${item.translation})` };
+          return { id: item.id, label: item.title };
+        });
+      },
+      onSuccess: (data) => {
+        setOptions(data);
+      },
+    },
+  );
+
+  useEffect(() => {
+    if (!state) {
+      return;
     }
-    const query = mentionState.query.full.toLowerCase() ?? "";
-    if (mentionState.name === "documents") {
-      const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
-      const only_documents = documents?.filter((doc) => !doc.folder && !doc.template) ?? [];
-      const document_titles = only_documents.map((doc) => ({
-        id: doc.id,
-        label: doc.title,
-      }));
 
-      const alter_names = only_documents
-        .filter((doc) => doc.alter_names)
-        .map((doc) => {
-          return doc.alter_names.map((name, index) => ({
-            id: `alter-${index} ${doc.id}`,
-            label: name,
-            test: "TEST",
-          }));
-        })
-        .flat();
-      const documentItems = [...document_titles, ...alter_names];
+    const searchTerm = state.query.full.toLowerCase();
 
-      return documentItems
-        .filter((item) => item.label.toLowerCase().includes(query))
-        .slice(0, 5)
-        .sort();
-    }
-    if (mentionState.name === "maps") {
-      const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
-      const mapItems = (maps?.filter((map) => !map.folder) ?? []).map((map) => ({
-        id: map.id,
-        label: map.title,
-      }));
-      return mapItems
-        .filter((item) => item.label.toLowerCase().includes(query))
-        .slice(0, 5)
-        .sort();
-    }
-    if (mentionState.name === "boards") {
-      const boards: BoardType[] | undefined = queryClient.getQueryData(["allItems", project_id, "boards"]);
+    const filteredOptions = (items || [])
+      .filter((item) => item.label.toLowerCase().includes(searchTerm))
+      .sort()
+      .slice(0, 5);
 
-      const boardItems = (boards?.filter((board) => !board.folder) ?? []).map((board) => ({
-        id: board.id,
-        label: board.title,
-      }));
+    setOptions(filteredOptions);
+  }, [state]);
 
-      return boardItems
-        .filter((item) => item.label.toLowerCase().includes(query))
-        .slice(0, 5)
-        .sort();
-    }
-    // if (mentionState.name === "dictionary") {
-    //   const languages = [
-    //     { title: "Elvish", words: [{ word: "Maat", translation: "Order" }] },
-    //     { title: "Old Imperial", words: [{ word: "Pheagon", translation: "Protector" }] },
-    //   ];
-
-    //   // const languageItems = languages?.map(lang => ({...lang}))?.map((lang) => ({
-    //   //   id: board.id,
-    //   //   label: `${}`
-    //   // }));
-
-    //   return boardItems
-    //     .filter((item) => item.label.toLowerCase().includes(query))
-    //     .slice(0, 5)
-    //     .sort();
-    // }
-
-    return [];
-  }, [mentionState]);
-  return <MentionAtomPopupComponent focusOnClick={false} items={items} onChange={setMentionState} />;
+  return (
+    <FloatingWrapper
+      containerClass="commandMenu"
+      enabled={Boolean(state)}
+      placement="auto-end"
+      positioner="always"
+      renderOutsideEditor>
+      <ul
+        className="remirror-mention-atom-popup-wrapper z-50 max-h-60 w-[12rem] min-w-[12rem] overflow-y-auto p-0"
+        {...getMenuProps()}>
+        {isFetching ? <ProgressSpinner /> : null}
+        {!isFetching
+          ? (items || []).map((item, index) => {
+              return (
+                <li
+                  key={item.id}
+                  className={`remirror-mention-atom-popup-item flex w-[12rem] items-center justify-between ${
+                    indexIsSelected(index) ? "remirror-mention-atom-popup-highlight" : ""
+                  } ${indexIsHovered(index) ? "remirror-mention-atom-popup-highlight" : ""}`}
+                  {...getItemProps({ item, index })}>
+                  {item?.displayLabel || item.label}
+                </li>
+              );
+            })
+          : null}
+      </ul>
+    </FloatingWrapper>
+  );
 }

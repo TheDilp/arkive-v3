@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
-import { TagCreateType, TagSettingsType, TagType, TagUpdateType } from "../types/generalTypes";
+import { AvailableItemTypes, TagCreateType, TagSettingsType, TagType, TagUpdateType } from "../types/generalTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -22,6 +22,16 @@ export const useFullSearch = (project_id: string) => {
       method: "POST",
       body: JSON.stringify({ query }),
     }),
+  );
+};
+export const useItemsSearch = () => {
+  return useMutation(
+    async ({ query, type, project_id }: { query: string | string[]; type: AvailableItemTypes | "words"; project_id: string }) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}search`,
+        method: "POST",
+        body: JSON.stringify({ query, type, project_id }),
+      }),
   );
 };
 

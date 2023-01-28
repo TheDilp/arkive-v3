@@ -17,7 +17,7 @@ export default function ScreensTree() {
   const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">
-      <h2 className="h-8 text-center font-Lato text-2xl">Screens</h2>
+      <h2 className="h-8 text-center font-Merriweather text-2xl">Screens</h2>
 
       <div className="mt-4 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2">
         <Button
