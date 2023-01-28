@@ -11,8 +11,8 @@ import {
   useUpdateItem,
   useUpdateManySubItems,
 } from "../CRUD/ItemsCRUD";
-import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/ItemTypes/boardTypes";
 import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
+import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/ItemTypes/boardTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom, MentionContextAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
@@ -565,6 +565,59 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
     ];
 
     return boardItems;
+  }
+  if (cmType.type === "screens") {
+    const screenItems = [
+      {
+        label: "Update Screen",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "screens",
+            });
+        },
+      },
+      // {
+      //   label: "Toggle Public",
+      //   icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data) {
+      //       updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+      //     }
+      //   },
+      // },
+
+      { separator: true },
+      // {
+      //   label: "View Public Screen",
+      //   icon: "pi pi-fw pi-external-link",
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+      //       toaster("warning", "Screen is set to private.");
+      //       return;
+      //     }
+      //     if (cmType.data?.id) navigate(`/view/screens/${cmType.data?.id}`);
+      //   },
+      // },
+      // {
+      //   label: "Copy Public URL",
+      //   icon: "pi pi-fw pi-link",
+      // },
+      {
+        label: "Delete Map",
+        icon: "pi pi-fw pi-trash",
+        command: () =>
+          deleteItem("Are you sure you want to delete this map?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+    return screenItems;
   }
   const rootItems = [
     {

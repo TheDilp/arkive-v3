@@ -36,40 +36,6 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
             ))
           : null}
       </div>
-
-      {/* <div ref={parentRef} className="h-[90%] w-full overflow-auto">
-
-// USE THIS TO ACCESS INDIVIDUAL ITEM
-      [virtualRow.index * count + virtualColumn.index]
-        <div
-          className="flex w-full gap-1"
-          style={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
-            width: `${columnVirtualizer.getTotalSize()}px`,
-            position: "relative",
-          }}>
-          {rowVirtualizer.getVirtualItems().map((virtualRow) => (
-            <div key={virtualRow.index}>
-              {columnVirtualizer.getVirtualItems().map((virtualColumn) => (
-                <div
-                  key={virtualColumn.index}
-                  className={` 
-                flex justify-center`}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: `${virtualColumn.size}px`,
-                    height: `${virtualRow.size}px`,
-                    transform: `translateX(${virtualColumn.start}px) translateY(${virtualRow.start}px)`,
-                  }}>
-                 
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 }

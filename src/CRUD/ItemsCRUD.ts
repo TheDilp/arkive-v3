@@ -178,7 +178,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
   return useMutation(
     async (updateItemValues: Partial<SubItemType>) => {
       if (updateItemValues.id) {
-        const url = updateURL(updateItemValues.id, subType);
+        const url = updateURL(subType);
         if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
       }
       return null;

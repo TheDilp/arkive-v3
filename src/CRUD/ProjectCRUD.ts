@@ -41,7 +41,7 @@ export const useUpdateProject = () => {
   return useMutation(
     async (variables: Partial<ProjectType>) =>
       FetchFunction({
-        url: `${baseURLS.baseServer}${updateURLs.updateProject}${variables.id}`,
+        url: `${baseURLS.baseServer}${updateURLs.updateProject}`,
         method: "POST",
         body: JSON.stringify(variables),
       }),
