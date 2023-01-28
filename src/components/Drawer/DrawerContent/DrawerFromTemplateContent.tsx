@@ -45,12 +45,16 @@ export default function DrawerFromTemplateContent() {
             loading={createDocumentMutation.isLoading}
             onClick={() => {
               const template = allDocuments?.find((doc) => doc.id === selectedTemplate);
-              createDocumentMutation?.mutate({
-                ...template,
-                id: crypto.randomUUID(),
-                project_id: project_id as string,
-                template: false,
-              });
+              if (template) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { parent, ...rest } = template;
+                createDocumentMutation?.mutate({
+                  ...rest,
+                  id: crypto.randomUUID(),
+                  project_id: project_id as string,
+                  template: false,
+                });
+              }
             }}
             type="submit">
             {buttonLabelWithIcon("Save", "mdi:content-save")}
