@@ -1,9 +1,9 @@
+import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
-import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { MapType } from "../../types/ItemTypes/mapTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -13,17 +13,16 @@ export default function MapsTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const createMapMutation = useCreateItem<MapType>("maps");
-  const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">
       <h2 className="h-8 text-center font-Lato text-2xl">Maps</h2>
 
-      <div className="mt-4 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 ">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
           iconPos="right"
-          label={isMd ? "" : "New Folder"}
+          label="New Folder"
           onClick={() => {
             createMapMutation?.mutate({
               folder: true,
@@ -34,9 +33,6 @@ export default function MapsTree() {
         />
         <Button
           className="p-button-outlined w-full truncate"
-          icon="pi pi-map"
-          iconPos="right"
-          label={isMd ? "" : "New Map"}
           onClick={() => {
             setDrawer({
               ...DefaultDrawer,
@@ -44,8 +40,14 @@ export default function MapsTree() {
               show: true,
               type: "maps",
             });
-          }}
-        />
+          }}>
+          <div className="flex w-full items-center justify-center gap-x-1">
+            <div className="w-full">New Map</div>
+            <div className="ml-auto">
+              <Icon className="" fontSize={20} icon="mdi:map-outline" />
+            </div>
+          </div>
+        </Button>
       </div>
 
       <BaseTree type="maps" />

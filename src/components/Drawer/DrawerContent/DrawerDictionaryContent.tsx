@@ -23,7 +23,7 @@ export default function DrawerDictionaryContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createDictionaryMutation = useCreateItem<DictionaryType>("dictionaries");
   const updateDictionaryMutation = useUpdateItem<DictionaryType>("dictionaries", project_id as string);
-  const deleteDictionaryMutaiton = useDeleteItem("dictionaries", project_id as string);
+  const deleteDictionaryMutation = useDeleteItem("dictionaries", project_id as string);
   const allDictionaries = queryClient.getQueryData<DictionaryType[]>(["allItems", project_id, "dictionaries"]);
   const dictionary = allDictionaries?.find((dict) => dict.id === drawer.id);
   const [localItem, setLocalItem] = useState<DictionaryType | DictionaryCreateType>(
@@ -59,7 +59,7 @@ export default function DrawerDictionaryContent() {
               dictionary,
               localItem,
               changedData,
-              "screens",
+              "dictionaries",
               project_id as string,
               queryClient,
               DefaultScreen,
@@ -71,7 +71,7 @@ export default function DrawerDictionaryContent() {
             );
           }
         }}
-        placeholder="Screen Name"
+        placeholder="Dictionary name"
         value={localItem?.title || ""}
       />
 
@@ -83,7 +83,7 @@ export default function DrawerDictionaryContent() {
             dictionary,
             localItem,
             changedData,
-            "screens",
+            "dictionaries",
             project_id as string,
             queryClient,
             DefaultScreen,
@@ -101,15 +101,15 @@ export default function DrawerDictionaryContent() {
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"
-            loading={deleteDictionaryMutaiton.isLoading}
+            loading={deleteDictionaryMutation.isLoading}
             onClick={() => {
               if (dictionary)
                 deleteItem(
                   dictionary.folder
                     ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
-                    : "Are you sure you want to delete this screen?",
+                    : "Are you sure you want to delete this dictionaries?",
                   () => {
-                    deleteDictionaryMutaiton?.mutate(dictionary.id, {
+                    deleteDictionaryMutation?.mutate(dictionary.id, {
                       onSuccess: () => {
                         handleCloseDrawer(setDrawer, "right");
                       },

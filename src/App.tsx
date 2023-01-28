@@ -18,7 +18,7 @@ import Layout from "./components/Layout/Layout";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import ContentView from "./pages/ContentView/ContentView";
 import Dashboard from "./pages/Dashboard";
-// const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
+
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const Signup = lazy(() => import("./pages/Auth/Signup"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));

@@ -2,24 +2,26 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, lazy, SetStateAction } from "react";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import DrawerBoardContent from "./DrawerContent/DrawerBoardContent";
-import DrawerBulkBoardEdit from "./DrawerContent/DrawerBulkBoardEdit";
-import DrawerCardContent from "./DrawerContent/DrawerCardContent";
-import DrawerDocumentContent from "./DrawerContent/DrawerDocumentContent";
-import DrawerEdgeContent from "./DrawerContent/DrawerEdgeContent";
-import DrawerFromTemplateContent from "./DrawerContent/DrawerFromTemplateContent";
-import DrawerFullSearch from "./DrawerContent/DrawerFullSearch";
-import DrawerMapContent from "./DrawerContent/DrawerMapContent";
-import DrawerMapPinContent from "./DrawerContent/DrawerMapPinContent";
-import DrawerMentionContent from "./DrawerContent/DrawerMentionContent";
-import DrawerNodeContent from "./DrawerContent/DrawerNodeContent";
-import DrawerScreensContent from "./DrawerContent/DrawerScreensContent";
-import DrawerSectionContent from "./DrawerContent/DrawerSectionContent";
+
+const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
+const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
+const DrawerCardContent = lazy(() => import("./DrawerContent/DrawerCardContent"));
+const DrawerDictionaryContent = lazy(() => import("./DrawerContent/DrawerDictionaryContent"));
+const DrawerDocumentContent = lazy(() => import("./DrawerContent/DrawerDocumentContent"));
+const DrawerEdgeContent = lazy(() => import("./DrawerContent/DrawerEdgeContent"));
+const DrawerFromTemplateContent = lazy(() => import("./DrawerContent/DrawerFromTemplateContent"));
+const DrawerFullSearch = lazy(() => import("./DrawerContent/DrawerFullSearch"));
+const DrawerMapContent = lazy(() => import("./DrawerContent/DrawerMapContent"));
+const DrawerMapPinContent = lazy(() => import("./DrawerContent/DrawerMapPinContent"));
+const DrawerMentionContent = lazy(() => import("./DrawerContent/DrawerMentionContent"));
+const DrawerNodeContent = lazy(() => import("./DrawerContent/DrawerNodeContent"));
+const DrawerScreensContent = lazy(() => import("./DrawerContent/DrawerScreensContent"));
+const DrawerSectionContent = lazy(() => import("./DrawerContent/DrawerSectionContent"));
 
 export function handleCloseDrawer(
   setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,
@@ -66,6 +68,7 @@ export default function Drawer() {
       {drawer.type === "mention" ? <DrawerMentionContent /> : null}
       {drawer.type === "screens" ? <DrawerScreensContent /> : null}
       {drawer.type === "sections" ? <DrawerSectionContent /> : null}
+      {drawer.type === "dictionaries" ? <DrawerDictionaryContent /> : null}
       {drawer.type === "cards" ? <DrawerCardContent /> : null}
     </PrimeDrawer>
   );
