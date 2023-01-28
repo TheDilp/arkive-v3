@@ -1,9 +1,9 @@
 import { Icon } from "@iconify/react";
 import { ColorPickerValueType } from "primereact/colorpicker";
 
+import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
 import { BoardType, EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
 import { DocumentType } from "../types/ItemTypes/documentTypes";
-import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
 import { MapPinType, MapType } from "../types/ItemTypes/mapTypes";
 import { ScreenType, SectionType } from "../types/ItemTypes/screenTypes";
 
@@ -19,6 +19,7 @@ export function getItemTypeFromURL(pathname: string) {
   if (pathname.includes("maps")) return "maps";
   if (pathname.includes("boards")) return "boards";
   if (pathname.includes("screens")) return "screens";
+  if (pathname.includes("dictionaries")) return "dictionaries";
   return "documents";
 }
 export function getIcon(type: AvailableItemTypes, item: AllItemsType) {

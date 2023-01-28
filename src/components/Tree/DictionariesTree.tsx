@@ -52,7 +52,7 @@ export default function DictionariesTree() {
         </Button>
       </div>
 
-      <BaseTree type="screens" />
+      <BaseTree type="dictionaries" />
     </div>
   );
 }

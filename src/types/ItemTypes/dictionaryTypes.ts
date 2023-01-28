@@ -11,3 +11,7 @@ export type WordType = {
 export interface DictionaryType extends BaseItemType {
   words: WordType[];
 }
+
+export type DictionaryCreateType = Partial<Omit<DictionaryType, "project_id">>;
+
+export type DefaultDictionaryType = Pick<DictionaryType, "title" | "project_id">;

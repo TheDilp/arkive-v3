@@ -1,5 +1,5 @@
-import { DocumentType } from "./documentTypes";
 import { BaseItemType } from "../generalTypes";
+import { DocumentType } from "./documentTypes";
 
 export type CardType = {
   id: string;
