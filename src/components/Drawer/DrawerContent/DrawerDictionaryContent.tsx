@@ -12,7 +12,6 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDictionary } from "../../../utils/DefaultValues/DictionaryDefaults";
-import { DefaultScreen } from "../../../utils/DefaultValues/ScreenDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
@@ -32,7 +31,7 @@ export default function DrawerDictionaryContent() {
       project_id: project_id as string,
     },
   );
-
+  console.log(localItem);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   useEffect(() => {
@@ -62,7 +61,7 @@ export default function DrawerDictionaryContent() {
               "dictionaries",
               project_id as string,
               queryClient,
-              DefaultScreen,
+              DefaultDictionary,
               allDictionaries,
               resetChanges,
               createDictionaryMutation.mutateAsync,
@@ -86,7 +85,7 @@ export default function DrawerDictionaryContent() {
             "dictionaries",
             project_id as string,
             queryClient,
-            DefaultScreen,
+            DefaultDictionary,
             allDictionaries,
             resetChanges,
             createDictionaryMutation.mutateAsync,
