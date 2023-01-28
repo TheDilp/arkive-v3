@@ -220,6 +220,13 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
           }
+          if (type === "dictionaries" && subType === "words" && "words" in oldData) {
+            const updatedData = (oldData[subType] || []).map((subItem) => {
+              if (subItem.id === variables.id) return { ...subItem, ...variables };
+              return subItem;
+            });
+            queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
+          }
         }
 
         return { oldData };
