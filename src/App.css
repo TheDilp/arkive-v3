@@ -21,7 +21,9 @@
 .p-tabview-nav {
   @apply h-14 !important;
 }
-
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+  @apply bg-transparent !important;
+}
 .p-tabview-panels {
   @apply h-12 flex-1 p-0 !important;
 }

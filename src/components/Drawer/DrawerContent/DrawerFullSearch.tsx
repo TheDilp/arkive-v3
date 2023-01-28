@@ -38,7 +38,7 @@ export default function DrawerFullSearch() {
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
   const [, setDrawer] = useAtom(DrawerAtom);
   const { project_id, subitem_id } = useParams();
-  const { mutate: searchMutation } = useFullSearch(project_id as string);
+  const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
   const { data: allTags } = useGetAllTags(project_id as string);
 
   const debounceSearch = useDebouncedCallback((searchQuery: string | TagType[], type: "namecontent" | "tags") => {
@@ -65,9 +65,10 @@ export default function DrawerFullSearch() {
     } else setResults(SearchDefault);
   }, 500);
 
-  const debounceTags = useDebouncedCallback(async (tagsQuery: string) => {
+  const debounceTags = useDebouncedCallback((tagsQuery: string) => {
     const t = allTags?.filter((tag) => tag.title.toLowerCase().includes(tagsQuery.toLowerCase()));
     if (t && t.length) setFilteredTags(t);
+    else setFilteredTags([]);
   }, 500);
   return (
     <div className="flex flex-col gap-y-4">
@@ -80,22 +81,27 @@ export default function DrawerFullSearch() {
         {menuIndex === 0 ? (
           <div>
             <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
-            <InputText
-              autoFocus
-              className="w-full"
-              onChange={(e) => {
-                setQuery(e.target.value);
-                debounceSearch(e.target.value, "namecontent");
-              }}
-              placeholder="Enter at least 3 characters"
-              value={query}
-            />
+
+            <span className="p-input-icon-right w-full">
+              {isSearching ? <i className="pi pi-spin pi-spinner" /> : null}
+              <InputText
+                autoFocus
+                className="w-full"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  debounceSearch(e.target.value, "namecontent");
+                }}
+                placeholder="Enter at least 3 characters"
+                value={query}
+              />
+            </span>
           </div>
         ) : null}
         {menuIndex === 1 ? (
           <div className="flex w-full flex-col">
             <h2 className="w-full text-center font-Lato text-2xl">Search by Tag</h2>
             <AutoComplete
+              autoFocus
               className="w-full"
               completeMethod={(e) => debounceTags(e.query)}
               field="title"
@@ -108,6 +114,7 @@ export default function DrawerFullSearch() {
                   "tags",
                 )
               }
+              placeholder="Search by tag"
               suggestions={filteredTags}
               value={tags}
             />

@@ -4,7 +4,6 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import { Dispatch, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { useGetItem } from "../../hooks/useGetItem";
 import { AllItemsType, AvailableItemTypes, BreadcrumbsType } from "../../types/generalTypes";
 
 export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
@@ -12,9 +11,7 @@ export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
   const queryClient = useQueryClient();
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsType>([]);
   const data: AllItemsType[] | undefined = queryClient.getQueryData(["allItems", project_id, type]);
-  const { data: currentItem } = useGetItem(item_id as string, type, { enabled: !!item_id }) as {
-    data: AllItemsType;
-  };
+  const currentItem = data?.find((item) => item.id === item_id);
   const navigate = useNavigate();
   function recursiveFindParents(
     parent_id: string | null,
@@ -62,7 +59,7 @@ export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
         setBreadcrumbs([]);
       }
     }
-  }, [item_id, currentItem]);
+  }, [item_id, currentItem, data]);
 
   return (
     <BreadCrumb

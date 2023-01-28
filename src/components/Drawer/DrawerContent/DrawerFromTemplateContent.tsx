@@ -3,7 +3,6 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { v4 } from "uuid";
 
 import { useCreateItem } from "../../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
@@ -13,8 +12,8 @@ export default function DrawerFromTemplateContent() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const [selectedTemplate, setSelectedTemplate] = useState("");
-  const allDocuments: DocumentType[] | undefined = queryClient.getQueryData(["allitems", project_id, "documents"]);
-  const createDocumentMutation = useCreateItem("documents");
+  const allDocuments: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id, "documents"]);
+  const createDocumentMutation = useCreateItem<DocumentType>("documents");
 
   function DropdownFilter(doc: DocumentType) {
     if (doc.template) return true;
@@ -42,12 +41,13 @@ export default function DrawerFromTemplateContent() {
 
         <div className="flex w-full justify-between">
           <Button
-            className="p-button-outlined p-button-success ml-auto"
+            className="p-button-outlined p-button-success w-full"
+            loading={createDocumentMutation.isLoading}
             onClick={() => {
               const template = allDocuments?.find((doc) => doc.id === selectedTemplate);
               createDocumentMutation?.mutate({
                 ...template,
-                id: v4(),
+                id: crypto.randomUUID(),
                 project_id: project_id as string,
                 template: false,
               });
