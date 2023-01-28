@@ -7,10 +7,11 @@ import { removeKeys } from "../../utils/transform";
 import BoardMention from "../Mention/BoardMention";
 import DocumentMention from "../Mention/DocumentMention";
 import MapMention from "../Mention/MapMention";
+import WordMention from "../Mention/WordMention";
 
 export type MarkMap = Partial<Record<string, string | ComponentType<any>>>;
 
-const typeMap = (project_id: string, isPublic: boolean): MarkMap => ({
+const typeMap = (project_id: string): MarkMap => ({
   bulletList: "ul",
   doc: Doc,
   hardBreak: "br",
@@ -29,15 +30,13 @@ const typeMap = (project_id: string, isPublic: boolean): MarkMap => ({
       const { attrs } = props[0].node;
       if (attrs) {
         const { id, label, name: type } = attrs;
-        if (type === "documents") {
-          return <DocumentMention id={id} isPublic={isPublic} label={label} project_id={project_id} title={label} />;
-        }
-        if (type === "maps") {
-          return <MapMention isPublic={isPublic} nodeId={id} nodeLabel={label} project_id={project_id} />;
-        }
-        if (type === "boards") {
-          return <BoardMention isPublic={isPublic} nodeId={id} nodeLabel={label} project_id={project_id} />;
-        }
+        if (type === "documents") return <DocumentMention id={id} label={label} project_id={project_id} title={label} />;
+
+        if (type === "maps") return <MapMention nodeId={id} nodeLabel={label} project_id={project_id} />;
+
+        if (type === "boards") return <BoardMention nodeId={id} nodeLabel={label} project_id={project_id} />;
+        if (type === "words") return <WordMention id={id} label={label} title={label} />;
+
         return (
           <Link className="font-Lato text-sm font-bold text-white underline" to={`../../${type}/${id}`}>
             {label}
@@ -57,17 +56,13 @@ const markMap: MarkMap = {
   link: "a",
 };
 
-export default function StaticRender({ content, isPublic = true }: { content: RemirrorJSON; isPublic?: boolean }) {
+export default function StaticRender({ content }: { content: RemirrorJSON }) {
   const { project_id } = useParams();
 
   const parsedContent = removeKeys(content, ["style", "resizable"]);
   return (
     <div className="staticRendererContainer">
-      <RemirrorRenderer
-        json={parsedContent as RemirrorJSON}
-        markMap={markMap}
-        typeMap={typeMap(project_id as string, isPublic)}
-      />
+      <RemirrorRenderer json={parsedContent as RemirrorJSON} markMap={markMap} typeMap={typeMap(project_id as string)} />
     </div>
   );
 }

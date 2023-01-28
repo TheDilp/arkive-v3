@@ -4,6 +4,7 @@ import { BaseItemType } from "../generalTypes";
 export type WordType = {
   id: string;
   title: string;
+  description?: string;
   translation: string;
   dictionary: DictionaryType;
   parentId: string;

@@ -134,6 +134,8 @@ export default function DrawerBoardContent() {
 
       <Button
         className="p-button-outlined p-button-success ml-auto"
+        disabled={createBoardMutation.isLoading || updateBoardMutation.isLoading}
+        loading={createBoardMutation.isLoading || updateBoardMutation.isLoading}
         onClick={async () =>
           createUpdateItem<BoardType>(
             board,

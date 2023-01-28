@@ -22,9 +22,9 @@ export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title"
   const { data, isLoading } = useQuery({
     queryKey: ["documents", id],
     queryFn: async () => {
-      const url = getSingleURL("documents", id as string);
+      const url = getSingleURL("documents");
       if (url) {
-        return FetchFunction({ url, method: "GET" });
+        return FetchFunction({ url, method: "POST", body: JSON.stringify({ id }) });
       }
 
       return null;

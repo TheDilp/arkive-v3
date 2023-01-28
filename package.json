@@ -20,7 +20,6 @@
     "@tanstack/react-query": "^4.19.0",
     "@tanstack/react-virtual": "3.0.0-beta.32",
     "concurrently": "^7.6.0",
-    "css-box-model": "^1.2.1",
     "cytoscape": "^3.23.0",
     "cytoscape-edgehandles": "^4.0.1",
     "cytoscape-grid-guide": "^2.3.3",

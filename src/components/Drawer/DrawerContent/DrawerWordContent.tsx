@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -109,6 +110,16 @@ export default function DrawerWordContent() {
         }}
         placeholder="Word translation"
         value={localItem?.translation || ""}
+      />
+
+      <InputTextarea
+        className="w-full"
+        maxLength={200}
+        name="description"
+        onChange={(e) => handleChange(e.target)}
+        placeholder="Word explanation/context (max 200 characters)"
+        rows={8}
+        value={localItem?.description || ""}
       />
 
       <Button

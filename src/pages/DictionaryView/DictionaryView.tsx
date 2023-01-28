@@ -45,6 +45,7 @@ export default function DictionaryView() {
           headerClassName="text-lg font-Merriweather"
         />
         <Column field="translation" header="Translation" headerClassName="text-lg font-Merriweather" />
+        <Column field="description" header="Description" headerClassName="text-lg font-Merriweather" />
       </DataTable>
     </div>
   );

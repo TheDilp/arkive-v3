@@ -1,8 +1,9 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { Dispatch, lazy, SetStateAction } from "react";
+import { Dispatch, lazy, SetStateAction, Suspense } from "react";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -57,21 +58,23 @@ export default function Drawer() {
       position={drawer.position}
       showCloseIcon={false}
       visible={drawer.show}>
-      {drawer.type === "documents" && !drawer.exceptions?.fromTemplate ? <DrawerDocumentContent /> : null}
-      {drawer.type === "documents" && drawer.exceptions?.fromTemplate ? <DrawerFromTemplateContent /> : null}
-      {drawer.type === "maps" ? <DrawerMapContent /> : null}
-      {drawer.type === "map_pins" ? <DrawerMapPinContent /> : null}
-      {drawer.type === "boards" ? <DrawerBoardContent /> : null}
-      {drawer.type === "nodes" ? <DrawerNodeContent /> : null}
-      {drawer.type === "edges" ? <DrawerEdgeContent /> : null}
-      {drawer.type === "many_nodes" || drawer.type === "many_edges" ? <DrawerBulkBoardEdit /> : null}
-      {drawer.type === "full_search" ? <DrawerFullSearch /> : null}
-      {drawer.type === "mention" ? <DrawerMentionContent /> : null}
-      {drawer.type === "screens" ? <DrawerScreensContent /> : null}
-      {drawer.type === "sections" ? <DrawerSectionContent /> : null}
-      {drawer.type === "cards" ? <DrawerCardContent /> : null}
-      {drawer.type === "dictionaries" ? <DrawerDictionaryContent /> : null}
-      {drawer.type === "words" ? <DrawerWordContent /> : null}
+      <Suspense fallback={<ProgressSpinner />}>
+        {drawer.type === "documents" && !drawer.exceptions?.fromTemplate ? <DrawerDocumentContent /> : null}
+        {drawer.type === "documents" && drawer.exceptions?.fromTemplate ? <DrawerFromTemplateContent /> : null}
+        {drawer.type === "maps" ? <DrawerMapContent /> : null}
+        {drawer.type === "map_pins" ? <DrawerMapPinContent /> : null}
+        {drawer.type === "boards" ? <DrawerBoardContent /> : null}
+        {drawer.type === "nodes" ? <DrawerNodeContent /> : null}
+        {drawer.type === "edges" ? <DrawerEdgeContent /> : null}
+        {drawer.type === "many_nodes" || drawer.type === "many_edges" ? <DrawerBulkBoardEdit /> : null}
+        {drawer.type === "full_search" ? <DrawerFullSearch /> : null}
+        {drawer.type === "mention" ? <DrawerMentionContent /> : null}
+        {drawer.type === "screens" ? <DrawerScreensContent /> : null}
+        {drawer.type === "sections" ? <DrawerSectionContent /> : null}
+        {drawer.type === "cards" ? <DrawerCardContent /> : null}
+        {drawer.type === "dictionaries" ? <DrawerDictionaryContent /> : null}
+        {drawer.type === "words" ? <DrawerWordContent /> : null}
+      </Suspense>
     </PrimeDrawer>
   );
 }
