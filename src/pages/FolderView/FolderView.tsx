@@ -15,22 +15,24 @@ export default function FolderView() {
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-hidden px-8">
       <Breadcrumbs type={type} />
-      <FolderViewCards
-        items={
-          data
-            ?.filter((item) => {
-              if ("template" in item) {
-                return !item.template;
-              }
-              return true;
-            })
-            ?.filter((item) => {
-              if (item_id) return item.parentId === item_id;
-              return !item.parentId;
-            }) || []
-        }
-        type={type}
-      />
+      {data ? (
+        <FolderViewCards
+          items={
+            (data || [])
+              ?.filter((item) => {
+                if ("template" in item) {
+                  return !item.template;
+                }
+                return true;
+              })
+              ?.filter((item) => {
+                if (item_id) return item.parentId === item_id;
+                return !item.parentId;
+              }) || []
+          }
+          type={type}
+        />
+      ) : null}
     </div>
   );
 }

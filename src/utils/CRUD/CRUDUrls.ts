@@ -2,12 +2,7 @@ import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../../typ
 import { AllAvailableTypes, AvailableItemTypes } from "../../types/generalTypes";
 
 export const getURL = (project_id: string, type: AvailableItemTypes) => {
-  if (type === "documents") return `${baseURLS.baseServer}${getURLS.getAllDocuments}${project_id}`;
-  if (type === "maps") return `${baseURLS.baseServer}${getURLS.getAllMaps}${project_id}`;
-  if (type === "boards") return `${baseURLS.baseServer}${getURLS.getAllBoards}${project_id}`;
-  if (type === "screens") return `${baseURLS.baseServer}${getURLS.getAllScreens}${project_id}`;
-  if (type === "dictionaries") return `${baseURLS.baseServer}${getURLS.getAllDictionaries}${project_id}`;
-  return null;
+  return `${baseURLS.baseServer}getall${type}/${project_id}`;
 };
 export const getSingleURL = (type: AvailableItemTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${getURLS.getSingleDocument}`;
@@ -31,6 +26,7 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "cards") return `${baseURLS.baseServer}${createURLS.createCard}`;
   if (type === "dictionaries") return `${baseURLS.baseServer}${createURLS.createDictionary}`;
   if (type === "words") return `${baseURLS.baseServer}${createURLS.createWord}`;
+  if (type === "calendars") return `${baseURLS.baseServer}${createURLS.createCalendar}`;
   return null;
 };
 export const updateURL = (type: AllAvailableTypes) => {

@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import BoardsTree from "../Tree/BoardsTree";
+import CalendarsTree from "../Tree/CalendarsTree";
 import DictionariesTree from "../Tree/DictionariesTree";
 import DocumentsTree from "../Tree/DocumentsTree";
 import MapsTree from "../Tree/MapsTree";
@@ -57,6 +58,7 @@ function SidebarContent() {
       {pathname.includes("boards") ? <BoardsTree /> : null}
       {pathname.includes("screens") ? <ScreensTree /> : null}
       {pathname.includes("dictionaries") ? <DictionariesTree /> : null}
+      {pathname.includes("calendars") ? <CalendarsTree /> : null}
     </div>
   );
 

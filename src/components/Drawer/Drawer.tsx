@@ -8,6 +8,7 @@ import { Dispatch, lazy, SetStateAction, Suspense } from "react";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerCalendarContent from "./DrawerContent/DrawerCalendarContent";
 
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
 const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
@@ -76,6 +77,7 @@ export default function Drawer() {
         {drawer.type === "dictionaries" ? <DrawerDictionaryContent /> : null}
         {drawer.type === "words" ? <DrawerWordContent /> : null}
         {drawer.type === "insert_word" ? <DrawerInsertWord /> : null}
+        {drawer.type === "calendars" ? <DrawerCalendarContent /> : null}
       </Suspense>
     </PrimeDrawer>
   );

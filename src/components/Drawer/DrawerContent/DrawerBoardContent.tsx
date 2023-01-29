@@ -156,7 +156,7 @@ export default function DrawerBoardContent() {
         {buttonLabelWithIcon("Save", "mdi:content-save")}
       </Button>
       <div className="mt-auto flex w-full">
-        {document ? (
+        {board ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"
             onClick={() => {

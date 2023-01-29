@@ -110,7 +110,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
 
   return (
     <div
-      className="flex h-full flex-col "
+      className="flex h-full flex-col"
       onContextMenu={(e) => {
         setContextMenu({ data: null, type, folder: false, template: true });
         cm?.current?.show(e);
@@ -152,7 +152,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
           container: "list-none max-h-full",
           listItem: "w-full",
           placeholder: "relative",
-          root: "w-full mt-1 flex flex-col px-2 h-[81%] overflow-y-auto",
+          root: "w-full mt-1 flex flex-col h-[81%] overflow-y-auto",
           dropTarget: "bg-zinc-700",
         }}
         dragPreviewRender={DragPreviewComponent}

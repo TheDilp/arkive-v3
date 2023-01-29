@@ -20,6 +20,7 @@ export function getItemTypeFromURL(pathname: string) {
   if (pathname.includes("boards")) return "boards";
   if (pathname.includes("screens")) return "screens";
   if (pathname.includes("dictionaries")) return "dictionaries";
+  if (pathname.includes("calendars")) return "calendars";
   return "documents";
 }
 export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
