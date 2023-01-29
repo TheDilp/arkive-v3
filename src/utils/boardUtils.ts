@@ -454,6 +454,7 @@ export function getNodeImage(node: NodeType) {
   } else if (node.document?.image) {
     image = node.document.image;
   }
+  console.log(node.document);
   if (image !== "") return getImageLink(image);
   return null;
 }
