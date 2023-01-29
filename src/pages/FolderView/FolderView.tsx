@@ -13,7 +13,7 @@ export default function FolderView() {
   const type = getItemTypeFromURL(pathname);
   const { data } = useGetAllItems<AllItemsType>(project_id as string, type);
   return (
-    <div className="flex flex-col gap-4 overflow-hidden px-8">
+    <div className="flex flex-1 flex-col gap-4 overflow-hidden px-8">
       <Breadcrumbs type={type} />
       <FolderViewCards
         items={

@@ -24,6 +24,7 @@ const DrawerNodeContent = lazy(() => import("./DrawerContent/DrawerNodeContent")
 const DrawerScreensContent = lazy(() => import("./DrawerContent/DrawerScreensContent"));
 const DrawerSectionContent = lazy(() => import("./DrawerContent/DrawerSectionContent"));
 const DrawerWordContent = lazy(() => import("./DrawerContent/DrawerWordContent"));
+const DrawerInsertWord = lazy(() => import("./DrawerContent/DrawerInsertWord"));
 
 export function handleCloseDrawer(
   setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,
@@ -74,6 +75,7 @@ export default function Drawer() {
         {drawer.type === "cards" ? <DrawerCardContent /> : null}
         {drawer.type === "dictionaries" ? <DrawerDictionaryContent /> : null}
         {drawer.type === "words" ? <DrawerWordContent /> : null}
+        {drawer.type === "insert_word" ? <DrawerInsertWord /> : null}
       </Suspense>
     </PrimeDrawer>
   );

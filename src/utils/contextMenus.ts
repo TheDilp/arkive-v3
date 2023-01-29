@@ -634,16 +634,33 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
   return rootItems;
 }
 
-export function useMentionMenuItems() {
+export function useEditorMenuItems() {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [mentionContext] = useAtom(MentionContextAtom);
-  return [
+  const finalItems = [
     {
+      command: () => {
+        setDrawer({
+          ...DefaultDrawer,
+          data: mentionContext,
+          position: "right",
+          drawerSize: "sm",
+          show: true,
+          type: "insert_word",
+        });
+      },
+      icon: "pi pi-fw pi-bookmark",
+      label: "Insert from dictionary",
+    },
+  ];
+  if (mentionContext?.data?.id) {
+    finalItems.push({
       command: () => {
         setDrawer({ ...DefaultDrawer, data: mentionContext, position: "right", drawerSize: "lg", show: true, type: "mention" });
       },
       icon: "pi pi-fw pi-book",
       label: "Show in drawer",
-    },
-  ];
+    });
+  }
+  return finalItems;
 }

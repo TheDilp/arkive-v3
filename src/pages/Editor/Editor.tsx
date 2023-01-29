@@ -4,7 +4,7 @@ import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { InvalidContentHandler, RemirrorJSON } from "remirror";
 import { useDebouncedCallback } from "use-debounce";
@@ -19,7 +19,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { EditorType } from "../../types/generalTypes";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { MentionContextAtom } from "../../utils/Atoms/atoms";
-import { useMentionMenuItems } from "../../utils/contextMenus";
+import { useEditorMenuItems } from "../../utils/contextMenus";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
 
@@ -31,8 +31,8 @@ export default function Editor({ content, editable }: EditorType) {
     isLoading: boolean;
   };
   const queryClient = useQueryClient();
-  const cm = useRef();
   const [, setMention] = useAtom(MentionContextAtom);
+  const cm = useRef() as MutableRefObject<any>;
   const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
 
   const onError: InvalidContentHandler = useCallback(({ json, invalidContent, transformers }) => {
@@ -40,7 +40,7 @@ export default function Editor({ content, editable }: EditorType) {
     return transformers.remove(json, invalidContent);
   }, []);
 
-  const { manager, state } = useRemirror({
+  const { manager, state, getContext } = useRemirror({
     content: editable === false ? content || undefined : (currentDocument && currentDocument?.content) || undefined,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -48,7 +48,6 @@ export default function Editor({ content, editable }: EditorType) {
     selection: "start",
     onError,
   });
-
   const debounced = useDebouncedCallback((changedContent: RemirrorJSON, id: string) => {
     updateDocumentMutation?.mutate(
       {
@@ -64,7 +63,7 @@ export default function Editor({ content, editable }: EditorType) {
     debounced(changedContent, doc_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const items = useMentionMenuItems();
+  const items = useEditorMenuItems();
 
   useEffect(() => {
     setMention((prev) => ({ ...prev, cm }));
@@ -94,7 +93,12 @@ export default function Editor({ content, editable }: EditorType) {
     return (
       <div className="flex w-full flex-1">
         <ContextMenu cm={cm} items={items} />
-        <div className={`${editable ? "" : "h-96"}  relative flex w-full flex-col content-start`}>
+        <div
+          className={`${editable ? "" : "h-96"}  relative flex w-full flex-col content-start`}
+          onContextMenu={(e) => {
+            setMention({ cm, data: getContext(), show: false });
+            if (cm.current) cm.current.show(e);
+          }}>
           {editable ? <Breadcrumbs type="documents" /> : null}
           <Remirror
             classNames={[

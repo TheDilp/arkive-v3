@@ -123,6 +123,7 @@ export default function DrawerFullSearch() {
       </div>
 
       <div className="mt-2 flex flex-col gap-y-2 font-Lato">
+        {isSearching ? "Searching..." : null}
         {results && Object.keys(results).length > 0
           ? Object.keys(results).map((key) =>
               Array.isArray(results[key as AvailableSearchResultTypes])
@@ -148,7 +149,7 @@ export default function DrawerFullSearch() {
                   ))
                 : null,
             )
-          : (query && "No items match this query.") || "Type something to search for documents, maps, pins, boards or nodes!"}
+          : (query && "No items match this query.") || ""}
       </div>
     </div>
   );

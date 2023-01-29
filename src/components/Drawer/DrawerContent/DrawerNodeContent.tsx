@@ -104,7 +104,7 @@ export default function DrawerNodeContent() {
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flex w-full flex-1 flex-col gap-y-2 overflow-y-auto">
-        <h2 className="text-center font-Lato text-3xl font-medium">{localItem?.label}</h2>
+        <h2 className="text-center font-Lato text-2xl font-medium">{localItem?.label}</h2>
         <div className="flex w-full flex-col gap-y-2">
           <div className=" w-full">
             <span className="w-full text-sm text-zinc-400">Node shape</span>

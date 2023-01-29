@@ -60,6 +60,7 @@ function App() {
     const auth = getAuth();
 
     onAuthStateChanged(auth, (user) => {
+      if (user) user?.getIdToken();
       if (!user) navigate("/auth/signin");
     });
   }, []);

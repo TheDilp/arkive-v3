@@ -37,7 +37,7 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
   template: false,
 });
 export const MentionContextAtom = atom<{
-  data: null | { id: string };
+  data: null | any;
   cm: any;
   show: boolean;
 }>({
