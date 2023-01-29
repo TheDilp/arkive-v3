@@ -8,6 +8,7 @@ import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { baseURLS, createURLS } from "../../../types/CRUDenums";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { CardType } from "../../../types/ItemTypes/screenTypes";
@@ -25,7 +26,7 @@ export default function DrawerCardContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [loading, setLoading] = useState(false);
   const [selectedDocuments, setSelectedDocuments] = useState<DocumentType[]>([]);
-  const documents = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
+  const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents");
   if (!drawer?.data || !documents) return null;
   return (
     <div className=" flex flex-col gap-y-2">

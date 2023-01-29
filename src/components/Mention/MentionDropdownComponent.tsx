@@ -20,7 +20,7 @@ export default function MentionDropdownComponent() {
   const { data: items, isFetching } = useQuery<
     { id: string; title: string; translation?: string }[],
     unknown,
-    { id: string; label: string; displayLabel?: string }[]
+    { id: string; label: string; searchItem?: string; displayLabel?: string }[]
   >(
     ["mentionItems", project_id, state?.name],
     async () => {
@@ -40,7 +40,13 @@ export default function MentionDropdownComponent() {
       enabled,
       select: (res) => {
         return res.map((item) => {
-          if (item?.translation) return { id: item.id, label: item.title, displayLabel: `${item.title} (${item.translation})` };
+          if (item?.translation)
+            return {
+              id: item.id,
+              searchItem: item.translation,
+              label: item.title,
+              displayLabel: `${item.title} (${item.translation})`,
+            };
           return { id: item.id, label: item.title };
         });
       },
@@ -58,7 +64,9 @@ export default function MentionDropdownComponent() {
     const searchTerm = state.query.full.toLowerCase();
 
     const filteredOptions = (items || [])
-      .filter((item) => item.label.toLowerCase().includes(searchTerm))
+      .filter((item) =>
+        item?.searchItem ? item.searchItem.toLowerCase().includes(searchTerm) : item.label.toLowerCase().includes(searchTerm),
+      )
       .sort()
       .slice(0, 5);
 
@@ -77,7 +85,7 @@ export default function MentionDropdownComponent() {
         {...getMenuProps()}>
         {isFetching ? <ProgressSpinner /> : null}
         {!isFetching
-          ? (items || []).map((item, index) => {
+          ? (options || []).map((item, index) => {
               return (
                 <li
                   key={item.id}
