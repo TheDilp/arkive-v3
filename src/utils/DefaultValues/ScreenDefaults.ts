@@ -9,4 +9,5 @@ export const DefaultSection: DefaultSectionType = {
   id: "",
   parentId: "",
   title: "New Section",
+  expanded: true,
 };
