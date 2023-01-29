@@ -23,6 +23,8 @@ export const getURLS = {
   // Dictionaries
   getAllDictionaries: "getalldictionaries/",
   getSingleDictionary: "getsingledictionary",
+  // Dictionaries
+  getSingleCalendar: "getsinglecalendar",
   // Images
   getAllImages: "getallimages/",
   getSingleImage: "getimage/images/",

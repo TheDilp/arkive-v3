@@ -88,7 +88,7 @@ export default function DrawerCalendarContent() {
       />
 
       <Button
-        className="p-button-outlined p-button-success ml-auto"
+        className="p-button-outlined p-button-success"
         disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
         loading={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
         onClick={async () =>

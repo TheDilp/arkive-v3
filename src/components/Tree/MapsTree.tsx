@@ -17,7 +17,7 @@ export default function MapsTree() {
     <div className="flex h-screen flex-1 flex-col">
       <h2 className="h-8 text-center font-Merriweather text-2xl">Maps</h2>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 ">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-y-2 border-b border-zinc-600 pb-2 ">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"

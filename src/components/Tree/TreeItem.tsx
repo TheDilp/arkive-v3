@@ -123,6 +123,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
               setDrawer({
                 exceptions: {},
                 id: node.id as string,
+                data: node.data,
                 position: "right",
                 show: true,
                 type,

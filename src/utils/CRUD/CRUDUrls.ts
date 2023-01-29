@@ -10,6 +10,7 @@ export const getSingleURL = (type: AvailableItemTypes) => {
   if (type === "boards") return `${baseURLS.baseServer}${getURLS.getSingleBoard}`;
   if (type === "screens") return `${baseURLS.baseServer}${getURLS.getSingleScreen}`;
   if (type === "dictionaries") return `${baseURLS.baseServer}${getURLS.getSingleDictionary}`;
+  if (type === "calendars") return `${baseURLS.baseServer}${getURLS.getSingleCalendar}`;
 
   return null;
 };
@@ -88,9 +89,9 @@ export const deleteManyURL = (type: AllAvailableTypes) => {
 };
 
 export const getImageLink = (image: string) => {
-  return `${baseURLS.baseImageHost}${image}`;
+  return `${image}`;
 };
 
 export const getMapImageLink = (image: string) => {
-  return `${baseURLS.baseImageHost}${image}`;
+  return `${image}`;
 };

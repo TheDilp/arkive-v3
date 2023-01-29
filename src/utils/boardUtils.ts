@@ -449,12 +449,12 @@ export function toModelPosition(boardRef: Core, pos: { x: number; y: number }) {
 }
 export function getNodeImage(node: NodeType) {
   let image = "";
-  if (node.image) {
-    image = node.image;
-  } else if (node.document?.image) {
+  if (node.document?.image) {
     image = node.document.image;
   }
-  console.log(node.document);
+  if (node.image) {
+    image = node.image;
+  }
   if (image !== "") return getImageLink(image);
   return null;
 }
