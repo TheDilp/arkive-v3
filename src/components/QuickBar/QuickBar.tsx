@@ -66,7 +66,7 @@ export default function BoardQuickBar() {
   //   };
   if (!board) return null;
   return (
-    <div className="absolute left-1/2 bottom-0 z-10 flex h-12 w-1/6 items-center justify-around rounded bg-zinc-800 text-white shadow-md">
+    <div className="absolute bottom-0 z-10 flex h-12 w-72 items-center justify-evenly rounded bg-zinc-800 px-2 text-white shadow-md">
       <span>
         <Tooltip autoHide content="Toggle grid display" position="top" target=".drawGrid" />
         <Tooltip autoHide content="Lock selected nodes" position="top" target=".lockSelected" />
@@ -143,18 +143,8 @@ export default function BoardQuickBar() {
         onClick={() => {
           if (boardRef && edgehandles) {
             if (boardState.drawMode) {
-              edgehandles.disable();
-              edgehandles.disableDrawMode();
-              boardRef.autoungrabify(false);
-              boardRef.autounselectify(false);
-              boardRef.autolock(false);
-              boardRef.zoomingEnabled(true);
-              boardRef.userZoomingEnabled(true);
-              boardRef.panningEnabled(true);
               setBoardState((prev) => ({ ...prev, drawMode: false }));
             } else {
-              edgehandles.enable();
-              edgehandles.enableDrawMode();
               setBoardState((prev) => ({ ...prev, drawMode: true }));
             }
           }

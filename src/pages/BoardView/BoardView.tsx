@@ -4,7 +4,6 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
@@ -42,18 +41,34 @@ export default function BoardView({ isReadOnly }: Props) {
     edges: null,
   });
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
-  const { data: board, isLoading } = useGetItem(item_id as string, "boards") as {
-    data: BoardType;
-    isLoading: boolean;
-  };
-  const contextItems = useBoardContextMenuItems({ type: boardContext.type, item_id: item_id as string, board, boardContext });
+  const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards");
+  const contextItems = useBoardContextMenuItems({
+    type: boardContext.type,
+    item_id: item_id as string,
+    board: board as BoardType,
+    boardContext,
+  });
   const createNodeMutation = useCreateSubItem<NodeType>(item_id as string, "nodes", "boards");
   const createEdgeMutation = useCreateSubItem<EdgeType>(item_id as string, "edges", "boards");
+  const makeEdgeCallback = useCallback(
+    (source: string, target: string, color?: string) => {
+      createEdgeMutation.mutate({
+        ...DefaultEdge,
+        id: crypto.randomUUID(),
+        parentId: item_id as string,
+        source_id: source,
+        target_id: target,
+        lineColor: color,
+        targetArrowColor: color,
+      });
+    },
+    [item_id],
+  );
 
   useEffect(() => {
+    setEdgeHandlesRef(null);
     if (board) {
       if (firstRender && firstRender.current) {
-        setBoardState({ ...boardState, grid: board.defaultGrid });
         firstRender.current = false;
       }
       let temp_nodes: NodeDefinition[] = [];
@@ -67,24 +82,12 @@ export default function BoardView({ isReadOnly }: Props) {
       setElements([...temp_nodes, ...temp_edges]);
     }
     return () => {
-      setBoardState({ ...boardState, grid: false });
       firstRender.current = true;
+      setBoardState({ grid: false, drawMode: false });
+      setEdgeHandlesRef(null);
     };
   }, [board, item_id]);
-  const makeEdgeCallback = useCallback(
-    (source: string, target: string, color: string) => {
-      createEdgeMutation.mutate({
-        ...DefaultEdge,
-        id: uuid(),
-        parentId: item_id as string,
-        source_id: source,
-        target_id: target,
-        lineColor: color,
-        targetArrowColor: color,
-      });
-    },
-    [item_id],
-  );
+
   // Board Events
   useEffect(() => {
     if (boardRef && !isReadOnly) {
@@ -173,6 +176,7 @@ export default function BoardView({ isReadOnly }: Props) {
     return () => {
       if (boardRef) {
         boardRef.removeListener("click mousedown cxttap dbltap free ehcomplete");
+        setEdgeHandlesRef(null);
       }
     };
   }, [boardRef, item_id]);
@@ -193,10 +197,28 @@ export default function BoardView({ isReadOnly }: Props) {
     }, 250);
   }, [subitem_id, boardRef]);
 
+  useEffect(() => {
+    if (edgeHandlesRef && boardRef) {
+      if (!boardState.drawMode) {
+        edgeHandlesRef.disable();
+        edgeHandlesRef.disableDrawMode();
+        boardRef.autoungrabify(false);
+        boardRef.autounselectify(false);
+        boardRef.autolock(false);
+        boardRef.zoomingEnabled(true);
+        boardRef.userZoomingEnabled(true);
+        boardRef.panningEnabled(true);
+      } else {
+        edgeHandlesRef.enable();
+        edgeHandlesRef.enableDrawMode();
+      }
+    }
+  }, [boardState.drawMode, edgeHandlesRef]);
+
   if (isLoading) return <ProgressSpinner />;
   return (
     <div
-      className="h-full w-full"
+      className="relative flex h-full w-full justify-center"
       onDrop={(e) => {
         const stringData = e.dataTransfer.getData("item_id");
         if (!stringData) return;
@@ -216,8 +238,8 @@ export default function BoardView({ isReadOnly }: Props) {
             x,
             y,
             parentId: item_id,
-            type: board.defaultNodeShape,
-            backgroundColor: board.defaultNodeColor,
+            type: board?.defaultNodeShape,
+            backgroundColor: board?.defaultNodeColor,
             id: crypto.randomUUID(),
             label,
             image,
@@ -229,8 +251,8 @@ export default function BoardView({ isReadOnly }: Props) {
             x,
             y,
             parentId: item_id,
-            type: board.defaultNodeShape,
-            backgroundColor: board.defaultNodeColor,
+            type: board?.defaultNodeShape,
+            backgroundColor: board?.defaultNodeColor,
             id: crypto.randomUUID(),
             image,
           });
@@ -239,7 +261,7 @@ export default function BoardView({ isReadOnly }: Props) {
       <ContextMenu cm={cm} items={contextItems} />
 
       <CytoscapeComponent
-        className="h-full w-full"
+        className="h-[94%] w-full"
         cy={(cy) => {
           if (cy) {
             // @ts-ignore
@@ -250,7 +272,7 @@ export default function BoardView({ isReadOnly }: Props) {
             });
           }
           setBoardRef(cy);
-          if (!edgeHandlesRef && boardRef) setEdgeHandlesRef(boardRef.edgehandles(edgehandlesSettings));
+          if (boardRef && !edgeHandlesRef) setEdgeHandlesRef(boardRef.edgehandles(edgehandlesSettings));
         }}
         elements={elements}
         // @ts-ignore
