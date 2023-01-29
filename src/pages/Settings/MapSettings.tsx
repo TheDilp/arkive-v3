@@ -5,7 +5,6 @@ import { Checkbox } from "primereact/checkbox";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -65,10 +64,9 @@ function IconColumn({ id, icon, folder }: MapType) {
   );
 }
 function ImageColumn({ image }: MapType) {
-  const { project_id } = useParams();
   return image ? (
     <div className="flex h-8 w-full justify-center">
-      <img alt={image || "column"} className="object-contain" src={getMapImageLink(image, project_id as string)} />
+      <img alt={image || "column"} className="object-contain" src={getMapImageLink(image)} />
     </div>
   ) : null;
 }
@@ -202,8 +200,6 @@ export default function MapSettings() {
     });
   }
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
-  if (!maps && isLoading) return <ProgressSpinner />;
-  if (!maps) return null;
   return (
     <div className="p-4">
       <SettingsToolbar
@@ -212,7 +208,13 @@ export default function MapSettings() {
         selection={{ selected, setSelected }}
         type="maps"
       />
-      <SettingsTable data={maps} globalFilter={globalFilter} selected={selected} setSelected={setSelected} tableRef={tableRef}>
+      <SettingsTable
+        data={maps || []}
+        globalFilter={globalFilter}
+        isLoading={isLoading}
+        selected={selected}
+        setSelected={setSelected}
+        tableRef={tableRef}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column editor={(e) => TitleEditor(e, updateMap)} field="title" filter header="Title" sortable />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />

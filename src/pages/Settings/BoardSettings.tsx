@@ -5,7 +5,6 @@ import { Checkbox } from "primereact/checkbox";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -221,8 +220,6 @@ export default function BoardSettings() {
       },
     });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
-  if (!boards && isLoading) return <ProgressSpinner />;
-  if (!boards) return null;
   return (
     <div className="p-4">
       <SettingsToolbar
@@ -232,8 +229,9 @@ export default function BoardSettings() {
         type="boards"
       />
       <SettingsTable
-        data={boards}
+        data={boards || []}
         globalFilter={globalFilter}
+        isLoading={isLoading}
         selected={selected}
         setSelected={setSelected}
         tableRef={tableRef}>
@@ -243,7 +241,7 @@ export default function BoardSettings() {
 
         <Column
           align="center"
-          body={(data) => ParentColumn(data, boards)}
+          body={(data) => ParentColumn(data, boards || [])}
           className="w-48"
           field="parent.title"
           filter

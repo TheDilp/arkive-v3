@@ -11,12 +11,13 @@ type Props = {
     title: string;
     tags: TagType[];
   };
+  isLoading: boolean;
   selected: AllItemsType[];
   setSelected: Dispatch<SetStateAction<any>>;
   tableRef: MutableRefObject<DataTable>;
 };
 
-export default function SettingsTable({ children, data, selected, setSelected, globalFilter, tableRef }: Props) {
+export default function SettingsTable({ children, data, selected, setSelected, globalFilter, isLoading, tableRef }: Props) {
   return (
     <DataTable
       ref={tableRef}
@@ -24,6 +25,7 @@ export default function SettingsTable({ children, data, selected, setSelected, g
       dataKey="id"
       editMode="cell"
       filterDisplay="menu"
+      loading={isLoading}
       onSelectionChange={(e) => setSelected(e.value)}
       paginator
       removableSort

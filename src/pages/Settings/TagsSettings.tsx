@@ -3,7 +3,6 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableExpandedRows } from "primereact/datatable";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -131,12 +130,12 @@ export default function TagsSettings() {
   const { data: tags, isLoading: isLoadingTags } = useGetTagSettings(project_id as string);
   const { mutate: updateTag } = useUpdateTag(project_id as string);
   const { mutate: deleteTags } = useDeleteTags(project_id as string);
-  if (isLoadingTags || isLoadingTags) return <ProgressSpinner />;
   return (
     <div className="h-screen px-4 pt-4 pb-16">
       <DataTable
         editMode="cell"
         expandedRows={expandedRows}
+        loading={isLoadingTags}
         onRowToggle={(e) => setExpandedRows(e.data)}
         onSelectionChange={(e) => setSelected(e.value)}
         paginator

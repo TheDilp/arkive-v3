@@ -6,7 +6,6 @@ import { Chips } from "primereact/chips";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -58,10 +57,9 @@ function IconColumn({ id, icon, folder }: DocumentType) {
   );
 }
 function ImageColumn({ image }: DocumentType) {
-  const { project_id } = useParams();
   return image ? (
     <div className="flex h-8 w-full justify-center">
-      <img alt={image || "column"} className="object-contain" src={getImageLink(image, project_id as string)} />
+      <img alt={image || "column"} className="object-contain" src={getImageLink(image)} />
     </div>
   ) : null;
 }
@@ -194,8 +192,6 @@ export default function DocumentSettings() {
       },
     });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
-  if (!documents && isLoading) return <ProgressSpinner />;
-  if (!documents) return null;
 
   return (
     <div className="h-[95vh] w-full overflow-hidden p-4">
@@ -206,8 +202,9 @@ export default function DocumentSettings() {
         type="documents"
       />
       <SettingsTable
-        data={documents}
+        data={documents || []}
         globalFilter={globalFilter}
+        isLoading={isLoading}
         selected={selected}
         setSelected={setSelected}
         tableRef={tableRef}>
