@@ -19,8 +19,8 @@ import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { BoardType } from "../../types/ItemTypes/boardTypes";
 import { TagType } from "../../types/generalTypes";
+import { BoardType } from "../../types/ItemTypes/boardTypes";
 import { boardNodeShapes } from "../../utils/boardUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { defaultNodeFilterFunction, tagsFilterFunction } from "../../utils/settingsUtils";
@@ -105,6 +105,17 @@ function TagsColumn({ tags }: BoardType, type: "tags") {
       {tags?.map((tag) => (
         <Tag key={tag.id} value={tag.title} />
       ))}
+    </div>
+  );
+}
+function ColorColumn({ defaultNodeColor, defaultEdgeColor }: BoardType, type: "defaultNodeColor" | "defaultEdgeColor") {
+  return (
+    <div className="flex items-center gap-x-2">
+      {type === "defaultNodeColor" ? defaultNodeColor : defaultEdgeColor}
+      <div
+        className="h-4 w-4 rounded-full"
+        style={{ backgroundColor: type === "defaultNodeColor" ? defaultNodeColor : defaultEdgeColor }}
+      />
     </div>
   );
 }
@@ -197,6 +208,7 @@ export default function BoardSettings() {
       {
         onSuccess: async () => {
           await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "boards"] });
+          toaster("success", "Color successfully updated.");
         },
       },
     );
@@ -306,7 +318,7 @@ export default function BoardSettings() {
         />
         <Column
           align="center"
-          body={(data: BoardType) => data.defaultNodeColor}
+          body={(data: BoardType) => ColorColumn(data, "defaultNodeColor")}
           editor={(e) => ColorEditor(e, debouncedColorUpdate, "defaultNodeColor")}
           field="defaultNodeColor"
           header="Default Node Color"
@@ -315,7 +327,7 @@ export default function BoardSettings() {
         />
         <Column
           align="center"
-          body={(data: BoardType) => data.defaultEdgeColor}
+          body={(data: BoardType) => ColorColumn(data, "defaultEdgeColor")}
           editor={(e) => ColorEditor(e, debouncedColorUpdate, "defaultEdgeColor")}
           field="defaultEdgeColor"
           header="Default Edge Color"
