@@ -24,7 +24,11 @@ export function WordMentionTooltip({ id }: Pick<Props, "id">) {
   return (
     <div className="h-fit w-fit max-w-[20rem] rounded bg-black p-2">
       <div className="whitespace-pre-line font-Lato font-light">
-        {isLoading ? <ProgressSpinner /> : null}
+        {isLoading ? (
+          <div className="h-4 w-4">
+            <ProgressSpinner className="max-h-full max-w-full" />
+          </div>
+        ) : null}
         <span className="italic">{data?.dictionary?.title ? `(${data?.dictionary?.title}: ${data?.translation}) ` : null}</span>
         {data?.description && !isLoading ? data.description : null}
       </div>
