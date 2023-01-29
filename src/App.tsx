@@ -48,7 +48,6 @@ function App() {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: "the-arkive-v3.firebaseapp.com",
     projectId: "the-arkive-v3",
-    storageBucket: "the-arkive-v3.appspot.com",
     messagingSenderId: "427542209724",
     appId: "1:427542209724:web:762016985ceab84cf49cb9",
   };

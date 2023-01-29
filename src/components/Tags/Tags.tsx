@@ -4,9 +4,9 @@ import { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateTag, useGetAllTags, useUpdateTag } from "../../CRUD/OtherCRUD";
+import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { BoardCreateType, DefaultEdgeType, DefaultNodeType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { DocumentCreateType } from "../../types/ItemTypes/documentTypes";
-import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { MapCreateType } from "../../types/ItemTypes/mapTypes";
 
 type Props = {

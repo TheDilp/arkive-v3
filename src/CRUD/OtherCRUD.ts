@@ -35,7 +35,7 @@ export const useItemsSearch = () => {
 };
 export const useGetTagSettings = (project_id: string) => {
   return useQuery<TagSettingsType[]>(
-    ["tagsSettings", project_id],
+    ["allTags", project_id, "settings"],
     async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsTags}${project_id}`, method: "GET" }),
     {
       staleTime: 5 * 60 * 1000,
@@ -57,7 +57,7 @@ export const useUpdateTag = (project_id: string) => {
   return useMutation(
     async (variables: Partial<Omit<TagUpdateType, "project_id">> & { id?: string }) =>
       FetchFunction({
-        url: `${baseURLS.baseServer}${updateURLs.updateTag}${variables.id}`,
+        url: `${baseURLS.baseServer}${updateURLs.updateTag}`,
         method: "POST",
         body: JSON.stringify({ ...variables }),
       }),
