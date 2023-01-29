@@ -31,14 +31,6 @@ export default function Navbar() {
                 icon="ion:upload"
                 onClick={() => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
               />
-              <Icon
-                className="cursor-pointer hover:text-blue-300"
-                fontSize={20}
-                icon="mdi:cog"
-                onClick={() => {
-                  navigate("./settings/project-settings");
-                }}
-              />
             </>
           ) : null}
 

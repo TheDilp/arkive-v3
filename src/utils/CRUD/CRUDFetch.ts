@@ -16,6 +16,7 @@ export async function FetchFunction({
     body,
     headers: {
       "Access-Control-Allow-Origin": "*",
+      BOB: "DOB",
       Authorization: `Bearer ${token}`,
     },
   });

@@ -91,10 +91,10 @@ export const deleteManyURL = (type: AllAvailableTypes) => {
   return null;
 };
 
-export const getImageLink = (image: string, project_id: string) => {
-  return `${baseURLS.baseServer}getimage/images/${project_id}/${image}`;
+export const getImageLink = (image: string) => {
+  return `${baseURLS.baseImageHost}${image}`;
 };
 
-export const getMapImageLink = (image: string, project_id: string) => {
-  return `${baseURLS.baseServer}getimage/maps/${project_id}/${image}`;
+export const getMapImageLink = (image: string) => {
+  return `${baseURLS.baseImageHost}${image}`;
 };

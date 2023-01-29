@@ -127,6 +127,7 @@ export const cytoscapeStylesheet = [
       "background-clip": "node",
       "background-color": "data(backgroundColor)",
       "background-opacity": "data(backgroundOpacity)",
+      "background-image-crossorigin": "anonymous",
       "text-halign": "data(textHAlign)",
       "text-valign": "data(textVAlign)",
       "text-wrap": "wrap",

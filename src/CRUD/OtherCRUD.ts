@@ -14,7 +14,6 @@ export const useGetAllTags = (project_id: string) => {
     },
   );
 };
-
 export const useFullSearch = (project_id: string) => {
   return useMutation(async ({ query, type }: { query: string | string[]; type: "namecontent" | "tags" }) =>
     FetchFunction({
@@ -34,7 +33,6 @@ export const useItemsSearch = () => {
       }),
   );
 };
-
 export const useGetTagSettings = (project_id: string) => {
   return useQuery<TagSettingsType[]>(
     ["tagsSettings", project_id],
@@ -44,7 +42,6 @@ export const useGetTagSettings = (project_id: string) => {
     },
   );
 };
-
 export const useCreateTag = (project_id: string) => {
   return useMutation(async (variables: TagCreateType) =>
     FetchFunction({

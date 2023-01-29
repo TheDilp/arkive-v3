@@ -69,7 +69,7 @@ function App() {
       <main className="flex h-screen w-screen flex-col">
         <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
 
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
           <Routes>
             <Route element={<AuthLayout />} path="auth/*">

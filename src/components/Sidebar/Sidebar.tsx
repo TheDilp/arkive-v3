@@ -66,16 +66,16 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         </Fragment>
       ))}
       <hr className="mb-2 w-full border-zinc-800" />
-      {/* <li className=" h-14">
-            <Button
-              className="p-button-text p-button-secondary"
-              tooltip="Create new section"
-              tooltipOptions={{ position: "right" }}>
-              <Icon className="newSectionButton text-white" fontSize={28} icon="mdi:plus" />
-            </Button>
-          </li> */}
+
       <li className="mt-auto h-14">
-        <Icon fontSize={28} icon="mdi:cog" />
+        <Icon
+          className="cursor-pointer hover:text-blue-300"
+          fontSize={28}
+          icon="mdi:cog"
+          onClick={() => {
+            navigate("./settings/project-settings");
+          }}
+        />
       </li>
     </>
   );

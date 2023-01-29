@@ -11,8 +11,8 @@ import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { DragItem } from "../../types/generalTypes";
+import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
@@ -27,7 +27,7 @@ type Props = {
 export default function BoardView({ isReadOnly }: Props) {
   const cm = useRef() as MutableRefObject<any>;
   const firstRender = useRef(true) as MutableRefObject<boolean>;
-  const { project_id, item_id, subitem_id } = useParams();
+  const { item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
   const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
@@ -59,7 +59,7 @@ export default function BoardView({ isReadOnly }: Props) {
       let temp_nodes: NodeDefinition[] = [];
       let temp_edges: EdgeDefinition[] = [];
       if (board?.nodes && board.nodes.length > 0) {
-        temp_nodes = mapNodes(board.nodes, board?.project_id || (project_id as string), isReadOnly);
+        temp_nodes = mapNodes(board.nodes, isReadOnly);
       }
       if (board?.edges && board.edges.length > 0) {
         temp_edges = mapEdges(board.edges, isReadOnly);

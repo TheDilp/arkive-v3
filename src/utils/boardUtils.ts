@@ -2,8 +2,8 @@ import { UseMutationResult } from "@tanstack/react-query";
 import cytoscape, { Core } from "cytoscape";
 import { saveAs } from "file-saver";
 
-import { EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
 import { AllSubItemsType } from "../types/generalTypes";
+import { EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
 import { getImageLink } from "./CRUD/CRUDUrls";
 import { toaster } from "./toast";
 
@@ -447,18 +447,18 @@ export function toModelPosition(boardRef: Core, pos: { x: number; y: number }) {
     y: (pos.y - pan.y) / zoom,
   };
 }
-export function getNodeImage(node: NodeType, project_id: string) {
+export function getNodeImage(node: NodeType) {
   let image = "";
   if (node.image) {
     image = node.image;
   } else if (node.document?.image) {
     image = node.document.image;
   }
-  if (image !== "") return getImageLink(image, project_id);
+  if (image !== "") return getImageLink(image);
   return null;
 }
 
-export function mapNodes(nodes: NodeType[], project_id: string, isReadOnly?: boolean) {
+export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
   return nodes
     .filter((node) => !node.template)
     .map((node: NodeType) => ({
@@ -467,7 +467,7 @@ export function mapNodes(nodes: NodeType[], project_id: string, isReadOnly?: boo
         classes: `${isReadOnly ? "publicBoardNode" : "boardNode"}`,
         label: node.label || "",
         zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
-        backgroundImage: getNodeImage(node, project_id as string) || [],
+        backgroundImage: getNodeImage(node) || [],
       },
       scratch: {
         doc_id: node?.doc_id,
