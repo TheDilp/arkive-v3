@@ -42,6 +42,7 @@ export const updateURL = (type: AllAvailableTypes) => {
   if (type === "sections") return `${baseURLS.baseServer}${updateURLs.updateSection}`;
   if (type === "cards") return `${baseURLS.baseServer}${updateURLs.updateCard}`;
   if (type === "words") return `${baseURLS.baseServer}${updateURLs.updateWord}`;
+  if (type === "calendars") return `${baseURLS.baseServer}${updateURLs.updateCalendar}`;
   return null;
 };
 

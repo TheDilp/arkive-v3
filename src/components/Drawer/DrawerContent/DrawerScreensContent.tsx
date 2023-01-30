@@ -16,6 +16,7 @@ import { DefaultScreen } from "../../../utils/DefaultValues/ScreenDefaults";
 import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import DrawerSectionTitle from "../DrawerSectionTitle";
 import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerScreensContent() {
@@ -50,7 +51,7 @@ export default function DrawerScreensContent() {
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center font-Lato text-2xl">{screen ? `Edit ${screen.title}` : "Create New Screen"}</h2>
       <div className="flex w-full flex-col">
-        <span className="w-full text-sm text-zinc-400">Section title</span>
+        <DrawerSectionTitle title="Section title" />
         <InputText
           autoFocus
           className="w-full"
@@ -79,7 +80,7 @@ export default function DrawerScreensContent() {
         />
       </div>
       <div className="flex w-full flex-col">
-        <span className="w-full text-sm text-zinc-400">Section size</span>
+        <DrawerSectionTitle title="Section size" />
         <Dropdown
           name="sectionSize"
           onChange={(e) => handleChange(e.target)}

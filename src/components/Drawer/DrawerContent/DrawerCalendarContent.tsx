@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
@@ -16,9 +16,10 @@ import { DefaultCalendar } from "../../../utils/DefaultValues/CalendarDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
+import DrawerSection from "../DrawerSection";
 
-function disableCalendarSaveButton(localItem: CalendarType) {
-  if (!localItem.title || !localItem.days.length || localItem.weeks === 0) return true;
+function disableCalendarSaveButton(localItem: CalendarType | CalendarCreateType) {
+  if (!localItem.title || ("days" in localItem && !localItem?.days?.length) || localItem.weeks === 0) return true;
   return false;
 }
 
@@ -27,7 +28,7 @@ export default function DrawerCalendarContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createCalendarMutation = useCreateItem<CalendarType>("calendars");
-  const updateCalendarMutation = useUpdateItem<CalendarType>(drawer?.data?.id, project_id as string);
+  const updateCalendarMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
   const deleteCalendarMutation = useDeleteItem("calendars", project_id as string);
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
   const calendar = allCalendars?.find((dict) => dict.id === drawer?.data?.id);
@@ -35,69 +36,91 @@ export default function DrawerCalendarContent() {
   const [localItem, setLocalItem] = useState<CalendarType | CalendarCreateType>(
     drawer?.data ?? { ...DefaultCalendar, project_id },
   );
+  const [months, setMonths] = useState<{ id: string; title: string }[]>(
+    localItem?.months?.map((month) => ({ id: crypto.randomUUID(), title: month })) || [],
+  );
+  const [days, setDays] = useState<{ id: string; title: string }[]>(
+    localItem?.days?.map((day) => ({ id: crypto.randomUUID(), title: day })) || [],
+  );
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
+
+  useEffect(() => {
+    if (months.length) {
+      handleChange({ name: "months", value: months.map((month) => month.title) });
+    }
+  }, [months]);
+  useEffect(() => {
+    if (days.length) {
+      handleChange({ name: "days", value: days.map((day) => day.title) });
+    }
+  }, [days]);
 
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Calendar"}</h2>
-      <InputText
-        autoFocus
-        className="w-full"
-        name="title"
-        onChange={(e) => handleChange(e.target)}
-        onKeyDown={async (e) => {
-          if (e.key === "Enter") {
-            await createUpdateItem<CalendarType>(
-              calendar,
-              localItem,
-              changedData,
-              "boards",
-              project_id as string,
-              queryClient,
-              DefaultCalendar,
-              allCalendars,
-              resetChanges,
-              createCalendarMutation.mutateAsync,
-              updateCalendarMutation.mutateAsync,
-              setDrawer,
-            );
-          }
-        }}
-        placeholder="Calendar title"
-        value={localItem?.title || ""}
-      />
-      <InputNumber
-        className="w-full"
-        name="weeks"
-        onChange={(e) => handleChange({ name: "weeks", value: e.value })}
-        onKeyDown={async (e) => {
-          if (e.key === "Enter") {
-            await createUpdateItem<CalendarType>(
-              calendar,
-              localItem,
-              changedData,
-              "boards",
-              project_id as string,
-              queryClient,
-              DefaultCalendar,
-              allCalendars,
-              resetChanges,
-              createCalendarMutation.mutateAsync,
-              updateCalendarMutation.mutateAsync,
-              setDrawer,
-            );
-          }
-        }}
-        placeholder="Number of weeks"
-        value={localItem?.weeks as number}
-      />
+      <DrawerSection title="Calendar title">
+        <InputText
+          autoFocus
+          className="w-full"
+          name="title"
+          onChange={(e) => handleChange(e.target)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              await createUpdateItem<CalendarType>(
+                calendar,
+                localItem,
+                changedData,
+                "boards",
+                project_id as string,
+                queryClient,
+                DefaultCalendar,
+                allCalendars,
+                resetChanges,
+                createCalendarMutation.mutateAsync,
+                updateCalendarMutation.mutateAsync,
+                setDrawer,
+              );
+            }
+          }}
+          placeholder="Calendar title"
+          value={localItem?.title || ""}
+        />
+      </DrawerSection>
+
+      <DrawerSection title="Number of weeks">
+        <InputNumber
+          className="w-full"
+          name="weeks"
+          onChange={(e) => handleChange({ name: "weeks", value: e.value })}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              await createUpdateItem<CalendarType>(
+                calendar,
+                localItem,
+                changedData,
+                "boards",
+                project_id as string,
+                queryClient,
+                DefaultCalendar,
+                allCalendars,
+                resetChanges,
+                createCalendarMutation.mutateAsync,
+                updateCalendarMutation.mutateAsync,
+                setDrawer,
+              );
+            }
+          }}
+          placeholder="Number of weeks"
+          value={localItem?.weeks as number}
+        />
+      </DrawerSection>
 
       <div className="flex items-start gap-x-2">
         <Button
           className="p-button-outlined p-button-info w-full"
           disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
           onClick={() => {
-            handleChange({ name: "months", value: [...(localItem?.months || []), "New Month"] });
+            setMonths((prev) => [...prev, { id: crypto.randomUUID(), title: "New Month" }]);
           }}
           type="submit">
           {buttonLabelWithIcon("Add month", "ph:calendar-thin")}
@@ -105,11 +128,53 @@ export default function DrawerCalendarContent() {
         <Button
           className="p-button-outlined p-button-info w-full"
           disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
-          onClick={async () => {}}
+          onClick={() => {
+            setDays((prev) => [...prev, { id: crypto.randomUUID(), title: "New Day" }]);
+          }}
           type="submit">
           {buttonLabelWithIcon("Add day", "ph:calendar-thin")}
         </Button>
       </div>
+      <hr className="border-zinc-600" />
+      <DrawerSection title="Months">
+        <div className="flex flex-col gap-y-1">
+          {months
+            ? months?.map((month, index) => (
+                <InputText
+                  key={month.id}
+                  onChange={(e) =>
+                    setMonths((prev) => {
+                      const tempPrev = [...prev];
+                      tempPrev[index].title = e.target.value;
+                      return tempPrev;
+                    })
+                  }
+                  value={month.title}
+                />
+              ))
+            : null}
+        </div>
+      </DrawerSection>
+      <hr className="border-zinc-600" />
+      <DrawerSection title="Days">
+        <div className="flex flex-col gap-y-1">
+          {days
+            ? days?.map((day, index) => (
+                <InputText
+                  key={day.id}
+                  onChange={(e) =>
+                    setDays((prev) => {
+                      const tempPrev = [...prev];
+                      tempPrev[index].title = e.target.value;
+                      return tempPrev;
+                    })
+                  }
+                  value={day.title}
+                />
+              ))
+            : null}
+        </div>
+      </DrawerSection>
       <Button
         className="p-button-outlined p-button-success"
         disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading || disableCalendarSaveButton(localItem)}
@@ -119,7 +184,7 @@ export default function DrawerCalendarContent() {
             calendar,
             localItem,
             changedData,
-            "boards",
+            "calendars",
             project_id as string,
             queryClient,
             DefaultCalendar,

@@ -14,7 +14,7 @@ export default function CalendarView() {
       </h2>
       {data
         ? [...Array(20).keys()].map((week) => (
-            <div key={`week${week}`} className="h-full min-h-[3.5rem] border-zinc-700 py-2 even:border-y">
+            <div key={`week${week}`} className="h-full min-h-[8rem] border-zinc-700 py-2 even:border-y">
               MONDAY
             </div>
           ))

@@ -73,6 +73,7 @@ export const updateURLs = {
   updateCard: "updatecard",
   updateDictionary: "updatedictionary",
   updateWord: "updateword",
+  updateCalendar: "updatecalendar",
   updateTag: "updatetag",
 
   sortDocuments: "sortdocuments",
