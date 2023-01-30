@@ -80,7 +80,7 @@ export function onDragEnd(
         }
       } else {
         const targetSection = tempSections[targetIdx];
-        if (targetSection.cards.some((card) => card.documentsId === movedCard.documentsId)) {
+        if (targetSection?.cards?.some((card) => card.documentsId === movedCard.documentsId)) {
           toaster("warning", "Sections cannot contain duplicate cards.");
           return;
         }

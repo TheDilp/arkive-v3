@@ -47,7 +47,7 @@ export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
             template: (
               <Link
                 className="font-bold text-white"
-                to={`/project/${project_id}/wiki/${currentItem.folder ? "folder" : "doc"}/${currentItem.id}`}>
+                to={`/project/${project_id}/${currentItem.folder ? "folder" : "documents"}/${currentItem.id}`}>
                 {currentItem.title}
               </Link>
             ),

@@ -8,7 +8,6 @@ import { Dispatch, lazy, SetStateAction, Suspense } from "react";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import DrawerCalendarContent from "./DrawerContent/DrawerCalendarContent";
 
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
 const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
@@ -26,6 +25,7 @@ const DrawerScreensContent = lazy(() => import("./DrawerContent/DrawerScreensCon
 const DrawerSectionContent = lazy(() => import("./DrawerContent/DrawerSectionContent"));
 const DrawerWordContent = lazy(() => import("./DrawerContent/DrawerWordContent"));
 const DrawerInsertWord = lazy(() => import("./DrawerContent/DrawerInsertWord"));
+const DrawerCalendarContent = lazy(() => import("./DrawerContent/DrawerCalendarContent"));
 
 export function handleCloseDrawer(
   setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,

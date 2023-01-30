@@ -17,6 +17,11 @@ import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
 
+function disableCalendarSaveButton(localItem: CalendarType) {
+  if (!localItem.title || !localItem.days.length || localItem.weeks === 0) return true;
+  return false;
+}
+
 export default function DrawerCalendarContent() {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
@@ -87,9 +92,27 @@ export default function DrawerCalendarContent() {
         value={localItem?.weeks as number}
       />
 
+      <div className="flex items-start gap-x-2">
+        <Button
+          className="p-button-outlined p-button-info w-full"
+          disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
+          onClick={() => {
+            handleChange({ name: "months", value: [...(localItem?.months || []), "New Month"] });
+          }}
+          type="submit">
+          {buttonLabelWithIcon("Add month", "ph:calendar-thin")}
+        </Button>
+        <Button
+          className="p-button-outlined p-button-info w-full"
+          disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
+          onClick={async () => {}}
+          type="submit">
+          {buttonLabelWithIcon("Add day", "ph:calendar-thin")}
+        </Button>
+      </div>
       <Button
         className="p-button-outlined p-button-success"
-        disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
+        disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading || disableCalendarSaveButton(localItem)}
         loading={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
         onClick={async () =>
           createUpdateItem<CalendarType>(

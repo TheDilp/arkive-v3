@@ -46,7 +46,7 @@ export default function CalendarsTree() {
           <div className="flex w-full items-center justify-center gap-x-1">
             <div className="w-full">New Calendar</div>
             <div className="ml-auto">
-              <Icon fontSize={20} icon="ph:calendar-blank-thin" />
+              <Icon fontSize={20} icon="ph:calendar-plus-thin" />
             </div>
           </div>
         </Button>

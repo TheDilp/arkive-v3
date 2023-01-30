@@ -26,13 +26,13 @@ export default function DrawerCardContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [loading, setLoading] = useState(false);
   const [selectedDocuments, setSelectedDocuments] = useState<DocumentType[]>([]);
-  const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents");
-  if (!drawer?.data || !documents) return null;
+  const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents");
   return (
     <div className=" flex flex-col gap-y-2">
-      <h2 className="font-Lato text-2xl font-medium">Add card</h2>
+      <h2 className="text-center font-Lato text-2xl font-medium">Add card</h2>
 
       <MultiSelect
+        disabled={isLoading}
         display="chip"
         filter
         filterBy="title"

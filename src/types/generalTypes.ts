@@ -2,17 +2,18 @@ import React from "react";
 import { RemirrorJSON } from "remirror";
 
 import { BoardType, EdgeType, NodeType } from "./ItemTypes/boardTypes";
+import { CalendarType, MonthType } from "./ItemTypes/calendarTypes";
 import { DictionaryType, WordType } from "./ItemTypes/dictionaryTypes";
 import { DocumentType } from "./ItemTypes/documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
 
 export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens" | "dictionaries" | "calendars";
-export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "sections" | "cards" | "words" | "days";
+export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "sections" | "cards" | "words" | "months";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
-export type AllItemsType = DocumentType | MapType | BoardType | ScreenType | DictionaryType;
-export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType | SectionType | CardType | WordType;
+export type AllItemsType = DocumentType | MapType | BoardType | ScreenType | DictionaryType | CalendarType;
+export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType | SectionType | CardType | WordType | MonthType;
 
 export type AvailableSearchResultTypes = "documents" | "maps" | "boards" | "pins" | "nodes" | "edges" | "screens" | "sections";
 

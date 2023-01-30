@@ -22,7 +22,7 @@ export function WordMentionTooltip({ id }: Pick<Props, "id">) {
     staleTime: 5 * 60 * 1000,
   });
   return (
-    <div className="h-fit w-fit max-w-[20rem] rounded bg-black p-2">
+    <div className="h-fit w-fit max-w-[20rem] rounded border border-zinc-800 bg-black p-2 shadow">
       <div className="whitespace-pre-line font-Lato font-light">
         {isLoading ? (
           <div className="h-4 w-4">

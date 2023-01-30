@@ -84,7 +84,7 @@ export default function DrawerWordContent() {
 
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{dictionary ? `Edit ${dictionary.title}` : "Create New Word"}</h2>
+      <h2 className="text-center text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Word"}</h2>
       <h3 className="text-center text-lg">{`For dictionary "${dictionary?.title}"`}</h3>
       <InputText
         autoFocus

@@ -65,7 +65,7 @@ export default function DrawerInsertWord() {
   }, [query]);
   return (
     <div className="flex flex-col gap-y-2">
-      <h2 className="text-center font-Lato text-2xl">Add word from dictionary</h2>
+      <h2 className="text-center font-Lato text-2xl">Add word for dictionary</h2>
       <span className="p-input-icon-right w-full">
         {isFetching ? <i className="pi pi-spin pi-spinner" /> : null}
         <InputText

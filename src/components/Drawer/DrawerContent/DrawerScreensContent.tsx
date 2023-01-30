@@ -48,33 +48,36 @@ export default function DrawerScreensContent() {
   }, [screen, project_id]);
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{screen ? `Edit ${screen.title}` : "Create New Screen"}</h2>
-      <InputText
-        autoFocus
-        className="w-full"
-        name="title"
-        onChange={(e) => handleChange(e.target)}
-        onKeyDown={async (e) => {
-          if (e.key === "Enter") {
-            await createUpdateItem<ScreenType>(
-              screen,
-              localItem,
-              changedData,
-              "screens",
-              project_id as string,
-              queryClient,
-              DefaultScreen,
-              allScreens,
-              resetChanges,
-              createScreenMutation.mutateAsync,
-              updateScreenMutation.mutateAsync,
-              setDrawer,
-            );
-          }
-        }}
-        placeholder="Screen Name"
-        value={localItem?.title || ""}
-      />
+      <h2 className="text-center font-Lato text-2xl">{screen ? `Edit ${screen.title}` : "Create New Screen"}</h2>
+      <div className="flex w-full flex-col">
+        <span className="w-full text-sm text-zinc-400">Section title</span>
+        <InputText
+          autoFocus
+          className="w-full"
+          name="title"
+          onChange={(e) => handleChange(e.target)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              await createUpdateItem<ScreenType>(
+                screen,
+                localItem,
+                changedData,
+                "screens",
+                project_id as string,
+                queryClient,
+                DefaultScreen,
+                allScreens,
+                resetChanges,
+                createScreenMutation.mutateAsync,
+                updateScreenMutation.mutateAsync,
+                setDrawer,
+              );
+            }
+          }}
+          placeholder="Screen Name"
+          value={localItem?.title || ""}
+        />
+      </div>
       <div className="flex w-full flex-col">
         <span className="w-full text-sm text-zinc-400">Section size</span>
         <Dropdown

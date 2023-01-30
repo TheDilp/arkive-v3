@@ -1,13 +1,9 @@
 import { BaseItemType } from "../generalTypes";
 
-export type DayType = {
-  id: string;
-  title: string;
-};
-
 export interface CalendarType extends BaseItemType {
+  days: string[];
   weeks: number;
-  days: DayType[];
+  months: string[];
 }
 
 export type CalendarCreateType = Partial<Omit<CalendarType, "parentId">>;

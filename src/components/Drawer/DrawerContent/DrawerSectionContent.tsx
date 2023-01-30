@@ -93,7 +93,7 @@ export default function DrawerSectionContent() {
   }
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Section"}</h2>
+      <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Section"}</h2>
       <div className="flex w-full flex-col">
         <span className="w-full text-sm text-zinc-400">Section title</span>
         <InputText

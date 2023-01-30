@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
@@ -10,13 +9,8 @@ export default function CalendarView() {
 
   return (
     <div className="flex h-full w-full max-w-full flex-col overflow-auto">
-      <h2 className="sticky top-0 flex h-14 items-center bg-zinc-800 py-2 text-center text-xl">
-        <span className="ml-auto select-none font-Lato">{data ? data.title : null}</span>
-        <Icon
-          className="ml-auto cursor-pointer text-zinc-400 transition-colors hover:text-sky-400"
-          fontSize={28}
-          icon="ph:calendar-plus-thin"
-        />
+      <h2 className="sticky top-0 flex h-14 items-center justify-center bg-zinc-800 py-2 text-center text-xl">
+        <span className="select-none font-Lato">{data ? data.title : null}</span>
       </h2>
       {data
         ? [...Array(20).keys()].map((week) => (
