@@ -1,9 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
-import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
@@ -19,7 +18,7 @@ import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
 function disableCalendarSaveButton(localItem: CalendarType | CalendarCreateType) {
-  if (!localItem.title || ("days" in localItem && !localItem?.days?.length) || localItem.weeks === 0) return true;
+  if (!localItem.title) return true;
   return false;
 }
 
@@ -36,24 +35,8 @@ export default function DrawerCalendarContent() {
   const [localItem, setLocalItem] = useState<CalendarType | CalendarCreateType>(
     drawer?.data ?? { ...DefaultCalendar, project_id },
   );
-  const [months, setMonths] = useState<{ id: string; title: string }[]>(
-    localItem?.months?.map((month) => ({ id: crypto.randomUUID(), title: month })) || [],
-  );
-  const [days, setDays] = useState<{ id: string; title: string }[]>(
-    localItem?.days?.map((day) => ({ id: crypto.randomUUID(), title: day })) || [],
-  );
-  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
-  useEffect(() => {
-    if (months.length) {
-      handleChange({ name: "months", value: months.map((month) => month.title) });
-    }
-  }, [months]);
-  useEffect(() => {
-    if (days.length) {
-      handleChange({ name: "days", value: days.map((day) => day.title) });
-    }
-  }, [days]);
+  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   return (
     <div className="flex h-full flex-col gap-y-2">
@@ -87,94 +70,8 @@ export default function DrawerCalendarContent() {
         />
       </DrawerSection>
 
-      <DrawerSection title="Number of weeks">
-        <InputNumber
-          className="w-full"
-          name="weeks"
-          onChange={(e) => handleChange({ name: "weeks", value: e.value })}
-          onKeyDown={async (e) => {
-            if (e.key === "Enter") {
-              await createUpdateItem<CalendarType>(
-                calendar,
-                localItem,
-                changedData,
-                "boards",
-                project_id as string,
-                queryClient,
-                DefaultCalendar,
-                allCalendars,
-                resetChanges,
-                createCalendarMutation.mutateAsync,
-                updateCalendarMutation.mutateAsync,
-                setDrawer,
-              );
-            }
-          }}
-          placeholder="Number of weeks"
-          value={localItem?.weeks as number}
-        />
-      </DrawerSection>
+      <hr className="border-zinc-600" />
 
-      <div className="flex items-start gap-x-2">
-        <Button
-          className="p-button-outlined p-button-info w-full"
-          disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
-          onClick={() => {
-            setMonths((prev) => [...prev, { id: crypto.randomUUID(), title: "New Month" }]);
-          }}
-          type="submit">
-          {buttonLabelWithIcon("Add month", "ph:calendar-thin")}
-        </Button>
-        <Button
-          className="p-button-outlined p-button-info w-full"
-          disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
-          onClick={() => {
-            setDays((prev) => [...prev, { id: crypto.randomUUID(), title: "New Day" }]);
-          }}
-          type="submit">
-          {buttonLabelWithIcon("Add day", "ph:calendar-thin")}
-        </Button>
-      </div>
-      <hr className="border-zinc-600" />
-      <DrawerSection title="Months">
-        <div className="flex flex-col gap-y-1">
-          {months
-            ? months?.map((month, index) => (
-                <InputText
-                  key={month.id}
-                  onChange={(e) =>
-                    setMonths((prev) => {
-                      const tempPrev = [...prev];
-                      tempPrev[index].title = e.target.value;
-                      return tempPrev;
-                    })
-                  }
-                  value={month.title}
-                />
-              ))
-            : null}
-        </div>
-      </DrawerSection>
-      <hr className="border-zinc-600" />
-      <DrawerSection title="Days">
-        <div className="flex flex-col gap-y-1">
-          {days
-            ? days?.map((day, index) => (
-                <InputText
-                  key={day.id}
-                  onChange={(e) =>
-                    setDays((prev) => {
-                      const tempPrev = [...prev];
-                      tempPrev[index].title = e.target.value;
-                      return tempPrev;
-                    })
-                  }
-                  value={day.title}
-                />
-              ))
-            : null}
-        </div>
-      </DrawerSection>
       <Button
         className="p-button-outlined p-button-success"
         disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading || disableCalendarSaveButton(localItem)}
