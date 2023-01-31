@@ -3,11 +3,13 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { Dispatch, lazy, SetStateAction, Suspense } from "react";
+import { Dispatch, lazy, SetStateAction, Suspense, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerMonthContent from "./DrawerContent/DrawerMonthContent";
 
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
 const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
@@ -50,6 +52,15 @@ function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void
 
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+
+  const { type, item_id } = useParams();
+
+  useEffect(() => {
+    return () => {
+      setDrawer(DefaultDrawer);
+    };
+  }, [type, item_id]);
+
   return (
     <PrimeDrawer
       className={`p-sidebar-${drawer.drawerSize || "sm"} max-h-full overflow-y-auto`}
@@ -78,6 +89,7 @@ export default function Drawer() {
         {drawer.type === "words" ? <DrawerWordContent /> : null}
         {drawer.type === "insert_word" ? <DrawerInsertWord /> : null}
         {drawer.type === "calendars" ? <DrawerCalendarContent /> : null}
+        {drawer.type === "months" ? <DrawerMonthContent /> : null}
       </Suspense>
     </PrimeDrawer>
   );
