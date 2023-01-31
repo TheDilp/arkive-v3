@@ -53,6 +53,7 @@ export const createURLS = {
   createDictionary: "createdictionary",
   createWord: "createword",
   createCalendar: "createcalendar",
+  createMonth: "createmonth",
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",

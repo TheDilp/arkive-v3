@@ -53,13 +53,13 @@ function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
-  const { type, item_id } = useParams();
+  // const { type, item_id } = useParams();
 
-  useEffect(() => {
-    return () => {
-      setDrawer(DefaultDrawer);
-    };
-  }, [type, item_id]);
+  // useEffect(() => {
+  //   return () => {
+  //     setDrawer(DefaultDrawer);
+  //   };
+  // }, [type, item_id]);
 
   return (
     <PrimeDrawer

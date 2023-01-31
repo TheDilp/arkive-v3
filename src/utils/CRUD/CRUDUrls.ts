@@ -28,6 +28,7 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type === "dictionaries") return `${baseURLS.baseServer}${createURLS.createDictionary}`;
   if (type === "words") return `${baseURLS.baseServer}${createURLS.createWord}`;
   if (type === "calendars") return `${baseURLS.baseServer}${createURLS.createCalendar}`;
+  if (type === "months") return `${baseURLS.baseServer}${createURLS.createMonth}`;
   return null;
 };
 export const updateURL = (type: AllAvailableTypes) => {

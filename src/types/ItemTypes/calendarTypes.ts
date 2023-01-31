@@ -5,6 +5,9 @@ export interface CalendarType extends BaseItemType {
   id: string;
   title: string;
 
+  hours?: number;
+  minutes?: number;
+
   eras: EraType[];
   months: MonthType[];
   days: string[];
@@ -16,8 +19,6 @@ export type EraType = {
   title: string;
   start_year: number;
   end_year: number;
-  hours: number;
-  minutes: number;
   parentId: string;
   sort: number;
 
@@ -51,5 +52,7 @@ export type EventType = {
 };
 
 export type CalendarCreateType = Partial<Omit<CalendarType, "parentId">>;
+export type MonthCreateType = Partial<Omit<MonthType, "events" | "sort">>;
 
 export type DefaultCalendarType = Pick<CalendarType, "title" | "project_id">;
+export type DefaultMonthType = Pick<MonthType, "title" | "parentId" | "days">;

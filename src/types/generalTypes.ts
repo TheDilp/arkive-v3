@@ -9,7 +9,17 @@ import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
 
 export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens" | "dictionaries" | "calendars";
-export type AvailableSubItemTypes = "map_pins" | "map_layers" | "nodes" | "edges" | "sections" | "cards" | "words" | "months";
+export type AvailableSubItemTypes =
+  | "map_pins"
+  | "map_layers"
+  | "nodes"
+  | "edges"
+  | "sections"
+  | "cards"
+  | "words"
+  | "eras"
+  | "months"
+  | "events";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
 export type AllItemsType = DocumentType | MapType | BoardType | ScreenType | DictionaryType | CalendarType;

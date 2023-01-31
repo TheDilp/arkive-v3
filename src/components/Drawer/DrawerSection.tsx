@@ -7,7 +7,7 @@ type Props = {
 
 export default function DrawerSection({ children, title }: Props) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-hidden">
       <DrawerSectionTitle title={title} />
       {children}
     </div>

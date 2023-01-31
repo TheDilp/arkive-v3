@@ -7,4 +7,5 @@ export const DefaultCalendar: DefaultCalendarType = {
 export const DefaultMonth: DefaultMonthType = {
   title: "",
   parentId: "",
+  days: 0,
 };

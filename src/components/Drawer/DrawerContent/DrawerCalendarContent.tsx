@@ -1,7 +1,11 @@
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { TabPanel, TabView } from "primereact/tabview";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -32,69 +36,167 @@ export default function DrawerCalendarContent() {
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
   const calendar = allCalendars?.find((dict) => dict.id === drawer?.data?.id);
 
-  const [localItem, setLocalItem] = useState<CalendarType | CalendarCreateType>(
-    drawer?.data ?? { ...DefaultCalendar, project_id },
+  const [localItem, setLocalItem] = useState<
+    Omit<CalendarType | CalendarCreateType, "days"> & { days: { id: string; value: string }[] }
+  >(
+    { ...drawer?.data, days: drawer?.data?.days.map((day: string) => ({ value: day, id: crypto.randomUUID() })) } ?? {
+      ...DefaultCalendar,
+      project_id,
+    },
   );
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   return (
-    <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Calendar"}</h2>
-      <DrawerSection title="Calendar title">
-        <InputText
-          autoFocus
-          className="w-full"
-          name="title"
-          onChange={(e) => handleChange(e.target)}
-          onKeyDown={async (e) => {
-            if (e.key === "Enter") {
-              await createUpdateItem<CalendarType>(
-                calendar,
-                localItem,
-                changedData,
-                "boards",
-                project_id as string,
-                queryClient,
-                DefaultCalendar,
-                allCalendars,
-                resetChanges,
-                createCalendarMutation.mutateAsync,
-                updateCalendarMutation.mutateAsync,
-                setDrawer,
-              );
-            }
-          }}
-          placeholder="Calendar title"
-          value={localItem?.title || ""}
-        />
-      </DrawerSection>
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex w-full flex-1 flex-col">
+        <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Calendar"}</h2>
+        <TabView className="h-full w-full overflow-hidden" renderActiveOnly>
+          <TabPanel header="Calendar">
+            <div className="flex w-full flex-col gap-y-3 pt-3 ">
+              <DrawerSection title="Calendar title">
+                <InputText
+                  autoFocus
+                  className="w-full"
+                  name="title"
+                  onChange={(e) => handleChange(e.target)}
+                  onKeyDown={async (e) => {
+                    if (e.key === "Enter") {
+                      await createUpdateItem<CalendarType>(
+                        calendar,
+                        localItem,
+                        changedData,
+                        "boards",
+                        project_id as string,
+                        queryClient,
+                        DefaultCalendar,
+                        allCalendars,
+                        resetChanges,
+                        createCalendarMutation.mutateAsync,
+                        updateCalendarMutation.mutateAsync,
+                        setDrawer,
+                      );
+                    }
+                  }}
+                  placeholder="Calendar title"
+                  value={localItem?.title || ""}
+                />
+              </DrawerSection>
+              <DrawerSection title="Calendar days">
+                <div className="flex h-72 flex-col items-end overflow-hidden">
+                  <DragDropContext
+                    onDragEnd={(result) => {
+                      if (!result.destination) return;
+                      const tempDays = [...(localItem?.days || [])];
+                      const day = tempDays[result.source.index];
+                      tempDays.splice(result.source.index, 1);
 
-      <hr className="border-zinc-600" />
+                      tempDays.splice(result.destination.index, 0, day);
+                      handleChange({ name: "days", value: tempDays });
+                    }}>
+                    <Droppable droppableId="Days">
+                      {(providedDroppable) => (
+                        <div
+                          ref={providedDroppable.innerRef}
+                          {...providedDroppable.droppableProps}
+                          className="flex w-full flex-col items-center overflow-y-auto overflow-x-hidden">
+                          {(localItem?.days || [])?.map((day, index) => (
+                            <Draggable key={day.id} draggableId={day.id} index={index}>
+                              {(providedDraggable) => (
+                                <div
+                                  ref={providedDraggable.innerRef}
+                                  className="mt-1 flex w-full items-center justify-between"
+                                  {...providedDraggable.draggableProps}>
+                                  <div {...providedDraggable.dragHandleProps}>
+                                    <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon="mdi:drag" />
+                                  </div>
+                                  <InputText
+                                    className="w-full"
+                                    onChange={(e) => {
+                                      const tempDays = [...(localItem?.days || [])];
+                                      tempDays[index].value = e.target.value;
+                                      handleChange({ name: "days", value: tempDays });
+                                    }}
+                                    value={day?.value}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {providedDroppable.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
 
-      <Button
-        className="p-button-outlined p-button-success"
-        disabled={createCalendarMutation.isLoading || updateCalendarMutation.isLoading || disableCalendarSaveButton(localItem)}
-        loading={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
-        onClick={async () =>
-          createUpdateItem<CalendarType>(
-            calendar,
-            localItem,
-            changedData,
-            "calendars",
-            project_id as string,
-            queryClient,
-            DefaultCalendar,
-            allCalendars,
-            resetChanges,
-            createCalendarMutation.mutateAsync,
-            updateCalendarMutation.mutateAsync,
-            setDrawer,
-          )
-        }
-        type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
-      </Button>
+                  <Button
+                    className="p-button-text"
+                    icon="pi pi-plus"
+                    iconPos="right"
+                    label="Add new day"
+                    onClick={() =>
+                      setLocalItem((prev) => ({
+                        ...prev,
+                        days: [
+                          ...(prev.days || []),
+                          { id: crypto.randomUUID(), value: `New Day ${(prev.days?.length || 0) + 1}` },
+                        ],
+                      }))
+                    }
+                    tooltip="Add new day"
+                    tooltipOptions={{ position: "left" }}
+                  />
+                </div>
+              </DrawerSection>
+              <DrawerSection title="Calendar hours (optional)">
+                <InputNumber
+                  name="hours"
+                  onChange={(e) => handleChange({ name: "hours", value: e.value })}
+                  placeholder="How many hours in a day?"
+                />
+              </DrawerSection>
+              <DrawerSection title="Calendar minutes (optional)">
+                <InputNumber
+                  name="minutes"
+                  onChange={(e) => handleChange({ name: "minutes", value: e.value })}
+                  placeholder="How many minutes in a day?"
+                />
+              </DrawerSection>
+            </div>
+          </TabPanel>
+          <TabPanel header="Eras">Eras</TabPanel>
+          <TabPanel header="Months">Months</TabPanel>
+        </TabView>
+      </div>
+
+      <div className="justify-content-end mb-2 flex w-full">
+        <Button
+          className="p-button-outlined p-button-success w-full"
+          disabled={
+            createCalendarMutation.isLoading || updateCalendarMutation.isLoading || disableCalendarSaveButton(localItem)
+          }
+          loading={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
+          onClick={async () =>
+            createUpdateItem<CalendarType>(
+              calendar,
+              { ...localItem, days: localItem.days.map((day) => day.value) },
+              changedData,
+              "calendars",
+              project_id as string,
+              queryClient,
+              DefaultCalendar,
+              allCalendars,
+              resetChanges,
+              createCalendarMutation.mutateAsync,
+              updateCalendarMutation.mutateAsync,
+              setDrawer,
+            )
+          }
+          type="submit">
+          {buttonLabelWithIcon("Save", "mdi:content-save")}
+        </Button>
+      </div>
+
       <div className="mt-auto flex w-full">
         {calendar ? (
           <Button

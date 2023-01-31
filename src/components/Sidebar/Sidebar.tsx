@@ -25,7 +25,7 @@ const navItems: NavItemType[] = [
   { icon: "ion:documents-outline", navigate: "./documents", tooltip: "Documents" },
   { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
   { icon: "ph:graph", navigate: "./boards", tooltip: "Boards" },
-  { icon: "ph:calendar-blank-thin", navigate: "./calendars", tooltip: "Calendars" },
+  { icon: "ph:calendar-blank", navigate: "./calendars", tooltip: "Calendars" },
   // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
   { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
   { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionaries" },
