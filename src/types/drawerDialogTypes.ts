@@ -10,6 +10,7 @@ export type DrawerAtomType = {
   exceptions: {
     fromTemplate?: boolean;
     createTemplate?: boolean;
+    eventDescription?: boolean;
   };
   data?: {
     [key: string]: any;

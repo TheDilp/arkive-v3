@@ -54,6 +54,7 @@ export const createURLS = {
   createWord: "createword",
   createCalendar: "createcalendar",
   createMonth: "createmonth",
+  createEvent: "createevent",
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",

@@ -9,22 +9,12 @@ import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
 import { CalendarType, MonthType } from "../../types/ItemTypes/calendarTypes";
-import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 function MonthDropdownTemplate(data: MonthType) {
   const { title } = data;
   return <div className="font-Lato text-lg">{title}</div>;
-}
-function getRemainingDays(monthDays: number, daysPerWeek: number, weeks: number) {
-  const finalDays = monthDays - weeks * daysPerWeek;
-  if (finalDays < 0) return 0;
-  return finalDays;
-}
-function getNextMonthDays(monthDays: number, daysPerWeek: number, weeks: number) {
-  const finalDays = daysPerWeek - (monthDays - weeks * daysPerWeek);
-  if (finalDays === daysPerWeek || finalDays < 0) return 0;
-  return finalDays;
 }
 function getNextDate(date: { month: number; year: number; weeks: number }, calendar: CalendarType, type: "next" | "previous") {
   const { month, year } = date;
@@ -60,13 +50,16 @@ function getStartingDayForMonth(months: MonthType[] | undefined, year: number, m
   const daysBeforeYear = year * dayInYear;
   return (daysBeforeYear % 10) + dayBeforeMonth;
 }
-
 function DayTitle({ index, weekdays: days, dayNumber }: { index: number; weekdays: string[]; dayNumber: number }) {
+  const [, setDrawer] = useAtom(DrawerAtom);
   return (
-    <span className="">
+    <span className="flex select-none items-center">
       {dayNumber + 1}
       <span className="text-zinc-600 transition-colors duration-100 group-hover:text-white">
         ({index < 10 ? days[index] : days[index % days.length ?? 0]}){" "}
+      </span>
+      <span className="ml-auto opacity-0 transition-all duration-100 hover:text-sky-400 group-hover:opacity-100">
+        <Icon icon="mdi:plus" onClick={() => setDrawer({ ...DefaultDrawer, type: "events", show: true })} />
       </span>
     </span>
   );
@@ -78,6 +71,7 @@ export default function CalendarView() {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [date, setDate] = useState({ month: 0, year: 5, weeks: 0 });
   const monthDays = calendar?.months?.[date.month]?.days;
+  const monthEvents = calendar?.months?.[date.month]?.events;
   useEffect(() => {
     if (monthDays) {
       setDate((prev) => ({ ...prev, weeks: Math.floor(monthDays / calendar.days.length) }));
@@ -87,7 +81,7 @@ export default function CalendarView() {
   if (isLoading) return <ProgressSpinner />;
 
   return (
-    <div className="flex h-full w-full max-w-full flex-col ">
+    <div className="flex h-full w-full max-w-full flex-col">
       <h2 className="sticky top-0 flex h-14 items-center justify-center bg-zinc-800 pt-2 text-center text-2xl">
         <div className="ml-auto flex items-center">
           <Icon
@@ -173,19 +167,46 @@ export default function CalendarView() {
           <div className="h-full overflow-hidden">
             <div className="flex h-full w-full flex-col content-start overflow-auto border border-zinc-700">
               <div
-                className="grid h-full w-full content-start overflow-auto "
+                className="grid h-full w-full content-start overflow-auto"
                 style={{
-                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(8rem, auto))`,
+                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(8rem, 10rem))`,
                 }}>
-                {[...Array(monthDays).keys()].map((day) => (
-                  <div className="group col-span-1 h-56 cursor-pointer border border-zinc-700 hover:text-white">
+                {[...Array(monthDays).keys()].map((day, index) => (
+                  <div
+                    className="group col-span-1 h-56 border border-zinc-700 hover:text-white"
+                    onKeyDown={() => {}}
+                    role="button"
+                    tabIndex={-1}>
                     <DayTitle
                       key={day}
                       dayNumber={day}
                       index={day + getStartingDayForMonth(calendar.months, 5, date.month)}
-                      monthDaysCount={calendar.months[date.month].days}
                       weekdays={calendar.days}
                     />
+                    <div className="p-1">
+                      {monthEvents
+                        ? monthEvents
+                            .filter((event) => event.day === index + 1 && event.year === date.year)
+                            .map((event) => (
+                              <div
+                                className="truncate rounded-md bg-sky-800 px-1 text-sm transition-all duration-100 hover:bg-sky-500"
+                                onClick={() =>
+                                  setDrawer({
+                                    ...DefaultDrawer,
+                                    show: true,
+                                    type: "events",
+                                    exceptions: { eventDescription: true },
+                                    drawerSize: "md",
+                                  })
+                                }
+                                onKeyDown={() => {}}
+                                role="button"
+                                tabIndex={-1}>
+                                {event.title}
+                              </div>
+                            ))
+                        : null}
+                    </div>
                   </div>
                 ))}
               </div>

@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { BaseItemType } from "../generalTypes";
+import { BaseItemType, TagType } from "../generalTypes";
 
 export interface CalendarType extends BaseItemType {
   id: string;
@@ -43,16 +43,20 @@ export type EventType = {
   era: EraType;
   month: MonthType;
   day: number;
-  hours: number;
-  minutes: number;
+  hours?: number;
+  minutes?: number;
 
   erasId: string;
   monthsId: string;
   calendarsId: string | null;
+
+  tags: TagType[];
 };
 
 export type CalendarCreateType = Partial<Omit<CalendarType, "parentId">>;
 export type MonthCreateType = Partial<Omit<MonthType, "events" | "sort">>;
+export type EventCreateType = Partial<Omit<EventType, "era">>;
 
 export type DefaultCalendarType = Pick<CalendarType, "title" | "project_id">;
 export type DefaultMonthType = Pick<MonthType, "title" | "parentId" | "days">;
+export type DefaultEventType = Pick<EventType, "title" | "monthsId" | "calendarsId">;

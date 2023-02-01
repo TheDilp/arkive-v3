@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerEventContent from "./DrawerContent/DrawerEventContent";
+import DrawerEventDescription from "./DrawerContent/DrawerEventDescription";
 import DrawerMonthContent from "./DrawerContent/DrawerMonthContent";
 
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
@@ -90,6 +92,8 @@ export default function Drawer() {
         {drawer.type === "insert_word" ? <DrawerInsertWord /> : null}
         {drawer.type === "calendars" ? <DrawerCalendarContent /> : null}
         {drawer.type === "months" ? <DrawerMonthContent /> : null}
+        {drawer.type === "events" && !drawer.exceptions?.eventDescription ? <DrawerEventContent /> : null}
+        {drawer.type === "events" && drawer.exceptions?.eventDescription ? <DrawerEventDescription /> : null}
       </Suspense>
     </PrimeDrawer>
   );
