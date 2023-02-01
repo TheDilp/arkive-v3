@@ -223,7 +223,7 @@ export default function DrawerCalendarContent() {
                             <InputText
                               className="w-full"
                               onChange={(e) => {
-                                const tempDays = [...(localItem?.mo || [])];
+                                const tempDays = [...(localItem?.days || [])];
                                 tempDays[index].value = e.target.value;
                                 handleChange({ name: "days", value: tempDays });
                               }}
@@ -235,7 +235,7 @@ export default function DrawerCalendarContent() {
                                 fontSize={20}
                                 icon="mdi:pencil-outline"
                                 onClick={() => {
-                                  setDrawer({ ...DefaultDrawer, show: true, type: "months" });
+                                  setDrawer({ ...DefaultDrawer, show: true, data: month, type: "months" });
                                 }}
                               />
                             </div>

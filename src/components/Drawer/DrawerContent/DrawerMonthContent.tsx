@@ -30,8 +30,11 @@ export default function DrawerMonthContent() {
   const updateMonthMutation = useUpdateSubItem<MonthType>(item_id as string, "months", "calendars");
   const deleteMonthMutation = useDeleteItem("calendars", project_id as string);
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
-  const month = allCalendars?.find((dict) => dict.id === item_id)?.months?.find((m) => m?.id === drawer?.data?.id);
-
+  const month = allCalendars?.find((cal) => cal.id === drawer?.data?.parentId)?.months?.find((m) => m?.id === drawer?.data?.id);
+  console.log(
+    allCalendars,
+    allCalendars?.find((cal) => cal.id === drawer?.data?.parentId),
+  );
   const [localItem, setLocalItem] = useState<MonthType | MonthCreateType>(month ?? { ...DefaultMonth });
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 

@@ -4,7 +4,6 @@ import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
-import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { CalendarType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -14,7 +13,6 @@ export default function CalendarsTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const createCalendarMutation = useCreateItem<CalendarType>("calendars");
-  const { isMd } = useBreakpoint();
   return (
     <div className="flex h-screen flex-1 flex-col">
       <h2 className="h-8 text-center font-Merriweather text-2xl">Calendars</h2>
@@ -24,7 +22,7 @@ export default function CalendarsTree() {
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
           iconPos="right"
-          label={isMd ? "" : "New Folder"}
+          label="New Folder"
           onClick={() => {
             createCalendarMutation?.mutate({
               folder: true,

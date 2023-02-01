@@ -213,6 +213,13 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
           }
+          if (type === "calendars" && subType === "months" && "months" in oldData) {
+            const updatedData = (oldData[subType] || []).map((subItem) => {
+              if (subItem.id === variables.id) return { ...subItem, ...variables };
+              return subItem;
+            });
+            queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
+          }
           if (type === "screens" && subType === "sections" && "sections" in oldData) {
             const updatedData = (oldData[subType] || []).map((subItem) => {
               if (subItem.id === variables.id) return { ...subItem, ...variables };
@@ -220,6 +227,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
           }
+
           if (type === "dictionaries" && subType === "words" && "words" in oldData) {
             const updatedData = (oldData[subType] || []).map((subItem) => {
               if (subItem.id === variables.id) return { ...subItem, ...variables };
@@ -437,7 +445,7 @@ export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItem
         return { old };
       },
       onSuccess: () => toaster("success", "Items successfully deleted."),
-      onError: (error, variables, context) => {
+      onError: (_, __, context) => {
         toaster("error", "There was an error deleting these items.");
         queryClient.setQueryData(["boards", item_id], context?.old);
       },
