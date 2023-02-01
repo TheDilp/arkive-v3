@@ -1,27 +1,31 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
-import { CalendarType } from "../../types/ItemTypes/calendarTypes";
+import { CalendarType, MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
+function MonthDropdownTemplate(data: MonthType) {
+  const { title } = data;
+  return <div className="font-Lato text-lg">{title}</div>;
+}
 function getRemainingDays(monthDays: number, daysPerWeek: number, weeks: number) {
   const finalDays = monthDays - weeks * daysPerWeek;
   if (finalDays < 0) return 0;
   return finalDays;
 }
-
 function getNextMonthDays(monthDays: number, daysPerWeek: number, weeks: number) {
   const finalDays = daysPerWeek - (monthDays - weeks * daysPerWeek);
   if (finalDays === daysPerWeek || finalDays < 0) return 0;
   return finalDays;
 }
-
 function getNextDate(date: { month: number; year: number; weeks: number }, calendar: CalendarType, type: "next" | "previous") {
   const { month, year } = date;
   const numberOfMonths = calendar?.months?.length;
@@ -47,12 +51,32 @@ function getNextDate(date: { month: number; year: number; weeks: number }, calen
   }
   return date;
 }
+function getStartingDayForMonth(months: MonthType[] | undefined, year: number, monthIndex: number) {
+  if ((!year && year === undefined) || !months) return 0;
+  const dayInYear = months.reduce((accumulator, currentValue) => accumulator + currentValue.days, 0);
+  const dayBeforeMonth = months
+    .filter((m, index) => index < monthIndex)
+    .reduce((accumulator, currentValue) => accumulator + currentValue.days, 0);
+  const daysBeforeYear = year * dayInYear;
+  return (daysBeforeYear % 10) + dayBeforeMonth;
+}
+
+function DayTitle({ index, weekdays: days, dayNumber }: { index: number; weekdays: string[]; dayNumber: number }) {
+  return (
+    <span className="">
+      {dayNumber + 1}
+      <span className="text-zinc-600 transition-colors duration-100 group-hover:text-white">
+        ({index < 10 ? days[index] : days[index % days.length ?? 0]}){" "}
+      </span>
+    </span>
+  );
+}
 
 export default function CalendarView() {
   const { item_id } = useParams();
   const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars");
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [date, setDate] = useState({ month: 0, year: 0, weeks: 0 });
+  const [date, setDate] = useState({ month: 0, year: 5, weeks: 0 });
   const monthDays = calendar?.months?.[date.month]?.days;
   useEffect(() => {
     if (monthDays) {
@@ -92,7 +116,38 @@ export default function CalendarView() {
           />
         </div>
         <span className="min-w-[10rem] select-none text-lg">
-          {calendar?.months ? calendar.months[date.month].title : null} {date?.year}
+          <Dropdown
+            className="monthDropdown h-min"
+            itemTemplate={MonthDropdownTemplate}
+            onChange={(e) => {
+              if (calendar) {
+                const monthIdx = calendar?.months ? calendar.months.findIndex((month) => month.id === e.value.id) : 0;
+                const newMonthDays = calendar?.months?.[monthIdx]?.days;
+                if (newMonthDays)
+                  setDate((prev) => ({
+                    ...prev,
+                    month: monthIdx,
+                    weeks: Math.floor(newMonthDays / calendar.days.length),
+                  }));
+              }
+            }}
+            optionLabel="title"
+            options={calendar?.months}
+            value={calendar?.months?.[date?.month]}
+          />
+          <InputNumber
+            onBlur={(e) => {
+              const year = parseFloat(e.currentTarget.value);
+              setDate((prev) => ({ ...prev, year }));
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const year = parseFloat(e.currentTarget.value);
+                setDate((prev) => ({ ...prev, year }));
+              }
+            }}
+            value={date.year}
+          />
         </span>
         <span className="ml-auto flex">
           <Button className="p-button-text" tooltip="Add eras" tooltipOptions={{ position: "left" }}>
@@ -117,34 +172,22 @@ export default function CalendarView() {
         {calendar ? (
           <div className="h-full overflow-hidden">
             <div className="flex h-full w-full flex-col content-start overflow-auto border border-zinc-700">
-              {[...Array(date.weeks).keys()].map((week) => (
-                <div key={week} className="flex">
-                  {calendar.days.map((day, index) => (
-                    <div
-                      key={`${week}-${day}`}
-                      className="h-40 w-40 min-w-[8rem] flex-1 border-b border-zinc-700 even:border-x">
-                      {calendar.days?.[index] || day + 1}
-                    </div>
-                  ))}
-                </div>
-              ))}
-              <div className="flex">
-                {[...Array(monthDays ? getRemainingDays(monthDays, calendar.days.length, date.weeks) : 0).keys()].map(
-                  (day, index) => (
-                    <div key={day} className="h-40 w-40 min-w-[8rem] flex-1 border-b border-zinc-700 even:border-x">
-                      {calendar.days?.[index] || day + 1}
-                    </div>
-                  ),
-                )}
-                {[...Array(monthDays ? getNextMonthDays(monthDays, calendar.days.length, date.weeks) : 0).keys()].map(
-                  (day, index) => (
-                    <div
+              <div
+                className="grid h-full w-full content-start overflow-auto "
+                style={{
+                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(8rem, auto))`,
+                }}>
+                {[...Array(monthDays).keys()].map((day) => (
+                  <div className="group col-span-1 h-56 cursor-pointer border border-zinc-700 hover:text-white">
+                    <DayTitle
                       key={day}
-                      className="h-40 w-40 min-w-[8rem] flex-1 border-b border-zinc-700 text-zinc-600 even:border-x">
-                      {calendar.days?.[monthDays ? index + monthDays - date.weeks * calendar.days.length : index] || day + 1}
-                    </div>
-                  ),
-                )}
+                      dayNumber={day}
+                      index={day + getStartingDayForMonth(calendar.months, 5, date.month)}
+                      monthDaysCount={calendar.months[date.month].days}
+                      weekdays={calendar.days}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
