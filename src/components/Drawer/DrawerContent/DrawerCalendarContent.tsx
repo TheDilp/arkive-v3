@@ -11,17 +11,23 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
+import { useGetItem } from "../../../hooks/useGetItem";
+import { baseURLS, updateURLs } from "../../../types/CRUDenums";
 import { CalendarCreateType, CalendarType } from "../../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultCalendar } from "../../../utils/DefaultValues/CalendarDefaults";
+import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
-function disableCalendarSaveButton(localItem: CalendarType | CalendarCreateType) {
+function disableCalendarSaveButton(
+  localItem: Omit<CalendarType | CalendarCreateType, "days"> & { days: { id: string; value: string }[] },
+) {
   if (!localItem.title) return true;
   return false;
 }
@@ -30,30 +36,29 @@ export default function DrawerCalendarContent() {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const { data: calendar } = useGetItem<CalendarType>(drawer?.data?.id, "calendars");
+  const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
   const createCalendarMutation = useCreateItem<CalendarType>("calendars");
   const updateCalendarMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
   const deleteCalendarMutation = useDeleteItem("calendars", project_id as string);
-  const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
-  const calendar = allCalendars?.find((dict) => dict.id === drawer?.data?.id);
 
   const [localItem, setLocalItem] = useState<
     Omit<CalendarType | CalendarCreateType, "days"> & { days: { id: string; value: string }[] }
   >(
-    { ...drawer?.data, days: drawer?.data?.days.map((day: string) => ({ value: day, id: crypto.randomUUID() })) } ?? {
+    { ...calendar, days: calendar?.days?.map((day: string) => ({ value: day, id: crypto.randomUUID() })) || [] } ?? {
       ...DefaultCalendar,
       project_id,
     },
   );
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flex w-full flex-1 flex-col">
         <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Calendar"}</h2>
         <TabView className="h-full w-full overflow-hidden" renderActiveOnly>
           <TabPanel header="Calendar">
-            <div className="flex w-full flex-col gap-y-3 pt-3 ">
+            <div className="flex w-full flex-col gap-y-3 pt-3">
               <DrawerSection title="Calendar title">
                 <InputText
                   autoFocus
@@ -64,7 +69,7 @@ export default function DrawerCalendarContent() {
                     if (e.key === "Enter") {
                       await createUpdateItem<CalendarType>(
                         calendar,
-                        localItem,
+                        { ...localItem, days: localItem.days.map((day) => day.value) },
                         changedData,
                         "boards",
                         project_id as string,
@@ -106,6 +111,7 @@ export default function DrawerCalendarContent() {
                                 <div
                                   ref={providedDraggable.innerRef}
                                   className="mt-1 flex w-full items-center justify-between"
+                                  tabIndex={-1}
                                   {...providedDraggable.draggableProps}>
                                   <div {...providedDraggable.dragHandleProps}>
                                     <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon="mdi:drag" />
@@ -143,8 +149,6 @@ export default function DrawerCalendarContent() {
                         ],
                       }))
                     }
-                    tooltip="Add new day"
-                    tooltipOptions={{ position: "left" }}
                   />
                 </div>
               </DrawerSection>
@@ -153,6 +157,7 @@ export default function DrawerCalendarContent() {
                   name="hours"
                   onChange={(e) => handleChange({ name: "hours", value: e.value })}
                   placeholder="How many hours in a day?"
+                  value={localItem.hours}
                 />
               </DrawerSection>
               <DrawerSection title="Calendar minutes (optional)">
@@ -160,12 +165,93 @@ export default function DrawerCalendarContent() {
                   name="minutes"
                   onChange={(e) => handleChange({ name: "minutes", value: e.value })}
                   placeholder="How many minutes in a day?"
+                  value={localItem.minutes}
                 />
               </DrawerSection>
             </div>
           </TabPanel>
-          <TabPanel header="Eras">Eras</TabPanel>
-          <TabPanel header="Months">Months</TabPanel>
+          <TabPanel disabled={!localItem?.id} header="Eras">
+            <div className="flex w-full flex-col items-end gap-y-3 pt-3">
+              <Button
+                className="p-button-text"
+                icon="pi pi-plus"
+                iconPos="right"
+                label="Add new era"
+                onClick={() =>
+                  setLocalItem((prev) => ({
+                    ...prev,
+                    days: [...(prev.days || []), { id: crypto.randomUUID(), value: `New Day ${(prev.days?.length || 0) + 1}` }],
+                  }))
+                }
+              />
+            </div>
+          </TabPanel>
+          <TabPanel disabled={!localItem?.id} header="Months">
+            <DragDropContext
+              onDragEnd={(result) => {
+                if (!result.destination) return;
+                const tempMonths = [...(localItem?.months || [])];
+                const month = tempMonths[result.source.index];
+                tempMonths.splice(result.source.index, 1);
+                tempMonths.splice(result.destination.index, 0, month);
+                handleChange({ name: "months", value: tempMonths });
+                FetchFunction({
+                  url: `${baseURLS.baseServer}${updateURLs.sortMonths}`,
+                  method: "POST",
+                  body: JSON.stringify(
+                    tempMonths.map((sortMonth, index) => ({ id: sortMonth.id, parentId: sortMonth.parentId, sort: index })),
+                  ),
+                });
+              }}>
+              <Droppable droppableId="Days">
+                {(providedDroppable) => (
+                  <div
+                    ref={providedDroppable.innerRef}
+                    {...providedDroppable.droppableProps}
+                    className="flex w-full flex-col items-center overflow-y-auto overflow-x-hidden">
+                    {(localItem?.months || [])?.map((month, index) => (
+                      <Draggable key={month.id} draggableId={month.id} index={index}>
+                        {(providedDraggable) => (
+                          <div
+                            ref={providedDraggable.innerRef}
+                            className="mt-1 flex w-full items-center justify-between"
+                            tabIndex={-1}
+                            {...providedDraggable.draggableProps}>
+                            <div {...providedDraggable.dragHandleProps}>
+                              <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon="mdi:drag" />
+                            </div>
+                            <InputText
+                              className="w-full"
+                              onChange={(e) => {
+                                const tempDays = [...(localItem?.mo || [])];
+                                tempDays[index].value = e.target.value;
+                                handleChange({ name: "days", value: tempDays });
+                              }}
+                              value={month.title}
+                            />
+                            <div>
+                              <Icon
+                                className="cursor-pointer hover:text-sky-400"
+                                fontSize={20}
+                                icon="mdi:pencil-outline"
+                                onClick={() => {
+                                  setDrawer({ ...DefaultDrawer, show: true, type: "months" });
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <Icon className="cursor-pointer hover:text-red-400" fontSize={20} icon="mdi:trash-outline" />
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {providedDroppable.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          </TabPanel>
         </TabView>
       </div>
 
@@ -176,11 +262,15 @@ export default function DrawerCalendarContent() {
             createCalendarMutation.isLoading || updateCalendarMutation.isLoading || disableCalendarSaveButton(localItem)
           }
           loading={createCalendarMutation.isLoading || updateCalendarMutation.isLoading}
-          onClick={async () =>
+          onClick={async () => {
             createUpdateItem<CalendarType>(
               calendar,
               { ...localItem, days: localItem.days.map((day) => day.value) },
-              changedData,
+              {
+                ...changedData,
+                ...(changedData &&
+                  "days" in changedData && { days: changedData.days.map((day: { id: string; value: string }) => day.value) }),
+              },
               "calendars",
               project_id as string,
               queryClient,
@@ -190,8 +280,8 @@ export default function DrawerCalendarContent() {
               createCalendarMutation.mutateAsync,
               updateCalendarMutation.mutateAsync,
               setDrawer,
-            )
-          }
+            );
+          }}
           type="submit">
           {buttonLabelWithIcon("Save", "mdi:content-save")}
         </Button>

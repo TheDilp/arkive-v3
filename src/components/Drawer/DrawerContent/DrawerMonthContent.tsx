@@ -32,7 +32,7 @@ export default function DrawerMonthContent() {
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
   const month = allCalendars?.find((dict) => dict.id === item_id)?.months?.find((m) => m?.id === drawer?.data?.id);
 
-  const [localItem, setLocalItem] = useState<MonthType | MonthCreateType>(drawer?.data ?? { ...DefaultMonth, project_id });
+  const [localItem, setLocalItem] = useState<MonthType | MonthCreateType>(month ?? { ...DefaultMonth });
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   const createUpdateMonth = () => {

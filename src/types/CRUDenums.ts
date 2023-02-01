@@ -83,6 +83,7 @@ export const updateURLs = {
   sortScreens: "sortscreens",
   sortSections: "sortsections",
   sortCards: "sortcards",
+  sortMonths: "sortmonths",
 };
 
 export const deleteURLs = {
