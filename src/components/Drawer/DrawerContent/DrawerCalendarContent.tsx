@@ -96,7 +96,7 @@ export default function DrawerCalendarContent() {
                 />
               </DrawerSection>
               <DrawerSection title="Calendar days">
-                <div className="flex h-72 flex-col items-end overflow-hidden">
+                <div className="flex h-fit max-h-[50rem] flex-col items-end overflow-hidden">
                   <DragDropContext
                     onDragEnd={(result) => {
                       if (!result.destination) return;
@@ -133,6 +133,18 @@ export default function DrawerCalendarContent() {
                                     }}
                                     value={day?.value}
                                   />
+                                  <div>
+                                    <Icon
+                                      className="cursor-pointer hover:text-red-400"
+                                      fontSize={20}
+                                      icon="mdi:trash-outline"
+                                      onClick={() => {
+                                        const tempDays = [...(localItem?.days || [])];
+                                        tempDays.splice(index, 1);
+                                        handleChange({ name: "days", value: tempDays });
+                                      }}
+                                    />
+                                  </div>
                                 </div>
                               )}
                             </Draggable>
@@ -148,15 +160,11 @@ export default function DrawerCalendarContent() {
                     icon="pi pi-plus"
                     iconPos="right"
                     label="Add new day"
-                    onClick={() =>
-                      setLocalItem((prev) => ({
-                        ...prev,
-                        days: [
-                          ...(prev.days || []),
-                          { id: crypto.randomUUID(), value: `New Day ${(prev.days?.length || 0) + 1}` },
-                        ],
-                      }))
-                    }
+                    onClick={() => {
+                      const tempDays = [...(localItem.days || [])];
+                      tempDays.push({ id: crypto.randomUUID(), value: `New Day ${(localItem.days?.length || 0) + 1}` });
+                      handleChange({ name: "days", value: tempDays });
+                    }}
                   />
                 </div>
               </DrawerSection>
