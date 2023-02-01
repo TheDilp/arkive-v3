@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
@@ -50,6 +50,14 @@ export default function DrawerCalendarContent() {
       project_id,
     },
   );
+
+  useEffect(() => {
+    if (calendar)
+      setLocalItem({
+        ...calendar,
+        days: calendar?.days?.map((day: string) => ({ value: day, id: crypto.randomUUID() })) || [],
+      });
+  }, [calendar]);
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
   return (
