@@ -7,6 +7,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import CalendarEvent from "../../components/Calendar/Event";
 import { useGetItem } from "../../hooks/useGetItem";
 import { CalendarType, MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -90,7 +91,6 @@ export default function CalendarView() {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [date, setDate] = useState({ month: 0, year: 5, weeks: 0 });
   const monthDays = calendar?.months?.[date.month]?.days;
-  const monthEvents = calendar?.months?.[date.month]?.events;
   useEffect(() => {
     if (monthDays) {
       setDate((prev) => ({ ...prev, weeks: Math.floor(monthDays / calendar.days.length) }));
@@ -205,32 +205,7 @@ export default function CalendarView() {
                     role="button"
                     tabIndex={-1}>
                     <DayNumber key={day} dayNumber={day} month={calendar.months?.[date.month]} year={date.year} />
-                    <div className="p-1">
-                      {monthEvents
-                        ? monthEvents
-                            .filter((event) => event.day === index + 1 && event.year === date.year)
-                            .map((event) => (
-                              <div
-                                key={event.id}
-                                className="truncate rounded bg-sky-800 px-1 text-sm transition-all duration-100 hover:bg-sky-500"
-                                onClick={() =>
-                                  setDrawer({
-                                    ...DefaultDrawer,
-                                    show: true,
-                                    type: "events",
-                                    data: event,
-                                    exceptions: { eventDescription: true },
-                                    drawerSize: "md",
-                                  })
-                                }
-                                onKeyDown={() => {}}
-                                role="button"
-                                tabIndex={-1}>
-                                {event.title}
-                              </div>
-                            ))
-                        : null}
-                    </div>
+                    <CalendarEvent index={index} monthEvents={calendar.months?.[date.month]?.events || []} year={date.year} />
                   </div>
                 ))}
               </div>

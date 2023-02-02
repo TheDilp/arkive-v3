@@ -45,6 +45,7 @@ export const updateURL = (type: AllAvailableTypes) => {
   if (type === "words") return `${baseURLS.baseServer}${updateURLs.updateWord}`;
   if (type === "calendars") return `${baseURLS.baseServer}${updateURLs.updateCalendar}`;
   if (type === "months") return `${baseURLS.baseServer}${updateURLs.updateMonth}`;
+  if (type === "events") return `${baseURLS.baseServer}${updateURLs.updateEvent}`;
   return null;
 };
 

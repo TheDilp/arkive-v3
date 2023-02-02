@@ -77,6 +77,7 @@ export const updateURLs = {
   updateWord: "updateword",
   updateCalendar: "updatecalendar",
   updateMonth: "updatemonth",
+  updateEvent: "updateevent",
   updateTag: "updatetag",
 
   sortDocuments: "sortdocuments",

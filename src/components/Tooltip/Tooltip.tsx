@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import {
   autoPlacement,
   autoUpdate,
@@ -18,9 +19,10 @@ interface Props {
   children: JSX.Element;
   disabled?: boolean;
   isClickable?: boolean;
+  closeOnClick?: boolean;
 }
 
-export function Tooltip({ children, content, disabled, isClickable }: Props) {
+export function Tooltip({ children, content, disabled, isClickable, closeOnClick }: Props) {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, context } = useFloating({
@@ -51,6 +53,14 @@ export function Tooltip({ children, content, disabled, isClickable }: Props) {
       {cloneElement(children, getReferenceProps({ ref: reference, ...children.props }))}
       {!disabled && open && (
         <div
+          onClick={() => {
+            if (closeOnClick) {
+              setOpen((prev) => !prev);
+            }
+          }}
+          onKeyDown={() => {}}
+          role="tooltip"
+          tabIndex={-1}
           {...getFloatingProps({
             ref: floating,
             className: "Tooltip",

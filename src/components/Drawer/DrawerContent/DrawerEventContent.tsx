@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 import { useDeleteItem, useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
-import { baseURLS, createURLS } from "../../../types/CRUDenums";
+import { baseURLS, createURLS, updateURLs } from "../../../types/CRUDenums";
 import { CalendarType, EventCreateType, EventType } from "../../../types/ItemTypes/calendarTypes";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -49,11 +49,16 @@ export default function DrawerEventContent() {
       if (localItem?.id) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { tags, ...rest } = changedData;
-        // await FetchFunction({
-        //   url: `${baseURLS.baseServer}${createURLS.createEvent}`,
-        //   method: "POST",
-        //   body: JSON.stringify(localItem),
-        // });
+        await FetchFunction({
+          url: `${baseURLS.baseServer}${updateURLs.updateEvent}`,
+          method: "POST",
+          body: JSON.stringify({ ...rest, id: localItem.id }),
+        });
+        queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
+        resetChanges();
+        setLoading(false);
+
+        handleCloseDrawer(setDrawer, "right");
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         await FetchFunction({
@@ -61,17 +66,7 @@ export default function DrawerEventContent() {
           method: "POST",
           body: JSON.stringify({ ...localItem, calendarsId: item_id as string }),
         });
-        queryClient.setQueryData<CalendarType>(["calendars", item_id], (oldData) => {
-          if (oldData)
-            return {
-              ...oldData,
-              months: oldData.months.map((month) => {
-                if (month.id === localItem.monthsId) return { ...month, events: [...month.events, localItem] };
-                return month;
-              }),
-            };
-          return oldData;
-        });
+        queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
 
