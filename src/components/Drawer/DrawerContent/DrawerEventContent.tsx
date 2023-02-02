@@ -3,14 +3,17 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
+import { InputTextarea } from "primereact/inputtextarea";
+import { MultiSelect } from "primereact/multiselect";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useDeleteItem } from "../../../CRUD/ItemsCRUD";
+import { useDeleteItem, useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, createURLS } from "../../../types/CRUDenums";
 import { CalendarType, EventCreateType, EventType } from "../../../types/ItemTypes/calendarTypes";
+import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { DefaultEvent } from "../../../utils/DefaultValues/CalendarDefaults";
@@ -27,13 +30,20 @@ function disableEventSaveButton(localItem: EventType | EventCreateType) {
 export default function DrawerEventContent() {
   const { project_id, item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents", {
+    staleTime: 5 * 60 * 1000,
+  });
 
   const deleteMonthMutation = useDeleteItem("calendars", project_id as string);
   const { data: calendar } = useGetItem<CalendarType>(item_id as string, "calendars");
-
-  const [localItem, setLocalItem] = useState<EventType | EventCreateType>(drawer?.data ?? { ...DefaultEvent });
+  const [loading, setLoading] = useState(false);
+  const [localItem, setLocalItem] = useState<EventType | EventCreateType>(
+    drawer?.data?.id ? drawer.data : { ...DefaultEvent, ...drawer.data },
+  );
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
+
   const createUpdateEvent = async () => {
+    setLoading(true);
     if (changedData) {
       if (localItem?.id) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,13 +61,18 @@ export default function DrawerEventContent() {
           body: JSON.stringify({ ...localItem, calendarsId: item_id as string }),
         });
         resetChanges();
+        setLoading(false);
+
         handleCloseDrawer(setDrawer, "right");
       }
     } else {
       toaster("info", "No data was changed.");
+      setLoading(false);
     }
   };
-
+  useEffect(() => {
+    setLocalItem((prev) => ({ ...prev, ...drawer.data }));
+  }, [drawer.data]);
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Event"}</h2>
@@ -77,7 +92,7 @@ export default function DrawerEventContent() {
         />
       </DrawerSection>
       <DrawerSection title="Event date">
-        <div className="flex flex-col gap-y-1">
+        <div className="flex w-full flex-col gap-y-1">
           <div className="flex gap-x-0.5">
             <InputNumber
               inputClassName="w-full"
@@ -126,12 +141,31 @@ export default function DrawerEventContent() {
           </div>
         </div>
       </DrawerSection>
+      <DrawerSection title="Event Description (optional)">
+        <InputTextarea name="description" onChange={(e) => handleChange(e.target)} value={localItem.description} />
+      </DrawerSection>
+      <DrawerSection title="Event Document (optional)">
+        <Dropdown
+          disabled={isLoading}
+          filter
+          filterBy="title"
+          onChange={(e) => handleChange({ name: "documentsId", value: e.value })}
+          optionLabel="title"
+          options={(documents || [])
+            .filter((doc) => !doc.template && !doc.folder)
+            .map((doc) => ({ id: doc.id, title: doc.title }))}
+          optionValue="id"
+          placeholder="Select documents"
+          value={localItem.documentsId}
+        />
+      </DrawerSection>
 
       <hr className="border-zinc-600" />
 
       <Button
         className="p-button-outlined p-button-success"
-        disabled={disableEventSaveButton(localItem)}
+        disabled={disableEventSaveButton(localItem) || loading}
+        loading={loading}
         onClick={() => createUpdateEvent()}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}

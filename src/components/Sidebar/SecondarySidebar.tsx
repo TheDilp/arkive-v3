@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
+import { setItem } from "../../utils/storage";
 import BoardsTree from "../Tree/BoardsTree";
 import CalendarsTree from "../Tree/CalendarsTree";
 import DictionariesTree from "../Tree/DictionariesTree";
@@ -22,7 +23,13 @@ function SidebarContainer({ children }: Props) {
   const [sidebar, setSidebar] = useAtom(SidebarCollapseAtom);
 
   return isMd ? (
-    <PrimeSidebar className="treeSidebar bg-zinc-800 transition-all" onHide={() => setSidebar(false)} visible={sidebar}>
+    <PrimeSidebar
+      className="treeSidebar bg-zinc-800 transition-all"
+      onHide={() => {
+        setSidebar(false);
+        setItem("sidebarState", false);
+      }}
+      visible={sidebar}>
       {children}
     </PrimeSidebar>
   ) : (

@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
 import { CalendarType, MonthType } from "../../types/ItemTypes/calendarTypes";
-import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 function MonthDropdownTemplate(data: MonthType) {
@@ -50,16 +50,39 @@ function getStartingDayForMonth(months: MonthType[] | undefined, year: number, m
   const daysBeforeYear = year * dayInYear;
   return (daysBeforeYear % 10) + dayBeforeMonth;
 }
-function DayTitle({ index, weekdays: days, dayNumber }: { index: number; weekdays: string[]; dayNumber: number }) {
+function DayTitle({
+  index,
+  weekdays,
+  dayNumber,
+  month,
+  year,
+}: {
+  index: number;
+  weekdays: string[];
+  dayNumber: number;
+  month: MonthType;
+  year: number;
+}) {
   const [, setDrawer] = useAtom(DrawerAtom);
   return (
     <span className="flex select-none items-center">
       {dayNumber + 1}
       <span className="text-zinc-600 transition-colors duration-100 group-hover:text-white">
-        ({index < 10 ? days[index] : days[index % days.length ?? 0]}){" "}
+        ({index < 10 ? weekdays[index] : weekdays[index % weekdays.length ?? 0]})
       </span>
       <span className="ml-auto opacity-0 transition-all duration-100 hover:text-sky-400 group-hover:opacity-100">
-        <Icon icon="mdi:plus" onClick={() => setDrawer({ ...DefaultDrawer, type: "events", show: true })} />
+        <Icon
+          icon="mdi:plus"
+          onClick={() =>
+            setDrawer({
+              ...DefaultDrawer,
+              data: { day: index + 1, monthsId: month?.id, year },
+
+              type: "events",
+              show: true,
+            })
+          }
+        />
       </span>
     </span>
   );
@@ -169,10 +192,11 @@ export default function CalendarView() {
               <div
                 className="grid h-full w-full content-start overflow-auto"
                 style={{
-                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(8rem, 10rem))`,
+                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(9rem, auto))`,
                 }}>
                 {[...Array(monthDays).keys()].map((day, index) => (
                   <div
+                    key={day}
                     className="group col-span-1 h-56 border border-zinc-700 hover:text-white"
                     onKeyDown={() => {}}
                     role="button"
@@ -181,7 +205,9 @@ export default function CalendarView() {
                       key={day}
                       dayNumber={day}
                       index={day + getStartingDayForMonth(calendar.months, 5, date.month)}
+                      month={calendar.months?.[date.month]}
                       weekdays={calendar.days}
+                      year={date.year}
                     />
                     <div className="p-1">
                       {monthEvents
@@ -189,6 +215,7 @@ export default function CalendarView() {
                             .filter((event) => event.day === index + 1 && event.year === date.year)
                             .map((event) => (
                               <div
+                                key={event.id}
                                 className="truncate rounded-md bg-sky-800 px-1 text-sm transition-all duration-100 hover:bg-sky-500"
                                 onClick={() =>
                                   setDrawer({

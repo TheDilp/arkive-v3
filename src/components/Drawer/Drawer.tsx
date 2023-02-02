@@ -9,9 +9,6 @@ import { useParams } from "react-router-dom";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import DrawerEventContent from "./DrawerContent/DrawerEventContent";
-import DrawerEventDescription from "./DrawerContent/DrawerEventDescription";
-import DrawerMonthContent from "./DrawerContent/DrawerMonthContent";
 
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
 const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
@@ -30,6 +27,9 @@ const DrawerSectionContent = lazy(() => import("./DrawerContent/DrawerSectionCon
 const DrawerWordContent = lazy(() => import("./DrawerContent/DrawerWordContent"));
 const DrawerInsertWord = lazy(() => import("./DrawerContent/DrawerInsertWord"));
 const DrawerCalendarContent = lazy(() => import("./DrawerContent/DrawerCalendarContent"));
+const DrawerMonthContent = lazy(() => import("./DrawerContent/DrawerMonthContent"));
+const DrawerEventContent = lazy(() => import("./DrawerContent/DrawerEventContent"));
+const DrawerEventDescription = lazy(() => import("./DrawerContent/DrawerEventDescription"));
 
 export function handleCloseDrawer(
   setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,

@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import { BaseItemType, TagType } from "../generalTypes";
+import { DocumentType } from "./documentTypes";
 
 export interface CalendarType extends BaseItemType {
   id: string;
@@ -38,8 +39,12 @@ export type MonthType = {
 export type EventType = {
   id: string;
   title: string;
-  year: number;
+  description?: string;
 
+  documentsId?: string;
+  document?: DocumentType;
+
+  year: number;
   era: EraType;
   month: MonthType;
   day: number;
