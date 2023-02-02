@@ -4,7 +4,6 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -19,6 +18,7 @@ import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { DefaultEvent } from "../../../utils/DefaultValues/CalendarDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import ColorInput from "../../ColorInput/ColorInput";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
@@ -57,6 +57,7 @@ export default function DrawerEventContent() {
         queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
+        toaster("success", "Event successfully created.");
 
         handleCloseDrawer(setDrawer, "right");
       } else {
@@ -69,6 +70,7 @@ export default function DrawerEventContent() {
         queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
+        toaster("success", "Event successfully updated.");
 
         handleCloseDrawer(setDrawer, "right");
       }
@@ -148,9 +150,9 @@ export default function DrawerEventContent() {
           </div>
         </div>
       </DrawerSection>
-      <DrawerSection title="Event Description (optional)">
+      {/* <DrawerSection title="Event Description (optional)">
         <InputTextarea name="description" onChange={(e) => handleChange(e.target)} value={localItem.description} />
-      </DrawerSection>
+      </DrawerSection> */}
       <DrawerSection title="Event Document (optional)">
         <Dropdown
           disabled={isLoading}
@@ -164,6 +166,20 @@ export default function DrawerEventContent() {
           optionValue="id"
           placeholder="Select documents"
           value={localItem.documentsId}
+        />
+      </DrawerSection>
+      <DrawerSection title="Event colors">
+        <span className="mt-1 text-xs text-zinc-400">Background Color</span>
+        <ColorInput
+          color={localItem?.backgroundColor || ""}
+          name="backgroundColor"
+          onChange={({ name, value }) => handleChange({ name, value })}
+        />
+        <span className="text-xs text-zinc-400">Text color</span>
+        <ColorInput
+          color={localItem?.textColor || ""}
+          name="textColor"
+          onChange={({ name, value }) => handleChange({ name, value })}
         />
       </DrawerSection>
 

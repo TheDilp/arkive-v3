@@ -55,7 +55,7 @@ export default function CalendarEvent({ monthEvents, index, year }: Props) {
         ? visibleEvents.map((event) => (
             <div
               key={event.id}
-              className="truncate rounded bg-sky-800 px-1 text-sm transition-all duration-100 hover:bg-sky-500"
+              className="truncate rounded  px-1 text-sm transition-all duration-100 hover:bg-sky-500"
               onClick={() =>
                 setDrawer({
                   ...DefaultDrawer,
@@ -68,6 +68,10 @@ export default function CalendarEvent({ monthEvents, index, year }: Props) {
               }
               onKeyDown={() => {}}
               role="button"
+              style={{
+                backgroundColor: event.backgroundColor,
+                color: event.textColor,
+              }}
               tabIndex={-1}>
               {event.title}
             </div>

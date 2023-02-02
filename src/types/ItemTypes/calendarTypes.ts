@@ -41,6 +41,9 @@ export type EventType = {
   title: string;
   description?: string;
 
+  textColor: string;
+  backgroundColor: string;
+
   documentsId?: string;
   document?: DocumentType;
 
@@ -64,4 +67,4 @@ export type EventCreateType = Partial<Omit<EventType, "era">>;
 
 export type DefaultCalendarType = Pick<CalendarType, "title" | "project_id">;
 export type DefaultMonthType = Pick<MonthType, "title" | "parentId" | "days">;
-export type DefaultEventType = Pick<EventType, "title" | "monthsId" | "calendarsId">;
+export type DefaultEventType = Pick<EventType, "title" | "monthsId" | "calendarsId" | "backgroundColor" | "textColor">;

@@ -13,4 +13,6 @@ export const DefaultEvent: DefaultEventType = {
   title: "",
   calendarsId: "",
   monthsId: "",
+  backgroundColor: "#075985",
+  textColor: "#ffffff",
 };
