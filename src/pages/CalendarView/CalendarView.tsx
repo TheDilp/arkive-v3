@@ -50,33 +50,29 @@ function getStartingDayForMonth(months: MonthType[] | undefined, year: number, m
   const daysBeforeYear = year * dayInYear;
   return (daysBeforeYear % 10) + dayBeforeMonth;
 }
-function DayTitle({
-  index,
-  weekdays,
-  dayNumber,
-  month,
-  year,
-}: {
-  index: number;
-  weekdays: string[];
-  dayNumber: number;
-  month: MonthType;
-  year: number;
-}) {
+
+function DayTitle({ index, weekdays }: { index: number; weekdays: string[] }) {
+  if (index < 10)
+    return <span className="font-Lato text-lg text-zinc-400 transition-colors hover:text-white">{weekdays[index]}</span>;
+  return (
+    <span className="font-Lato text-lg text-zinc-400 transition-colors hover:text-white">
+      {weekdays[index % weekdays.length ?? 0]}
+    </span>
+  );
+}
+
+function DayNumber({ dayNumber, month, year }: { dayNumber: number; month: MonthType; year: number }) {
   const [, setDrawer] = useAtom(DrawerAtom);
   return (
     <span className="flex select-none items-center">
       {dayNumber + 1}
-      <span className="text-zinc-600 transition-colors duration-100 group-hover:text-white">
-        ({index < 10 ? weekdays[index] : weekdays[index % weekdays.length ?? 0]})
-      </span>
       <span className="ml-auto opacity-0 transition-all duration-100 hover:text-sky-400 group-hover:opacity-100">
         <Icon
           icon="mdi:plus"
           onClick={() =>
             setDrawer({
               ...DefaultDrawer,
-              data: { day: index + 1, monthsId: month?.id, year },
+              data: { day: dayNumber + 1, monthsId: month?.id, year },
 
               type: "events",
               show: true,
@@ -167,21 +163,19 @@ export default function CalendarView() {
           />
         </span>
         <span className="ml-auto flex">
-          <Button className="p-button-text" tooltip="Add eras" tooltipOptions={{ position: "left" }}>
-            <Icon
-              className="cursor-pointer transition-colors hover:text-sky-400"
-              fontSize={28}
-              icon="ic:twotone-history-edu"
-              onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "eras" })}
-            />
+          <Button
+            className="p-button-text"
+            onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "eras" })}
+            tooltip="Add eras"
+            tooltipOptions={{ position: "left" }}>
+            <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon="ic:twotone-history-edu" />
           </Button>
-          <Button className="p-button-text" tooltip="Create months" tooltipOptions={{ position: "left" }}>
-            <Icon
-              className="cursor-pointer transition-colors hover:text-sky-400"
-              fontSize={28}
-              icon="ph:calendar-plus-thin"
-              onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "months" })}
-            />
+          <Button
+            className="p-button-text"
+            onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "months" })}
+            tooltip="Create months"
+            tooltipOptions={{ position: "left" }}>
+            <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon="ph:calendar-plus-thin" />
           </Button>
         </span>
       </h2>
@@ -194,6 +188,15 @@ export default function CalendarView() {
                 style={{
                   gridTemplateColumns: `repeat(${calendar.days.length}, minmax(9rem, auto))`,
                 }}>
+                {calendar.days.map((day, index) => (
+                  <div key={day} className="group col-span-1 h-min text-white" onKeyDown={() => {}} role="button" tabIndex={-1}>
+                    <DayTitle
+                      key={day}
+                      index={index + getStartingDayForMonth(calendar.months, date.year, date.month)}
+                      weekdays={calendar.days}
+                    />
+                  </div>
+                ))}
                 {[...Array(monthDays).keys()].map((day, index) => (
                   <div
                     key={day}
@@ -201,14 +204,7 @@ export default function CalendarView() {
                     onKeyDown={() => {}}
                     role="button"
                     tabIndex={-1}>
-                    <DayTitle
-                      key={day}
-                      dayNumber={day}
-                      index={day + getStartingDayForMonth(calendar.months, 5, date.month)}
-                      month={calendar.months?.[date.month]}
-                      weekdays={calendar.days}
-                      year={date.year}
-                    />
+                    <DayNumber key={day} dayNumber={day} month={calendar.months?.[date.month]} year={date.year} />
                     <div className="p-1">
                       {monthEvents
                         ? monthEvents
@@ -216,12 +212,13 @@ export default function CalendarView() {
                             .map((event) => (
                               <div
                                 key={event.id}
-                                className="truncate rounded-md bg-sky-800 px-1 text-sm transition-all duration-100 hover:bg-sky-500"
+                                className="truncate rounded bg-sky-800 px-1 text-sm transition-all duration-100 hover:bg-sky-500"
                                 onClick={() =>
                                   setDrawer({
                                     ...DefaultDrawer,
                                     show: true,
                                     type: "events",
+                                    data: event,
                                     exceptions: { eventDescription: true },
                                     drawerSize: "md",
                                   })

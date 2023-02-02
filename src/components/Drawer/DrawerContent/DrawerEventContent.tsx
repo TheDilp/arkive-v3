@@ -1,10 +1,10 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import { MultiSelect } from "primereact/multiselect";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -29,6 +29,7 @@ function disableEventSaveButton(localItem: EventType | EventCreateType) {
 
 export default function DrawerEventContent() {
   const { project_id, item_id } = useParams();
+  const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents", {
     staleTime: 5 * 60 * 1000,
@@ -59,6 +60,17 @@ export default function DrawerEventContent() {
           url: `${baseURLS.baseServer}${createURLS.createEvent}`,
           method: "POST",
           body: JSON.stringify({ ...localItem, calendarsId: item_id as string }),
+        });
+        queryClient.setQueryData<CalendarType>(["calendars", item_id], (oldData) => {
+          if (oldData)
+            return {
+              ...oldData,
+              months: oldData.months.map((month) => {
+                if (month.id === localItem.monthsId) return { ...month, events: [...month.events, localItem] };
+                return month;
+              }),
+            };
+          return oldData;
         });
         resetChanges();
         setLoading(false);

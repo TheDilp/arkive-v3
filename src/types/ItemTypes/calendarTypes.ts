@@ -45,7 +45,7 @@ export type EventType = {
   document?: DocumentType;
 
   year: number;
-  era: EraType;
+  era?: EraType;
   month: MonthType;
   day: number;
   hours?: number;
