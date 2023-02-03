@@ -61,9 +61,11 @@ export type EventType = {
 };
 
 export type CalendarCreateType = Partial<Omit<CalendarType, "parentId">>;
+export type EraCreateType = Partial<Omit<EraType, "events">>;
 export type MonthCreateType = Partial<Omit<MonthType, "events" | "sort">>;
 export type EventCreateType = Partial<Omit<EventType, "era">>;
 
 export type DefaultCalendarType = Pick<CalendarType, "title" | "project_id">;
+export type DefaultEraType = Pick<EraType, "title" | "parentId" | "start_year" | "end_year">;
 export type DefaultMonthType = Pick<MonthType, "title" | "parentId" | "days">;
 export type DefaultEventType = Pick<EventType, "title" | "monthsId" | "calendarsId" | "backgroundColor" | "textColor">;

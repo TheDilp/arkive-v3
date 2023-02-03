@@ -10,7 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import CalendarEvent from "../../components/Calendar/Event";
 import { useGetItem } from "../../hooks/useGetItem";
-import { CalendarType, MonthType } from "../../types/ItemTypes/calendarTypes";
+import { CalendarType, EraType, MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getItem, setItem } from "../../utils/storage";
@@ -122,8 +122,9 @@ function DayNumber({
 export default function CalendarView() {
   const { item_id } = useParams();
   const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars");
+
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [date, setDate] = useState({ month: 0, year: 1 });
+  const [date, setDate] = useState<{ month: number; year: number; era: EraType | null }>({ month: 0, year: 1, era: null });
   const monthDays = calendar?.months?.[date.month]?.days;
   const debounceYearChange = useDebouncedCallback((year: number) => {
     setDate((prev) => ({ ...prev, year }));
@@ -131,10 +132,13 @@ export default function CalendarView() {
   }, 500);
 
   useEffect(() => {
-    const savedDate = getItem(item_id as string) as { year: number; month: number };
-    if (savedDate) setDate(savedDate);
-    else setDate({ year: 1, month: 0 });
-  }, [item_id]);
+    if (calendar) {
+      const era = calendar?.eras?.find((findEra) => date.year >= findEra.start_year && date.year <= findEra.end_year);
+      const savedDate = getItem(item_id as string) as { year: number; month: number; era: EraType | null };
+      if (savedDate) setDate({ ...savedDate, era: savedDate?.era || era || null });
+      else setDate({ year: 1, month: 0, era: era || null });
+    }
+  }, [item_id, calendar]);
 
   if (isLoading) return <ProgressSpinner />;
   return (
@@ -148,7 +152,7 @@ export default function CalendarView() {
             onClick={() => {
               if (calendar) {
                 const previousDate = getNextDate(date, calendar, "previous");
-                if (previousDate) setDate(previousDate);
+                if (previousDate) setDate((prev) => ({ ...prev, ...previousDate }));
                 setItem(item_id as string, previousDate);
               }
             }}
@@ -162,13 +166,13 @@ export default function CalendarView() {
             onClick={() => {
               if (calendar) {
                 const nextDate = getNextDate(date, calendar, "next");
-                if (nextDate) setDate(nextDate);
+                if (nextDate) setDate((prev) => ({ ...prev, ...nextDate }));
                 setItem(item_id as string, nextDate);
               }
             }}
           />
         </div>
-        <span className="flex max-w-[10rem] select-none items-center text-lg ">
+        <span className="flex w-[12rem] select-none items-center text-lg">
           <Dropdown
             className="monthDropdown h-min"
             itemTemplate={MonthDropdownTemplate}
@@ -194,16 +198,18 @@ export default function CalendarView() {
               if (e.value) debounceYearChange(e.value);
             }}
             prefix="Year: "
+            useGrouping={false}
             value={date.year}
           />
         </span>
+        <span className="w-fit text-base italic">{date?.era ? `(${date.era.title})` : null}</span>
         <span className="ml-auto flex">
           <Button
             className="p-button-text"
             onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "eras" })}
             tooltip="Add eras"
             tooltipOptions={{ position: "left" }}>
-            <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon="ic:twotone-history-edu" />
+            <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon="ph:scroll-thin" />
           </Button>
           <Button
             className="p-button-text"

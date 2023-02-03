@@ -54,6 +54,7 @@ export const createURLS = {
   createWord: "createword",
   createCalendar: "createcalendar",
   createMonth: "createmonth",
+  createEra: "createera",
   createEvent: "createevent",
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
@@ -76,6 +77,7 @@ export const updateURLs = {
   updateDictionary: "updatedictionary",
   updateWord: "updateword",
   updateCalendar: "updatecalendar",
+  updateEra: "updateera",
   updateMonth: "updatemonth",
   updateEvent: "updateevent",
   updateTag: "updatetag",
@@ -103,6 +105,7 @@ export const deleteURLs = {
   deleteWord: "deleteword",
   deleteCard: "deletecard",
   deleteCalendar: "deletecalendar",
+  deleteEra: "deleteera",
   deleteEvent: "deleteevent",
   deleteTags: "deletetags",
 };

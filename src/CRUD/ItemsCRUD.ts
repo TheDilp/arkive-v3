@@ -213,7 +213,10 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
           }
-          if (type === "calendars" && subType === "months" && "months" in oldData) {
+          if (
+            type === "calendars" &&
+            ((subType === "months" && "months" in oldData) || (subType === "eras" && "eras" in oldData))
+          ) {
             const updatedData = (oldData[subType] || []).map((subItem) => {
               if (subItem.id === variables.id) return { ...subItem, ...variables };
               return subItem;
