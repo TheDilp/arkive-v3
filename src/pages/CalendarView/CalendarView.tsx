@@ -6,6 +6,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 import CalendarEvent from "../../components/Calendar/Event";
 import { useGetItem } from "../../hooks/useGetItem";
@@ -124,6 +125,7 @@ export default function CalendarView() {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [date, setDate] = useState({ month: 0, year: 1 });
   const monthDays = calendar?.months?.[date.month]?.days;
+  const debounceYearChange = useDebouncedCallback((year: number) => setDate((prev) => ({ ...prev, year })), 500);
 
   useEffect(() => {
     const savedDate = getItem(item_id as string) as { year: number; month: number };
@@ -185,15 +187,8 @@ export default function CalendarView() {
           />
           <InputNumber
             inputClassName="yearInput"
-            onBlur={(e) => {
-              const year = parseFloat(e.currentTarget.value);
-              setDate((prev) => ({ ...prev, year }));
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                const year = parseFloat(e.currentTarget.value);
-                setDate((prev) => ({ ...prev, year }));
-              }
+            onChange={(e) => {
+              if (e.value) debounceYearChange(e.value);
             }}
             prefix="Year: "
             value={date.year}
