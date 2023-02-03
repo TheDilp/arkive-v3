@@ -21,7 +21,6 @@ export type EraType = {
   start_year: number;
   end_year: number;
   parentId: string;
-  sort: number;
 
   events: EventType[];
 };
