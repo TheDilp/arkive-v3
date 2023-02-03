@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -128,15 +128,22 @@ export default function CalendarView() {
     setDate((prev) => ({ ...prev, year }));
     setItem(item_id as string, { ...date, year });
   }, 500);
+  const era = useMemo(
+    () => calendar?.eras?.find((findEra) => date.year >= findEra.start_year && date.year <= findEra.end_year),
+    [calendar, date.year],
+  );
 
   useEffect(() => {
     if (calendar) {
-      const era = calendar?.eras?.find((findEra) => date.year >= findEra.start_year && date.year <= findEra.end_year);
       const savedDate = getItem(item_id as string) as { year: number; month: number; era: EraType | null };
-      if (savedDate) setDate({ ...savedDate, era: savedDate?.era || era || null });
+      if (savedDate)
+        setDate({
+          ...savedDate,
+          era: era || savedDate.era || null,
+        });
       else setDate({ year: 1, month: 0, era: era || null });
     }
-  }, [item_id, calendar]);
+  }, [item_id, calendar, era]);
 
   if (isLoading) return <ProgressSpinner />;
   return (
@@ -155,7 +162,7 @@ export default function CalendarView() {
               }
             }}
           />
-          <span className="w-fit select-none font-Lato">{calendar ? calendar.title : null}</span>
+          <span className="w-fit select-none truncate font-Lato">{calendar ? calendar.title : null}</span>
 
           <Icon
             className="cursor-pointer text-zinc-600 transition-colors hover:text-zinc-200"
@@ -170,7 +177,7 @@ export default function CalendarView() {
             }}
           />
         </div>
-        <span className="flex w-[12rem] select-none items-center text-lg">
+        <span className="flex w-[12rem] select-none items-center truncate">
           <Dropdown
             className="monthDropdown h-min"
             itemTemplate={MonthDropdownTemplate}
@@ -200,7 +207,7 @@ export default function CalendarView() {
             value={date.year}
           />
         </span>
-        <span className="w-fit truncate text-base italic">{date?.era ? `(${date.era.title})` : null}</span>
+        <span className="w-fit select-none truncate text-base italic">{date?.era ? `(${date.era.title})` : null}</span>
         <span className="ml-auto flex">
           <Button
             className="p-button-text"
@@ -268,7 +275,11 @@ export default function CalendarView() {
                     role="button"
                     tabIndex={-1}>
                     <DayNumber key={day} dayNumber={day} month={date.month} year={date.year} />
-                    <CalendarEvent index={index} monthEvents={calendar?.events || []} year={date.year} />
+                    <CalendarEvent
+                      index={index}
+                      monthEvents={calendar?.events?.filter((event) => event.month === date.month) || []}
+                      year={date.year}
+                    />
                   </div>
                 ))}
               </div>

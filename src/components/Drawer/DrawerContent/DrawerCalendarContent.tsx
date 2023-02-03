@@ -194,17 +194,33 @@ export default function DrawerCalendarContent() {
           </TabPanel>
           <TabPanel disabled={!localItem?.id} header="Eras">
             <div className="flex w-full flex-col items-end gap-y-3 pt-3">
+              {(localItem?.eras || []).map((era) => (
+                <div key={era.id} className="flex w-full items-center">
+                  <div className="w-full pl-2 text-left font-Lato text-base">
+                    {era.title} ({era.start_year} - {era.end_year})
+                  </div>
+                  <div>
+                    <Icon
+                      className="cursor-pointer hover:text-sky-400"
+                      fontSize={20}
+                      icon="mdi:pencil-outline"
+                      onClick={() => {
+                        setDrawer({ ...DefaultDrawer, show: true, data: era, type: "eras" });
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <Icon className="cursor-pointer hover:text-red-400" fontSize={20} icon="mdi:trash-outline" />
+                  </div>
+                </div>
+              ))}
+
               <Button
                 className="p-button-text"
                 icon="pi pi-plus"
                 iconPos="right"
                 label="Add new era"
-                onClick={() =>
-                  setLocalItem((prev) => ({
-                    ...prev,
-                    days: [...(prev.days || []), { id: crypto.randomUUID(), value: `New Day ${(prev.days?.length || 0) + 1}` }],
-                  }))
-                }
+                onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "eras" })}
               />
             </div>
           </TabPanel>
@@ -245,22 +261,14 @@ export default function DrawerCalendarContent() {
                         {(providedDraggable) => (
                           <div
                             ref={providedDraggable.innerRef}
-                            className="mt-1 flex w-full items-center justify-between"
+                            className="mt-1 flex w-full items-center justify-between border-b border-zinc-700"
                             tabIndex={-1}
                             {...providedDraggable.draggableProps}>
                             <div {...providedDraggable.dragHandleProps} tabIndex={-1}>
                               <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon="mdi:drag" />
                             </div>
-                            <InputText
-                              className="w-full"
-                              onChange={(e) => {
-                                const tempDays = [...(localItem?.days || [])];
-                                tempDays[index].value = e.target.value;
-                                handleChange({ name: "days", value: tempDays });
-                              }}
-                              value={month.title}
-                            />
-                            <div>
+                            <div className="w-full pl-2 text-left text-lg">{month.title}</div>
+                            <div className="flex items-center">
                               <Icon
                                 className="cursor-pointer hover:text-sky-400"
                                 fontSize={20}
@@ -269,8 +277,6 @@ export default function DrawerCalendarContent() {
                                   setDrawer({ ...DefaultDrawer, show: true, data: month, type: "months" });
                                 }}
                               />
-                            </div>
-                            <div>
                               <Icon className="cursor-pointer hover:text-red-400" fontSize={20} icon="mdi:trash-outline" />
                             </div>
                           </div>

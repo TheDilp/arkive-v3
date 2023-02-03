@@ -169,6 +169,7 @@ export default function DrawerEventContent() {
       <DrawerSection title="Event Document (optional)">
         <Dropdown
           disabled={isLoading}
+          dropdownIcon={isLoading ? "pi pi-spinner pi-spin" : "pi pi-chevron-down"}
           filter
           filterBy="title"
           onChange={(e) => handleChange({ name: "documentsId", value: e.value })}
