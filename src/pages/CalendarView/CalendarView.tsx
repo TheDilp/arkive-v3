@@ -125,7 +125,10 @@ export default function CalendarView() {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [date, setDate] = useState({ month: 0, year: 1 });
   const monthDays = calendar?.months?.[date.month]?.days;
-  const debounceYearChange = useDebouncedCallback((year: number) => setDate((prev) => ({ ...prev, year })), 500);
+  const debounceYearChange = useDebouncedCallback((year: number) => {
+    setDate((prev) => ({ ...prev, year }));
+    setItem(item_id as string, { ...date, year });
+  }, 500);
 
   useEffect(() => {
     const savedDate = getItem(item_id as string) as { year: number; month: number };
@@ -221,7 +224,12 @@ export default function CalendarView() {
                   gridTemplateColumns: `repeat(${calendar.days.length}, minmax(9rem, auto))`,
                 }}>
                 {calendar.days.map((day, index) => (
-                  <div key={day} className="group col-span-1 h-min text-white" onKeyDown={() => {}} role="button" tabIndex={-1}>
+                  <div
+                    key={day}
+                    className="group col-span-1 h-min border-b border-zinc-700 text-white"
+                    onKeyDown={() => {}}
+                    role="button"
+                    tabIndex={-1}>
                     <DayTitle key={day} index={index} weekdays={calendar.days} />
                   </div>
                 ))}
@@ -235,7 +243,7 @@ export default function CalendarView() {
                   .map((day) => (
                     <div
                       key={day}
-                      className="group col-span-1 h-56 border border-zinc-700 hover:text-white"
+                      className="group col-span-1 h-56 border-b border-r border-zinc-700 hover:text-white"
                       onKeyDown={() => {}}
                       role="button"
                       tabIndex={-1}>
@@ -251,7 +259,7 @@ export default function CalendarView() {
                 {[...Array(monthDays).keys()].map((day, index) => (
                   <div
                     key={day}
-                    className="group col-span-1 h-56 border border-zinc-700 hover:text-white"
+                    className="group col-span-1 h-56 border-b border-r border-zinc-700 hover:text-white"
                     onKeyDown={() => {}}
                     role="button"
                     tabIndex={-1}>
