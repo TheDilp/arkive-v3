@@ -24,7 +24,7 @@ import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
 function disableEventSaveButton(localItem: EventType | EventCreateType) {
-  if (!localItem.title || !localItem.day || !localItem.monthsId || !localItem.year) return true;
+  if (!localItem.title || !localItem.day || !localItem.month || !localItem.year) return true;
   return false;
 }
 async function deleteEvent(id: string, calendar_id: string, queryClient: QueryClient) {
@@ -93,8 +93,10 @@ export default function DrawerEventContent() {
     setLocalItem((prev) => ({ ...prev, ...drawer.data }));
   }, [drawer.data]);
   return (
-    <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Event"}</h2>
+    <div className="flex h-full flex-col gap-y-2 overflow-y-auto overflow-x-hidden">
+      <h2 className="truncate text-center font-Lato text-2xl">
+        {localItem?.id ? `Edit ${localItem.title}` : "Create New Event"}
+      </h2>
       <DrawerSection title="Month title">
         <InputText
           autoFocus
@@ -123,12 +125,12 @@ export default function DrawerEventContent() {
             />
             <Dropdown
               name="month"
-              onChange={(e) => handleChange({ name: "monthsId", value: e.value })}
+              onChange={(e) => handleChange({ name: "month", value: e.value })}
               optionLabel="title"
-              options={calendar?.months}
-              optionValue="id"
+              options={calendar?.months?.map((month, index) => ({ title: month.title, value: index }))}
+              optionValue="value"
               placeholder="Month"
-              value={localItem?.monthsId}
+              value={localItem?.month}
             />
             <InputNumber
               inputClassName="w-full"
@@ -160,6 +162,7 @@ export default function DrawerEventContent() {
           </div>
         </div>
       </DrawerSection>
+
       {/* <DrawerSection title="Event Description (optional)">
         <InputTextarea name="description" onChange={(e) => handleChange(e.target)} value={localItem.description} />
       </DrawerSection> */}

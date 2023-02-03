@@ -55,7 +55,7 @@ export default function CalendarEvent({ monthEvents, index, year }: Props) {
         ? visibleEvents.map((event) => (
             <div
               key={event.id}
-              className="truncate rounded px-1 text-sm transition-all duration-100 hover:bg-sky-500"
+              className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-200"
               onClick={() =>
                 setDrawer({
                   ...DefaultDrawer,

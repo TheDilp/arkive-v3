@@ -70,7 +70,6 @@ function getFillerDayNumber(calendarMonths: MonthType[], currentMonthIndex: numb
   }
   return calendarMonths[currentMonthIndex - 1].days - day - 1;
 }
-
 function DayTitle({ index, weekdays }: { index: number; weekdays: string[] }) {
   if (index < 10)
     return (
@@ -82,7 +81,6 @@ function DayTitle({ index, weekdays }: { index: number; weekdays: string[] }) {
     </span>
   );
 }
-
 function DayNumber({
   dayNumber,
   month,
@@ -90,7 +88,7 @@ function DayNumber({
   isFiller,
 }: {
   dayNumber: number;
-  month: MonthType;
+  month: number;
   year: number;
   isFiller?: boolean;
 }) {
@@ -106,7 +104,7 @@ function DayNumber({
               if (!isFiller)
                 setDrawer({
                   ...DefaultDrawer,
-                  data: { day: dayNumber + 1, monthsId: month?.id, year },
+                  data: { day: dayNumber + 1, month, year },
 
                   type: "events",
                   show: true,
@@ -202,7 +200,7 @@ export default function CalendarView() {
             value={date.year}
           />
         </span>
-        <span className="w-fit text-base italic">{date?.era ? `(${date.era.title})` : null}</span>
+        <span className="w-fit truncate text-base italic">{date?.era ? `(${date.era.title})` : null}</span>
         <span className="ml-auto flex">
           <Button
             className="p-button-text"
@@ -257,7 +255,7 @@ export default function CalendarView() {
                         key={day}
                         dayNumber={getFillerDayNumber(calendar.months, date.month, day)}
                         isFiller
-                        month={calendar.months?.[date.month]}
+                        month={date.month}
                         year={date.year}
                       />
                     </div>
@@ -269,8 +267,8 @@ export default function CalendarView() {
                     onKeyDown={() => {}}
                     role="button"
                     tabIndex={-1}>
-                    <DayNumber key={day} dayNumber={day} month={calendar.months?.[date.month]} year={date.year} />
-                    <CalendarEvent index={index} monthEvents={calendar.months?.[date.month]?.events || []} year={date.year} />
+                    <DayNumber key={day} dayNumber={day} month={date.month} year={date.year} />
+                    <CalendarEvent index={index} monthEvents={calendar?.events || []} year={date.year} />
                   </div>
                 ))}
               </div>

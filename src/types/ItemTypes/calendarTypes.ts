@@ -12,7 +12,7 @@ export interface CalendarType extends BaseItemType {
   eras: EraType[];
   months: MonthType[];
   days: string[];
-  event: EventType[];
+  events: EventType[];
 }
 
 export type EraType = {
@@ -31,8 +31,6 @@ export type MonthType = {
   days: number;
   sort: number;
   parentId: string;
-
-  events: EventType[];
 };
 
 export type EventType = {
@@ -48,13 +46,12 @@ export type EventType = {
 
   year: number;
   era?: EraType;
-  month: MonthType;
+  month: number;
   day: number;
   hours?: number;
   minutes?: number;
 
   erasId: string;
-  monthsId: string;
   calendarsId: string | null;
 
   tags: TagType[];
@@ -68,4 +65,4 @@ export type EventCreateType = Partial<Omit<EventType, "era">>;
 export type DefaultCalendarType = Pick<CalendarType, "title" | "project_id">;
 export type DefaultEraType = Pick<EraType, "title" | "parentId" | "start_year" | "end_year">;
 export type DefaultMonthType = Pick<MonthType, "title" | "parentId" | "days">;
-export type DefaultEventType = Pick<EventType, "title" | "monthsId" | "calendarsId" | "backgroundColor" | "textColor">;
+export type DefaultEventType = Pick<EventType, "title" | "calendarsId" | "backgroundColor" | "textColor">;
