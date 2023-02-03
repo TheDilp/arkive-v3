@@ -45,7 +45,7 @@ export default function DrawerMonthContent() {
             onSuccess: () => {
               toaster("success", `Month ${localItem?.title || ""} was successfully updated.`);
               handleCloseDrawer(setDrawer, "right");
-
+              queryClient.refetchQueries(["calendars", item_id]);
               resetChanges();
             },
           },
@@ -57,6 +57,7 @@ export default function DrawerMonthContent() {
             onSuccess: () => {
               toaster("success", `Month ${localItem?.title || ""} was successfully created.`);
               handleCloseDrawer(setDrawer, "right");
+              queryClient.refetchQueries(["calendars", item_id]);
 
               resetChanges();
             },

@@ -102,6 +102,8 @@ export const deleteURLs = {
   deleteDictionary: "deletedictionary",
   deleteWord: "deleteword",
   deleteCard: "deletecard",
+  deleteCalendar: "deletecalendar",
+  deleteEvent: "deleteevent",
   deleteTags: "deletetags",
 };
 

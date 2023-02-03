@@ -5,6 +5,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { TabPanel, TabView } from "primereact/tabview";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -36,12 +37,11 @@ export default function DrawerCalendarContent() {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const { data: calendar } = useGetItem<CalendarType>(drawer?.data?.id, "calendars");
+  const { data: calendar, isLoading } = useGetItem<CalendarType>(drawer?.data?.id, "calendars");
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
   const createCalendarMutation = useCreateItem<CalendarType>("calendars");
   const updateCalendarMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
   const deleteCalendarMutation = useDeleteItem("calendars", project_id as string);
-
   const [localItem, setLocalItem] = useState<
     Omit<CalendarType | CalendarCreateType, "days"> & { days: { id: string; value: string }[] }
   >(
@@ -57,16 +57,23 @@ export default function DrawerCalendarContent() {
         ...calendar,
         days: calendar?.days?.map((day: string) => ({ value: day, id: crypto.randomUUID() })) || [],
       });
+    else
+      setLocalItem({
+        ...DefaultCalendar,
+        days: [],
+        project_id,
+      });
   }, [calendar]);
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
+  if (isLoading) return <ProgressSpinner />;
   return (
     <div className="flex h-full flex-col justify-between">
-      <div className="flex w-full flex-1 flex-col">
+      <div className="flexw-full flex-1 flex-col">
         <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Calendar"}</h2>
-        <TabView className="h-full w-full overflow-hidden" renderActiveOnly>
+        <TabView className="h-[90%] w-full overflow-y-auto" renderActiveOnly>
           <TabPanel header="Calendar">
-            <div className="flex w-full flex-col gap-y-3 pt-3">
+            <div className="flex w-full flex-col gap-y-3 overflow-y-auto pt-3">
               <DrawerSection title="Calendar title">
                 <InputText
                   autoFocus
@@ -96,7 +103,7 @@ export default function DrawerCalendarContent() {
                 />
               </DrawerSection>
               <DrawerSection title="Calendar days">
-                <div className="flex h-fit max-h-[50rem] flex-col items-end overflow-hidden">
+                <div className="flex h-fit flex-col items-end">
                   <DragDropContext
                     onDragEnd={(result) => {
                       if (!result.destination) return;
@@ -112,7 +119,7 @@ export default function DrawerCalendarContent() {
                         <div
                           ref={providedDroppable.innerRef}
                           {...providedDroppable.droppableProps}
-                          className="flex w-full flex-col items-center overflow-y-auto overflow-x-hidden">
+                          className="flex w-full flex-col items-center overflow-x-hidden">
                           {(localItem?.days || [])?.map((day, index) => (
                             <Draggable key={day.id} draggableId={day.id} index={index}>
                               {(providedDraggable) => (
@@ -224,7 +231,7 @@ export default function DrawerCalendarContent() {
                   <div
                     ref={providedDroppable.innerRef}
                     {...providedDroppable.droppableProps}
-                    className="flex w-full flex-col items-center overflow-y-auto overflow-x-hidden">
+                    className="flex h-full w-full flex-col items-center overflow-hidden">
                     {(localItem?.months || [])?.map((month, index) => (
                       <Draggable key={month.id} draggableId={month.id} index={index}>
                         {(providedDraggable) => (
@@ -233,7 +240,7 @@ export default function DrawerCalendarContent() {
                             className="mt-1 flex w-full items-center justify-between"
                             tabIndex={-1}
                             {...providedDraggable.draggableProps}>
-                            <div {...providedDraggable.dragHandleProps}>
+                            <div {...providedDraggable.dragHandleProps} tabIndex={-1}>
                               <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon="mdi:drag" />
                             </div>
                             <InputText

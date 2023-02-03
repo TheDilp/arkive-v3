@@ -61,6 +61,8 @@ export const deleteURL = (type: AllAvailableTypes) => {
   if (type === "sections") return `${baseURLS.baseServer}${deleteURLs.deleteSection}`;
   if (type === "cards") return `${baseURLS.baseServer}${deleteURLs.deleteCard}`;
   if (type === "words") return `${baseURLS.baseServer}${deleteURLs.deleteWord}`;
+  if (type === "calendars") return `${baseURLS.baseServer}${deleteURLs.deleteCalendar}`;
+  if (type === "events") return `${baseURLS.baseServer}${deleteURLs.deleteEvent}`;
   return null;
 };
 

@@ -57,7 +57,12 @@
     @apply w-full text-center !important;
   }
 }
-
+/*
+Inputs
+*/
+.yearInput {
+  @apply h-8 w-24 border-0 border-b bg-transparent p-0 !important;
+}
 /* Editor */
 .remirror-editor-wrapper {
   @apply flex-1 flex-col;

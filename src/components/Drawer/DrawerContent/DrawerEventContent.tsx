@@ -1,4 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -10,10 +10,11 @@ import { useParams } from "react-router-dom";
 import { useDeleteItem, useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
-import { baseURLS, createURLS, updateURLs } from "../../../types/CRUDenums";
+import { baseURLS, createURLS, deleteURLs, updateURLs } from "../../../types/CRUDenums";
 import { CalendarType, EventCreateType, EventType } from "../../../types/ItemTypes/calendarTypes";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { DefaultEvent } from "../../../utils/DefaultValues/CalendarDefaults";
 import { toaster } from "../../../utils/toast";
@@ -25,6 +26,14 @@ import DrawerSection from "../DrawerSection";
 function disableEventSaveButton(localItem: EventType | EventCreateType) {
   if (!localItem.title || !localItem.day || !localItem.monthsId || !localItem.year) return true;
   return false;
+}
+async function deleteEvent(id: string, calendar_id: string, queryClient: QueryClient) {
+  await FetchFunction({
+    url: `${baseURLS.baseServer}${deleteURLs.deleteEvent}`,
+    method: "DELETE",
+    body: JSON.stringify({ id }),
+  });
+  await queryClient.refetchQueries<CalendarType>(["calendars", calendar_id]);
 }
 
 export default function DrawerEventContent() {
@@ -54,7 +63,7 @@ export default function DrawerEventContent() {
           method: "POST",
           body: JSON.stringify({ ...rest, id: localItem.id }),
         });
-        queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
+        await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully created.");
@@ -67,7 +76,7 @@ export default function DrawerEventContent() {
           method: "POST",
           body: JSON.stringify({ ...localItem, calendarsId: item_id as string }),
         });
-        queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
+        await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully updated.");
@@ -79,6 +88,7 @@ export default function DrawerEventContent() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     setLocalItem((prev) => ({ ...prev, ...drawer.data }));
   }, [drawer.data]);
@@ -199,18 +209,18 @@ export default function DrawerEventContent() {
             className="p-button-outlined p-button-danger w-full"
             loading={deleteMonthMutation.isLoading}
             onClick={() => {
-              // if (month)
-              //   deleteItem(
-              //     "Are you sure you want to delete this month?",
-              //     () => {
-              //       deleteMonthMutation?.mutate(month.id, {
-              //         onSuccess: () => {
-              //           handleCloseDrawer(setDrawer, "right");
-              //         },
-              //       });
-              //     },
-              //     () => toaster("info", "Item not deleted."),
-              //   );
+              deleteItem(
+                "Are you sure you want to delete this event?",
+                () => {
+                  if (localItem?.id) {
+                    deleteEvent(localItem.id, item_id as string, queryClient);
+                    handleCloseDrawer(setDrawer, "right");
+                  } else {
+                    toaster("info", "Item not deleted.");
+                  }
+                },
+                () => toaster("info", "Item not deleted."),
+              );
             }}
             type="submit">
             {buttonLabelWithIcon("Delete", "mdi:trash")}
