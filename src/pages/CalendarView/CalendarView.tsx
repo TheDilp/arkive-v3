@@ -12,35 +12,31 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { CalendarType, MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { getItem, setItem } from "../../utils/storage";
 
 function MonthDropdownTemplate(data: MonthType) {
   const { title } = data;
   return <div className="font-Lato text-lg">{title}</div>;
 }
-function getNextDate(date: { month: number; year: number; weeks: number }, calendar: CalendarType, type: "next" | "previous") {
+function getNextDate(date: { month: number; year: number }, calendar: CalendarType, type: "next" | "previous") {
   const { month, year } = date;
   const numberOfMonths = calendar?.months?.length;
   // const monthDays = calendar?.months?.[month]?.days;
   if (numberOfMonths) {
     if (type === "next") {
       if (month === numberOfMonths - 1) {
-        const monthDays = calendar?.months?.[0]?.days;
-        return { month: 0, year: year + 1, weeks: Math.floor(monthDays / calendar.days.length) };
+        return { month: 0, year: year + 1 };
       }
-      const monthDays = calendar?.months?.[month + 1]?.days;
-      return { month: month + 1, year, weeks: Math.floor(monthDays / calendar.days.length) };
+      return { month: month + 1, year };
     }
     if (type === "previous") {
       if (month === 0) {
-        const monthDays = calendar?.months?.[numberOfMonths - 1]?.days;
         return {
           month: numberOfMonths - 1,
           year: year - 1 === 0 ? -1 : year - 1,
-          weeks: Math.floor(monthDays / calendar.days.length),
         };
       }
-      const monthDays = calendar?.months?.[month - 1]?.days;
-      return { month: month - 1, year, weeks: Math.floor(monthDays / calendar.days.length) };
+      return { month: month - 1, year };
     }
     return date;
   }
@@ -126,13 +122,14 @@ export default function CalendarView() {
   const { item_id } = useParams();
   const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars");
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [date, setDate] = useState({ month: 0, year: 1, weeks: 0 });
+  const [date, setDate] = useState({ month: 0, year: 1 });
   const monthDays = calendar?.months?.[date.month]?.days;
+
   useEffect(() => {
-    if (monthDays) {
-      setDate((prev) => ({ ...prev, weeks: Math.floor(monthDays / calendar.days.length) }));
-    }
-  }, [calendar]);
+    const savedDate = getItem(item_id as string) as { year: number; month: number };
+    if (savedDate) setDate(savedDate);
+    else setDate({ year: 1, month: 0 });
+  }, [item_id]);
 
   if (isLoading) return <ProgressSpinner />;
   return (
@@ -147,6 +144,7 @@ export default function CalendarView() {
               if (calendar) {
                 const previousDate = getNextDate(date, calendar, "previous");
                 if (previousDate) setDate(previousDate);
+                setItem(item_id as string, previousDate);
               }
             }}
           />
@@ -160,6 +158,7 @@ export default function CalendarView() {
               if (calendar) {
                 const nextDate = getNextDate(date, calendar, "next");
                 if (nextDate) setDate(nextDate);
+                setItem(item_id as string, nextDate);
               }
             }}
           />
@@ -176,8 +175,8 @@ export default function CalendarView() {
                   setDate((prev) => ({
                     ...prev,
                     month: monthIdx,
-                    weeks: Math.floor(newMonthDays / calendar.days.length),
                   }));
+                setItem(item_id as string, { ...date, month: monthIdx });
               }
             }}
             optionLabel="title"
