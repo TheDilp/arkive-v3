@@ -104,6 +104,17 @@ export default function DrawerCalendarContent() {
               </DrawerSection>
               <DrawerSection title="Calendar days">
                 <div className="flex h-fit flex-col items-end">
+                  <Button
+                    className="p-button-text"
+                    icon="pi pi-plus"
+                    iconPos="right"
+                    label="Add new day"
+                    onClick={() => {
+                      const tempDays = [...(localItem.days || [])];
+                      tempDays.push({ id: crypto.randomUUID(), value: `New Day ${(localItem.days?.length || 0) + 1}` });
+                      handleChange({ name: "days", value: tempDays });
+                    }}
+                  />
                   <DragDropContext
                     onDragEnd={(result) => {
                       if (!result.destination) return;
@@ -161,18 +172,6 @@ export default function DrawerCalendarContent() {
                       )}
                     </Droppable>
                   </DragDropContext>
-
-                  <Button
-                    className="p-button-text"
-                    icon="pi pi-plus"
-                    iconPos="right"
-                    label="Add new day"
-                    onClick={() => {
-                      const tempDays = [...(localItem.days || [])];
-                      tempDays.push({ id: crypto.randomUUID(), value: `New Day ${(localItem.days?.length || 0) + 1}` });
-                      handleChange({ name: "days", value: tempDays });
-                    }}
-                  />
                 </div>
               </DrawerSection>
               <DrawerSection title="Calendar hours (optional)">
@@ -210,6 +209,15 @@ export default function DrawerCalendarContent() {
             </div>
           </TabPanel>
           <TabPanel disabled={!localItem?.id} header="Months">
+            <div className="flex w-full justify-end">
+              <Button
+                className="p-button-primary p-button-text"
+                icon="pi pi-plus"
+                iconPos="right"
+                label="Add new month"
+                onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "months" })}
+              />
+            </div>
             <DragDropContext
               onDragEnd={(result) => {
                 if (!result.destination) return;
