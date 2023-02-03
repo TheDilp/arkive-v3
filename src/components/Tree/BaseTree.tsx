@@ -153,7 +153,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
           listItem: "w-full",
           placeholder: "relative",
           root: "w-full mt-1 flex flex-col h-[81%] overflow-y-auto",
-          dropTarget: "bg-zinc-700",
         }}
         dragPreviewRender={DragPreviewComponent}
         dropTargetOffset={10}
