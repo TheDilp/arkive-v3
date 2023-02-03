@@ -35,6 +35,7 @@ export default function Signin() {
     <div className="flex flex-col gap-y-2">
       <InputText name="email" onChange={(e) => changeLoginData(e.target)} placeholder="Email" type="email" />
       <Password
+        feedback={false}
         inputClassName="w-full"
         name="password"
         onChange={(e) => changeLoginData(e.target)}
