@@ -33,6 +33,7 @@ export default function Signin() {
   // if (user) return <Navigate to="/" />;
   return (
     <div className="flex flex-col gap-y-2">
+      <h3 className="text-center font-Lato text-2xl">Welcome back</h3>
       <InputText name="email" onChange={(e) => changeLoginData(e.target)} placeholder="Email" type="email" />
       <Password
         feedback={false}

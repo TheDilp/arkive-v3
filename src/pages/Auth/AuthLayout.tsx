@@ -1,3 +1,5 @@
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 import backgroundImage from "../../assets/earthimg.jpg";
@@ -12,7 +14,9 @@ export default function AuthLayout() {
           <div className="text-center font-Lato text-3xl font-semibold">Discover your world</div>
         </div>
         <img alt="logo" className="mb-4 rounded object-contain" src={backgroundImage} />
-        <Outlet />
+        <Suspense fallback={<ProgressSpinner />}>
+          <Outlet />
+        </Suspense>
       </div>
     </article>
   );
