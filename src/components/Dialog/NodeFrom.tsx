@@ -1,24 +1,27 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { useParams } from "react-router-dom";
 
-import { useGetAllImages } from "../../CRUD/ItemsCRUD";
+import { useGetAllImages, useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { FolderViewCards } from "../../pages/FolderView/FolderViewCards";
+import { baseURLS } from "../../types/CRUDenums";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
-import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 
 type Props = {
   type: "documents" | "images";
 };
 
 export default function NodeFrom({ type }: Props) {
-  const queryClient = useQueryClient();
   const { project_id } = useParams();
-  const data: DocumentType[] | undefined = queryClient.getQueryData(["allitems", project_id, type]);
-  const { data: allImages } = useGetAllImages(project_id as string, { enabled: type === "images" });
+  const { data: documents, isFetching } = useGetAllItems<DocumentType>(project_id as string, "documents", {
+    staleTime: 5 * 60 * 1000,
+  });
+  const { data: allImages } = useGetAllImages(project_id as string, { enabled: type === "images", staleTime: 5 * 60 * 1000 });
+
+  if (isFetching) return <ProgressSpinner />;
   return (
     <div className="max-w-md">
       {type === "documents" ? (
-        <FolderViewCards items={data?.filter((doc) => !doc.folder && !doc.template) || []} type="documents" />
+        <FolderViewCards items={documents?.filter((doc) => !doc.folder && !doc.template) || []} type="documents" />
       ) : (
         <div className="flex w-full flex-wrap gap-2 overflow-y-auto">
           {allImages?.map((image) => (
@@ -29,7 +32,7 @@ export default function NodeFrom({ type }: Props) {
               onDragStart={(e) => {
                 e.dataTransfer.setData("item_id", JSON.stringify({ image, type }));
               }}
-              src={getImageLink(image, project_id as string)}
+              src={`${baseURLS.baseImageHost}${image}`}
             />
           ))}
         </div>
