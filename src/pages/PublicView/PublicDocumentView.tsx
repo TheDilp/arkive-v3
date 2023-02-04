@@ -1,5 +1,5 @@
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import StaticRender from "../../components/Editor/StaticRender";
 import { useGetItem } from "../../hooks/useGetItem";
@@ -7,6 +7,7 @@ import { AllItemsType } from "../../types/generalTypes";
 import { toaster } from "../../utils/toast";
 
 export default function PublicDocumentView() {
+  const navigate = useNavigate();
   const { item_id } = useParams();
   const { data, isLoading } = useGetItem<AllItemsType>(
     item_id as string,
@@ -19,6 +20,8 @@ export default function PublicDocumentView() {
   if (isLoading) return <ProgressSpinner />;
   if (!data?.isPublic && !isLoading) {
     toaster("warning", "That page is not public.");
+    navigate("/");
+
     return null;
   }
   return (

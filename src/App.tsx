@@ -18,11 +18,11 @@ import Layout from "./components/Layout/Layout";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import ContentView from "./pages/ContentView/ContentView";
 import Dashboard from "./pages/Dashboard";
+import PublicWrapper from "./pages/PublicView/PublicWrapper";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const Signup = lazy(() => import("./pages/Auth/Signup"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
-const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
 const AssetSettings = lazy(() => import("./pages/Settings/Assets/AssetSettings"));
 const BoardSettings = lazy(() => import("./pages/Settings/BoardSettings"));
 const DocumentSettings = lazy(() => import("./pages/Settings/DocumentSettings"));

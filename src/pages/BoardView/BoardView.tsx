@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
-import { useParams } from "react-router-dom";
+import { Navigate, To, useParams } from "react-router-dom";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import BoardQuickBar from "../../components/QuickBar/QuickBar";
@@ -222,6 +222,10 @@ export default function BoardView({ isReadOnly }: Props) {
   }, [boardState.drawMode]);
 
   if (isLoading) return <ProgressSpinner />;
+  if (isReadOnly && !board?.isPublic) {
+    toaster("warning", "This map is not public.");
+    return <Navigate to={-1 as To} />;
+  }
   return (
     <div
       className="relative flex h-full w-full flex-col items-center justify-start"
@@ -264,7 +268,9 @@ export default function BoardView({ isReadOnly }: Props) {
           });
         }
       }}>
-      {isReadOnly ? <h2 className="m-0 w-full pt-1 text-center font-Merriweather text-4xl">{board?.title || ""}</h2> : null}
+      {isReadOnly ? (
+        <h2 className="m-0 w-full truncate pt-1 text-center font-Merriweather text-4xl">{board?.title || ""}</h2>
+      ) : null}
       <ContextMenu cm={cm} items={contextItems} />
 
       <CytoscapeComponent

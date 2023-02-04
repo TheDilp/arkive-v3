@@ -14,6 +14,7 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { MapPinCreateType, MapPinType, MapType } from "../../../types/ItemTypes/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
 import { IconSelect } from "../../IconSelect/IconSelect";
@@ -109,8 +110,13 @@ export default function DrawerMapPinContent() {
         className="p-button-outlined p-button-success ml-auto"
         loading={createMapPin.isLoading || updateMapPin.isLoading}
         onClick={async () => {
-          if (currentPin) await updateMapPin.mutateAsync({ id: localItem.id, ...changedData });
-          else await createMapPin.mutateAsync({ ...localItem, id: crypto.randomUUID() });
+          if (currentPin) {
+            await updateMapPin.mutateAsync({ id: localItem.id, ...changedData });
+            toaster("success", "Map marker successfully updated.");
+          } else {
+            await createMapPin.mutateAsync({ ...localItem, id: crypto.randomUUID() });
+            toaster("success", "Map marker successfully created.");
+          }
           resetChanges();
           handleCloseDrawer(setDrawer, "right");
         }}

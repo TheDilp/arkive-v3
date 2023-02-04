@@ -52,7 +52,7 @@ export function Tooltip({ children, content, disabled, isClickable, closeOnClick
     <>
       {cloneElement(children, getReferenceProps({ ref: reference, ...children.props }))}
       {!disabled && open && (
-        <div
+        <span
           onClick={() => {
             if (closeOnClick) {
               setOpen((prev) => !prev);
@@ -72,7 +72,7 @@ export function Tooltip({ children, content, disabled, isClickable, closeOnClick
             },
           })}>
           {content}
-        </div>
+        </span>
       )}
     </>
   );

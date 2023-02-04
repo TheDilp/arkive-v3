@@ -502,6 +502,16 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         label: "Copy Public URL",
         icon: "pi pi-fw pi-link",
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic) {
+            if (cmType.data?.id) {
+              navigator.clipboard.writeText(`${window.origin}/view/maps/${cmType.data?.id}`);
+              toaster("success", "Link copied.");
+            } else toaster("error", "There was an error copying this link.");
+          } else {
+            toaster("warning", "This map is not public.");
+          }
+        },
       },
       {
         label: "Delete Map",
@@ -556,10 +566,13 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         label: "Copy Public URL",
         icon: "pi pi-fw pi-link",
         command: () => {
-          if (navigator && navigator.clipboard) {
-            navigator.clipboard.writeText(`${window.location.host}/view/${project_id}/boards/${cmType?.data?.id}`).then(() => {
-              toaster("success", "URL copied! 🔗");
-            });
+          if (cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic) {
+            if (cmType.data?.id) {
+              navigator.clipboard.writeText(`${window.origin}/view/boards/${cmType.data?.id}`);
+              toaster("success", "Link copied.");
+            } else toaster("error", "There was an error copying this link.");
+          } else {
+            toaster("warning", "This board is not public.");
           }
         },
       },

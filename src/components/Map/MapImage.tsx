@@ -4,7 +4,6 @@ import { MutableRefObject, useEffect, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
 import { useParams } from "react-router-dom";
 
-import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
 import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
@@ -14,14 +13,14 @@ import MapPin from "./MapPin";
 type Props = {
   cm: MutableRefObject<any>;
   src: string;
+  currentMap: MapType;
   bounds: LatLngBoundsExpression;
   imgRef: any;
   isReadOnly?: boolean;
 };
 
-export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
-  const { project_id, item_id, subitem_id } = useParams();
-  const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps");
+export default function MapImage({ src, bounds, currentMap, imgRef, cm, isReadOnly }: Props) {
+  const { project_id, subitem_id } = useParams();
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
 
   const PinFilter = (mapPin: MapPinType) => {

@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
 import { Fragment } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
@@ -24,7 +24,7 @@ const navItems: NavItemType[] = [
   },
   { icon: "ion:documents-outline", navigate: "./documents", tooltip: "Documents" },
   { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
-  { icon: "ph:graph", navigate: "./boards", tooltip: "Boards" },
+  { icon: "ph:graph", navigate: "./boards", tooltip: "Graphs" },
   { icon: "ph:calendar-blank", navigate: "./calendars", tooltip: "Calendars" },
   // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
   { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
@@ -57,11 +57,10 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
               item.tooltip
             } flex h-14 cursor-pointer items-center justify-center transition-colors hover:text-sky-400 ${
               item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400" : ""
-            }`}
-            onClick={() => {
-              navigate(item.navigate);
-            }}>
-            <Icon fontSize={28} icon={item.icon} />
+            }`}>
+            <Link to={item.navigate}>
+              <Icon fontSize={28} icon={item.icon} />
+            </Link>
           </li>
         </Fragment>
       ))}

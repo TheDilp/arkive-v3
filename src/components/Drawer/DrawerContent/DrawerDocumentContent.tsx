@@ -21,6 +21,7 @@ import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../IconSelect/IconSelect";
@@ -95,7 +96,7 @@ export default function DrawerDocumentContent() {
           }}
           value={localItem?.title || ""}
         />
-        <div className="flex w-full flex-col items-center">
+        <div className="flex w-full flex-col items-center overflow-hidden">
           {localItem?.image ? (
             <Image
               className="h-28 w-36 object-contain"
@@ -106,6 +107,7 @@ export default function DrawerDocumentContent() {
           ) : null}
           <Dropdown
             className="w-full"
+            filter
             itemTemplate={ImageDropdownItem}
             name="image"
             onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? undefined : e.value })}
@@ -113,6 +115,7 @@ export default function DrawerDocumentContent() {
             placeholder="Select map"
             value={localItem?.image}
             valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+            virtualScrollerOptions={virtualScrollerSettings}
           />
         </div>
         {!localItem?.template && (

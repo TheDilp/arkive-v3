@@ -2,7 +2,7 @@ import { CRS, LatLngBoundsExpression } from "leaflet";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useRef, useState } from "react";
 import { MapContainer } from "react-leaflet";
-import { useParams } from "react-router-dom";
+import { Navigate, To, useParams } from "react-router-dom";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import MapImage from "../../components/Map/MapImage";
@@ -10,6 +10,7 @@ import { useDeleteItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { MapType } from "../../types/ItemTypes/mapTypes";
 import { useMapContextMenuItems } from "../../utils/contextMenus";
+import { toaster } from "../../utils/toast";
 
 type Props = {
   isReadOnly?: boolean;
@@ -53,6 +54,10 @@ export default function MapView({ isReadOnly }: Props) {
 
   if (loading || isLoading) return <ProgressSpinner />;
   if (!currentMap) return null;
+  if (isReadOnly && !currentMap?.isPublic && !isLoading) {
+    toaster("warning", "This map is not public.");
+    return <Navigate to={-1 as To} />;
+  }
   return (
     <div className="flex h-full w-full flex-col">
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
@@ -75,6 +80,7 @@ export default function MapView({ isReadOnly }: Props) {
             <MapImage
               bounds={bounds as LatLngBoundsExpression}
               cm={cm}
+              currentMap={currentMap}
               imgRef={imgRef}
               isReadOnly={isReadOnly}
               src={currentMap?.image || ""}
