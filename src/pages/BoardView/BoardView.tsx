@@ -12,7 +12,7 @@ import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DragItem } from "../../types/generalTypes";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
-import { BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
 import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
@@ -31,7 +31,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const { item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
-
+  const [, setBoardRef] = useAtom(BoardReferenceAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -271,6 +271,7 @@ export default function BoardView({ isReadOnly }: Props) {
               snapToGridDuringDrag: boardState.grid,
               drawGrid: boardState.grid,
             });
+            setBoardRef(cyRef.current);
             ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
           }
         }}
