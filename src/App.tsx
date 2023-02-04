@@ -71,7 +71,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <main className="flex h-screen w-screen flex-col">
-        <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
+        <ToastContainer autoClose={1500} newestOnTop theme="dark" />
 
         <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>

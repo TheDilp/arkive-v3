@@ -350,11 +350,11 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         label: "Edit Document",
       },
 
-      {
-        icon: "pi pi-fw pi-copy",
-        label: "Create Doc From Template",
-        // command: () => {},
-      },
+      // {
+      //   icon: "pi pi-fw pi-copy",
+      //   label: "Create Doc From Template",
+      //   // command: () => {},
+      // },
       { separator: true },
       {
         icon: "pi pi-fw pi-trash",
@@ -412,17 +412,16 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         icon: "pi pi-fw pi-copy",
         label: "Covert to Template",
       },
-      {
-        icon: "pi pi-fw pi-download",
-        label: "Export JSON",
-        // command: () => {},
-      },
+      // {
+      //   icon: "pi pi-fw pi-download",
+      //   label: "Export JSON",
+      //   // command: () => {},
+      // },
       { separator: true },
       {
         icon: "pi pi-fw pi-external-link",
         label: "View Public Document",
         command: () => {
-          console.log(cmType.data);
           if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
             toaster("warning", "Document is set to private.");
             return;
@@ -433,7 +432,16 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         icon: "pi pi-fw pi-link",
         label: "Copy Public URL",
-        // command: () => {},
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic) {
+            if (cmType.data?.id) {
+              navigator.clipboard.writeText(`${window.origin}/view/documents/${cmType.data?.id}`);
+              toaster("success", "Link copied.");
+            } else toaster("error", "There was an error copying this link.");
+          } else {
+            toaster("warning", "This document is not public.");
+          }
+        },
       },
       {
         command: () =>

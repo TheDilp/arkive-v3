@@ -121,7 +121,6 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
                     <LayersControl.Overlay key={layer.id + layer.title} name={layer.title}>
                       <ImageOverlay
                         bounds={bounds}
-                        className="leafletImageOverlayLayer "
                         url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${layer.image}`}
                         zIndex={9999}
                       />

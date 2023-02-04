@@ -77,7 +77,7 @@ export default function DrawerMapPinContent() {
         <ColorInput color={localItem.backgroundColor || "#000000"} name="backgroundColor" onChange={handleChange} />
       </div>
       <div className="flex flex-wrap items-center justify-between">
-        <span>Public:</span>
+        <span>Is Public?</span>
         <Checkbox checked={localItem.isPublic} onChange={(e) => handleChange({ name: "isPublic", value: e.target.checked })} />
         <p className="w-full pt-2 text-xs text-zinc-400">
           If a document is linked, the marker will use its public setting by default.
