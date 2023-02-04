@@ -30,9 +30,8 @@ export default function BoardView({ isReadOnly }: Props) {
   const firstRender = useRef(true) as MutableRefObject<boolean>;
   const { item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
+  const [boardState, setBoardState] = useAtom(BoardStateAtom);
 
-  const [boardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -41,7 +40,9 @@ export default function BoardView({ isReadOnly }: Props) {
     edges: null,
   });
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
+
   const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards");
+  const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
   const contextItems = useBoardContextMenuItems({
     type: boardContext.type,
     item_id: item_id as string,
@@ -87,7 +88,7 @@ export default function BoardView({ isReadOnly }: Props) {
 
       if (cyRef?.current) {
         cyRef?.current.removeListener("click mousedown cxttap dbltap free ehcomplete");
-        // cyRef?.current.destroy();
+        setBoardState((prev) => ({ ...prev, drawMode: false }));
       }
     };
   }, [item_id]);
