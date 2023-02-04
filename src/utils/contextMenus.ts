@@ -47,7 +47,7 @@ export function useMapContextMenuItems({
               setDrawer({ ...DefaultDrawer, data: drawer?.data, position: "right", show: true, type: "map_pins" });
             },
             icon: "pi pi-fw pi-map-marker",
-            label: "New Token",
+            label: "New Map Marker",
           },
           {
             command: () => mapRef?.current?.fitBounds(bounds),
@@ -56,16 +56,16 @@ export function useMapContextMenuItems({
         ]
       : [
           {
-            command: () => setDrawer((prev) => ({ ...prev, position: "left", show: true, type: "map_pins" })),
+            command: () => setDrawer((prev) => ({ ...prev, position: "right", show: true, type: "map_pins" })),
             icon: "pi pi-fw pi-pencil",
-            label: "Edit Pin",
+            label: "Edit Map Marker",
           },
           {
             command: () => {
               if (drawer?.id) deleteMapPin.mutate(drawer.id);
             },
             icon: "pi pi-fw pi-trash",
-            label: "Delete Pin",
+            label: "Delete Map Marker",
           },
         ];
 

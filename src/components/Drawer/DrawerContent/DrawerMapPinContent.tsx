@@ -17,10 +17,12 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
 import { IconSelect } from "../../IconSelect/IconSelect";
+import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const queryClient = useQueryClient();
+  const [, setDrawer] = useAtom(DrawerAtom);
   const [drawer] = useAtom(DrawerAtom);
   const createMapPin = useCreateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
   const updateMapPin = useUpdateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
@@ -105,10 +107,12 @@ export default function DrawerMapPinContent() {
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() => {
-          if (currentPin) updateMapPin.mutate({ id: localItem.id, ...changedData });
-          else createMapPin.mutate({ ...localItem, id: crypto.randomUUID() });
+        loading={createMapPin.isLoading || updateMapPin.isLoading}
+        onClick={async () => {
+          if (currentPin) await updateMapPin.mutateAsync({ id: localItem.id, ...changedData });
+          else await createMapPin.mutateAsync({ ...localItem, id: crypto.randomUUID() });
           resetChanges();
+          handleCloseDrawer(setDrawer, "right");
         }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
