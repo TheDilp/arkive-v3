@@ -95,11 +95,7 @@ function App() {
               </Route>
             </Route>
 
-            <Route element={<PublicWrapper />} path="view/*">
-              <Route path="documents/:item_id" />
-              <Route path="maps/:item_id" />
-              <Route path="boards/:item_id" />
-            </Route>
+            <Route element={<PublicWrapper />} path="view/:type/:item_id" />
           </Routes>
         </DndProvider>
       </main>

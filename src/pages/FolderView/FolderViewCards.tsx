@@ -27,9 +27,9 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
                 cm={cm}
                 icon={getIcon(type, item)}
                 id={item.id}
-                // @ts-ignore
-                image={item?.image || undefined}
+                image={"image" in item ? item?.image : undefined}
                 isFolder={item.folder}
+                isPublic={item?.isPublic}
                 title={item.title}
                 type={type}
               />

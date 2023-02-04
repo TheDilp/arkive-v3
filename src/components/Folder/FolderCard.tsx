@@ -12,6 +12,7 @@ type Props = {
   id: string;
   title: string;
   isFolder: boolean;
+  isPublic: boolean;
   icon: string;
   type: AvailableItemTypes;
   cm: MutableRefObject<any>;
@@ -26,7 +27,7 @@ const getCardURL = ({ id, isFolder, type }: { id: string; type: AvailableItemTyp
   return finalURL;
 };
 
-export default function FolderCard({ id, title, type, isFolder, icon, image, cm }: Props) {
+export default function FolderCard({ id, title, type, isFolder, isPublic, icon, image, cm }: Props) {
   const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const { project_id } = useParams();
   const sortItemsMutation = useSortMutation(project_id as string, type);
@@ -36,12 +37,12 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
       onContextMenu={(e) => {
         if (isFolder)
           setContextMenu({
-            data: { id, title },
+            data: { id, title, isPublic },
             type,
             folder: isFolder,
             template: false,
           });
-        else setContextMenu({ data: { id, title }, type, folder: false, template: false });
+        else setContextMenu({ data: { id, title, isPublic }, type, folder: false, template: false });
         cm.current.show(e);
       }}
       onDragStart={(e) => {

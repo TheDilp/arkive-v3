@@ -422,6 +422,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         icon: "pi pi-fw pi-external-link",
         label: "View Public Document",
         command: () => {
+          console.log(cmType.data);
           if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
             toaster("warning", "Document is set to private.");
             return;
