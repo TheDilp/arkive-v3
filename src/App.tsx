@@ -11,7 +11,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { lazy, useEffect } from "react";
 import { DndProvider } from "react-dnd";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Layout from "./components/Layout/Layout";
@@ -43,6 +43,7 @@ const queryClient = new QueryClient({
   },
 });
 function App() {
+  const { pathname } = useLocation();
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -62,7 +63,9 @@ function App() {
 
     onAuthStateChanged(auth, (user) => {
       if (user) user?.getIdToken();
-      if (!user) navigate("/auth/signin");
+      if (!user && !pathname.includes("view")) {
+        navigate("/auth/signin");
+      }
     });
   }, []);
   return (

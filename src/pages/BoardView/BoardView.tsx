@@ -41,7 +41,7 @@ export default function BoardView({ isReadOnly }: Props) {
   });
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
 
-  const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards");
+  const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards", {}, isReadOnly);
   const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
   const contextItems = useBoardContextMenuItems({
     type: boardContext.type,
@@ -193,6 +193,12 @@ export default function BoardView({ isReadOnly }: Props) {
               eles: node,
             },
           });
+      } else if (cyRef?.current) {
+        cyRef?.current?.animate({
+          center: {
+            eles: cyRef?.current?.nodes(),
+          },
+        });
       }
     }, 250);
   }, [subitem_id, cyRef?.current]);
@@ -218,7 +224,7 @@ export default function BoardView({ isReadOnly }: Props) {
   if (isLoading) return <ProgressSpinner />;
   return (
     <div
-      className="relative flex h-full w-full justify-center"
+      className="relative flex h-full w-full flex-col items-center justify-start"
       onDrop={(e) => {
         const stringData = e.dataTransfer.getData("item_id");
         if (!stringData) return;
@@ -258,6 +264,7 @@ export default function BoardView({ isReadOnly }: Props) {
           });
         }
       }}>
+      {isReadOnly ? <h2 className="m-0 w-full pt-1 text-center font-Merriweather text-4xl">{board?.title || ""}</h2> : null}
       <ContextMenu cm={cm} items={contextItems} />
 
       <CytoscapeComponent
@@ -279,7 +286,7 @@ export default function BoardView({ isReadOnly }: Props) {
         // @ts-ignore
         stylesheet={cytoscapeStylesheet}
       />
-      <BoardQuickBar />
+      {isReadOnly ? null : <BoardQuickBar />}
     </div>
   );
 }

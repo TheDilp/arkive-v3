@@ -120,6 +120,18 @@ export default function DrawerBoardContent() {
         />
       </div>
       <div className="flex items-center justify-between">
+        <span className="p-checkbox-label">Is Public?</span>
+        <Checkbox
+          checked={localItem.isPublic}
+          onChange={(e) =>
+            handleChange({
+              name: "isPublic",
+              value: e.checked,
+            })
+          }
+        />
+      </div>
+      <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Draw grid by default?</span>
         <Checkbox
           checked={localItem.defaultGrid}
