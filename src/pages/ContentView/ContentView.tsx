@@ -10,6 +10,7 @@ const CalendarView = lazy(() => import("../CalendarView/CalendarView"));
 
 export default function ContentView() {
   const { type } = useParams();
+
   if (type === "documents") return <Editor editable />;
   if (type === "maps") return <MapView />;
   if (type === "boards") return <BoardView />;

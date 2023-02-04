@@ -12,7 +12,7 @@ import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DragItem } from "../../types/generalTypes";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
-import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
 import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
@@ -25,14 +25,14 @@ type Props = {
 
 export default function BoardView({ isReadOnly }: Props) {
   const cm = useRef() as MutableRefObject<any>;
+  const cyRef = useRef() as any;
+  const ehRef = useRef() as any;
   const firstRender = useRef(true) as MutableRefObject<boolean>;
   const { item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
   const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
-  const [edgeHandlesRef, setEdgeHandlesRef] = useAtom(BoardEdgeHandlesAtom);
 
-  const [boardState, setBoardState] = useAtom(BoardStateAtom);
+  const [boardState] = useAtom(BoardStateAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -66,35 +66,39 @@ export default function BoardView({ isReadOnly }: Props) {
   );
 
   useEffect(() => {
-    setEdgeHandlesRef(null);
-    if (board) {
-      if (firstRender && firstRender.current) {
-        firstRender.current = false;
-      }
-      let temp_nodes: NodeDefinition[] = [];
-      let temp_edges: EdgeDefinition[] = [];
-      if (board?.nodes && board.nodes.length > 0) {
-        temp_nodes = mapNodes(board.nodes, isReadOnly);
-      }
-      if (board?.edges && board.edges.length > 0) {
-        temp_edges = mapEdges(board.edges, isReadOnly);
-      }
-      setElements([...temp_nodes, ...temp_edges]);
+    let temp_nodes: NodeDefinition[] = [];
+    let temp_edges: EdgeDefinition[] = [];
+    if (board?.nodes && board.nodes.length > 0) {
+      temp_nodes = mapNodes(board.nodes, isReadOnly);
     }
+    if (board?.edges && board.edges.length > 0) {
+      temp_edges = mapEdges(board.edges, isReadOnly);
+    }
+    setElements([...temp_nodes, ...temp_edges]);
+  }, [board]);
+
+  useEffect(() => {
+    if (firstRender && firstRender.current) {
+      firstRender.current = false;
+    }
+
     return () => {
       firstRender.current = true;
-      setBoardState({ grid: false, drawMode: false });
-      setEdgeHandlesRef(null);
+
+      if (cyRef?.current) {
+        cyRef?.current.removeListener("click mousedown cxttap dbltap free ehcomplete");
+        // cyRef?.current.destroy();
+      }
     };
-  }, [board, item_id]);
+  }, [item_id]);
 
   // Board Events
   useEffect(() => {
-    if (boardRef && !isReadOnly) {
+    if (cyRef?.current && !isReadOnly) {
       // Right click
-      boardRef.on("cxttap", function (evt: any) {
+      cyRef?.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
-        if (evt.target === boardRef) {
+        if (evt.target === cyRef?.current) {
           cm.current.show(evt.originalEvent);
           setBoardContext({
             ...evt.position,
@@ -108,8 +112,8 @@ export default function BoardView({ isReadOnly }: Props) {
           // If the current target is not in the selected group, make it the only selected item
           // This mimics a desktop mouse experience
           // Otherwise, do nothing
-          if (!boardRef.elements(":selected").contains(evt.target)) {
-            boardRef.elements(":selected").unselect();
+          if (!cyRef?.current.elements(":selected").contains(evt.target)) {
+            cyRef?.current.elements(":selected").unselect();
             evt.target.select();
           }
           if (group === "nodes") {
@@ -131,7 +135,7 @@ export default function BoardView({ isReadOnly }: Props) {
       });
       // Creating edges
       // @ts-ignore
-      boardRef.on("ehcomplete", function (_, sourceNode: any, targetNode: any, addedEdge: any) {
+      cyRef?.current.on("ehcomplete", function (_, sourceNode: any, targetNode: any, addedEdge: any) {
         const sourceData = sourceNode._private.data;
         const targetData = targetNode._private.data;
 
@@ -139,19 +143,20 @@ export default function BoardView({ isReadOnly }: Props) {
         // When drawmode is turned on and then off and then back on
         // It can add an edges to a node that doesn't exist
         try {
-          boardRef.remove(addedEdge);
+          cyRef?.current.remove(addedEdge);
         } catch (error) {
           toaster("warning", "Cytoedge couldn't be removed, there was an error.");
         }
         makeEdgeCallback(sourceData.id, targetData.id, board?.defaultEdgeColor);
       });
+
       // Moving nodes
-      boardRef.on("free", "node", function (evt: EventObject) {
+      cyRef?.current.on("free", "node", function (evt: EventObject) {
         evt.preventDefault();
         evt.stopPropagation();
         evt.stopImmediatePropagation();
         const target = evt.target._private;
-        boardRef.elements(":selected").select();
+        cyRef?.current.elements(":selected").select();
         evt.target.select();
         // Grid extenstion messes with the "grab events"
         // "Freeon" event triggers on double clicking
@@ -160,60 +165,54 @@ export default function BoardView({ isReadOnly }: Props) {
       });
 
       // Double Click
-      boardRef.on("dbltap", "node", function (evt: any) {
+      cyRef?.current.on("dbltap", "node", function (evt: any) {
         const target = evt.target._private;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { backgroundImage, classes, document, locked, parent, zIndexCompare, ...rest } = target.data;
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "nodes", drawerSize: "sm" });
       });
-      boardRef.on("dbltap", "edge", function (evt: any) {
+      cyRef?.current.on("dbltap", "edge", function (evt: any) {
         const targetEdge = evt.target._private;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { classes, parent, zIndexCompare, source, target, ...rest } = targetEdge.data;
         setDrawer({ ...DefaultDrawer, data: rest, position: "right", show: true, type: "edges", drawerSize: "sm" });
       });
     }
-    return () => {
-      if (boardRef) {
-        boardRef.removeListener("click mousedown cxttap dbltap free ehcomplete");
-        setEdgeHandlesRef(null);
-      }
-    };
-  }, [boardRef, item_id]);
+  }, [cyRef?.current, item_id]);
 
   useEffect(() => {
     setTimeout(() => {
       // If there is a node id in the URL navigate to that node
-      if (subitem_id && boardRef) {
-        const node = boardRef.getElementById(subitem_id);
+      if (subitem_id && cyRef?.current) {
+        const node = cyRef?.current.getElementById(subitem_id);
 
         if (node)
-          boardRef?.animate({
+          cyRef?.current?.animate({
             center: {
               eles: node,
             },
           });
       }
     }, 250);
-  }, [subitem_id, boardRef]);
+  }, [subitem_id, cyRef?.current]);
 
   useEffect(() => {
-    if (edgeHandlesRef && boardRef) {
+    if (cyRef?.current) {
       if (!boardState.drawMode) {
-        edgeHandlesRef.disable();
-        edgeHandlesRef.disableDrawMode();
-        boardRef.autoungrabify(false);
-        boardRef.autounselectify(false);
-        boardRef.autolock(false);
-        boardRef.zoomingEnabled(true);
-        boardRef.userZoomingEnabled(true);
-        boardRef.panningEnabled(true);
+        ehRef?.current.disable();
+        ehRef?.current.disableDrawMode();
+        cyRef?.current.autoungrabify(false);
+        cyRef?.current.autounselectify(false);
+        cyRef?.current.autolock(false);
+        cyRef?.current.zoomingEnabled(true);
+        cyRef?.current.userZoomingEnabled(true);
+        cyRef?.current.panningEnabled(true);
       } else {
-        edgeHandlesRef.enable();
-        edgeHandlesRef.enableDrawMode();
+        ehRef?.current.enable();
+        ehRef?.current.enableDrawMode();
       }
     }
-  }, [boardState.drawMode, edgeHandlesRef]);
+  }, [boardState.drawMode]);
 
   if (isLoading) return <ProgressSpinner />;
   return (
@@ -223,10 +222,10 @@ export default function BoardView({ isReadOnly }: Props) {
         const stringData = e.dataTransfer.getData("item_id");
         if (!stringData) return;
         const data: DragItem = JSON.parse(e.dataTransfer.getData("item_id"));
-        if (!data || !boardRef) return;
+        if (!data || !cyRef?.current) return;
         const { image } = data;
         const { top, left } = e.currentTarget.getBoundingClientRect();
-        const { x, y } = toModelPosition(boardRef, {
+        const { x, y } = toModelPosition(cyRef?.current, {
           x: e.clientX - left,
           y: e.clientY - top,
         });
@@ -265,14 +264,14 @@ export default function BoardView({ isReadOnly }: Props) {
         cy={(cy) => {
           if (cy) {
             // @ts-ignore
-            cy.gridGuide({
+            cyRef.current = cy;
+            cyRef.current.gridGuide({
               ...cytoscapeGridOptions,
               snapToGridDuringDrag: boardState.grid,
               drawGrid: boardState.grid,
             });
+            ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
           }
-          setBoardRef(cy);
-          if (boardRef && !edgeHandlesRef) setEdgeHandlesRef(boardRef.edgehandles(edgehandlesSettings));
         }}
         elements={elements}
         // @ts-ignore

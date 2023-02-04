@@ -11,7 +11,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
-import { BoardEdgeHandlesAtom, BoardReferenceAtom, BoardStateAtom, DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { BoardReferenceAtom, BoardStateAtom, DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, updateColor } from "../../utils/boardUtils";
 import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -23,7 +23,6 @@ export default function BoardQuickBar() {
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [edgehandles] = useAtom(BoardEdgeHandlesAtom);
   const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
 
   const updateManyNodes = useUpdateManySubItems<NodeType>(item_id as string, "nodes");
@@ -137,16 +136,12 @@ export default function BoardQuickBar() {
 
       {/* Drawmode button */}
       <i
-        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${
-          edgehandles && boardState.drawMode ? "text-green-500" : ""
-        } drawMode`}
+        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""} drawMode`}
         onClick={() => {
-          if (boardRef && edgehandles) {
-            if (boardState.drawMode) {
-              setBoardState((prev) => ({ ...prev, drawMode: false }));
-            } else {
-              setBoardState((prev) => ({ ...prev, drawMode: true }));
-            }
+          if (boardState.drawMode) {
+            setBoardState((prev) => ({ ...prev, drawMode: false }));
+          } else {
+            setBoardState((prev) => ({ ...prev, drawMode: true }));
           }
         }}
       />

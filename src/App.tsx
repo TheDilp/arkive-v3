@@ -56,6 +56,7 @@ function App() {
 
   const navigate = useNavigate();
   initializeApp(firebaseConfig);
+
   useEffect(() => {
     const auth = getAuth();
 
