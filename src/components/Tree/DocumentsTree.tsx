@@ -23,7 +23,17 @@ export default function DocumentsTree() {
             type: "documents",
           }),
         icon: "pi pi-file",
-        label: "Create Document (Drawer)",
+        label: "Create Document (Detailed)",
+      },
+      {
+        command: () =>
+          createDocumentMutation?.mutate({
+            folder: true,
+            project_id: project_id as string,
+            title: "New Folder",
+          }),
+        icon: "pi pi-folder",
+        label: "Create Folder",
       },
       {
         command: () => {
