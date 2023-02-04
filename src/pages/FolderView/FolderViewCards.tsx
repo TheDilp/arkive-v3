@@ -19,7 +19,7 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
   return (
     <div className="flex h-full flex-col">
       <ContextMenu cm={cm} items={menuItems} />
-      <div className="flex h-full flex-1 flex-wrap overflow-auto">
+      <div className="flex h-full flex-1 flex-wrap content-start gap-y-4 overflow-auto">
         {items.length
           ? items.map((item) => (
               <FolderCard

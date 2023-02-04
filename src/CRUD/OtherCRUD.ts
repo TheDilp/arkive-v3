@@ -76,7 +76,7 @@ export const useUpdateTag = (project_id: string) => {
           }
           return old;
         });
-        queryClient.refetchQueries(["allItems", project_id]);
+        // queryClient.refetchQueries(["allItems", project_id]);
         return { oldData };
       },
       onError: (_, __, context) => {
