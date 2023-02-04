@@ -14,7 +14,7 @@ export default function Layout() {
   const user = useAuth();
   if (!user) return <ProgressSpinner />;
   return (
-    <div className="flex h-full max-w-full overflow-hidden bg-black">
+    <div className="flex h-full max-w-full overflow-hidden">
       <ConfirmDialog />
 
       <DialogWrapper />

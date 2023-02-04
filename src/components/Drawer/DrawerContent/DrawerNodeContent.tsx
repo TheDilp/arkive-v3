@@ -21,6 +21,7 @@ import {
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
@@ -123,11 +124,10 @@ export default function DrawerNodeContent() {
               <InputNumber
                 inputClassName="w-full"
                 max={5000}
-                min={10}
+                min={1}
                 onChange={(e) => handleChange({ name: "width", value: e.value as number })}
                 onKeyDown={handleEnter}
                 showButtons
-                step={10}
                 value={localItem.width}
               />
             </div>
@@ -136,11 +136,10 @@ export default function DrawerNodeContent() {
               <InputNumber
                 inputClassName="w-full"
                 max={5000}
-                min={10}
+                min={1}
                 onChange={(e) => handleChange({ name: "height", value: e.value as number })}
                 onKeyDown={handleEnter}
                 showButtons
-                step={10}
                 value={localItem.height}
               />
             </div>
@@ -232,6 +231,7 @@ export default function DrawerNodeContent() {
                   onChange={(e) => handleChange({ name: "textVAlign", value: e.value })}
                   options={textVAlignOptions}
                   value={localItem.textVAlign}
+                  virtualScrollerOptions={virtualScrollerSettings}
                 />
               </div>
             </div>
@@ -261,6 +261,7 @@ export default function DrawerNodeContent() {
               optionValue="id"
               placeholder="Link Document"
               value={localItem.doc_id}
+              virtualScrollerOptions={virtualScrollerSettings}
             />
           </div>
           {/* <div className="flex w-full flex-wrap">
@@ -300,12 +301,14 @@ export default function DrawerNodeContent() {
             <span className="w-full text-sm text-zinc-400">Custom image</span>
             <div className="text-xs text-gray-400">Note: Custom images override images of linked documents.</div>
             <Dropdown
+              filter
               itemTemplate={ImageDropdownItem}
               onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? null : e.value })}
               options={["None", ...(images || [])] || []}
               placeholder="Select image"
               value={localItem}
               valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+              virtualScrollerOptions={virtualScrollerSettings}
             />
           </div>
           <div className="mb-2 w-full">

@@ -220,6 +220,15 @@ export default function BoardView({ isReadOnly }: Props) {
       }
     }
   }, [boardState.drawMode]);
+  useEffect(() => {
+    if (cyRef?.current) {
+      cyRef.current.gridGuide({
+        ...cytoscapeGridOptions,
+        snapToGridDuringDrag: boardState.grid,
+        drawGrid: boardState.grid,
+      });
+    }
+  }, [boardState.grid]);
 
   if (isLoading) return <ProgressSpinner />;
   if (isReadOnly && !board?.isPublic) {
