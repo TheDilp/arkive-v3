@@ -5,22 +5,23 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { ColorPicker } from "primereact/colorpicker";
 import { Tooltip } from "primereact/tooltip";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
-import { BoardReferenceAtom, BoardStateAtom, DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { BoardType, CytoscapeEdgeType, CytoscapeNodeType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
+import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { changeLockState, updateColor } from "../../utils/boardUtils";
-import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
+import { ColorPresets, cytoscapeGridOptions } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
-export default function BoardQuickBar() {
+export default function BoardQuickBar({ cyRef, ehRef }: { ehRef: any; cyRef: any }) {
   const { item_id } = useParams();
-  const [boardRef] = useAtom(BoardReferenceAtom);
-  const [boardState, setBoardState] = useAtom(BoardStateAtom);
+  const [grid, setGrid] = useState(false);
+  const [draw, setDraw] = useState(false);
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
@@ -28,13 +29,12 @@ export default function BoardQuickBar() {
   const updateManyNodes = useUpdateManySubItems<NodeType>(item_id as string, "nodes");
   const updateManyEdges = useUpdateManySubItems<EdgeType>(item_id as string, "edges");
 
-  const [, setExportDialog] = useAtom(DialogAtom);
   const deleteManyNodesMutation = useDeleteManySubItems(item_id as string, "nodes");
   const deleteManyEdgesMutation = useDeleteManySubItems(item_id as string, "edges");
   const debouncedColorPick = useDebouncedCallback(
     // function
     (color) => {
-      if (boardRef) updateColor(boardRef, `#${color}`, updateManyNodes, updateManyEdges);
+      if (cyRef?.current) updateColor(cyRef.current, `#${color}`, updateManyNodes, updateManyEdges);
     },
     // delay in ms
     400,
@@ -84,7 +84,7 @@ export default function BoardQuickBar() {
                 key={color}
                 className="h-4 w-4 cursor-pointer rounded-sm"
                 onClick={() => {
-                  if (boardRef) updateColor(boardRef, `#${color}`, updateManyNodes, updateManyEdges);
+                  if (cyRef?.current) updateColor(cyRef.current, `#${color}`, updateManyNodes, updateManyEdges);
                 }}
                 style={{
                   backgroundColor: `#${color}`,
@@ -99,49 +99,65 @@ export default function BoardQuickBar() {
 
       {/* Toggle grid visibility */}
       <span
-        className={`flex cursor-pointer hover:text-blue-300 ${boardState.grid ? "text-green-500" : ""}  drawGrid`}
-        onClick={() => setBoardState({ ...boardState, grid: !boardState.grid })}>
+        className={`flex cursor-pointer hover:text-blue-300 ${grid ? "text-green-500" : ""}  drawGrid`}
+        onClick={() => {
+          cyRef.current.gridGuide({
+            ...cytoscapeGridOptions,
+            snapToGridDuringDrag: !grid,
+            drawGrid: !grid,
+          });
+        }}>
         <Icon icon="mdi:grid" />
       </span>
       {/* Lock selected elements button */}
       <i
         className="pi pi-fw pi-lock lockSelected cursor-pointer hover:text-blue-300"
         onClick={() => {
-          if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+          if (cyRef?.current) changeLockState(cyRef?.current, true, updateManyNodes);
         }}
       />
       {/* Unlock selected elements button */}
       <i
         className="pi pi-fw pi-lock-open unlockSelected cursor-pointer hover:text-blue-300"
         onClick={() => {
-          if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+          if (cyRef?.current) changeLockState(cyRef?.current, false, updateManyNodes);
         }}
       />
       {/* Delete selected elements button */}
       <i
         className="pi pi-fw pi-trash deleteSelected cursor-pointer hover:text-blue-300"
         onClick={() => {
-          if (!boardRef) return;
-          const selected = boardRef.elements(":selected");
+          if (!cyRef?.current) return;
+          const selected = cyRef?.current.elements(":selected");
           if (selected.length === 0) {
             toaster("warning", "No elements are selected.");
           } else {
             const nodes = selected.nodes();
             const edges = selected.edges();
-            if (nodes.length) deleteManyNodesMutation.mutate(nodes.map((node) => node.id()));
-            if (edges.length) deleteManyEdgesMutation.mutate(edges.map((edge) => edge.id()));
+            if (nodes.length) deleteManyNodesMutation.mutate(nodes.map((node: any) => node.id()));
+            if (edges.length) deleteManyEdgesMutation.mutate(edges.map((edge: any) => edge.id()));
           }
         }}
       />
 
       {/* Drawmode button */}
       <i
-        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""} drawMode`}
+        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${draw ? "text-green-500" : ""} drawMode`}
         onClick={() => {
-          if (boardState.drawMode) {
-            setBoardState((prev) => ({ ...prev, drawMode: false }));
+          if (draw) {
+            ehRef?.current.disable();
+            ehRef?.current.disableDrawMode();
+            cyRef?.current.autoungrabify(false);
+            cyRef?.current.autounselectify(false);
+            cyRef?.current.autolock(false);
+            cyRef?.current.zoomingEnabled(true);
+            cyRef?.current.userZoomingEnabled(true);
+            cyRef?.current.panningEnabled(true);
+            setDraw(false);
           } else {
-            setBoardState((prev) => ({ ...prev, drawMode: true }));
+            ehRef?.current.enable();
+            ehRef?.current.enableDrawMode();
+            setDraw(true);
           }
         }}
       />
@@ -149,7 +165,7 @@ export default function BoardQuickBar() {
       <i
         className="pi pi-download saveButton cursor-pointer hover:text-blue-300"
         onClick={() => {
-          setExportDialog((prev) => ({
+          setDialog((prev) => ({
             ...prev,
             data: { title: board.title },
             position: "center",
@@ -169,7 +185,7 @@ export default function BoardQuickBar() {
       <span
         className="resetColors flex cursor-pointer hover:text-blue-300"
         onClick={() => {
-          if (boardRef) updateColor(boardRef, "#595959", updateManyNodes, updateManyEdges);
+          if (cyRef?.current) updateColor(cyRef?.current, "#595959", updateManyNodes, updateManyEdges);
         }}>
         <Icon fontSize={20} icon="mdi:invert-colors-off" />
       </span>
@@ -177,8 +193,8 @@ export default function BoardQuickBar() {
       <span
         className="editSelectedElements flex cursor-pointer hover:text-blue-300"
         onClick={() => {
-          if (!boardRef) return;
-          if (boardRef.elements(":selected")?.length > 0) {
+          if (!cyRef?.current) return;
+          if (cyRef?.current.elements(":selected")?.length > 0) {
             setDrawer({ ...DefaultDrawer, position: "right", type: "many_nodes", show: true });
           } else {
             toaster("warning", "No elements are selected.");

@@ -455,7 +455,6 @@ export function getNodeImage(node: NodeType) {
   if (node.image) {
     image = node.image;
   }
-  console.log(image);
   if (image !== "") return getImageLink(image.replaceAll(" ", "%20"));
   return null;
 }

@@ -1,8 +1,7 @@
-import { EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
+import cytoscape, { EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
-import CytoscapeComponent from "react-cytoscapejs";
 import { Navigate, To, useParams } from "react-router-dom";
 
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
@@ -12,10 +11,10 @@ import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { DragItem } from "../../types/generalTypes";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
-import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -25,13 +24,12 @@ type Props = {
 
 export default function BoardView({ isReadOnly }: Props) {
   const cm = useRef() as MutableRefObject<any>;
+  const cyContainerRef = useRef() as any;
   const cyRef = useRef() as any;
   const ehRef = useRef() as any;
   const firstRender = useRef(true) as MutableRefObject<boolean>;
   const { item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [boardState, setBoardState] = useAtom(BoardStateAtom);
-  const [, setBoardRef] = useAtom(BoardReferenceAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -67,6 +65,18 @@ export default function BoardView({ isReadOnly }: Props) {
   );
 
   useEffect(() => {
+    if (cyContainerRef && cyContainerRef.current) {
+      cyRef.current = cytoscape({
+        container: cyContainerRef?.current,
+        elements,
+        layout: { name: "preset" },
+        // @ts-ignore
+        style: cytoscapeStylesheet,
+      });
+    }
+  }, [cyContainerRef?.current]);
+
+  useEffect(() => {
     let temp_nodes: NodeDefinition[] = [];
     let temp_edges: EdgeDefinition[] = [];
     if (board?.nodes && board.nodes.length > 0) {
@@ -82,13 +92,11 @@ export default function BoardView({ isReadOnly }: Props) {
     if (firstRender && firstRender.current) {
       firstRender.current = false;
     }
-
     return () => {
       firstRender.current = true;
 
       if (cyRef?.current) {
         cyRef?.current.removeListener("click mousedown cxttap dbltap free ehcomplete");
-        setBoardState((prev) => ({ ...prev, drawMode: false }));
       }
     };
   }, [item_id]);
@@ -96,6 +104,8 @@ export default function BoardView({ isReadOnly }: Props) {
   // Board Events
   useEffect(() => {
     if (cyRef?.current && !isReadOnly) {
+      ehRef.current = null;
+      ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
       // Right click
       cyRef?.current.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
@@ -203,33 +213,6 @@ export default function BoardView({ isReadOnly }: Props) {
     }, 250);
   }, [subitem_id, cyRef?.current]);
 
-  useEffect(() => {
-    if (cyRef?.current) {
-      if (!boardState.drawMode) {
-        ehRef?.current.disable();
-        ehRef?.current.disableDrawMode();
-        cyRef?.current.autoungrabify(false);
-        cyRef?.current.autounselectify(false);
-        cyRef?.current.autolock(false);
-        cyRef?.current.zoomingEnabled(true);
-        cyRef?.current.userZoomingEnabled(true);
-        cyRef?.current.panningEnabled(true);
-      } else {
-        ehRef?.current.enable();
-        ehRef?.current.enableDrawMode();
-      }
-    }
-  }, [boardState.drawMode]);
-  useEffect(() => {
-    if (cyRef?.current) {
-      cyRef.current.gridGuide({
-        ...cytoscapeGridOptions,
-        snapToGridDuringDrag: boardState.grid,
-        drawGrid: boardState.grid,
-      });
-    }
-  }, [boardState.grid]);
-
   if (isLoading) return <ProgressSpinner />;
   if (isReadOnly && !board?.isPublic) {
     toaster("warning", "This map is not public.");
@@ -282,26 +265,20 @@ export default function BoardView({ isReadOnly }: Props) {
       ) : null}
       <ContextMenu cm={cm} items={contextItems} />
 
-      <CytoscapeComponent
+      <div
+        ref={cyContainerRef}
         className="h-[94%] w-full"
-        cy={(cy) => {
-          if (cy) {
-            // @ts-ignore
-            cyRef.current = cy;
-            cyRef.current.gridGuide({
-              ...cytoscapeGridOptions,
-              snapToGridDuringDrag: boardState.grid,
-              drawGrid: boardState.grid,
-            });
-            setBoardRef(cyRef.current);
-            ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
-          }
-        }}
-        elements={elements}
-        // @ts-ignore
-        stylesheet={cytoscapeStylesheet}
+        // cy={(cy) => {
+        //   if (cy) {
+        //     // @ts-ignore
+        //     cyRef.current = cy;
+        //   }
+        // }}
+        // elements={elements}
+        // // @ts-ignore
+        // stylesheet={cytoscapeStylesheet}
       />
-      {isReadOnly ? null : <BoardQuickBar />}
+      {isReadOnly ? null : <BoardQuickBar cyRef={cyRef} ehRef={ehRef} />}
     </div>
   );
 }
