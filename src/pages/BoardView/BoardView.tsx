@@ -198,7 +198,7 @@ export default function BoardView({ isReadOnly }: Props) {
   }, [subitem_id, cyRef?.current]);
 
   useEffect(() => {
-    if (cyRef?.current) {
+    if (cyRef?.current && ehRef?.current) {
       if (!boardState.drawMode) {
         ehRef?.current.disable();
         ehRef?.current.disableDrawMode();
@@ -213,7 +213,7 @@ export default function BoardView({ isReadOnly }: Props) {
         ehRef?.current.enableDrawMode();
       }
     }
-  }, [boardState.drawMode]);
+  }, [boardState.drawMode, cyRef?.current, ehRef?.current]);
 
   if (isLoading) return <ProgressSpinner />;
   return (
@@ -277,7 +277,6 @@ export default function BoardView({ isReadOnly }: Props) {
           }
 
           if (ehRef.current === undefined) ehRef.current = cy.edgehandles(edgehandlesSettings);
-          console.log(ehRef.current);
         }}
         elements={elements}
         // @ts-ignore

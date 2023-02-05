@@ -4,7 +4,6 @@ import { saveAs } from "file-saver";
 
 import { AllSubItemsType } from "../types/generalTypes";
 import { EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
-import { getImageLink } from "./CRUD/CRUDUrls";
 import { toaster } from "./toast";
 
 export function changeLockState(
