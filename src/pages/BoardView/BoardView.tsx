@@ -263,17 +263,21 @@ export default function BoardView({ isReadOnly }: Props) {
       <CytoscapeComponent
         className="h-[94%] w-full"
         cy={(cy) => {
-          if (cy) {
-            // @ts-ignore
-            cyRef.current = cy;
-            cyRef.current.gridGuide({
-              ...cytoscapeGridOptions,
-              snapToGridDuringDrag: boardState.grid,
-              drawGrid: boardState.grid,
-            });
-            setBoardRef(cyRef.current);
-            ehRef.current = cyRef.current.edgehandles(edgehandlesSettings);
+          // @ts-ignore
+          cyRef.current = cy;
+          cyRef.current.gridGuide({
+            ...cytoscapeGridOptions,
+            snapToGridDuringDrag: boardState.grid,
+            drawGrid: boardState.grid,
+          });
+          setBoardRef(cyRef.current);
+          if (ehRef.current) {
+            ehRef.current.destroy();
+            ehRef.current = undefined;
           }
+
+          if (ehRef.current === undefined) ehRef.current = cy.edgehandles(edgehandlesSettings);
+          console.log(ehRef.current);
         }}
         elements={elements}
         // @ts-ignore
