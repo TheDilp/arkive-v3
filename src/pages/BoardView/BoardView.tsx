@@ -31,7 +31,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const { item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
-  const [, setBoardRef] = useAtom(BoardReferenceAtom);
+  const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -53,6 +53,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const createEdgeMutation = useCreateSubItem<EdgeType>(item_id as string, "edges", "boards");
   const makeEdgeCallback = useCallback(
     (source: string, target: string, color?: string) => {
+      cyRef?.current?.remove(".eh-ghost-edge");
       createEdgeMutation.mutate({
         ...DefaultEdge,
         id: crypto.randomUUID(),
@@ -140,6 +141,23 @@ export default function BoardView({ isReadOnly }: Props) {
         const sourceData = sourceNode._private.data;
         const targetData = targetNode._private.data;
 
+        if (
+          elements.some((edge) => {
+            if (edge.data.source === sourceData.id && edge.data.target === targetData.id) {
+              try {
+                cyRef?.current.remove(addedEdge);
+              } catch (error) {
+                console.log(error);
+              }
+              return true;
+            }
+            return false;
+            // @ts-ignore
+          })
+        ) {
+          toaster("warning", "Edge between these nodes already exists.");
+          return;
+        }
         // Check due to weird edgehandles behavior when toggling drawmode
         // When drawmode is turned on and then off and then back on
         // It can add an edges to a node that doesn't exist

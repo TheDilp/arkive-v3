@@ -33,7 +33,9 @@ export function changeLockState(
 
 export const edgehandlesSettings = {
   canConnect(sourceNode: any, targetNode: any) {
-    return !sourceNode.outgoers().includes(targetNode) && !sourceNode.same(targetNode);
+    return (
+      !sourceNode.outgoers().includes(targetNode) && !sourceNode.same(targetNode) && !targetNode.outgoers().includes(sourceNode)
+    );
     // whether an edge can be created between source and target
     // e.g. disallow loops
   },
