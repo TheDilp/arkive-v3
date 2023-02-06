@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { Tooltip } from "../Tooltip/Tooltip";
+import RandomGenerator from "./RandomGenerator";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -31,6 +33,9 @@ export default function Navbar() {
                 icon="ion:upload"
                 onClick={() => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
               />
+              <Tooltip allowedPlacements={["bottom-end"]} closeOnClick content={<RandomGenerator />} isClickable>
+                <Icon className="cursor-pointer hover:text-blue-300" fontSize={20} icon="arcticons:reroll" />
+              </Tooltip>
             </>
           ) : null}
 
