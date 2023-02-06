@@ -23,6 +23,7 @@ import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getMapImageLink } from "../../utils/CRUD/CRUDUrls";
 import { tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
+import { virtualScrollerSettings } from "../../utils/uiUtils";
 import { ParentColumn } from "./Columns";
 import BooleanFilter from "./Filters/BooleanFilter";
 import TagsFilter from "./Filters/TagsFilter";
@@ -81,12 +82,14 @@ function ImageEditor(
     <div className="w-36">
       <Dropdown
         className="w-full"
+        filter
         itemTemplate={MapImageDropdownItem}
         onChange={(e) => updateDocument({ id: rowData.id, image: e.value })}
         options={["None", ...(images || [])] || []}
         placeholder="Select map"
         value={rowData?.image}
         valueTemplate={ImageDropdownValue({ image: rowData?.image })}
+        virtualScrollerOptions={virtualScrollerSettings}
       />
     </div>
   );

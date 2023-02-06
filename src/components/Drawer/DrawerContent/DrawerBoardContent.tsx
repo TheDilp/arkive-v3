@@ -18,6 +18,7 @@ import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
@@ -87,6 +88,7 @@ export default function DrawerBoardContent() {
           optionValue="id"
           placeholder="Board Folder"
           value={localItem?.parent?.id}
+          virtualScrollerOptions={virtualScrollerSettings}
         />
       </div>
       <Tags handleChange={handleChange} localItem={localItem} type="boards" />

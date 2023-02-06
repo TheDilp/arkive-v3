@@ -73,12 +73,14 @@ export default function DrawerMapContent() {
       />
 
       <Dropdown
+        filter
         itemTemplate={MapImageDropdownItem}
         onChange={(e) => handleChange({ name: "image", value: e.target.value })}
         options={map_images || []}
         placeholder="Select map"
         value={localItem.image}
         valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+        virtualScrollerOptions={virtualScrollerSettings}
       />
       <div className="">
         <Dropdown

@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { baseURLS } from "../../types/CRUDenums";
 import { DialogAtom } from "../../utils/Atoms/atoms";
+import { virtualScrollerSettings } from "../../utils/uiUtils";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 
@@ -25,6 +26,7 @@ export default function InsertImageEditor() {
         placeholder="Select map"
         value={localImage}
         valueTemplate={ImageDropdownValue({ image: localImage })}
+        virtualScrollerOptions={virtualScrollerSettings}
       />
       <Button
         className="p-button-rounded p-button-outlined"

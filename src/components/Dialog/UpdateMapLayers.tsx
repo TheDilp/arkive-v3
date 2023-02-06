@@ -12,6 +12,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { MapLayerType, MapType } from "../../types/ItemTypes/mapTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
 import { toaster } from "../../utils/toast";
+import { virtualScrollerSettings } from "../../utils/uiUtils";
 import { MapImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 
@@ -82,6 +83,7 @@ export default function UpdateMapLayers() {
               />
               <div className="w-48">
                 <Dropdown
+                  filter
                   itemTemplate={MapImageDropdownItem}
                   onChange={(e) =>
                     setLayers((prev) =>
@@ -95,6 +97,7 @@ export default function UpdateMapLayers() {
                   placeholder="Select map image"
                   value={layer.image}
                   valueTemplate={ImageDropdownValue({ image: layer?.image })}
+                  virtualScrollerOptions={virtualScrollerSettings}
                 />
               </div>
               <div className="flex w-fit gap-x-4">

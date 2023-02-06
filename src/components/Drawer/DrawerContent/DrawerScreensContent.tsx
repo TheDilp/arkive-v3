@@ -16,8 +16,8 @@ import { DefaultScreen } from "../../../utils/DefaultValues/ScreenDefaults";
 import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
-import DrawerSectionTitle from "../DrawerSectionTitle";
 import { handleCloseDrawer } from "../Drawer";
+import DrawerSectionTitle from "../DrawerSectionTitle";
 
 export default function DrawerScreensContent() {
   const queryClient = useQueryClient();

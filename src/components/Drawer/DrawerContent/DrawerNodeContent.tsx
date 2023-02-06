@@ -21,6 +21,7 @@ import {
 } from "../../../utils/boardUtils";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
@@ -120,12 +121,14 @@ export default function DrawerNodeContent() {
           <div className="flex w-full flex-col">
             <span className="w-full text-sm text-zinc-400">Image</span>
             <Dropdown
+              filter
               itemTemplate={ImageDropdownItem}
               onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? null : e.value })}
               options={["None", ...(images || [])] || []}
               placeholder="Select image"
               value={localItem}
               valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+              virtualScrollerOptions={virtualScrollerSettings}
             />
           </div>
           <div className="flex flex-nowrap gap-x-1 gap-y-2">

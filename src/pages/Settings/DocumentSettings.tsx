@@ -24,6 +24,7 @@ import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getImageLink } from "../../utils/CRUD/CRUDUrls";
 import { getCheckedValue, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
+import { virtualScrollerSettings } from "../../utils/uiUtils";
 import { ParentColumn } from "./Columns";
 import BooleanFilter from "./Filters/BooleanFilter";
 import TagsFilter from "./Filters/TagsFilter";
@@ -74,12 +75,14 @@ function ImageEditor(
     <div className="w-36">
       <Dropdown
         className="w-full"
+        filter
         itemTemplate={ImageDropdownItem}
         onChange={(e) => updateDocument({ id: rowData.id, image: e.value })}
         options={["None", ...(images || [])] || []}
         placeholder="Select image"
         value={rowData?.image}
         valueTemplate={ImageDropdownValue({ image: rowData?.image })}
+        virtualScrollerOptions={virtualScrollerSettings}
       />
     </div>
   );

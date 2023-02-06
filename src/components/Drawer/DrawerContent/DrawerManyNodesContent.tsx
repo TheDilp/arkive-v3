@@ -20,6 +20,7 @@ import {
 } from "../../../utils/boardUtils";
 import { DefaultNode } from "../../../utils/DefaultValues/BoardDefaults";
 import { toaster } from "../../../utils/toast";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
@@ -250,6 +251,7 @@ export default function DrawerManyNodesContent() {
         <div className="flex w-full justify-between">
           <Dropdown
             className="w-4/5"
+            filter
             itemTemplate={FontItemTemplate}
             onChange={(e) =>
               setLocalItem((prev) => ({
@@ -260,6 +262,7 @@ export default function DrawerManyNodesContent() {
             options={BoardFontFamilies}
             value={localItem.fontFamily}
             valueTemplate={FontItemTemplate}
+            virtualScrollerOptions={virtualScrollerSettings}
           />
           <Button
             className="p-button-square p-button-success p-button-outlined "
@@ -427,12 +430,14 @@ export default function DrawerManyNodesContent() {
         <div className="text-xs text-gray-400">Note: Custom images override images of linked documents.</div>
         <Dropdown
           className="w-4/5"
+          filter
           itemTemplate={ImageDropdownItem}
           onChange={(e) => setLocalItem((prev) => ({ ...prev, image: e.value === "None" ? null : e.value }))}
           options={["None", ...(images || [])]}
           placeholder="Select image"
           value={localItem}
           valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+          virtualScrollerOptions={virtualScrollerSettings}
         />
         <Button
           className="p-button-square p-button-success p-button-outlined "

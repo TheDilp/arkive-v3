@@ -13,6 +13,7 @@ import {
   boardEdgeCaps,
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
+  boardEdgeTaxiDirections,
   BoardFontFamilies,
   BoardFontSizes,
 } from "../../../utils/boardUtils";
@@ -84,27 +85,57 @@ export default function DrawerManyEdgesContent() {
           type="submit"
         />
       </div>
-      <div className="flex w-full flex-wrap justify-between">
-        <span className="w-full text-sm text-zinc-400">Line Cap</span>
-        <Dropdown
-          className="w-4/5"
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, lineCap: e.value }))}
-          options={boardEdgeCaps}
-          value={localItem.lineCap}
-        />
-        <Button
-          className="p-button-square p-button-success p-button-outlined"
-          icon="pi pi-save"
-          iconPos="right"
-          onClick={() => {
-            if (!boardRef) return;
-            updateManyEdges({
-              lineStyle: localItem.lineStyle,
-            });
-          }}
-          type="submit"
-        />
-      </div>
+      {localItem.curveStyle === "taxi" ? (
+        <>
+          <div className="flex w-full flex-wrap justify-between">
+            <span className="w-full text-sm text-gray-400">Edge Direction</span>
+            <Dropdown
+              className="w-4/5"
+              onChange={(e) => setLocalItem((prev) => ({ ...prev, taxiDirection: e.value }))}
+              options={boardEdgeTaxiDirections}
+              value={localItem.taxiDirection}
+            />
+            <Button
+              className="p-button-square p-button-success p-button-outlined"
+              icon="pi pi-save"
+              iconPos="right"
+              onClick={() => {
+                if (!boardRef) return;
+                updateManyEdges({
+                  taxiDirection: localItem.taxiDirection,
+                });
+              }}
+              type="submit"
+            />
+          </div>
+          <div className="flex w-full flex-wrap justify-between">
+            <span className="w-full text-sm text-gray-400">Break Distance</span>
+            <InputNumber
+              className="w-4/5"
+              inputClassName="w-full"
+              max={1000}
+              min={-1000}
+              onChange={(e) => setLocalItem((prev) => ({ ...prev, taxiTurn: e.value as number }))}
+              showButtons
+              step={5}
+              value={localItem.taxiTurn}
+            />
+            <Button
+              className="p-button-square p-button-success p-button-outlined"
+              icon="pi pi-save"
+              iconPos="right"
+              onClick={() => {
+                if (!boardRef) return;
+                updateManyEdges({
+                  taxiTurn: localItem.taxiTurn,
+                });
+              }}
+              type="submit"
+            />
+          </div>
+        </>
+      ) : null}
+
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-zinc-400">Thickness</span>
         <InputNumber
@@ -147,6 +178,27 @@ export default function DrawerManyEdgesContent() {
             if (!boardRef) return;
             updateManyEdges({
               lineColor: localItem.lineColor,
+            });
+          }}
+          type="submit"
+        />
+      </div>
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Line Cap</span>
+        <Dropdown
+          className="w-4/5"
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, lineCap: e.value }))}
+          options={boardEdgeCaps}
+          value={localItem.lineCap}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              lineStyle: localItem.lineStyle,
             });
           }}
           type="submit"

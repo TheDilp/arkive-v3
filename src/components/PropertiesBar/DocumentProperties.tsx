@@ -12,6 +12,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { toaster } from "../../utils/toast";
+import { virtualScrollerSettings } from "../../utils/uiUtils";
 import { ImageDropdownItem } from "../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../Dropdown/ImageDropdownValue";
 import Tags from "../Tags/Tags";
@@ -111,12 +112,14 @@ export default function DocumentProperties() {
         <AccordionTab headerTemplate={() => DocumentOptionsHeader({ icon: "mdi:image", title: "Image" })}>
           <Image preview src={`${baseURLS.baseServer}${getURLS.getSingleImage}${project_id}/${currentDocument?.image}`} />
           <Dropdown
+            filter
             itemTemplate={ImageDropdownItem}
             onChange={(e) => updateDocumentMutation?.mutate({ id: currentDocument?.id, image: e.value })}
             options={images || []}
             placeholder="Select map"
             value={currentDocument?.image}
             valueTemplate={ImageDropdownValue({ image: currentDocument?.image })}
+            virtualScrollerOptions={virtualScrollerSettings}
           />
         </AccordionTab>
         <AccordionTab headerTemplate={() => DocumentOptionsHeader({ icon: "mdi:cog", title: "Settings" })}>
