@@ -5,8 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { lazy, useEffect } from "react";
@@ -17,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
+import QueryWrapper from "./pages/QueryWrapper";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
@@ -30,18 +29,6 @@ const MapSettings = lazy(() => import("./pages/Settings/MapSettings"));
 const ProjectSettings = lazy(() => import("./pages/Settings/ProjectSettings"));
 const TagsSettings = lazy(() => import("./pages/Settings/TagsSettings"));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      networkMode: "always",
-      retry: (failureCount) => {
-        if (failureCount >= 1) return false;
-        return true;
-      },
-    },
-  },
-});
 function App() {
   // Your web app's Firebase configuration
   const firebaseConfig = {
@@ -51,7 +38,6 @@ function App() {
     messagingSenderId: "427542209724",
     appId: "1:427542209724:web:762016985ceab84cf49cb9",
   };
-
   // Initialize Firebase
 
   const navigate = useNavigate();
@@ -66,17 +52,16 @@ function App() {
     });
   }, []);
   return (
-    <QueryClientProvider client={queryClient}>
-      <main className="flex h-screen w-screen flex-col">
-        <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
+    <main className="flex h-screen w-screen flex-col">
+      <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
 
-        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-        <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-          <Routes>
-            <Route element={<AuthLayout />} path="auth/*">
-              <Route element={<Signup />} path="signup" />
-              <Route element={<Signin />} path="signin" />
-            </Route>
+      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+        <Routes>
+          <Route element={<AuthLayout />} path="auth/*">
+            <Route element={<Signup />} path="signup" />
+            <Route element={<Signin />} path="signin" />
+          </Route>
+          <Route element={<QueryWrapper />}>
             <Route element={<Dashboard />} path="/" />
             <Route element={<Layout />} path="/project/:project_id/*">
               <Route path=":type/*">
@@ -100,10 +85,10 @@ function App() {
               <Route path="maps/:item_id" />
               <Route path="boards/:item_id" />
             </Route>
-          </Routes>
-        </DndProvider>
-      </main>
-    </QueryClientProvider>
+          </Route>
+        </Routes>
+      </DndProvider>
+    </main>
   );
 }
 

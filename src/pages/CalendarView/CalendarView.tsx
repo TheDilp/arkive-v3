@@ -3,12 +3,12 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import CalendarEvent from "../../components/Calendar/Event";
+import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { useGetItem } from "../../hooks/useGetItem";
 import { CalendarType, EraType, MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -145,7 +145,7 @@ export default function CalendarView() {
     }
   }, [item_id, calendar, era]);
 
-  if (isLoading) return <ProgressSpinner />;
+  if (isLoading) return <LoadingScreen />;
   return (
     <div className="flex h-full w-full max-w-full flex-col">
       <h2 className="sticky top-0 flex h-14 items-center justify-center bg-zinc-800 pt-2 text-center text-2xl">
