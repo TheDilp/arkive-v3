@@ -23,6 +23,20 @@ export function getItemTypeFromURL(pathname: string) {
   if (pathname.includes("calendars")) return "calendars";
   return "documents";
 }
+export function getItemNameForTree(type: AvailableItemTypes) {
+  if (type !== "dictionaries") return type.slice(0, type.length - 1);
+  return "dictionary";
+}
+export function getItemIconForTree(type: AvailableItemTypes) {
+  if (type === "documents") return "mdi:file";
+  if (type === "maps") return "mdi:map-outline";
+  if (type === "boards") return "ph:graph";
+  if (type === "screens") return "fluent:board-24-regular";
+  if (type === "dictionaries") return "mdi-light:book";
+  if (type === "calendars") return "ph:calendar-blank";
+  if (type === "random_tables") return "arcticons:reroll";
+  return "mdi:plus";
+}
 export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
   if ("icon" in item) return item.icon;
   if (type === "maps") return "mdi:map";

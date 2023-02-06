@@ -1,17 +1,14 @@
 import { useAtom } from "jotai";
 import { Sidebar as PrimeSidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks/useMediaQuery";
+import { AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { setItem } from "../../utils/storage";
-import BoardsTree from "../Tree/BoardsTree";
-import CalendarsTree from "../Tree/CalendarsTree";
-import DictionariesTree from "../Tree/DictionariesTree";
 import DocumentsTree from "../Tree/DocumentsTree";
-import MapsTree from "../Tree/MapsTree";
-import ScreensTree from "../Tree/ScreensTree";
+import ItemsTree from "../Tree/ItemsTree";
 import TemplatesTree from "../Tree/TemplatesTree";
 import SettingsSidebar from "./SecondarySidebarContent/SettingsSidebar";
 
@@ -43,9 +40,9 @@ function SidebarContainer({ children }: Props) {
 }
 
 function SidebarContent() {
-  const { pathname } = useLocation();
+  const { type } = useParams();
 
-  if (pathname.includes("documents"))
+  if (type === "documents")
     return (
       <div className="flex flex-1 flex-col">
         <TabView className="wikiTabs flex flex-1 flex-col" renderActiveOnly>
@@ -58,14 +55,10 @@ function SidebarContent() {
         </TabView>
       </div>
     );
-  if (pathname.includes("settings")) return <SettingsSidebar />;
+  if (type === "settings") return <SettingsSidebar />;
   return (
     <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
-      {pathname.includes("maps") ? <MapsTree /> : null}
-      {pathname.includes("boards") ? <BoardsTree /> : null}
-      {pathname.includes("screens") ? <ScreensTree /> : null}
-      {pathname.includes("dictionaries") ? <DictionariesTree /> : null}
-      {pathname.includes("calendars") ? <CalendarsTree /> : null}
+      <ItemsTree type={type as AvailableItemTypes} />
     </div>
   );
 
