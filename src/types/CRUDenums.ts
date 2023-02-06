@@ -13,7 +13,7 @@ export const getURLS = {
   getManyDocuments: "getmanydocuments",
   // Maps
   getAllMaps: "getallmaps/",
-  getSingleMap: "getsinglemap/",
+  getSingleMap: "getsinglemap",
   // Boards
   getAllBoards: "getallboards/",
   getSingleBoard: "getsingleboard",
