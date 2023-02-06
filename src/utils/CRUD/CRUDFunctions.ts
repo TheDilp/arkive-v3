@@ -1,10 +1,10 @@
-import { QueryClient, UseMutateAsyncFunction } from "@tanstack/react-query";
+import { UseMutateAsyncFunction } from "@tanstack/react-query";
 import { SetStateAction } from "jotai";
 
 import { handleCloseDrawer } from "../../components/Drawer/Drawer";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
-import { AvailableItemTypes, TagType } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { toaster } from "../toast";
 import { FetchFunction } from "./CRUDFetch";
 import { getURL } from "./CRUDUrls";
@@ -23,9 +23,6 @@ export async function createUpdateItem<
   item: ItemType | undefined,
   newData: Partial<ItemType>,
   changedData: Partial<ItemType>,
-  type: AvailableItemTypes,
-  project_id: string,
-  queryClient: QueryClient,
   defaultItem: Partial<ItemType>,
   allItems: ItemType[] | undefined,
   resetChanges: () => void,
@@ -36,6 +33,8 @@ export async function createUpdateItem<
     Partial<ItemType>,
     {
       oldData: unknown;
+      oldDataSingle: AllItemsType;
+      oldDataAll: AllItemsType[];
     }
   >,
   setDrawer: (update: SetStateAction<DrawerAtomType>) => void,
@@ -59,7 +58,6 @@ export async function createUpdateItem<
       } as ItemType,
       {
         onSuccess: () => {
-          queryClient.refetchQueries({ queryKey: ["allItems", project_id, type] });
           toaster("success", "Item successfully updated.");
           handleCloseDrawer(setDrawer, "right");
         },
@@ -73,7 +71,6 @@ export async function createUpdateItem<
       },
       {
         onSuccess: () => {
-          queryClient.refetchQueries({ queryKey: ["allItems", project_id, type] });
           handleCloseDrawer(setDrawer, "right");
         },
       },

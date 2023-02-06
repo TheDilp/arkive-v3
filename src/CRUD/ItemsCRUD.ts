@@ -134,13 +134,22 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
         if ("content" in variables && !variables?.content) toaster("success", "Item successfully updated.");
       },
       onMutate: async (variables) => {
-        const oldData = queryClient.getQueryData([type, variables.id]);
+        const oldDataSingle = queryClient.getQueryData<AllItemsType>([type, variables.id]);
+        const oldDataAll = queryClient.getQueryData<AllItemsType[]>(["allItems", project_id, type]);
         // Don't update in case of documents when saving content, messes with editor saving and updating
-        if (type === "documents" && "content" in variables) return { oldData };
+        if (type === "documents" && "content" in variables) return { oldData: oldDataSingle };
         if (variables) {
           // @ts-ignore
           queryClient.setQueryData([type, variables.id], (old: AllItemsType | undefined) => {
             if (old) return { ...old, ...variables };
+            return old;
+          });
+          queryClient.setQueryData(["allItems", project_id, type], (old: AllItemsType[] | undefined) => {
+            if (old)
+              return old.map((item) => {
+                if (item.id === variables.id) return { ...item, ...variables };
+                return item;
+              });
             return old;
           });
 
@@ -163,11 +172,12 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
           }
         }
 
-        return { oldData };
+        return { oldDataSingle, oldDataAll } as any;
       },
       onError: (_, variables, context) => {
         toaster("error", "There was an error updating this item.");
-        queryClient.setQueryData([type, variables.id], context?.oldData);
+        queryClient.setQueryData([type, variables.id], context?.oldDataSingle);
+        queryClient.setQueryData(["allItems", project_id, type], context?.oldDataAll);
       },
     },
   );
