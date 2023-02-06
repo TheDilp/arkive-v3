@@ -117,6 +117,17 @@ export default function DrawerNodeContent() {
               value={localItem.type}
             />
           </div>
+          <div className="flex w-full flex-col">
+            <span className="w-full text-sm text-zinc-400">Image</span>
+            <Dropdown
+              itemTemplate={ImageDropdownItem}
+              onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? null : e.value })}
+              options={["None", ...(images || [])] || []}
+              placeholder="Select image"
+              value={localItem}
+              valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+            />
+          </div>
           <div className="flex flex-nowrap gap-x-1 gap-y-2">
             <div className="w-full">
               <span className="w-full text-sm text-zinc-400">Width</span>
@@ -241,6 +252,7 @@ export default function DrawerNodeContent() {
         <div className="flex w-full flex-col gap-y-2">
           <div className="w-full">
             <span className="w-full text-sm text-zinc-400">Linked document</span>
+            <div className="text-xs text-gray-400">Note: Custom images override images of linked documents.</div>
             <Dropdown
               className="w-full"
               emptyFilterMessage="No documents found"
@@ -296,18 +308,7 @@ export default function DrawerNodeContent() {
                   value={selectedTemplate}
                 />
               </div> */}
-          <div className="flex w-full flex-col">
-            <span className="w-full text-sm text-zinc-400">Custom image</span>
-            <div className="text-xs text-gray-400">Note: Custom images override images of linked documents.</div>
-            <Dropdown
-              itemTemplate={ImageDropdownItem}
-              onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? null : e.value })}
-              options={["None", ...(images || [])] || []}
-              placeholder="Select image"
-              value={localItem}
-              valueTemplate={ImageDropdownValue({ image: localItem?.image })}
-            />
-          </div>
+
           <div className="mb-2 w-full">
             <span className="w-full text-sm text-zinc-400">Node level</span>
             <InputNumber
