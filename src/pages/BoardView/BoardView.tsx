@@ -29,7 +29,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const ehRef = useRef(undefined) as any;
   const firstRender = useRef(true) as MutableRefObject<boolean>;
   const { item_id, subitem_id } = useParams();
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [, setBoardRef] = useAtom(BoardReferenceAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
@@ -258,6 +258,31 @@ export default function BoardView({ isReadOnly }: Props) {
       });
     }
   }, [boardState.grid, cyRef?.current?._cy]);
+
+  useEffect(() => {
+    if (cyRef?.current?._cy) {
+      if (drawer.type === "edges" || drawer.type === "nodes") {
+        const selectedElements = cyRef.current._cy.elements(".selected");
+        if (selectedElements && selectedElements.length > 0) {
+          const t = selectedElements.map((el) => `#${el.id()}`).join(", ");
+          cyRef?.current?._cy.$(t).removeClass("selected");
+        }
+
+        const singleEl = cyRef.current._cy.getElementById(drawer?.data?.id);
+        if (singleEl) singleEl.addClass("selected");
+      }
+    }
+    if (drawer.type === null) {
+      if (cyRef?.current?._cy) {
+        const selectedElements = cyRef.current._cy.elements(".selected");
+        if (selectedElements && selectedElements.length > 0) {
+          const t = selectedElements.map((el) => `#${el.id()}`).join(", ");
+          cyRef?.current?._cy.$(t).removeClass("selected");
+        }
+      }
+    }
+    return () => {};
+  }, [drawer]);
 
   if (isLoading) return <ProgressSpinner />;
   return (

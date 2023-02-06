@@ -251,11 +251,20 @@ export const cytoscapeStylesheet = [
     selector: "node:selected",
     style: {
       "underlay-color": "green",
-      "underlay-padding": 8,
+      "underlay-padding": 6,
       "underlay-opacity": 1,
       "border-opacity": 0.25,
       "line-color": "green",
       "target-arrow-color": "green",
+    },
+  },
+  {
+    selector: "node.selected",
+    style: {
+      "underlay-color": "cyan",
+      "underlay-padding": 4,
+      "underlay-opacity": 1,
+      "border-opacity": 0.25,
     },
   },
   {
@@ -267,6 +276,17 @@ export const cytoscapeStylesheet = [
       "border-opacity": 0.25,
       "line-color": "green",
       "target-arrow-color": "green",
+    },
+  },
+  {
+    selector: "edge.selected",
+    style: {
+      "underlay-color": "cyan",
+      "underlay-padding": 2,
+      "underlay-opacity": 1,
+      "border-opacity": 0.25,
+      "line-color": "cyan",
+      "target-arrow-color": "cyan",
     },
   },
 

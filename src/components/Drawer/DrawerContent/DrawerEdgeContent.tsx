@@ -56,7 +56,7 @@ export default function DrawerEdgeContent() {
   }
   return (
     <div className="flex h-full flex-col justify-between">
-      <div className="flex w-full flex-1 flex-col overflow-y-scroll">
+      <div className="flex w-full flex-1 flex-col overflow-y-auto">
         <h2 className="text-center font-Lato text-2xl font-medium">{localItem?.label}</h2>
         <TabView renderActiveOnly>
           <TabPanel header="Edge">
