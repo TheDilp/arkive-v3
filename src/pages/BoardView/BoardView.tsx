@@ -1,4 +1,4 @@
-import { EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
+import { Collection, EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
@@ -262,7 +262,7 @@ export default function BoardView({ isReadOnly }: Props) {
   useEffect(() => {
     if (cyRef?.current?._cy) {
       if (drawer.type === "edges" || drawer.type === "nodes") {
-        const selectedElements = cyRef.current._cy.elements(".selected");
+        const selectedElements: Collection = cyRef.current._cy.elements(".selected");
         if (selectedElements && selectedElements.length > 0) {
           const t = selectedElements.map((el) => `#${el.id()}`).join(", ");
           cyRef?.current?._cy.$(t).removeClass("selected");
@@ -274,7 +274,7 @@ export default function BoardView({ isReadOnly }: Props) {
     }
     if (drawer.type === null) {
       if (cyRef?.current?._cy) {
-        const selectedElements = cyRef.current._cy.elements(".selected");
+        const selectedElements: Collection = cyRef.current._cy.elements(".selected");
         if (selectedElements && selectedElements.length > 0) {
           const t = selectedElements.map((el) => `#${el.id()}`).join(", ");
           cyRef?.current?._cy.$(t).removeClass("selected");

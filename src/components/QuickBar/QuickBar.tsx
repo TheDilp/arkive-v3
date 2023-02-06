@@ -74,7 +74,7 @@ export default function BoardQuickBar() {
         <Tooltip autoHide content="Toggle Draw Mode" position="top" target=".drawMode" />
         <Tooltip autoHide content="Export Board" position="top" target=".saveButton" />
         <Tooltip autoHide content="Search Board" position="top" target=".searchButton" />
-        <Tooltip autoHide content="Reset selected to default color" position="top" target=".resetColors" />
+        <Tooltip autoHide content="Reset selected to board's default colors" position="top" target=".resetColors" />
         <Tooltip autoHide content="Edit selected elements" position="top" target=".editSelectedElements" />
 
         <Tooltip autoHide={false} hideEvent="focus" position="top" target=".colorPresets">
@@ -165,11 +165,17 @@ export default function BoardQuickBar() {
         onClick={() => setDialog({ ...DefaultDialog, type: "node_search", show: true, position: "top" })}
       />
 
-      {/* Reset to default color button */}
+      {/* Reset nodes/edges to the board's default color button */}
       <span
         className="resetColors flex cursor-pointer hover:text-blue-300"
         onClick={() => {
-          if (boardRef) updateColor(boardRef, "#595959", updateManyNodes, updateManyEdges);
+          if (boardRef)
+            updateColor(
+              boardRef,
+              { nodeColor: board.defaultNodeColor, edgeColor: board.defaultEdgeColor },
+              updateManyNodes,
+              updateManyEdges,
+            );
         }}>
         <Icon fontSize={20} icon="mdi:invert-colors-off" />
       </span>

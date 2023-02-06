@@ -342,7 +342,7 @@ export const boardEdgeCaps = [
 ];
 export function updateColor(
   boardRef: cytoscape.Core,
-  color: string,
+  color: string | { nodeColor: string; edgeColor: string },
   updateManyNodes: UseMutationResult<
     Response | null,
     unknown,
@@ -369,22 +369,33 @@ export function updateColor(
   if (boardRef.elements(":selected")?.length > 0) {
     const nodes = boardRef.elements(":selected").nodes();
     const edges = boardRef.elements(":selected").edges();
-    if (nodes.length)
-      updateManyNodes.mutate({
-        ids: nodes.map((node) => node.id()),
-        data: { backgroundColor: color },
-      });
-    if (edges.length)
-      updateManyEdges.mutate({
-        ids: edges.map((edge) => edge.id()),
-        data: {
-          lineColor: color,
-          targetArrowColor: color,
-          sourceArrowColor: color,
-          midTargetArrowColor: color,
-          midSourceArrowColor: color,
+    if (nodes.length) {
+      updateManyNodes.mutate(
+        {
+          ids: nodes.map((node) => node.id()),
+          data: { backgroundColor: typeof color === "object" ? color.nodeColor : color },
         },
-      });
+        {
+          onSuccess: () => toaster("success", "Node colors successfully updated."),
+        },
+      );
+    }
+    if (edges.length)
+      updateManyEdges.mutate(
+        {
+          ids: edges.map((edge) => edge.id()),
+          data: {
+            lineColor: typeof color === "object" ? color.edgeColor : color,
+            targetArrowColor: typeof color === "object" ? color.edgeColor : color,
+            sourceArrowColor: typeof color === "object" ? color.edgeColor : color,
+            midTargetArrowColor: typeof color === "object" ? color.edgeColor : color,
+            midSourceArrowColor: typeof color === "object" ? color.edgeColor : color,
+          },
+        },
+        {
+          onSuccess: () => toaster("success", "Edge colors successfully updated."),
+        },
+      );
   } else {
     toaster("warning", "No elements are selected.");
   }
