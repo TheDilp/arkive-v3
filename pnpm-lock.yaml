@@ -54,7 +54,7 @@ specifiers:
   prettier-plugin-tailwindcss: ^0.2.0
   primeicons: ^6.0.1
   primereact: ^8.7.3
-  react: ^18.1.0
+  react: ^18.2.0
   react-colorful: ^5.6.1
   react-cytoscapejs: ^1.2.1
   react-dnd: ^16.0.1
