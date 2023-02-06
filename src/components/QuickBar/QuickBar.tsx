@@ -3,8 +3,8 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
-import { ColorPicker } from "primereact/colorpicker";
 import { Tooltip } from "primereact/tooltip";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -16,11 +16,13 @@ import { changeLockState, updateColor } from "../../utils/boardUtils";
 import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
+import ColorInput from "../ColorInput/ColorInput";
 
 export default function BoardQuickBar() {
   const { item_id } = useParams();
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
+  const [pickerColor, setPickerColor] = useState("#595959");
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
@@ -34,7 +36,7 @@ export default function BoardQuickBar() {
   const debouncedColorPick = useDebouncedCallback(
     // function
     (color) => {
-      if (boardRef) updateColor(boardRef, `#${color}`, updateManyNodes, updateManyEdges);
+      if (boardRef) updateColor(boardRef, color, updateManyNodes, updateManyEdges);
     },
     // delay in ms
     400,
@@ -195,11 +197,13 @@ export default function BoardQuickBar() {
       {/* Color preset button */}
       <i className="pi pi-fw pi-palette colorPresets cursor-pointer hover:text-blue-300" />
       {/* Color picker square */}
-      <ColorPicker
-        className="w-2rem h-2rem"
-        defaultColor="595959"
-        onChange={(e) => {
-          debouncedColorPick(e.target.value);
+      <ColorInput
+        color={pickerColor}
+        hasInput={false}
+        name="pickerColor"
+        onChange={({ value }) => {
+          setPickerColor(value);
+          debouncedColorPick(value);
         }}
       />
     </div>

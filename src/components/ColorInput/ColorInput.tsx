@@ -7,12 +7,13 @@ import { Tooltip } from "../Tooltip/Tooltip";
 type Props = {
   color: string;
   name: string;
+  hasInput?: boolean;
   onChange: ({ name, value }: { name: string; value: string }) => void;
 };
 
-export default function ColorInput({ name, color, onChange }: Props) {
+export default function ColorInput({ name, color, onChange, hasInput }: Props) {
   return (
-    <div className="relative flex w-full items-center justify-between">
+    <div className="relative flex w-min items-center justify-between">
       <Tooltip
         content={
           <div className="w-full max-w-full">
@@ -41,7 +42,9 @@ export default function ColorInput({ name, color, onChange }: Props) {
         <div className="h-8 w-8 cursor-pointer rounded" style={{ backgroundColor: color }} />
       </Tooltip>
 
-      <InputText onChange={(e) => onChange({ name, value: `#${e.target.value.replaceAll("#", "")}` })} value={color} />
+      {hasInput === undefined || hasInput ? (
+        <InputText onChange={(e) => onChange({ name, value: `#${e.target.value.replaceAll("#", "")}` })} value={color} />
+      ) : null}
     </div>
   );
 }
