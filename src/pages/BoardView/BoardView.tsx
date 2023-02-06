@@ -15,7 +15,7 @@ import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTyp
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -31,7 +31,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const { item_id, subitem_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
-  const [boardRef, setBoardRef] = useAtom(BoardReferenceAtom);
+  const [, setBoardRef] = useAtom(BoardReferenceAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -296,8 +296,8 @@ export default function BoardView({ isReadOnly }: Props) {
       <ContextMenu cm={cm} items={contextItems} />
 
       <CytoscapeComponent
-        className="h-[94%] w-full"
         ref={cyRef}
+        className="h-[94%] w-full"
         cy={(cy) => {
           // @ts-ignore
           // cyRef.current = cy;
