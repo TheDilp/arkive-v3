@@ -15,7 +15,7 @@ import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTyp
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import { cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -249,6 +249,15 @@ export default function BoardView({ isReadOnly }: Props) {
       }
     }
   }, [boardState.drawMode, cyRef?.current?._cy, ehRef?.current]);
+  useEffect(() => {
+    if (cyRef?.current?._cy) {
+      cyRef.current._cy.gridGuide({
+        ...cytoscapeGridOptions,
+        snapToGridDuringDrag: boardState.grid,
+        drawGrid: boardState.grid,
+      });
+    }
+  }, [boardState.grid, cyRef?.current?._cy]);
 
   if (isLoading) return <ProgressSpinner />;
   return (
