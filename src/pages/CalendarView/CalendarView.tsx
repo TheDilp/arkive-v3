@@ -232,7 +232,7 @@ export default function CalendarView() {
               <div
                 className="grid h-full w-full content-start overflow-auto"
                 style={{
-                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(9rem, auto))`,
+                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(9rem, 1fr))`,
                 }}>
                 {calendar.days.map((day, index) => (
                   <div
