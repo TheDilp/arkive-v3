@@ -19,7 +19,8 @@ export type AvailableSubItemTypes =
   | "words"
   | "eras"
   | "months"
-  | "events";
+  | "events"
+  | "randomtableoptions";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
 export type AllItemsType = DocumentType | MapType | BoardType | ScreenType | DictionaryType | CalendarType;

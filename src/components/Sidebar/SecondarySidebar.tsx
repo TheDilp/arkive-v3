@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { Sidebar as PrimeSidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { AvailableItemTypes } from "../../types/generalTypes";
@@ -41,6 +41,8 @@ function SidebarContainer({ children }: Props) {
 
 function SidebarContent() {
   const { type } = useParams();
+  const { pathname } = useLocation();
+  if (pathname.includes("settings")) return <SettingsSidebar />;
 
   if (type === "documents")
     return (
@@ -55,7 +57,7 @@ function SidebarContent() {
         </TabView>
       </div>
     );
-  if (type === "settings") return <SettingsSidebar />;
+
   return (
     <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
       <ItemsTree type={type as AvailableItemTypes} />

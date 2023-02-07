@@ -76,6 +76,8 @@ export const updateURLs = {
   updateEra: "updateera",
   updateMonth: "updatemonth",
   updateEvent: "updateevent",
+  updateRandomTable: "updaterandomtable",
+  updateRandomTableOption: "updaterandomtableoption",
   updateTag: "updatetag",
 
   sortDocuments: "sortdocuments",

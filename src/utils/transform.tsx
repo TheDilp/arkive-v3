@@ -15,10 +15,13 @@ export const buttonLabelWithIcon = (title: string, icon: string, size?: number) 
 );
 
 export function getItemNameForTree(type: AvailableItemTypes) {
-  if (type === "randomtables") return "random table";
-  if (type === "boards") return "graph";
-  if (type !== "dictionaries") return type.slice(0, type.length - 1);
-  return "dictionary";
+  if (type) {
+    if (type === "randomtables") return "random table";
+    if (type === "boards") return "graph";
+    if (type !== "dictionaries") return type.slice(0, type.length - 1);
+    return "dictionary";
+  }
+  return "";
 }
 export function getItemIconForTree(type: AvailableItemTypes) {
   if (type === "documents") return "mdi:file";
