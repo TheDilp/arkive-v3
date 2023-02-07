@@ -566,6 +566,59 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
 
     return boardItems;
   }
+  if (cmType.type === "calendars") {
+    const screenItems = [
+      {
+        label: "Update Calendar",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "calendars",
+            });
+        },
+      },
+      // {
+      //   label: "Toggle Public",
+      //   icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data) {
+      //       updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+      //     }
+      //   },
+      // },
+
+      { separator: true },
+      // {
+      //   label: "View Public Screen",
+      //   icon: "pi pi-fw pi-external-link",
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+      //       toaster("warning", "Screen is set to private.");
+      //       return;
+      //     }
+      //     if (cmType.data?.id) navigate(`/view/screens/${cmType.data?.id}`);
+      //   },
+      // },
+      // {
+      //   label: "Copy Public URL",
+      //   icon: "pi pi-fw pi-link",
+      // },
+      {
+        label: "Delete Calendar",
+        icon: "pi pi-fw pi-trash",
+        command: () =>
+          deleteItem("Are you sure you want to delete this calendar?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+    return screenItems;
+  }
   if (cmType.type === "screens") {
     const screenItems = [
       {
@@ -609,10 +662,117 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       //   icon: "pi pi-fw pi-link",
       // },
       {
-        label: "Delete Map",
+        label: "Delete Screen",
         icon: "pi pi-fw pi-trash",
         command: () =>
-          deleteItem("Are you sure you want to delete this map?", () => {
+          deleteItem("Are you sure you want to delete this screen?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+    return screenItems;
+  }
+
+  if (cmType.type === "dictionaries") {
+    const dictionaryItems = [
+      {
+        label: "Update Dictionary",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "dictionaries",
+            });
+        },
+      },
+      // {
+      //   label: "Toggle Public",
+      //   icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data) {
+      //       updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+      //     }
+      //   },
+      // },
+
+      { separator: true },
+      // {
+      //   label: "View Public Screen",
+      //   icon: "pi pi-fw pi-external-link",
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+      //       toaster("warning", "Screen is set to private.");
+      //       return;
+      //     }
+      //     if (cmType.data?.id) navigate(`/view/screens/${cmType.data?.id}`);
+      //   },
+      // },
+      // {
+      //   label: "Copy Public URL",
+      //   icon: "pi pi-fw pi-link",
+      // },
+      {
+        label: "Delete Dictionary",
+        icon: "pi pi-fw pi-trash",
+        command: () =>
+          deleteItem("Are you sure you want to delete this dictionary?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+    return dictionaryItems;
+  }
+  if (cmType.type === "randomtables") {
+    const screenItems = [
+      {
+        label: "Update Random Table",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "randomtables",
+            });
+        },
+      },
+      // {
+      //   label: "Toggle Public",
+      //   icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data) {
+      //       updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+      //     }
+      //   },
+      // },
+
+      { separator: true },
+      // {
+      //   label: "View Public Screen",
+      //   icon: "pi pi-fw pi-external-link",
+      //   command: () => {
+      //     if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+      //       toaster("warning", "Screen is set to private.");
+      //       return;
+      //     }
+      //     if (cmType.data?.id) navigate(`/view/screens/${cmType.data?.id}`);
+      //   },
+      // },
+      // {
+      //   label: "Copy Public URL",
+      //   icon: "pi pi-fw pi-link",
+      // },
+      {
+        label: "Delete Random Table",
+        icon: "pi pi-fw pi-trash",
+        command: () =>
+          deleteItem("Are you sure you want to delete this random table?", () => {
             if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
           }),
       },
