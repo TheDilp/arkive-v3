@@ -21,7 +21,9 @@ export default function ItemsTree({ type }: Props) {
   const itemName = getItemNameForTree(type);
   return (
     <div className="flex h-screen flex-1 flex-col">
-      <h2 className="h-8 text-center font-Merriweather text-2xl capitalize">{type === "boards" ? "graphs" : type}</h2>
+      <h2 className="h-8 text-center font-Merriweather text-2xl capitalize">
+        {itemName === "dictionary" ? "dictionaries" : `${itemName}s`}
+      </h2>
 
       <div className="mt-3 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2">
         <Button
