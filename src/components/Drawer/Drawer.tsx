@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerRandomTableContent from "./DrawerContent/DrawerRandomTableContent";
 
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
 const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
@@ -96,6 +97,7 @@ export default function Drawer() {
         {drawer.type === "months" ? <DrawerMonthContent /> : null}
         {drawer.type === "events" && !drawer.exceptions?.eventDescription ? <DrawerEventContent /> : null}
         {drawer.type === "events" && drawer.exceptions?.eventDescription ? <DrawerEventDescription /> : null}
+        {drawer.type === "randomtables" ? <DrawerRandomTableContent /> : null}
       </Suspense>
     </PrimeDrawer>
   );

@@ -14,16 +14,8 @@ export const buttonLabelWithIcon = (title: string, icon: string, size?: number) 
   </div>
 );
 
-export function getItemTypeFromURL(pathname: string) {
-  if (pathname.includes("documents")) return "documents";
-  if (pathname.includes("maps")) return "maps";
-  if (pathname.includes("boards")) return "boards";
-  if (pathname.includes("screens")) return "screens";
-  if (pathname.includes("dictionaries")) return "dictionaries";
-  if (pathname.includes("calendars")) return "calendars";
-  return "documents";
-}
 export function getItemNameForTree(type: AvailableItemTypes) {
+  if (type === "randomtables") return "random table";
   if (type !== "dictionaries") return type.slice(0, type.length - 1);
   return "dictionary";
 }

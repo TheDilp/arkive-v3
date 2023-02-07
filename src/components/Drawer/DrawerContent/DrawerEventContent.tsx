@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -24,7 +25,8 @@ import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
 function disableEventSaveButton(localItem: EventType | EventCreateType) {
-  if (!localItem.title || !localItem.day || !localItem.month || !localItem.year) return true;
+  if (!localItem.title || !localItem.day || (!localItem.month && typeof localItem.month !== "number") || !localItem.year)
+    return true;
   return false;
 }
 async function deleteEvent(id: string, calendar_id: string, queryClient: QueryClient) {
@@ -97,7 +99,7 @@ export default function DrawerEventContent() {
       <h2 className="truncate text-center font-Lato text-2xl">
         {localItem?.id ? `Edit ${localItem.title}` : "Create New Event"}
       </h2>
-      <DrawerSection title="Month title">
+      <DrawerSection title="Event title">
         <InputText
           autoFocus
           className="w-full"
@@ -163,9 +165,14 @@ export default function DrawerEventContent() {
         </div>
       </DrawerSection>
 
-      {/* <DrawerSection title="Event Description (optional)">
-        <InputTextarea name="description" onChange={(e) => handleChange(e.target)} value={localItem.description} />
-      </DrawerSection> */}
+      <DrawerSection title="Event Description (optional)">
+        <InputTextarea
+          name="description"
+          onChange={(e) => handleChange(e.target)}
+          placeholder="Note: the event will use a document's content if selected."
+          value={localItem.description}
+        />
+      </DrawerSection>
       <DrawerSection title="Event Document (optional)">
         <Dropdown
           disabled={isLoading}

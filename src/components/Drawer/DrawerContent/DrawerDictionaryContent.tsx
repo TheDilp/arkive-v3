@@ -44,8 +44,8 @@ export default function DrawerDictionaryContent() {
     }
   }, [dictionary, project_id]);
   return (
-    <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{dictionary ? `Edit ${dictionary.title}` : "Create New Dictionary"}</h2>
+    <div className="flex h-full flex-col gap-y-2 font-Lato">
+      <h2 className="text-center font-Lato text-2xl">{dictionary ? `Edit ${dictionary.title}` : "Create New Dictionary"}</h2>
       <InputText
         autoFocus
         className="w-full"

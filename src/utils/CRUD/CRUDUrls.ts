@@ -1,4 +1,4 @@
-import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../../types/CRUDenums";
+import { baseURLS, deleteURLs, getURLS, updateURLs } from "../../types/CRUDenums";
 import { AllAvailableTypes, AvailableItemTypes } from "../../types/generalTypes";
 
 export const getURL = (project_id: string, type: AvailableItemTypes) => {
@@ -15,22 +15,12 @@ export const getSingleURL = (type: AvailableItemTypes) => {
   return null;
 };
 export const createURL = (type: AllAvailableTypes) => {
-  if (type === "documents") return `${baseURLS.baseServer}${createURLS.createDocument}`;
-  if (type === "maps") return `${baseURLS.baseServer}${createURLS.createMap}`;
-  if (type === "boards") return `${baseURLS.baseServer}${createURLS.createBoard}`;
-  if (type === "map_pins") return `${baseURLS.baseServer}${createURLS.createMapPin}`;
-  if (type === "map_layers") return `${baseURLS.baseServer}${createURLS.createMapLayer}`;
-  if (type === "nodes") return `${baseURLS.baseServer}${createURLS.createNode}`;
-  if (type === "edges") return `${baseURLS.baseServer}${createURLS.createEdge}`;
-  if (type === "screens") return `${baseURLS.baseServer}${createURLS.createScreen}`;
-  if (type === "sections") return `${baseURLS.baseServer}${createURLS.createSection}`;
-  if (type === "cards") return `${baseURLS.baseServer}${createURLS.createCard}`;
-  if (type === "dictionaries") return `${baseURLS.baseServer}${createURLS.createDictionary}`;
-  if (type === "words") return `${baseURLS.baseServer}${createURLS.createWord}`;
-  if (type === "calendars") return `${baseURLS.baseServer}${createURLS.createCalendar}`;
-  if (type === "eras") return `${baseURLS.baseServer}${createURLS.createEra}`;
-  if (type === "months") return `${baseURLS.baseServer}${createURLS.createMonth}`;
-  return null;
+  if (type !== "dictionaries") {
+    const urlType = type;
+
+    return `${baseURLS.baseServer}create${urlType.slice(0, -1).replace("_", "")}`;
+  }
+  return `${baseURLS.baseServer}createdictionary`;
 };
 export const updateURL = (type: AllAvailableTypes) => {
   if (type === "documents") return `${baseURLS.baseServer}${updateURLs.updateDocument}`;
