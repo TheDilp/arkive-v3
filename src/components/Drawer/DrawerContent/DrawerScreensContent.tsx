@@ -19,6 +19,11 @@ import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSectionTitle from "../DrawerSectionTitle";
 
+function isDisabledSaveScreen(localItem: ScreenType | ScreenCreateType) {
+  if (!localItem?.title) return true;
+  return false;
+}
+
 export default function DrawerScreensContent() {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
@@ -59,17 +64,18 @@ export default function DrawerScreensContent() {
           onChange={(e) => handleChange(e.target)}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
-              await createUpdateItem<ScreenType>(
-                screen,
-                localItem,
-                changedData,
-                DefaultScreen,
-                allScreens,
-                resetChanges,
-                createScreenMutation.mutateAsync,
-                updateScreenMutation.mutateAsync,
-                setDrawer,
-              );
+              if (!isDisabledSaveScreen(localItem))
+                await createUpdateItem<ScreenType>(
+                  screen,
+                  localItem,
+                  changedData,
+                  DefaultScreen,
+                  allScreens,
+                  resetChanges,
+                  createScreenMutation.mutateAsync,
+                  updateScreenMutation.mutateAsync,
+                  setDrawer,
+                );
             }
           }}
           placeholder="Screen Name"
@@ -88,6 +94,7 @@ export default function DrawerScreensContent() {
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
+        disabled={createScreenMutation.isLoading || updateScreenMutation.isLoading || isDisabledSaveScreen(localItem)}
         loading={createScreenMutation.isLoading || updateScreenMutation.isLoading}
         onClick={async () => {
           await createUpdateItem<ScreenType>(

@@ -3,14 +3,14 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { Dispatch, lazy, SetStateAction, Suspense, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Dispatch, lazy, SetStateAction, Suspense } from "react";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import DrawerRandomTableContent from "./DrawerContent/DrawerRandomTableContent";
 
+const DrawerRandomTableContent = lazy(() => import("./DrawerContent/DrawerRandomTableContent"));
+const DrawerRandomTableOptionContent = lazy(() => import("./DrawerContent/DrawerRandomTableOption"));
 const DrawerBoardContent = lazy(() => import("./DrawerContent/DrawerBoardContent"));
 const DrawerBulkBoardEdit = lazy(() => import("./DrawerContent/DrawerBulkBoardEdit"));
 const DrawerCardContent = lazy(() => import("./DrawerContent/DrawerCardContent"));
@@ -98,6 +98,7 @@ export default function Drawer() {
         {drawer.type === "events" && !drawer.exceptions?.eventDescription ? <DrawerEventContent /> : null}
         {drawer.type === "events" && drawer.exceptions?.eventDescription ? <DrawerEventDescription /> : null}
         {drawer.type === "randomtables" ? <DrawerRandomTableContent /> : null}
+        {drawer.type === "randomtableoptions" ? <DrawerRandomTableOptionContent /> : null}
       </Suspense>
     </PrimeDrawer>
   );

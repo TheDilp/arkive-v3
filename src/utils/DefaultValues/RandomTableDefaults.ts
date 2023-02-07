@@ -1,6 +1,10 @@
-import { DefaultRandomTableType } from "../../types/ItemTypes/randomTableTypes";
+import { DefaultRandomTableOptionType, DefaultRandomTableType } from "../../types/ItemTypes/randomTableTypes";
 
 export const DefaultRandomTable: DefaultRandomTableType = {
-  title: "New random table",
+  title: "",
   project_id: "",
+};
+export const DefaultRandomTableOption: DefaultRandomTableOptionType = {
+  title: "",
+  description: "",
 };

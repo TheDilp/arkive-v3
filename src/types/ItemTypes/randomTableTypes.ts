@@ -14,8 +14,11 @@ export interface RandomTableType extends BaseItemType {
   title: string;
   description?: string;
   isShared: boolean;
+  random_table_options: RandomTableOptionType[];
 }
 
 export type RandomTableCreateType = CreateType<RandomTableType>;
+export type RandomTableOptionCreateType = Partial<RandomTableOptionType>;
 
 export type DefaultRandomTableType = Pick<RandomTableType, "title" | "project_id">;
+export type DefaultRandomTableOptionType = Pick<RandomTableOptionType, "title" | "description">;

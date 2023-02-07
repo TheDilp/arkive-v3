@@ -16,7 +16,7 @@ export default function FolderView() {
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-hidden px-8">
       <Breadcrumbs type={type as AvailableItemTypes} />
-      {data ? (
+      {data && data.length > 0 ? (
         <FolderViewCards
           items={
             (data || [])
@@ -33,7 +33,9 @@ export default function FolderView() {
           }
           type={type as AvailableItemTypes}
         />
-      ) : null}
+      ) : (
+        "There is no content."
+      )}
     </div>
   );
 }

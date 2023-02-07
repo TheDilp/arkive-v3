@@ -68,7 +68,7 @@ export default function DrawerEventContent() {
         await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
-        toaster("success", "Event successfully created.");
+        toaster("success", "Event successfully updated.");
 
         handleCloseDrawer(setDrawer, "right");
       } else {
@@ -81,9 +81,7 @@ export default function DrawerEventContent() {
         await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
-        toaster("success", "Event successfully updated.");
-
-        handleCloseDrawer(setDrawer, "right");
+        toaster("success", "Event successfully created.");
       }
     } else {
       toaster("info", "No data was changed.");

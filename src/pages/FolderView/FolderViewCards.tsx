@@ -34,7 +34,7 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
                 type={type}
               />
             ))
-          : null}
+          : "There is no content."}
       </div>
     </div>
   );

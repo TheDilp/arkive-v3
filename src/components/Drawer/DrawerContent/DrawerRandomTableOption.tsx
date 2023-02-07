@@ -6,15 +6,14 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem, useDeleteItem, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useDeleteItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { baseURLS, updateURLs } from "../../../types/CRUDenums";
-import { RandomTableCreateType, RandomTableOptionType, RandomTableType } from "../../../types/ItemTypes/randomTableTypes";
+import { baseURLS, createURLS, updateURLs } from "../../../types/CRUDenums";
+import { RandomTableOptionCreateType, RandomTableOptionType } from "../../../types/ItemTypes/randomTableTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
-import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
-import { DefaultRandomTable } from "../../../utils/DefaultValues/RandomTableDefaults";
+import { DefaultRandomTableOption } from "../../../utils/DefaultValues/RandomTableDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
@@ -25,24 +24,10 @@ export default function DrawerRandomTableOptionContent() {
   const { project_id, item_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [loading, setLoading] = useState(false);
-  const createRandomTableMutation = useCreateSubItem<RandomTableOptionType>(
-    item_id as string,
-    "randomtableoptions",
-    "randomtables",
-  );
-  const updateRandomTableMutation = useUpdateSubItem<RandomTableOptionType>(
-    item_id as string,
-    "randomtableoptions",
-    "randomtables",
-  );
   const deleteRandomTableMutation = useDeleteItem("randomtables", project_id as string);
-  const allRandomTables = queryClient.getQueryData<RandomTableType[]>(["allItems", project_id, "randomtables"]);
-  const randomTable = allRandomTables?.find((dict) => dict.id === drawer.id);
-  const [localItem, setLocalItem] = useState<RandomTableType | RandomTableCreateType>(
-    randomTable ?? {
-      ...DefaultRandomTable,
-      project_id: project_id as string,
-    },
+
+  const [localItem, setLocalItem] = useState<RandomTableOptionType | RandomTableOptionCreateType>(
+    drawer?.data ?? DefaultRandomTableOption,
   );
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
@@ -57,25 +42,23 @@ export default function DrawerRandomTableOptionContent() {
           method: "POST",
           body: JSON.stringify({ ...rest, id: localItem.id }),
         });
-        await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
+        await queryClient.refetchQueries<RandomTableOptionType>(["randomtables", item_id]);
         resetChanges();
+        toaster("success", "Option successfully updated.");
         setLoading(false);
-        toaster("success", "Event successfully created.");
-
         handleCloseDrawer(setDrawer, "right");
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         await FetchFunction({
-          url: `${baseURLS.baseServer}${createURLS.createEvent}`,
+          url: `${baseURLS.baseServer}${createURLS.createRandomTableOption}`,
           method: "POST",
-          body: JSON.stringify({ ...localItem, calendarsId: item_id as string }),
+          body: JSON.stringify({ ...localItem, parentId: item_id as string }),
         });
-        await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
+        await queryClient.refetchQueries<RandomTableOptionType>(["randomtables", item_id]);
         resetChanges();
+        toaster("success", "Option successfully created.");
+        setLocalItem(DefaultRandomTableOption);
         setLoading(false);
-        toaster("success", "Event successfully updated.");
-
-        handleCloseDrawer(setDrawer, "right");
       }
     } else {
       toaster("info", "No data was changed.");
@@ -84,21 +67,18 @@ export default function DrawerRandomTableOptionContent() {
   };
 
   useEffect(() => {
-    if (randomTable) {
-      setLocalItem(randomTable);
+    if (drawer?.data) {
+      setLocalItem(drawer?.data as RandomTableOptionType);
     } else {
-      setLocalItem({
-        ...DefaultRandomTable,
-        project_id: project_id as string,
-      });
+      setLocalItem(DefaultRandomTableOption);
     }
-  }, [randomTable, project_id]);
+  }, [drawer?.data]);
   return (
     <div className="flex h-full flex-col gap-y-2 font-Lato">
       <h2 className="text-center font-Lato text-2xl">
-        {randomTable ? `Edit ${randomTable.title}` : "Create New Random Table"}
+        {localItem?.id ? `Edit ${localItem?.title}` : "Create New Random Table Option"}
       </h2>
-      <DrawerSection title="Random table title">
+      <DrawerSection title="Random table option title">
         <InputText
           autoFocus
           className="w-full"
@@ -106,24 +86,14 @@ export default function DrawerRandomTableOptionContent() {
           onChange={(e) => handleChange(e.target)}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
-              await createUpdateItem<RandomTableType>(
-                randomTable,
-                localItem,
-                changedData,
-                DefaultRandomTable,
-                allRandomTables,
-                resetChanges,
-                createRandomTableMutation.mutateAsync,
-                updateRandomTableMutation.mutateAsync,
-                setDrawer,
-              );
+              await createUpdateRandomTableOption();
             }
           }}
-          placeholder="Random table title"
+          placeholder="Random table option title"
           value={localItem?.title || ""}
         />
       </DrawerSection>
-      <DrawerSection title="Random table description (optional)">
+      <DrawerSection title="Random table option description (optional)">
         <InputTextarea
           name="description"
           onChange={(e) => handleChange(e.target)}
@@ -133,19 +103,10 @@ export default function DrawerRandomTableOptionContent() {
       </DrawerSection>
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        loading={createRandomTableMutation.isLoading || updateRandomTableMutation.isLoading}
+        disabled={loading || !localItem?.title}
+        loading={loading}
         onClick={async () => {
-          await createUpdateItem<RandomTableType>(
-            randomTable,
-            localItem,
-            changedData,
-            DefaultRandomTable,
-            allRandomTables,
-            resetChanges,
-            createRandomTableMutation.mutateAsync,
-            updateRandomTableMutation.mutateAsync,
-            setDrawer,
-          );
+          await createUpdateRandomTableOption();
         }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}
@@ -156,17 +117,16 @@ export default function DrawerRandomTableOptionContent() {
             className=" p-button-outlined p-button-danger w-full"
             loading={deleteRandomTableMutation.isLoading}
             onClick={() => {
-              if (randomTable)
+              if (localItem?.id)
                 deleteItem(
-                  randomTable.folder
-                    ? "Are you sure you want to delete this folder? Deleting it will also delete all of its children!"
-                    : "Are you sure you want to delete this dictionaries?",
+                  "Are you sure you want to delete this option?",
                   () => {
-                    deleteRandomTableMutation?.mutate(randomTable.id, {
-                      onSuccess: () => {
-                        handleCloseDrawer(setDrawer, "right");
-                      },
-                    });
+                    if (localItem?.id)
+                      deleteRandomTableMutation?.mutate(localItem.id, {
+                        onSuccess: () => {
+                          handleCloseDrawer(setDrawer, "right");
+                        },
+                      });
                   },
                   () => toaster("info", "Item not deleted."),
                 );

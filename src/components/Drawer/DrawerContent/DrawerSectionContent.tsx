@@ -114,6 +114,7 @@ export default function DrawerSectionContent() {
 
       <Button
         className="p-button-outlined p-button-success ml-auto"
+        disabled={isLoadingCreate || isLoadingUpdate || !localItem?.title}
         loading={isLoadingCreate || isLoadingUpdate}
         onClick={createUpdateSection}
         type="submit">

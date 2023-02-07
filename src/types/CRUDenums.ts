@@ -4,7 +4,7 @@ export const baseURLS = {
 };
 export const getURLS = {
   //  Projects
-  getSingeProject: "getsingleproject",
+  getSingleProject: "getsingleproject",
 
   // Documents
   getSingleDocument: "getsingledocument",
@@ -52,6 +52,8 @@ export const createURLS = {
   createMonth: "createmonth",
   createEra: "createera",
   createEvent: "createevent",
+  createRandomTable: "createrandomtable",
+  createRandomTableOption: "createrandomtableoption",
   createTag: "createtag",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",
