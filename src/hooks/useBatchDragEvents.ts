@@ -9,7 +9,6 @@ const useBatchUpdateNodePositions = (item_id: string) => {
   const updateManyNodePositions = useUpdateManyNodesPosition(item_id);
 
   const addOrUpdateNode = (newNode: NodePositionUpdateType) => {
-    console.log(newNode);
     batchedData.current = [...(batchedData.current || [])];
     const idx = batchedData.current.findIndex((n: NodePositionUpdateType) => n.id === newNode.id);
 

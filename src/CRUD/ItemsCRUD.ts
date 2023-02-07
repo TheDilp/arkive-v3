@@ -273,9 +273,21 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
     },
 
     {
+      onMutate: (id) => {
+        const oldData = queryClient.getQueryData<AllItemsType>(["allItems", project_id, type]);
+        queryClient.setQueryData<AllItemsType[]>(["allItems", project_id, type], (old) => {
+          if (old) {
+            return old.filter((item) => item.id !== id);
+          }
+          return old;
+        });
+        return { oldData };
+      },
+      onError: (_, __, context) => {
+        toaster("error", "There was an error deleting this item.");
+        queryClient.setQueryData(["allItems", project_id, type], context?.oldData);
+      },
       onSuccess: () => {
-        if (["documents", "maps", "boards", "screens"].includes(type))
-          queryClient.refetchQueries(["allItems", project_id, type]);
         toaster("success", "Item successfully deleted. 🗑️");
       },
     },
