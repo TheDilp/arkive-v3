@@ -4,27 +4,23 @@ export const baseURLS = {
 };
 export const getURLS = {
   //  Projects
-  getAllProjects: "getallprojects",
   getSingeProject: "getsingleproject",
 
   // Documents
-  getAllDocuments: "getalldocuments/",
   getSingleDocument: "getsingledocument",
   getManyDocuments: "getmanydocuments",
   // Maps
-  getAllMaps: "getallmaps/",
   getSingleMap: "getsinglemap",
   // Boards
-  getAllBoards: "getallboards/",
   getSingleBoard: "getsingleboard",
   // Screens
-  getAllScreens: "getallscreens/",
   getSingleScreen: "getsinglescreen",
   // Dictionaries
-  getAllDictionaries: "getalldictionaries/",
   getSingleDictionary: "getsingledictionary",
-  // Dictionaries
+  // Calendars
   getSingleCalendar: "getsinglecalendar",
+  // RandomTables
+  getSingleRandomTable: "getsinglerandomtable",
   // Images
   getAllImages: "getallimages/",
   getSingleImage: "getimage/images/",

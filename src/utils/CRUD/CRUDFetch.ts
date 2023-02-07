@@ -16,13 +16,13 @@ export async function FetchFunction({
     body,
     headers: {
       "Access-Control-Allow-Origin": "*",
-      BOB: "DOB",
       Authorization: `Bearer ${token}`,
     },
   });
   if (!res.ok) {
-    return new Error("error");
+    return new Error("There was an error with this request (server error).");
   }
   const data = await res.json();
+  if (data === false) throw new Error("There was an error with this reques.");
   return data;
 }

@@ -8,7 +8,7 @@ import { DocumentType } from "./ItemTypes/documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
 
-export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens" | "dictionaries" | "calendars" | "random_tables";
+export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens" | "dictionaries" | "calendars" | "randomtables";
 export type AvailableSubItemTypes =
   | "map_pins"
   | "map_layers"
