@@ -41,7 +41,7 @@ export default function BoardView({ isReadOnly }: Props) {
   });
   const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
 
-  const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards");
+  const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards", {}, isReadOnly);
   const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
   const contextItems = useBoardContextMenuItems({
     type: boardContext.type,

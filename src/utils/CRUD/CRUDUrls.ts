@@ -104,3 +104,12 @@ export const getImageLink = (image: string) => {
 export const getMapImageLink = (image: string) => {
   return `${image}`;
 };
+
+export const getPublicURL = (type: AvailableItemTypes) => {
+  if (type !== "dictionaries") {
+    const urlType = type;
+
+    return `${baseURLS.baseServer}getpublic${urlType.slice(0, -1)}`;
+  }
+  return `${baseURLS.baseServer}getpublicdictionary`;
+};

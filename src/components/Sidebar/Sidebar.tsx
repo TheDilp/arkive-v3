@@ -29,7 +29,7 @@ const navItems: NavItemType[] = [
   // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
   { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
   { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionaries" },
-  { icon: "arcticons:reroll", navigate: "./random-tables", tooltip: "Random Tables" },
+  { icon: "arcticons:reroll", navigate: "./randomtables", tooltip: "Random Tables" },
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 

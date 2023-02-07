@@ -10,7 +10,7 @@ export const useGetAllProjects = (enabled: boolean) => {
     ["allProjects"],
     async () => {
       try {
-        return FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllProjects}`, method: "GET" });
+        return FetchFunction({ url: `${baseURLS.baseServer}getallprojects`, method: "GET" });
       } catch (error) {
         return [];
       }

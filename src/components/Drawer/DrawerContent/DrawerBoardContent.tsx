@@ -22,6 +22,7 @@ import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
+import DrawerSection from "../DrawerSection";
 
 export default function DrawerBoardContent() {
   const { project_id } = useParams();
@@ -52,29 +53,31 @@ export default function DrawerBoardContent() {
     }
   }, [board, project_id]);
   return (
-    <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center text-2xl">{board ? `Edit ${board.title}` : "Create New Board"}</h2>
-      <InputText
-        autoFocus
-        className="w-full"
-        onChange={(e) =>
-          handleChange({
-            name: "title",
-            value: e.target.value,
-          })
-        }
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && board) {
-            updateBoardMutation?.mutate({
-              id: board.id,
-              ...changedData,
-            });
+    <div className="flex h-full flex-col gap-y-2 font-Lato">
+      <h2 className="text-center font-Lato text-2xl">{board ? `Edit ${board.title}` : "Create New Graph"}</h2>
+      <DrawerSection title="Graph title">
+        <InputText
+          autoFocus
+          className="w-full"
+          onChange={(e) =>
+            handleChange({
+              name: "title",
+              value: e.target.value,
+            })
           }
-        }}
-        placeholder="Board Name"
-        value={localItem?.title || ""}
-      />
-      <div className="">
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && board) {
+              updateBoardMutation?.mutate({
+                id: board.id,
+                ...changedData,
+              });
+            }
+          }}
+          placeholder="Graph title"
+          value={localItem?.title || ""}
+        />
+      </DrawerSection>
+      <DrawerSection title="Graph folder">
         <Dropdown
           className="w-full"
           filter
@@ -90,24 +93,29 @@ export default function DrawerBoardContent() {
           value={localItem?.parent?.id}
           virtualScrollerOptions={virtualScrollerSettings}
         />
-      </div>
-      <Tags handleChange={handleChange} localItem={localItem} type="boards" />
-      <h4 className="w-full text-lg underline">Default Node Shape</h4>
-      <Dropdown
-        className="w-full"
-        filter
-        onChange={(e) => handleChange({ name: "defaultNodeShape", value: e.value })}
-        options={boardNodeShapes}
-        placeholder="Default Node Shape"
-        value={localItem.defaultNodeShape}
-      />
+      </DrawerSection>
+      <DrawerSection title="Tags">
+        <Tags handleChange={handleChange} localItem={localItem} type="boards" />
+      </DrawerSection>
+      <DrawerSection title="Default node shape">
+        <Dropdown
+          className="w-full"
+          filter
+          onChange={(e) => handleChange({ name: "defaultNodeShape", value: e.value })}
+          options={boardNodeShapes}
+          placeholder="Default Node Shape"
+          value={localItem.defaultNodeShape}
+        />
+      </DrawerSection>
       <div className="flex flex-wrap items-center justify-between">
-        <h4 className="w-full text-lg underline">Default Node Color</h4>
-        <ColorInput color={localItem.defaultNodeColor as string} name="defaultNodeColor" onChange={handleChange} />
+        <DrawerSection title="Default node color">
+          <ColorInput color={localItem.defaultNodeColor as string} name="defaultNodeColor" onChange={handleChange} />
+        </DrawerSection>
       </div>
       <div className="flex flex-wrap items-center justify-between">
-        <h4 className="w-full text-lg underline">Default Edge & Arrow Color</h4>
-        <ColorInput color={localItem.defaultEdgeColor as string} name="defaultEdgeColor" onChange={handleChange} />
+        <DrawerSection title="Default edge color">
+          <ColorInput color={localItem.defaultEdgeColor as string} name="defaultEdgeColor" onChange={handleChange} />
+        </DrawerSection>
       </div>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>

@@ -8,12 +8,13 @@ import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { lazy, useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Layout from "./components/Layout/Layout";
+import LoadingScreen from "./components/Loading/LoadingScreen";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 
@@ -69,36 +70,34 @@ function App() {
       <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
       <QueryClientProvider client={queryClient}>
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-          <Routes>
-            <Route element={<AuthLayout />} path="auth/*">
-              <Route element={<Signup />} path="signup" />
-              <Route element={<Signin />} path="signin" />
-            </Route>
-
-            <Route element={<Dashboard />} path="/" />
-            <Route element={<Layout />} path="/project/:project_id/*">
-              <Route path=":type/*">
-                <Route element={<FolderView />} path="" />
-                <Route element={<FolderView />} path="folder/:item_id" />
-                <Route element={<ContentView />} path=":item_id" />
+          <Suspense fallback={<LoadingScreen />}>
+            <Routes>
+              <Route element={<AuthLayout />} path="auth/*">
+                <Route element={<Signup />} path="signup" />
+                <Route element={<Signin />} path="signin" />
               </Route>
 
-              <Route path="settings/*">
-                <Route element={<ProjectSettings />} path="project-settings" />
-                <Route element={<DocumentSettings />} path="document-settings" />
-                <Route element={<MapSettings />} path="map-settings" />
-                <Route element={<BoardSettings />} path="board-settings" />
-                <Route element={<TagsSettings />} path="tags-settings" />
-                <Route element={<AssetSettings />} path="assets-settings/*" />
-              </Route>
-            </Route>
+              <Route element={<Dashboard />} path="/" />
+              <Route element={<Layout />} path="/project/:project_id/*">
+                <Route path=":type/*">
+                  <Route element={<FolderView />} path="" />
+                  <Route element={<FolderView />} path="folder/:item_id" />
+                  <Route element={<ContentView />} path=":item_id" />
+                </Route>
 
-            <Route element={<PublicWrapper />} path="view/*">
-              <Route path="documents/:item_id" />
-              <Route path="maps/:item_id" />
-              <Route path="boards/:item_id" />
-            </Route>
-          </Routes>
+                <Route path="settings/*">
+                  <Route element={<ProjectSettings />} path="project-settings" />
+                  <Route element={<DocumentSettings />} path="document-settings" />
+                  <Route element={<MapSettings />} path="map-settings" />
+                  <Route element={<BoardSettings />} path="board-settings" />
+                  <Route element={<TagsSettings />} path="tags-settings" />
+                  <Route element={<AssetSettings />} path="assets-settings/*" />
+                </Route>
+              </Route>
+
+              <Route element={<PublicWrapper />} path="view/:type/:item_id/*" />
+            </Routes>
+          </Suspense>
         </DndProvider>
       </QueryClientProvider>
     </main>

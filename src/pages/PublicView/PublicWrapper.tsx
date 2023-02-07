@@ -1,30 +1,19 @@
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Navigate, useLocation, useParams } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { useParams } from "react-router-dom";
 
-import { useGetItem } from "../../hooks/useGetItem";
-import { AllItemsType } from "../../types/generalTypes";
-import { toaster } from "../../utils/toast";
-import { getItemTypeFromURL } from "../../utils/transform";
-import BoardView from "../BoardView/BoardView";
-import MapView from "../MapView/MapView";
-import PublicDocumentView from "./PublicDocumentView";
+import LoadingScreen from "../../components/Loading/LoadingScreen";
 
+const BoardView = lazy(() => import("../BoardView/BoardView"));
+const MapView = lazy(() => import("../MapView/MapView"));
+const PublicDocumentView = lazy(() => import("./PublicDocumentView"));
 export default function PublicWrapper() {
-  const { item_id } = useParams();
-  const { pathname } = useLocation();
-  const type = getItemTypeFromURL(pathname);
-  const { data, isLoading } = useGetItem<AllItemsType>(item_id as string, type);
+  const { type } = useParams();
 
-  if (isLoading) return <ProgressSpinner />;
-
-  if (!data?.isPublic && !isLoading) {
-    toaster("warning", "That page is not public.");
-    return <Navigate to="/" />;
-  }
-  if (data) {
-    if (type === "documents") return <PublicDocumentView data={data} />;
-    if (type === "maps") return <MapView isReadOnly />;
-    if (type === "boards") return <BoardView isReadOnly />;
-  }
-  return <div>TEST</div>;
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      {type === "documents" ? <PublicDocumentView /> : null}
+      {type === "maps" ? <MapView isReadOnly /> : null}
+      {type === "boards" ? <BoardView isReadOnly /> : null}
+    </Suspense>
+  );
 }

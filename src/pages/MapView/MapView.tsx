@@ -27,7 +27,7 @@ export default function MapView({ isReadOnly }: Props) {
   const imgRef = useRef() as any;
   const cm = useRef() as any;
 
-  const { data: currentMap, isLoading } = useGetItem<MapType>(item_id as string, "maps");
+  const { data: currentMap, isLoading } = useGetItem<MapType>(item_id as string, "maps", {}, isReadOnly);
 
   const items = useMapContextMenuItems({ mapRef, bounds, deleteMapPin });
 

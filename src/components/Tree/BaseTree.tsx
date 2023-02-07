@@ -105,7 +105,6 @@ export default function BaseTree({ isTemplates, type }: Props) {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
-  console.log(items);
   if (isLoadingItems) return <ProgressSpinner />;
   return (
     <div

@@ -7,6 +7,7 @@ const BoardView = lazy(() => import("../BoardView/BoardView"));
 const ScreenView = lazy(() => import("../ScreenView/ScreenView"));
 const DictionaryView = lazy(() => import("../DictionaryView/DictionaryView"));
 const CalendarView = lazy(() => import("../CalendarView/CalendarView"));
+const RandomTableView = lazy(() => import("../RandomTableView/RandomTableView"));
 
 export default function ContentView() {
   const { type } = useParams();
@@ -17,5 +18,6 @@ export default function ContentView() {
   if (type === "screens") return <ScreenView />;
   if (type === "dictionaries") return <DictionaryView />;
   if (type === "calendars") return <CalendarView />;
+  if (type === "randomtables") return <RandomTableView />;
   return null;
 }
