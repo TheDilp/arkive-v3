@@ -33,9 +33,9 @@ export default function Navbar() {
                 icon="ion:upload"
                 onClick={() => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
               />
-              <Tooltip allowedPlacements={["bottom-end"]} closeOnClick content={<RandomGenerator />} isClickable>
+              {/* <Tooltip allowedPlacements={["bottom-end"]} closeOnClick content={<RandomGenerator />} isClickable>
                 <Icon className="cursor-pointer hover:text-blue-300" fontSize={20} icon="arcticons:reroll" />
-              </Tooltip>
+              </Tooltip> */}
             </>
           ) : null}
 
