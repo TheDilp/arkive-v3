@@ -29,7 +29,7 @@ const navItems: NavItemType[] = [
   // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
   { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
   { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionaries" },
-  { icon: "arcticons:reroll", navigate: "./randomtables", tooltip: "Random Tables" },
+  { icon: "arcticons:reroll", navigate: "./randomtables", tooltip: "Random_Tables" },
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 
@@ -52,7 +52,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
       </li>
       {items.map((item) => (
         <Fragment key={item.icon}>
-          <Tooltip content={item.tooltip} position="right" target={`.${item.tooltip}`} />
+          <Tooltip content={item.tooltip.replace("_", " ")} position="right" target={`.${item.tooltip}`} />
           <li
             className={` ${
               item.tooltip
