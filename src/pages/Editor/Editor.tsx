@@ -98,6 +98,15 @@ export default function Editor({ content, editable }: EditorType) {
           onContextMenu={(e) => {
             setMention({ cm, data: getContext(), show: false });
             if (cm.current) cm.current.show(e);
+          }}
+          onDrop={(e) => {
+            const stringData = e.dataTransfer.getData("random_table_option_result");
+            if (!stringData) return;
+            const data: { index: number; title: string; description?: string } = JSON.parse(
+              e.dataTransfer.getData("random_table_option_result"),
+            );
+            if (!data) return;
+            getContext()?.commands.insertText(`${data.title}: ${data?.description}`);
           }}>
           {editable ? <Breadcrumbs type="documents" /> : null}
           <Remirror

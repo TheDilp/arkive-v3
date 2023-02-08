@@ -10,7 +10,7 @@ import BoardQuickBar from "../../components/QuickBar/QuickBar";
 import { useCreateSubItem } from "../../CRUD/ItemsCRUD";
 import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
-import { DragItem } from "../../types/generalTypes";
+import { BoardDragItemType } from "../../types/generalTypes";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
@@ -291,7 +291,7 @@ export default function BoardView({ isReadOnly }: Props) {
       onDrop={(e) => {
         const stringData = e.dataTransfer.getData("item_id");
         if (!stringData) return;
-        const data: DragItem = JSON.parse(e.dataTransfer.getData("item_id"));
+        const data: BoardDragItemType = JSON.parse(e.dataTransfer.getData("item_id"));
         if (!data || !cyRef?.current?._cy) return;
         const { image } = data;
         const { top, left } = e.currentTarget.getBoundingClientRect();

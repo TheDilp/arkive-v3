@@ -108,7 +108,7 @@ export type slashMenuItem = {
   column_count?: number;
 };
 
-export type DragItem = { id: string; image?: string; title: string; type: "documents" | "images" };
+export type BoardDragItemType = { id: string; image?: string; title: string; type: "documents" | "images" };
 
 export type FullSearchResults = {
   documents: DocumentType[];

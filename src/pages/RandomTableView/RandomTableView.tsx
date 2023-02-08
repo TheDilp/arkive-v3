@@ -10,6 +10,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { RandomTableType } from "../../types/ItemTypes/randomTableTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { getRandomTableResult } from "../../utils/randomtableUtils";
 import { buttonLabelWithIcon } from "../../utils/transform";
 
 export default function RandomTableView() {
@@ -38,19 +39,7 @@ export default function RandomTableView() {
         <Button
           className="p-button-outlined p-button-success w-fit"
           onClick={() => {
-            if (randomTable?.random_table_options) {
-              const optionCount = randomTable.random_table_options?.length || 0;
-              if (optionCount) {
-                const max = optionCount - 1;
-                const index = Math.floor(Math.random() * (max - 0 + 1)) + 0;
-                if (typeof index === "number")
-                  setResult({
-                    index,
-                    title: randomTable.random_table_options[index].title,
-                    description: randomTable.random_table_options[index]?.description,
-                  });
-              }
-            }
+            if (randomTable) setResult(getRandomTableResult(randomTable));
           }}>
           {buttonLabelWithIcon("Roll on table", "arcticons:reroll")}
         </Button>

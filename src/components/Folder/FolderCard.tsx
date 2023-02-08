@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { useSortMutation } from "../../CRUD/ItemsCRUD";
 import { baseURLS } from "../../types/CRUDenums";
-import { AvailableItemTypes, DragItem } from "../../types/generalTypes";
+import { AvailableItemTypes, BoardDragItemType } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 
 type Props = {
@@ -51,7 +51,7 @@ export default function FolderCard({ id, title, type, isFolder, icon, image, cm 
         if (!isFolder) return;
         const data = e.dataTransfer.getData("item_id");
         if (data) {
-          const parsedData: DragItem = JSON.parse(data);
+          const parsedData: BoardDragItemType = JSON.parse(data);
           sortItemsMutation.mutate([{ id: parsedData.id, parentId: id, sort: 0 }]);
         }
       }}

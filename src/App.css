@@ -1,3 +1,7 @@
+/*Navbar*/
+.randomTableNavbarDropdownPanel {
+  @apply z-[99999] !important;
+}
 .p-breadcrumb {
   @apply border-transparent bg-transparent !important;
 }
