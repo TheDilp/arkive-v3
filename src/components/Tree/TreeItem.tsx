@@ -89,7 +89,6 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
                 { icon: newIcon, id: node.id as string },
                 {
                   onSuccess: () => {
-                    queryClient.refetchQueries({ queryKey: ["allItems", project_id, type] });
                     toaster("success", "Icon updated successfully.");
                   },
                 },
