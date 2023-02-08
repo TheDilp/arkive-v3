@@ -38,6 +38,7 @@ export default function RandomTableView() {
         />
         <Button
           className="p-button-outlined p-button-success w-fit"
+          disabled={randomTable?.random_table_options?.length === 0}
           onClick={() => {
             if (randomTable) setResult(getRandomTableResult(randomTable));
           }}>
