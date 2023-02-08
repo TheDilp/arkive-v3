@@ -71,14 +71,20 @@ export default function RandomTableView() {
           </div>
         ) : null}
       </div>
-      <DataTable loading={isLoading} paginator rows={100} size="small" value={randomTable?.random_table_options || []}>
+      <DataTable
+        loading={isLoading}
+        paginator
+        responsiveLayout="scroll"
+        rows={100}
+        size="small"
+        value={randomTable?.random_table_options || []}>
         <Column
           body={(_, info) => {
             return `${info.rowIndex + 1}.`;
           }}
         />
-        <Column bodyClassName="italic font-light" field="title" />
-        <Column bodyClassName="font-medium" field="description" />
+        <Column bodyClassName="italic font-light w-[30%]" field="title" />
+        <Column bodyClassName="font-medium w-[70%]" field="description" />
       </DataTable>
     </div>
   );
