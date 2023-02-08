@@ -11,6 +11,7 @@ import { RandomTableType } from "../../types/ItemTypes/randomTableTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getRandomTableResult } from "../../utils/randomtableUtils";
+import { toaster } from "../../utils/toast";
 import { buttonLabelWithIcon } from "../../utils/transform";
 
 export default function RandomTableView() {
@@ -45,17 +46,29 @@ export default function RandomTableView() {
           {buttonLabelWithIcon("Roll on table", "arcticons:reroll")}
         </Button>
         {result ? (
-          <Tooltip
-            content={
-              <div className="max-w-xs rounded bg-black p-2 text-white">{`${result.index + 1}. ${result?.title} ${
-                result?.description ? `: ${result.description}` : null
-              }`}</div>
-            }>
-            <div className="flex-1 truncate">
-              <span className="font-bold">{`${result.index + 1}. ${result?.title}`}</span>
-              <span>{result?.description ? `: ${result.description}` : null}</span>
-            </div>
-          </Tooltip>
+          <div className="flex flex-1 items-center justify-between truncate">
+            <Tooltip
+              content={
+                <div className="w-48 break-words rounded bg-black p-2 text-white">{`${result.index + 1}. ${result?.title} ${
+                  result?.description ? `: ${result.description}` : null
+                }`}</div>
+              }>
+              <span className="truncate">
+                <span className="font-bold">{`${result.index + 1}. ${result?.title}`}</span>
+                <span>{result?.description ? `: ${result.description}` : null}</span>
+              </span>
+            </Tooltip>
+            <Button
+              className="p-button-text"
+              icon="pi pi-copy"
+              onClick={async () => {
+                await navigator.clipboard.writeText(`${result.title}: ${result?.description ? result.description : ""}`);
+                toaster("success", "Copied to clipboard. 📎");
+              }}
+              tooltip="Copy to clipboard"
+              tooltipOptions={{ position: "left" }}
+            />
+          </div>
         ) : null}
       </div>
       <DataTable loading={isLoading} paginator rows={100} size="small" value={randomTable?.random_table_options || []}>
