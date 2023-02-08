@@ -57,6 +57,8 @@ export const deleteURL = (type: AllAvailableTypes) => {
   if (type === "calendars") return `${baseURLS.baseServer}${deleteURLs.deleteCalendar}`;
   if (type === "eras") return `${baseURLS.baseServer}${deleteURLs.deleteEra}`;
   if (type === "events") return `${baseURLS.baseServer}${deleteURLs.deleteEvent}`;
+  if (type === "randomtables") return `${baseURLS.baseServer}${deleteURLs.deleteRandomTable}`;
+  if (type === "randomtableoptions") return `${baseURLS.baseServer}${deleteURLs.deleteRandomTableOption}`;
   return null;
 };
 

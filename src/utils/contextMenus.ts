@@ -672,7 +672,6 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
     ];
     return screenItems;
   }
-
   if (cmType.type === "dictionaries") {
     const dictionaryItems = [
       {

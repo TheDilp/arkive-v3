@@ -107,6 +107,8 @@ export const deleteURLs = {
   deleteCalendar: "deletecalendar",
   deleteEra: "deleteera",
   deleteEvent: "deleteevent",
+  deleteRandomTable: "deleterandomtable",
+  deleteRandomTableOption: "deleterandomtableoption",
   deleteTags: "deletetags",
 };
 
