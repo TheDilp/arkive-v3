@@ -3,10 +3,10 @@ import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { useState } from "react";
-import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Tooltip } from "../../components/Tooltip/Tooltip";
-import { useDeleteItem } from "../../CRUD/ItemsCRUD";
+import { useDeleteSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { RandomTableType } from "../../types/ItemTypes/randomTableTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -16,16 +16,17 @@ import { getRandomTableResult } from "../../utils/randomtableUtils";
 import { toaster } from "../../utils/toast";
 import { buttonLabelWithIcon } from "../../utils/transform";
 
-function ActionsColumn({ id, folder }: RandomTableType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
+function ActionsColumn({ id, title, description }: RandomTableType, deleteAction: (docId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
       <Button
         className="p-button-success p-button-outlined"
-        icon="pi pi-fw pi-link"
+        icon="pi pi-fw pi-copy"
         onClick={() => {
-          navigate(`../../documents/${folder ? "folder/" : ""}${id}`);
+          navigator.clipboard.writeText(`${title}${description ? `: ${description}` : null}`);
+          toaster("success", "Item successfully copied.📎");
         }}
-        tooltip="Go to item"
+        tooltip="Copy"
         tooltipOptions={{ showDelay: 300, position: "left" }}
       />
       <Button
@@ -39,14 +40,12 @@ function ActionsColumn({ id, folder }: RandomTableType, navigate: NavigateFuncti
 }
 
 export default function RandomTableView() {
-  const { project_id, item_id } = useParams();
+  const { item_id } = useParams();
   const [result, setResult] = useState<null | { index: number; title: string; description?: string }>(null);
   const { data: randomTable, isLoading } = useGetItem<RandomTableType>(item_id as string, "randomtables");
 
-  const { mutate: deleteMutation } = useDeleteItem("randomtables", project_id as string);
+  const { mutate: deleteMutation } = useDeleteSubItem(item_id as string, "randomtableoptions", "randomtables");
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
-
-  const navigate = useNavigate();
 
   const [, setDrawer] = useAtom(DrawerAtom);
 
@@ -114,11 +113,7 @@ export default function RandomTableView() {
         />
         <Column bodyClassName="italic font-light w-[30%]" field="title" header="Title" />
         <Column bodyClassName="font-medium w-[65%]" field="description" header="Description" />
-        <Column
-          body={(data) => ActionsColumn(data, navigate, deleteAction)}
-          bodyClassName="font-medium w-[5%]"
-          header="Actions"
-        />
+        <Column body={(data) => ActionsColumn(data, deleteAction)} bodyClassName="font-medium w-[5%]" header="Actions" />
       </DataTable>
     </div>
   );

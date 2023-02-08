@@ -4,6 +4,7 @@ import { baseURLS, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { BoardType } from "../types/ItemTypes/boardTypes";
 import { DictionaryType } from "../types/ItemTypes/dictionaryTypes";
+import { RandomTableType } from "../types/ItemTypes/randomTableTypes";
 import { ScreenType } from "../types/ItemTypes/screenTypes";
 import { SortIndexes } from "../types/treeTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
@@ -417,6 +418,14 @@ export const useDeleteSubItem = (item_id: string, subType: AvailableSubItemTypes
           queryClient.setQueryData([type, item_id], (oldData: ScreenType | undefined) => {
             if (oldData) {
               return { ...oldData, [subType]: oldData[subType].filter((subItem) => subItem.id !== id) };
+            }
+            return oldData;
+          });
+        }
+        if (subType === "randomtableoptions" && type === "randomtables") {
+          queryClient.setQueryData([type, item_id], (oldData: RandomTableType | undefined) => {
+            if (oldData) {
+              return { ...oldData, random_table_options: oldData.random_table_options.filter((subItem) => subItem.id !== id) };
             }
             return oldData;
           });
