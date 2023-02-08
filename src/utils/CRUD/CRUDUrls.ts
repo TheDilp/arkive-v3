@@ -39,6 +39,9 @@ export const updateURL = (type: AllAvailableTypes) => {
   if (type === "eras") return `${baseURLS.baseServer}${updateURLs.updateEra}`;
   if (type === "months") return `${baseURLS.baseServer}${updateURLs.updateMonth}`;
   if (type === "events") return `${baseURLS.baseServer}${updateURLs.updateEvent}`;
+  if (type === "dictionaries") return `${baseURLS.baseServer}${updateURLs.updateDictionary}`;
+  if (type === "randomtables") return `${baseURLS.baseServer}${updateURLs.updateRandomTable}`;
+  if (type === "randomtableoptions") return `${baseURLS.baseServer}${updateURLs.updateRandomTableOption}`;
   return null;
 };
 

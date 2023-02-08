@@ -1,6 +1,5 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -22,7 +21,6 @@ type Props = {
 };
 
 export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Props) {
-  const queryClient = useQueryClient();
   const { project_id, item_id } = useParams();
   const navigate = useNavigate();
   const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
