@@ -5,6 +5,7 @@ export type UserType = {
   auth_id: string;
   nickname: string;
   email: string;
+  image?: string;
 
   projects?: ProjectType[];
   createrOf?: ProjectType[];

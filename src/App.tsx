@@ -17,6 +17,7 @@ import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile/Profile";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
@@ -78,6 +79,8 @@ function App() {
               </Route>
 
               <Route element={<Dashboard />} path="/" />
+              <Route element={<Profile />} path="user/:user_id" />
+
               <Route element={<Layout />} path="/project/:project_id/*">
                 <Route path=":type/*">
                   <Route element={<FolderView />} path="" />

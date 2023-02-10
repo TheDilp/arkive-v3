@@ -5,7 +5,7 @@ import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { getPublicURL, getSingleURL } from "../utils/CRUD/CRUDUrls";
 
 export function useGetItem<ItemType>(id: string, type: AvailableItemTypes, options?: UseQueryOptions, isPublic?: boolean) {
-  const { data, isLoading } = useQuery<ItemType>({
+  const { data, isLoading, isFetching } = useQuery<ItemType>({
     queryKey: [type, id],
     queryFn: async () => {
       const url = isPublic ? getPublicURL(type) : getSingleURL(type);
@@ -16,7 +16,8 @@ export function useGetItem<ItemType>(id: string, type: AvailableItemTypes, optio
       return null;
     },
     enabled: options?.enabled,
+    staleTime: options?.staleTime,
   });
 
-  return { data, isLoading };
+  return { data, isLoading, isFetching };
 }

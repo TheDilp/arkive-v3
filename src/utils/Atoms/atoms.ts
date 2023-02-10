@@ -5,6 +5,7 @@ import { DialogPositionType } from "primereact/dialog";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
+import { UserType } from "../../types/userTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
 import { getItem } from "../storage";
 
@@ -67,3 +68,5 @@ export const BoardStateAtom = atom<{
 });
 
 export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
+
+export const UserAtom = atom<UserType | null>(null);
