@@ -1,8 +1,9 @@
-import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
 import { baseURLS, createURLS } from "../types/CRUDenums";
 import { UserType } from "../types/userTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
+import { toaster } from "../utils/toast";
 
 export const useCreateUser = () => {
   return useMutation(async (newUserData: Pick<UserType, "email" | "nickname" | "auth_id">) =>
@@ -27,3 +28,26 @@ export function useGetUser(id: string, options?: UseQueryOptions, isPublic?: boo
   });
   return { data, isLoading, isFetching };
 }
+
+export const useUpdateProfile = (id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (updateItemValues: Partial<UserType>) => {
+      if (updateItemValues.id) {
+        const url = `${baseURLS.baseServer}updateuser`;
+        if (url) return FetchFunction({ url, body: JSON.stringify(updateItemValues), method: "POST" });
+      }
+      return null;
+    },
+    {
+      onSuccess: (_, variables) => {
+        toaster("success", "Profile successfully updated.");
+        queryClient.setQueryData<UserType>(["user", id], (oldData) => {
+          if (oldData) return { ...oldData, ...variables };
+          return oldData;
+        });
+      },
+    },
+  );
+};

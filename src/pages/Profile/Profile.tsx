@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import Navbar from "../../components/Nav/Navbar";
-import { useGetUser } from "../../CRUD/AuthCRUD";
+import { useGetUser, useUpdateProfile } from "../../CRUD/AuthCRUD";
 import { useAuth } from "../../hooks/useAuth";
 import { useHandleChange } from "../../hooks/useGetChanged";
 import { UserType } from "../../types/userTypes";
@@ -27,6 +27,7 @@ export default function Profile() {
     },
     false,
   );
+  const { mutate } = useUpdateProfile(localData?.id);
 
   const { handleChange, changedData } = useHandleChange({ data: localData, setData: setLocalData });
   if (isFetching || !localData) return <LoadingScreen />;
@@ -55,11 +56,14 @@ export default function Profile() {
             value={localData?.nickname}
           />
           <Button
-            disabled={!changedData}
             className="p-button-success p-button-outlined w-full"
+            disabled={!changedData}
             icon="pi pi-user-edit"
             iconPos="right"
             label="Save profile"
+            onClick={() => {
+              if (localData?.id) mutate({ id: localData.id, ...changedData });
+            }}
           />
         </div>
       </div>
