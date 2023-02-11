@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
 import { Fragment } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { NavItemType } from "../../types/generalTypes";
@@ -32,20 +32,17 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         />
       </li>
       {items.map((item) => (
-        <Fragment key={item.icon}>
+        <Link key={item.icon} to={item.navigate}>
           <Tooltip content={item.tooltip.replace("_", " ")} position="right" target={`.${item.tooltip}`} />
           <li
             className={` ${
               item.tooltip
             } flex h-14 cursor-pointer items-center justify-center transition-colors hover:text-sky-400 ${
               item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400" : ""
-            }`}
-            onClick={() => {
-              navigate(item.navigate);
-            }}>
+            }`}>
             <Icon fontSize={28} icon={item.icon} />
           </li>
-        </Fragment>
+        </Link>
       ))}
       <hr className="mb-2 w-full border-zinc-800" />
 
