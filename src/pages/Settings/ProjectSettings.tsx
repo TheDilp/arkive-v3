@@ -27,7 +27,7 @@ export default function ProjectSettings() {
   const [userData] = useAtom(UserAtom);
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const { data: allImages } = useGetAllImages(project_id as string);
-  const [userInvite, setUserInvite] = useState({ email: "", permisssion: "viewer" });
+  const [userInvite, setUserInvite] = useState({ email: "" });
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
   useEffect(() => {
     if (data) setLocalItem(data);
@@ -107,7 +107,7 @@ export default function ProjectSettings() {
             optionLabel="label"
             options={userPermissions}
             optionValue="value"
-            value={userInvite.permisssion}
+            value="editor"
           />
           <Button
             className="p-button-outlined"
@@ -118,9 +118,9 @@ export default function ProjectSettings() {
               FetchFunction({
                 url: `${baseURLS.baseServer}addtoproject`,
                 method: "POST",
-                body: JSON.stringify({ ...userInvite, project_id }),
+                body: JSON.stringify({ email: userInvite.email, project_id }),
               });
-              setUserInvite({ email: "", permisssion: "viewer" });
+              setUserInvite({ email: "" });
             }}
           />
         </div>

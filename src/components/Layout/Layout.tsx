@@ -1,11 +1,10 @@
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import { useGetUser } from "../../CRUD/AuthCRUD";
 import { useAuth } from "../../hooks/useAuth";
-import { MemberType } from "../../types/generalTypes";
 import { UserType } from "../../types/userTypes";
 import { UserAtom } from "../../utils/Atoms/atoms";
 import DialogWrapper from "../Dialog/DialogWrapper";
@@ -16,7 +15,6 @@ import SecondarySidebar from "../Sidebar/SecondarySidebar";
 import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
-  const { project_id } = useParams();
   const user = useAuth();
   const [, setUserAtom] = useAtom(UserAtom);
   const { isFetching } = useGetUser(
@@ -26,12 +24,13 @@ export default function Layout() {
       staleTime: 5 * 60 * 1000,
       onSuccess: (data) => {
         if (data) {
-          const { members, ...userData } = data as UserType & { members: MemberType[] };
-          const permission = members.find((member: MemberType) => member.project_id === project_id)?.permission;
-          if (permission) setUserAtom({ ...userData, permission });
-          else {
-            setUserAtom({ ...userData, permission: null });
-          }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+          setUserAtom(data as UserType);
+          // const permission = members.find((member: MemberType) => member.project_id === project_id)?.permission;
+          // if (permission) setUserAtom({ ...userData });
+          // else {
+          // }
         }
       },
     },

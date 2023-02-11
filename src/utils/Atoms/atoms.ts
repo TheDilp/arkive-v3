@@ -69,4 +69,4 @@ export const BoardStateAtom = atom<{
 
 export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
 
-export const UserAtom = atom<(UserType & { permission: "viewer" | "editor" | null }) | null>(null);
+export const UserAtom = atom<UserType | null>(null);

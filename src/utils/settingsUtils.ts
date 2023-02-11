@@ -26,12 +26,12 @@ export function getCheckedValue(
 }
 
 export const userPermissions = [
-  {
-    label: "Viewer",
-    value: "viewer",
-  },
   // {
-  //   label: "Editor",
-  //   value: "editor",
+  //   label: "Viewer",
+  //   value: "viewer",
   // },
+  {
+    label: "Editor",
+    value: "editor",
+  },
 ];
