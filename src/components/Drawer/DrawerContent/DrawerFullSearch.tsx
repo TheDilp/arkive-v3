@@ -158,7 +158,8 @@ export default function DrawerFullSearch() {
                       <Icon fontSize={24} icon={getIconForFullSearch(item)} />
                       <span className="flex flex-col">
                         {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                        {"label" in item && (item.label || "Node/Edge")}
+                        {"label" in item && "source" in item ? item.label || "Edge" : null}
+                        {"label" in item && !("source" in item) ? item.label || "Node" : null}
                         <span className="text-xs">
                           {"source" in item
                             ? `(${item.source?.label || "Unnamed node"} - ${item.target?.label || "Unnamed node"})`
