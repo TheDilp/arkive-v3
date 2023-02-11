@@ -72,7 +72,7 @@ export default function DrawerSectionContent() {
           );
         else
           createSectionMutation(
-            { ...DefaultSection, ...changedData, id: crypto.randomUUID(), parentId: item_id as string, sort: 999 },
+            { ...DefaultSection, ...changedData, id: crypto.randomUUID(), parentId: item_id as string },
 
             {
               onSuccess: () => {
@@ -123,7 +123,7 @@ export default function DrawerSectionContent() {
       <div className="mt-auto flex w-full">
         {localItem?.id ? (
           <Button
-            className=" p-button-outlined p-button-danger w-full"
+            className="p-button-outlined  p-button-danger w-full"
             onClick={() => {
               if (document)
                 deleteItem(
