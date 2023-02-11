@@ -41,7 +41,7 @@ export default function RandomGenerator() {
           loading={loadingTableOptions}
           onClick={async () => {
             if (selectedRandomTable) {
-              const currentData = queryClient.getQueryData<RandomTableType>(["randomtables", selectedRandomTable.id]);
+              const currentData = queryClient.getQueryData<RandomTableType>(["randomtables", selectedRandomTable.id, false]);
               if (!currentData) setLoadingTableOptions(true);
               const tableData = await queryClient.ensureQueryData<RandomTableType>(["randomtables", selectedRandomTable.id], {
                 queryFn: async () =>

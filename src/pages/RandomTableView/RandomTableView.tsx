@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { Tooltip } from "../../components/Tooltip/Tooltip";
 import { useDeleteSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { RandomTableType } from "../../types/ItemTypes/randomTableTypes";
+import { RandomTableOptionType, RandomTableType } from "../../types/ItemTypes/randomTableTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -16,11 +16,24 @@ import { getRandomTableResult } from "../../utils/randomtableUtils";
 import { toaster } from "../../utils/toast";
 import { buttonLabelWithIcon } from "../../utils/transform";
 
-function ActionsColumn({ id, title, description }: RandomTableType, deleteAction: (docId: string) => void) {
+function ActionsColumn(
+  { id, title, description }: RandomTableOptionType,
+  deleteAction: (docId: string) => void,
+  editAction: (data: { id: string; title: string; description: string }) => void,
+) {
   return (
     <div className="flex justify-center gap-x-1">
       <Button
         className="p-button-success p-button-outlined"
+        icon="pi pi-fw pi-pencil"
+        onClick={() => {
+          editAction({ id, title, description });
+        }}
+        tooltip="Edit"
+        tooltipOptions={{ showDelay: 300, position: "left" }}
+      />
+      <Button
+        className="p-button-info p-button-outlined"
         icon="pi pi-fw pi-copy"
         onClick={() => {
           navigator.clipboard.writeText(`${title}${description ? `: ${description}` : null}`);
@@ -44,10 +57,16 @@ export default function RandomTableView() {
   const [result, setResult] = useState<null | { index: number; title: string; description?: string }>(null);
   const { data: randomTable, isLoading } = useGetItem<RandomTableType>(item_id as string, "randomtables");
 
+  const [, setDrawer] = useAtom(DrawerAtom);
   const { mutate: deleteMutation } = useDeleteSubItem(item_id as string, "randomtableoptions", "randomtables");
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
-
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const editAction = (data: { id: string; title: string; description: string }) =>
+    setDrawer({
+      ...DefaultDrawer,
+      data,
+      show: true,
+      type: "randomtableoptions",
+    });
 
   return (
     <div className="flex w-full flex-col p-4">
@@ -111,9 +130,13 @@ export default function RandomTableView() {
             return `${info.rowIndex + 1}.`;
           }}
         />
-        <Column bodyClassName="italic font-light w-[30%]" field="title" header="Title" />
-        <Column bodyClassName="font-medium w-[65%]" field="description" header="Description" />
-        <Column body={(data) => ActionsColumn(data, deleteAction)} bodyClassName="font-medium w-[5%]" header="Actions" />
+        <Column bodyClassName="font-medium w-[30%]" field="title" header="Title" />
+        <Column bodyClassName="font-light italic w-[65%]" field="description" header="Description" />
+        <Column
+          body={(data) => ActionsColumn(data, deleteAction, editAction)}
+          bodyClassName="font-medium w-[5%]"
+          header="Actions"
+        />
       </DataTable>
     </div>
   );

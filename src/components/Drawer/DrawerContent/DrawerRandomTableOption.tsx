@@ -38,7 +38,7 @@ export default function DrawerRandomTableOptionContent() {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { tags, ...rest } = changedData;
         await FetchFunction({
-          url: `${baseURLS.baseServer}${updateURLs}`,
+          url: `${baseURLS.baseServer}${updateURLs.updateRandomTableOption}`,
           method: "POST",
           body: JSON.stringify({ ...rest, id: localItem.id }),
         });
@@ -114,7 +114,7 @@ export default function DrawerRandomTableOptionContent() {
       <div className="mt-auto flex w-full">
         {document ? (
           <Button
-            className=" p-button-outlined p-button-danger w-full"
+            className="p-button-outlined  p-button-danger w-full"
             loading={deleteRandomTableMutation.isLoading}
             onClick={() => {
               if (localItem?.id)
