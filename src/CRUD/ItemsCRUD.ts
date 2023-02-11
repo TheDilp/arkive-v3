@@ -452,8 +452,8 @@ export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItem
     },
     {
       onMutate: async (ids) => {
-        const old = queryClient.getQueryData(["boards", item_id]);
         if (subType === "nodes" || subType === "edges") {
+          const old = queryClient.getQueryData(["boards", item_id]);
           queryClient.setQueryData(["boards", item_id], (oldData: BoardType | undefined) => {
             if (oldData) {
               if (subType === "nodes") {
@@ -465,8 +465,10 @@ export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItem
             }
             return oldData;
           });
+          return { old };
         }
         if (subType === "sections") {
+          const old = queryClient.getQueryData(["screens", item_id]);
           queryClient.setQueryData(["screens", item_id], (oldData: ScreenType | undefined) => {
             if (oldData) {
               if (subType === "sections") {
@@ -475,13 +477,15 @@ export const useDeleteManySubItems = (item_id: string, subType: AvailableSubItem
             }
             return oldData;
           });
+          return { old };
         }
-        return { old };
+        return {};
       },
       onSuccess: () => toaster("success", "Items successfully deleted."),
       onError: (_, __, context) => {
         toaster("error", "There was an error deleting these items.");
-        queryClient.setQueryData(["boards", item_id], context?.old);
+        if (subType === "nodes" || subType === "edges") queryClient.setQueryData(["boards", item_id], context?.old);
+        if (subType === "sections") queryClient.setQueryData(["screens", item_id], context?.old);
       },
     },
   );

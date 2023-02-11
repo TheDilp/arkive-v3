@@ -6,7 +6,7 @@ import { getPublicURL, getSingleURL } from "../utils/CRUD/CRUDUrls";
 
 export function useGetItem<ItemType>(id: string, type: AvailableItemTypes, options?: UseQueryOptions, isPublic?: boolean) {
   const { data, isLoading, isFetching } = useQuery<ItemType>({
-    queryKey: [type, id, isPublic ?? false],
+    queryKey: isPublic ? [type, id, true] : [type, id],
     queryFn: async () => {
       const url = isPublic ? getPublicURL(type) : getSingleURL(type);
       if (url) {
