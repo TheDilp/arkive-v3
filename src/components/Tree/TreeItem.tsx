@@ -108,7 +108,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
       </span>
 
       <div className={`flex w-full items-center font-Lato ${node.id === item_id && "text-sky-400"}`}>
-        <div className="white-space-nowrap text-overflow-ellipsis w-full overflow-hidden">
+        <div className="w-full truncate">
           {node.text} {"template" in node.data && node.data?.template && !node.droppable ? "[TEMPLATE]" : null}
         </div>
         <div className="flex items-center opacity-0 group-hover:opacity-100">

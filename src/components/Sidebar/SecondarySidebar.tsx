@@ -32,8 +32,8 @@ function SidebarContainer({ children }: Props) {
   ) : (
     <div
       className={`flex ${
-        sidebar ? "w-[20rem] min-w-[20rem] opacity-100" : "w-0"
-      } max-w-[20rem] flex-col overflow-hidden bg-zinc-900 transition-all`}>
+        sidebar ? "flex-1 opacity-100" : "w-0 max-w-0 overflow-hidden opacity-0"
+      } max-w-[20rem] flex-col bg-zinc-900 transition-all`}>
       {children}
     </div>
   );
@@ -64,7 +64,7 @@ function SidebarContent() {
     </div>
   );
 
-  // if (pathname.includes("timelines")) return <div className="flex flex-1 flex-col bg-zinc-900">TIMELINES</div>;
+  // if (pathname.includes("timelines")) return <div className="flex flex-col flex-1 bg-zinc-900">TIMELINES</div>;
 }
 
 export default function SecondarySidebar() {

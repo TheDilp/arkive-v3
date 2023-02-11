@@ -7,6 +7,9 @@ module.exports = {
         Lato: ["Lato"],
         Merriweather: ["Merriweather"],
       },
+      transitionProperty: {
+        width: "width",
+      },
     },
   },
   plugins: [],
