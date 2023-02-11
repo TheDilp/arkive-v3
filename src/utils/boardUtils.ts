@@ -467,7 +467,7 @@ export function getNodeImage(node: NodeType) {
   if (node.image) {
     image = node.image;
   }
-  if (image !== "") return image.replace(" ", "%20");
+  if (image !== "") return image.replaceAll(" ", "%20");
   return null;
 }
 
