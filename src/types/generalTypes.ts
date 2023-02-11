@@ -84,6 +84,11 @@ export interface BaseItemType {
   expanded: boolean;
   tags: TagType[];
 }
+export type NavItemType = {
+  icon: string;
+  navigate: string;
+  tooltip: string;
+};
 
 export type slashMenuItem = {
   name: string;

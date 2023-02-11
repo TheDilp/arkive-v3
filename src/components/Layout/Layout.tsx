@@ -1,10 +1,12 @@
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { useGetUser } from "../../CRUD/AuthCRUD";
+import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useAuth } from "../../hooks/useAuth";
+import { MemberType } from "../../types/generalTypes";
 import { UserType } from "../../types/userTypes";
 import { UserAtom } from "../../utils/Atoms/atoms";
 import DialogWrapper from "../Dialog/DialogWrapper";
@@ -15,28 +17,27 @@ import SecondarySidebar from "../Sidebar/SecondarySidebar";
 import Sidebar from "../Sidebar/Sidebar";
 
 export default function Layout() {
+  const { project_id } = useParams();
   const user = useAuth();
   const [, setUserAtom] = useAtom(UserAtom);
+  const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
+    enabled: !!user,
+  });
+
   const { isFetching } = useGetUser(
     user as string,
     {
-      enabled: !!user,
-      staleTime: 5 * 60 * 1000,
+      enabled: !!user && !isFetchingProject,
       onSuccess: (data) => {
         if (data) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-          setUserAtom(data as UserType);
-          // const permission = members.find((member: MemberType) => member.project_id === project_id)?.permission;
-          // if (permission) setUserAtom({ ...userData });
-          // else {
-          // }
+          const { members, ...userData } = data as UserType & { members: MemberType[] };
+          setUserAtom({ ...userData, permission: projectData?.ownerId === user ? "owner" : "member" });
         }
       },
     },
     false,
   );
-  if (isFetching) return <LoadingScreen />;
   return (
     <div className="flex h-full max-w-full overflow-hidden">
       <Sidebar />
@@ -53,7 +54,7 @@ export default function Layout() {
 
       <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
         <Navbar />
-        {user ? (
+        {user || isFetching || isFetchingProject ? (
           <Suspense fallback={<LoadingScreen />}>
             <Outlet />
           </Suspense>

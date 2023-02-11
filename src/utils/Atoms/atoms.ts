@@ -4,6 +4,7 @@ import { atom } from "jotai";
 import { DialogPositionType } from "primereact/dialog";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
+import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { UserType } from "../../types/userTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
@@ -50,7 +51,7 @@ export const MentionContextAtom = atom<{
 const sidebarState = getItem("sidebarState") as boolean | undefined;
 
 export const SidebarCollapseAtom = atom<boolean>(sidebarState ?? true);
-
+export const ProjectAtom = atom<ProjectType | null>(null);
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
 
 export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
@@ -69,4 +70,4 @@ export const BoardStateAtom = atom<{
 
 export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
 
-export const UserAtom = atom<UserType | null>(null);
+export const UserAtom = atom<(UserType & { permission: "owner" | "member" | null }) | null>(null);

@@ -1,14 +1,14 @@
-import { Button } from "primereact/button";
+import { Icon } from "@iconify/react";
 import { Card } from "primereact/card";
+import { Tooltip } from "primereact/tooltip";
 import { Link } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { baseURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { getProjectPermissions } from "../../utils/authUtils";
-import { buttonLabelWithIcon } from "../../utils/transform";
+import { navItems } from "../../utils/uiUtils";
 
-export default function ProjectCard({ id, image, ownerId, title, user_id }: ProjectType & { user_id: string }) {
+export default function ProjectCard({ id, image, title }: ProjectType) {
   const header = (
     <Link className="relative h-60 no-underline" to={`/project/${id}/documents`}>
       <img
@@ -20,32 +20,24 @@ export default function ProjectCard({ id, image, ownerId, title, user_id }: Proj
     </Link>
   );
   const footer = (
-    <div className="flex flex-wrap justify-between">
-      <Link className="no-underline" to={`../project/${id}/documents`}>
-        <Button className="p-button-outlined p-button-primary w-full font-Lato">
-          {buttonLabelWithIcon("Wiki", "mdi:files")}
-        </Button>
-      </Link>
-
-      <Link
-        className="no-underline"
-        onClick={(e) => {
-          if (!getProjectPermissions(user_id, ownerId)) {
-            e.preventDefault();
-          }
-        }}
-        to={`/project/${id}/settings/project-settings`}>
-        <Button
-          className="p-button-outlined p-button-secondary w-full font-Lato"
-          disabled={!getProjectPermissions(user_id, ownerId)}>
-          {buttonLabelWithIcon("Settings", "mdi:cog")}
-        </Button>
-      </Link>
+    <div className="flex flex-wrap justify-between gap-2">
+      {navItems
+        .filter((_, index) => index !== 0)
+        .map((navItem) => (
+          <Link key={navItem.icon} className="flex-1 no-underline" to={`../project/${id}/${navItem.navigate}`}>
+            <Tooltip content={navItem.tooltip.replace("_", " ")} target={`#${navItem.tooltip.replace("_", "")}`} />
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:text-sky-400"
+              id={navItem.tooltip.replace("_", "")}>
+              <Icon fontSize={30} icon={navItem.icon} />
+            </div>
+          </Link>
+        ))}
     </div>
   );
   return (
     <Card
-      className="Merriweather mx-2 flex h-[25rem] w-80 flex-col justify-between rounded-md border border-zinc-700 text-center shadow-sm"
+      className="Merriweather projectCard mx-2 flex h-[25rem] w-80 flex-col justify-between rounded-md border border-zinc-700 text-center shadow-sm"
       footer={footer}
       header={header}
       title={<div className="font-Merriweather">{title}</div>}

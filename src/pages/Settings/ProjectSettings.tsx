@@ -14,7 +14,6 @@ import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../C
 import { baseURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserAtom } from "../../utils/Atoms/atoms";
-import { getProjectPermissions } from "../../utils/authUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { userPermissions } from "../../utils/settingsUtils";
@@ -34,12 +33,10 @@ export default function ProjectSettings() {
   }, [data]);
   const updateProject = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
-
-  if (userData && data) {
-    if (!getProjectPermissions(data?.ownerId, userData.id)) {
-      toaster("info", "You do not have permissions to view the project settings.");
-      return <Navigate to="/" />;
-    }
+  console.log(userData);
+  if (!userData?.permission || userData.permission !== "owner") {
+    toaster("info", "You do not have permissions to view the project settings.");
+    return <Navigate to="/" />;
   }
 
   if (isLoading || !userData) return <ProgressSpinner />;
@@ -52,7 +49,7 @@ export default function ProjectSettings() {
       <div className="flex gap-x-4">
         <InputText
           className="w-2/3"
-          onChange={(e) => setLocalItem({ ...localItem, id: data?.id as string, title: e.target.value })}
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, id: data?.id as string, title: e.target.value }))}
           onKeyDown={(e) => {
             if (e.key === "Enter") updateProject.mutate({ id: project_id as string, title: localItem?.title });
           }}

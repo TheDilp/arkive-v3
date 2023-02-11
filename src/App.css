@@ -2,6 +2,9 @@
 .randomTableNavbarDropdownPanel {
   @apply z-[99999] !important;
 }
+.projectCard .p-card-body {
+  @apply pt-1;
+}
 .p-breadcrumb {
   @apply border-transparent bg-transparent !important;
 }

@@ -8,35 +8,16 @@ import { Fragment } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
-import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
+import { NavItemType } from "../../types/generalTypes";
+import { SidebarCollapseAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { setItem } from "../../utils/storage";
-
-type NavItemType = {
-  icon: string;
-  navigate: string;
-  tooltip: string;
-};
-const navItems: NavItemType[] = [
-  {
-    icon: "mdi:home",
-    navigate: "/",
-    tooltip: "Projects",
-  },
-  { icon: "ion:documents-outline", navigate: "./documents", tooltip: "Documents" },
-  { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
-  { icon: "ph:graph", navigate: "./boards", tooltip: "Graphs" },
-  { icon: "ph:calendar-blank", navigate: "./calendars", tooltip: "Calendars" },
-  // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
-  { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
-  { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionaries" },
-  { icon: "arcticons:reroll", navigate: "./randomtables", tooltip: "Random_Tables" },
-  // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
-];
+import { checkIfOwner, navItems } from "../../utils/uiUtils";
 
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const navigate = useNavigate();
-
+  const [userData] = useAtom(UserAtom);
+  const isOwner = checkIfOwner(userData?.permission);
   return (
     <>
       <li className="flex h-14 items-center">
@@ -70,11 +51,11 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
 
       <li className="mt-auto h-14">
         <Icon
-          className="cursor-pointer hover:text-blue-300"
+          className={` ${isOwner ? "cursor-pointer hover:text-blue-300" : "text-zinc-600"}`}
           fontSize={28}
           icon="mdi:cog"
           onClick={() => {
-            navigate("./settings/project-settings");
+            if (isOwner) navigate("./settings/project-settings");
           }}
         />
       </li>

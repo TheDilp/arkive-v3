@@ -1,18 +1,21 @@
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { getAuth, signOut } from "firebase/auth";
 import { useAtom } from "jotai";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { Tooltip } from "../Tooltip/Tooltip";
 import RandomGenerator from "./RandomGenerator";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
+  const [, setUserData] = useAtom(UserAtom);
   const auth = getAuth();
 
   return (
@@ -51,9 +54,12 @@ export default function Navbar() {
             className="cursor-pointer hover:text-blue-300"
             fontSize={20}
             icon="mdi:log-out"
-            onClick={async () => {
-              await signOut(auth);
-              navigate("/auth/signin");
+            onClick={() => {
+              signOut(auth).then(() => {
+                queryClient.clear();
+                setUserData(null);
+                navigate("/auth/signin");
+              });
             }}
           />
         </span>
