@@ -107,7 +107,7 @@ export default function DrawerNodeContent() {
       <div className="flex w-full flex-1 flex-col gap-y-2 overflow-y-auto">
         <h2 className="text-center font-Lato text-2xl font-medium">{localItem?.label}</h2>
         <div className="flex w-full flex-col gap-y-2">
-          <div className=" w-full">
+          <div className="w-full ">
             <span className="w-full text-sm text-zinc-400">Node shape</span>
             <Dropdown
               className="w-full"
@@ -137,11 +137,10 @@ export default function DrawerNodeContent() {
               <InputNumber
                 inputClassName="w-full"
                 max={5000}
-                min={10}
+                min={1}
                 onChange={(e) => handleChange({ name: "width", value: e.value as number })}
                 onKeyDown={handleEnter}
                 showButtons
-                step={10}
                 value={localItem.width}
               />
             </div>
@@ -150,11 +149,10 @@ export default function DrawerNodeContent() {
               <InputNumber
                 inputClassName="w-full"
                 max={5000}
-                min={10}
+                min={1}
                 onChange={(e) => handleChange({ name: "height", value: e.value as number })}
                 onKeyDown={handleEnter}
                 showButtons
-                step={10}
                 value={localItem.height}
               />
             </div>
@@ -278,7 +276,7 @@ export default function DrawerNodeContent() {
               value={localItem.doc_id}
             />
           </div>
-          {/* <div className="flex w-full flex-wrap">
+          {/* <div className="flex flex-wrap w-full">
                 <span className="w-full text-sm text-zinc-400">Template</span>
                 <Dropdown
                   className="w-full"
