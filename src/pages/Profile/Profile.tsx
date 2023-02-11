@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
-import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 
@@ -27,7 +26,7 @@ export default function Profile() {
     },
     false,
   );
-  const { mutate } = useUpdateProfile(localData?.id);
+  const { mutate } = useUpdateProfile();
 
   const { handleChange, changedData } = useHandleChange({ data: localData, setData: setLocalData });
   if (isFetching || !localData) return <LoadingScreen />;

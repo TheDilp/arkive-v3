@@ -6,7 +6,9 @@ import { CalendarType, MonthType } from "./ItemTypes/calendarTypes";
 import { DictionaryType, WordType } from "./ItemTypes/dictionaryTypes";
 import { DocumentType } from "./ItemTypes/documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
+import { ProjectType } from "./ItemTypes/projectTypes";
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
+import { UserType } from "./userTypes";
 
 export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens" | "dictionaries" | "calendars" | "randomtables";
 export type AvailableSubItemTypes =
@@ -119,4 +121,14 @@ export type FullSearchResults = {
   pins: MapPinType[];
   screens: ScreenType[];
   sections: SectionType[];
+};
+
+export type MemberType = {
+  id: string;
+  project: ProjectType;
+  member: UserType;
+
+  permission: "viewer" | "editor";
+  project_id: string;
+  user_id: string;
 };

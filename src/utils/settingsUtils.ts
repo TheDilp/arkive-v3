@@ -24,3 +24,14 @@ export function getCheckedValue(
   if (type === "isPublic") return isPublic;
   return false;
 }
+
+export const userPermissions = [
+  {
+    label: "Viewer",
+    value: "viewer",
+  },
+  // {
+  //   label: "Editor",
+  //   value: "editor",
+  // },
+];

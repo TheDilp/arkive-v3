@@ -34,7 +34,15 @@ export default function Signin() {
   return (
     <div className="flex flex-col gap-y-2">
       <h3 className="text-center font-Lato text-2xl">Welcome back</h3>
-      <InputText name="email" onChange={(e) => changeLoginData(e.target)} placeholder="Email" type="email" />
+      <InputText
+        name="email"
+        onChange={(e) => changeLoginData(e.target)}
+        onKeyDown={async (e) => {
+          if (e.key === "Enter") await loginUser();
+        }}
+        placeholder="Email"
+        type="email"
+      />
       <Password
         feedback={false}
         inputClassName="w-full"

@@ -29,7 +29,7 @@ export function useGetUser(id: string, options?: UseQueryOptions, isPublic?: boo
   return { data, isLoading, isFetching };
 }
 
-export const useUpdateProfile = (id: string) => {
+export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -43,7 +43,7 @@ export const useUpdateProfile = (id: string) => {
     {
       onSuccess: (_, variables) => {
         toaster("success", "Profile successfully updated.");
-        queryClient.setQueryData<UserType>(["user", id], (oldData) => {
+        queryClient.setQueryData<UserType>(["user", variables?.id], (oldData) => {
           if (oldData) return { ...oldData, ...variables };
           return oldData;
         });

@@ -1,9 +1,10 @@
+import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
@@ -12,21 +13,36 @@ import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
+import { UserAtom } from "../../utils/Atoms/atoms";
+import { getProjectPermissions } from "../../utils/authUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
+import { userPermissions } from "../../utils/settingsUtils";
+import { toaster } from "../../utils/toast";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
   const navigate = useNavigate();
+  const [userData] = useAtom(UserAtom);
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const { data: allImages } = useGetAllImages(project_id as string);
+  const [userInvite, setUserInvite] = useState({ email: "", permisssion: "viewer" });
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
   useEffect(() => {
     if (data) setLocalItem(data);
   }, [data]);
   const updateProject = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
-  if (isLoading) return <ProgressSpinner />;
+
+  if (userData && data) {
+    if (!getProjectPermissions(data?.ownerId, userData.id)) {
+      toaster("info", "You do not have permissions to view the project settings.");
+      return <Navigate to="/" />;
+    }
+  }
+
+  if (isLoading || !userData) return <ProgressSpinner />;
   return (
     <div className="flex h-[95vh] flex-col gap-y-4 overflow-y-auto p-4">
       <div>
@@ -76,17 +92,52 @@ export default function ProjectSettings() {
       </div>
       <hr />
       <div className="flex flex-col gap-y-2">
+        <h3 className="text-lg font-semibold">Add to project</h3>
+        <h4 className="text-base font-semibold">Add another user to a project with selected permissions</h4>
+        <div className="flex w-full max-w-lg justify-between gap-x-2">
+          <InputText
+            className="flex-1"
+            name="email"
+            onChange={(e) => setUserInvite((prev) => ({ ...prev, email: e.target.value }))}
+            placeholder="User's email"
+            value={userInvite.email}
+          />
+          <Dropdown
+            onChange={(e) => setUserInvite((prev) => ({ ...prev, permisssion: e.value }))}
+            optionLabel="label"
+            options={userPermissions}
+            optionValue="value"
+            value={userInvite.permisssion}
+          />
+          <Button
+            className="p-button-outlined"
+            icon="pi pi-user-plus"
+            iconPos="right"
+            label="Add user"
+            onClick={async () => {
+              FetchFunction({
+                url: `${baseURLS.baseServer}addtoproject`,
+                method: "POST",
+                body: JSON.stringify({ ...userInvite, project_id }),
+              });
+              setUserInvite({ email: "", permisssion: "viewer" });
+            }}
+          />
+        </div>
+      </div>
+      <hr />
+      <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Export Project</h3>
         <h4 className="text-base font-semibold">
           This exports all data related to documents, maps, boards and images from this project in the JSON format (docs, maps,
           boards).
         </h4>
-        <Button className="p-button-outlined w-fit" icon="pi pi-download" iconPos="right" label="Export All" />
+        <Button className="p-button-outlined w-fit" disabled icon="pi pi-download" iconPos="right" label="Export All" />
       </div>
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Export All</h3>
         <h4 className="text-base font-semibold">This button exports only images that are related to this project.</h4>
-        <Button className="p-button-outlined w-fit" icon="pi pi-download" iconPos="right" label="Export Images" />
+        <Button className="p-button-outlined w-fit" disabled icon="pi pi-download" iconPos="right" label="Export Images" />
       </div>
       <hr />
       <div className="flex flex-col gap-y-2">

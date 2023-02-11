@@ -6,6 +6,7 @@ import "./App.css";
 
 import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { lazy, Suspense, useEffect } from "react";
@@ -72,6 +73,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <DndProvider backend={MultiBackend} options={getBackendOptions()}>
           <Suspense fallback={<LoadingScreen />}>
+            <ReactQueryDevtools position="bottom-right" />
             <Routes>
               <Route element={<AuthLayout />} path="auth/*">
                 <Route element={<Signup />} path="signup" />
