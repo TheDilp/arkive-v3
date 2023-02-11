@@ -4,7 +4,6 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
-import { Fragment } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";

@@ -22,7 +22,7 @@ export const navItems: NavItemType[] = [
   { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
   { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionaries" },
   { icon: "arcticons:reroll", navigate: "./randomtables", tooltip: "Random_Tables" },
-  { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
+  // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 
 export function checkIfOwner(permission?: null | "owner" | "member") {
