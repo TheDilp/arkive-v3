@@ -143,7 +143,7 @@ export default function DrawerFullSearch() {
                 ? results[key as AvailableSearchResultTypes].map((item) => (
                     <Link
                       key={item.id}
-                      className="flex cursor-pointer items-center gap-x-1 truncate py-1 hover:bg-sky-400"
+                      className="flex cursor-pointer items-center gap-x-1 py-1 hover:bg-sky-400"
                       onClick={() => {
                         if (boardRef) goToNodeEdge(subitem_id, item.id, boardRef);
                         setDrawer({ ...DefaultDrawer, position: "right" });
@@ -156,8 +156,15 @@ export default function DrawerFullSearch() {
                         "folder" in item ? item.folder : false,
                       )}>
                       <Icon fontSize={24} icon={getIconForFullSearch(item)} />
-                      {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                      {"label" in item && (item.label || "Node/Edge")}
+                      <span className="flex flex-col">
+                        {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
+                        {"label" in item && (item.label || "Node/Edge")}
+                        <span className="text-xs">
+                          {"source" in item
+                            ? `(${item.source?.label || "Unnamed node"} - ${item.target?.label || "Unnamed node"})`
+                            : null}
+                        </span>
+                      </span>
                     </Link>
                   ))
                 : null,

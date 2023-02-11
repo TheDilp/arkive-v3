@@ -104,9 +104,12 @@ export type EdgeType = {
   fontFamily: string;
 
   zIndex: number;
+
+  parentId: string;
   source_id: string;
   target_id: string;
-  parentId: string;
+  source: NodeType;
+  target: NodeType;
 };
 export interface BoardType extends BaseItemType {
   defaultNodeShape: NodeShape;
