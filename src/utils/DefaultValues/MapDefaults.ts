@@ -7,7 +7,6 @@ export const DefaultMap: DefaultMapType = {
   parentId: null,
   icon: "mdi:map",
   isPublic: false,
-  sort: 0,
   tags: [],
   title: "New Map",
 };

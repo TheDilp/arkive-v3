@@ -9,7 +9,6 @@ export const DefaultDocument: DefaultDocumentType = {
   parentId: null,
   properties: [],
   isPublic: false,
-  sort: 0,
   tags: [],
   template: false,
   title: "New Document",

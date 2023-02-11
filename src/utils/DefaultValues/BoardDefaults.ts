@@ -6,7 +6,6 @@ export const DefaultBoard: DefaultBoardType = {
   folder: false,
   isPublic: false,
   expanded: false,
-  sort: 0,
   parentId: null,
   tags: [],
   defaultNodeShape: "rectangle",

@@ -35,7 +35,7 @@ export type MapCreateType = Partial<Omit<MapType, "project_id">> & {
   project_id: string;
 };
 
-export type DefaultMapType = Omit<MapType, "id" | "project_id" | "map_layers" | "map_pins">;
+export type DefaultMapType = Omit<MapType, "id" | "project_id" | "map_layers" | "map_pins" | "sort">;
 
 export type MapPinCreateType = Partial<Omit<MapPinType, "parent">>;
 export type DefaultMapPinType = Omit<MapPinType, "id">;
