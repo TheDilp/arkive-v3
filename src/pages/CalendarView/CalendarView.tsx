@@ -86,17 +86,19 @@ function DayNumber({
   month,
   year,
   isFiller,
+  isReadOnly,
 }: {
   dayNumber: number;
   month: number;
   year: number;
   isFiller?: boolean;
+  isReadOnly?: boolean;
 }) {
   const [, setDrawer] = useAtom(DrawerAtom);
   return (
     <span className={`${isFiller ? "text-zinc-800" : ""} flex select-none items-center p-1`}>
       {dayNumber + 1}
-      {!isFiller ? (
+      {!isFiller && !isReadOnly ? (
         <span className="ml-auto opacity-0 transition-all duration-100 hover:text-sky-400 group-hover:opacity-100">
           <Icon
             icon="mdi:plus"
@@ -117,9 +119,9 @@ function DayNumber({
   );
 }
 
-export default function CalendarView() {
+export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
   const { item_id } = useParams();
-  const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars");
+  const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars", {}, isReadOnly);
 
   const [, setDrawer] = useAtom(DrawerAtom);
   const [date, setDate] = useState<{ month: number; year: number; era: EraType | null }>({ month: 0, year: 1, era: null });
@@ -144,7 +146,6 @@ export default function CalendarView() {
       else setDate({ year: 1, month: 0, era: era || null });
     }
   }, [item_id, calendar, era]);
-
   if (isLoading) return <LoadingScreen />;
   return (
     <div className="flex h-full w-full max-w-full flex-col">
@@ -208,22 +209,30 @@ export default function CalendarView() {
           />
         </span>
         <span className="w-fit select-none truncate text-base italic">{date?.era ? `(${date.era.title})` : null}</span>
-        <span className="ml-auto flex">
-          <Button
-            className="p-button-text"
-            onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "eras" })}
-            tooltip="Add eras"
-            tooltipOptions={{ position: "left" }}>
-            <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon="ph:scroll-thin" />
-          </Button>
-          <Button
-            className="p-button-text"
-            onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "months" })}
-            tooltip="Create months"
-            tooltipOptions={{ position: "left" }}>
-            <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon="ph:calendar-plus-thin" />
-          </Button>
-        </span>
+        {!isReadOnly ? (
+          <span className="ml-auto flex">
+            <Button
+              className="p-button-text"
+              onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "eras" })}
+              tooltip="Add eras"
+              tooltipOptions={{ position: "left" }}>
+              <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon="ph:scroll-thin" />
+            </Button>
+            <Button
+              className="p-button-text"
+              onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "months" })}
+              tooltip="Create months"
+              tooltipOptions={{ position: "left" }}>
+              <Icon
+                className="cursor-pointer transition-colors hover:text-sky-400"
+                fontSize={28}
+                icon="ph:calendar-plus-thin"
+              />
+            </Button>
+          </span>
+        ) : (
+          <div className="ml-auto" />
+        )}
       </h2>
       <div className="h-full overflow-hidden">
         {calendar ? (
@@ -232,9 +241,9 @@ export default function CalendarView() {
               <div
                 className="grid h-full w-full content-start overflow-auto"
                 style={{
-                  gridTemplateColumns: `repeat(${calendar.days.length}, minmax(9rem, 1fr))`,
+                  gridTemplateColumns: `repeat(${calendar?.days?.length || 0}, minmax(9rem, 1fr))`,
                 }}>
-                {calendar.days.map((day, index) => (
+                {calendar?.days?.map((day, index) => (
                   <div
                     key={day}
                     className="group col-span-1 h-min border-b border-zinc-700 text-white"
@@ -246,8 +255,10 @@ export default function CalendarView() {
                 ))}
                 {[
                   ...Array(
-                    getStartingDayForMonth(calendar?.months, date.year, date.month, calendar?.days.length) %
-                      calendar.days.length,
+                    calendar?.days?.length
+                      ? getStartingDayForMonth(calendar?.months, date?.year, date?.month, calendar?.days?.length) %
+                          calendar.days.length
+                      : 0,
                   ).keys(),
                 ]
                   .reverse()
@@ -262,6 +273,7 @@ export default function CalendarView() {
                         key={day}
                         dayNumber={getFillerDayNumber(calendar.months, date.month, day)}
                         isFiller
+                        isReadOnly={isReadOnly}
                         month={date.month}
                         year={date.year}
                       />
@@ -274,9 +286,10 @@ export default function CalendarView() {
                     onKeyDown={() => {}}
                     role="button"
                     tabIndex={-1}>
-                    <DayNumber key={day} dayNumber={day} month={date.month} year={date.year} />
+                    <DayNumber key={day} dayNumber={day} isReadOnly={isReadOnly} month={date.month} year={date.year} />
                     <CalendarEvent
                       index={index}
+                      isReadOnly={isReadOnly}
                       monthEvents={calendar?.events?.filter((event) => event.month === date.month) || []}
                       year={date.year}
                     />

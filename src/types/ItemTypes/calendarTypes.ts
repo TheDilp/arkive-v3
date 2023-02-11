@@ -51,6 +51,8 @@ export type EventType = {
   hours?: number;
   minutes?: number;
 
+  isPublic: boolean;
+
   erasId: string;
   calendarsId: string | null;
 

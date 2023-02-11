@@ -593,32 +593,39 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
             });
         },
       },
-      // {
-      //   label: "Toggle Public",
-      //   icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
-      //   command: () => {
-      //     if (cmType?.data && "isPublic" in cmType.data) {
-      //       updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
-      //     }
-      //   },
-      // },
+      {
+        label: "Toggle Public",
+        icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data) {
+            updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+          }
+        },
+      },
 
       { separator: true },
-      // {
-      //   label: "View Public Screen",
-      //   icon: "pi pi-fw pi-external-link",
-      //   command: () => {
-      //     if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
-      //       toaster("warning", "Screen is set to private.");
-      //       return;
-      //     }
-      //     if (cmType.data?.id) navigate(`/view/screens/${cmType.data?.id}`);
-      //   },
-      // },
-      // {
-      //   label: "Copy Public URL",
-      //   icon: "pi pi-fw pi-link",
-      // },
+      {
+        label: "View Public Calendar",
+        icon: "pi pi-fw pi-external-link",
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data && !cmType?.data?.isPublic) {
+            toaster("warning", "Calendar is set to private.");
+            return;
+          }
+          if (cmType.data?.id) navigate(`/view/calendars/${cmType.data?.id}`);
+        },
+      },
+      {
+        label: "Copy Public URL",
+        icon: "pi pi-fw pi-link",
+        command: () => {
+          if (navigator && navigator.clipboard) {
+            navigator.clipboard.writeText(`${window.location.host}/view/calendars/${cmType?.data?.id}`).then(() => {
+              toaster("success", "URL copied! 🔗");
+            });
+          }
+        },
+      },
       {
         label: "Delete Calendar",
         icon: "pi pi-fw pi-trash",

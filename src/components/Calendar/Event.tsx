@@ -11,6 +11,7 @@ type Props = {
   monthEvents: EventType[];
   index: number;
   year: number;
+  isReadOnly?: boolean;
 };
 
 function openOtherEvent(setDrawer: (update: SetStateAction<DrawerAtomType>) => void, event: EventType) {
@@ -43,7 +44,7 @@ function OtherEvents({ events, openEvent }: { events: EventType[]; openEvent: (e
   );
 }
 
-export default function CalendarEvent({ monthEvents, index, year }: Props) {
+export default function CalendarEvent({ monthEvents, index, year, isReadOnly }: Props) {
   const sortedEvents = [...monthEvents].sort(sortEvents);
   const daysEvents = sortedEvents.filter((event) => event.day === index + 1 && event.year === year);
   const visibleEvents = daysEvents.slice(0, 5);
@@ -62,7 +63,7 @@ export default function CalendarEvent({ monthEvents, index, year }: Props) {
                   show: true,
                   type: "events",
                   data: event,
-                  exceptions: { eventDescription: true },
+                  exceptions: { eventDescription: true, isReadOnly },
                   drawerSize: "md",
                 })
               }

@@ -11,6 +11,7 @@ export type DrawerAtomType = {
     fromTemplate?: boolean;
     createTemplate?: boolean;
     eventDescription?: boolean;
+    isReadOnly?: boolean;
   };
   data?: {
     [key: string]: any;

@@ -3,7 +3,8 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Sidebar as PrimeDrawer } from "primereact/sidebar";
-import { Dispatch, lazy, SetStateAction, Suspense } from "react";
+import { Dispatch, lazy, SetStateAction, Suspense, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -57,13 +58,13 @@ function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void
 export default function Drawer() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
-  // const { type, item_id } = useParams();
+  const { type, item_id } = useParams();
 
-  // useEffect(() => {
-  //   return () => {
-  //     setDrawer(DefaultDrawer);
-  //   };
-  // }, [type, item_id]);
+  useEffect(() => {
+    return () => {
+      setDrawer(DefaultDrawer);
+    };
+  }, [type, item_id]);
 
   return (
     <PrimeDrawer
