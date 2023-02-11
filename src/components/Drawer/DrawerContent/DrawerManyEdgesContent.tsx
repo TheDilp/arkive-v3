@@ -155,7 +155,7 @@ export default function DrawerManyEdgesContent() {
           onClick={() => {
             if (!boardRef) return;
             updateManyEdges({
-              lineStyle: localItem.lineStyle,
+              width: localItem.width,
             });
           }}
           type="submit"

@@ -27,6 +27,7 @@ import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
+import DrawerSection from "../DrawerSection";
 
 export default function DrawerNodeContent() {
   const { project_id, item_id } = useParams();
@@ -35,7 +36,7 @@ export default function DrawerNodeContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id as string, "documents"]);
   const { data: allDocumentsData } = useGetAllItems<DocumentType>(project_id as string, "documents", { enabled: !documents });
-  const { mutate: updateNodeMutation } = useUpdateSubItem(item_id as string, "nodes", "boards");
+  const { mutate: updateNodeMutation, isLoading: isUpdating } = useUpdateSubItem(item_id as string, "nodes", "boards");
   const { data: images } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<NodeType | undefined>(drawer?.data as NodeType);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
@@ -107,6 +108,17 @@ export default function DrawerNodeContent() {
       <div className="flex w-full flex-1 flex-col gap-y-2 overflow-y-auto">
         <h2 className="text-center font-Lato text-2xl font-medium">{localItem?.label}</h2>
         <div className="flex w-full flex-col gap-y-2">
+          {/* Label text */}
+          <DrawerSection title="Node label">
+            <InputText
+              autoComplete="false"
+              className="w-full"
+              onChange={(e) => handleChange({ name: "label", value: e.target.value })}
+              onKeyDown={handleEnter}
+              placeholder="Node Label"
+              value={localItem.label}
+            />
+          </DrawerSection>
           <div className="w-full ">
             <span className="w-full text-sm text-zinc-400">Node shape</span>
             <Dropdown
@@ -183,19 +195,6 @@ export default function DrawerNodeContent() {
         <hr />
         <div className="flex w-full flex-col gap-y-2">
           <div className="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-2">
-            {/* Label text */}
-            <div className="flex w-full flex-wrap">
-              <span className="w-full text-sm text-zinc-400">Node label</span>
-
-              <InputText
-                autoComplete="false"
-                className="w-full"
-                onChange={(e) => handleChange({ name: "label", value: e.target.value })}
-                onKeyDown={handleEnter}
-                placeholder="Node Label"
-                value={localItem.label}
-              />
-            </div>
             {/* Label font & size */}
             <div className="flex w-full flex-nowrap gap-x-1">
               <div className="flex w-1/2 flex-col">
@@ -330,9 +329,11 @@ export default function DrawerNodeContent() {
       <div className="w-full">
         <Button
           className="p-button-outlined p-button-success w-full"
+          disabled={isUpdating}
           icon="pi pi-save"
           iconPos="right"
           label="Save Node"
+          loading={isUpdating}
           onClick={() => {
             updateNode();
 

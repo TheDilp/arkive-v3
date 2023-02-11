@@ -409,9 +409,11 @@ export default function DrawerEdgeContent() {
       <div className="justify-content-end flex w-full">
         <Button
           className="p-button-outlined p-button-success w-full"
+          disabled={updateEdgeMutation.isPaused}
           icon="pi pi-save"
           iconPos="right"
           label="Save Edge"
+          loading={updateEdgeMutation.isLoading}
           onClick={() => {
             if (changedData) {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
