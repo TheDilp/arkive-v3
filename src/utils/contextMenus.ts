@@ -412,12 +412,17 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         icon: "pi pi-fw pi-copy",
         label: "Covert to Template",
       },
-      {
-        icon: "pi pi-fw pi-download",
-        label: "Export JSON",
-        // command: () => {},
-      },
+
       { separator: true },
+      {
+        label: "Toggle Public",
+        icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data) {
+            updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+          }
+        },
+      },
       {
         icon: "pi pi-fw pi-external-link",
         label: "View Public Document",
@@ -432,7 +437,13 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         icon: "pi pi-fw pi-link",
         label: "Copy Public URL",
-        // command: () => {},
+        command: () => {
+          if (navigator && navigator.clipboard) {
+            navigator.clipboard.writeText(`${window.location.host}/view/documents/${cmType?.data?.id}`).then(() => {
+              toaster("success", "URL copied! 🔗");
+            });
+          }
+        },
       },
       {
         command: () =>
