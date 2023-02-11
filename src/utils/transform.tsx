@@ -65,6 +65,7 @@ export function getIconForFullSearch(
   if ("icon" in item) icon = item.icon || "mdi:file";
   if ("text" in item) icon = "mdi:map_marker";
   if ("label" in item) icon = "ph:graph-light";
+  if ("calendarsId" in item) icon = "ph:flag-thin";
 
   return icon;
 }
