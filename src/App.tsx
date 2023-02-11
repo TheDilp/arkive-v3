@@ -88,6 +88,7 @@ function App() {
                   <Route element={<FolderView />} path="" />
                   <Route element={<FolderView />} path="folder/:item_id" />
                   <Route element={<ContentView />} path=":item_id" />
+                  <Route element={<ContentView />} path=":item_id/:subitem_id" />
                 </Route>
 
                 <Route path="settings/*">

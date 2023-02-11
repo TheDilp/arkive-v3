@@ -49,7 +49,6 @@ export default function BoardView({ isReadOnly }: Props) {
     board: board as BoardType,
     boardContext,
   });
-  console.log(isReadOnly);
   const createNodeMutation = useCreateSubItem<NodeType>(item_id as string, "nodes", "boards");
   const createEdgeMutation = useCreateSubItem<EdgeType>(item_id as string, "edges", "boards");
   const makeEdgeCallback = useCallback(

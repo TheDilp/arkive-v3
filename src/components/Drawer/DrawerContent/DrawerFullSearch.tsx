@@ -14,7 +14,17 @@ import { BoardReferenceAtom, DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
 
-const SearchDefault = { documents: [], maps: [], boards: [], pins: [], nodes: [], edges: [], screens: [], sections: [] };
+const SearchDefault = {
+  documents: [],
+  maps: [],
+  boards: [],
+  pins: [],
+  nodes: [],
+  edges: [],
+  screens: [],
+  sections: [],
+  events: [],
+};
 
 function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core) {
   if (subitem_id === id) {
@@ -58,6 +68,7 @@ export default function DrawerFullSearch() {
               edges: [];
               screens: [];
               sections: [];
+              events: [];
             }) => setResults(data),
           },
         );
@@ -137,7 +148,7 @@ export default function DrawerFullSearch() {
                       }}
                       to={getLinkForFullSearch(
                         item.id,
-                        item.parentId as string,
+                        "parentId" in item ? (item.parentId as string) : (item.calendarsId as string),
                         key as AvailableSearchResultTypes,
                         project_id as string,
                         "folder" in item ? item.folder : false,

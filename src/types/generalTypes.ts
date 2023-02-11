@@ -2,7 +2,7 @@ import React from "react";
 import { RemirrorJSON } from "remirror";
 
 import { BoardType, EdgeType, NodeType } from "./ItemTypes/boardTypes";
-import { CalendarType, MonthType } from "./ItemTypes/calendarTypes";
+import { CalendarType, EventType, MonthType } from "./ItemTypes/calendarTypes";
 import { DictionaryType, WordType } from "./ItemTypes/dictionaryTypes";
 import { DocumentType } from "./ItemTypes/documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
@@ -28,7 +28,16 @@ export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 export type AllItemsType = DocumentType | MapType | BoardType | ScreenType | DictionaryType | CalendarType;
 export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType | SectionType | CardType | WordType | MonthType;
 
-export type AvailableSearchResultTypes = "documents" | "maps" | "boards" | "pins" | "nodes" | "edges" | "screens" | "sections";
+export type AvailableSearchResultTypes =
+  | "documents"
+  | "maps"
+  | "boards"
+  | "pins"
+  | "nodes"
+  | "edges"
+  | "screens"
+  | "sections"
+  | "events";
 
 export type IconSelectMenuType = {
   // eslint-disable-next-line no-unused-vars
@@ -126,6 +135,7 @@ export type FullSearchResults = {
   pins: MapPinType[];
   screens: ScreenType[];
   sections: SectionType[];
+  events: EventType[];
 };
 
 export type MemberType = {

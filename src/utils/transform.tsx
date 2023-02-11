@@ -3,6 +3,7 @@ import { ColorPickerValueType } from "primereact/colorpicker";
 
 import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
 import { BoardType, EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
+import { EventType } from "../types/ItemTypes/calendarTypes";
 import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { MapPinType, MapType } from "../types/ItemTypes/mapTypes";
 import { ScreenType, SectionType } from "../types/ItemTypes/screenTypes";
@@ -52,11 +53,12 @@ export function getLinkForFullSearch(
   if (type === "pins") return `/project/${project_id}/maps/${parentId}/${id}`;
   if (type === "nodes" || type === "edges") return `/project/${project_id}/boards/${parentId}/${id}`;
   if (type === "sections") return `/project/${project_id}/screens/${parentId}/${id}`;
+  if (type === "events") return `/project/${project_id}/calendars/${parentId}/${id}`;
   return "./";
 }
 
 export function getIconForFullSearch(
-  item: DocumentType | MapType | MapPinType | BoardType | NodeType | EdgeType | ScreenType | SectionType,
+  item: DocumentType | MapType | MapPinType | BoardType | NodeType | EdgeType | ScreenType | SectionType | EventType,
 ) {
   if ("folder" in item && item.folder) return "mdi:folder";
   let icon = "mdi:file";
