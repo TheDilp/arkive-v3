@@ -37,6 +37,7 @@ export type AvailableSearchResultTypes =
   | "edges"
   | "screens"
   | "sections"
+  | "calendars"
   | "events";
 
 export type IconSelectMenuType = {
@@ -135,6 +136,7 @@ export type FullSearchResults = {
   pins: MapPinType[];
   screens: ScreenType[];
   sections: SectionType[];
+  calendars: CalendarType[];
   events: EventType[];
 };
 
