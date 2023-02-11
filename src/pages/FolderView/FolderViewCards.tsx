@@ -30,6 +30,7 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
                 // @ts-ignore
                 image={item?.image || undefined}
                 isFolder={item.folder}
+                isPublic={item.isPublic}
                 title={item.title}
                 type={type}
               />

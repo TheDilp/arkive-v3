@@ -548,7 +548,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         icon: "pi pi-fw pi-link",
         command: () => {
           if (navigator && navigator.clipboard) {
-            navigator.clipboard.writeText(`${window.location.host}/view/${project_id}/boards/${cmType?.data?.id}`).then(() => {
+            navigator.clipboard.writeText(`${window.location.host}/view/boards/${cmType?.data?.id}`).then(() => {
               toaster("success", "URL copied! 🔗");
             });
           }
