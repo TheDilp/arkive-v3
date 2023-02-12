@@ -72,7 +72,7 @@ export interface TagSettingsType extends TagType {
   map_pins: Pick<MapPinType, "id" | "text" | "icon">[];
   boards: Pick<BoardType, "id" | "title" | "icon" | "folder">[];
   nodes: Pick<NodeType, "id" | "label" | "parentId">[];
-  edges: Pick<EdgeType, "id" | "label" | "parentId">[];
+  edges: Pick<EdgeType, "id" | "label" | "parentId" | "source" | "target">[];
   screens: Pick<ScreenType, "id" | "title" | "icon" | "folder">[];
 }
 

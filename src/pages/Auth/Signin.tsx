@@ -9,21 +9,25 @@ import { toaster } from "../../utils/toast";
 
 export default function Signin() {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const navigate = useNavigate();
   function changeLoginData({ name, value }: { name: string; value: string }) {
     setLoginData((prev) => ({ ...prev, [name]: value }));
   }
   async function loginUser() {
+    setLoading(true);
     if (loginData.email && loginData.password) {
       signInWithEmailAndPassword(auth, loginData.email, loginData.password)
         .then(() => {
+          setLoading(false);
           navigate("/");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           toaster("error", `${errorCode}: ${errorMessage}`);
+          setLoading(false);
         });
     } else {
       if (!loginData.email) toaster("error", "No email entered.");
@@ -62,9 +66,11 @@ export default function Signin() {
       </Link>
       <Button
         className="p-button-success p-button-outlined"
+        disabled={loading}
         icon="pi pi-sign-in"
         iconPos="right"
         label="Sign in"
+        loading={loading}
         onClick={async () => loginUser()}
       />
     </div>

@@ -37,7 +37,7 @@ function DeleteColumn(item: TagType, deleteTags: UseMutateFunction<any, unknown,
 function ExpandedSection(tag: TagSettingsType) {
   if (!tag) return null;
   const { documents, maps, boards, nodes, edges } = tag;
-
+  console.log(edges);
   return (
     <div className="ml-28 flex w-full flex-wrap gap-y-3">
       <h4 className="w-full text-xl font-semibold">Items containing this tag</h4>
@@ -106,13 +106,15 @@ function ExpandedSection(tag: TagSettingsType) {
           <Icon icon="ph:graph-light" />
           Edges
         </h5>
+
         {edges.map((edge) => (
           <Link
             key={edge.id}
             className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
             to={`../../boards/${edge.parentId}/${edge.id}`}>
             <Icon icon="ph:graph-light" />
-            {edge.label || "Unlabeled edge"}
+            {edge.label || "Unlabeled edge"}{" "}
+            {`(${edge?.source?.label || "Unlabeled node"} - ${edge?.target?.label || "Unlabeled node"})`}
           </Link>
         ))}
       </div>
