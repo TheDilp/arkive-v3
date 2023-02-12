@@ -346,7 +346,7 @@ export default function BoardView({ isReadOnly }: Props) {
         // @ts-ignore
         stylesheet={cytoscapeStylesheet}
       />
-      <BoardQuickBar />
+      {isReadOnly ? null : <BoardQuickBar />}
     </div>
   );
 }
