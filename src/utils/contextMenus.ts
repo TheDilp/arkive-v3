@@ -324,9 +324,14 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       { separator: true },
       {
         command: () =>
-          deleteItem("Are you sure you want to delete this folder?", () => {
-            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
-          }),
+          deleteItem(
+            "Are you sure you want to delete this folder? This will delete all items within the folder!",
+            () => {
+              if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+            },
+            () => {},
+            "Delete folder and ALL of its children.",
+          ),
         icon: "pi pi-fw pi-trash",
         label: "Delete Folder",
       },
