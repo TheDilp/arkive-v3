@@ -197,15 +197,17 @@ export default function BoardQuickBar() {
       {/* Color preset button */}
       <i className="pi pi-fw pi-palette colorPresets cursor-pointer hover:text-blue-300" />
       {/* Color picker square */}
-      <ColorInput
-        color={pickerColor}
-        hasInput={false}
-        name="pickerColor"
-        onChange={({ value }) => {
-          setPickerColor(value);
-          debouncedColorPick(value);
-        }}
-      />
+      <div>
+        <ColorInput
+          color={pickerColor}
+          hasInput={false}
+          name="pickerColor"
+          onChange={({ value }) => {
+            setPickerColor(value);
+            debouncedColorPick(value);
+          }}
+        />
+      </div>
     </div>
   );
 }

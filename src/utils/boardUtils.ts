@@ -500,3 +500,4 @@ export function mapEdges(edges: EdgeType[], isReadOnly?: boolean) {
     },
   }));
 }
+export const edgeArrowTypes = ["source", "target", "midSource", "midTarget"];

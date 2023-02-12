@@ -14,10 +14,10 @@ type Props = {
 
 export default function ColorInput({ name, color, onChange, hasInput, onEnter }: Props) {
   return (
-    <div className="relative flex w-min items-center justify-between">
+    <div className="relative flex w-full items-center justify-between">
       <Tooltip
         content={
-          <div className="w-full max-w-full">
+          <div className="w-full">
             <HexColorPicker
               color={color}
               onChange={(newColor) => {

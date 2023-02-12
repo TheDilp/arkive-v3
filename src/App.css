@@ -21,6 +21,11 @@
 .p-sidebar {
   @apply bg-[#27272A] !important;
 }
+.mainDrawer {
+  .p-tabview-nav-link {
+    @apply border-b bg-zinc-800 !important;
+  }
+}
 .treeSidebar {
   @apply flex max-h-full flex-1 flex-col !important;
 }

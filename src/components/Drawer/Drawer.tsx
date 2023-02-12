@@ -68,7 +68,7 @@ export default function Drawer() {
 
   return (
     <PrimeDrawer
-      className={`p-sidebar-${drawer.drawerSize || "sm"} max-h-full overflow-y-auto`}
+      className={`p-sidebar-${drawer.drawerSize || "sm"} mainDrawer max-h-full overflow-y-auto`}
       dismissable={false}
       icons={() => DrawerIcons(setDrawer)}
       modal={false}
