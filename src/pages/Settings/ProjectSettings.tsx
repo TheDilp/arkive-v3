@@ -1,12 +1,14 @@
 import { useAtom } from "jotai";
+import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
+import DrawerSection from "../../components/Drawer/DrawerSection";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import { useGetAllImages } from "../../CRUD/ItemsCRUD";
@@ -33,12 +35,10 @@ export default function ProjectSettings() {
   }, [data]);
   const updateProject = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
-  console.log(userData);
   if (!userData?.permission || userData.permission !== "owner") {
     toaster("info", "You do not have permissions to view the project settings.");
     return <Navigate to="/" />;
   }
-
   if (isLoading || !userData) return <ProgressSpinner />;
   return (
     <div className="flex h-[95vh] flex-col gap-y-4 overflow-y-auto p-4">
@@ -46,9 +46,10 @@ export default function ProjectSettings() {
         <h2 className="font-Merriweather text-2xl font-bold">{data?.title} - Settings</h2>
       </div>
       <h3 className="text-lg font-semibold">Update Project Name</h3>
-      <div className="flex gap-x-4">
+      <div className="flex w-full max-w-lg gap-x-4">
         <InputText
           className="w-2/3"
+          // @ts-ignore
           onChange={(e) => setLocalItem((prev) => ({ ...prev, id: data?.id as string, title: e.target.value }))}
           onKeyDown={(e) => {
             if (e.key === "Enter") updateProject.mutate({ id: project_id as string, title: localItem?.title });
@@ -87,7 +88,7 @@ export default function ProjectSettings() {
           virtualScrollerOptions={virtualScrollerSettings}
         />
       </div>
-      <hr />
+      <hr className="border-zinc-700" />
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Add to project</h3>
         <h4 className="text-base font-semibold">Add another user to a project with selected permissions</h4>
@@ -121,8 +122,25 @@ export default function ProjectSettings() {
             }}
           />
         </div>
+        <div className="flex w-full max-w-lg flex-col">
+          <DrawerSection title="Current Members">
+            {data?.members?.length
+              ? data.members.map((m) => (
+                  <div key={m.user_id} className="flex w-full items-center gap-x-2">
+                    <Avatar
+                      icon="pi pi-user"
+                      image={m.member.image || `https://avatars.dicebear.com/api/bottts/${m.member?.id}.svg`}
+                    />
+                    {m.member.nickname}
+                    <Button className="p-button-danger p-button-text p-button-rounded" icon="pi pi-trash" iconPos="right" />
+                  </div>
+                ))
+              : null}
+          </DrawerSection>
+        </div>
       </div>
-      <hr />
+      <hr className="border-zinc-700" />
+
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Export Project</h3>
         <h4 className="text-base font-semibold">
@@ -136,7 +154,8 @@ export default function ProjectSettings() {
         <h4 className="text-base font-semibold">This button exports only images that are related to this project.</h4>
         <Button className="p-button-outlined w-fit" disabled icon="pi pi-download" iconPos="right" label="Export Images" />
       </div>
-      <hr />
+      <hr className="border-zinc-700" />
+
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Delete Project</h3>
         <h4 className="text-base font-bold text-red-600">

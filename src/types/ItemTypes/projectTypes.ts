@@ -5,5 +5,5 @@ export type ProjectType = {
   title: string;
   image?: string;
   ownerId: string;
-  members: MemberType;
+  members: MemberType[];
 };

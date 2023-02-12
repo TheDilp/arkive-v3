@@ -1,4 +1,3 @@
-import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
@@ -9,18 +8,15 @@ import { useGetUser, useUpdateProfile } from "../../CRUD/AuthCRUD";
 import { useAuth } from "../../hooks/useAuth";
 import { useHandleChange } from "../../hooks/useGetChanged";
 import { UserType } from "../../types/userTypes";
-import { UserAtom } from "../../utils/Atoms/atoms";
 
 export default function Profile() {
   const user = useAuth();
-  const [, setUserAtom] = useAtom(UserAtom);
   const [localData, setLocalData] = useState<UserType | null>(null);
   const { isFetching } = useGetUser(
     user as string,
     {
       enabled: !!user,
       onSuccess: (data) => {
-        setUserAtom(data as UserType);
         setLocalData(data as UserType);
       },
     },
