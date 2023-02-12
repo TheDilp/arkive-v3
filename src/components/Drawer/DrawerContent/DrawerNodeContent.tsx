@@ -112,6 +112,7 @@ export default function DrawerNodeContent() {
           <DrawerSection title="Node label">
             <InputText
               autoComplete="false"
+              autoFocus
               className="w-full"
               onChange={(e) => handleChange({ name: "label", value: e.target.value })}
               onKeyDown={handleEnter}
@@ -125,8 +126,12 @@ export default function DrawerNodeContent() {
               className="w-full"
               filter
               onChange={(e) => handleChange({ name: "type", value: e.value })}
+              onHide={() => {
+                if (changedData) updateNode();
+              }}
               options={boardNodeShapes}
               placeholder="Node Shape"
+              resetFilterOnHide
               value={localItem.type}
             />
           </div>
@@ -135,9 +140,15 @@ export default function DrawerNodeContent() {
             <Dropdown
               filter
               itemTemplate={ImageDropdownItem}
-              onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? null : e.value })}
+              onChange={(e) => {
+                handleChange({ name: "image", value: e.value === "None" ? null : e.value });
+              }}
+              onHide={() => {
+                if (changedData) updateNode();
+              }}
               options={["None", ...(images || [])] || []}
               placeholder="Select image"
+              resetFilterOnHide
               value={localItem}
               valueTemplate={ImageDropdownValue({ image: localItem?.image })}
               virtualScrollerOptions={virtualScrollerSettings}
@@ -171,7 +182,12 @@ export default function DrawerNodeContent() {
           </div>
           <div className="flex w-full flex-wrap items-center justify-between">
             <span className="w-full text-sm text-zinc-400">Node color</span>
-            <ColorInput color={localItem.backgroundColor} name="backgroundColor" onChange={handleChange} />
+            <ColorInput
+              color={localItem.backgroundColor}
+              name="backgroundColor"
+              onChange={handleChange}
+              onEnter={() => updateNode()}
+            />
           </div>
           <div className="w-full">
             <span className="pl-1">
@@ -223,7 +239,7 @@ export default function DrawerNodeContent() {
             {/* Label color */}
             <div className="flex w-full flex-wrap items-center justify-between">
               <span className="w-full text-sm text-zinc-400">Label color</span>
-              <ColorInput color={localItem.fontColor} name="fontColor" onChange={handleChange} />
+              <ColorInput color={localItem.fontColor} name="fontColor" onChange={handleChange} onEnter={() => updateNode()} />
             </div>
             {/* Aligns */}
             <div className="flex w-full flex-nowrap gap-x-1">

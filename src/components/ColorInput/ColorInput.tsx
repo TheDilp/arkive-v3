@@ -9,9 +9,10 @@ type Props = {
   name: string;
   hasInput?: boolean;
   onChange: ({ name, value }: { name: string; value: string }) => void;
+  onEnter?: () => void;
 };
 
-export default function ColorInput({ name, color, onChange, hasInput }: Props) {
+export default function ColorInput({ name, color, onChange, hasInput, onEnter }: Props) {
   return (
     <div className="relative flex w-min items-center justify-between">
       <Tooltip
@@ -43,7 +44,13 @@ export default function ColorInput({ name, color, onChange, hasInput }: Props) {
       </Tooltip>
 
       {hasInput === undefined || hasInput ? (
-        <InputText onChange={(e) => onChange({ name, value: `#${e.target.value.replaceAll("#", "")}` })} value={color} />
+        <InputText
+          onChange={(e) => onChange({ name, value: `#${e.target.value.replaceAll("#", "")}` })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && onEnter) onEnter();
+          }}
+          value={color}
+        />
       ) : null}
     </div>
   );

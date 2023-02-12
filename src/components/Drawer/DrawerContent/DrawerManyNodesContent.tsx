@@ -25,7 +25,6 @@ import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
-import Tags from "../../Tags/Tags";
 
 export default function DrawerManyNodesContent() {
   const { project_id, item_id } = useParams();
@@ -106,17 +105,22 @@ export default function DrawerManyNodesContent() {
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-gray-400">Width</span>
         <InputNumber
-          inputClassName="w-6rem"
           max={5000}
-          min={10}
+          min={1}
           onChange={(e) =>
             setLocalItem((prev) => ({
               ...prev,
               width: e.value as number,
             }))
           }
+          onKeyDown={(e) => {
+            if (!boardRef) return;
+            if (e.key === "Enter")
+              updateManyNodes({
+                width: localItem.width,
+              });
+          }}
           showButtons
-          step={10}
           value={localItem.width}
         />
         <Button
@@ -137,15 +141,21 @@ export default function DrawerManyNodesContent() {
         <InputNumber
           inputClassName="w-6rem"
           max={5000}
-          min={10}
+          min={1}
           onChange={(e) =>
             setLocalItem((prev) => ({
               ...prev,
               height: e.value as number,
             }))
           }
+          onKeyDown={(e) => {
+            if (!boardRef) return;
+            if (e.key === "Enter")
+              updateManyNodes({
+                height: localItem.height,
+              });
+          }}
           showButtons
-          step={10}
           value={localItem.height}
         />
         <Button
@@ -169,6 +179,11 @@ export default function DrawerManyNodesContent() {
             color={localItem.backgroundColor}
             name="backgroundColor"
             onChange={({ name, value }) => setLocalItem((prev) => ({ ...prev, [name]: value }))}
+            onEnter={() =>
+              updateManyNodes({
+                backgroundColor: localItem.backgroundColor,
+              })
+            }
           />
         </div>
         <Button
@@ -198,6 +213,13 @@ export default function DrawerManyNodesContent() {
                 backgroundOpacity: e.value as number,
               }))
             }
+            onKeyDown={(e) => {
+              if (!boardRef) return;
+              if (e.key === "Enter")
+                updateManyNodes({
+                  backgroundOpacity: localItem.backgroundOpacity,
+                });
+            }}
             showButtons
             step={0.01}
             value={localItem.backgroundOpacity}
@@ -230,6 +252,13 @@ export default function DrawerManyNodesContent() {
               label: e.target.value,
             }))
           }
+          onKeyDown={(e) => {
+            if (!boardRef) return;
+            if (e.key === "Enter")
+              updateManyNodes({
+                label: localItem.label,
+              });
+          }}
           placeholder="Node Label"
           value={localItem.label}
         />
@@ -260,6 +289,7 @@ export default function DrawerManyNodesContent() {
               }))
             }
             options={BoardFontFamilies}
+            resetFilterOnHide
             value={localItem.fontFamily}
             valueTemplate={FontItemTemplate}
             virtualScrollerOptions={virtualScrollerSettings}
@@ -309,7 +339,7 @@ export default function DrawerManyNodesContent() {
         </div>
       </div>
       <div className="flex w-full flex-wrap justify-between">
-        <span className="w-full text-sm text-gray-400">Label Font Size</span>
+        <span className="w-full text-sm text-gray-400">Label Font Color</span>
         <div className="flex w-full justify-between">
           <div className="w-4/5">
             <ColorInput
@@ -465,6 +495,13 @@ export default function DrawerManyNodesContent() {
               zIndex: e.value as number,
             }))
           }
+          onKeyDown={(e) => {
+            if (!boardRef) return;
+            if (e.key === "Enter")
+              updateManyNodes({
+                zIndex: localItem.zIndex,
+              });
+          }}
           showButtons
           value={localItem.zIndex}
         />
@@ -476,27 +513,6 @@ export default function DrawerManyNodesContent() {
             if (!boardRef) return;
             updateManyNodes({
               zIndex: localItem.zIndex,
-            });
-          }}
-          type="submit"
-        />
-      </div>
-      <div className="flex w-full flex-wrap justify-between">
-        <div className="w-4/5">
-          <Tags
-            handleChange={({ value }) => setLocalItem((prev) => ({ ...prev, tags: value }))}
-            localItem={localItem}
-            type="edges"
-          />
-        </div>
-        <Button
-          className="p-button-square p-button-success p-button-outlined"
-          icon="pi pi-save"
-          iconPos="right"
-          onClick={() => {
-            if (!boardRef) return;
-            updateManyNodes({
-              tags: localItem.tags,
             });
           }}
           type="submit"
