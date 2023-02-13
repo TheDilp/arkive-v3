@@ -25,7 +25,11 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
         .filter((_, index) => index !== 0)
         .map((navItem) => (
           <Link key={navItem.icon} className="flex-1 no-underline" to={`../project/${id}/${navItem.navigate}`}>
-            <Tooltip content={navItem.tooltip.replace("_", " ")} target={`#${navItem.tooltip.replace("_", "")}`} />
+            <Tooltip
+              content={navItem.tooltip.replace("_", " ")}
+              position="bottom"
+              target={`#${navItem.tooltip.replace("_", "")}`}
+            />
             <div
               className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:text-sky-400"
               id={navItem.tooltip.replace("_", "")}>
