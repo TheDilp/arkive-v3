@@ -10,7 +10,7 @@ import StaticRender from "../../Editor/StaticRender";
 
 export default function DrawerEventDescription() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const { data: document, isLoading } = useGetItem<DocumentType>(drawer?.data?.documentsId, "documents", {
+  const { data: document, isFetching } = useGetItem<DocumentType>(drawer?.data?.documentsId, "documents", {
     enabled: !!drawer?.data?.documentsId,
   });
   return (
@@ -30,7 +30,7 @@ export default function DrawerEventDescription() {
       <hr className="my-2 border-zinc-700" />
       <div className="h-full overflow-y-auto">
         {document ? <StaticRender content={document.content as RemirrorJSON} /> : null}
-        {!document && !isLoading ? drawer?.data?.description : null}
+        {!document && !isFetching ? drawer?.data?.description : null}
       </div>
     </div>
   );
