@@ -109,7 +109,12 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
                             {...providedDraggable.dragHandleProps}
                             {...providedDraggable.draggableProps}
                             ref={providedDraggable.innerRef}>
-                            <SectionCard card={card} deleteCard={deleteCard} updateCard={updateCard} />
+                            <SectionCard
+                              card={card}
+                              cardSize={section.cardSize}
+                              deleteCard={deleteCard}
+                              updateCard={updateCard}
+                            />
                           </div>
                         )}
                       </Draggable>

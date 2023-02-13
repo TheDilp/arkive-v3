@@ -15,7 +15,6 @@ import { useHandleChange } from "../../../hooks/useGetChanged";
 import { BoardType, EdgeType } from "../../../types/ItemTypes/boardTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import {
-  boardEdgeCaps,
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
   boardEdgeTaxiDirections,
@@ -141,15 +140,7 @@ export default function DrawerEdgeContent() {
                   </div>
                 </div>
               )}
-              <div className="w-full">
-                <span className="w-full text-sm text-zinc-400">Line Cap</span>
-                <Dropdown
-                  className="w-full"
-                  onChange={(e) => handleChange({ name: "lineCap", value: e.value })}
-                  options={boardEdgeCaps}
-                  value={localItem.lineCap}
-                />
-              </div>
+
               <div className="flex w-full flex-wrap">
                 <span className="w-full text-sm text-zinc-400">Thickness</span>
                 <InputNumber

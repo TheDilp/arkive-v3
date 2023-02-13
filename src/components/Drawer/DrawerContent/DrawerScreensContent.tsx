@@ -17,7 +17,7 @@ import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
-import DrawerSectionTitle from "../DrawerSectionTitle";
+import DrawerSection from "../DrawerSection";
 
 function isDisabledSaveScreen(localItem: ScreenType | ScreenCreateType) {
   if (!localItem?.title) return true;
@@ -55,8 +55,7 @@ export default function DrawerScreensContent() {
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center font-Lato text-2xl">{screen ? `Edit ${screen.title}` : "Create New Screen"}</h2>
-      <div className="flex w-full flex-col">
-        <DrawerSectionTitle title="Section title" />
+      <DrawerSection title="Section title">
         <InputText
           autoFocus
           className="w-full"
@@ -81,16 +80,17 @@ export default function DrawerScreensContent() {
           placeholder="Screen Name"
           value={localItem?.title || ""}
         />
-      </div>
+      </DrawerSection>
       <div className="flex w-full flex-col">
-        <DrawerSectionTitle title="Section size" />
-        <Dropdown
-          name="sectionSize"
-          onChange={(e) => handleChange(e.target)}
-          options={SectionSizeOptions}
-          title="Section size"
-          value={localItem?.sectionSize}
-        />
+        <DrawerSection title="Section size">
+          <Dropdown
+            name="sectionSize"
+            onChange={(e) => handleChange(e.target)}
+            options={SectionSizeOptions}
+            title="Section size"
+            value={localItem?.sectionSize}
+          />
+        </DrawerSection>
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"

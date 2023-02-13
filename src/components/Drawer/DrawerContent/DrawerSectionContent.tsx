@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -12,9 +13,11 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { DefaultSection } from "../../../utils/DefaultValues/ScreenDefaults";
+import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
+import DrawerSection from "../DrawerSection";
 
 export default function DrawerSectionContent() {
   const queryClient = useQueryClient();
@@ -94,8 +97,7 @@ export default function DrawerSectionContent() {
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Section"}</h2>
-      <div className="flex w-full flex-col">
-        <span className="w-full text-sm text-zinc-400">Section title</span>
+      <DrawerSection title="Section title">
         <InputText
           autoFocus
           className="w-full"
@@ -110,7 +112,16 @@ export default function DrawerSectionContent() {
           title="Section title"
           value={localItem?.title || ""}
         />
-      </div>
+      </DrawerSection>
+      <DrawerSection title="Card height">
+        <Dropdown
+          name="cardSize"
+          onChange={(e) => handleChange(e.target)}
+          options={SectionSizeOptions}
+          title="Section size"
+          value={localItem?.cardSize}
+        />
+      </DrawerSection>
 
       <Button
         className="p-button-outlined p-button-success ml-auto"
