@@ -115,7 +115,6 @@ export interface BoardType extends BaseItemType {
   defaultNodeShape: NodeShape;
   defaultNodeColor: string;
   defaultEdgeColor: string;
-  defaultGrid: boolean;
   parent?: BoardType;
   nodes: NodeType[];
   edges: EdgeType[];
