@@ -5,6 +5,7 @@ import { EventType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { sortEvents } from "../../utils/calendarUtils";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { DocumentMentionTooltip } from "../Mention/DocumentMention";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
@@ -54,28 +55,32 @@ export default function CalendarEvent({ monthEvents, index, year, isReadOnly }: 
     <div className="flex flex-col gap-y-0.5 p-1">
       {monthEvents
         ? visibleEvents.map((event) => (
-            <div
+            <Tooltip
               key={event.id}
-              className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-200"
-              onClick={() =>
-                setDrawer({
-                  ...DefaultDrawer,
-                  show: true,
-                  type: "events",
-                  data: event,
-                  exceptions: { eventDescription: true, isReadOnly },
-                  drawerSize: "md",
-                })
-              }
-              onKeyDown={() => {}}
-              role="button"
-              style={{
-                backgroundColor: event.backgroundColor,
-                color: event.textColor,
-              }}
-              tabIndex={-1}>
-              {event.title}
-            </div>
+              content={<DocumentMentionTooltip id={event?.documentsId} />}
+              disabled={!event?.documentsId ?? false}>
+              <div
+                className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-200"
+                onClick={() =>
+                  setDrawer({
+                    ...DefaultDrawer,
+                    show: true,
+                    type: "events",
+                    data: event,
+                    exceptions: { eventDescription: true, isReadOnly },
+                    drawerSize: "md",
+                  })
+                }
+                onKeyDown={() => {}}
+                role="button"
+                style={{
+                  backgroundColor: event.backgroundColor,
+                  color: event.textColor,
+                }}
+                tabIndex={-1}>
+                {event.title}
+              </div>
+            </Tooltip>
           ))
         : null}
       {daysEvents.length > 5 ? (

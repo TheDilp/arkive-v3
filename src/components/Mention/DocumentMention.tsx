@@ -11,7 +11,7 @@ import StaticRender from "../Editor/StaticRender";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
-  title: string;
+  title?: string;
   id: string | undefined;
   label: string;
   isDisabledTooltip?: boolean;
@@ -32,7 +32,7 @@ export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title"
     staleTime: 5 * 60 * 1000,
   });
   return (
-    <Card className="h-96 w-96 overflow-y-auto" title={<div className="p-0 text-center">{title}</div>}>
+    <Card className="h-96 w-96 overflow-y-auto" title={<div className="p-0 text-center">{title || data?.title}</div>}>
       <div className="whitespace-pre-line">
         {isLoading ? <ProgressSpinner /> : null}
         {data?.content && !isLoading ? <StaticRender content={data.content} /> : null}
