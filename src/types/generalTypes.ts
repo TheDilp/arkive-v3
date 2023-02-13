@@ -69,11 +69,15 @@ export type TagUpdateType = {
 export interface TagSettingsType extends TagType {
   documents: Pick<DocumentType, "id" | "title" | "icon" | "folder">[];
   maps: Pick<MapType, "id" | "title" | "icon" | "folder">[];
-  map_pins: Pick<MapPinType, "id" | "text" | "icon">[];
+  map_pins: Pick<MapPinType, "id" | "text" | "icon" | "parentId">[];
   boards: Pick<BoardType, "id" | "title" | "icon" | "folder">[];
   nodes: Pick<NodeType, "id" | "label" | "parentId">[];
   edges: Pick<EdgeType, "id" | "label" | "parentId" | "source" | "target">[];
+  calendars: Pick<CalendarType, "id" | "title" | "icon" | "folder">[];
+  events: Pick<EventType, "id" | "title" | "calendarsId">[];
   screens: Pick<ScreenType, "id" | "title" | "icon" | "folder">[];
+  cards: Pick<CardType, "id" | "parentId" | "document">[];
+  dictionaries: Pick<DictionaryType, "id" | "title" | "icon" | "folder">[];
 }
 
 export type EditorType = {

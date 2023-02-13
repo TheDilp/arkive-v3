@@ -21,7 +21,8 @@
 .p-sidebar {
   @apply bg-[#27272A] !important;
 }
-.mainDrawer {
+.mainDrawer,
+.tagSettings {
   .p-tabview-nav-link {
     @apply border-b bg-zinc-800 !important;
   }

@@ -3,6 +3,7 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableExpandedRows } from "primereact/datatable";
+import { TabPanel, TabView } from "primereact/tabview";
 import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -36,89 +37,157 @@ function DeleteColumn(item: TagType, deleteTags: UseMutateFunction<any, unknown,
 
 function ExpandedSection(tag: TagSettingsType) {
   if (!tag) return null;
-  const { documents, maps, boards, nodes, edges } = tag;
-  console.log(edges);
+  const { documents, maps, map_pins, boards, nodes, edges, calendars, events, screens, cards, dictionaries } = tag;
   return (
-    <div className="ml-28 flex w-full flex-wrap gap-y-3">
-      <h4 className="w-full text-xl font-semibold">Items containing this tag</h4>
-      <div className="w-1/2">
-        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
-          <Icon icon="mdi:files" />
-          Documents
-        </h5>
-        {documents.map((doc) => (
-          <Link
-            key={doc.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
-            to={`../../documents${doc.folder ? "/folder" : ""}/${doc.id}`}>
-            <Icon icon={doc.icon} />
-            {doc.title}
-          </Link>
-        ))}
-      </div>
-      <div className="w-1/2">
-        <h5 className="flex items-center gap-x-2 text-lg font-medium underline ">
-          <Icon icon="mdi:map" />
-          Maps
-        </h5>
-        {maps.map((map) => (
-          <Link
-            key={map.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
-            to={`../../maps${map.folder ? "/folder" : ""}/${map.id}`}>
-            <Icon icon={map.icon} />
-            {map.title}
-          </Link>
-        ))}
-      </div>
-      <div className="w-1/2">
-        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
-          <Icon icon="mdi:draw" />
-          Boards
-        </h5>
-        {boards.map((board) => (
-          <Link
-            key={board.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
-            to={`../../boards${board.folder ? "/folder" : ""}/${board.id}`}>
-            <Icon icon={board.icon} />
-            {board.title}
-          </Link>
-        ))}
-      </div>
-      <div className="w-1/2">
-        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
-          <Icon icon="ph:graph-light" />
-          Nodes
-        </h5>
-        {nodes.map((node) => (
-          <Link
-            key={node.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
-            to={`../../boards/${node.parentId}/${node.id}`}>
-            <Icon icon="ph:graph-light" />
-            {node.label || "Unlabeled node"}
-          </Link>
-        ))}
-      </div>
-      <div className="w-1/2">
-        <h5 className="flex items-center gap-x-2 text-lg font-medium underline">
-          <Icon icon="ph:graph-light" />
-          Edges
-        </h5>
+    <TabView className="h-72" panelContainerClassName="h-full min-h-full" renderActiveOnly>
+      <TabPanel disabled={!documents.length} header="Documents">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {documents.map((doc) => (
+            <Link
+              key={doc.id}
+              className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+              to={`../../documents${doc.folder ? "/folder" : ""}/${doc.id}`}>
+              <Icon icon={doc.icon} />
+              {doc.title}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
 
-        {edges.map((edge) => (
-          <Link
-            key={edge.id}
-            className="flex cursor-pointer items-center gap-x-1 pl-1 text-sm hover:text-sky-400"
-            to={`../../boards/${edge.parentId}/${edge.id}`}>
-            <Icon icon="ph:graph-light" />
-            {edge.label || "Unlabeled edge"}{" "}
-            {`(${edge?.source?.label || "Unlabeled node"} - ${edge?.target?.label || "Unlabeled node"})`}
-          </Link>
-        ))}
-      </div>
-    </div>
+      <TabPanel disabled={!maps.length} header="Maps">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {maps.map((map) => (
+            <Link
+              key={map.id}
+              className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+              to={`../../maps${map.folder ? "/folder" : ""}/${map.id}`}>
+              <Icon icon={map.icon} />
+              {map.title}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel disabled={!maps.length} header="Map pins">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {map_pins.map((map_pin) => (
+            <Link
+              key={map_pin.id}
+              className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+              to={`../../maps/${map_pin.parentId}/${map_pin.id}`}>
+              <Icon icon={map_pin.icon} />
+              {map_pin?.text || "Unnamed pin"}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel disabled={!boards.length} header="Graphs">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {boards.map((board) => (
+            <Link
+              key={board.id}
+              className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+              to={`../../boards${board.folder ? "/folder" : ""}/${board.id}`}>
+              <Icon icon={board.icon} />
+              {board.title}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel disabled={!nodes.length} header="Nodes">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {nodes.map((node) => (
+            <Link
+              key={node.id}
+              className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
+              to={`../../boards/${node.parentId}/${node.id}`}>
+              <Icon icon="ph:graph-light" />
+              {node.label || "Unlabeled node"}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!edges.length} header="Edges">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {edges.map((edge) => (
+            <Link
+              key={edge.id}
+              className="flex cursor-pointer items-center hover:text-sky-400"
+              to={`../../boards/${edge.parentId}/${edge.id}`}>
+              <Icon icon="ph:graph-light" />
+              {edge.label || "Unlabeled edge"}{" "}
+              {`(${edge?.source?.label || "Unlabeled node"} - ${edge?.target?.label || "Unlabeled node"})`}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!calendars.length} header="Calendars">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {calendars.map((calendar) => (
+            <Link
+              key={calendar.id}
+              className="flex cursor-pointer items-center hover:text-sky-400"
+              to={`../../calendars${calendar.folder ? "/folder" : ""}/${calendar.id}`}>
+              <Icon icon="ph:graph-light" />
+              {calendar.title}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!events.length} header="Events">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {events
+            ? events?.map((event) => (
+                <Link
+                  key={event.id}
+                  className="flex cursor-pointer items-center hover:text-sky-400"
+                  to={`../../calendars/${event.calendarsId}/${event.id}`}>
+                  <Icon icon="ph:graph-light" />
+                  {event.title}
+                </Link>
+              ))
+            : null}
+        </div>
+      </TabPanel>
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!screens.length} header="Screens">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {screens.map((screen) => (
+            <Link
+              key={screen.id}
+              className="flex cursor-pointer items-center hover:text-sky-400"
+              to={`../../screens${screen.folder ? "/folder" : ""}/${screen.id}`}>
+              <Icon icon="ph:graph-light" />
+              {screen.title || "Unlabeled edge"}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!cards.length} header="Cards">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {cards.map((card) => (
+            <Link
+              key={card.id}
+              className="flex cursor-pointer items-center hover:text-sky-400"
+              to={`../../screens/${card.parentId}/${card.id}`}>
+              <Icon icon="ph:graph-light" />
+              {card.document.title}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!dictionaries.length} header="Dictionaries">
+        <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
+          {dictionaries.map((dictionary) => (
+            <Link
+              key={dictionary.id}
+              className="flex cursor-pointer items-center hover:text-sky-400"
+              to={`../../dictionaries${dictionary.folder ? "/folder" : ""}/${dictionary.id}`}>
+              <Icon icon="ph:graph-light" />
+              {dictionary.title}
+            </Link>
+          ))}
+        </div>
+      </TabPanel>
+    </TabView>
   );
 }
 function TagTitle(tag: TagType) {
@@ -133,7 +202,7 @@ export default function TagsSettings() {
   const { mutate: updateTag } = useUpdateTag(project_id as string);
   const { mutate: deleteTags } = useDeleteTags(project_id as string);
   return (
-    <div className="h-screen px-4 pt-4 pb-16">
+    <div className="tagSettings h-screen px-4 pt-4 pb-16">
       <DataTable
         editMode="cell"
         expandedRows={expandedRows}
