@@ -29,13 +29,9 @@ import DefaultNodeFilter from "./Filters/DefaultNodeFilter";
 import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
 // TABLE UTIL FUNCTIONS
-function getCheckedValue(
-  { folder, isPublic, defaultGrid }: { folder: boolean; isPublic: boolean; defaultGrid: boolean },
-  type: "folder" | "defaultGrid" | "isPublic",
-) {
+function getCheckedValue({ folder, isPublic }: { folder: boolean; isPublic: boolean }, type: "folder" | "isPublic") {
   if (type === "folder") return folder;
   if (type === "isPublic") return isPublic;
-  if (type === "defaultGrid") return defaultGrid;
   return false;
 }
 
@@ -69,14 +65,14 @@ function IconColumn({ id, icon, folder }: BoardType) {
   );
 }
 
-function FolderPublicGridColumn({ id, folder, isPublic, defaultGrid }: BoardType, type: "folder" | "isPublic" | "defaultGrid") {
+function FolderPublicGridColumn({ id, folder, isPublic }: BoardType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
   const updateDocumentMutation = useUpdateItem("boards", project_id as string);
   const queryClient = useQueryClient();
 
   return (
     <Checkbox
-      checked={getCheckedValue({ folder, isPublic, defaultGrid }, type)}
+      checked={getCheckedValue({ folder, isPublic }, type)}
       onChange={(e) =>
         updateDocumentMutation?.mutate(
           { [type]: e.checked, id },
@@ -288,18 +284,7 @@ export default function BoardSettings() {
           header="Public"
           sortable
         />
-        <Column
-          align="center"
-          body={(data) => FolderPublicGridColumn(data, "defaultGrid")}
-          className="w-10"
-          dataType="boolean"
-          field="defaultGrid"
-          filter
-          filterElement={BooleanFilter}
-          filterMatchMode="equals"
-          header="Grid"
-          sortable
-        />
+
         <Column
           align="center"
           body={(data: BoardType) => capitalCase(data.defaultNodeShape)}
