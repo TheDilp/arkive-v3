@@ -57,7 +57,6 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
       }),
     );
   }, []);
-
   return (
     <div
       key={section.id}

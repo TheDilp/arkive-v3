@@ -276,6 +276,7 @@ export default function DrawerEdgeContent() {
                   // @ts-ignore
                   arrowShape={localItem[`${type}ArrowShape`]}
                   handleChange={handleChange}
+                  isUpdating={updateEdgeMutation.isLoading}
                   title={capitalCase(type)}
                 />
               ))}

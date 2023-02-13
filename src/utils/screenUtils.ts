@@ -41,6 +41,15 @@ export const getSectionSizeClass = (size: string) => {
   if (size === "xxl") return "min-w-[40rem] max-w-[40rem] w-[40rem]";
   return "min-w-[25rem] max-w-[25rem] w-[25rem]";
 };
+export const getCardSizeClass = (size: string) => {
+  if (size === "xs") return "min-h-[15rem] max-h-[15rem] h-[15rem]";
+  if (size === "sm") return "min-h-[20rem] max-h-[20rem] h-[20rem]";
+  if (size === "md") return "min-h-[25rem] max-h-[25rem] h-[25rem]";
+  if (size === "lg") return "min-h-[30rem] max-h-[30rem] h-[30rem]";
+  if (size === "xl") return "min-h-[35rem] max-h-[35rem] h-[35rem]";
+  if (size === "xxl") return "min-h-[40rem] max-h-[40rem] h-[40rem]";
+  return "min-h-[25rem] max-h-[25rem] h-[25rem]";
+};
 
 export function onDragEnd(
   result: DropResult,

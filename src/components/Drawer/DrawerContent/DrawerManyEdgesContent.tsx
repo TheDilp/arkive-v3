@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { Slider } from "primereact/slider";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -22,7 +23,6 @@ import { toaster } from "../../../utils/toast";
 import { getHexColor } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
 import { FontItemTemplate } from "../../Dropdown/FontItemTemplate";
-import Tags from "../../Tags/Tags";
 
 export default function DrawerManyEdgesContent() {
   const { item_id } = useParams();
@@ -64,27 +64,56 @@ export default function DrawerManyEdgesContent() {
           type="submit"
         />
       </div>
-      <div className="flex w-full flex-wrap justify-between">
-        <span className="w-full text-sm text-zinc-400">Line Style</span>
-        <Dropdown
-          className="w-4/5"
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, lineStyle: e.value }))}
-          options={boardEdgeLineStyles}
-          value={localItem.lineStyle}
-        />
-        <Button
-          className="p-button-square p-button-success p-button-outlined"
-          icon="pi pi-save"
-          iconPos="right"
-          onClick={() => {
-            if (!boardRef) return;
-            updateManyEdges({
-              lineStyle: localItem.lineStyle,
-            });
-          }}
-          type="submit"
-        />
-      </div>
+      {localItem.curveStyle === "unbundled-bezier" ? (
+        <div className="flex w-full flex-wrap">
+          <div className="flex w-full flex-wrap items-center justify-between">
+            <span className="w-full text-sm text-gray-400">Curve Strength: {localItem.controlPointDistances}</span>
+            <Slider
+              className=" w-4/5"
+              max={1000}
+              min={-1000}
+              onChange={(e) => setLocalItem((prev) => ({ ...prev, controlPointDistances: e.value as number }))}
+              step={10}
+              value={localItem.controlPointDistances}
+            />
+            <Button
+              className="p-button-square p-button-success p-button-outlined"
+              icon="pi pi-save"
+              iconPos="right"
+              onClick={() => {
+                if (!boardRef) return;
+                updateManyEdges({
+                  controlPointDistances: localItem.controlPointDistances,
+                });
+              }}
+              type="submit"
+            />
+          </div>
+          <div className="flex w-full flex-wrap items-center justify-between">
+            <span className="w-full text-sm text-gray-400">Curve Center: {localItem.controlPointWeights}</span>
+            <Slider
+              className=" w-4/5"
+              max={1}
+              min={0}
+              onChange={(e) => setLocalItem((prev) => ({ ...prev, controlPointWeights: e.value as number }))}
+              step={0.1}
+              value={localItem.controlPointWeights}
+            />
+            <Button
+              className="p-button-square p-button-success p-button-outlined"
+              icon="pi pi-save"
+              iconPos="right"
+              onClick={() => {
+                if (!boardRef) return;
+                updateManyEdges({
+                  controlPointWeights: localItem.controlPointWeights,
+                });
+              }}
+              type="submit"
+            />
+          </div>
+        </div>
+      ) : null}
       {localItem.curveStyle === "taxi" ? (
         <>
           <div className="flex w-full flex-wrap justify-between">
@@ -135,6 +164,28 @@ export default function DrawerManyEdgesContent() {
           </div>
         </>
       ) : null}
+
+      <div className="flex w-full flex-wrap justify-between">
+        <span className="w-full text-sm text-zinc-400">Line Style</span>
+        <Dropdown
+          className="w-4/5"
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, lineStyle: e.value }))}
+          options={boardEdgeLineStyles}
+          value={localItem.lineStyle}
+        />
+        <Button
+          className="p-button-square p-button-success p-button-outlined"
+          icon="pi pi-save"
+          iconPos="right"
+          onClick={() => {
+            if (!boardRef) return;
+            updateManyEdges({
+              lineStyle: localItem.lineStyle,
+            });
+          }}
+          type="submit"
+        />
+      </div>
 
       <div className="flex w-full flex-wrap justify-between">
         <span className="w-full text-sm text-zinc-400">Thickness</span>
@@ -371,7 +422,7 @@ export default function DrawerManyEdgesContent() {
           type="submit"
         />
       </div>
-      <div className="flex w-full flex-wrap justify-between">
+      {/* <div className="flex w-full flex-wrap justify-between">
         <div className="w-4/5">
           <Tags
             handleChange={({ value }) => setLocalItem((prev) => ({ ...prev, tags: value }))}
@@ -391,7 +442,7 @@ export default function DrawerManyEdgesContent() {
           }}
           type="submit"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

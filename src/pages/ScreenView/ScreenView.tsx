@@ -25,7 +25,6 @@ export default function ScreenView() {
   const [sections, setSections] = useState<SectionType[]>([]);
   const [, setDrawer] = useAtom(DrawerAtom);
   const updateSectionMutation = useUpdateSubItem<SectionType>(item_id as string, "sections", "screens");
-
   useEffect(() => {
     if (data?.sections) setSections(data.sections);
   }, [data, item_id]);
