@@ -57,8 +57,18 @@ export default function CalendarEvent({ monthEvents, index, year, isReadOnly }: 
         ? visibleEvents.map((event) => (
             <Tooltip
               key={event.id}
-              content={<DocumentMentionTooltip id={event?.documentsId} />}
-              disabled={!event?.documentsId ?? false}>
+              content={
+                event?.documentsId ? (
+                  <DocumentMentionTooltip id={event?.documentsId} />
+                ) : (
+                  (
+                    <div className="max-h-56 max-w-xs overflow-auto break-words rounded bg-black p-2">{event?.description}</div>
+                  ) || ""
+                )
+              }
+              customOffset={{
+                mainAxis: 5,
+              }}>
               <div
                 className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-200"
                 onClick={() =>

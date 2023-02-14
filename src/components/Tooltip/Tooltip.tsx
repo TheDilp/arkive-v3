@@ -3,6 +3,7 @@ import {
   autoPlacement,
   autoUpdate,
   inline,
+  offset,
   Placement,
   safePolygon,
   useClick,
@@ -22,15 +23,16 @@ interface Props {
   disabled?: boolean;
   isClickable?: boolean;
   closeOnClick?: boolean;
+  customOffset?: { mainAxis?: number; crossAxis?: number };
 }
 
-export function Tooltip({ allowedPlacements, children, content, disabled, isClickable, closeOnClick }: Props) {
+export function Tooltip({ allowedPlacements, children, content, disabled, isClickable, closeOnClick, customOffset }: Props) {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, context } = useFloating({
     open,
     onOpenChange: setOpen,
-    middleware: [inline(), autoPlacement({ allowedPlacements })],
+    middleware: [inline(), autoPlacement({ allowedPlacements }), offset(customOffset)],
     whileElementsMounted: autoUpdate,
   });
 
