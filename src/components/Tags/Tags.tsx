@@ -20,12 +20,12 @@ type Props = {
     | BoardCreateType
     | DefaultNodeType
     | DefaultEdgeType;
-  type: AvailableItemTypes | "map_pins" | "nodes" | "edges";
+  type: AvailableItemTypes | "map_pins" | "nodes" | "edges" | "cards" | "events";
 };
 
 function getTagRelationId(
   id: string | undefined,
-  type: AvailableItemTypes | "map_pins" | "nodes" | "edges",
+  type: AvailableItemTypes | "map_pins" | "nodes" | "edges" | "cards" | "events",
   updateType: "connect" | "disconnect",
 ) {
   if (!id) return {};

@@ -21,6 +21,7 @@ import { DefaultEvent } from "../../../utils/DefaultValues/CalendarDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
+import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
@@ -162,13 +163,13 @@ export default function DrawerEventContent() {
           </div>
         </div>
       </DrawerSection>
-
       <DrawerSection title="Event Description (optional)">
         <InputTextarea
+          disabled={!!localItem?.documentsId}
           name="description"
           onChange={(e) => handleChange(e.target)}
           placeholder="Note: the event will use a document's content if selected."
-          value={localItem.description}
+          value={localItem.description || ""}
         />
       </DrawerSection>
       <DrawerSection title="Event Document (optional)">
@@ -179,7 +180,7 @@ export default function DrawerEventContent() {
           filterBy="title"
           onChange={(e) => handleChange({ name: "documentsId", value: e.value })}
           optionLabel="title"
-          options={(documents || [])
+          options={[{ title: "None", id: null, template: false, folder: false }, ...(documents || [])]
             .filter((doc) => !doc.template && !doc.folder)
             .map((doc) => ({ id: doc.id, title: doc.title }))}
           optionValue="id"
@@ -201,9 +202,10 @@ export default function DrawerEventContent() {
           onChange={({ name, value }) => handleChange({ name, value })}
         />
       </DrawerSection>
-
+      <DrawerSection title="Event tags">
+        <Tags handleChange={handleChange} localItem={localItem} type="events" />
+      </DrawerSection>
       <hr className="border-zinc-600" />
-
       <Button
         className="p-button-outlined p-button-success"
         disabled={disableEventSaveButton(localItem) || loading}
