@@ -207,7 +207,7 @@ export const cytoscapeStylesheet = [
       "control-point-distances": "data(controlPointDistances)",
       "control-point-weights": "data(controlPointWeights)",
       "z-index": "data(zIndex)",
-      "z-index-compare": "manual",
+      "z-index-compare": "auto",
     },
   },
   {

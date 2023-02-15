@@ -175,7 +175,7 @@ export default function BoardView({ isReadOnly }: Props) {
       });
 
       // Moving nodes
-      cyRef?.current?._cy.on("freeon", "node", function (evt: EventObject) {
+      cyRef?.current?._cy.on("free", "node", function (evt: EventObject) {
         evt.preventDefault();
         evt.stopPropagation();
         evt.stopImmediatePropagation();
