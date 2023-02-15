@@ -16,12 +16,12 @@ export function defaultNodeFilterFunction(value: string, filter: string[] | null
 }
 
 export function getCheckedValue(
-  { folder, template, isPublic }: { folder: boolean; template: boolean; isPublic: boolean },
+  { folder, template, isPublic }: { folder: boolean; template?: boolean; isPublic: boolean },
   type: "folder" | "template" | "isPublic",
 ) {
   if (type === "folder") return folder;
-  if (type === "template") return template;
   if (type === "isPublic") return isPublic;
+  if (type === "template") return template;
   return false;
 }
 

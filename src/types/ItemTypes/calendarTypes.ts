@@ -9,6 +9,7 @@ export interface CalendarType extends BaseItemType {
   hours?: number;
   minutes?: number;
 
+  parent?: CalendarType;
   eras: EraType[];
   months: MonthType[];
   days: string[];

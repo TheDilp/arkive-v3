@@ -33,11 +33,11 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   { icon: "ion:documents-outline", navigate: "./settings/document-settings", title: "Document Settings" },
   { icon: "mdi:map-outline", navigate: "./settings/map-settings", title: "Map Settings" },
   { icon: "ph:graph", navigate: "./settings/board-settings", title: "Graph Settings" },
-  { icon: "ph:calendar-blank", navigate: "./settings/calendar-settings", title: "Calendars Settings" },
+  { icon: "ph:calendar-blank", navigate: "./settings/calendar-settings", title: "Calendar Settings" },
   // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
-  { icon: "fluent:board-24-regular", navigate: "./settings/screen-settings", title: "Screens Settings" },
-  { icon: "mdi-light:book", navigate: "./settings/dictionary-settings", title: "Dictionaries Settings" },
-  { icon: "arcticons:reroll", navigate: "./settings/randomtable-settings", title: "Random Tables Settings" },
+  { icon: "fluent:board-24-regular", navigate: "./settings/screen-settings", title: "Screen Settings" },
+  { icon: "mdi-light:book", navigate: "./settings/dictionary-settings", title: "Dictionary Settings" },
+  { icon: "arcticons:reroll", navigate: "./settings/randomtable-settings", title: "Random Table Settings" },
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 

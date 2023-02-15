@@ -19,6 +19,7 @@ import LoadingScreen from "./components/Loading/LoadingScreen";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile/Profile";
+import CalendarSettings from "./pages/Settings/CalendarSettings";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
@@ -97,6 +98,7 @@ function App() {
                   <Route element={<DocumentSettings />} path="document-settings" />
                   <Route element={<MapSettings />} path="map-settings" />
                   <Route element={<BoardSettings />} path="board-settings" />
+                  <Route element={<CalendarSettings />} path="calendar-settings" />
                   <Route element={<TagsSettings />} path="tags-settings" />
                   <Route element={<AssetSettings />} path="assets-settings/*" />
                 </Route>
