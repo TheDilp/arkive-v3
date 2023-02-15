@@ -26,7 +26,7 @@ import SettingsToolbar from "./SettingsToolbar";
 function IconColumn({ id, icon, folder }: CalendarType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const updateMapMutation = useUpdateItem<CalendarType>("boards", project_id as string);
+  const updateMapMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
   return (
     <div className="flex justify-center">
       <IconSelect
@@ -36,7 +36,7 @@ function IconColumn({ id, icon, folder }: CalendarType) {
             { icon: newIcon, id },
             {
               onSuccess: () => {
-                queryClient.refetchQueries({ queryKey: ["allItems", project_id, "boards"] });
+                queryClient.refetchQueries({ queryKey: ["allItems", project_id, "calendars"] });
                 toaster("success", "Icon updated successfully.");
               },
             },
@@ -55,7 +55,7 @@ function IconColumn({ id, icon, folder }: CalendarType) {
 
 function FolderPublicGridColumn({ id, folder, isPublic }: CalendarType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
-  const updateDocumentMutation = useUpdateItem("boards", project_id as string);
+  const updateDocumentMutation = useUpdateItem("calendars", project_id as string);
   const queryClient = useQueryClient();
 
   return (
@@ -66,7 +66,7 @@ function FolderPublicGridColumn({ id, folder, isPublic }: CalendarType, type: "f
           { [type]: e.checked, id },
           {
             onSuccess: () => {
-              queryClient.refetchQueries({ queryKey: ["allItems", project_id, "boards"] });
+              queryClient.refetchQueries({ queryKey: ["allItems", project_id, "calendars"] });
               toaster("success", "Item updated successfully.");
             },
           },
@@ -75,9 +75,9 @@ function FolderPublicGridColumn({ id, folder, isPublic }: CalendarType, type: "f
     />
   );
 }
-function ParentColumn({ parent }: CalendarType, boards: CalendarType[]) {
+function ParentColumn({ parent }: CalendarType, calendars: CalendarType[]) {
   // eslint-disable-next-line react/destructuring-assignment
-  const parentFolder = boards?.find((doc) => doc.id === parent?.id);
+  const parentFolder = calendars?.find((doc) => doc.id === parent?.id);
   if (parentFolder) return <div className="w-full">{parentFolder.title}</div>;
   return null;
 }
@@ -101,7 +101,7 @@ function TagsEditor(editorOptions: ColumnEditorOptions, updateBoard: (data: Part
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
-      type="boards"
+      type="calendars"
     />
   );
 }
@@ -112,7 +112,7 @@ function ActionsColumn({ id, folder }: CalendarType, navigate: NavigateFunction,
         className="p-button-success p-button-outlined"
         icon="pi pi-fw pi-link"
         onClick={() => {
-          navigate(`../../boards/${folder ? "folder/" : ""}${id}`);
+          navigate(`../../calendars/${folder ? "folder/" : ""}${id}`);
         }}
         tooltip="Go to item"
         tooltipOptions={{ showDelay: 300, position: "left" }}

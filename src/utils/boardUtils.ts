@@ -496,6 +496,7 @@ export function mapEdges(edges: EdgeType[], isReadOnly?: boolean) {
       source: edge.source_id,
       target: edge.target_id,
       classes: `boardEdge ${isReadOnly && "publicBoardEdge"}`,
+      zIndexCompare: "manual",
       label: edge.label || "",
     },
   }));

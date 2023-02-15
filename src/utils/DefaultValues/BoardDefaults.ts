@@ -11,7 +11,6 @@ export const DefaultBoard: DefaultBoardType = {
   defaultNodeShape: "rectangle",
   defaultNodeColor: "#595959",
   defaultEdgeColor: "#595959",
-  defaultGrid: false,
 };
 
 export const DefaultEdge: DefaultEdgeType = {
@@ -142,7 +141,6 @@ export const cytoscapeStylesheet = [
       width: "50rem",
       height: "50rem",
       "font-size": "20rem",
-      label: "TARGET",
       color: "white",
       "text-outline-color": "black",
       "text-outline-width": "2px",
