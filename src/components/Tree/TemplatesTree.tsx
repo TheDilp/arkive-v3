@@ -33,11 +33,11 @@ export default function TemplatesTree() {
   );
 
   return (
-    <div className="flex flex-col p-2">
+    <div className="flex flex-col p-4">
       <SplitButton
         className="p-button-outlined"
-        icon="pi pi-bolt"
-        label="Quick Create"
+        icon="pi pi-plus"
+        label="Create Template"
         loading={createDocumentMutation.isLoading}
         model={items}
         onClick={() => {

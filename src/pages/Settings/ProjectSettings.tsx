@@ -45,27 +45,6 @@ export default function ProjectSettings() {
       <div>
         <h2 className="font-Merriweather text-2xl font-bold">{data?.title} - Settings</h2>
       </div>
-      <h3 className="text-lg font-semibold">Update Project Name</h3>
-      <div className="flex w-full max-w-lg gap-x-4">
-        <InputText
-          className="w-2/3"
-          // @ts-ignore
-          onChange={(e) => setLocalItem((prev) => ({ ...prev, id: data?.id as string, title: e.target.value }))}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") updateProject.mutate({ id: project_id as string, title: localItem?.title });
-          }}
-          value={localItem?.title || ""}
-        />
-        <Button
-          className="p-button-outlined p-button-success"
-          icon="pi pi-save"
-          iconPos="right"
-          label="Save"
-          onClick={() => {
-            updateProject.mutate({ id: project_id as string, title: localItem?.title });
-          }}
-        />
-      </div>
       <h3 className="text-lg font-semibold">Update Project Card Image</h3>
       <div className="flex h-48 w-48 flex-col gap-x-4">
         <div className=" max-h-36 max-w-[9rem] ">
@@ -88,6 +67,28 @@ export default function ProjectSettings() {
           virtualScrollerOptions={virtualScrollerSettings}
         />
       </div>
+      <h3 className="text-lg font-semibold">Update Project Name</h3>
+      <div className="flex w-full max-w-lg gap-x-4">
+        <InputText
+          className="w-2/3"
+          // @ts-ignore
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, id: data?.id as string, title: e.target.value }))}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") updateProject.mutate({ id: project_id as string, title: localItem?.title });
+          }}
+          value={localItem?.title || ""}
+        />
+        <Button
+          className="p-button-outlined p-button-success"
+          icon="pi pi-save"
+          iconPos="right"
+          label="Save"
+          onClick={() => {
+            updateProject.mutate({ id: project_id as string, title: localItem?.title });
+          }}
+        />
+      </div>
+
       <hr className="border-zinc-700" />
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Add to project</h3>

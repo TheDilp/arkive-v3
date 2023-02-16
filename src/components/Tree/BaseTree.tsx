@@ -44,7 +44,9 @@ function Placeholder(args: PlaceholderRenderParams) {
 
 export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
-  const { data: items, isLoading: isLoadingItems } = useGetAllItems<AllItemsType>(project_id as string, type);
+  const { data: items, isLoading: isLoadingItems } = useGetAllItems<AllItemsType>(project_id as string, type, {
+    staleTime: 5 * 60 * 1000,
+  });
   const updateItemMutation = useUpdateItem<DocumentType>(type, project_id as string);
   const sortItemMutation = useSortMutation(project_id as string, type);
   const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);

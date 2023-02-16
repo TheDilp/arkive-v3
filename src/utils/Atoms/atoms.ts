@@ -53,13 +53,10 @@ const sidebarState = getItem("sidebarState") as boolean | undefined;
 export const SidebarCollapseAtom = atom<boolean>(sidebarState ?? true);
 export const ProjectAtom = atom<ProjectType | null>(null);
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
-
 export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
 
 export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null });
-
 export const BoardReferenceAtom = atom<null | cytoscape.Core>(null);
-
 export const BoardStateAtom = atom<{
   grid: boolean;
   drawMode: boolean;
@@ -67,7 +64,6 @@ export const BoardStateAtom = atom<{
   grid: false,
   drawMode: false,
 });
-
 export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
-
 export const UserAtom = atom<(UserType & { permission: "owner" | "member" | null }) | null>(null);
+export const DocumentsSidebar = atom<number>(0);

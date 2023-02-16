@@ -151,7 +151,6 @@ export default function CalendarSettings() {
     staleTime: 5 * 60 * 1000,
   });
   const { data: tags } = useGetAllTags(project_id as string);
-
   const [selected, setSelected] = useState<CalendarType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 

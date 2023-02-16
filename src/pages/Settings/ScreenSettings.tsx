@@ -28,7 +28,7 @@ import SettingsToolbar from "./SettingsToolbar";
 function IconColumn({ id, icon, folder }: ScreenType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const updateDocumentMutation = useUpdateItem<ScreenType>("documents", project_id as string);
+  const updateDocumentMutation = useUpdateItem<ScreenType>("screens", project_id as string);
   return (
     <div className="flex justify-center">
       <IconSelect
@@ -37,7 +37,7 @@ function IconColumn({ id, icon, folder }: ScreenType) {
           updateDocumentMutation?.mutate(
             { icon: newIcon, id },
             {
-              onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] }),
+              onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "screens"] }),
             },
           );
         }}>
@@ -54,7 +54,7 @@ function IconColumn({ id, icon, folder }: ScreenType) {
 
 function FolderTemplatePublicColumn({ id, folder, isPublic }: ScreenType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
-  const updateDocumentMutation = useUpdateItem("documents", project_id as string);
+  const updateDocumentMutation = useUpdateItem("screens", project_id as string);
   const queryClient = useQueryClient();
 
   return (
@@ -64,7 +64,7 @@ function FolderTemplatePublicColumn({ id, folder, isPublic }: ScreenType, type: 
         updateDocumentMutation?.mutate(
           { [type]: e.checked, id },
           {
-            onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] }),
+            onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "screens"] }),
           },
         )
       }
@@ -88,7 +88,7 @@ function TagsEditor(editorOptions: ColumnEditorOptions) {
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
-      type="documents"
+      type="screens"
     />
   );
 }
@@ -100,7 +100,7 @@ function ActionsColumn({ id, folder }: ScreenType, navigate: NavigateFunction, d
         className="p-button-success p-button-outlined"
         icon="pi pi-fw pi-link"
         onClick={() => {
-          navigate(`../../documents/${folder ? "folder/" : ""}${id}`);
+          navigate(`../../screens/${folder ? "folder/" : ""}${id}`);
         }}
         tooltip="Go to item"
         tooltipOptions={{ showDelay: 300, position: "left" }}
@@ -134,8 +134,8 @@ export default function ScreenSettings() {
         toaster("success", "Item updated successfully.");
       },
     });
-  const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
 
+  const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   return (
     <div className="h-[95vh] w-full overflow-hidden p-4">
       <SettingsToolbar

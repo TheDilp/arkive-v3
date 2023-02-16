@@ -5,7 +5,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { AvailableItemTypes } from "../../types/generalTypes";
-import { SidebarCollapseAtom } from "../../utils/Atoms/atoms";
+import { DocumentsSidebar, SidebarCollapseAtom } from "../../utils/Atoms/atoms";
 import { setItem } from "../../utils/storage";
 import DocumentsTree from "../Tree/DocumentsTree";
 import ItemsTree from "../Tree/ItemsTree";
@@ -42,12 +42,17 @@ function SidebarContainer({ children }: Props) {
 function SidebarContent() {
   const { type } = useParams();
   const { pathname } = useLocation();
+  const [documentsTab, setDocumentsTab] = useAtom(DocumentsSidebar);
   if (pathname.includes("settings")) return <SettingsSidebar />;
 
   if (type === "documents")
     return (
       <div className="flex flex-1 flex-col">
-        <TabView className="wikiTabs flex flex-1 flex-col" renderActiveOnly>
+        <TabView
+          activeIndex={documentsTab}
+          className="wikiTabs flex flex-1 flex-col"
+          onTabChange={(e) => setDocumentsTab(e.index)}
+          renderActiveOnly>
           <TabPanel className="flex h-full w-full flex-1 flex-col" header="Documents">
             <DocumentsTree />
           </TabPanel>

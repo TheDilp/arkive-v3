@@ -5,6 +5,12 @@
 .projectCard .p-card-body {
   @apply pt-1;
 }
+
+.folderView {
+  .p-breadcrumb {
+    @apply pl-0;
+  }
+}
 .p-breadcrumb {
   @apply border-transparent bg-transparent !important;
 }
