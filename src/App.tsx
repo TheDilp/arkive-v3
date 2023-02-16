@@ -18,8 +18,6 @@ import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile/Profile";
-import CalendarSettings from "./pages/Settings/CalendarSettings";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
@@ -32,6 +30,8 @@ const DocumentSettings = lazy(() => import("./pages/Settings/DocumentSettings"))
 const MapSettings = lazy(() => import("./pages/Settings/MapSettings"));
 const ProjectSettings = lazy(() => import("./pages/Settings/ProjectSettings"));
 const TagsSettings = lazy(() => import("./pages/Settings/TagsSettings"));
+const CalendarSettings = lazy(() => import("./pages/Settings/CalendarSettings"));
+const Profile = lazy(() => import("./pages/Profile/Profile"));
 
 const queryClient = new QueryClient({
   defaultOptions: {

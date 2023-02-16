@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { InputNumber } from "primereact/inputnumber";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -26,13 +27,13 @@ import SettingsToolbar from "./SettingsToolbar";
 function IconColumn({ id, icon, folder }: CalendarType) {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
-  const updateMapMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
+  const updateCalendarMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
   return (
     <div className="flex justify-center">
       <IconSelect
         disabled={folder}
         setIcon={(newIcon) => {
-          updateMapMutation?.mutate(
+          updateCalendarMutation?.mutate(
             { icon: newIcon, id },
             {
               onSuccess: () => {
@@ -52,7 +53,6 @@ function IconColumn({ id, icon, folder }: CalendarType) {
     </div>
   );
 }
-
 function FolderPublicGridColumn({ id, folder, isPublic }: CalendarType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
   const updateCalendarMutation = useUpdateItem("calendars", project_id as string);
@@ -81,7 +81,6 @@ function ParentColumn({ parent }: CalendarType, calendars: CalendarType[]) {
   if (parentFolder) return <div className="w-full">{parentFolder.title}</div>;
   return null;
 }
-
 function TagsColumn({ tags }: CalendarType, type: "tags") {
   return (
     <div className={`flex justify-center gap-x-1 ${type}Tags`}>
@@ -91,7 +90,6 @@ function TagsColumn({ tags }: CalendarType, type: "tags") {
     </div>
   );
 }
-
 function TagsEditor(editorOptions: ColumnEditorOptions, updateCalendar: (data: Partial<CalendarType>) => void) {
   const { rowData, editorCallback } = editorOptions;
   return (
@@ -124,6 +122,23 @@ function ActionsColumn({ id, folder }: CalendarType, navigate: NavigateFunction,
         onClick={() => deleteAction(id)}
       />
     </div>
+  );
+}
+function ClockEditor(editorOptions: ColumnEditorOptions, updateItem: <T>(data: Partial<T>) => void, type: "hours" | "minutes") {
+  const { rowData, editorCallback } = editorOptions;
+  return (
+    <InputNumber
+      onChange={(e) => {
+        if (rowData.id && e.value && editorCallback) editorCallback(e.value);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          updateItem({ id: rowData.id, [type]: parseFloat(e.currentTarget.value) });
+        }
+      }}
+      useGrouping={false}
+      value={rowData[type]}
+    />
   );
 }
 
@@ -168,6 +183,20 @@ export default function CalendarSettings() {
         tableRef={tableRef}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column editor={(e) => TitleEditor(e, updateCalendar)} field="title" filter header="Title" sortable />
+        <Column
+          bodyStyle={{ textAlign: "center" }}
+          className="w-20"
+          editor={(e) => ClockEditor(e, updateCalendar, "hours")}
+          field="hours"
+          header="Hours"
+        />
+        <Column
+          bodyStyle={{ textAlign: "center" }}
+          className="w-20"
+          editor={(e) => ClockEditor(e, updateCalendar, "minutes")}
+          field="minutes"
+          header="Minutes"
+        />
         <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
 
         <Column
