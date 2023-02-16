@@ -23,6 +23,7 @@ import { DefaultCalendar } from "../../../utils/DefaultValues/CalendarDefaults";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
@@ -186,6 +187,9 @@ export default function DrawerCalendarContent() {
                   placeholder="How many minutes in a day?"
                   value={localItem.minutes}
                 />
+              </DrawerSection>
+              <DrawerSection title="Tags">
+                <Tags handleChange={handleChange} localItem={localItem} type="calendars" />
               </DrawerSection>
             </div>
           </TabPanel>

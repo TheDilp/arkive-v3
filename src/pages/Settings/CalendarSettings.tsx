@@ -55,14 +55,14 @@ function IconColumn({ id, icon, folder }: CalendarType) {
 
 function FolderPublicGridColumn({ id, folder, isPublic }: CalendarType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
-  const updateDocumentMutation = useUpdateItem("calendars", project_id as string);
+  const updateCalendarMutation = useUpdateItem("calendars", project_id as string);
   const queryClient = useQueryClient();
 
   return (
     <Checkbox
       checked={getCheckedValue({ folder, isPublic }, type)}
       onChange={(e) =>
-        updateDocumentMutation?.mutate(
+        updateCalendarMutation?.mutate(
           { [type]: e.checked, id },
           {
             onSuccess: () => {
@@ -92,12 +92,12 @@ function TagsColumn({ tags }: CalendarType, type: "tags") {
   );
 }
 
-function TagsEditor(editorOptions: ColumnEditorOptions, updateBoard: (data: Partial<CalendarType>) => void) {
+function TagsEditor(editorOptions: ColumnEditorOptions, updateCalendar: (data: Partial<CalendarType>) => void) {
   const { rowData, editorCallback } = editorOptions;
   return (
     <Tags
       handleChange={({ name, value }) => {
-        updateBoard({ id: rowData.id, [name]: value });
+        updateCalendar({ id: rowData.id, [name]: value });
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
@@ -105,7 +105,7 @@ function TagsEditor(editorOptions: ColumnEditorOptions, updateBoard: (data: Part
     />
   );
 }
-function ActionsColumn({ id, folder }: CalendarType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
+function ActionsColumn({ id, folder }: CalendarType, navigate: NavigateFunction, deleteAction: (calId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
       <Button
