@@ -50,11 +50,10 @@ export async function createUpdateItem<
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { tags, ...rest } = changedData;
     await updateMutation(
       {
         id: item.id,
-        ...rest,
+        ...changedData,
       } as ItemType,
       {
         onSuccess: () => {
