@@ -17,6 +17,7 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import AuthLayout from "./pages/Auth/AuthLayout";
+import SettingsContentView from "./pages/ContentView/SettingsContentView";
 import Dashboard from "./pages/Dashboard";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
@@ -24,13 +25,7 @@ const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
 const Signup = lazy(() => import("./pages/Auth/Signup"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
 const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
-const AssetSettings = lazy(() => import("./pages/Settings/Assets/AssetSettings"));
-const BoardSettings = lazy(() => import("./pages/Settings/BoardSettings"));
-const DocumentSettings = lazy(() => import("./pages/Settings/DocumentSettings"));
-const MapSettings = lazy(() => import("./pages/Settings/MapSettings"));
-const ProjectSettings = lazy(() => import("./pages/Settings/ProjectSettings"));
-const TagsSettings = lazy(() => import("./pages/Settings/TagsSettings"));
-const CalendarSettings = lazy(() => import("./pages/Settings/CalendarSettings"));
+
 const Profile = lazy(() => import("./pages/Profile/Profile"));
 
 const queryClient = new QueryClient({
@@ -93,15 +88,7 @@ function App() {
                   <Route element={<ContentView />} path=":item_id/:subitem_id" />
                 </Route>
 
-                <Route path="settings/*">
-                  <Route element={<ProjectSettings />} path="project-settings" />
-                  <Route element={<DocumentSettings />} path="document-settings" />
-                  <Route element={<MapSettings />} path="map-settings" />
-                  <Route element={<BoardSettings />} path="board-settings" />
-                  <Route element={<CalendarSettings />} path="calendar-settings" />
-                  <Route element={<TagsSettings />} path="tags-settings" />
-                  <Route element={<AssetSettings />} path="assets-settings/*" />
-                </Route>
+                <Route element={<SettingsContentView />} path="settings/:type" />
               </Route>
 
               <Route element={<PublicWrapper />} path="view/:type/:item_id/*" />
