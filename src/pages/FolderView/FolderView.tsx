@@ -32,7 +32,8 @@ export default function FolderView() {
               ?.filter((item) => {
                 if (item_id) return item.parentId === item_id;
                 return !item.parentId;
-              }) || []
+              })
+              .sort((a, b) => a.sort - b.sort) || []
           }
           type={type as AvailableItemTypes}
         />
