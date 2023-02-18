@@ -14,7 +14,7 @@ import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { TagType } from "../../types/generalTypes";
-import { DictionaryType } from "../../types/ItemTypes/dictionaryTypes";
+import { RandomTableType } from "../../types/ItemTypes/randomTableTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getCheckedValue, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
@@ -23,9 +23,9 @@ import BooleanFilter from "./Filters/BooleanFilter";
 import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
 
-function FolderPublicGridColumn({ id, folder, isPublic }: DictionaryType, type: "folder" | "isPublic") {
+function FolderPublicGridColumn({ id, folder, isPublic }: RandomTableType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
-  const updateCalendarMutation = useUpdateItem("dictionaries", project_id as string);
+  const updateCalendarMutation = useUpdateItem("randomtables", project_id as string);
   const queryClient = useQueryClient();
 
   return (
@@ -36,7 +36,7 @@ function FolderPublicGridColumn({ id, folder, isPublic }: DictionaryType, type: 
           { [type]: e.checked, id },
           {
             onSuccess: () => {
-              queryClient.refetchQueries({ queryKey: ["allItems", project_id, "dictionaries"] });
+              queryClient.refetchQueries({ queryKey: ["allItems", project_id, "randomtables"] });
               toaster("success", "Item updated successfully.");
             },
           },
@@ -46,7 +46,7 @@ function FolderPublicGridColumn({ id, folder, isPublic }: DictionaryType, type: 
   );
 }
 
-function TagsColumn({ tags }: DictionaryType, type: "tags") {
+function TagsColumn({ tags }: RandomTableType, type: "tags") {
   return (
     <div className={`flex justify-center gap-x-1 ${type}Tags`}>
       {tags?.map((tag) => (
@@ -55,7 +55,7 @@ function TagsColumn({ tags }: DictionaryType, type: "tags") {
     </div>
   );
 }
-function TagsEditor(editorOptions: ColumnEditorOptions, updateCalendar: (data: Partial<DictionaryType>) => void) {
+function TagsEditor(editorOptions: ColumnEditorOptions, updateCalendar: (data: Partial<RandomTableType>) => void) {
   const { rowData, editorCallback } = editorOptions;
   return (
     <Tags
@@ -64,18 +64,18 @@ function TagsEditor(editorOptions: ColumnEditorOptions, updateCalendar: (data: P
         if (editorCallback) editorCallback(value);
       }}
       localItem={rowData}
-      type="dictionaries"
+      type="randomtables"
     />
   );
 }
-function ActionsColumn({ id, folder }: DictionaryType, navigate: NavigateFunction, deleteAction: (calId: string) => void) {
+function ActionsColumn({ id, folder }: RandomTableType, navigate: NavigateFunction, deleteAction: (calId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
       <Button
         className="p-button-success p-button-outlined"
         icon="pi pi-fw pi-link"
         onClick={() => {
-          navigate(`../../dictionaries/${folder ? "folder/" : ""}${id}`);
+          navigate(`../../randomtables/${folder ? "folder/" : ""}${id}`);
         }}
         tooltip="Go to item"
         tooltipOptions={{ showDelay: 300, position: "left" }}
@@ -90,25 +90,25 @@ function ActionsColumn({ id, folder }: DictionaryType, navigate: NavigateFunctio
   );
 }
 
-export default function DictionarySettings() {
+export default function RandomTableSettings() {
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const tableRef = useRef() as MutableRefObject<DataTable>;
-  const { data: dictionaries, isLoading } = useGetAllItems<DictionaryType>(project_id as string, "dictionaries", {
+  const { data: randomtables, isLoading } = useGetAllItems<RandomTableType>(project_id as string, "randomtables", {
     staleTime: 5 * 60 * 1000,
   });
   const { data: tags } = useGetAllTags(project_id as string);
-  const [selected, setSelected] = useState<DictionaryType[]>([]);
+  const [selected, setSelected] = useState<RandomTableType[]>([]);
   const [globalFilter, setGlobalFilter] = useState<{ title: string; tags: TagType[] }>({ title: "", tags: [] });
 
-  const { mutate } = useUpdateItem<DictionaryType>("dictionaries", project_id as string);
-  const { mutate: deleteMutation } = useDeleteItem("dictionaries", project_id as string);
+  const { mutate } = useUpdateItem<RandomTableType>("randomtables", project_id as string);
+  const { mutate: deleteMutation } = useDeleteItem("randomtables", project_id as string);
 
-  const updateCalendar = (data: Partial<DictionaryType>) =>
+  const updateCalendar = (data: Partial<RandomTableType>) =>
     mutate(data, {
       onSuccess: async () => {
-        await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "dictionaries"] });
+        await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "randomtables"] });
       },
     });
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
@@ -119,10 +119,10 @@ export default function DictionarySettings() {
         ref={tableRef}
         filter={{ globalFilter, setGlobalFilter }}
         selection={{ selected, setSelected }}
-        type="dictionaries"
+        type="randomtables"
       />
       <SettingsTable
-        data={dictionaries || []}
+        data={randomtables || []}
         globalFilter={globalFilter}
         isLoading={isLoading}
         selected={selected}
@@ -132,7 +132,7 @@ export default function DictionarySettings() {
         <Column editor={(e) => TitleEditor(e, updateCalendar)} field="title" filter header="Title" sortable />
         <Column
           align="center"
-          body={(data) => IconColumn<DictionaryType>({ ...data, type: "dictionaries" })}
+          body={(data) => IconColumn<RandomTableType>({ ...data, type: "randomtables" })}
           className="w-24"
           field="icon"
           header="Icon"

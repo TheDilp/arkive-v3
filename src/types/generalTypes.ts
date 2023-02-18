@@ -7,6 +7,7 @@ import { DictionaryType, WordType } from "./ItemTypes/dictionaryTypes";
 import { DocumentType } from "./ItemTypes/documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
 import { ProjectType } from "./ItemTypes/projectTypes";
+import { RandomTableOptionType, RandomTableType } from "./ItemTypes/randomTableTypes";
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
 import { UserType } from "./userTypes";
 
@@ -25,8 +26,17 @@ export type AvailableSubItemTypes =
   | "randomtableoptions";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
-export type AllItemsType = DocumentType | MapType | BoardType | ScreenType | DictionaryType | CalendarType;
-export type AllSubItemsType = MapPinType | MapLayerType | NodeType | EdgeType | SectionType | CardType | WordType | MonthType;
+export type AllItemsType = DocumentType | MapType | BoardType | CalendarType | ScreenType | DictionaryType | RandomTableType;
+export type AllSubItemsType =
+  | MapPinType
+  | MapLayerType
+  | NodeType
+  | EdgeType
+  | SectionType
+  | CardType
+  | WordType
+  | MonthType
+  | RandomTableOptionType;
 
 export type AvailableSearchResultTypes =
   | "documents"
