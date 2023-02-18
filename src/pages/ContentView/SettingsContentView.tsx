@@ -7,6 +7,7 @@ const MapSettings = lazy(() => import("../Settings/MapSettings"));
 const BoardSettings = lazy(() => import("../Settings/BoardSettings"));
 const CalendarSettings = lazy(() => import("../Settings/CalendarSettings"));
 const ScreenSettings = lazy(() => import("../Settings/ScreenSettings"));
+const DictionarySettings = lazy(() => import("../Settings/DictionarySettings"));
 const TagsSettings = lazy(() => import("../Settings/TagsSettings"));
 const AssetSettings = lazy(() => import("../Settings/Assets/AssetSettings"));
 
@@ -19,6 +20,7 @@ export default function SettingsContentView() {
   if (type === "board-settings") return <BoardSettings />;
   if (type === "calendar-settings") return <CalendarSettings />;
   if (type === "screen-settings") return <ScreenSettings />;
+  if (type === "dictionary-settings") return <DictionarySettings />;
   if (type === "tag-settings") return <TagsSettings />;
   if (type === "asset-settings") return <AssetSettings />;
   return null;
