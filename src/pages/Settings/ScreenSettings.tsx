@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { Dropdown } from "primereact/dropdown";
 import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
@@ -17,6 +18,7 @@ import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { TagType } from "../../types/generalTypes";
 import { ScreenType } from "../../types/ItemTypes/screenTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { getSectionSizeName, SectionSizeOptions } from "../../utils/screenUtils";
 import { getCheckedValue, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
 import { ParentColumn } from "./Columns";
@@ -54,14 +56,14 @@ function IconColumn({ id, icon, folder }: ScreenType) {
 
 function FolderTemplatePublicColumn({ id, folder, isPublic }: ScreenType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
-  const updateDocumentMutation = useUpdateItem("screens", project_id as string);
+  const updateScreenMutation = useUpdateItem("screens", project_id as string);
   const queryClient = useQueryClient();
 
   return (
     <Checkbox
       checked={getCheckedValue({ folder, isPublic }, type)}
       onChange={(e) =>
-        updateDocumentMutation?.mutate(
+        updateScreenMutation?.mutate(
           { [type]: e.checked, id },
           {
             onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "screens"] }),
@@ -92,7 +94,21 @@ function TagsEditor(editorOptions: ColumnEditorOptions) {
     />
   );
 }
-
+function SectionSizeEditor(editorOptions: ColumnEditorOptions, updateScreen: (data: Partial<ScreenType>) => void) {
+  const { field, editorCallback, rowData } = editorOptions;
+  return (
+    <Dropdown
+      name="sectionSize"
+      onChange={(e) => {
+        updateScreen({ id: rowData.id, sectionSize: e.value });
+        if (editorCallback) editorCallback(e.value);
+      }}
+      options={SectionSizeOptions}
+      title="Section size"
+      value={field}
+    />
+  );
+}
 function ActionsColumn({ id, folder }: ScreenType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
@@ -127,14 +143,15 @@ export default function ScreenSettings() {
   const { mutate: deleteMutation } = useDeleteItem("screens", project_id as string);
   const queryClient = useQueryClient();
 
-  const updateDocument = (data: Partial<ScreenType>) =>
+  const updateScreen = (data: Partial<ScreenType>) => {
     mutate(data, {
       onSuccess: async () => {
         await queryClient.refetchQueries({ queryKey: ["allItems", project_id, "screens"] });
         toaster("success", "Item updated successfully.");
       },
     });
-
+  };
+  console.log(screens);
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   return (
     <div className="h-[95vh] w-full overflow-hidden p-4">
@@ -154,11 +171,19 @@ export default function ScreenSettings() {
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column
           className="max-w-[15rem] truncate"
-          editor={(e) => TitleEditor(e, updateDocument)}
+          editor={(e) => TitleEditor(e, updateScreen)}
           field="title"
           filter
           header="Title"
           sortable
+        />
+        <Column
+          body={(data) => getSectionSizeName(data.sectionSize)}
+          bodyStyle={{ textAlign: "center" }}
+          className="max-w-[5rem]"
+          editor={(e) => SectionSizeEditor(e, updateScreen)}
+          field="sectionSize"
+          header="Section Size"
         />
         <Column align="center" body={IconColumn} className="w-8" field="icon" header="Icon" />
 

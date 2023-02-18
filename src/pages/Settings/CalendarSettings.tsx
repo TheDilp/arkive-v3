@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -9,7 +8,7 @@ import { Tag } from "primereact/tag";
 import { MutableRefObject, useRef, useState } from "react";
 import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 
-import { IconSelect } from "../../components/IconSelect/IconSelect";
+import IconColumn from "../../components/Settings/Columns/IconColumn";
 import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
@@ -24,35 +23,6 @@ import BooleanFilter from "./Filters/BooleanFilter";
 import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
 
-function IconColumn({ id, icon, folder }: CalendarType) {
-  const { project_id } = useParams();
-  const queryClient = useQueryClient();
-  const updateCalendarMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
-  return (
-    <div className="flex justify-center">
-      <IconSelect
-        disabled={folder}
-        setIcon={(newIcon) => {
-          updateCalendarMutation?.mutate(
-            { icon: newIcon, id },
-            {
-              onSuccess: () => {
-                queryClient.refetchQueries({ queryKey: ["allItems", project_id, "calendars"] });
-                toaster("success", "Icon updated successfully.");
-              },
-            },
-          );
-        }}>
-        <Icon
-          className={`rounded-full ${folder ? "" : "cursor-pointer hover:bg-sky-400"}`}
-          fontSize={24}
-          icon={folder ? "mdi:folder" : icon || "mdi:file"}
-          inline
-        />
-      </IconSelect>
-    </div>
-  );
-}
 function FolderPublicGridColumn({ id, folder, isPublic }: CalendarType, type: "folder" | "isPublic") {
   const { project_id } = useParams();
   const updateCalendarMutation = useUpdateItem("calendars", project_id as string);
@@ -196,7 +166,13 @@ export default function CalendarSettings() {
           field="minutes"
           header="Minutes"
         />
-        <Column align="center" body={IconColumn} className="w-24" field="icon" header="Icon" />
+        <Column
+          align="center"
+          body={(data) => IconColumn<CalendarType>({ ...data, type: "calendars" })}
+          className="w-24"
+          field="icon"
+          header="Icon"
+        />
 
         <Column
           align="center"

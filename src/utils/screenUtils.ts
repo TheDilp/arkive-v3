@@ -50,6 +50,9 @@ export const getCardSizeClass = (size: string) => {
   if (size === "xxl") return "min-h-[40rem] max-h-[40rem] h-[40rem]";
   return "min-h-[25rem] max-h-[25rem] h-[25rem]";
 };
+export function getSectionSizeName(size: "xs" | "sm" | "md" | "lg" | "xl") {
+  return SectionSizeOptions.find((item) => item.value === size)?.label;
+}
 
 export function onDragEnd(
   result: DropResult,

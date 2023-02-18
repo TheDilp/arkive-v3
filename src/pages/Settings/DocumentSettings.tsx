@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
@@ -12,7 +11,7 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
-import { IconSelect } from "../../components/IconSelect/IconSelect";
+import IconColumn from "../../components/Settings/Columns/IconColumn";
 import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
 import Tags from "../../components/Tags/Tags";
@@ -31,32 +30,6 @@ import TagsFilter from "./Filters/TagsFilter";
 import SettingsToolbar from "./SettingsToolbar";
 // TABLE UTIL FUNCTIONS
 
-function IconColumn({ id, icon, folder }: DocumentType) {
-  const { project_id } = useParams();
-  const queryClient = useQueryClient();
-  const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
-  return (
-    <div className="flex justify-center">
-      <IconSelect
-        disabled={folder}
-        setIcon={(newIcon) => {
-          updateDocumentMutation?.mutate(
-            { icon: newIcon, id },
-            {
-              onSuccess: () => queryClient.refetchQueries({ queryKey: ["allItems", project_id, "documents"] }),
-            },
-          );
-        }}>
-        <Icon
-          className={`rounded-full ${folder ? "" : "cursor-pointer hover:bg-sky-400"}`}
-          fontSize={24}
-          icon={folder ? "mdi:folder" : icon || "mdi:file"}
-          inline
-        />
-      </IconSelect>
-    </div>
-  );
-}
 function ImageColumn({ image }: DocumentType) {
   return image ? (
     <div className="flex h-8 w-full justify-center">
@@ -87,7 +60,6 @@ function ImageEditor(
     </div>
   );
 }
-
 function FolderTemplatePublicColumn(
   { id, folder, template, isPublic }: DocumentType,
   type: "folder" | "template" | "isPublic",
@@ -111,7 +83,6 @@ function FolderTemplatePublicColumn(
     />
   );
 }
-
 function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" | "alter_names") {
   return (
     <div className={`flex w-[10rem] flex-wrap justify-center gap-1 truncate ${type}Tags`}>
@@ -120,7 +91,6 @@ function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" 
     </div>
   );
 }
-
 function TagsEditor(editorOptions: ColumnEditorOptions) {
   const { rowData, editorCallback } = editorOptions;
   return (
@@ -133,7 +103,6 @@ function TagsEditor(editorOptions: ColumnEditorOptions) {
     />
   );
 }
-
 function AlterNamesEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: Partial<DocumentType>) => void) {
   const { rowData, editorCallback } = editorOptions;
   return (
@@ -151,7 +120,6 @@ function AlterNamesEditor(editorOptions: ColumnEditorOptions, updateDocument: (d
     />
   );
 }
-
 function ActionsColumn({ id, folder }: DocumentType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
@@ -220,7 +188,13 @@ export default function DocumentSettings() {
           header="Title"
           sortable
         />
-        <Column align="center" body={IconColumn} className="w-8" field="icon" header="Icon" />
+        <Column
+          align="center"
+          body={(data) => IconColumn<DocumentType>({ ...data, type: "documents" })}
+          className="w-8"
+          field="icon"
+          header="Icon"
+        />
         <Column
           align="center"
           body={ImageColumn}
