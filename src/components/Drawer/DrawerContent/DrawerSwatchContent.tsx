@@ -21,8 +21,14 @@ export default function DrawerSwatchContent() {
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
   const { mutateAsync, isLoading: isMutating } = useCreateSwatch(project_id as string);
   return (
-    <div className="flex flex-col">
-      {`${localItem?.id ? "Update" : "Create"} Swatch`}
+    <div className="flex flex-col gap-y-2">
+      <h2 className="text-center text-2xl">
+        {document ? (
+          `${localItem?.id ? "Update" : "Create"} Swatch`
+        ) : (
+          <div className="flex items-center">Create New Document</div>
+        )}
+      </h2>
 
       <DrawerSection title="Swatch name (optional)">
         <InputText name="title" onChange={(e) => handleChange(e.target)} value={localItem?.title} />

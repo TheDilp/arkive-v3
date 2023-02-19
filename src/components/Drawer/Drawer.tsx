@@ -33,6 +33,7 @@ const DrawerEraContent = lazy(() => import("./DrawerContent/DrawerEraContent"));
 const DrawerMonthContent = lazy(() => import("./DrawerContent/DrawerMonthContent"));
 const DrawerEventContent = lazy(() => import("./DrawerContent/DrawerEventContent"));
 const DrawerEventDescription = lazy(() => import("./DrawerContent/DrawerEventDescription"));
+const DrawerSwatchContent = lazy(() => import("./DrawerContent/DrawerSwatchContent"));
 
 export function handleCloseDrawer(
   setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,
@@ -100,6 +101,7 @@ export default function Drawer() {
         {drawer.type === "events" && drawer.exceptions?.eventDescription ? <DrawerEventDescription /> : null}
         {drawer.type === "randomtables" ? <DrawerRandomTableContent /> : null}
         {drawer.type === "randomtableoptions" ? <DrawerRandomTableOptionContent /> : null}
+        {drawer.type === "swatches" ? <DrawerSwatchContent /> : null}
       </Suspense>
     </PrimeDrawer>
   );
