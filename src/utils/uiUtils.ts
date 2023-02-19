@@ -28,7 +28,7 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   {
     icon: "mdi:home",
     navigate: "./settings/project-settings",
-    title: "Projects",
+    title: "Project",
   },
   { icon: "ion:documents-outline", navigate: "./settings/document-settings", title: "Documents" },
   { icon: "mdi:map-outline", navigate: "./settings/map-settings", title: "Maps" },

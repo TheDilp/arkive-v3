@@ -12,7 +12,6 @@ export default function IconColumn<ItemType extends { id: string; icon: string; 
   folder,
   type,
 }: ItemType & { type: AvailableItemTypes }) {
-  console.log(id, icon, folder, type);
   const { project_id } = useParams();
   const queryClient = useQueryClient();
   const updateItemMutation = useUpdateItem<AllItemsType>(type, project_id as string);

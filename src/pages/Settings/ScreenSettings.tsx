@@ -151,7 +151,6 @@ export default function ScreenSettings() {
       },
     });
   };
-  console.log(screens);
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   return (
     <div className="h-[95vh] w-full overflow-hidden p-4">

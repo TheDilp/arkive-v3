@@ -12,6 +12,7 @@ import { MapCreateType } from "../../types/ItemTypes/mapTypes";
 
 type Props = {
   handleChange: ({ name, value }: { name: string; value: any }) => void;
+  isSettings?: boolean;
   localItem:
     | AllItemsType
     | NodeType
@@ -49,7 +50,7 @@ const filterTags = (
   if (!query && initialTags) setTags(initialTags);
 };
 
-export default function Tags({ handleChange, localItem, type }: Props) {
+export default function Tags({ handleChange, localItem, type, isSettings }: Props) {
   const { project_id } = useParams();
   const { data: initialTags } = useGetAllTags(project_id as string);
   const [tags, setTags] = useState(initialTags || []);
@@ -65,26 +66,36 @@ export default function Tags({ handleChange, localItem, type }: Props) {
       multiple
       onChange={(e) => setTags(e.value)}
       onKeyPress={(e) => {
+        if (isSettings) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
         // For adding completely new tags
         if (e.key === "Enter" && e.currentTarget.value !== "" && e.currentTarget.value !== undefined) {
           const id = crypto.randomUUID();
           handleChange({ name: "tags", value: [...(localItem?.tags || []), { id, title: e?.currentTarget?.value }] });
-          mutate({ id, title: e.currentTarget.value, ...getTagRelationId(localItem.id, type, "connect") });
+          if (!isSettings) mutate({ id, title: e.currentTarget.value, ...getTagRelationId(localItem.id, type, "connect") });
           e.currentTarget.value = "";
         }
       }}
       onSelect={(e) => {
-        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "connect") });
-
+        if (isSettings) {
+          e.originalEvent.preventDefault();
+          e.originalEvent.preventDefault();
+        }
         handleChange({ name: "tags", value: [...(localItem?.tags || []), e.value] });
+        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "connect") });
       }}
       onUnselect={(e) => {
-        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "disconnect") });
-
+        if (isSettings) {
+          e.originalEvent.stopPropagation();
+          e.originalEvent.preventDefault();
+        }
         handleChange({
           name: "tags",
           value: [...(localItem?.tags || []).filter((tag) => tag.id !== e.value.id)],
         });
+        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "disconnect") });
       }}
       placeholder="Add Tags"
       suggestions={tags}
