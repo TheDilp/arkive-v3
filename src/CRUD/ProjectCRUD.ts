@@ -169,3 +169,36 @@ export const useUpdateSwatch = (project_id: string) => {
     },
   );
 };
+
+export const useDeleteSwatch = (project_id: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (id: string) => {
+      if (id) {
+        const url = `${baseURLS.baseServer}deleteswatch`;
+        if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id }) });
+      }
+      return null;
+    },
+    {
+      onMutate: (variables) => {
+        const oldData = queryClient.getQueryData(["singleProject", project_id]);
+        queryClient.setQueryData(["singleProject", project_id], (old: ProjectType | undefined) => {
+          if (old) {
+            return { ...old, swatches: (old?.swatches || []).filter((swatch) => swatch.id !== variables) };
+          }
+          return old;
+        });
+        return { oldData };
+      },
+      onError: (error, _, context) => {
+        queryClient.setQueryData(["allProjects"], context?.oldData);
+        toaster("error", error as string);
+      },
+      onSuccess: () => {
+        toaster("success", "Swatch successfully deleted. 🗑️");
+      },
+    },
+  );
+};

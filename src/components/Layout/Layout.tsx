@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
 
 import { useGetUser } from "../../CRUD/AuthCRUD";
@@ -42,6 +42,10 @@ export default function Layout() {
     },
     false,
   );
+
+  useEffect(() => {
+    if (projectData) setProjectAtom(projectData as ProjectType);
+  }, [projectData]);
   return (
     <div className="flex h-full max-w-full overflow-hidden">
       <Sidebar />

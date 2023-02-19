@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 
 import SwatchCard from "../../components/Card/SwatchCard";
-import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
+import { useDeleteSwatch, useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
@@ -11,6 +11,8 @@ export default function MiscellaneousSettings() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const { data: project } = useGetSingleProject(project_id as string, { staleTime: 5 * 60 * 1000 });
+  const { mutateAsync } = useDeleteSwatch(project_id as string);
+
   return (
     <div className="flex flex-col gap-y-4 p-4">
       <div>
@@ -24,7 +26,7 @@ export default function MiscellaneousSettings() {
       </div>
       <div className="grid grid-cols-4 gap-2 lg:grid-cols-6">
         {project?.swatches?.length
-          ? project.swatches.map((swatch) => <SwatchCard key={swatch.id} {...swatch} />)
+          ? project.swatches.map((swatch) => <SwatchCard key={swatch.id} {...swatch} deleteSwatch={mutateAsync} />)
           : "There are no swatches."}
       </div>
     </div>

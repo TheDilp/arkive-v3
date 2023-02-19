@@ -12,16 +12,16 @@ import { buttonLabelWithIcon } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
 import DrawerSection from "../DrawerSection";
 
+const DefaultSwatch = { id: "", title: "", color: "#595959" };
+
 export default function DrawerSwatchContent() {
   const { project_id } = useParams();
   const [drawer] = useAtom(DrawerAtom);
-  const [localItem, setLocalItem] = useState<SwatchType>(
-    (drawer?.data as SwatchType) ?? { id: "", title: "", color: "#595959" },
-  );
+  const [localItem, setLocalItem] = useState<SwatchType>((drawer?.data as SwatchType) ?? DefaultSwatch);
 
   useEffect(() => {
     if (drawer?.data) setLocalItem(drawer?.data as SwatchType);
-    else setLocalItem({ id: "", title: "", color: "#595959" });
+    else setLocalItem(DefaultSwatch);
   }, [drawer?.data]);
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
@@ -53,8 +53,9 @@ export default function DrawerSwatchContent() {
         onClick={async () => {
           if (!localItem?.id) {
             await createSwatch({ id: crypto.randomUUID(), project_id, ...changedData });
+            setLocalItem(DefaultSwatch);
           } else {
-            updateSwatch({ id: localItem.id, title: localItem.title });
+            await updateSwatch({ id: localItem.id, title: localItem.title });
           }
           resetChanges();
         }}
