@@ -22,7 +22,7 @@ export default function MiscellaneousSettings() {
           onClick={() => setDrawer({ ...DefaultDrawer, type: "swatches", show: true, position: "right" })}
         />
       </div>
-      <div className="grid grid-cols-6 gap-2">
+      <div className="grid grid-cols-4 gap-2 lg:grid-cols-6">
         {project?.swatches?.length
           ? project.swatches.map((swatch) => <SwatchCard key={swatch.id} {...swatch} />)
           : "There are no swatches."}

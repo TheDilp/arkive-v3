@@ -75,6 +75,7 @@ export const useGetSingleProject = (id: string, options?: UseQueryOptions) => {
     {
       enabled: options?.enabled,
       staleTime: 60 * 5 * 1000,
+      onSuccess: options?.onSuccess,
     },
   );
 };
@@ -127,6 +128,38 @@ export const useCreateSwatch = (project_id: string) => {
       onMutate: (variables: SwatchType) => {
         queryClient.setQueryData(["singleProject", project_id], (old: ProjectType | undefined) => {
           if (old) return { ...old, swatches: [...old.swatches, variables] };
+          return old;
+        });
+      },
+      onSuccess: () => {
+        toaster("success", "Your swatch has been successfully created.");
+      },
+    },
+  );
+};
+export const useUpdateSwatch = (project_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (variables: Partial<SwatchType>) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${updateURLs.updateSwatch}`,
+        method: "POST",
+        body: JSON.stringify(variables),
+      }),
+    {
+      onError: () => {
+        toaster("error", "There was an error creating this swatch.");
+      },
+      onMutate: (variables: Partial<SwatchType>) => {
+        queryClient.setQueryData(["singleProject", project_id], (old: ProjectType | undefined) => {
+          if (old)
+            return {
+              ...old,
+              swatches: [...(old.swatches || [])].map((swatch) => {
+                if (swatch.id === variables.id) return { ...swatch, ...variables };
+                return swatch;
+              }),
+            };
           return old;
         });
       },

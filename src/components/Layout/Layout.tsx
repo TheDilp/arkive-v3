@@ -7,8 +7,9 @@ import { useGetUser } from "../../CRUD/AuthCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useAuth } from "../../hooks/useAuth";
 import { MemberType } from "../../types/generalTypes";
+import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
-import { UserAtom } from "../../utils/Atoms/atoms";
+import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import LoadingScreen from "../Loading/LoadingScreen";
@@ -20,10 +21,13 @@ export default function Layout() {
   const { project_id } = useParams();
   const user = useAuth();
   const [, setUserAtom] = useAtom(UserAtom);
+  const [, setProjectAtom] = useAtom(ProjectAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
     enabled: !!user,
+    onSuccess: (data) => {
+      setProjectAtom(data as ProjectType);
+    },
   });
-
   const { isFetching } = useGetUser(
     user as string,
     {
