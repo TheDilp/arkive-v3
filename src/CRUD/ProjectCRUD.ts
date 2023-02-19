@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
-import { ProjectType } from "../types/ItemTypes/projectTypes";
+import { ProjectType, SwatchType } from "../types/ItemTypes/projectTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -78,7 +78,6 @@ export const useGetSingleProject = (id: string, options?: UseQueryOptions) => {
     },
   );
 };
-
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();
 
@@ -110,4 +109,22 @@ export const useDeleteProject = () => {
       },
     },
   );
+};
+
+export const useCreateSwatch = (project_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(async () => FetchFunction({ url: `${baseURLS.baseServer}${createURLS.createSwatch}`, method: "POST" }), {
+    onError: () => {
+      toaster("error", "There was an error creating this swatch.");
+    },
+    onMutate: (variables: SwatchType) => {
+      queryClient.setQueryData(["singleProject", project_id], (old: ProjectType | undefined) => {
+        if (old) return { ...old, swatches: [...old.swatches, variables] };
+        return old;
+      });
+    },
+    onSuccess: () => {
+      toaster("success", "Your swatch has been successfully created.");
+    },
+  });
 };

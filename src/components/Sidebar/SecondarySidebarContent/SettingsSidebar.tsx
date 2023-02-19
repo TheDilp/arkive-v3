@@ -22,23 +22,6 @@ export default function SettingsSidebar() {
             </Link>
           </li>
         ))}
-
-        <Link
-          className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-            pathname.includes("tags-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-          }`}
-          to="./settings/tags-settings">
-          <Icon fontSize={18} icon="mdi:tags" />
-          Tags
-        </Link>
-        {/* <Link
-          className={`flex cursor-pointer items-center gap-x-4 rounded py-2 px-4  hover:text-white ${
-            pathname.includes("assets-settings") ? "bg-sky-700 text-white" : "text-zinc-500"
-          }`}
-          to="./settings/assets-settings">
-          <Icon fontSize={18} icon="ion:images" />
-          Assets
-        </Link> */}
       </ul>
     </div>
   );

@@ -38,6 +38,9 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   { icon: "fluent:board-24-regular", navigate: "./settings/screen-settings", title: "Screens" },
   { icon: "mdi-light:book", navigate: "./settings/dictionary-settings", title: "Dictionaries" },
   { icon: "arcticons:reroll", navigate: "./settings/randomtable-settings", title: "Random Tables" },
+  { icon: "mdi:tags", navigate: "./settings/tag-settings", title: "Tags" },
+  { icon: "ic:baseline-miscellaneous-services", navigate: "./settings/misc-settings", title: "Miscellaneous" },
+
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 

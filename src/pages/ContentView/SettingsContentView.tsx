@@ -10,6 +10,7 @@ const ScreenSettings = lazy(() => import("../Settings/ScreenSettings"));
 const DictionarySettings = lazy(() => import("../Settings/DictionarySettings"));
 const RandomTableSettings = lazy(() => import("../Settings/RandomTableSettings"));
 const TagsSettings = lazy(() => import("../Settings/TagsSettings"));
+const MiscellaneousSettings = lazy(() => import("../Settings/MiscellaneousSettings"));
 const AssetSettings = lazy(() => import("../Settings/Assets/AssetSettings"));
 
 export default function SettingsContentView() {
@@ -24,6 +25,7 @@ export default function SettingsContentView() {
   if (type === "dictionary-settings") return <DictionarySettings />;
   if (type === "randomtable-settings") return <RandomTableSettings />;
   if (type === "tag-settings") return <TagsSettings />;
+  if (type === "misc-settings") return <MiscellaneousSettings />;
   if (type === "asset-settings") return <AssetSettings />;
   return null;
 }

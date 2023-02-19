@@ -90,8 +90,8 @@ export default function ProjectSettings() {
       </div>
 
       <hr className="border-zinc-700" />
-      <div className="flex flex-col gap-y-2">
-        <h3 className="text-lg font-semibold">Add to project</h3>
+      <div className="flex flex-col gap-y-4">
+        <h3 className="text-lg font-semibold">Invite to project</h3>
         <h4 className="text-base font-semibold">Add another user to a project with selected permissions</h4>
         <div className="flex w-full max-w-lg justify-between gap-x-2">
           <InputText
