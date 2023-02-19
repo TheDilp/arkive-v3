@@ -42,7 +42,7 @@ export default function DrawerSwatchContent() {
         disabled={!localItem.color}
         loading={isMutating}
         onClick={async () => {
-          await mutateAsync({ id: crypto.randomUUID(), ...changedData });
+          await mutateAsync({ id: crypto.randomUUID(), project_id, ...changedData });
           resetChanges();
         }}
         type="submit">
