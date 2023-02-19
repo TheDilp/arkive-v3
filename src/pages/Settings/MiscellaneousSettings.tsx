@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 
+import SwatchCard from "../../components/Card/SwatchCard";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -21,7 +22,11 @@ export default function MiscellaneousSettings() {
           onClick={() => setDrawer({ ...DefaultDrawer, type: "swatches", show: true, position: "right" })}
         />
       </div>
-      {project?.swatches?.length ? "Test" : "There are no swatches."}
+      <div className="grid grid-cols-6 gap-2">
+        {project?.swatches?.length
+          ? project.swatches.map((swatch) => <SwatchCard key={swatch.id} {...swatch} />)
+          : "There are no swatches."}
+      </div>
     </div>
   );
 }
