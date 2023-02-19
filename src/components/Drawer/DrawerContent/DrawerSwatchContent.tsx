@@ -38,11 +38,42 @@ export default function DrawerSwatchContent() {
       </h2>
 
       <DrawerSection title="Swatch name (optional)">
-        <InputText name="title" onChange={(e) => handleChange(e.target)} value={localItem?.title} />
+        <InputText
+          name="title"
+          onChange={(e) => handleChange(e.target)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter" && localItem?.color) {
+              if (!localItem?.id) {
+                await createSwatch({ id: crypto.randomUUID(), project_id, ...changedData });
+                setLocalItem(DefaultSwatch);
+              } else {
+                await updateSwatch({ id: localItem.id, title: localItem.title });
+              }
+              resetChanges();
+            }
+          }}
+          value={localItem?.title}
+        />
       </DrawerSection>
       {localItem?.id ? null : (
         <DrawerSection title="Swatch color">
-          <ColorInput color={localItem.color} isDisabled={!!localItem.id} name="color" onChange={handleChange} />
+          <ColorInput
+            color={localItem.color}
+            isDisabled={!!localItem.id}
+            name="color"
+            onChange={handleChange}
+            onEnter={async () => {
+              if (localItem?.color) {
+                if (!localItem?.id) {
+                  await createSwatch({ id: crypto.randomUUID(), project_id, ...changedData });
+                  setLocalItem(DefaultSwatch);
+                } else {
+                  await updateSwatch({ id: localItem.id, title: localItem.title });
+                }
+                resetChanges();
+              }
+            }}
+          />
         </DrawerSection>
       )}
 
