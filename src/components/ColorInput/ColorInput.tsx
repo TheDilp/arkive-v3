@@ -5,6 +5,7 @@ import { HexColorPicker } from "react-colorful";
 
 import { ProjectAtom } from "../../utils/Atoms/atoms";
 import { DefaultSwatches } from "../../utils/DefaultValues/ProjectDefaults";
+import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
@@ -32,15 +33,22 @@ export default function ColorInput({ name, color, isDisabled, onChange, hasInput
             <div className="flex w-full flex-wrap gap-x-2 bg-zinc-900 p-1">
               {projectData?.swatches?.length
                 ? projectData.swatches.map((swatch) => (
-                    <button
-                      key={swatch.id}
-                      className="h-6 w-6 cursor-pointer rounded-sm"
-                      onClick={() => onChange({ name, value: swatch.color })}
-                      style={{
-                        backgroundColor: swatch.color,
+                    <Tooltip
+                      content={swatch?.title ? <DefaultTooltip>{swatch.title}</DefaultTooltip> : "TEST"}
+                      customOffset={{
+                        mainAxis: 10,
                       }}
-                      type="button"
-                    />
+                      disabled={!swatch?.title}>
+                      <button
+                        key={swatch.id}
+                        className="h-6 w-6 cursor-pointer rounded-sm"
+                        onClick={() => onChange({ name, value: swatch.color })}
+                        style={{
+                          backgroundColor: swatch.color,
+                        }}
+                        type="button"
+                      />
+                    </Tooltip>
                   ))
                 : DefaultSwatches.map((preset: string) => (
                     <button

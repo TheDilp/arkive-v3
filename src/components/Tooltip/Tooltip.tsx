@@ -18,7 +18,7 @@ import { cloneElement, useState } from "react";
 
 interface Props {
   allowedPlacements?: Placement[];
-  content: string | JSX.Element;
+  content: string | JSX.Element | null;
   children: JSX.Element;
   disabled?: boolean;
   isClickable?: boolean;
