@@ -59,7 +59,10 @@ export default function ColorInput({ name, color, isDisabled, isShowingSwatches 
                             <button
                               key={swatch.id}
                               className="h-6 w-6 cursor-pointer rounded-sm"
-                              onClick={() => onChange({ name, value: swatch.color })}
+                              onClick={() => {
+                                onChange({ name, value: swatch.color });
+                                setFilter("");
+                              }}
                               style={{
                                 backgroundColor: swatch.color,
                               }}

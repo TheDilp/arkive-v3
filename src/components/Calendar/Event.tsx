@@ -68,7 +68,8 @@ export default function CalendarEvent({ monthEvents, index, year, isReadOnly }: 
               }
               customOffset={{
                 mainAxis: 5,
-              }}>
+              }}
+              disabled={!event?.documentsId || !event?.description}>
               <div
                 className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-200"
                 onClick={() =>
