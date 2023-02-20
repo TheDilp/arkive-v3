@@ -33,38 +33,10 @@ export default function BoardQuickBar() {
   const [, setExportDialog] = useAtom(DialogAtom);
   const deleteManyNodesMutation = useDeleteManySubItems(item_id as string, "nodes");
   const deleteManyEdgesMutation = useDeleteManySubItems(item_id as string, "edges");
-  const debouncedColorPick = useDebouncedCallback(
-    // function
-    (color) => {
-      if (boardRef) updateColor(boardRef, color, updateManyNodes, updateManyEdges);
-    },
-    // delay in ms
-    400,
-  );
+  const debouncedColorPick = useDebouncedCallback((color) => {
+    if (boardRef) updateColor(boardRef, color, updateManyNodes, updateManyEdges);
+  }, 400);
 
-  //   const confirmDelete = (selected: any) => {
-  //     confirmDialog({
-  //       message: <div>Are you sure you want to delete these nodes/edges?</div>,
-  //       header: "Delete nodes/edges",
-  //       icon: "pi pi-exclamation-triangle",
-  //       acceptClassName: "p-button-outlined text-red-400",
-  //       accept: async () => {
-  //         if (selected.nodes()?.length > 0) {
-  //           deleteManyNodesMutation.mutate({
-  //             ids: selected.nodes().map((node: any) => node.data().id),
-  //             board_id: board_id as string,
-  //           });
-  //         }
-  //         if (selected.edges().length > 0) {
-  //           deleteManyEdgesMutation.mutate({
-  //             ids: selected.edges().map((edge: any) => edge.data().id),
-  //             board_id: board_id as string,
-  //           });
-  //         }
-  //       },
-  //       reject: () => {},
-  //     });
-  //   };
   if (!board) return null;
   return (
     <div className="absolute bottom-0 z-10 flex h-12 w-72 items-center justify-evenly rounded bg-zinc-800 px-2 text-white shadow-md">
