@@ -60,6 +60,7 @@ export default function DrawerSwatchContent() {
           <ColorInput
             color={localItem.color}
             isDisabled={!!localItem.id}
+            isShowingSwatches={false}
             name="color"
             onChange={handleChange}
             onEnter={async () => {
