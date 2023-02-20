@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { useAtom } from "jotai";
 import { InputText } from "primereact/inputtext";
+import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
 import { ProjectAtom } from "../../utils/Atoms/atoms";
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export default function ColorInput({ name, color, isDisabled, onChange, hasInput, onEnter }: Props) {
+  const [filter, setFilter] = useState("");
   const [projectData] = useAtom(ProjectAtom);
   return (
     <div className="relative flex w-full items-center justify-between">
@@ -30,26 +32,38 @@ export default function ColorInput({ name, color, isDisabled, onChange, hasInput
                 onChange({ name, value: newColor });
               }}
             />
-            <div className="flex w-full flex-wrap gap-x-2 bg-zinc-900 p-1">
+            <InputText
+              className="p-inputtext-sm w-full"
+              onChange={(e) => setFilter(e.target.value)}
+              placeholder="Search swatch"
+              value={filter}
+            />
+            <div
+              className="grid h-24 content-start gap-x-2 gap-y-1 overflow-y-auto bg-zinc-900 p-1"
+              style={{
+                gridTemplateColumns: "repeat(6, minmax(1.5rem, 1fr))",
+              }}>
               {projectData?.swatches?.length
-                ? projectData.swatches.map((swatch) => (
-                    <Tooltip
-                      content={swatch?.title ? <DefaultTooltip>{swatch.title}</DefaultTooltip> : "TEST"}
-                      customOffset={{
-                        mainAxis: 10,
-                      }}
-                      disabled={!swatch?.title}>
-                      <button
-                        key={swatch.id}
-                        className="h-6 w-6 cursor-pointer rounded-sm"
-                        onClick={() => onChange({ name, value: swatch.color })}
-                        style={{
-                          backgroundColor: swatch.color,
+                ? projectData.swatches
+                    .filter((swatch) => (filter ? swatch?.title?.toLowerCase()?.includes(filter.toLowerCase()) : true))
+                    .map((swatch) => (
+                      <Tooltip
+                        content={swatch?.title ? <DefaultTooltip>{swatch.title}</DefaultTooltip> : null}
+                        customOffset={{
+                          mainAxis: 10,
                         }}
-                        type="button"
-                      />
-                    </Tooltip>
-                  ))
+                        disabled={!swatch?.title}>
+                        <button
+                          key={swatch.id}
+                          className="h-6 w-6 cursor-pointer rounded-sm"
+                          onClick={() => onChange({ name, value: swatch.color })}
+                          style={{
+                            backgroundColor: swatch.color,
+                          }}
+                          type="button"
+                        />
+                      </Tooltip>
+                    ))
                 : DefaultSwatches.map((preset: string) => (
                     <button
                       key={preset}

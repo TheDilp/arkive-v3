@@ -24,7 +24,7 @@ export default function MiscellaneousSettings() {
           onClick={() => setDrawer({ ...DefaultDrawer, type: "swatches", show: true, position: "right" })}
         />
       </div>
-      <div className="grid grid-cols-4 gap-2 lg:grid-cols-6">
+      <div className="grid max-w-full gap-4  lg:grid-cols-4 xl:grid-cols-6">
         {project?.swatches?.length
           ? project.swatches.map((swatch) => <SwatchCard key={swatch.id} {...swatch} deleteSwatch={mutateAsync} />)
           : "There are no swatches."}
