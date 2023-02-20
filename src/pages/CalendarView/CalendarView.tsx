@@ -3,15 +3,20 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
+import DayNumber from "../../components/Calendar/DayNumber";
+import DayTitle from "../../components/Calendar/DayTitle";
 import CalendarEvent from "../../components/Calendar/Event";
+import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { useGetItem } from "../../hooks/useGetItem";
 import { CalendarType, EraType, MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { getFillerDayNumber, getNextDate, getStartingDayForMonth } from "../../utils/calendarUtils";
+import { useEventMenuItems } from "../../utils/contextMenus";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getItem, setItem } from "../../utils/storage";
 
@@ -19,113 +24,19 @@ function MonthDropdownTemplate(data: MonthType) {
   const { title } = data;
   return <div className="font-Lato text-lg">{title}</div>;
 }
-function getNextDate(date: { month: number; year: number }, calendar: CalendarType, type: "next" | "previous") {
-  const { month, year } = date;
-  const numberOfMonths = calendar?.months?.length;
-  // const monthDays = calendar?.months?.[month]?.days;
-  if (numberOfMonths) {
-    if (type === "next") {
-      if (month === numberOfMonths - 1) {
-        return { month: 0, year: year + 1 };
-      }
-      return { month: month + 1, year };
-    }
-    if (type === "previous") {
-      if (month === 0) {
-        return {
-          month: numberOfMonths - 1,
-          year: year - 1 === 0 ? -1 : year - 1,
-        };
-      }
-      return { month: month - 1, year };
-    }
-    return date;
-  }
-  return date;
-}
-function getStartingDayForMonth(
-  months: MonthType[] | undefined,
-  year: number,
-  monthIndex: number,
-  weekdays: number | undefined,
-) {
-  if (year === undefined || !months || !weekdays) return 0;
-  if (year === 1 && monthIndex === 0) return 0;
-  const dayInYear = months.reduce((accumulator, currentValue) => accumulator + currentValue.days, 0);
-  const dayBeforeMonth = months
-    .filter((_, index) => index < monthIndex)
-    .reduce((accumulator, currentValue) => accumulator + currentValue.days, 0);
-  let daysBeforeYear;
-  if (year < 0) {
-    daysBeforeYear = 0;
-  } else {
-    daysBeforeYear = (year - 1) * dayInYear;
-  }
-
-  return (daysBeforeYear % weekdays) + dayBeforeMonth;
-}
-function getFillerDayNumber(calendarMonths: MonthType[], currentMonthIndex: number, day: number) {
-  if (currentMonthIndex === 0) {
-    return calendarMonths[calendarMonths.length - 1].days - day - 1;
-  }
-  return calendarMonths[currentMonthIndex - 1].days - day - 1;
-}
-function DayTitle({ index, weekdays }: { index: number; weekdays: string[] }) {
-  if (index < 10)
-    return (
-      <span className="select-none font-Lato text-lg text-zinc-400 transition-colors hover:text-white">{weekdays[index]}</span>
-    );
-  return (
-    <span className="select-none font-Lato text-lg text-zinc-400 transition-colors hover:text-white">
-      {weekdays[index % weekdays.length || 0]}
-    </span>
-  );
-}
-function DayNumber({
-  dayNumber,
-  month,
-  year,
-  isFiller,
-  isReadOnly,
-}: {
-  dayNumber: number;
-  month: number;
-  year: number;
-  isFiller?: boolean;
-  isReadOnly?: boolean;
-}) {
-  const [, setDrawer] = useAtom(DrawerAtom);
-  return (
-    <span className={`${isFiller ? "text-zinc-800" : ""} flex select-none items-center p-1`}>
-      {dayNumber + 1}
-      {!isFiller && !isReadOnly ? (
-        <span className="ml-auto opacity-0 transition-all duration-100 hover:text-sky-400 group-hover:opacity-100">
-          <Icon
-            icon="mdi:plus"
-            onClick={() => {
-              if (!isFiller)
-                setDrawer({
-                  ...DefaultDrawer,
-                  data: { day: dayNumber + 1, month, year },
-
-                  type: "events",
-                  show: true,
-                });
-            }}
-          />
-        </span>
-      ) : null}
-    </span>
-  );
-}
 
 export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
   const { item_id } = useParams();
   const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars", {}, isReadOnly);
 
+  // Event context menu
+  const cm = useRef() as any;
+  const eventContextMenuItems = useEventMenuItems();
+
   const [, setDrawer] = useAtom(DrawerAtom);
   const [date, setDate] = useState<{ month: number; year: number; era: EraType | null }>({ month: 0, year: 1, era: null });
   const monthDays = calendar?.months?.[date.month]?.days;
+
   const debounceYearChange = useDebouncedCallback((year: number) => {
     setDate((prev) => ({ ...prev, year }));
     setItem(item_id as string, { ...date, year });
@@ -147,8 +58,11 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
     }
   }, [item_id, calendar, era]);
   if (isLoading) return <LoadingScreen />;
+
   return (
     <div className="flex h-full w-full max-w-full flex-col">
+      <ContextMenu cm={cm} items={eventContextMenuItems} />
+
       <h2 className="sticky top-0 flex h-14 items-center justify-center bg-zinc-800 pt-2 text-center text-2xl">
         <div className="ml-auto flex w-fit items-center">
           <Icon
@@ -288,8 +202,10 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
                     tabIndex={-1}>
                     <DayNumber key={day} dayNumber={day} isReadOnly={isReadOnly} month={date.month} year={date.year} />
                     <CalendarEvent
+                      cm={cm}
                       index={index}
                       isReadOnly={isReadOnly}
+                      monthDays={monthDays}
                       monthEvents={calendar?.events?.filter((event) => event.month === date.month) || []}
                       year={date.year}
                     />

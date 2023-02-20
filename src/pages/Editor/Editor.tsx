@@ -18,7 +18,7 @@ import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { EditorType } from "../../types/generalTypes";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
-import { MentionContextAtom } from "../../utils/Atoms/atoms";
+import { OtherContextMenuAtom } from "../../utils/Atoms/atoms";
 import { useEditorMenuItems } from "../../utils/contextMenus";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
@@ -31,7 +31,7 @@ export default function Editor({ content, editable }: EditorType) {
     isLoading: boolean;
   };
   const queryClient = useQueryClient();
-  const [, setMention] = useAtom(MentionContextAtom);
+  const [, setMention] = useAtom(OtherContextMenuAtom);
   const cm = useRef() as MutableRefObject<any>;
   const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
 

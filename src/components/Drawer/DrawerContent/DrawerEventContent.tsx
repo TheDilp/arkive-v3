@@ -49,10 +49,13 @@ export default function DrawerEventContent() {
 
   const deleteMonthMutation = useDeleteItem("calendars", project_id as string);
   const { data: calendar } = useGetItem<CalendarType>(item_id as string, "calendars");
+
   const [loading, setLoading] = useState(false);
   const [localItem, setLocalItem] = useState<EventType | EventCreateType>(
-    drawer?.data?.id ? drawer.data : { ...DefaultEvent, ...drawer.data },
+    drawer?.data?.event?.id ? drawer.data : { ...DefaultEvent, ...drawer.data?.event },
   );
+  const [monthDays, setMonthDays] = useState(0);
+
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   const createUpdateEvent = async () => {
@@ -91,8 +94,11 @@ export default function DrawerEventContent() {
   };
 
   useEffect(() => {
-    setLocalItem((prev) => ({ ...prev, ...drawer.data }));
+    setLocalItem((prev) => ({ ...prev, ...drawer.data?.event }));
   }, [drawer.data]);
+  useEffect(() => {
+    if (calendar && typeof localItem?.month === "number") setMonthDays(calendar?.months?.[localItem.month]?.days);
+  }, [localItem?.month]);
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-y-auto overflow-x-hidden">
       <h2 className="truncate text-center font-Lato text-2xl">
@@ -117,10 +123,20 @@ export default function DrawerEventContent() {
         <div className="flex w-full flex-col gap-y-1">
           <div className="flex gap-x-0.5">
             <InputNumber
+              disabled={localItem?.month === undefined}
               inputClassName="w-full"
+              max={calendar?.months?.[localItem?.month || 0]?.days}
+              min={1}
               name="day"
-              onChange={(e) => handleChange({ name: "day", value: e.value })}
+              onChange={(e) => {
+                handleChange({
+                  name: "day",
+                  value: e.value && monthDays && e.value >= monthDays ? monthDays : e.value,
+                });
+              }}
               placeholder="Day"
+              tooltip={localItem?.month === undefined ? "Select a month first" : ""}
+              tooltipOptions={{ disabled: localItem?.month !== undefined, position: "left" }}
               useGrouping={false}
               value={localItem?.day}
             />
@@ -145,6 +161,7 @@ export default function DrawerEventContent() {
           <div className="flex gap-x-0.5">
             <InputNumber
               inputClassName="w-full"
+              min={1}
               name="hours"
               onChange={(e) => handleChange({ name: "hours", value: e.value })}
               placeholder="Hour(s)"

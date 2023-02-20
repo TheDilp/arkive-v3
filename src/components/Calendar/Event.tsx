@@ -2,17 +2,19 @@ import { SetStateAction, useAtom } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { EventType } from "../../types/ItemTypes/calendarTypes";
-import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom, OtherContextMenuAtom } from "../../utils/Atoms/atoms";
 import { sortEvents } from "../../utils/calendarUtils";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { DocumentMentionTooltip } from "../Mention/DocumentMention";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
+  monthDays: number | undefined;
   monthEvents: EventType[];
   index: number;
   year: number;
   isReadOnly?: boolean;
+  cm: any;
 };
 
 function openOtherEvent(setDrawer: (update: SetStateAction<DrawerAtomType>) => void, event: EventType) {
@@ -45,10 +47,11 @@ function OtherEvents({ events, openEvent }: { events: EventType[]; openEvent: (e
   );
 }
 
-export default function CalendarEvent({ monthEvents, index, year, isReadOnly }: Props) {
+export default function CalendarEvent({ monthEvents, index, year, isReadOnly, cm, monthDays }: Props) {
   const sortedEvents = [...monthEvents].sort(sortEvents);
   const daysEvents = sortedEvents.filter((event) => event.day === index + 1 && event.year === year);
   const visibleEvents = daysEvents.slice(0, 5);
+  const [, setContextMenuData] = useAtom(OtherContextMenuAtom);
 
   const [, setDrawer] = useAtom(DrawerAtom);
   return (
@@ -82,6 +85,10 @@ export default function CalendarEvent({ monthEvents, index, year, isReadOnly }: 
                     drawerSize: "md",
                   })
                 }
+                onContextMenu={(e) => {
+                  setContextMenuData({ data: { event, monthDays }, cm, show: true });
+                  if (cm.current) cm.current.show(e);
+                }}
                 onKeyDown={() => {}}
                 role="button"
                 style={{

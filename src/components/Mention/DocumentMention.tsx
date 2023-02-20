@@ -4,7 +4,7 @@ import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Link } from "react-router-dom";
 
-import { MentionContextAtom } from "../../utils/Atoms/atoms";
+import { OtherContextMenuAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { getSingleURL } from "../../utils/CRUD/CRUDUrls";
 import StaticRender from "../Editor/StaticRender";
@@ -41,7 +41,7 @@ export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title"
   );
 }
 export default function DocumentMention({ title, id, label, isDisabledTooltip, project_id }: Props) {
-  const [mention, setMention] = useAtom(MentionContextAtom);
+  const [mention, setMention] = useAtom(OtherContextMenuAtom);
   return (
     <Tooltip content={<DocumentMentionTooltip id={id} title={title || label} />} disabled={isDisabledTooltip ?? false}>
       <Link

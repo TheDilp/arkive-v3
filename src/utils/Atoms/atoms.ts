@@ -38,7 +38,7 @@ export const SidebarTreeContextAtom = atom<SidebarTreeItemType>({
   folder: false,
   template: false,
 });
-export const MentionContextAtom = atom<{
+export const OtherContextMenuAtom = atom<{
   data: null | any;
   cm: any;
   show: boolean;

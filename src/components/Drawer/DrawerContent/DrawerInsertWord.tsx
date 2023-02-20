@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { baseURLS } from "../../../types/CRUDenums";
-import { MentionContextAtom } from "../../../utils/Atoms/atoms";
+import { OtherContextMenuAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 
 export default function DrawerInsertWord() {
   const { project_id } = useParams();
   const [query, setQuery] = useState("");
-  const [mention] = useAtom(MentionContextAtom);
+  const [mention] = useAtom(OtherContextMenuAtom);
   const {
     data: items,
     refetch,

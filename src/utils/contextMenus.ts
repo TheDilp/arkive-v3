@@ -14,7 +14,7 @@ import {
 import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/ItemTypes/boardTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
-import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom, MentionContextAtom } from "./Atoms/atoms";
+import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom, OtherContextMenuAtom } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { deleteItem } from "./Confirms/Confirm";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
@@ -818,7 +818,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
 
 export function useEditorMenuItems() {
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [mentionContext] = useAtom(MentionContextAtom);
+  const [mentionContext] = useAtom(OtherContextMenuAtom);
   const finalItems = [
     {
       command: () => {
@@ -849,13 +849,13 @@ export function useEditorMenuItems() {
 
 export function useEventMenuItems() {
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [mentionContext] = useAtom(MentionContextAtom);
+  const [contextMenuData] = useAtom(OtherContextMenuAtom);
   const finalItems = [
     {
       command: () => {
         setDrawer({
           ...DefaultDrawer,
-          data: mentionContext,
+          data: contextMenuData?.data,
           position: "right",
           drawerSize: "sm",
           show: true,
@@ -863,17 +863,9 @@ export function useEventMenuItems() {
         });
       },
       icon: "pi pi-fw pi-bookmark",
-      label: "Insert from dictionary",
+      label: "Edit event",
     },
   ];
-  if (mentionContext?.data?.id) {
-    finalItems.push({
-      command: () => {
-        setDrawer({ ...DefaultDrawer, data: mentionContext, position: "right", drawerSize: "lg", show: true, type: "mention" });
-      },
-      icon: "pi pi-fw pi-book",
-      label: "Show in drawer",
-    });
-  }
+
   return finalItems;
 }
