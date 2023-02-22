@@ -60,9 +60,11 @@ export const BoardReferenceAtom = atom<null | cytoscape.Core>(null);
 export const BoardStateAtom = atom<{
   grid: boolean;
   drawMode: boolean;
+  curveStyle: "straight" | "taxi" | "unbundled-bezier";
 }>({
   grid: false,
   drawMode: false,
+  curveStyle: "straight",
 });
 export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
 export const UserAtom = atom<(UserType & { permission: "owner" | "member" | null }) | null>(null);

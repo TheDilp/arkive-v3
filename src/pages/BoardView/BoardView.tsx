@@ -1,7 +1,7 @@
 import { Collection, EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 
@@ -15,7 +15,12 @@ import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTyp
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import { cytoscapeGridOptions, cytoscapeStylesheet, DefaultEdge, DefaultNode } from "../../utils/DefaultValues/BoardDefaults";
+import {
+  cytoscapeGridOptions,
+  DefaultEdge,
+  DefaultNode,
+  getCytoscapeStylesheet,
+} from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -43,6 +48,13 @@ export default function BoardView({ isReadOnly }: Props) {
 
   const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards", {}, isReadOnly);
   const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
+
+  const styleSheet = useMemo(
+    () => getCytoscapeStylesheet(boardState.curveStyle),
+
+    [boardState.curveStyle],
+  );
+
   const contextItems = useBoardContextMenuItems({
     type: boardContext.type,
     item_id: item_id as string,
@@ -61,10 +73,11 @@ export default function BoardView({ isReadOnly }: Props) {
         source_id: source,
         target_id: target,
         lineColor: color,
+        curveStyle: boardState.curveStyle,
         targetArrowColor: color,
       });
     },
-    [item_id],
+    [boardState.curveStyle],
   );
 
   useEffect(() => {
@@ -93,7 +106,7 @@ export default function BoardView({ isReadOnly }: Props) {
         ehRef.current = undefined;
       }
       if (cyRef?.current?._cy) {
-        cyRef?.current?._cy.removeListener("click mousedown cxttap dbltap free ehcomplete");
+        cyRef?.current?._cy.removeListener("click mousedown cxttap dbltap free");
         setBoardState((prev) => ({ ...prev, drawMode: false }));
       }
     };
@@ -140,39 +153,6 @@ export default function BoardView({ isReadOnly }: Props) {
           }
         }
       });
-      // Creating edges
-      // @ts-ignore
-      cyRef?.current?._cy.on("ehcomplete", function (_, sourceNode: any, targetNode: any, addedEdge: any) {
-        const sourceData = sourceNode._private.data;
-        const targetData = targetNode._private.data;
-
-        if (
-          elements.some((edge) => {
-            if (edge.data.source === sourceData.id && edge.data.target === targetData.id) {
-              try {
-                cyRef?.current?._cy.remove(addedEdge);
-              } catch (error) {
-                console.log(error);
-              }
-              return true;
-            }
-            return false;
-            // @ts-ignore
-          })
-        ) {
-          toaster("warning", "Edge between these nodes already exists.");
-          return;
-        }
-        // Check due to weird edgehandles behavior when toggling drawmode
-        // When drawmode is turned on and then off and then back on
-        // It can add an edges to a node that doesn't exist
-        try {
-          cyRef?.current?._cy.remove(addedEdge);
-        } catch (error) {
-          toaster("warning", "Cytoedge couldn't be removed, there was an error.");
-        }
-        makeEdgeCallback(sourceData.id, targetData.id, board?.defaultEdgeColor);
-      });
 
       // Moving nodes
       cyRef?.current?._cy.on("free", "node", function (evt: EventObject) {
@@ -187,7 +167,6 @@ export default function BoardView({ isReadOnly }: Props) {
         // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
         addOrUpdateNode({ id: target.data.id, ...target.position });
       });
-
       // Double Click
       cyRef?.current?._cy.on("dbltap", "node", function (evt: any) {
         const target = evt.target._private;
@@ -203,6 +182,31 @@ export default function BoardView({ isReadOnly }: Props) {
       });
     }
   }, [cyRef?.current?._cy, item_id]);
+
+  useEffect(() => {
+    // Creating edges
+    // @ts-ignore
+    cyRef?.current?._cy.on("ehcomplete", function (_, sourceNode: any, targetNode: any, addedEdge: any) {
+      const sourceData = sourceNode._private.data;
+      const targetData = targetNode._private.data;
+
+      // Check due to weird edgehandles behavior when toggling drawmode
+      // When drawmode is turned on and then off and then back on
+      // It can add an edges to a node that doesn't exist
+      try {
+        cyRef?.current?._cy.remove(addedEdge);
+      } catch (error) {
+        toaster("warning", "Cytoedge couldn't be removed, there was an error.");
+      }
+      makeEdgeCallback(sourceData.id, targetData.id, board?.defaultEdgeColor);
+    });
+
+    return () => {
+      if (cyRef?.current?._cy) {
+        cyRef?.current?._cy.removeListener("ehcomplete");
+      }
+    };
+  }, [cyRef?.current?._cy, item_id, boardState.curveStyle]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -344,7 +348,7 @@ export default function BoardView({ isReadOnly }: Props) {
         }}
         elements={elements}
         // @ts-ignore
-        stylesheet={cytoscapeStylesheet}
+        stylesheet={styleSheet}
       />
       {isReadOnly ? null : <BoardQuickBar />}
     </div>

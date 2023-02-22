@@ -3,7 +3,7 @@ import cytoscape, { Core } from "cytoscape";
 import { saveAs } from "file-saver";
 
 import { AllSubItemsType } from "../types/generalTypes";
-import { EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
+import { CurveStyleType, EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
 import { toaster } from "./toast";
 
 export function changeLockState(
@@ -66,7 +66,6 @@ export const BoardFontSizes = [
   128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176,
   178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200,
 ];
-
 export const BoardFontFamilies = [
   {
     label: "Arial",
@@ -117,7 +116,6 @@ export const BoardFontFamilies = [
     value: "Verdana",
   },
 ];
-
 export const textHAlignOptions = [
   {
     label: "Left",
@@ -146,7 +144,6 @@ export const textVAlignOptions = [
     value: "bottom",
   },
 ];
-
 export const boardNodeShapes = [
   {
     label: "Rectangle",
@@ -400,7 +397,6 @@ export function updateColor(
     toaster("warning", "No elements are selected.");
   }
 }
-
 export function exportBoardFunction(
   boardRef: cytoscape.Core,
   view: "Graph" | "View",
@@ -450,7 +446,6 @@ export function exportBoardFunction(
     );
   }
 }
-
 export function toModelPosition(boardRef: Core, pos: { x: number; y: number }) {
   const pan = boardRef.pan();
   const zoom = boardRef.zoom();
@@ -470,7 +465,6 @@ export function getNodeImage(node: NodeType) {
   if (image !== "") return image.replaceAll(" ", "%20");
   return null;
 }
-
 export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
   return nodes
     .filter((node) => !node.template)
@@ -502,3 +496,10 @@ export function mapEdges(edges: EdgeType[], isReadOnly?: boolean) {
   }));
 }
 export const edgeArrowTypes = ["source", "target", "midSource", "midTarget"];
+export const curveStyles: CurveStyleType[] = ["straight", "taxi", "unbundled-bezier"];
+export function getCurveStyleIcon(curveStyle: CurveStyleType): string {
+  if (curveStyle === "straight") return "cil:graph";
+  if (curveStyle === "taxi") return "icon-park-outline:chart-graph";
+  if (curveStyle === "unbundled-bezier") return "ph:bezier-curve";
+  return "cil:graph";
+}

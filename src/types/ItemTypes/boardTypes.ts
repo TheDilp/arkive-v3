@@ -17,7 +17,7 @@ type ArrowShape =
   | "chevron";
 
 type ArrowFill = "filled" | "hollow";
-
+export type CurveStyleType = "straight" | "taxi" | "unbundled-bezier";
 type NodeShape =
   | "rectangle"
   | "ellipse"

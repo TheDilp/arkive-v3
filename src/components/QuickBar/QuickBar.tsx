@@ -3,20 +3,22 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
-import { Tooltip } from "primereact/tooltip";
+import { Tooltip as PrimeTooltip } from "primereact/tooltip";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useDeleteManySubItems, useUpdateManySubItems } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
-import { BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
+import { BoardType, CurveStyleType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { BoardReferenceAtom, BoardStateAtom, DialogAtom, DrawerAtom } from "../../utils/Atoms/atoms";
-import { changeLockState, updateColor } from "../../utils/boardUtils";
+import { changeLockState, curveStyles, getCurveStyleIcon, updateColor } from "../../utils/boardUtils";
 import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 import ColorInput from "../ColorInput/ColorInput";
+import DefaultTooltip from "../Tooltip/DefaultTooltip";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 export default function BoardQuickBar() {
   const { item_id } = useParams();
@@ -25,6 +27,7 @@ export default function BoardQuickBar() {
   const [pickerColor, setPickerColor] = useState("#595959");
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
+
   const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
 
   const updateManyNodes = useUpdateManySubItems<NodeType>(item_id as string, "nodes");
@@ -37,21 +40,28 @@ export default function BoardQuickBar() {
     if (boardRef) updateColor(boardRef, color, updateManyNodes, updateManyEdges);
   }, 400);
 
+  function changeCurveStyle(curveStyle: CurveStyleType) {
+    setBoardState((prev) => ({ ...prev, curveStyle }));
+  }
+  function changeDrawMode(drawMode: boolean) {
+    setBoardState((prev) => ({ ...prev, drawMode }));
+  }
+
   if (!board) return null;
   return (
     <div className="absolute bottom-0 z-10 flex h-12 w-72 items-center justify-evenly rounded bg-zinc-800 px-2 text-white shadow-md">
       <span>
-        <Tooltip autoHide content="Toggle grid display" position="top" target=".drawGrid" />
-        <Tooltip autoHide content="Lock selected nodes" position="top" target=".lockSelected" />
-        <Tooltip autoHide content="Unlock selected nodes" position="top" target=".unlockSelected" />
-        <Tooltip autoHide content="Delete selected elements" position="top" target=".deleteSelected" />
-        <Tooltip autoHide content="Toggle Draw Mode" position="top" target=".drawMode" />
-        <Tooltip autoHide content="Export Board" position="top" target=".saveButton" />
-        <Tooltip autoHide content="Search Board" position="top" target=".searchButton" />
-        <Tooltip autoHide content="Reset selected to board's default colors" position="top" target=".resetColors" />
-        <Tooltip autoHide content="Edit selected elements" position="top" target=".editSelectedElements" />
+        <PrimeTooltip autoHide content="Toggle grid display" position="top" target=".drawGrid" />
+        <PrimeTooltip autoHide content="Lock selected nodes" position="top" target=".lockSelected" />
+        <PrimeTooltip autoHide content="Unlock selected nodes" position="top" target=".unlockSelected" />
+        <PrimeTooltip autoHide content="Delete selected elements" position="top" target=".deleteSelected" />
+        <PrimeTooltip autoHide content="Toggle Draw Mode" position="top" target=".drawMode" />
+        <PrimeTooltip autoHide content="Export Board" position="top" target=".saveButton" />
+        <PrimeTooltip autoHide content="Search Board" position="top" target=".searchButton" />
+        <PrimeTooltip autoHide content="Reset selected to board's default colors" position="top" target=".resetColors" />
+        <PrimeTooltip autoHide content="Edit selected elements" position="top" target=".editSelectedElements" />
 
-        <Tooltip autoHide={false} hideEvent="focus" position="top" target=".colorPresets">
+        <PrimeTooltip autoHide={false} hideEvent="focus" position="top" target=".colorPresets">
           <div className="flex w-40 flex-wrap gap-1">
             {ColorPresets.map((color: string) => (
               <button
@@ -67,33 +77,33 @@ export default function BoardQuickBar() {
               />
             ))}
           </div>
-        </Tooltip>
-        <Tooltip content="Pick color for selected elements" position="top" target=".pickColor" />
+        </PrimeTooltip>
+        <PrimeTooltip content="Pick color for selected elements" position="top" target=".pickColor" />
       </span>
 
       {/* Toggle grid visibility */}
       <span
-        className={`flex cursor-pointer hover:text-blue-300 ${boardState.grid ? "text-green-500" : ""}  drawGrid`}
+        className={`flex cursor-pointer hover:text-sky-400 ${boardState.grid ? "text-green-500" : ""}  drawGrid`}
         onClick={() => setBoardState({ ...boardState, grid: !boardState.grid })}>
         <Icon icon="mdi:grid" />
       </span>
       {/* Lock selected elements button */}
       <i
-        className="pi pi-fw pi-lock lockSelected cursor-pointer hover:text-blue-300"
+        className="pi pi-fw pi-lock lockSelected cursor-pointer hover:text-sky-400"
         onClick={() => {
           if (boardRef) changeLockState(boardRef, true, updateManyNodes);
         }}
       />
       {/* Unlock selected elements button */}
       <i
-        className="pi pi-fw pi-lock-open unlockSelected cursor-pointer hover:text-blue-300"
+        className="pi pi-fw pi-lock-open unlockSelected cursor-pointer hover:text-sky-400"
         onClick={() => {
           if (boardRef) changeLockState(boardRef, false, updateManyNodes);
         }}
       />
       {/* Delete selected elements button */}
       <i
-        className="pi pi-fw pi-trash deleteSelected cursor-pointer hover:text-blue-300"
+        className="pi pi-fw pi-trash deleteSelected cursor-pointer hover:text-sky-400"
         onClick={() => {
           if (!boardRef) return;
           const selected = boardRef.elements(":selected");
@@ -109,19 +119,42 @@ export default function BoardQuickBar() {
       />
 
       {/* Drawmode button */}
-      <i
-        className={`pi pi-pencil cursor-pointer hover:text-blue-300 ${boardState.drawMode ? "text-green-500" : ""} drawMode`}
-        onClick={() => {
-          if (boardState.drawMode) {
-            setBoardState((prev) => ({ ...prev, drawMode: false }));
-          } else {
-            setBoardState((prev) => ({ ...prev, drawMode: true }));
-          }
-        }}
-      />
+
+      <Tooltip
+        content={
+          <DefaultTooltip>
+            <div className="flex items-center gap-x-1">
+              {curveStyles.map((curveStyle: CurveStyleType) => (
+                <Icon
+                  key={curveStyle}
+                  className={`cursor-pointer hover:text-sky-400 ${
+                    curveStyle === boardState.curveStyle && boardState.drawMode ? "text-sky-400" : ""
+                  }`}
+                  fontSize={24}
+                  icon={getCurveStyleIcon(curveStyle)}
+                  onClick={() => {
+                    changeCurveStyle(curveStyle);
+                    changeDrawMode(true);
+                  }}
+                />
+              ))}
+            </div>
+          </DefaultTooltip>
+        }>
+        <span className="cursor-pointer">
+          <Icon
+            className={`cursor-pointer hover:text-sky-400 ${boardState.drawMode ? "text-sky-400" : ""}`}
+            icon={getCurveStyleIcon(boardState.curveStyle)}
+            onClick={() => {
+              if (boardState.drawMode) changeDrawMode(false);
+              else changeDrawMode(true);
+            }}
+          />
+        </span>
+      </Tooltip>
       {/* Export button */}
       <i
-        className="pi pi-download saveButton cursor-pointer hover:text-blue-300"
+        className="pi pi-download saveButton cursor-pointer hover:text-sky-400"
         onClick={() => {
           setExportDialog((prev) => ({
             ...prev,
@@ -135,13 +168,13 @@ export default function BoardQuickBar() {
       />
       {/* Search button */}
       <i
-        className="pi pi-search searchButton cursor-pointer hover:text-blue-300"
+        className="pi pi-search searchButton cursor-pointer hover:text-sky-400"
         onClick={() => setDialog({ ...DefaultDialog, type: "node_search", show: true, position: "top" })}
       />
 
       {/* Reset nodes/edges to the board's default color button */}
       <span
-        className="resetColors flex cursor-pointer hover:text-blue-300"
+        className="resetColors flex cursor-pointer hover:text-sky-400"
         onClick={() => {
           if (boardRef)
             updateColor(
@@ -155,7 +188,7 @@ export default function BoardQuickBar() {
       </span>
       {/* Edit selected button */}
       <span
-        className="editSelectedElements flex cursor-pointer hover:text-blue-300"
+        className="editSelectedElements flex cursor-pointer hover:text-sky-400"
         onClick={() => {
           if (!boardRef) return;
           if (boardRef.elements(":selected")?.length > 0) {
@@ -167,7 +200,7 @@ export default function BoardQuickBar() {
         <Icon icon="mdi:vector-polyline-edit" />
       </span>
       {/* Color preset button */}
-      <i className="pi pi-fw pi-palette colorPresets cursor-pointer hover:text-blue-300" />
+      <i className="pi pi-fw pi-palette colorPresets cursor-pointer hover:text-sky-400" />
       {/* Color picker square */}
       <div>
         <ColorInput
