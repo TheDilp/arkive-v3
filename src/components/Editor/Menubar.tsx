@@ -5,7 +5,6 @@ import { Icon } from "@iconify/react";
 import { useActive, useAttrs, useCommands, useRemirrorContext } from "@remirror/react";
 import { useAtom } from "jotai";
 import { Menubar } from "primereact/menubar";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { useParams } from "react-router-dom";
 import { findParentNode, RemirrorJSON } from "remirror";
 
@@ -15,7 +14,7 @@ import { DialogAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
-export default function MenuBar({ saving }: { saving: number | boolean }) {
+export default function MenuBar() {
   const {
     toggleBold,
     toggleItalic,
@@ -63,7 +62,6 @@ export default function MenuBar({ saving }: { saving: number | boolean }) {
     // active.bold(), active.italic(), etc
     <Menubar
       className="Lato w-full border-0 p-0"
-      end={() => (saving ? <ProgressSpinner className="w-2" /> : "")}
       model={[
         {
           label: "B",
