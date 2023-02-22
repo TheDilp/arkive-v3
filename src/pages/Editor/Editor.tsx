@@ -4,7 +4,7 @@ import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { InvalidContentHandler, RemirrorJSON } from "remirror";
 import { useDebouncedCallback } from "use-debounce";
@@ -25,7 +25,6 @@ import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
-  const [saving, setSaving] = useState(false);
   const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents", { enabled: !!editable }) as {
     data: DocumentType;
     isLoading: boolean;
@@ -49,15 +48,10 @@ export default function Editor({ content, editable }: EditorType) {
     onError,
   });
   const debounced = useDebouncedCallback((changedContent: RemirrorJSON, id: string) => {
-    updateDocumentMutation?.mutate(
-      {
-        content: changedContent,
-        id,
-      },
-      {
-        onSuccess: () => setSaving(false),
-      },
-    );
+    updateDocumentMutation?.mutate({
+      content: changedContent,
+      id,
+    });
   }, 1250);
   const onChange = useCallback((changedContent: RemirrorJSON, doc_id: string) => {
     debounced(changedContent, doc_id);
@@ -124,10 +118,9 @@ export default function Editor({ content, editable }: EditorType) {
             <OnChangeJSON
               onChange={(changedContent: RemirrorJSON) => {
                 onChange(changedContent, item_id as string);
-                setSaving(true);
               }}
             />
-            {editable ? <Menubar saving={saving} /> : null}
+            {editable ? <Menubar /> : null}
             <EditorComponent />
             <MentionDropdownComponent />
             <CommandMenu />
