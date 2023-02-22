@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { getAuth, signOut } from "firebase/auth";
 import { useAtom } from "jotai";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { DialogAtom, DrawerAtom, UserAtom } from "../../utils/Atoms/atoms";
@@ -17,13 +18,18 @@ export default function Navbar() {
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setUserData] = useAtom(UserAtom);
   const auth = getAuth();
-
+  const mutationCount = useIsMutating();
   return (
     <div className="flex h-14 min-h-[56px] w-full flex-nowrap items-center border-b border-zinc-800 bg-zinc-900 py-2 shadow">
       <div className="flex w-full items-center justify-center gap-x-2 px-2">
         <span className="ml-auto flex items-center gap-x-2">
           {project_id ? (
             <>
+              {mutationCount > 0 ? (
+                <div className="flex w-fit items-center">
+                  <ProgressSpinner style={{ width: "1.5rem" }} />
+                </div>
+              ) : null}
               <Icon
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
