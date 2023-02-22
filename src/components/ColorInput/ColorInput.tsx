@@ -51,13 +51,13 @@ export default function ColorInput({ name, color, isDisabled, isShowingSwatches 
                         .filter((swatch) => (filter ? swatch?.title?.toLowerCase()?.includes(filter.toLowerCase()) : true))
                         .map((swatch) => (
                           <Tooltip
+                            key={swatch.id}
                             content={swatch?.title ? <DefaultTooltip>{swatch.title}</DefaultTooltip> : null}
                             customOffset={{
                               mainAxis: 10,
                             }}
                             disabled={!swatch?.title}>
                             <button
-                              key={swatch.id}
                               className="h-6 w-6 cursor-pointer rounded-sm"
                               onClick={() => {
                                 onChange({ name, value: swatch.color });
