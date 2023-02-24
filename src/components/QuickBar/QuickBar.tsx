@@ -51,6 +51,7 @@ export default function BoardQuickBar() {
   return (
     <div className="absolute bottom-0 z-10 flex h-12 w-72 items-center justify-evenly rounded bg-zinc-800 px-2 text-white shadow-md">
       <span>
+        <PrimeTooltip autoHide content="Add nodes" position="top" target=".addNodes" />
         <PrimeTooltip autoHide content="Toggle grid display" position="top" target=".drawGrid" />
         <PrimeTooltip autoHide content="Lock selected nodes" position="top" target=".lockSelected" />
         <PrimeTooltip autoHide content="Unlock selected nodes" position="top" target=".unlockSelected" />
@@ -79,6 +80,12 @@ export default function BoardQuickBar() {
           </div>
         </PrimeTooltip>
         <PrimeTooltip content="Pick color for selected elements" position="top" target=".pickColor" />
+      </span>
+
+      <span
+        className={`flex cursor-pointer hover:text-sky-400 ${boardState.addNodes ? "text-green-500" : ""}  addNodes`}
+        onClick={() => setBoardState({ ...boardState, drawMode: false, addNodes: !boardState.addNodes })}>
+        <Icon icon="mdi:plus" />
       </span>
 
       {/* Toggle grid visibility */}
@@ -147,7 +154,10 @@ export default function BoardQuickBar() {
             icon={getCurveStyleIcon(boardState.curveStyle)}
             onClick={() => {
               if (boardState.drawMode) changeDrawMode(false);
-              else changeDrawMode(true);
+              else {
+                changeDrawMode(true);
+                setBoardState((prev) => ({ ...prev, addNodes: false }));
+              }
             }}
           />
         </span>

@@ -58,10 +58,12 @@ export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
 export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null });
 export const BoardReferenceAtom = atom<null | cytoscape.Core>(null);
 export const BoardStateAtom = atom<{
+  addNodes: boolean;
   grid: boolean;
   drawMode: boolean;
   curveStyle: "straight" | "taxi" | "unbundled-bezier";
 }>({
+  addNodes: false,
   grid: false,
   drawMode: false,
   curveStyle: "straight",
