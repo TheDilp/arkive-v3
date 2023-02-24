@@ -43,12 +43,32 @@ export const useGetTagSettings = (project_id: string) => {
   );
 };
 export const useCreateTag = (project_id: string) => {
-  return useMutation(async (variables: TagCreateType) =>
-    FetchFunction({
-      url: `${baseURLS.baseServer}${createURLS.createTag}`,
-      method: "POST",
-      body: JSON.stringify({ project_id, ...variables }),
-    }),
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (variables: TagCreateType) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${createURLS.createTag}`,
+        method: "POST",
+        body: JSON.stringify({ project_id, ...variables }),
+      }),
+
+    {
+      onMutate: (variables) => {
+        const oldData = queryClient.getQueryData(["allTags", project_id]);
+
+        queryClient.setQueryData<TagType[]>(["allTags", project_id], (old) => {
+          if (old) {
+            return [...old, { ...variables, project_id }];
+          }
+          return old;
+        });
+        return { oldData };
+      },
+      onError: (_, __, context) => {
+        toaster("error", "There was an error creating this tag.");
+        return context?.oldData;
+      },
+    },
   );
 };
 export const useUpdateTag = (project_id: string) => {

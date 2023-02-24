@@ -54,7 +54,7 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
   const { project_id } = useParams();
   const { data: initialTags } = useGetAllTags(project_id as string);
   const [tags, setTags] = useState(initialTags || []);
-  const { mutate } = useCreateTag(project_id as string);
+  const { mutate: createTag } = useCreateTag(project_id as string);
 
   const { mutate: updateTag } = useUpdateTag(project_id as string);
 
@@ -74,7 +74,7 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
         if (e.key === "Enter" && e.currentTarget.value !== "" && e.currentTarget.value !== undefined) {
           const id = crypto.randomUUID();
           handleChange({ name: "tags", value: [...(localItem?.tags || []), { id, title: e?.currentTarget?.value }] });
-          if (!isSettings) mutate({ id, title: e.currentTarget.value, ...getTagRelationId(localItem.id, type, "connect") });
+          if (!isSettings) createTag({ id, title: e.currentTarget.value, ...getTagRelationId(localItem.id, type, "connect") });
           e.currentTarget.value = "";
         }
       }}
