@@ -33,7 +33,7 @@ export default function FolderCard({ id, title, type, isFolder, isPublic, icon, 
   const sortItemsMutation = useSortMutation(project_id as string, type);
   return (
     <Link
-      className="cursor-pointer"
+      className="h-24 max-h-24 min-h-[6rem] cursor-pointer"
       onContextMenu={(e) => {
         if (isFolder)
           setContextMenu({
