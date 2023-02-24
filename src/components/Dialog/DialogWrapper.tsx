@@ -20,6 +20,7 @@ export default function DialogWrapper() {
       className="p-0"
       contentClassName="pb-0"
       header={() => {
+        if (uploading) return "Uploading...";
         if (dialog.type === "files") return "Upload Files";
         if (dialog.type === "map_layer") return "Edit Map Layers";
         if (dialog.type === "editor_image") return "Insert an Image";
@@ -27,7 +28,6 @@ export default function DialogWrapper() {
         if (dialog.type === "export_board") return "Export Board";
         if (dialog.type === "node_from_document") return "Create Node from a Document";
         if (dialog.type === "node_from_image") return "Create Node from an Image";
-        if (uploading) return "Uploading...";
         return null;
       }}
       modal={dialog.modal}

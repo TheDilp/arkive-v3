@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 
 import { baseURLS, createURLS } from "../../types/CRUDenums";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
+import { toaster } from "../../utils/toast";
 
 function FileUploadItemTemplate(
   file: any,
@@ -40,6 +41,21 @@ function FileUploadItemTemplate(
   );
 }
 
+const chooseOptions = {
+  className: "custom-choose-btn p-button-rounded p-button-outlined",
+  icon: "pi pi-fw pi-images",
+  iconOnly: true,
+};
+const uploadOptions = {
+  className: "custom-upload-btn p-button-success p-button-rounded p-button-outlined",
+  icon: "pi pi-fw pi-cloud-upload",
+  iconOnly: true,
+};
+const cancelOptions = {
+  className: "custom-cancel-btn p-button-danger p-button-rounded p-button-outlined",
+  icon: "pi pi-fw pi-times",
+  iconOnly: true,
+};
 export default function QuickUploadDialog({ setUploading }: { setUploading: Dispatch<SetStateAction<boolean>> }) {
   const { project_id } = useParams();
   const fileUploadRef = useRef<FileUpload>(null);
@@ -52,22 +68,6 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
       types.push({ name: files[i].name, type: "Image" });
     }
     setTypes(allTypes);
-  };
-
-  const chooseOptions = {
-    className: "custom-choose-btn p-button-rounded p-button-outlined",
-    icon: "pi pi-fw pi-images",
-    iconOnly: true,
-  };
-  const uploadOptions = {
-    className: "custom-upload-btn p-button-success p-button-rounded p-button-outlined",
-    icon: "pi pi-fw pi-cloud-upload",
-    iconOnly: true,
-  };
-  const cancelOptions = {
-    className: "custom-cancel-btn p-button-danger p-button-rounded p-button-outlined",
-    icon: "pi pi-fw pi-times",
-    iconOnly: true,
   };
   const headerTemplate = (options: any) => {
     const { className, chooseButton, uploadButton, cancelButton } = options;
@@ -124,7 +124,7 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
             body: imageFormData,
             method: "POST",
           });
-          queryClient.refetchQueries({ queryKey: ["allImages", project_id] });
+          await queryClient.refetchQueries({ queryKey: ["allImages", project_id] });
         }
         if (types.some((type) => type.type === "Map")) {
           await FetchFunction({
@@ -132,11 +132,12 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
             body: mapsFormData,
             method: "POST",
           });
-          queryClient.refetchQueries({ queryKey: ["allMaps", project_id] });
+          await queryClient.refetchQueries({ queryKey: ["allMaps", project_id] });
         }
         setUploading(false);
         setTypes([]);
         e.options.clear();
+        toaster("success", "Upload completed.");
       }}
       uploadOptions={uploadOptions}
     />
