@@ -39,15 +39,18 @@ export const useGetManyItems = <ItemType>(
   });
 };
 
-export const useCreateItem = <ItemType>(type: AvailableItemTypes) => {
+export const useCreateItem = <ItemType>(type: AvailableItemTypes, isTemplate?: boolean) => {
   const queryClient = useQueryClient();
 
   return useMutation(
     async (newItemValues: Partial<ItemType>) => {
       const url = createURL(type);
-      if (url) return FetchFunction({ url, body: JSON.stringify(newItemValues), method: "POST" });
 
-      return null;
+      return FetchFunction({
+        url: isTemplate ? `${baseURLS.baseServer}createfromtemplate` : url,
+        body: JSON.stringify(newItemValues),
+        method: "POST",
+      });
     },
     {
       onError: () => toaster("error", "There was an error creating this item."),
