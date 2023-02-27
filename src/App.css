@@ -89,6 +89,13 @@ Inputs
 .remirror-editor.ProseMirror {
   @apply overflow-y-auto !important;
 }
+
+.staticRendererContainer {
+  p {
+    @apply min-h-[1rem];
+  }
+}
+
 .editor,
 .staticRendererContainer {
   @apply p-4 font-Lato;
