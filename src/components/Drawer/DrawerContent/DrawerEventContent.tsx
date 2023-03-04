@@ -1,5 +1,7 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
+import omit from "lodash.omit";
+import set from "lodash.set";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
@@ -43,17 +45,20 @@ export default function DrawerEventContent() {
   const { project_id, item_id } = useParams();
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [loading, setLoading] = useState(false);
+
+  const { data: calendar, isFetching } = useGetItem<CalendarType>(item_id as string, "calendars");
   const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents", {
     staleTime: 5 * 60 * 1000,
+    enabled: !!calendar && !isFetching,
   });
 
   const deleteMonthMutation = useDeleteItem("calendars", project_id as string);
-  const { data: calendar } = useGetItem<CalendarType>(item_id as string, "calendars");
 
-  const [loading, setLoading] = useState(false);
   const [localItem, setLocalItem] = useState<EventType | EventCreateType>(
-    drawer?.data?.event?.id ? drawer.data : { ...DefaultEvent, ...drawer.data?.event },
+    drawer?.data?.event?.id ? drawer.data : { ...DefaultEvent, ...drawer.data },
   );
+
   const [monthDays, setMonthDays] = useState(0);
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
@@ -62,12 +67,17 @@ export default function DrawerEventContent() {
     setLoading(true);
     if (changedData) {
       if (localItem?.id) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { tags, ...rest } = changedData;
+        let payload = omit(changedData, ["tags"]);
+
+        if (changedData?.month) {
+          set(payload, "monthsId", changedData?.month?.id);
+          payload = omit(payload, ["month"]);
+        }
+
         await FetchFunction({
           url: `${baseURLS.baseServer}${updateURLs.updateEvent}`,
           method: "POST",
-          body: JSON.stringify({ ...rest, id: localItem.id }),
+          body: JSON.stringify({ ...payload, id: localItem.id }),
         });
         await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
@@ -76,12 +86,14 @@ export default function DrawerEventContent() {
 
         handleCloseDrawer(setDrawer, "right");
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const payload = omit(localItem, ["month"]);
+
         await FetchFunction({
           url: `${baseURLS.baseServer}${createURLS.createEvent}`,
           method: "POST",
-          body: JSON.stringify({ ...localItem, calendarsId: item_id as string }),
+          body: JSON.stringify({ ...payload, monthsId: localItem?.month?.id, calendarsId: item_id as string }),
         });
+
         await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
         resetChanges();
         setLoading(false);
@@ -94,11 +106,12 @@ export default function DrawerEventContent() {
   };
 
   useEffect(() => {
-    setLocalItem((prev) => ({ ...prev, ...drawer.data?.event }));
+    setLocalItem((prev) => ({ ...prev, ...drawer.data }));
   }, [drawer.data]);
   useEffect(() => {
     if (calendar && typeof localItem?.month === "number") setMonthDays(calendar?.months?.[localItem.month]?.days);
   }, [localItem?.month]);
+
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-y-auto overflow-x-hidden">
       <h2 className="truncate text-center font-Lato text-2xl">
@@ -125,7 +138,7 @@ export default function DrawerEventContent() {
             <InputNumber
               disabled={localItem?.month === undefined}
               inputClassName="w-full"
-              max={calendar?.months?.[localItem?.month || 0]?.days}
+              max={localItem?.month?.days}
               min={1}
               name="day"
               onChange={(e) => {
@@ -144,8 +157,7 @@ export default function DrawerEventContent() {
               name="month"
               onChange={(e) => handleChange({ name: "month", value: e.value })}
               optionLabel="title"
-              options={calendar?.months?.map((month, index) => ({ title: month.title, value: index }))}
-              optionValue="value"
+              options={calendar?.months?.map((month) => ({ title: month.title, value: month }))}
               placeholder="Month"
               value={localItem?.month}
             />

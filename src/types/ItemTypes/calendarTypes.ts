@@ -31,6 +31,7 @@ export type MonthType = {
   title: string;
   days: number;
   sort: number;
+  events: EventType[];
   parentId: string;
 };
 
@@ -47,7 +48,7 @@ export type EventType = {
 
   year: number;
   era?: EraType;
-  month: number;
+  month: MonthType;
   day: number;
   hours?: number;
   minutes?: number;
@@ -55,6 +56,7 @@ export type EventType = {
   isPublic: boolean;
 
   erasId: string;
+  monthsId: string | null;
   calendarsId: string | null;
 
   tags: TagType[];

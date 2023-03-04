@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 
+import { MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
@@ -12,7 +13,7 @@ export default function DayNumber({
   isReadOnly,
 }: {
   dayNumber: number;
-  month: number;
+  month: MonthType;
   year: number;
   isFiller?: boolean;
   isReadOnly?: boolean;
@@ -30,7 +31,6 @@ export default function DayNumber({
                 setDrawer({
                   ...DefaultDrawer,
                   data: { day: dayNumber + 1, month, year },
-
                   type: "events",
                   show: true,
                 });

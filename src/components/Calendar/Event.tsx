@@ -1,7 +1,7 @@
 import { SetStateAction, useAtom } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
-import { EventType } from "../../types/ItemTypes/calendarTypes";
+import { EventType, MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom, OtherContextMenuAtom } from "../../utils/Atoms/atoms";
 import { sortEvents } from "../../utils/calendarUtils";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -9,7 +9,7 @@ import { DocumentMentionTooltip } from "../Mention/DocumentMention";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
-  monthDays: number | undefined;
+  month: MonthType;
   monthEvents: EventType[];
   index: number;
   year: number;
@@ -47,7 +47,7 @@ function OtherEvents({ events, openEvent }: { events: EventType[]; openEvent: (e
   );
 }
 
-export default function CalendarEvent({ monthEvents, index, year, isReadOnly, cm, monthDays }: Props) {
+export default function CalendarEvent({ monthEvents, index, month, year, isReadOnly, cm }: Props) {
   const sortedEvents = [...monthEvents].sort(sortEvents);
   const daysEvents = sortedEvents.filter((event) => event.day === index + 1 && event.year === year);
   const visibleEvents = daysEvents.slice(0, 5);
@@ -80,13 +80,13 @@ export default function CalendarEvent({ monthEvents, index, year, isReadOnly, cm
                     ...DefaultDrawer,
                     show: true,
                     type: "events",
-                    data: event,
+                    data: { ...event, month },
                     exceptions: { eventDescription: true, isReadOnly },
                     drawerSize: "md",
                   })
                 }
                 onContextMenu={(e) => {
-                  setContextMenuData({ data: { event, monthDays }, cm, show: true });
+                  setContextMenuData({ data: { event, monthDays: month.days }, cm, show: true });
                   if (cm.current) cm.current.show(e);
                 }}
                 onKeyDown={() => {}}

@@ -188,7 +188,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
                         dayNumber={getFillerDayNumber(calendar.months, date.month, day)}
                         isFiller
                         isReadOnly={isReadOnly}
-                        month={date.month}
+                        month={calendar.months[date.month]}
                         year={date.year}
                       />
                     </div>
@@ -200,13 +200,19 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
                     onKeyDown={() => {}}
                     role="button"
                     tabIndex={-1}>
-                    <DayNumber key={day} dayNumber={day} isReadOnly={isReadOnly} month={date.month} year={date.year} />
+                    <DayNumber
+                      key={day}
+                      dayNumber={day}
+                      isReadOnly={isReadOnly}
+                      month={calendar.months[date.month]}
+                      year={date.year}
+                    />
                     <CalendarEvent
                       cm={cm}
                       index={index}
                       isReadOnly={isReadOnly}
-                      monthDays={monthDays}
-                      monthEvents={calendar?.events?.filter((event) => event.month === date.month) || []}
+                      month={calendar.months[date.month]}
+                      monthEvents={calendar?.months[date.month]?.events || []}
                       year={date.year}
                     />
                   </div>

@@ -16,6 +16,7 @@ specifiers:
   '@types/file-saver': ^2.0.5
   '@types/leaflet': ^1.9.0
   '@types/lodash.clonedeep': ^4.5.7
+  '@types/lodash.omit': ^4.5.7
   '@types/lodash.pick': ^4.4.7
   '@types/lodash.set': ^4.3.7
   '@types/react': ^18.0.22
@@ -47,6 +48,7 @@ specifiers:
   leaflet: ^1.9.3
   localstorage-slim: ^2.3.0
   lodash.clonedeep: ^4.5.0
+  lodash.omit: ^4.5.0
   lodash.pick: ^4.4.0
   lodash.set: ^4.3.2
   postcss: ^8.4.18
@@ -90,6 +92,7 @@ dependencies:
   leaflet: 1.9.3
   localstorage-slim: 2.3.0
   lodash.clonedeep: 4.5.0
+  lodash.omit: 4.5.0
   lodash.pick: 4.4.0
   lodash.set: 4.3.2
   primeicons: 6.0.1
@@ -114,6 +117,7 @@ devDependencies:
   '@types/file-saver': 2.0.5
   '@types/leaflet': 1.9.0
   '@types/lodash.clonedeep': 4.5.7
+  '@types/lodash.omit': 4.5.7
   '@types/lodash.pick': 4.4.7
   '@types/lodash.set': 4.3.7
   '@types/react': 18.0.26
@@ -3239,6 +3243,12 @@ packages:
       '@types/lodash': 4.14.191
     dev: true
 
+  /@types/lodash.omit/4.5.7:
+    resolution: {integrity: sha512-6q6cNg0tQ6oTWjSM+BcYMBhan54P/gLqBldG4AuXd3nKr0oeVekWNS4VrNEu3BhCSDXtGapi7zjhnna0s03KpA==}
+    dependencies:
+      '@types/lodash': 4.14.191
+    dev: true
+
   /@types/lodash.pick/4.4.7:
     resolution: {integrity: sha512-HgdyKz7/1+oeoVzbpu1XiX/Bti9AUksHtOILH38T07aKvqoirzcdOsrO2+Yg3L51Hv/8m1MetvHZEUGeABiTiQ==}
     dependencies:
@@ -5354,6 +5364,10 @@ packages:
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
+
+  /lodash.omit/4.5.0:
+    resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    dev: false
 
   /lodash.pick/4.4.0:
     resolution: {integrity: sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==}
