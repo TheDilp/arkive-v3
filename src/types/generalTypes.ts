@@ -11,7 +11,15 @@ import { RandomTableOptionType, RandomTableType } from "./ItemTypes/randomTableT
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
 import { UserType } from "./userTypes";
 
-export type AvailableItemTypes = "documents" | "maps" | "boards" | "screens" | "dictionaries" | "calendars" | "randomtables";
+export type AvailableItemTypes =
+  | "documents"
+  | "maps"
+  | "boards"
+  | "screens"
+  | "dictionaries"
+  | "calendars"
+  | "timelines"
+  | "randomtables";
 export type AvailableSubItemTypes =
   | "map_pins"
   | "map_layers"
@@ -48,6 +56,7 @@ export type AvailableSearchResultTypes =
   | "screens"
   | "sections"
   | "calendars"
+  | "timelines"
   | "events";
 
 export type IconSelectMenuType = {

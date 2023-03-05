@@ -11,6 +11,7 @@ export const getSingleURL = (type: AvailableItemTypes) => {
   if (type === "screens") return `${baseURLS.baseServer}${getURLS.getSingleScreen}`;
   if (type === "dictionaries") return `${baseURLS.baseServer}${getURLS.getSingleDictionary}`;
   if (type === "calendars") return `${baseURLS.baseServer}${getURLS.getSingleCalendar}`;
+  if (type === "timelines") return `${baseURLS.baseServer}${getURLS.getSingleTimeline}`;
   if (type === "randomtables") return `${baseURLS.baseServer}${getURLS.getSingleRandomTable}`;
 
   return null;

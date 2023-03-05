@@ -25,7 +25,7 @@ export const useGetManyItems = <ItemType>(
   options?: UseQueryOptions,
 ) => {
   return useQuery<ItemType[]>({
-    queryKey: [type, project_id, "manyItems"],
+    queryKey: ["manyItems", project_id, type],
     queryFn: async () => {
       const url = `${baseURLS.baseServer}${getURLS.getManyDocuments}`;
       if (url) {

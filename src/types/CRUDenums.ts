@@ -19,6 +19,8 @@ export const getURLS = {
   getSingleDictionary: "getsingledictionary",
   // Calendars
   getSingleCalendar: "getsinglecalendar",
+  // Calendars
+  getSingleTimeline: "getsingletimeline",
   // RandomTables
   getSingleRandomTable: "getsinglerandomtable",
   // Images

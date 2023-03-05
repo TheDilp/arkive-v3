@@ -1,6 +1,8 @@
 import { lazy } from "react";
 import { useParams } from "react-router-dom";
 
+import TimelineView from "../TimelineView/TimelineView";
+
 const Editor = lazy(() => import("../Editor/Editor"));
 const MapView = lazy(() => import("../MapView/MapView"));
 const BoardView = lazy(() => import("../BoardView/BoardView"));
@@ -18,6 +20,7 @@ export default function ContentView() {
   if (type === "screens") return <ScreenView />;
   if (type === "dictionaries") return <DictionaryView />;
   if (type === "calendars") return <CalendarView />;
+  if (type === "timelines") return <TimelineView />;
   if (type === "randomtables") return <RandomTableView />;
   return null;
 }
