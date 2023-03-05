@@ -20,7 +20,7 @@ export const createURL = (type: AllAvailableTypes) => {
   if (type !== "dictionaries") {
     const urlType = type;
 
-    return `${baseURLS.baseServer}create${urlType.slice(0, -1).replace("_", "")}`;
+    return `${baseURLS.baseServer}create${urlType.slice(0, -1).replace("_", "")}`; // Replace is for random_tables
   }
   return `${baseURLS.baseServer}createdictionary`;
 };
@@ -37,6 +37,7 @@ export const updateURL = (type: AllAvailableTypes) => {
   if (type === "cards") return `${baseURLS.baseServer}${updateURLs.updateCard}`;
   if (type === "words") return `${baseURLS.baseServer}${updateURLs.updateWord}`;
   if (type === "calendars") return `${baseURLS.baseServer}${updateURLs.updateCalendar}`;
+  if (type === "timelines") return `${baseURLS.baseServer}${updateURLs.updateTimeline}`;
   if (type === "eras") return `${baseURLS.baseServer}${updateURLs.updateEra}`;
   if (type === "months") return `${baseURLS.baseServer}${updateURLs.updateMonth}`;
   if (type === "events") return `${baseURLS.baseServer}${updateURLs.updateEvent}`;
@@ -59,6 +60,7 @@ export const deleteURL = (type: AllAvailableTypes) => {
   if (type === "cards") return `${baseURLS.baseServer}${deleteURLs.deleteCard}`;
   if (type === "words") return `${baseURLS.baseServer}${deleteURLs.deleteWord}`;
   if (type === "calendars") return `${baseURLS.baseServer}${deleteURLs.deleteCalendar}`;
+  if (type === "timelines") return `${baseURLS.baseServer}${deleteURLs.deleteTimeline}`;
   if (type === "eras") return `${baseURLS.baseServer}${deleteURLs.deleteEra}`;
   if (type === "events") return `${baseURLS.baseServer}${deleteURLs.deleteEvent}`;
   if (type === "randomtables") return `${baseURLS.baseServer}${deleteURLs.deleteRandomTable}`;

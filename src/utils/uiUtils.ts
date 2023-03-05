@@ -18,7 +18,7 @@ export const navItems: NavItemType[] = [
   { icon: "mdi:map-outline", navigate: "./maps", tooltip: "Maps" },
   { icon: "ph:graph", navigate: "./boards", tooltip: "Graphs" },
   { icon: "ph:calendar-blank", navigate: "./calendars", tooltip: "Calendars" },
-  // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
+  { icon: "mdi:timeline-clock-outline", navigate: "./timelines", tooltip: "Timelines" },
   { icon: "fluent:board-24-regular", navigate: "./screens", tooltip: "Screens" },
   { icon: "mdi-light:book", navigate: "./dictionaries", tooltip: "Dictionaries" },
   { icon: "arcticons:reroll", navigate: "./randomtables", tooltip: "Random_Tables" },

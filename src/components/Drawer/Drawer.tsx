@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DrawerTimelineContent from "./DrawerContent/DrawerTimelineContent";
 
 const DrawerRandomTableContent = lazy(() => import("./DrawerContent/DrawerRandomTableContent"));
 const DrawerRandomTableOptionContent = lazy(() => import("./DrawerContent/DrawerRandomTableOption"));
@@ -99,6 +100,7 @@ export default function Drawer() {
         {drawer.type === "months" ? <DrawerMonthContent /> : null}
         {drawer.type === "events" && !drawer.exceptions?.eventDescription ? <DrawerEventContent /> : null}
         {drawer.type === "events" && drawer.exceptions?.eventDescription ? <DrawerEventDescription /> : null}
+        {drawer.type === "timelines" ? <DrawerTimelineContent /> : null}
         {drawer.type === "randomtables" ? <DrawerRandomTableContent /> : null}
         {drawer.type === "randomtableoptions" ? <DrawerRandomTableOptionContent /> : null}
         {drawer.type === "swatches" ? <DrawerSwatchContent /> : null}
