@@ -20,7 +20,7 @@ export async function FetchFunction({
     },
   });
   if (!res.ok) {
-    return new Error("There was an error with this request (server error).");
+    throw new Error("There was an error with this request (server error).");
   }
   const data = await res.json();
   if (data === false) throw new Error("There was an error with this reques.");
