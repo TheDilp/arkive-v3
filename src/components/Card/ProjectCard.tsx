@@ -20,7 +20,7 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
     </Link>
   );
   const footer = (
-    <div className="flex flex-wrap justify-between gap-2">
+    <div className="flex flex-wrap justify-between gap-1">
       {navItems
         .filter((_, index) => index !== 0)
         .map((navItem) => (
