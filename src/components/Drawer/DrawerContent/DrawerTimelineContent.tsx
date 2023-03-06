@@ -2,10 +2,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { MultiSelect } from "primereact/multiselect";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { TimelineCreateType, TimelineType } from "../../../types/ItemTypes/timelineTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -23,7 +24,7 @@ export default function DrawerTimelineContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const allTimelines = queryClient.getQueryData<TimelineType[]>(["allItems", project_id, "timelines"]);
-
+  const { data: allCalendars } = useGetAllItems(project_id as string, "calendars");
   const dictionary = allTimelines?.find((dict) => dict.id === drawer.id);
 
   const createTimelineMutation = useCreateItem("timelines");
@@ -72,6 +73,33 @@ export default function DrawerTimelineContent() {
           }}
           placeholder="Timeline title"
           value={localItem?.title || ""}
+        />
+      </DrawerSection>
+      <DrawerSection subtitle="Calendars from which the timeline will draw events" title="Calendars">
+        <MultiSelect
+          className="w-full"
+          name="calendars"
+          onChange={(e) => handleChange({ name: "calendars", value: e.value })}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              await createUpdateItem<TimelineType>(
+                dictionary,
+                localItem,
+                changedData,
+                DefaultTimeline,
+                allTimelines,
+                resetChanges,
+                createTimelineMutation.mutateAsync,
+                updateTimelineMutation.mutateAsync,
+                setDrawer,
+              );
+            }
+          }}
+          optionLabel="title"
+          options={allCalendars}
+          optionValue="id"
+          placeholder="Selected Calendars"
+          value={localItem?.calendars || ""}
         />
       </DrawerSection>
       <Button

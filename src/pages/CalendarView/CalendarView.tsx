@@ -57,6 +57,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
       else setDate({ year: 1, month: 0, era: era || null });
     }
   }, [item_id, calendar, era]);
+
   if (isLoading) return <LoadingScreen />;
 
   return (
