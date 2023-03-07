@@ -10,4 +10,5 @@ export const DefaultSection: DefaultSectionType = {
   parentId: "",
   title: "",
   expanded: true,
+  cardSize: "md",
 };

@@ -27,7 +27,7 @@ export type SectionCreateType = Partial<Omit<SectionType, "cards" | "parentId">>
   parentId: string;
   sort: number;
 };
-export type DefaultSectionType = Pick<SectionType, "id" | "parentId" | "title" | "expanded">;
+export type DefaultSectionType = Pick<SectionType, "id" | "parentId" | "title" | "expanded" | "cardSize">;
 
 export interface ScreenType extends BaseItemType {
   id: string;
