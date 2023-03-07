@@ -8,7 +8,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { useDeleteItem, useGetAllItems } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
@@ -16,6 +16,7 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, createURLS, deleteURLs, updateURLs } from "../../../types/CRUDenums";
 import { CalendarType, EventCreateType, EventType } from "../../../types/ItemTypes/calendarTypes";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
+import { TimelineType } from "../../../types/ItemTypes/timelineTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
@@ -32,28 +33,28 @@ function disableEventSaveButton(localItem: EventType | EventCreateType) {
     return true;
   return false;
 }
-async function deleteEvent(id: string, calendar_id: string, queryClient: QueryClient) {
+async function deleteEvent(id: string, calendar_id: string, queryClient: QueryClient, itemType: "timelines" | "calendars") {
   await FetchFunction({
     url: `${baseURLS.baseServer}${deleteURLs.deleteEvent}`,
     method: "DELETE",
     body: JSON.stringify({ id }),
   });
-  await queryClient.refetchQueries<CalendarType>(["calendars", calendar_id]);
+  await queryClient.refetchQueries<CalendarType>([itemType, calendar_id]);
 }
 
 export default function DrawerEventContent() {
   const { project_id, item_id } = useParams();
+  const { pathname } = useLocation();
+  const itemType = pathname.includes("timelines") ? "timelines" : "calendars";
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [loading, setLoading] = useState(false);
-
-  const { data: calendar, isFetching } = useGetItem<CalendarType>(item_id as string, "calendars");
+  const { data: calendar, isFetching } = useGetItem<CalendarType>(drawer.data?.calendarsId || (item_id as string), "calendars");
   const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents", {
     staleTime: 5 * 60 * 1000,
     enabled: !!calendar && !isFetching,
   });
-
-  const deleteMonthMutation = useDeleteItem("calendars", project_id as string);
+  const deleteEventMutation = useDeleteItem("events", project_id as string);
 
   const [localItem, setLocalItem] = useState<EventType | EventCreateType>(
     drawer?.data?.event?.id ? drawer.data : { ...DefaultEvent, ...drawer.data },
@@ -79,7 +80,7 @@ export default function DrawerEventContent() {
           method: "POST",
           body: JSON.stringify({ ...payload, id: localItem.id }),
         });
-        await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
+        await queryClient.refetchQueries<CalendarType | TimelineType>([itemType, item_id]);
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully updated.");
@@ -94,7 +95,7 @@ export default function DrawerEventContent() {
           body: JSON.stringify({ ...payload, monthsId: localItem?.month?.id, calendarsId: item_id as string }),
         });
 
-        await queryClient.refetchQueries<CalendarType>(["calendars", item_id]);
+        await queryClient.refetchQueries<CalendarType | TimelineType>([itemType, item_id]);
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully created.");
@@ -111,7 +112,6 @@ export default function DrawerEventContent() {
   useEffect(() => {
     if (calendar && typeof localItem?.month === "number") setMonthDays(calendar?.months?.[localItem.month]?.days);
   }, [localItem?.month]);
-
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-y-auto overflow-x-hidden">
       <h2 className="truncate text-center font-Lato text-2xl">
@@ -157,9 +157,10 @@ export default function DrawerEventContent() {
               name="month"
               onChange={(e) => handleChange({ name: "month", value: e.value })}
               optionLabel="title"
-              options={calendar?.months?.map((month) => ({ title: month.title, value: month }))}
+              options={calendar?.months}
+              optionValue="id"
               placeholder="Month"
-              value={localItem?.month}
+              value={localItem?.month?.id}
             />
             <InputNumber
               inputClassName="w-full"
@@ -247,13 +248,13 @@ export default function DrawerEventContent() {
         {localItem?.id ? (
           <Button
             className="p-button-outlined p-button-danger w-full"
-            loading={deleteMonthMutation.isLoading}
+            loading={deleteEventMutation.isLoading}
             onClick={() => {
               deleteItem(
                 "Are you sure you want to delete this event?",
                 () => {
                   if (localItem?.id) {
-                    deleteEvent(localItem.id, item_id as string, queryClient);
+                    deleteEvent(localItem.id, item_id as string, queryClient, itemType);
                     handleCloseDrawer(setDrawer, "right");
                   } else {
                     toaster("info", "Item not deleted.");

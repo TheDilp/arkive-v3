@@ -18,7 +18,7 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
   return (
     <div className="flex h-fit min-h-[24rem] w-full border-r border-zinc-700 last:border-b even:border-y">
       <div className="flex h-full w-16 items-start justify-center border-x border-zinc-700 font-Lato text-xl">{year}</div>
-      <div className={`flex h-full flex-1 overflow-auto ${groupByHour ? "flex-col content-start" : "items-start gap-1"}`}>
+      <div className={`flex h-full flex-1 overflow-auto ${groupByHour ? "flex-col content-start" : "items-start gap-1 p-1"}`}>
         {groupByHour
           ? items.map((item) => (
               <div key={item} className="flex h-full flex-1 justify-start border-b border-zinc-800">
@@ -36,8 +36,8 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
                                 ...DefaultDrawer,
                                 show: true,
                                 type: "events",
-                                data: { ...event, month: 0 },
-                                drawerSize: "md",
+                                data: event,
+                                drawerSize: "sm",
                               })
                             }
                             // onContextMenu={(e) => {
@@ -61,7 +61,19 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
               <div
                 key={event.id}
                 className="max-h-fit max-w-fit rounded px-2"
-                style={{ backgroundColor: event.backgroundColor, color: event.textColor }}>
+                onClick={() =>
+                  setDrawer({
+                    ...DefaultDrawer,
+                    show: true,
+                    type: "events",
+                    data: event,
+                    drawerSize: "sm",
+                  })
+                }
+                onKeyDown={() => {}}
+                role="button"
+                style={{ backgroundColor: event.backgroundColor, color: event.textColor }}
+                tabIndex={-1}>
                 {event.title}
               </div>
             ))

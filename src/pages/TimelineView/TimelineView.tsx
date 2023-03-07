@@ -2,6 +2,7 @@ import { SelectButton } from "primereact/selectbutton";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
+import DrawerSectionTitle from "../../components/Drawer/DrawerSectionTitle";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import TimelineGroup from "../../components/Timeline/TimelineGroup";
 import { useGetItem } from "../../hooks/useGetItem";
@@ -19,14 +20,17 @@ export default function TimelineView() {
   const allEvents = timeline?.calendars?.map((cal) => cal.events)?.flat();
   return (
     <div className="flex h-full flex-col overflow-y-auto overflow-x-hidden p-4">
-      <SelectButton
-        className="mb-2"
-        onChange={(e) => {
-          setViewSettings((prev) => ({ ...prev, groupByHour: e.value === "On" }));
-        }}
-        options={TimelineGroupingOptions}
-        value={viewSettings.groupByHour ? "On" : "Off"}
-      />
+      <div>
+        <DrawerSectionTitle title="Group by hour" />
+        <SelectButton
+          className="mb-2"
+          onChange={(e) => {
+            setViewSettings((prev) => ({ ...prev, groupByHour: e.value === "On" }));
+          }}
+          options={TimelineGroupingOptions}
+          value={viewSettings.groupByHour ? "On" : "Off"}
+        />
+      </div>
       {items.map((item) => (
         <TimelineGroup
           key={item}
