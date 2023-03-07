@@ -71,20 +71,20 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
         <div className="item-center flex">
           <Icon
             className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
-            icon="mdi:plus"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDrawer({ ...DefaultDrawer, show: true, type: "cards", data: section });
-            }}
-          />
-          <Icon
-            className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
             icon="mdi:pencil"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setDrawer({ ...DefaultDrawer, show: true, type: "sections", data: section });
+            }}
+          />
+          <Icon
+            className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
+            icon="mdi:plus"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDrawer({ ...DefaultDrawer, show: true, type: "cards", data: section });
             }}
           />
         </div>

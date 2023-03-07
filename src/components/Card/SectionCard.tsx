@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { Link } from "react-router-dom";
 
 import { CardType } from "../../types/ItemTypes/screenTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
@@ -18,8 +19,11 @@ export default function SectionCard({ card, deleteCard, updateCard, cardSize }: 
       <h4 className="group flex h-10 w-full items-center justify-between gap-x-2  py-2 font-Lato text-lg ">
         <span className="select-none truncate px-2">{card.document.title}</span>
         <div className="flex items-center">
+          <Link to={`../../documents/${card.documentsId}`}>
+            <Icon className="cursor-pointer opacity-0 transition-all group-hover:opacity-100" fontSize={20} icon="mdi:pencil" />
+          </Link>
           <Icon
-            className=" cursor-pointer opacity-0 transition-all hover:text-red-400 group-hover:opacity-100"
+            className="cursor-pointer opacity-0 transition-all hover:text-red-400 group-hover:opacity-100"
             fontSize={20}
             icon="mdi:trash"
             onClick={() => {
@@ -27,7 +31,7 @@ export default function SectionCard({ card, deleteCard, updateCard, cardSize }: 
             }}
           />
           <Icon
-            className=" cursor-pointer"
+            className="cursor-pointer"
             fontSize={28}
             icon={`mdi:chevron-${card.expanded ? "up" : "down"}`}
             onClick={() => {
