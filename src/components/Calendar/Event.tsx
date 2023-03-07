@@ -54,6 +54,7 @@ export default function CalendarEvent({ monthEvents, index, month, year, isReadO
   const [, setContextMenuData] = useAtom(OtherContextMenuAtom);
 
   const [, setDrawer] = useAtom(DrawerAtom);
+  console.log(monthEvents);
   return (
     <div className="flex flex-col gap-y-0.5 p-1">
       {monthEvents
@@ -64,15 +65,13 @@ export default function CalendarEvent({ monthEvents, index, month, year, isReadO
                 event?.documentsId ? (
                   <DocumentMentionTooltip id={event?.documentsId} />
                 ) : (
-                  (
-                    <div className="max-h-56 max-w-xs overflow-auto break-words rounded bg-black p-2">{event?.description}</div>
-                  ) || ""
+                  <div className="max-h-56 max-w-xs overflow-auto break-words rounded bg-black p-2">{event?.description}</div>
                 )
               }
               customOffset={{
                 mainAxis: 5,
               }}
-              disabled={!event?.documentsId || !event?.description}>
+              disabled={!event?.documentsId && !event?.description}>
               <div
                 className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-200"
                 onClick={() =>
