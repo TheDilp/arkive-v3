@@ -51,7 +51,7 @@ export default function TimelineView() {
   return (
     <div className="flex h-full flex-col overflow-hidden p-4">
       <div className="flex w-full gap-x-2">
-        <DrawerSection title="Group by hour">
+        <DrawerSection title="Group by year">
           <SelectButton
             className="mb-2"
             onChange={(e) => {
