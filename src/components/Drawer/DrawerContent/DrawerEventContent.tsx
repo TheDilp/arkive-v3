@@ -157,11 +157,9 @@ export default function DrawerEventContent() {
             <Dropdown
               name="month"
               onChange={(e) => handleChange({ name: "month", value: e.value })}
-              optionLabel="title"
               options={calendar?.months}
-              optionValue="id"
               placeholder="Month"
-              value={localItem?.month?.id}
+              value={localItem?.monthsId}
             />
             <InputNumber
               inputClassName="w-full"

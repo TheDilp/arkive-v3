@@ -1,3 +1,5 @@
+import { Button } from "primereact/button";
+import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -9,6 +11,30 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { TimelineType, TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 import { sortEvents } from "../../utils/calendarUtils";
 import { TimelineGroupingOptions, TimelineViewOptions } from "../../utils/timelineUtils";
+import { scrollElementIntoView } from "../../utils/uiUtils";
+
+function scrollToYear({
+  year,
+  groupItems,
+  setGroupItems,
+}: {
+  year: number;
+  groupItems: number;
+  setGroupItems: (newItems: number) => void;
+}) {
+  if (year <= groupItems * 10) {
+    scrollElementIntoView(`[data-year="${year}"]`);
+    return;
+  }
+  let newGroupItems = groupItems + 10;
+  while (newGroupItems * 10 <= year) {
+    newGroupItems += 10;
+  }
+  setGroupItems(newGroupItems);
+  setTimeout(() => {
+    scrollElementIntoView(`[data-year="${year}"]`);
+  }, 100);
+}
 
 export default function TimelineView() {
   const { item_id } = useParams();
@@ -16,6 +42,7 @@ export default function TimelineView() {
     groupByHour: true,
     view: { label: "Grouped", value: "Grouped" },
   });
+  const [year, setYear] = useState(1);
   const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines");
 
   const [groupItems, setGroupItems] = useState(10);
@@ -23,7 +50,7 @@ export default function TimelineView() {
   const allEvents = timeline?.calendars?.map((cal) => cal.events)?.flat();
   return (
     <div className="flex h-full flex-col overflow-hidden p-4">
-      <div className="flex w-full justify-between">
+      <div className="flex w-full gap-x-2">
         <DrawerSection title="Group by hour">
           <SelectButton
             className="mb-2"
@@ -34,18 +61,42 @@ export default function TimelineView() {
             value={viewSettings.groupByHour ? "On" : "Off"}
           />
         </DrawerSection>
-        <DrawerSection title="Viewing mode">
-          <SelectButton
-            className="mb-2"
-            onChange={(e) => {
-              if (e.value) setViewSettings((prev) => ({ ...prev, view: e.value }));
-            }}
-            optionDisabled="isDisabled"
-            optionLabel="label"
-            options={TimelineViewOptions}
-            value={viewSettings.view.label}
-          />
+        <DrawerSection title="Jump to year">
+          <div className="flex gap-x-1">
+            <Button
+              className="p-button-outlined mb-2"
+              label="Jump"
+              onClick={() => scrollToYear({ year, groupItems, setGroupItems })}
+            />
+            <InputNumber
+              className="w-24"
+              inputClassName="w-full"
+              onChange={(e) => {
+                if (e.value) setYear(e.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  scrollToYear({ year, groupItems, setGroupItems });
+                }
+              }}
+              value={year}
+            />
+          </div>
         </DrawerSection>
+        <div className="ml-auto">
+          <DrawerSection title="Viewing mode">
+            <SelectButton
+              className="mb-2"
+              onChange={(e) => {
+                if (e.value) setViewSettings((prev) => ({ ...prev, view: e.value }));
+              }}
+              optionDisabled="isDisabled"
+              optionLabel="label"
+              options={TimelineViewOptions}
+              value={viewSettings.view.label}
+            />
+          </DrawerSection>
+        </div>
       </div>
       <div
         className="flex h-full flex-col overflow-y-auto"

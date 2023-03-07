@@ -48,3 +48,10 @@ export function checkIfOwner(permission?: null | "owner" | "member") {
   if (permission && permission === "owner") return true;
   return false;
 }
+
+export function scrollElementIntoView(selector: string) {
+  const el = document.querySelector(selector);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" });
+  }
+}
