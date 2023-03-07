@@ -4,8 +4,8 @@ export const virtualScrollerSettings = {
   delay: 10,
   resizeDelay: 150,
   autoSize: true,
-  numToleratedItems: 3,
-  itemSize: 48,
+  numToleratedItems: 5,
+  itemSize: 45,
 };
 
 export const navItems: NavItemType[] = [

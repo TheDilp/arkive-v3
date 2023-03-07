@@ -23,6 +23,7 @@ import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { DefaultEvent } from "../../../utils/DefaultValues/CalendarDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
@@ -216,6 +217,7 @@ export default function DrawerEventContent() {
           optionValue="id"
           placeholder="Select documents"
           value={localItem.documentsId}
+          virtualScrollerOptions={virtualScrollerSettings}
         />
       </DrawerSection>
       <DrawerSection title="Event colors">
