@@ -20,7 +20,7 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
     </Link>
   );
   const footer = (
-    <div className="grid grid-cols-4 gap-y-4">
+    <div className="grid grid-cols-4 gap-y-2">
       {navItems
         .filter((_, index) => index !== 0)
         .map((navItem, index) => (
@@ -36,7 +36,7 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
             <div
               className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:text-sky-400"
               id={navItem.tooltip.replace("_", "")}>
-              <Icon fontSize={30} icon={navItem.icon} />
+              <Icon fontSize={42} icon={navItem.icon} />
             </div>
           </Link>
         ))}
