@@ -20,14 +20,17 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
     </Link>
   );
   const footer = (
-    <div className="flex flex-wrap justify-between gap-1">
+    <div className="grid grid-cols-4 gap-y-4">
       {navItems
         .filter((_, index) => index !== 0)
-        .map((navItem) => (
-          <Link key={navItem.icon} className="flex-1 no-underline" to={`../project/${id}/${navItem.navigate}`}>
+        .map((navItem, index) => (
+          <Link
+            key={navItem.icon}
+            className="flex flex-1 justify-center no-underline"
+            to={`../project/${id}/${navItem.navigate}`}>
             <Tooltip
               content={navItem.tooltip.replace("_", " ")}
-              position="bottom"
+              position={index < 4 ? "top" : "bottom"}
               target={`#${navItem.tooltip.replace("_", "")}`}
             />
             <div
