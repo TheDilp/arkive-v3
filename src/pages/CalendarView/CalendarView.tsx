@@ -7,9 +7,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
+import CalendarEvent from "../../components/Calendar/CalendarEvent";
 import DayNumber from "../../components/Calendar/DayNumber";
 import DayTitle from "../../components/Calendar/DayTitle";
-import CalendarEvent from "../../components/Calendar/Event";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { useGetItem } from "../../hooks/useGetItem";

@@ -50,7 +50,7 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
                             }}
                             disabled={!event?.documentsId && !event?.description}>
                             <div
-                              className="max-h-fit max-w-fit rounded px-2"
+                              className="max-h-fit max-w-fit rounded px-2 transition-all duration-100 hover:brightness-125"
                               onClick={() =>
                                 setDrawer({
                                   ...DefaultDrawer,
@@ -60,10 +60,6 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
                                   drawerSize: "sm",
                                 })
                               }
-                              // onContextMenu={(e) => {
-                              //   setContextMenuData({ data: { event, monthDays: month.days }, cm, show: true });
-                              //   if (cm.current) cm.current.show(e);
-                              // }}
                               onKeyDown={() => {}}
                               role="button"
                               style={{ backgroundColor: event.backgroundColor, color: event.textColor }}
@@ -81,7 +77,7 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
           ? events.map((event) => (
               <div
                 key={event.id}
-                className="max-h-fit max-w-fit rounded px-2"
+                className="max-h-fit max-w-fit rounded px-2 transition-all duration-100 hover:brightness-125"
                 onClick={() =>
                   setDrawer({
                     ...DefaultDrawer,

@@ -54,7 +54,6 @@ export default function CalendarEvent({ monthEvents, index, month, year, isReadO
   const [, setContextMenuData] = useAtom(OtherContextMenuAtom);
 
   const [, setDrawer] = useAtom(DrawerAtom);
-  console.log(monthEvents);
   return (
     <div className="flex flex-col gap-y-0.5 p-1">
       {monthEvents
@@ -73,7 +72,7 @@ export default function CalendarEvent({ monthEvents, index, month, year, isReadO
               }}
               disabled={!event?.documentsId && !event?.description}>
               <div
-                className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-200"
+                className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-125"
                 onClick={() =>
                   setDrawer({
                     ...DefaultDrawer,
