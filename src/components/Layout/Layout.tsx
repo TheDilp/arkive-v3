@@ -49,11 +49,9 @@ export default function Layout() {
   return (
     <div className="flex h-full max-w-full overflow-hidden">
       <Sidebar />
-
       {user ? (
         <>
           <ConfirmDialog />
-
           <DialogWrapper />
           <SecondarySidebar />
           <Drawer />

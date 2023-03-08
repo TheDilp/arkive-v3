@@ -68,8 +68,6 @@ function SidebarContent() {
       <ItemsTree type={type as AvailableItemTypes} />
     </div>
   );
-
-  // if (pathname.includes("timelines")) return <div className="flex flex-col flex-1 bg-zinc-900">TIMELINES</div>;
 }
 
 export default function SecondarySidebar() {

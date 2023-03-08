@@ -31,6 +31,7 @@ export function getItemIconForTree(type: AvailableItemTypes) {
   if (type === "screens") return "fluent:board-24-regular";
   if (type === "dictionaries") return "mdi-light:book";
   if (type === "calendars") return "ph:calendar-blank";
+  if (type === "timelines") return "mdi:timeline-clock-outline";
   if (type === "randomtables") return "arcticons:reroll";
   return "mdi:plus";
 }
