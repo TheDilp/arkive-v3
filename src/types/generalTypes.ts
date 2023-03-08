@@ -9,6 +9,7 @@ import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
 import { ProjectType } from "./ItemTypes/projectTypes";
 import { RandomTableOptionType, RandomTableType } from "./ItemTypes/randomTableTypes";
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
+import { TimelineType } from "./ItemTypes/timelineTypes";
 import { UserType } from "./userTypes";
 
 export type AvailableItemTypes =
@@ -160,6 +161,7 @@ export type FullSearchResults = {
   screens: ScreenType[];
   sections: SectionType[];
   calendars: CalendarType[];
+  timelines: TimelineType[];
   events: EventType[];
 };
 

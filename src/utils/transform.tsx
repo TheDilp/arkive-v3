@@ -7,6 +7,7 @@ import { CalendarType, EventType } from "../types/ItemTypes/calendarTypes";
 import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { MapPinType, MapType } from "../types/ItemTypes/mapTypes";
 import { ScreenType, SectionType } from "../types/ItemTypes/screenTypes";
+import { TimelineType } from "../types/ItemTypes/timelineTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
   <div className="flex w-full items-center justify-center gap-x-1">
@@ -69,6 +70,7 @@ export function getIconForFullSearch(
     | ScreenType
     | SectionType
     | CalendarType
+    | TimelineType
     | EventType,
 ) {
   if ("folder" in item && item.folder) return "mdi:folder";

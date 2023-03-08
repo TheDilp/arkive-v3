@@ -24,6 +24,7 @@ const SearchDefault = {
   screens: [],
   sections: [],
   calendars: [],
+  timelines: [],
   events: [],
 };
 
@@ -70,6 +71,7 @@ export default function DrawerFullSearch() {
               screens: [];
               sections: [];
               calendars: [];
+              timelines: [];
               events: [];
             }) => setResults(data),
           },
