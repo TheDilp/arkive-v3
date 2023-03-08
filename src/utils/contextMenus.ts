@@ -256,7 +256,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
   const [, setDialog] = useAtom(DialogAtom);
   const navigate = useNavigate();
 
-  if (cmType.folder) {
+  if (cmType?.folder) {
     const folderItems = [
       {
         command: () => {
@@ -338,7 +338,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
     ];
     return folderItems;
   }
-  if (cmType.template) {
+  if (cmType?.template) {
     const templateItems = [
       {
         command: () => {
@@ -582,7 +582,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
 
     return boardItems;
   }
-  if (cmType.type === "calendars") {
+  /*  if (cmType.type === "calendars") {
     const screenItems = [
       {
         label: "Update Calendar",
@@ -641,6 +641,66 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       },
     ];
     return screenItems;
+  } */
+  if (cmType.type === "timelines") {
+    const timelineItems = [
+      {
+        label: "Update Timeline",
+        icon: "pi pi-fw pi-pencil",
+        command: () => {
+          if (cmType.data?.id)
+            setDrawer({
+              ...DefaultDrawer,
+              id: cmType.data.id,
+              position: "right",
+              show: true,
+              type: "timelines",
+            });
+        },
+      },
+      {
+        label: "Toggle Public",
+        icon: `pi pi-fw ${cmType?.data && "isPublic" in cmType.data && cmType.data?.isPublic ? "pi-eye" : "pi-eye-slash"}`,
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data) {
+            updateItemMutation.mutate({ id: cmType.data?.id, isPublic: !cmType.data?.isPublic });
+          }
+        },
+      },
+
+      { separator: true },
+      {
+        label: "View Public Timeline",
+        icon: "pi pi-fw pi-external-link",
+        command: () => {
+          if (cmType?.data && "isPublic" in cmType.data && !cmType?.data?.isPublic) {
+            toaster("warning", "Timeline is set to private.");
+            return;
+          }
+          if (cmType.data?.id) navigate(`/view/timelines/${cmType.data?.id}`);
+        },
+      },
+      {
+        label: "Copy Public URL",
+        icon: "pi pi-fw pi-link",
+        command: () => {
+          if (navigator && navigator.clipboard) {
+            navigator.clipboard.writeText(`${window.location.host}/view/timelines/${cmType?.data?.id}`).then(() => {
+              toaster("success", "URL copied! 🔗");
+            });
+          }
+        },
+      },
+      {
+        label: "Delete Timeline",
+        icon: "pi pi-fw pi-trash",
+        command: () =>
+          deleteItem("Are you sure you want to delete this timeline?", () => {
+            if (cmType.data?.id) deleteItemMutation?.mutate(cmType.data.id);
+          }),
+      },
+    ];
+    return timelineItems;
   }
   if (cmType.type === "screens") {
     const screenItems = [

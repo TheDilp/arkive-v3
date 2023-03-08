@@ -1,12 +1,14 @@
 import { Icon } from "@iconify/react";
 import { Card } from "primereact/card";
-import { Tooltip } from "primereact/tooltip";
+import { Tooltip as PrimeTooltip } from "primereact/tooltip";
 import { Link } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { baseURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { navItems } from "../../utils/uiUtils";
+import DefaultTooltip from "../Tooltip/DefaultTooltip";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 export default function ProjectCard({ id, image, title }: ProjectType) {
   const header = (
@@ -28,7 +30,7 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
             key={navItem.icon}
             className="flex flex-1 justify-center no-underline"
             to={`../project/${id}/${navItem.navigate}`}>
-            <Tooltip
+            <PrimeTooltip
               content={navItem.tooltip.replace("_", " ")}
               position={index < 4 ? "top" : "bottom"}
               target={`#${navItem.tooltip.replace("_", "")}`}
@@ -47,7 +49,11 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
       className="Merriweather projectCard mx-2 flex h-[25rem] w-80 flex-col justify-between rounded-md border border-zinc-700 text-center shadow-sm"
       footer={footer}
       header={header}
-      title={<div className="font-Merriweather">{title}</div>}
+      title={
+        <Tooltip content={<DefaultTooltip>{title}</DefaultTooltip>}>
+          <div className="truncate font-Merriweather">{title}</div>
+        </Tooltip>
+      }
     />
   );
 }
