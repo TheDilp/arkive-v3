@@ -28,7 +28,7 @@ export default function DrawerEventDescription() {
         ) : null}
       </h2>
       <hr className="my-2 border-zinc-700" />
-      <div className="h-full overflow-y-auto">
+      <div className="drawerEventDescription h-full overflow-y-auto">
         {document ? <StaticRender content={document.content as RemirrorJSON} /> : null}
         {!document && !isFetching ? drawer?.data?.description : null}
       </div>

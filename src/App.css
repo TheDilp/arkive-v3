@@ -186,6 +186,11 @@ Inputs
     overflow: auto;
   }
 }
+.drawerEventDescription {
+  .staticRendererContainer {
+    @apply p-0;
+  }
+}
 .editor:focus {
   @apply outline-none;
 }
