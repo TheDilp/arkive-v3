@@ -26,7 +26,7 @@ function MonthDropdownTemplate(data: MonthType) {
 }
 
 export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
-  const { item_id } = useParams();
+  const { item_id, subitem_id } = useParams();
   const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars", {}, isReadOnly);
 
   // Event context menu
@@ -48,15 +48,24 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
 
   useEffect(() => {
     if (calendar) {
-      const savedDate = getItem(item_id as string) as { year: number; month: number; era: EraType | null };
-      if (savedDate)
-        setDate({
-          ...savedDate,
-          era: era || savedDate.era || null,
-        });
-      else setDate({ year: 1, month: 0, era: era || null });
+      if (subitem_id) {
+        const monthIdx = calendar.months.findIndex((mth) => mth.events.some((ev) => ev.id === subitem_id));
+        if (monthIdx !== -1) {
+          const event = calendar.months[monthIdx].events.find((ev) => ev.id === subitem_id);
+
+          setDate({ year: event?.year as number, month: monthIdx, era: era || null });
+        }
+      } else {
+        const savedDate = getItem(item_id as string) as { year: number; month: number; era: EraType | null };
+        if (savedDate)
+          setDate({
+            ...savedDate,
+            era: era || savedDate.era || null,
+          });
+        else setDate({ year: 1, month: 0, era: era || null });
+      }
     }
-  }, [item_id, calendar, era]);
+  }, [item_id, subitem_id, calendar, era]);
 
   if (isLoading) return <LoadingScreen />;
 

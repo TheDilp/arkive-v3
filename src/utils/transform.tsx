@@ -50,7 +50,7 @@ export function getLinkForFullSearch(
   project_id: string,
   folder: boolean,
 ) {
-  if (["documents", "maps", "boards", "screens", "calendars"].includes(type))
+  if (["documents", "maps", "boards", "screens", "timelines", "calendars"].includes(type))
     return `/project/${project_id}/${type}/${folder ? "folder/" : ""}${id}`;
   if (type === "pins") return `/project/${project_id}/maps/${parentId}/${id}`;
   if (type === "nodes" || type === "edges") return `/project/${project_id}/boards/${parentId}/${id}`;
