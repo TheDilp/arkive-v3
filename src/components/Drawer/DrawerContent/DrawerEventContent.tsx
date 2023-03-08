@@ -100,6 +100,7 @@ export default function DrawerEventContent() {
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully created.");
+        handleCloseDrawer(setDrawer, "right");
       }
     } else {
       toaster("info", "No data was changed.");

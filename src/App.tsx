@@ -8,7 +8,7 @@ import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { lazy, Suspense, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -59,8 +59,20 @@ function App() {
   useEffect(() => {
     const auth = getAuth();
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) user?.getIdToken();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const jwtToken = await user?.getIdTokenResult();
+        const { expirationTime } = jwtToken;
+        const now = new Date();
+        const expirationDate = new Date(expirationTime);
+        if (now > expirationDate) {
+          signOut(auth).then(() => {
+            queryClient.clear();
+            navigate("/auth/signin");
+          });
+        }
+        user?.getIdToken();
+      }
       if (!user && !pathname.includes("view")) navigate("/auth/signin");
     });
   }, []);

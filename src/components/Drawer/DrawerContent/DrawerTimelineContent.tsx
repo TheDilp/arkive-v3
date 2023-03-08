@@ -46,7 +46,7 @@ export default function DrawerTimelineContent() {
       });
     }
   }, [dictionary, project_id]);
-
+  console.log(localItem);
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Timeline"}</h2>
