@@ -7,8 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { MapPinType } from "../../types/ItemTypes/mapTypes";
-import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
-import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { MapContextAtom } from "../../utils/Atoms/atoms";
 
 export default function MapPin({
   pinData: markerData,
@@ -24,7 +23,6 @@ export default function MapPin({
   const { project_id } = useParams();
   const updateMapPin = useUpdateSubItem<MapPinType>(project_id as string, "map_pins", "maps");
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
-  const [, setDrawer] = useAtom(DrawerAtom);
   const [, setMapContext] = useAtom(MapContextAtom);
 
   const eventHandlers = {
@@ -41,9 +39,8 @@ export default function MapPin({
     },
     contextmenu: (e: any) => {
       if (!readOnly) {
-        setMapContext({ type: "pin" });
+        setMapContext({ type: "pin", data: markerData });
         cm.current.show(e.originalEvent);
-        setDrawer({ ...DefaultDrawer, position: "right", id, data: { ...markerData, ...e.latlng } });
       }
     },
     dragend(e: any) {

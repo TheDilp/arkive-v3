@@ -56,7 +56,8 @@ export function useMapContextMenuItems({
         ]
       : [
           {
-            command: () => setDrawer((prev) => ({ ...prev, position: "left", show: true, type: "map_pins" })),
+            command: () =>
+              setDrawer((prev) => ({ ...prev, data: mapContext?.data, position: "right", show: true, type: "map_pins" })),
             icon: "pi pi-fw pi-pencil",
             label: "Edit Pin",
           },
@@ -582,7 +583,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
 
     return boardItems;
   }
-  /*  if (cmType.type === "calendars") {
+  if (cmType.type === "calendars") {
     const screenItems = [
       {
         label: "Update Calendar",
@@ -641,7 +642,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       },
     ];
     return screenItems;
-  } */
+  }
   if (cmType.type === "timelines") {
     const timelineItems = [
       {

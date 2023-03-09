@@ -5,7 +5,7 @@ import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateSubItem, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
@@ -17,15 +17,16 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
 import { IconSelect } from "../../IconSelect/IconSelect";
+import { handleCloseDrawer } from "../Drawer";
 
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const queryClient = useQueryClient();
-  const [drawer] = useAtom(DrawerAtom);
+  const [drawer, setDrawer] = useAtom(DrawerAtom);
   const createMapPin = useCreateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
   const updateMapPin = useUpdateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
   const { data: map } = useGetItem<MapType>(item_id as string, "maps");
-  const currentPin = map?.map_pins?.find((pin) => pin.id === drawer.id);
+  const currentPin = map?.map_pins?.find((pin) => pin.id === drawer?.data?.id);
   const documents = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
   const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
   const [localItem, setLocalItem] = useState<MapPinType | MapPinCreateType>(
@@ -40,6 +41,11 @@ export default function DrawerMapPinContent() {
       text: "",
     },
   );
+
+  useEffect(() => {
+    if (currentPin) setLocalItem(currentPin);
+  }, [currentPin]);
+
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
   if (!map) return null;
   return (
@@ -50,7 +56,7 @@ export default function DrawerMapPinContent() {
           className="w-full"
           onChange={(e) => handleChange({ name: "text", value: e.target.value })}
           placeholder="Marker Popup Text"
-          value={localItem.text}
+          value={localItem?.text}
         />
       </div>
       <div className="flex flex-wrap items-center justify-between">
@@ -105,10 +111,12 @@ export default function DrawerMapPinContent() {
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
-        onClick={() => {
-          if (currentPin) updateMapPin.mutate({ id: localItem.id, ...changedData });
-          else createMapPin.mutate({ ...localItem, id: crypto.randomUUID() });
+        loading={createMapPin.isLoading || updateMapPin.isLoading}
+        onClick={async () => {
+          if (currentPin) await updateMapPin.mutateAsync({ id: localItem.id, ...changedData });
+          else await createMapPin.mutateAsync({ ...localItem, id: crypto.randomUUID() });
           resetChanges();
+          handleCloseDrawer(setDrawer, "right");
         }}
         type="submit">
         {buttonLabelWithIcon("Save", "mdi:content-save")}

@@ -4,6 +4,7 @@ import { atom } from "jotai";
 import { DialogPositionType } from "primereact/dialog";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
+import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { UserType } from "../../types/userTypes";
@@ -55,7 +56,7 @@ export const ProjectAtom = atom<ProjectType | null>(null);
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);
 export const DialogAtom = atom<DialogAtomType>(DefaultDialog);
 
-export const MapContextAtom = atom<{ type: null | "map" | "pin" }>({ type: null });
+export const MapContextAtom = atom<{ type: null | "map" | "pin"; data?: MapType | MapPinType }>({ type: null });
 export const BoardReferenceAtom = atom<null | cytoscape.Core>(null);
 export const BoardStateAtom = atom<{
   addNodes: boolean;
