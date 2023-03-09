@@ -126,7 +126,8 @@ export default function TimelineView() {
             events={
               allEvents
                 ?.filter((event) => {
-                  if (item !== 0) return event.year > item * 10 && event.year <= item * 20;
+                  console.log(event.year, item * 10, item * 20);
+                  if (item !== 0) return event.year > item * 10 && event.year <= item * 10 + 10;
                   return event.year > 0 && event.year <= 10;
                 })
                 .sort(sortEvents) || []
