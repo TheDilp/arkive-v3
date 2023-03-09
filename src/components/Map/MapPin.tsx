@@ -56,6 +56,7 @@ export default function MapPin({
       }
     },
   };
+  console.log(icon.match(/.*:/g));
   return (
     <Marker
       draggable={!readOnly}
@@ -72,9 +73,9 @@ export default function MapPin({
                   e.stopPropagation();
                 }}
                 style={{
-                  background: `url('https://api.iconify.design/mdi/${icon ? icon?.replace(/.*:/g, "") : ""}.svg?color=%23${
-                    color ? color.replace("#", "") : ""
-                  }') no-repeat`,
+                  background: `url('https://api.iconify.design/${icon.match(/.*:/g)?.[0]?.replace(":", "") || "mdi:"}/${
+                    icon ? icon?.replace(/.*:/g, "") : ""
+                  }.svg?color=%23${color ? color.replace("#", "") : ""}') no-repeat`,
                   backgroundColor,
                   backgroundPosition: "center",
                   backgroundSize: "2rem",
