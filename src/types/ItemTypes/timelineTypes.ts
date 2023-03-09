@@ -15,4 +15,4 @@ export type DefaultTimelineType = Pick<TimelineType, "title" | "project_id">;
 
 export type TimelineViewType = "Vertical" | "Horizontal" | "Grouped";
 
-export type TimelineViewSettings = { groupByHour: boolean; view: { label: TimelineViewType; value: TimelineViewType } };
+export type TimelineViewSettings = { groupBy: boolean; view: { label: TimelineViewType; value: TimelineViewType } };

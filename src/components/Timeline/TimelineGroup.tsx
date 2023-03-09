@@ -3,9 +3,7 @@ import { useAtom } from "jotai";
 import { EventType } from "../../types/ItemTypes/calendarTypes";
 import { TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
-import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { DocumentMentionTooltip } from "../Mention/DocumentMention";
-import { Tooltip } from "../Tooltip/Tooltip";
+import TimelineEvent from "./TimelineEvent";
 
 type Props = {
   year: number;
@@ -15,7 +13,7 @@ type Props = {
 
 export default function TimelineGroup({ year, events, viewSettings }: Props) {
   const [, setDrawer] = useAtom(DrawerAtom);
-  const { groupByHour } = viewSettings;
+  const { groupBy: groupByHour } = viewSettings;
   const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   return (
     <div
@@ -33,67 +31,14 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
                   {events.length
                     ? events
                         .filter((event) => event.year === year + item)
-                        .map((event) => (
-                          <Tooltip
-                            key={event.id}
-                            content={
-                              event?.documentsId ? (
-                                <DocumentMentionTooltip id={event?.documentsId} />
-                              ) : (
-                                <div className="max-h-56 max-w-xs overflow-auto break-words rounded bg-black p-2">
-                                  {event?.description}
-                                </div>
-                              )
-                            }
-                            customOffset={{
-                              mainAxis: 5,
-                            }}
-                            disabled={!event?.documentsId && !event?.description}>
-                            <div
-                              className="max-h-fit max-w-fit rounded px-2 transition-all duration-100 hover:brightness-125"
-                              onClick={() =>
-                                setDrawer({
-                                  ...DefaultDrawer,
-                                  show: true,
-                                  type: "events",
-                                  data: event,
-                                  drawerSize: "sm",
-                                })
-                              }
-                              onKeyDown={() => {}}
-                              role="button"
-                              style={{ backgroundColor: event.backgroundColor, color: event.textColor }}
-                              tabIndex={-1}>
-                              {event.title}
-                            </div>
-                          </Tooltip>
-                        ))
+                        .map((event) => <TimelineEvent key={event.id} event={event} setDrawer={setDrawer} />)
                     : null}
                 </div>
               </div>
             ))
           : null}
         {events.length && !groupByHour
-          ? events.map((event) => (
-              <div
-                key={event.id}
-                className="max-h-fit max-w-fit rounded px-2 transition-all duration-100 hover:brightness-125"
-                onClick={() =>
-                  setDrawer({
-                    ...DefaultDrawer,
-                    show: true,
-                    type: "events",
-                    data: event,
-                    drawerSize: "sm",
-                  })
-                }
-                onKeyDown={() => {}}
-                role="button"
-                style={{ backgroundColor: event.backgroundColor, color: event.textColor }}
-                tabIndex={-1}>
-                {event.title}
-              </div>
-            ))
+          ? events.map((event) => <TimelineEvent key={event.id} event={event} setDrawer={setDrawer} />)
           : null}
       </div>
     </div>

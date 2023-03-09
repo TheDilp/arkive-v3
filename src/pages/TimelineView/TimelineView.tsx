@@ -13,33 +13,44 @@ import { sortEvents } from "../../utils/calendarUtils";
 import { TimelineGroupingOptions, TimelineViewOptions } from "../../utils/timelineUtils";
 import { scrollElementIntoView } from "../../utils/uiUtils";
 
+function scrollBasedOnGroup(groupBy: boolean, year: number) {
+  if (groupBy) {
+    scrollElementIntoView(`[data-year="${year}"]`);
+  } else {
+    const stringYear = parseFloat(`${year.toString().slice(0, -1)}1`);
+    scrollElementIntoView(`[data-start-year="${stringYear}"]`);
+  }
+}
+
 function scrollToYear({
   year,
   groupItems,
   setGroupItems,
+  groupBy,
 }: {
   year: number;
   groupItems: number;
   setGroupItems: (newItems: number) => void;
+  groupBy: boolean;
 }) {
   if (year <= groupItems * 10) {
-    scrollElementIntoView(`[data-year="${year}"]`);
-    return;
+    scrollBasedOnGroup(groupBy, year);
+  } else {
+    let newGroupItems = groupItems + 10;
+    while (newGroupItems * 10 <= year) {
+      newGroupItems += 10;
+    }
+    setGroupItems(newGroupItems);
+    setTimeout(() => {
+      scrollBasedOnGroup(groupBy, year);
+    }, 100);
   }
-  let newGroupItems = groupItems + 10;
-  while (newGroupItems * 10 <= year) {
-    newGroupItems += 10;
-  }
-  setGroupItems(newGroupItems);
-  setTimeout(() => {
-    scrollElementIntoView(`[data-year="${year}"]`);
-  }, 100);
 }
 
 export default function TimelineView() {
   const { item_id } = useParams();
   const [viewSettings, setViewSettings] = useState<TimelineViewSettings>({
-    groupByHour: true,
+    groupBy: true,
     view: { label: "Grouped", value: "Grouped" },
   });
   const [year, setYear] = useState(1);
@@ -55,10 +66,10 @@ export default function TimelineView() {
           <SelectButton
             className="mb-2"
             onChange={(e) => {
-              setViewSettings((prev) => ({ ...prev, groupByHour: e.value === "On" }));
+              setViewSettings((prev) => ({ ...prev, groupBy: e.value === "On" }));
             }}
             options={TimelineGroupingOptions}
-            value={viewSettings.groupByHour ? "On" : "Off"}
+            value={viewSettings.groupBy ? "On" : "Off"}
           />
         </DrawerSection>
         <DrawerSection title="Jump to year">
@@ -66,7 +77,7 @@ export default function TimelineView() {
             <Button
               className="p-button-outlined mb-2"
               label="Jump"
-              onClick={() => scrollToYear({ year, groupItems, setGroupItems })}
+              onClick={() => scrollToYear({ year, groupItems, setGroupItems, groupBy: viewSettings.groupBy })}
             />
             <InputNumber
               className="w-24"
@@ -76,7 +87,7 @@ export default function TimelineView() {
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  scrollToYear({ year, groupItems, setGroupItems });
+                  scrollToYear({ year, groupItems, setGroupItems, groupBy: viewSettings.groupBy });
                 }
               }}
               value={year}
