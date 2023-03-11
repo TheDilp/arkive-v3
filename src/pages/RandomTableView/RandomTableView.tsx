@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
@@ -5,7 +6,6 @@ import { DataTable } from "primereact/datatable";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import IconColumn from "../../components/Settings/Columns/IconColumn";
 import { Tooltip } from "../../components/Tooltip/Tooltip";
 import { useDeleteSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
@@ -17,10 +17,20 @@ import { getRandomTableResult } from "../../utils/randomtableUtils";
 import { toaster } from "../../utils/toast";
 import { buttonLabelWithIcon } from "../../utils/transform";
 
+function IconColumn({ icon, iconColor }: RandomTableOptionType) {
+  if (icon)
+    return (
+      <div className="flex justify-center">
+        <Icon color={iconColor || "#ffffff"} fontSize={32} icon={icon} />
+      </div>
+    );
+  return null;
+}
+
 function ActionsColumn(
-  { id, title, description }: RandomTableOptionType,
+  { id, title, description, icon, iconColor }: RandomTableOptionType,
   deleteAction: (docId: string) => void,
-  editAction: (data: { id: string; title: string; description: string }) => void,
+  editAction: (data: Pick<RandomTableOptionType, "id" | "title" | "description" | "icon" | "iconColor">) => void,
 ) {
   return (
     <div className="flex justify-center gap-x-1">
@@ -28,7 +38,7 @@ function ActionsColumn(
         className="p-button-success p-button-outlined"
         icon="pi pi-fw pi-pencil"
         onClick={() => {
-          editAction({ id, title, description });
+          editAction({ id, title, description, icon, iconColor });
         }}
         tooltip="Edit"
         tooltipOptions={{ showDelay: 300, position: "left" }}
@@ -133,8 +143,9 @@ export default function RandomTableView() {
         />
         <Column bodyClassName="font-medium w-[30%]" field="title" header="Title" />
         <Column bodyClassName="font-light italic w-[60%]" field="description" header="Description" />
-        <Column body={IconColumn} bodyClassName="w-[5%]" field="icon" header="Icon" />
+        <Column align="center" body={IconColumn} bodyClassName="w-[5%]" field="icon" header="Icon" />
         <Column
+          align="center"
           body={(data) => ActionsColumn(data, deleteAction, editAction)}
           bodyClassName="font-medium w-[5%]"
           header="Actions"

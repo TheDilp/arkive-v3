@@ -100,7 +100,9 @@ export default function DrawerRandomTableOptionContent() {
       <DrawerSection title="Random table option icon (optional)">
         <div className="flex items-center gap-x-1">
           <div className="w-8">
-            <IconSelect iconTypes={["weather"]} setIcon={(newIcon) => handleChange({ name: "icon", value: newIcon })}>
+            <IconSelect
+              iconTypes={["general", "weather"]}
+              setIcon={(newIcon) => handleChange({ name: "icon", value: newIcon })}>
               {localItem?.icon ? (
                 <Icon
                   className="cursor-pointer transition-colors hover:text-sky-400"
