@@ -5,7 +5,6 @@ import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-lea
 import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
-import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
 import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -20,7 +19,7 @@ type Props = {
 };
 
 export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
-  const { project_id, item_id, subitem_id } = useParams();
+  const { item_id, subitem_id } = useParams();
   const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps");
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
 
@@ -119,12 +118,7 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
                 .map((layer) => {
                   return (
                     <LayersControl.Overlay key={layer.id + layer.title} name={layer.title}>
-                      <ImageOverlay
-                        bounds={bounds}
-                        className="leafletImageOverlayLayer "
-                        url={`${baseURLS.baseServer}${getURLS.getSingleMapImage}${project_id}/${layer.image}`}
-                        zIndex={9999}
-                      />
+                      <ImageOverlay bounds={bounds} className="leafletImageOverlayLayer " url={layer.image} zIndex={9999} />
                     </LayersControl.Overlay>
                   );
                 })

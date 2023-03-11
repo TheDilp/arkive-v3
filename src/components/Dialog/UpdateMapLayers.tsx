@@ -31,7 +31,7 @@ export default function UpdateMapLayers() {
   }, [currentMap?.map_layers]);
   return (
     <>
-      <div className="mb-2 flex w-full items-center justify-between">
+      <div className="mb-2 flex w-full min-w-[20rem] items-center justify-between">
         <span className="font-medium text-blue-300">New Layer</span>
         <Button
           className="p-button-outlined"
@@ -61,124 +61,125 @@ export default function UpdateMapLayers() {
         </Button>
       </div>
 
-      <div className="flex w-min flex-wrap items-center gap-y-1">
+      <div className="flex w-fit flex-wrap items-center gap-y-1">
         <span className="w-full text-sm text-zinc-400">Only layers with a set map image will be visible</span>
 
-        {layers &&
-          layers.map((layer: MapLayerType) => (
-            <div key={layer.id} className="flex w-full items-center justify-start gap-x-2">
-              <InputText
-                className="w-48"
-                onChange={(e) =>
-                  setLayers((prev) =>
-                    prev?.map((stateLayer) => {
-                      if (stateLayer.id === layer.id) {
-                        return { ...layer, title: e.target.value };
-                      }
-                      return stateLayer;
-                    }),
-                  )
-                }
-                value={layer.title}
-              />
-              <div className="w-48">
-                <Dropdown
-                  filter
-                  itemTemplate={MapImageDropdownItem}
+        {layers
+          ? layers.map((layer: MapLayerType) => (
+              <div key={layer.id} className="flex w-full items-center justify-start gap-x-2">
+                <InputText
+                  className="w-48"
                   onChange={(e) =>
                     setLayers((prev) =>
-                      prev.map((stateLayer) => {
-                        if (stateLayer.id === layer.id) return { ...stateLayer, image: e.value };
+                      prev?.map((stateLayer) => {
+                        if (stateLayer.id === layer.id) {
+                          return { ...layer, title: e.target.value };
+                        }
                         return stateLayer;
                       }),
                     )
                   }
-                  options={map_images || []}
-                  placeholder="Select map image"
-                  value={layer.image}
-                  valueTemplate={ImageDropdownValue({ image: layer?.image })}
-                  virtualScrollerOptions={virtualScrollerSettings}
+                  value={layer.title}
                 />
-              </div>
-              <div className="flex w-fit gap-x-4">
-                <Button
-                  className="p-button-outlined p-button-success w-24"
-                  icon="pi pi-save"
-                  onClick={() => {
-                    updateMapLayer.mutate(
-                      {
-                        id: layer.id,
-                        title: layer.title,
-                        image: layer.image,
-                      },
-                      {
+                <div className="w-48">
+                  <Dropdown
+                    filter
+                    itemTemplate={MapImageDropdownItem}
+                    onChange={(e) =>
+                      setLayers((prev) =>
+                        prev.map((stateLayer) => {
+                          if (stateLayer.id === layer.id) return { ...stateLayer, image: e.value };
+                          return stateLayer;
+                        }),
+                      )
+                    }
+                    options={map_images || []}
+                    placeholder="Select map image"
+                    value={layer.image}
+                    valueTemplate={ImageDropdownValue({ image: layer?.image })}
+                    virtualScrollerOptions={virtualScrollerSettings}
+                  />
+                </div>
+                <div className="flex w-fit gap-x-4">
+                  <Button
+                    className="p-button-outlined p-button-success w-24"
+                    icon="pi pi-save"
+                    onClick={() => {
+                      updateMapLayer.mutate(
+                        {
+                          id: layer.id,
+                          title: layer.title,
+                          image: layer.image,
+                        },
+                        {
+                          onSuccess: () => {
+                            queryClient.setQueryData(["maps", item_id], (oldData: MapType | undefined) => {
+                              if (oldData)
+                                return {
+                                  ...oldData,
+                                  map_layers: oldData.map_layers.map((oldLayer) => {
+                                    if (oldLayer.id === layer.id) return { ...oldLayer, ...layer };
+                                    return oldLayer;
+                                  }),
+                                };
+                              return oldData;
+                            });
+                            toaster("success", "Map layer updated successfully.");
+                          },
+                        },
+                      );
+                    }}
+                  />
+                  <Button
+                    className={`p-button-outlined w-1/12 p-button-${layer.isPublic ? "info" : "secondary"}`}
+                    icon={`pi pi-${layer.isPublic ? "eye" : "eye-slash"}`}
+                    onClick={() => {
+                      updateMapLayer.mutate(
+                        {
+                          id: layer.id,
+                          isPublic: !layer.isPublic,
+                        },
+                        {
+                          onSuccess: () =>
+                            toaster(
+                              "info",
+                              `Visiblity of this layer has been changed to: ${!layer.isPublic ? "public" : "private."}`,
+                            ),
+                        },
+                      );
+                      setLayers((prev) =>
+                        prev?.map((prevLayer) => {
+                          if (prevLayer.id === layer.id) {
+                            return { ...layer, isPublic: !layer.isPublic };
+                          }
+                          return prevLayer;
+                        }),
+                      );
+                    }}
+                    tooltip="Toggle public"
+                  />
+                  <Button
+                    className="p-button-outlined p-button-danger w-1/12"
+                    icon="pi pi-trash"
+                    onClick={() =>
+                      deleteMapLayer.mutate(layer.id, {
                         onSuccess: () => {
                           queryClient.setQueryData(["maps", item_id], (oldData: MapType | undefined) => {
                             if (oldData)
                               return {
                                 ...oldData,
-                                map_layers: oldData.map_layers.map((oldLayer) => {
-                                  if (oldLayer.id === layer.id) return { ...oldLayer, ...layer };
-                                  return oldLayer;
-                                }),
+                                map_layers: oldData.map_layers.filter((oldLayer) => oldLayer.id !== layer.id),
                               };
                             return oldData;
                           });
-                          toaster("success", "Map layer updated successfully.");
                         },
-                      },
-                    );
-                  }}
-                />
-                <Button
-                  className={`p-button-outlined w-1/12 p-button-${layer.isPublic ? "info" : "secondary"}`}
-                  icon={`pi pi-${layer.isPublic ? "eye" : "eye-slash"}`}
-                  onClick={() => {
-                    updateMapLayer.mutate(
-                      {
-                        id: layer.id,
-                        isPublic: !layer.isPublic,
-                      },
-                      {
-                        onSuccess: () =>
-                          toaster(
-                            "info",
-                            `Visiblity of this layer has been changed to: ${!layer.isPublic ? "public" : "private."}`,
-                          ),
-                      },
-                    );
-                    setLayers((prev) =>
-                      prev?.map((prevLayer) => {
-                        if (prevLayer.id === layer.id) {
-                          return { ...layer, isPublic: !layer.isPublic };
-                        }
-                        return prevLayer;
-                      }),
-                    );
-                  }}
-                  tooltip="Toggle public"
-                />
-                <Button
-                  className="p-button-outlined p-button-danger w-1/12"
-                  icon="pi pi-trash"
-                  onClick={() =>
-                    deleteMapLayer.mutate(layer.id, {
-                      onSuccess: () => {
-                        queryClient.setQueryData(["maps", item_id], (oldData: MapType | undefined) => {
-                          if (oldData)
-                            return {
-                              ...oldData,
-                              map_layers: oldData.map_layers.filter((oldLayer) => oldLayer.id !== layer.id),
-                            };
-                          return oldData;
-                        });
-                      },
-                    })
-                  }
-                />
+                      })
+                    }
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          : null}
       </div>
     </>
   );

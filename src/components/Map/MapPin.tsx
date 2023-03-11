@@ -56,7 +56,6 @@ export default function MapPin({
       }
     },
   };
-  console.log(icon.match(/.*:/g));
   return (
     <Marker
       draggable={!readOnly}
