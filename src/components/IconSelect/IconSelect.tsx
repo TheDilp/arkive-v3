@@ -14,6 +14,7 @@ import {
 import { cloneElement, useMemo, useState } from "react";
 import { mergeRefs } from "react-merge-refs";
 
+import { IconCategoriesType } from "../../types/generalTypes";
 import IconSelectList from "./IconSelectList";
 
 interface Props {
@@ -21,9 +22,10 @@ interface Props {
   setIcon: (newIcon: string) => void;
   placement?: Placement;
   disabled?: boolean;
+  iconTypes?: IconCategoriesType[];
 }
 
-export function IconSelect({ children, setIcon, placement, disabled }: Props) {
+export function IconSelect({ children, setIcon, placement, disabled, iconTypes = ["general"] }: Props) {
   const [open, setOpen] = useState(false);
 
   const { x, y, reference, floating, strategy, context } = useFloating({
@@ -65,7 +67,7 @@ export function IconSelect({ children, setIcon, placement, disabled }: Props) {
               top: y ?? 0,
             }}
             {...getFloatingProps()}>
-            <IconSelectList close={() => setOpen(false)} setIcon={setIcon} />
+            <IconSelectList close={() => setOpen(false)} iconTypes={iconTypes} setIcon={setIcon} />
           </div>
         </FloatingFocusManager>
       )}

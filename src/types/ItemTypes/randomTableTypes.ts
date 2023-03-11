@@ -7,6 +7,7 @@ export type RandomTableOptionType = {
   description: string;
   parentId: string;
   sort: number;
+  icon?: string;
 };
 
 export interface RandomTableType extends BaseItemType {

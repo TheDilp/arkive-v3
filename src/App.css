@@ -48,6 +48,13 @@
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
   @apply bg-transparent !important;
 }
+.p-tabmenu-nav {
+  @apply w-full justify-between !important;
+
+  li {
+    @apply flex-1;
+  }
+}
 .p-tabview-panels {
   @apply h-12 flex-1 p-0 !important;
 }

@@ -1,4 +1,4 @@
-import { NavItemType } from "../types/generalTypes";
+import { IconCategoriesType, NavItemType } from "../types/generalTypes";
 
 export const virtualScrollerSettings = {
   delay: 10,
@@ -54,4 +54,12 @@ export function scrollElementIntoView(selector: string) {
   if (el) {
     el.scrollIntoView({ behavior: "smooth" });
   }
+}
+
+export function getTabForIconSelect(iconTypes: IconCategoriesType[]) {
+  const tabs = [];
+  if (iconTypes.includes("general")) tabs.push({ label: "General", icon: "pi pi-fw pi-file" });
+  if (iconTypes.includes("weather")) tabs.push({ label: "Weather", icon: "pi pi-fw pi-sun" });
+
+  return tabs;
 }

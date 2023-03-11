@@ -1,44 +1,61 @@
 import { Icon } from "@iconify/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { InputText } from "primereact/inputtext";
+import { TabMenu } from "primereact/tabmenu";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { IconSelectMenuType } from "../../types/generalTypes";
-import { iconList } from "../../utils/iconsList";
+import { getIconsList } from "../../utils/iconsList";
+import { getTabForIconSelect } from "../../utils/uiUtils";
 
-export default function IconSelectList({ close, setIcon }: IconSelectMenuType) {
+export default function IconSelectList({ close, setIcon, iconTypes }: IconSelectMenuType) {
+  const [activeIndex, setActiveIndex] = useState(0);
   const [search, setSearch] = useState<string | null>(null);
-  const [filteredIconList, setFilteredIconList] = useState(iconList);
+  const [icons, setIcons] = useState(getIconsList(iconTypes[activeIndex]));
+  const [filteredIconList, setFilteredIconList] = useState(icons);
   const parentRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   const rowVirtualizer = useVirtualizer({
-    count: Math.ceil(iconList.filter((icon) => (search ? icon.includes(search.toLowerCase()) : true)).length / 6),
+    count: Math.ceil(icons.filter((icon) => (search ? icon.includes(search.toLowerCase()) : true)).length / 6),
     getScrollElement: () => parentRef.current,
     estimateSize: useCallback(() => 30, []),
-    overscan: 5,
+    overscan: 1,
   });
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
     count: 6,
     getScrollElement: () => parentRef.current,
-    estimateSize: useCallback(() => 30, []),
+    estimateSize: useCallback(() => 40, []),
     overscan: 5,
   });
   const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
 
   useEffect(() => {
-    setFilteredIconList(iconList.filter((icon) => (search ? icon.includes(search.toLowerCase()) : true)));
-  }, [search]);
+    const newIcons = getIconsList(iconTypes[activeIndex]);
+    setIcons(newIcons);
+    setFilteredIconList(newIcons);
+    setSearch(null);
+  }, [activeIndex]);
 
+  useEffect(() => {
+    setFilteredIconList(icons.filter((icon) => (search ? icon.includes(search.toLowerCase()) : true)));
+  }, [search]);
   return (
-    <div ref={ref} className="h-80 w-52 rounded-sm bg-zinc-800">
-      <div ref={parentRef} className="h-full w-full overflow-auto">
+    <div ref={ref} className="h-96 w-64 rounded-sm bg-zinc-900">
+      <TabMenu
+        activeIndex={activeIndex}
+        className="w-full"
+        model={getTabForIconSelect(iconTypes)}
+        onTabChange={(e) => setActiveIndex(e.index)}
+      />
+      <div ref={parentRef} className="max-h-80 w-full overflow-auto">
         <InputText
           autoFocus
-          className="mb-2 w-full py-1"
+          className="p-inputtext-sm sticky top-0 z-10 mb-2 w-full py-1"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search icons"
           type="text"
         />
+
         <div
           style={{
             width: "100%",

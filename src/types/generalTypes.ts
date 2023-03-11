@@ -60,11 +60,6 @@ export type AvailableSearchResultTypes =
   | "timelines"
   | "events";
 
-export type IconSelectMenuType = {
-  // eslint-disable-next-line no-unused-vars
-  setIcon: (newIcon: string) => void;
-  close: () => void;
-};
 export interface TagType {
   id: string;
   title: string;
@@ -173,4 +168,13 @@ export type MemberType = {
   permission: "viewer" | "editor";
   project_id: string;
   user_id: string;
+};
+
+export type IconCategoriesType = "general" | "weather";
+
+export type IconSelectMenuType = {
+  // eslint-disable-next-line no-unused-vars
+  setIcon: (newIcon: string) => void;
+  close: () => void;
+  iconTypes: IconCategoriesType[];
 };

@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
@@ -16,6 +17,8 @@ import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { DefaultRandomTableOption } from "../../../utils/DefaultValues/RandomTableDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import IconPlaceholder from "../../IconSelect/IconPlaceholder";
+import { IconSelect } from "../../IconSelect/IconSelect";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
@@ -79,19 +82,28 @@ export default function DrawerRandomTableOptionContent() {
         {localItem?.id ? `Edit ${localItem?.title}` : "Create New Random Table Option"}
       </h2>
       <DrawerSection title="Random table option title">
-        <InputText
-          autoFocus
-          className="w-full"
-          name="title"
-          onChange={(e) => handleChange(e.target)}
-          onKeyDown={async (e) => {
-            if (e.key === "Enter") {
-              await createUpdateRandomTableOption();
-            }
-          }}
-          placeholder="Random table option title"
-          value={localItem?.title || ""}
-        />
+        <div className="flex items-center gap-x-1">
+          <InputText
+            autoFocus
+            className="w-full"
+            name="title"
+            onChange={(e) => handleChange(e.target)}
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") {
+                await createUpdateRandomTableOption();
+              }
+            }}
+            placeholder="Random table option title"
+            value={localItem?.title || ""}
+          />
+          <IconSelect iconTypes={["weather"]} setIcon={(newIcon) => handleChange({ name: "icon", value: newIcon })}>
+            {localItem?.icon ? (
+              <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={32} icon={localItem?.icon} />
+            ) : (
+              <IconPlaceholder />
+            )}
+          </IconSelect>
+        </div>
       </DrawerSection>
       <DrawerSection title="Random table option description (optional)">
         <InputTextarea
