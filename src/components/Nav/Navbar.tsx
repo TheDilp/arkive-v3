@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { DialogAtom, DrawerAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 import RandomGenerator from "./RandomGenerator";
 
@@ -27,9 +28,15 @@ export default function Navbar() {
             <>
               {mutationCount > 0 ? (
                 <div className="flex w-fit items-center">
-                  <ProgressSpinner style={{ width: "1.5rem" }} />
+                  <ProgressSpinner style={{ width: "2.5rem" }} />
                 </div>
-              ) : null}
+              ) : (
+                <div className="rounded-full border p-1">
+                  <Tooltip content={<DefaultTooltip>All saved.</DefaultTooltip>}>
+                    <Icon color="lightgreen" icon="codicon:check-all" />
+                  </Tooltip>
+                </div>
+              )}
               <Icon
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
