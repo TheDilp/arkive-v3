@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -10,11 +11,12 @@ import { TabPanel, TabView } from "primereact/tabview";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateItem, useDeleteItem, useUpdateItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateItem, useDeleteItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, updateURLs } from "../../../types/CRUDenums";
 import { CalendarCreateType, CalendarType } from "../../../types/ItemTypes/calendarTypes";
+import { RandomTableType } from "../../../types/ItemTypes/randomTableTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
@@ -39,6 +41,7 @@ export default function DrawerCalendarContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: calendar, isLoading } = useGetItem<CalendarType>(drawer?.data?.id, "calendars");
+  const { data: allTables } = useGetAllItems<RandomTableType>(project_id as string, "randomtables");
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
   const createCalendarMutation = useCreateItem<CalendarType>("calendars");
   const updateCalendarMutation = useUpdateItem<CalendarType>("calendars", project_id as string);
@@ -187,6 +190,9 @@ export default function DrawerCalendarContent() {
                   placeholder="How many minutes in a day?"
                   value={localItem.minutes}
                 />
+              </DrawerSection>
+              <DrawerSection title="Weather table (optional)">
+                <Dropdown optionLabel="title" options={allTables || []} optionValue="id" />
               </DrawerSection>
               <DrawerSection title="Tags">
                 <Tags handleChange={handleChange} localItem={localItem} type="calendars" />

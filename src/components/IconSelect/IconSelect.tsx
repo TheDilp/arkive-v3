@@ -13,15 +13,14 @@ import {
 } from "@floating-ui/react";
 import { cloneElement, useMemo, useState } from "react";
 import { mergeRefs } from "react-merge-refs";
-import { v4 } from "uuid";
 
 import IconSelectList from "./IconSelectList";
 
 interface Props {
-  placement?: Placement;
   children: JSX.Element;
-  disabled?: boolean;
   setIcon: (newIcon: string) => void;
+  placement?: Placement;
+  disabled?: boolean;
 }
 
 export function IconSelect({ children, setIcon, placement, disabled }: Props) {
@@ -35,7 +34,7 @@ export function IconSelect({ children, setIcon, placement, disabled }: Props) {
     whileElementsMounted: autoUpdate,
   });
 
-  const id = v4();
+  const id = crypto.randomUUID();
   const labelId = `${id}-label`;
   const descriptionId = `${id}-description`;
 
