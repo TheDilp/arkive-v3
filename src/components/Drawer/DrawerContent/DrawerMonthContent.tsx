@@ -103,7 +103,6 @@ export default function DrawerMonthContent() {
       </DrawerSection>
 
       <hr className="border-zinc-600" />
-
       <Button
         className="p-button-outlined p-button-success"
         disabled={createMonthMutation.isLoading || updateMonthMutation.isLoading || disableMonthSaveButton(localItem)}
