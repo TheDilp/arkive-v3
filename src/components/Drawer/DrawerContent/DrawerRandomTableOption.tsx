@@ -17,6 +17,7 @@ import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { DefaultRandomTableOption } from "../../../utils/DefaultValues/RandomTableDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import ColorInput from "../../ColorInput/ColorInput";
 import IconPlaceholder from "../../IconSelect/IconPlaceholder";
 import { IconSelect } from "../../IconSelect/IconSelect";
 import { handleCloseDrawer } from "../Drawer";
@@ -82,27 +83,39 @@ export default function DrawerRandomTableOptionContent() {
         {localItem?.id ? `Edit ${localItem?.title}` : "Create New Random Table Option"}
       </h2>
       <DrawerSection title="Random table option title">
+        <InputText
+          autoFocus
+          className="w-full"
+          name="title"
+          onChange={(e) => handleChange(e.target)}
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              await createUpdateRandomTableOption();
+            }
+          }}
+          placeholder="Random table option title"
+          value={localItem?.title || ""}
+        />
+      </DrawerSection>
+      <DrawerSection title="Random table option icon (optional)">
         <div className="flex items-center gap-x-1">
-          <InputText
-            autoFocus
-            className="w-full"
-            name="title"
-            onChange={(e) => handleChange(e.target)}
-            onKeyDown={async (e) => {
-              if (e.key === "Enter") {
-                await createUpdateRandomTableOption();
-              }
-            }}
-            placeholder="Random table option title"
-            value={localItem?.title || ""}
-          />
-          <IconSelect iconTypes={["weather"]} setIcon={(newIcon) => handleChange({ name: "icon", value: newIcon })}>
-            {localItem?.icon ? (
-              <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={32} icon={localItem?.icon} />
-            ) : (
-              <IconPlaceholder />
-            )}
-          </IconSelect>
+          <div className="w-8">
+            <IconSelect iconTypes={["weather"]} setIcon={(newIcon) => handleChange({ name: "icon", value: newIcon })}>
+              {localItem?.icon ? (
+                <Icon
+                  className="cursor-pointer transition-colors hover:text-sky-400"
+                  color={localItem?.iconColor}
+                  fontSize={32}
+                  icon={localItem?.icon}
+                />
+              ) : (
+                <IconPlaceholder />
+              )}
+            </IconSelect>
+          </div>
+          <div className="flex-1">
+            <ColorInput color={localItem?.iconColor || "#ffffff"} name="iconColor" onChange={handleChange} />
+          </div>
         </div>
       </DrawerSection>
       <DrawerSection title="Random table option description (optional)">
