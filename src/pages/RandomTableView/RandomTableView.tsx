@@ -5,6 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
+import IconColumn from "../../components/Settings/Columns/IconColumn";
 import { Tooltip } from "../../components/Tooltip/Tooltip";
 import { useDeleteSubItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
@@ -131,7 +132,8 @@ export default function RandomTableView() {
           }}
         />
         <Column bodyClassName="font-medium w-[30%]" field="title" header="Title" />
-        <Column bodyClassName="font-light italic w-[65%]" field="description" header="Description" />
+        <Column bodyClassName="font-light italic w-[60%]" field="description" header="Description" />
+        <Column body={IconColumn} bodyClassName="w-[5%]" field="icon" header="Icon" />
         <Column
           body={(data) => ActionsColumn(data, deleteAction, editAction)}
           bodyClassName="font-medium w-[5%]"
