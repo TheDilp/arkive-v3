@@ -349,7 +349,7 @@ Inputs
 
 /* Maps */
 .leaflet-container {
-  @apply bg-zinc-900 !important;
+  @apply bg-zinc-800 !important;
 }
 .leaflet-control-layers-overlays {
   @apply select-none;
