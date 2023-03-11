@@ -8,7 +8,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
@@ -23,13 +23,18 @@ import { handleCloseDrawer } from "../Drawer";
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
   const queryClient = useQueryClient();
+  const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
+  const { data: map } = useGetItem<MapType>(item_id as string, "maps");
+  const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents", {
+    staleTime: 5 * 60 * 1000,
+  });
+
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const currentPin = map?.map_pins?.find((pin) => pin.id === drawer?.data?.id);
+
   const createMapPin = useCreateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
   const updateMapPin = useUpdateSubItem<MapPinType>(item_id as string, "map_pins", "maps");
-  const { data: map } = useGetItem<MapType>(item_id as string, "maps");
-  const currentPin = map?.map_pins?.find((pin) => pin.id === drawer?.data?.id);
-  const documents = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
-  const maps: MapType[] | undefined = queryClient.getQueryData(["allItems", project_id, "maps"]);
+
   const [localItem, setLocalItem] = useState<MapPinType | MapPinCreateType>(
     currentPin ?? {
       backgroundColor: "#000000",
