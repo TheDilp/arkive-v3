@@ -1,12 +1,13 @@
 import { Icon } from "@iconify/react";
 import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { getAuth, signOut } from "firebase/auth";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { DialogAtom, DrawerAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom, SidebarCollapseAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import PageTitle from "../Title/PageTitle";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 import RandomGenerator from "./RandomGenerator";
@@ -18,11 +19,14 @@ export default function Navbar() {
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setUserData] = useAtom(UserAtom);
+
+  const sidebarToggle = useAtomValue(SidebarCollapseAtom);
   const auth = getAuth();
   const mutationCount = useIsMutating();
   return (
     <div className="flex h-14 min-h-[56px] w-full flex-nowrap items-center border-b border-zinc-800 bg-zinc-900 py-2 shadow">
       <div className="flex w-full items-center justify-center gap-x-2 px-2">
+        {!sidebarToggle ? <PageTitle /> : null}
         <span className="ml-auto flex items-center gap-x-2">
           {project_id ? (
             <>
@@ -31,8 +35,8 @@ export default function Navbar() {
                   <ProgressSpinner style={{ width: "2.5rem" }} />
                 </div>
               ) : (
-                <div className="rounded-full border p-1">
-                  <Tooltip content={<DefaultTooltip>All saved.</DefaultTooltip>}>
+                <div className="rounded-full border p-0.5">
+                  <Tooltip allowedPlacements={["bottom", "left"]} content={<DefaultTooltip>All saved.</DefaultTooltip>}>
                     <Icon color="lightgreen" icon="codicon:check-all" />
                   </Tooltip>
                 </div>

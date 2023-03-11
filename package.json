@@ -24,7 +24,7 @@
     "cytoscape-grid-guide": "^2.3.3",
     "file-saver": "^2.0.5",
     "firebase": "^9.16.0",
-    "jotai": "^1.9.1",
+    "jotai": "^2.0.3",
     "leaflet": "^1.9.3",
     "localstorage-slim": "^2.3.0",
     "lodash.clonedeep": "^4.5.0",
