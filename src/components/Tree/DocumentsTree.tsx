@@ -1,17 +1,19 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { SplitButton } from "primereact/splitbutton";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
-import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
 
 export default function DocumentsTree() {
   const { project_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
+  const theme = useAtomValue(ThemeAtom);
   const createDocumentMutation = useCreateItem("documents");
+
   const items = useMemo(
     () => [
       {
@@ -53,7 +55,7 @@ export default function DocumentsTree() {
   );
 
   return (
-    <div className="h-screen p-4">
+    <div className={`h-screen p-4 ${theme === "dark" ? "" : "border-r bg-white"}`}>
       <SplitButton
         className="p-button-outlined w-full"
         icon="pi pi-plus"

@@ -25,8 +25,9 @@ export default function Signin() {
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          toaster("error", `${errorCode}: ${errorMessage}`);
+          if (errorCode === "auth/wrong-password") {
+            toaster("error", "The entered credentials are incorrect.");
+          }
           setLoading(false);
         });
     } else {

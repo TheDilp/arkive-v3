@@ -44,6 +44,7 @@ function Placeholder(args: PlaceholderRenderParams) {
 
 export default function BaseTree({ isTemplates, type }: Props) {
   const { project_id } = useParams();
+
   const { data: items, isLoading: isLoadingItems } = useGetAllItems<AllItemsType>(project_id as string, type, {
     staleTime: 5 * 60 * 1000,
   });

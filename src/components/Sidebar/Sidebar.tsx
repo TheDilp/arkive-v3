@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { NavItemType } from "../../types/generalTypes";
-import { SidebarCollapseAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { SidebarCollapseAtom, ThemeAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { setItem } from "../../utils/storage";
 import { checkIfOwner, navItems } from "../../utils/uiUtils";
 
@@ -43,7 +43,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
           </li>
         </Link>
       ))}
-      <hr className="mb-2 w-full border-zinc-800" />
+      <hr className="mb-2 w-full" />
 
       <li className="mt-auto h-14">
         <Icon
@@ -78,8 +78,9 @@ function SidebarDashBoardItems() {
 
 export default function Sidebar() {
   const { pathname } = useLocation();
+  const theme = useAtomValue(ThemeAtom);
   return (
-    <div className="flex w-16 min-w-[4rem] flex-col border-r border-zinc-800 bg-zinc-900">
+    <div className={`flex w-16 min-w-[4rem] flex-col border-r border-zinc-800 bg-${theme === "dark" ? "zinc" : "white"}-900`}>
       <nav className="flex flex-1 flex-col">
         <ul className="flex flex-1 flex-col items-center">
           {pathname === "/" ? <SidebarDashBoardItems /> : <SidebarProjectItems items={navItems} pathname={pathname} />}

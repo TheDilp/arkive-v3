@@ -51,6 +51,7 @@ export const OtherContextMenuAtom = atom<{
 
 const sidebarState = getItem("sidebarState") as boolean | undefined;
 
+export const ThemeAtom = atom<"dark" | "light">("dark");
 export const SidebarCollapseAtom = atom<boolean>(sidebarState ?? true);
 export const ProjectAtom = atom<ProjectType | null>(null);
 export const DrawerAtom = atom<DrawerAtomType>(DefaultDrawer);

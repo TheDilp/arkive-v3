@@ -1,6 +1,5 @@
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
-import "primereact/resources/themes/arya-blue/theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
@@ -9,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useAtom } from "jotai";
 import { lazy, Suspense, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
@@ -19,6 +19,8 @@ import LoadingScreen from "./components/Loading/LoadingScreen";
 import AuthLayout from "./pages/Auth/AuthLayout";
 import SettingsContentView from "./pages/ContentView/SettingsContentView";
 import Dashboard from "./pages/Dashboard";
+import { ThemeAtom } from "./utils/Atoms/atoms";
+import { getItem, setItem } from "./utils/storage";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
@@ -42,6 +44,7 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const [theme, setTheme] = useAtom(ThemeAtom);
   const { pathname } = useLocation();
   // Your web app's Firebase configuration
   const firebaseConfig = {
@@ -55,6 +58,25 @@ function App() {
 
   const navigate = useNavigate();
   initializeApp(firebaseConfig);
+
+  useEffect(() => {
+    const th = getItem("theme");
+    if (th) setTheme(th as "dark" | "light");
+  }, []);
+
+  useEffect(() => {
+    if (!theme) {
+      setItem("theme", "dark");
+      setTheme("dark");
+    } else {
+      const el = document.getElementById("app-theme") as HTMLLinkElement;
+      if (theme === "dark") {
+        el.href = "/node_modules/primereact/resources/themes/arya-blue/theme.css";
+      } else {
+        el.href = "/node_modules/primereact/resources/themes/saga-blue/theme.css";
+      }
+    }
+  }, [theme]);
 
   useEffect(() => {
     const auth = getAuth();

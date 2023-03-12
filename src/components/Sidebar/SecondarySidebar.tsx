@@ -1,11 +1,11 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { Sidebar as PrimeSidebar } from "primereact/sidebar";
 import { TabPanel, TabView } from "primereact/tabview";
 import { useLocation, useParams } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { AvailableItemTypes } from "../../types/generalTypes";
-import { DocumentsSidebar, SidebarCollapseAtom } from "../../utils/Atoms/atoms";
+import { DocumentsSidebar, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { setItem } from "../../utils/storage";
 import DocumentsTree from "../Tree/DocumentsTree";
 import ItemsTree from "../Tree/ItemsTree";
@@ -18,10 +18,10 @@ type Props = {
 function SidebarContainer({ children }: Props) {
   const { isMd } = useBreakpoint();
   const [sidebar, setSidebar] = useAtom(SidebarCollapseAtom);
-
+  const theme = useAtomValue(ThemeAtom);
   return isMd ? (
     <PrimeSidebar
-      className="treeSidebar bg-zinc-800 transition-all"
+      className={`treeSidebar ${theme === "dark" ? "bg-zinc-800" : "bg-white"} transition-all`}
       onHide={() => {
         setSidebar(false);
         setItem("sidebarState", false);
@@ -31,9 +31,9 @@ function SidebarContainer({ children }: Props) {
     </PrimeSidebar>
   ) : (
     <div
-      className={`flex ${
-        sidebar ? "flex-1 opacity-100" : "w-0 max-w-0 overflow-hidden opacity-0"
-      } max-w-[20rem] flex-col bg-zinc-900 transition-all`}>
+      className={`flex ${sidebar ? "flex-1 opacity-100" : "w-0 max-w-0 overflow-hidden opacity-0"} max-w-[20rem] flex-col ${
+        theme === "dark" ? "bg-zinc-900" : "bg-white"
+      } transition-all`}>
       {children}
     </div>
   );
@@ -64,7 +64,7 @@ function SidebarContent() {
     );
 
   return (
-    <div className="flex h-full flex-1 flex-col bg-zinc-900 p-4">
+    <div className="flex h-full flex-1 flex-col  p-4">
       <ItemsTree type={type as AvailableItemTypes} />
     </div>
   );

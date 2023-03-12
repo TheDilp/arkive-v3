@@ -5,8 +5,9 @@ import { useAtom, useAtomValue } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { DialogAtom, DrawerAtom, SidebarCollapseAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom, SidebarCollapseAtom, ThemeAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { setItem } from "../../utils/storage";
 import PageTitle from "../Title/PageTitle";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
@@ -19,12 +20,16 @@ export default function Navbar() {
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setUserData] = useAtom(UserAtom);
+  const [theme, setTheme] = useAtom(ThemeAtom);
 
   const sidebarToggle = useAtomValue(SidebarCollapseAtom);
   const auth = getAuth();
   const mutationCount = useIsMutating();
   return (
-    <div className="flex h-14 min-h-[56px] w-full flex-nowrap items-center border-b border-zinc-800 bg-zinc-900 py-2 shadow">
+    <div
+      className={`flex h-14 min-h-[56px] w-full flex-nowrap items-center border-b border-zinc-800 ${
+        theme === "dark" ? "bg-zinc-900" : "bg-white"
+      } py-2 shadow`}>
       <div className="flex w-full items-center justify-center gap-x-2 px-2">
         {!sidebarToggle ? <PageTitle /> : null}
         <span className="ml-auto flex items-center gap-x-2">
@@ -64,6 +69,15 @@ export default function Navbar() {
                   navigate(`/user/${auth.currentUser?.uid}`);
                 }}
               />
+              {/* <Icon
+                className="cursor-pointer hover:text-blue-300"
+                fontSize={20}
+                icon={theme === "dark" ? "ph:moon" : "ph:sun-dim-light"}
+                onClick={() => {
+                  setItem("theme", theme === "dark" ? "light" : "dark");
+                  setTheme(theme === "dark" ? "light" : "dark");
+                }}
+              /> */}
             </>
           ) : null}
 
