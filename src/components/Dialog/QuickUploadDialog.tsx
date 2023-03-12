@@ -105,7 +105,7 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
       emptyTemplate={<p className="text-center text-gray-400">Drag and Drop image files here!</p>}
       headerTemplate={headerTemplate}
       itemTemplate={(files: any) => FileUploadItemTemplate(files, types, setTypes)}
-      maxFileSize={5000000}
+      maxFileSize={20000000}
       multiple
       name="quickupload[]"
       onSelect={onTemplateSelect}
