@@ -43,9 +43,8 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
           </li>
         </Link>
       ))}
-      <hr className="mb-2 w-full" />
 
-      <li className="mt-auto h-14">
+      <li className="mt-auto flex h-14 items-center">
         <Icon
           className={` ${isOwner ? "cursor-pointer hover:text-blue-300" : "text-zinc-600"}`}
           fontSize={28}
@@ -81,7 +80,7 @@ export default function Sidebar() {
   const theme = useAtomValue(ThemeAtom);
   return (
     <div className={`flex w-16 min-w-[4rem] flex-col border-r border-zinc-800 bg-${theme === "dark" ? "zinc" : "white"}-900`}>
-      <nav className="flex flex-1 flex-col">
+      <nav className="flex flex-1 flex-col  overflow-y-auto">
         <ul className="flex flex-1 flex-col items-center">
           {pathname === "/" ? <SidebarDashBoardItems /> : <SidebarProjectItems items={navItems} pathname={pathname} />}
         </ul>
