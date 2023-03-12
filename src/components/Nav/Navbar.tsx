@@ -75,7 +75,7 @@ export default function Navbar() {
               signOut(auth).then(() => {
                 queryClient.clear();
                 setUserData(null);
-                navigate("/auth/signin");
+                window.location.href = "https://home.thearkive.app";
               });
             }}
           />
