@@ -7,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { DialogAtom, DrawerAtom, SidebarCollapseAtom, ThemeAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { setItem } from "../../utils/storage";
 import PageTitle from "../Title/PageTitle";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
@@ -20,7 +19,7 @@ export default function Navbar() {
   const [, setDialog] = useAtom(DialogAtom);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setUserData] = useAtom(UserAtom);
-  const [theme, setTheme] = useAtom(ThemeAtom);
+  const theme = useAtomValue(ThemeAtom);
 
   const sidebarToggle = useAtomValue(SidebarCollapseAtom);
   const auth = getAuth();
