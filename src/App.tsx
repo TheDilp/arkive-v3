@@ -11,7 +11,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { lazy, Suspense, useEffect } from "react";
 import { DndProvider } from "react-dnd";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Layout from "./components/Layout/Layout";
@@ -54,7 +54,6 @@ function App() {
   };
   // Initialize Firebase
 
-  const navigate = useNavigate();
   initializeApp(firebaseConfig);
 
   // useEffect(() => {
@@ -88,12 +87,14 @@ function App() {
         if (now > expirationDate) {
           signOut(auth).then(() => {
             queryClient.clear();
-            navigate("/auth/signin");
+            window.location.href = "https://home.thearkive.app";
           });
         }
         user?.getIdToken();
       }
-      if (!user && !pathname.includes("view")) navigate("/auth/signin");
+      if (!user && !pathname.includes("view")) {
+        window.location.href = "https://home.thearkive.app";
+      }
     });
   }, []);
   return (

@@ -9,7 +9,7 @@ export default function PageTitle() {
 
   return (
     <h2 className="h-8 text-center font-Merriweather text-2xl capitalize delay-1000">
-      {itemName && itemName === "dictionary" ? "dictionaries" : `${itemName}s`}
+      {itemName ? `${itemName.replace("y", "ie")}s` : null}
     </h2>
   );
 }
