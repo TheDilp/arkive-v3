@@ -1,11 +1,14 @@
 {
   "folders": [
-	{
-		"path": "../../.."
-	},
-	{
-		"path": "../../../../arkive-v3-server"
-	}
-],
+    {
+      "path": "../../.."
+    },
+    {
+      "path": "../../../../arkive-v3-server"
+    },
+    {
+      "path": "../../../../arkive-v3-landingpage"
+    }
+  ],
   "settings": {}
 }
