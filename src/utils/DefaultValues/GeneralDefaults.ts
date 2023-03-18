@@ -16,6 +16,7 @@ export const IconEnum = {
   event: "ph:flag",
   dictionary: "ph:book-bookmark-light",
   randomtables: "game-icons:perspective-dice-six-faces-random",
+  tags: "ph:tag-thin",
 
   // Other
 
