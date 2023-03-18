@@ -30,7 +30,12 @@
 .mainDrawer,
 .tagSettings {
   .p-tabview-nav-link {
-    /* @apply border-b bg-zinc-800 !important; */
+    @apply border-b bg-zinc-800 !important;
+  }
+}
+.searchTabs {
+  .p-menuitem-link {
+    @apply flex justify-center font-Lato text-xl !important;
   }
 }
 .treeSidebar {

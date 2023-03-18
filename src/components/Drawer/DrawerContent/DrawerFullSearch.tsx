@@ -71,6 +71,7 @@ export default function DrawerFullSearch() {
       <div className="flex flex-col gap-y-2">
         <TabMenu
           activeIndex={menuIndex}
+          className="searchTabs"
           model={[{ label: "Title" }, { label: "Tags" }]}
           onTabChange={(e) => setMenuIndex(e.index)}
         />

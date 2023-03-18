@@ -23,7 +23,7 @@ export default function SearchResultGroup({ items, itemType }: Props) {
   if (!items.length) return null;
   return (
     <div>
-      <h5 className="flex items-center gap-x-1 border-b border-zinc-700 text-lg font-medium">
+      <h5 className="mb-1 flex items-center gap-x-1 border-b border-zinc-700 text-lg font-semibold">
         <Icon fontSize={24} icon={getSearchGroupIcon(itemType)} />
         {capitalCase(itemType)}
       </h5>
@@ -43,8 +43,10 @@ export default function SearchResultGroup({ items, itemType }: Props) {
                 project_id as string,
                 "folder" in item ? item.folder : false,
               )}>
-              <Icon fontSize={18} icon={getIconForFullSearch(item)} />
-              <SearchResult item={item} />
+              <div className="flex items-center pl-0.5 ">
+                <Icon fontSize={18} icon={getIconForFullSearch(item)} />
+                <SearchResult item={item} />
+              </div>
             </Link>
           ))
         : null}

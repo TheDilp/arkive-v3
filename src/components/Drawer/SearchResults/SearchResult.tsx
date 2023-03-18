@@ -6,7 +6,7 @@ type Props = {
 
 export default function SearchResult({ item }: Props) {
   return (
-    <span className="flex flex-col">
+    <span className="flex flex-col text-sm">
       {"title" in item ? item.title : null}
       {"text" in item ? item?.text || "Map Pin" : null}
       {"label" in item && "source" in item ? item.label || "Edge" : null}
