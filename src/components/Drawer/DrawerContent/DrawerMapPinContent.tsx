@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
+import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -45,6 +46,9 @@ export default function DrawerMapPinContent() {
   const [localItem, setLocalItem] = useState<MapPinType | MapPinCreateType>(
     currentPin ?? {
       backgroundColor: "#000000",
+      showBackground: true,
+      showBorder: true,
+      borderColor: "#ffffff",
       color: "#ffffff",
       icon: IconEnum.user,
       lat: drawer?.data?.lat,
@@ -88,11 +92,36 @@ export default function DrawerMapPinContent() {
           <ColorInput color={localItem.color || "#ffffff"} name="color" onChange={handleChange} />
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-between">
-        <h4 className="w-full text-lg underline">Marker Background</h4>
-
-        <ColorInput color={localItem.backgroundColor || "#000000"} name="backgroundColor" onChange={handleChange} />
-      </div>
+      <DrawerSection title="Marker background">
+        <div className="flex flex-wrap items-center justify-between">
+          <div>
+            <ColorInput color={localItem.backgroundColor || "#000000"} name="backgroundColor" onChange={handleChange} />
+          </div>
+          <div className="flex flex-1 justify-end">
+            <InputSwitch
+              checked={localItem.showBackground}
+              onChange={(e) => handleChange({ name: "showBackground", value: e.value })}
+              tooltip="Show background"
+              tooltipOptions={{ position: "left" }}
+            />
+          </div>
+        </div>
+      </DrawerSection>
+      <DrawerSection title="Marker border">
+        <div className="flex flex-wrap items-center justify-between">
+          <div>
+            <ColorInput color={localItem.borderColor || "#ffffff"} name="borderColor" onChange={handleChange} />
+          </div>
+          <div className="flex flex-1 justify-end">
+            <InputSwitch
+              checked={localItem.showBorder}
+              onChange={(e) => handleChange({ name: "showBorder", value: e.value })}
+              tooltip="Show border"
+              tooltipOptions={{ position: "left" }}
+            />
+          </div>
+        </div>
+      </DrawerSection>
       <div className="flex flex-wrap items-center justify-between">
         <span>Public:</span>
         <Checkbox checked={localItem.isPublic} onChange={(e) => handleChange({ name: "isPublic", value: e.target.checked })} />

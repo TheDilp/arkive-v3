@@ -18,7 +18,22 @@ export default function MapPin({
   cm: MutableRefObject<any>;
   readOnly?: boolean;
 }) {
-  const { id, icon, image, color, backgroundColor, text, lat, lng, doc_id, map_link, isPublic } = markerData;
+  const {
+    id,
+    icon,
+    image,
+    color,
+    showBackground,
+    showBorder,
+    borderColor,
+    backgroundColor,
+    text,
+    lat,
+    lng,
+    doc_id,
+    map_link,
+    isPublic,
+  } = markerData;
   const navigate = useNavigate();
   const { project_id } = useParams();
   const updateMapPin = useUpdateSubItem<MapPinType>(project_id as string, "map_pins", "maps");
@@ -77,11 +92,11 @@ export default function MapPin({
                 style={{
                   background: image ? "" : background,
                   backgroundImage: image ? `url(${image})` : "",
-                  backgroundColor: image ? "" : backgroundColor,
+                  backgroundColor: showBackground ? backgroundColor : "",
                   backgroundPosition: "center",
                   backgroundSize: image ? "contain" : "2rem",
                   backgroundRepeat: "no-repeat",
-                  border: image ? "" : "white solid 3px",
+                  border: showBorder ? `${borderColor} solid 3px` : "",
                   zIndex: 999999,
                 }}
               />
