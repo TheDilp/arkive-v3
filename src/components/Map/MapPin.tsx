@@ -56,7 +56,6 @@ export default function MapPin({
       }
     },
   };
-  console.log(image);
   const background = `url('https://api.iconify.design/${icon?.match(/.*:/g)?.[0]?.replace(":", "") || "mdi:"}/${
     icon ? icon?.replace(/.*:/g, "") : ""
   }.svg?color=%23${color ? color.replace("#", "") : ""}') no-repeat`;
