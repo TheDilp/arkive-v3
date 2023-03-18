@@ -20,6 +20,7 @@ import { deleteItem } from "./Confirms/Confirm";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
 import { DefaultDialog, DefaultDrawer } from "./DefaultValues/DrawerDialogDefaults";
 import { toaster } from "./toast";
+import { getItemNameForTree } from "./transform";
 
 export type BoardContextMenuType = {
   type: BoardContextType;
@@ -297,14 +298,14 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
             command: () => {
               if (cmType.data?.id)
                 createItemMutation.mutate({
-                  title: "New Document",
+                  title: `New ${getItemNameForTree(type)}`,
                   project_id: project_id as string,
                   folder: false,
                   parentId: cmType.data?.id,
                 });
             },
-            icon: "pi pi-fw pi-file",
-            label: "Insert Document",
+            icon: "pi pi-fw pi-plus",
+            label: `Insert ${getItemNameForTree(type)}`,
           },
           {
             command: () => {
