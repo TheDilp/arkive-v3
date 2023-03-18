@@ -15,6 +15,7 @@ import { BoardReferenceAtom, BoardStateAtom, DialogAtom, DrawerAtom } from "../.
 import { changeLockState, curveStyles, getCurveStyleIcon, updateColor } from "../../utils/boardUtils";
 import { ColorPresets } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../utils/toast";
 import ColorInput from "../ColorInput/ColorInput";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
@@ -85,14 +86,14 @@ export default function BoardQuickBar() {
       <span
         className={`flex cursor-pointer hover:text-sky-400 ${boardState.addNodes ? "text-green-500" : ""}  addNodes`}
         onClick={() => setBoardState({ ...boardState, drawMode: false, addNodes: !boardState.addNodes })}>
-        <Icon icon="mdi:plus" />
+        <Icon icon={IconEnum.add} />
       </span>
 
       {/* Toggle grid visibility */}
       <span
         className={`flex cursor-pointer hover:text-sky-400 ${boardState.grid ? "text-green-500" : ""}  drawGrid`}
         onClick={() => setBoardState({ ...boardState, grid: !boardState.grid })}>
-        <Icon icon="mdi:grid" />
+        <Icon icon={IconEnum.grid} />
       </span>
       {/* Lock selected elements button */}
       <i

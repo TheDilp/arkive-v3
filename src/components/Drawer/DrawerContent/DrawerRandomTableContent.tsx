@@ -12,6 +12,7 @@ import { RandomTableCreateType, RandomTableType } from "../../../types/ItemTypes
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DefaultRandomTable } from "../../../utils/DefaultValues/RandomTableDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -100,7 +101,7 @@ export default function DrawerRandomTableContent() {
           );
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {document ? (
@@ -124,7 +125,7 @@ export default function DrawerRandomTableContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

@@ -5,6 +5,7 @@ import { SwatchType } from "../../types/ItemTypes/projectTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 
 export default function SwatchCard({
   id,
@@ -24,14 +25,14 @@ export default function SwatchCard({
         }}>
         <Icon
           className="cursor-pointer opacity-0 transition-opacity hover:text-sky-400 group-hover:opacity-100"
-          icon="mdi:edit"
+          icon={IconEnum.edit}
           onClick={() =>
             setDrawer({ ...DefaultDrawer, data: { id, title, color }, type: "swatches", show: true, position: "right" })
           }
         />
         <Icon
           className="cursor-pointer opacity-0 transition-opacity hover:text-sky-400 group-hover:opacity-100"
-          icon="mdi:trash"
+          icon={IconEnum.trash}
           onClick={() => deleteItem("Are you sure you want to delete this swatch?", async () => deleteSwatch(id))}
         />
       </div>

@@ -12,6 +12,7 @@ import { TimelineCreateType, TimelineType } from "../../../types/ItemTypes/timel
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DefaultTimeline } from "../../../utils/DefaultValues/TimelineDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -120,7 +121,7 @@ export default function DrawerTimelineContent() {
           );
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {localItem?.id ? (
@@ -142,7 +143,7 @@ export default function DrawerTimelineContent() {
               );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

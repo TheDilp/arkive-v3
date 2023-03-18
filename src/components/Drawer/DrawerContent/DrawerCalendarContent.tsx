@@ -21,6 +21,7 @@ import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultCalendar } from "../../../utils/DefaultValues/CalendarDefaults";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import Tags from "../../Tags/Tags";
@@ -138,7 +139,7 @@ export default function DrawerCalendarContent() {
                                   tabIndex={-1}
                                   {...providedDraggable.draggableProps}>
                                   <div {...providedDraggable.dragHandleProps}>
-                                    <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon="mdi:drag" />
+                                    <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon={IconEnum.drag} />
                                   </div>
                                   <InputText
                                     className="w-full"
@@ -153,7 +154,7 @@ export default function DrawerCalendarContent() {
                                     <Icon
                                       className="cursor-pointer hover:text-red-400"
                                       fontSize={20}
-                                      icon="mdi:trash-outline"
+                                      icon={IconEnum.trash}
                                       onClick={() => {
                                         const tempDays = [...(localItem?.days || [])];
                                         tempDays.splice(index, 1);
@@ -205,14 +206,14 @@ export default function DrawerCalendarContent() {
                     <Icon
                       className="cursor-pointer hover:text-sky-400"
                       fontSize={20}
-                      icon="mdi:pencil-outline"
+                      icon={IconEnum.edit}
                       onClick={() => {
                         setDrawer({ ...DefaultDrawer, show: true, data: era, type: "eras" });
                       }}
                     />
                   </div>
                   <div>
-                    <Icon className="cursor-pointer hover:text-red-400" fontSize={20} icon="mdi:trash-outline" />
+                    <Icon className="cursor-pointer hover:text-red-400" fontSize={20} icon={IconEnum.trash} />
                   </div>
                 </div>
               ))}
@@ -267,19 +268,19 @@ export default function DrawerCalendarContent() {
                             tabIndex={-1}
                             {...providedDraggable.draggableProps}>
                             <div {...providedDraggable.dragHandleProps} tabIndex={-1}>
-                              <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon="mdi:drag" />
+                              <Icon className="cursor-pointer hover:text-sky-400" fontSize={28} icon={IconEnum.drag} />
                             </div>
                             <div className="w-full pl-2 text-left text-lg">{month.title}</div>
                             <div className="flex items-center">
                               <Icon
                                 className="cursor-pointer hover:text-sky-400"
                                 fontSize={20}
-                                icon="mdi:pencil-outline"
+                                icon={IconEnum.edit}
                                 onClick={() => {
                                   setDrawer({ ...DefaultDrawer, show: true, data: month, type: "months" });
                                 }}
                               />
-                              <Icon className="cursor-pointer hover:text-red-400" fontSize={20} icon="mdi:trash-outline" />
+                              <Icon className="cursor-pointer hover:text-red-400" fontSize={20} icon={IconEnum.trash} />
                             </div>
                           </div>
                         )}
@@ -319,7 +320,7 @@ export default function DrawerCalendarContent() {
             );
           }}
           type="submit">
-          {buttonLabelWithIcon("Save", "mdi:content-save")}
+          {buttonLabelWithIcon("Save", IconEnum.save)}
         </Button>
       </div>
 
@@ -343,7 +344,7 @@ export default function DrawerCalendarContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

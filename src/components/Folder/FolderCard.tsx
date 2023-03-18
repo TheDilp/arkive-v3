@@ -7,6 +7,7 @@ import { useSortMutation } from "../../CRUD/ItemsCRUD";
 import { baseURLS } from "../../types/CRUDenums";
 import { AvailableItemTypes, BoardDragItemType } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 
 type Props = {
   id: string;
@@ -61,7 +62,7 @@ export default function FolderCard({ id, title, type, isFolder, isPublic, icon, 
         {image && !isFolder ? (
           <img alt={type} className="max-h-[70px] object-contain" src={`${baseURLS.baseImageHost}${image}`} />
         ) : (
-          <Icon fontSize={80} icon={isFolder ? "mdi:folder" : icon} />
+          <Icon fontSize={80} icon={isFolder ? IconEnum.folder : icon} />
         )}
 
         <h3 className="w-full max-w-full truncate text-center text-lg">{title}</h3>

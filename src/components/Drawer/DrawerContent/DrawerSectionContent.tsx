@@ -12,6 +12,7 @@ import { ScreenType, SectionCreateType, SectionType } from "../../../types/ItemT
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DefaultSection } from "../../../utils/DefaultValues/ScreenDefaults";
 import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
@@ -129,7 +130,7 @@ export default function DrawerSectionContent() {
         loading={isLoadingCreate || isLoadingUpdate}
         onClick={createUpdateSection}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {localItem?.id ? (
@@ -147,7 +148,7 @@ export default function DrawerSectionContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

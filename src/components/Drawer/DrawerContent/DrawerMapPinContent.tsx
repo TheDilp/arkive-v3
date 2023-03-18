@@ -14,6 +14,7 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { MapPinCreateType, MapPinType, MapType } from "../../../types/ItemTypes/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
@@ -39,7 +40,7 @@ export default function DrawerMapPinContent() {
     currentPin ?? {
       backgroundColor: "#000000",
       color: "#ffffff",
-      icon: "mdi:user",
+      icon: IconEnum.user,
       lat: drawer?.data?.lat,
       lng: drawer?.data?.lng,
       parentId: item_id as string,
@@ -73,7 +74,7 @@ export default function DrawerMapPinContent() {
             className="cursor-pointer rounded-full hover:bg-sky-400"
             color={localItem.color}
             fontSize={32}
-            icon={localItem.icon ?? "mdi:map-pin"}
+            icon={localItem.icon ?? IconEnum.map_pin}
             inline
           />
         </IconSelect>
@@ -143,7 +144,7 @@ export default function DrawerMapPinContent() {
           handleCloseDrawer(setDrawer, "right");
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
     </div>
   );

@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { ColorPickerValueType } from "primereact/colorpicker";
 
 import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
+import { IconEnum } from "./DefaultValues/GeneralDefaults";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
   <div className="flex w-full items-center justify-center gap-x-1">
@@ -28,12 +29,12 @@ export function getItemIcon(type: AvailableItemTypes) {
   if (type === "calendars") return "ph:calendar-blank";
   if (type === "timelines") return "mdi:timeline-clock-outline";
   if (type === "randomtables") return "arcticons:reroll";
-  return "mdi:plus";
+  return IconEnum.add;
 }
 export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
   if ("icon" in item) return item.icon;
   if (type === "maps") return "mdi:map";
-  if (type === "boards") return "mdi:draw";
+  if (type === "boards") return IconEnum.board;
   return "mdi:file";
 }
 

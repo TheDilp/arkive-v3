@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { CardType } from "../../types/ItemTypes/screenTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { getCardSizeClass } from "../../utils/screenUtils";
 import StaticRender from "../Editor/StaticRender";
 
@@ -20,12 +21,16 @@ export default function SectionCard({ card, deleteCard, updateCard, cardSize }: 
         <span className="select-none truncate px-2">{card.document.title}</span>
         <div className="flex items-center">
           <Link to={`../../documents/${card.documentsId}`}>
-            <Icon className="cursor-pointer opacity-0 transition-all group-hover:opacity-100" fontSize={20} icon="mdi:pencil" />
+            <Icon
+              className="cursor-pointer opacity-0 transition-all group-hover:opacity-100"
+              fontSize={20}
+              icon={IconEnum.edit}
+            />
           </Link>
           <Icon
             className="cursor-pointer opacity-0 transition-all hover:text-red-400 group-hover:opacity-100"
             fontSize={20}
-            icon="mdi:trash"
+            icon={IconEnum.trash}
             onClick={() => {
               deleteItem("Are you sure you want to delete this card?", () => deleteCard(card.id, card.parentId));
             }}
@@ -33,7 +38,7 @@ export default function SectionCard({ card, deleteCard, updateCard, cardSize }: 
           <Icon
             className="cursor-pointer"
             fontSize={28}
-            icon={`mdi:chevron-${card.expanded ? "up" : "down"}`}
+            icon={card.expanded ? IconEnum.chevron_up : IconEnum.chevron_down}
             onClick={() => {
               updateCard(card.parentId, card.id, !card.expanded);
             }}

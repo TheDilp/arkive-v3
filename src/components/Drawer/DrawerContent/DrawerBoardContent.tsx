@@ -15,6 +15,7 @@ import { boardNodeShapes } from "../../../utils/boardUtils";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultBoard } from "../../../utils/DefaultValues/BoardDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -160,7 +161,7 @@ export default function DrawerBoardContent() {
           )
         }
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {board ? (
@@ -180,7 +181,7 @@ export default function DrawerBoardContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

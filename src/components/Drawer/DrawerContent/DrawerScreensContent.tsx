@@ -12,6 +12,7 @@ import { ScreenCreateType, ScreenType } from "../../../types/ItemTypes/screenTyp
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DefaultScreen } from "../../../utils/DefaultValues/ScreenDefaults";
 import { SectionSizeOptions } from "../../../utils/screenUtils";
 import { toaster } from "../../../utils/toast";
@@ -110,7 +111,7 @@ export default function DrawerScreensContent() {
           );
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {document ? (
@@ -134,7 +135,7 @@ export default function DrawerScreensContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

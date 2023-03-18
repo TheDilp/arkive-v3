@@ -1,8 +1,9 @@
 import { CurveStyleType, DefaultBoardType, DefaultEdgeType, DefaultNodeType } from "../../types/ItemTypes/boardTypes";
+import { IconEnum } from "./GeneralDefaults";
 
 export const DefaultBoard: DefaultBoardType = {
   title: "",
-  icon: "mdi:draw",
+  icon: IconEnum.board,
   folder: false,
   isPublic: false,
   expanded: false,

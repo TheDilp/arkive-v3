@@ -11,6 +11,7 @@ import { useCreateSubItem, useDeleteItem, useGetAllMapImages, useUpdateSubItem }
 import { useGetItem } from "../../hooks/useGetItem";
 import { MapLayerType, MapType } from "../../types/ItemTypes/mapTypes";
 import { DialogAtom } from "../../utils/Atoms/atoms";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../utils/toast";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
 import { MapImageDropdownItem } from "../Dropdown/ImageDropdownItem";
@@ -57,7 +58,7 @@ export default function UpdateMapLayers() {
               },
             });
           }}>
-          <Icon icon="mdi:layers-plus" />
+          <Icon icon={IconEnum.map_layers} />
         </Button>
       </div>
 

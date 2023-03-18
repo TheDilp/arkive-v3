@@ -9,6 +9,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { NavItemType } from "../../types/generalTypes";
 import { SidebarCollapseAtom, ThemeAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
 import { checkIfOwner, navItems } from "../../utils/uiUtils";
 
@@ -69,7 +70,7 @@ function SidebarDashBoardItems() {
         onClick={() => createProjectMutation()}
         tooltip="Create new project"
         tooltipOptions={{ position: "right" }}>
-        {isLoading ? null : <Icon className="newSectionButton text-white" fontSize={28} icon="mdi:plus" />}
+        {isLoading ? null : <Icon className="newSectionButton text-white" fontSize={28} icon={IconEnum.add} />}
       </Button>
     </li>
   );

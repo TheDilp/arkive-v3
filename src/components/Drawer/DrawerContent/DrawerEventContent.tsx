@@ -21,6 +21,7 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { DefaultEvent } from "../../../utils/DefaultValues/CalendarDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { virtualScrollerSettings } from "../../../utils/uiUtils";
@@ -245,7 +246,7 @@ export default function DrawerEventContent() {
         loading={loading}
         onClick={() => createUpdateEvent()}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {localItem?.id ? (
@@ -267,7 +268,7 @@ export default function DrawerEventContent() {
               );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

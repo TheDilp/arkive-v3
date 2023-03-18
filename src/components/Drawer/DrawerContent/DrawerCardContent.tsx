@@ -14,6 +14,7 @@ import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { CardType } from "../../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { DocumentMentionTooltip } from "../../Mention/DocumentMention";
@@ -87,7 +88,7 @@ export default function DrawerCardContent() {
           }
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
     </div>
   );

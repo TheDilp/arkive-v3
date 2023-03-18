@@ -18,6 +18,7 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
 import { DefaultDocument } from "../../../utils/DefaultValues/DocumentDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -172,7 +173,7 @@ export default function DrawerDocumentContent() {
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Icon</span>
           <IconSelect setIcon={(newIcon: string) => handleChange({ name: "icon", value: newIcon })}>
-            <Icon className="cursor-pointer" fontSize={20} icon={localItem.icon || "mdi:file"} />
+            <Icon className="cursor-pointer" fontSize={20} icon={localItem.icon || IconEnum.document} />
           </IconSelect>
         </div>
       </div>
@@ -195,7 +196,7 @@ export default function DrawerDocumentContent() {
           );
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {document ? (
@@ -215,7 +216,7 @@ export default function DrawerDocumentContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

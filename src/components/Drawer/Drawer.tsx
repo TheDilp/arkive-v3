@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import DrawerTimelineContent from "./DrawerContent/DrawerTimelineContent";
 
 const DrawerRandomTableContent = lazy(() => import("./DrawerContent/DrawerRandomTableContent"));
@@ -51,7 +52,7 @@ function DrawerIcons(setDrawer: (update: SetStateAction<DrawerAtomType>) => void
   return (
     <Button
       className="p-button-text p-button-rounded p-button-secondary w-fit p-0 hover:bg-transparent"
-      icon={<Icon className="pointer-events-none" fontSize={26} icon="mdi:close" />}
+      icon={<Icon className="pointer-events-none" fontSize={26} icon={IconEnum.close} />}
       onClick={() => handleCloseDrawer(setDrawer)}
     />
   );

@@ -12,6 +12,7 @@ import { CalendarType, EraCreateType, EraType } from "../../../types/ItemTypes/c
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultEra } from "../../../utils/DefaultValues/CalendarDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
@@ -132,7 +133,7 @@ export default function DrawerEraContent() {
         loading={createEraMutation.isLoading || updateEraMutation.isLoading}
         onClick={() => createUpdateEra()}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {month ? (
@@ -154,7 +155,7 @@ export default function DrawerEraContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

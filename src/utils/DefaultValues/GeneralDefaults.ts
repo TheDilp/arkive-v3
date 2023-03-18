@@ -5,6 +5,7 @@ export const IconEnum = {
   folder: "ph:folder-thin",
   map: "ph:map-trifold",
   map_pin: "ph:map-pin-light",
+  map_layers: "et:layers",
   board: "ph:graph-light",
   node: "ph:graph-light",
   edge: "ph:graph-light",
@@ -18,6 +19,15 @@ export const IconEnum = {
 
   // Other
 
+  add: "ph:plus-thin",
   edit: "ph:pencil-simple-thin",
   trash: "ph:trash-thin",
+  close: "mdi:close",
+  save: "ph:floppy-disk-thin",
+  drag: "ph:dots-six-vertical-thin",
+  chevron_up: "mdi:chevron-up",
+  chevron_down: "mdi:chevron-down",
+  user: "ph:user",
+  table: "ph:table-thin",
+  grid: "ph:grid-four-thin",
 };

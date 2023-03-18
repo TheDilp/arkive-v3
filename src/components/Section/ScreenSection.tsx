@@ -14,6 +14,7 @@ import { CardType, SectionType } from "../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { getSectionSizeClass } from "../../utils/screenUtils";
 import SectionCard from "../Card/SectionCard";
 
@@ -71,7 +72,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
         <div className="item-center flex">
           <Icon
             className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
-            icon="mdi:pencil"
+            icon={IconEnum.edit}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -80,7 +81,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
           />
           <Icon
             className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
-            icon="mdi:plus"
+            icon={IconEnum.add}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();

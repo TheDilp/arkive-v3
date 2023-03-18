@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import DrawerSection from "../DrawerSection";
 
@@ -64,7 +65,7 @@ export default function DrawerFromTemplateContent() {
               }
             }}
             type="submit">
-            {buttonLabelWithIcon("Save", "mdi:content-save")}
+            {buttonLabelWithIcon("Save", IconEnum.save)}
           </Button>
         </div>
       </div>

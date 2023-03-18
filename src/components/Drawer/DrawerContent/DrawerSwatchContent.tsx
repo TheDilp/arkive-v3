@@ -8,6 +8,7 @@ import { useCreateSwatch, useUpdateSwatch } from "../../../CRUD/ProjectCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { SwatchType } from "../../../types/ItemTypes/projectTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import ColorInput from "../../ColorInput/ColorInput";
 import DrawerSection from "../DrawerSection";
@@ -92,7 +93,7 @@ export default function DrawerSwatchContent() {
           resetChanges();
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
     </div>
   );

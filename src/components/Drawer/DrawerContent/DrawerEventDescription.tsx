@@ -6,6 +6,7 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import StaticRender from "../../Editor/StaticRender";
 
 export default function DrawerEventDescription() {
@@ -20,7 +21,7 @@ export default function DrawerEventDescription() {
         {!drawer?.exceptions?.isReadOnly ? (
           <Icon
             className="cursor-pointer transition-colors hover:text-sky-400"
-            icon="mdi:pencil-outline"
+            icon={IconEnum.edit}
             onClick={() => {
               setDrawer({ ...DefaultDrawer, show: true, type: "events", data: drawer.data });
             }}

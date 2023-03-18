@@ -13,6 +13,7 @@ import { MapCreateType, MapType } from "../../../types/ItemTypes/mapTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { createUpdateItem } from "../../../utils/CRUD/CRUDFunctions";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DefaultMap } from "../../../utils/DefaultValues/MapDefaults";
 import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
@@ -121,7 +122,7 @@ export default function DrawerMapContent() {
           )
         }
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto w-full">
         {map ? (
@@ -141,7 +142,7 @@ export default function DrawerMapContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

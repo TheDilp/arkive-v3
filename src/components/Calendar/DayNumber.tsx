@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 
 export default function DayNumber({
   dayNumber,
@@ -25,7 +26,7 @@ export default function DayNumber({
       {!isFiller && !isReadOnly ? (
         <span className="ml-auto opacity-0 transition-all duration-100 hover:text-sky-400 group-hover:opacity-100">
           <Icon
-            icon="mdi:plus"
+            icon={IconEnum.add}
             onClick={() => {
               if (!isFiller)
                 setDrawer({

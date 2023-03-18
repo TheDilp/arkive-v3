@@ -12,6 +12,7 @@ import { DictionaryType, WordCreateType, WordType } from "../../../types/ItemTyp
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { DefaultWord } from "../../../utils/DefaultValues/DictionaryDefaults";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
@@ -130,7 +131,7 @@ export default function DrawerWordContent() {
           createUpdateWord();
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {document ? (
@@ -152,7 +153,7 @@ export default function DrawerWordContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>

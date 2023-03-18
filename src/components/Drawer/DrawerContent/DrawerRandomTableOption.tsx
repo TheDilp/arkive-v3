@@ -14,6 +14,7 @@ import { RandomTableOptionCreateType, RandomTableOptionType } from "../../../typ
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
+import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DefaultRandomTableOption } from "../../../utils/DefaultValues/RandomTableDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
@@ -136,7 +137,7 @@ export default function DrawerRandomTableOptionContent() {
           await createUpdateRandomTableOption();
         }}
         type="submit">
-        {buttonLabelWithIcon("Save", "mdi:content-save")}
+        {buttonLabelWithIcon("Save", IconEnum.save)}
       </Button>
       <div className="mt-auto flex w-full">
         {document ? (
@@ -159,7 +160,7 @@ export default function DrawerRandomTableOptionContent() {
                 );
             }}
             type="submit">
-            {buttonLabelWithIcon("Delete", "mdi:trash")}
+            {buttonLabelWithIcon("Delete", IconEnum.trash)}
           </Button>
         ) : null}
       </div>
