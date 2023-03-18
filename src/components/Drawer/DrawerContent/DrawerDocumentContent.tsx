@@ -96,12 +96,14 @@ export default function DrawerDocumentContent() {
         />
         <div className="flex w-full flex-col items-center">
           {localItem?.image ? (
-            <Image
-              className="h-28 w-36 object-contain"
-              imageClassName="object-fit"
-              preview
-              src={`${baseURLS.baseImageHost}${localItem?.image}`}
-            />
+            <div className="h-28 w-36">
+              <Image
+                className="h-28 w-36"
+                imageClassName="object-contain h-5/6 w-full"
+                preview
+                src={`${baseURLS.baseImageHost}${localItem?.image}`}
+              />
+            </div>
           ) : null}
           <Dropdown
             className="w-full"
