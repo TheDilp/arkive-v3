@@ -10,7 +10,6 @@ import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
-import DrawerTimelineContent from "./DrawerContent/DrawerTimelineContent";
 
 const DrawerRandomTableContent = lazy(() => import("./DrawerContent/DrawerRandomTableContent"));
 const DrawerRandomTableOptionContent = lazy(() => import("./DrawerContent/DrawerRandomTableOption"));
@@ -31,6 +30,7 @@ const DrawerSectionContent = lazy(() => import("./DrawerContent/DrawerSectionCon
 const DrawerWordContent = lazy(() => import("./DrawerContent/DrawerWordContent"));
 const DrawerInsertWord = lazy(() => import("./DrawerContent/DrawerInsertWord"));
 const DrawerCalendarContent = lazy(() => import("./DrawerContent/DrawerCalendarContent"));
+const DrawerTimelineContent = lazy(() => import("./DrawerContent/DrawerTimelineContent"));
 const DrawerEraContent = lazy(() => import("./DrawerContent/DrawerEraContent"));
 const DrawerMonthContent = lazy(() => import("./DrawerContent/DrawerMonthContent"));
 const DrawerEventContent = lazy(() => import("./DrawerContent/DrawerEventContent"));

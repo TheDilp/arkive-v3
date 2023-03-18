@@ -17,7 +17,7 @@ export default function DialogWrapper() {
 
   return (
     <Dialog
-      className="p-0"
+      className="max-w-md p-0"
       contentClassName="pb-0"
       header={() => {
         if (uploading) return "Uploading...";
