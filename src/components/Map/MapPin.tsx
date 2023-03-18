@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { MapPinType } from "../../types/ItemTypes/mapTypes";
 import { MapContextAtom } from "../../utils/Atoms/atoms";
+import { formatImageURL } from "../../utils/transform";
 
 export default function MapPin({
   pinData: markerData,
@@ -91,7 +92,7 @@ export default function MapPin({
                 }}
                 style={{
                   background: image ? "" : background,
-                  backgroundImage: image ? `url(${image})` : "",
+                  backgroundImage: image ? `url(${formatImageURL(image)})` : "",
                   backgroundColor: showBackground ? backgroundColor : "",
                   backgroundPosition: "center",
                   backgroundSize: image ? "contain" : "2rem",

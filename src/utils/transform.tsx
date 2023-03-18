@@ -68,3 +68,6 @@ export function removeKeys(obj: { [key: string]: any }, keys: string[]): object 
   }
   return obj;
 }
+export function formatImageURL(image: string) {
+  return image.replaceAll(" ", "%20");
+}

@@ -5,6 +5,7 @@ import { saveAs } from "file-saver";
 import { AllSubItemsType } from "../types/generalTypes";
 import { CurveStyleType, EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
 import { toaster } from "./toast";
+import { formatImageURL } from "./transform";
 
 export function changeLockState(
   boardContext: cytoscape.Core,
@@ -462,7 +463,7 @@ export function getNodeImage(node: NodeType) {
   if (node.image) {
     image = node.image;
   }
-  if (image !== "") return image.replaceAll(" ", "%20");
+  if (image !== "") return formatImageURL(image);
   return null;
 }
 export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
