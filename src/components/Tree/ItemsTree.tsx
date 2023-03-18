@@ -7,7 +7,7 @@ import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { getItemIconForTree, getItemNameForTree } from "../../utils/transform";
+import { getItemIcon, getItemNameForTree } from "../../utils/transform";
 import BaseTree from "./BaseTree";
 
 type Props = {
@@ -52,7 +52,7 @@ export default function ItemsTree({ type }: Props) {
           <div className="flex w-full items-center justify-center gap-x-1">
             <div className="w-full">New {itemName === "board" ? "graph" : itemName}</div>
             <div className="ml-auto">
-              <Icon fontSize={20} icon={getItemIconForTree(type)} />
+              <Icon fontSize={20} icon={getItemIcon(type)} />
             </div>
           </div>
         </Button>

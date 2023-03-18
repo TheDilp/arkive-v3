@@ -82,6 +82,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
           <Icon className="mr-1" icon="bxs:folder" inline />
         ) : (
           <IconSelect
+            iconTypes={["general", "weather"]}
             setIcon={(newIcon) => {
               updateMutation?.mutate(
                 { icon: newIcon, id: node.id as string },
@@ -94,13 +95,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
             }}>
             <Icon
               className={`rounded-full ${type === "documents" ? "hover:bg-sky-400" : ""}`}
-              icon={
-                ("icon" in node.data && (node.data?.icon as string)) ||
-                (type === "maps" && "mdi:map") ||
-                (type === "boards" && "mdi:draw") ||
-                (type === "screens" && "fluent:board-24-regular") ||
-                "mdi:file"
-              }
+              icon={"icon" in node.data ? (node.data?.icon as string) : "mdi:file"}
               inline
             />
           </IconSelect>

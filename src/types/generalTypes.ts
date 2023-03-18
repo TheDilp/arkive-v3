@@ -146,6 +146,19 @@ export type slashMenuItem = {
 
 export type BoardDragItemType = { id: string; image?: string; title: string; type: "documents" | "images" };
 
+export type SearchResultType =
+  | DocumentType
+  | MapType
+  | MapPinType
+  | BoardType
+  | NodeType
+  | EdgeType
+  | ScreenType
+  | SectionType
+  | CalendarType
+  | TimelineType
+  | EventType;
+
 export type FullSearchResults = {
   documents: DocumentType[];
   maps: MapType[];

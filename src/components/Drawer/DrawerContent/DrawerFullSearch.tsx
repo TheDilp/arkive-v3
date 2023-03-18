@@ -1,18 +1,13 @@
-import { Icon } from "@iconify/react";
-import { Core } from "cytoscape";
-import { useAtom } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useFullSearch, useGetAllTags } from "../../../CRUD/OtherCRUD";
 import { AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
-import { BoardReferenceAtom, DrawerAtom } from "../../../utils/Atoms/atoms";
-import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
-import { getIconForFullSearch, getLinkForFullSearch } from "../../../utils/transform";
+import SearchResultGroup from "../SearchResults/SearchResultGroup";
 
 const SearchDefault = {
   documents: [],
@@ -28,28 +23,13 @@ const SearchDefault = {
   events: [],
 };
 
-function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core) {
-  if (subitem_id === id) {
-    const node = boardRef.getElementById(subitem_id);
-
-    if (node)
-      boardRef?.animate({
-        center: {
-          eles: node,
-        },
-      });
-  }
-}
-
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState<TagType[]>([]);
   const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
-  const [boardRef] = useAtom(BoardReferenceAtom);
   const [menuIndex, setMenuIndex] = useState(0);
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const { project_id, subitem_id } = useParams();
+  const { project_id } = useParams();
   const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
   const { data: allTags } = useGetAllTags(project_id as string);
 
@@ -141,38 +121,13 @@ export default function DrawerFullSearch() {
       <div className="mt-2 flex flex-col gap-y-2 font-Lato">
         {isSearching ? "Searching..." : null}
         {results && Object.keys(results).length > 0
-          ? Object.keys(results).map((key) =>
-              Array.isArray(results[key as AvailableSearchResultTypes])
-                ? results[key as AvailableSearchResultTypes].map((item) => (
-                    <Link
-                      key={item.id}
-                      className="flex cursor-pointer items-center gap-x-1 py-1 hover:bg-sky-400"
-                      onClick={() => {
-                        if (boardRef) goToNodeEdge(subitem_id, item.id, boardRef);
-                        setDrawer({ ...DefaultDrawer, position: "right" });
-                      }}
-                      to={getLinkForFullSearch(
-                        item.id,
-                        "parentId" in item ? (item.parentId as string) : (item.calendarsId as string),
-                        key as AvailableSearchResultTypes,
-                        project_id as string,
-                        "folder" in item ? item.folder : false,
-                      )}>
-                      <Icon fontSize={24} icon={getIconForFullSearch(item)} />
-                      <span className="flex flex-col">
-                        {"title" in item && item.title} {"text" in item && (item?.text || "Map Pin")}
-                        {"label" in item && "source" in item ? item.label || "Edge" : null}
-                        {"label" in item && !("source" in item) ? item.label || "Node" : null}
-                        <span className="text-xs">
-                          {"source" in item
-                            ? `(${item.source?.label || "Unnamed node"} - ${item.target?.label || "Unnamed node"})`
-                            : null}
-                        </span>
-                      </span>
-                    </Link>
-                  ))
-                : null,
-            )
+          ? Object.keys(results).map((key) => (
+              <SearchResultGroup
+                key={key}
+                items={results[key as AvailableSearchResultTypes]}
+                itemType={key as AvailableSearchResultTypes}
+              />
+            ))
           : (query && "No items match this query.") || ""}
       </div>
     </div>

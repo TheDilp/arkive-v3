@@ -1,9 +1,11 @@
+/* eslint-disable no-use-before-define */
 import { BaseItemType } from "../generalTypes";
 
 // Map Pins
 export type MapPinType = {
   id: string;
   parentId: string;
+  parent: MapType;
   lat: number;
   lng: number;
   color: string;

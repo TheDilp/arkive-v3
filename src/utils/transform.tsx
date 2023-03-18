@@ -2,12 +2,6 @@ import { Icon } from "@iconify/react";
 import { ColorPickerValueType } from "primereact/colorpicker";
 
 import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
-import { BoardType, EdgeType, NodeType } from "../types/ItemTypes/boardTypes";
-import { CalendarType, EventType } from "../types/ItemTypes/calendarTypes";
-import { DocumentType } from "../types/ItemTypes/documentTypes";
-import { MapPinType, MapType } from "../types/ItemTypes/mapTypes";
-import { ScreenType, SectionType } from "../types/ItemTypes/screenTypes";
-import { TimelineType } from "../types/ItemTypes/timelineTypes";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
   <div className="flex w-full items-center justify-center gap-x-1">
@@ -25,7 +19,7 @@ export function getItemNameForTree(type: AvailableItemTypes) {
   }
   return "";
 }
-export function getItemIconForTree(type: AvailableItemTypes) {
+export function getItemIcon(type: AvailableItemTypes) {
   if (type === "documents") return "mdi:file";
   if (type === "maps") return "mdi:map-outline";
   if (type === "boards") return "ph:graph";
@@ -57,30 +51,6 @@ export function getLinkForFullSearch(
   if (type === "sections") return `/project/${project_id}/screens/${parentId}/${id}`;
   if (type === "events") return `/project/${project_id}/calendars/${parentId}/${id}`;
   return "./";
-}
-
-export function getIconForFullSearch(
-  item:
-    | DocumentType
-    | MapType
-    | MapPinType
-    | BoardType
-    | NodeType
-    | EdgeType
-    | ScreenType
-    | SectionType
-    | CalendarType
-    | TimelineType
-    | EventType,
-) {
-  if ("folder" in item && item.folder) return "mdi:folder";
-  let icon = "mdi:file";
-  if ("icon" in item) icon = item.icon || "mdi:file";
-  if ("text" in item) icon = "mdi:map_marker";
-  if ("label" in item) icon = "ph:graph-light";
-  if ("calendarsId" in item) icon = "ph:flag-thin";
-
-  return icon;
 }
 
 export function getHexColor(value: string | ColorPickerValueType) {
