@@ -5,7 +5,7 @@ import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "..
 import { IconEnum } from "./DefaultValues/GeneralDefaults";
 
 export const buttonLabelWithIcon = (title: string, icon: string, size?: number) => (
-  <div className="flex w-full items-center justify-center gap-x-1">
+  <div className="flex min-h-full w-full items-center justify-center gap-x-1">
     <div className="ml-0 text-center">{title}</div>
     <Icon className="" fontSize={size || 20} icon={icon} />
   </div>

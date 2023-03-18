@@ -203,7 +203,7 @@ export default function DrawerDocumentContent() {
       <div className="mt-auto flex w-full">
         {document ? (
           <Button
-            className=" p-button-outlined p-button-danger w-full"
+            className=" p-button-outlined p-button-danger h-10 min-h-[2.5rem] w-full"
             onClick={() => {
               if (document)
                 deleteItem(

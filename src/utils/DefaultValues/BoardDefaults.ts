@@ -108,7 +108,6 @@ export const ColorPresets = [
 ];
 
 export const getCytoscapeStylesheet = (curveStyle: CurveStyleType) => {
-  console.log(curveStyle);
   return [
     // Nodes in general
     {
