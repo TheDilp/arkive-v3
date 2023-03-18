@@ -23,6 +23,7 @@ import { MapImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
+import DrawerSection from "../DrawerSection";
 
 export default function DrawerMapContent() {
   const { project_id } = useParams();
@@ -53,37 +54,42 @@ export default function DrawerMapContent() {
     }
   }, [map, project_id]);
   return (
-    <div className="flex h-full flex-col gap-y-2">
+    <div className="flex h-full flex-col gap-y-2 font-Lato">
       <h2 className="text-center text-2xl">
         {map ? `Edit ${map.title}` : <div className="flex items-center justify-center">Create New Map</div>}
       </h2>
-      <InputText
-        autoFocus
-        className="w-full"
-        onChange={(e) => handleChange({ name: "title", value: e.target.value })}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && map) {
-            updateMapMutation?.mutate({
-              id: map.id,
-              parent: localItem.parent,
-              title: localItem.title,
-            });
-          }
-        }}
-        value={localItem?.title || ""}
-      />
+      <DrawerSection title="Map title">
+        <InputText
+          autoFocus
+          className="w-full"
+          onChange={(e) => handleChange({ name: "title", value: e.target.value })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && map) {
+              updateMapMutation?.mutate({
+                id: map.id,
+                parent: localItem.parent,
+                title: localItem.title,
+              });
+            }
+          }}
+          value={localItem?.title || ""}
+        />
+      </DrawerSection>
 
-      <Dropdown
-        filter
-        itemTemplate={MapImageDropdownItem}
-        onChange={(e) => handleChange({ name: "image", value: e.target.value })}
-        options={map_images || []}
-        placeholder="Select map"
-        value={localItem.image}
-        valueTemplate={ImageDropdownValue({ image: localItem?.image })}
-        virtualScrollerOptions={virtualScrollerSettings}
-      />
-      <div className="">
+      <DrawerSection title="Map image">
+        <Dropdown
+          filter
+          itemTemplate={MapImageDropdownItem}
+          onChange={(e) => handleChange({ name: "image", value: e.target.value })}
+          options={map_images || []}
+          placeholder="Select map"
+          value={localItem.image}
+          valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+          virtualScrollerOptions={virtualScrollerSettings}
+        />
+      </DrawerSection>
+
+      <DrawerSection title="Map folder">
         <Dropdown
           className="w-full"
           filter
@@ -95,12 +101,14 @@ export default function DrawerMapContent() {
               : [{ id: null, title: "Root" }]
           }
           optionValue="id"
-          placeholder="Map Folder"
+          placeholder="Map folder"
           value={localItem?.parent?.id}
           virtualScrollerOptions={virtualScrollerSettings}
         />
-      </div>
-      <Tags handleChange={handleChange} localItem={localItem} type="maps" />
+      </DrawerSection>
+      <DrawerSection title="Tags">
+        <Tags handleChange={handleChange} localItem={localItem} type="maps" />
+      </DrawerSection>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />

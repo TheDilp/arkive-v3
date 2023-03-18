@@ -108,16 +108,16 @@ export default function DrawerBoardContent() {
           value={localItem.defaultNodeShape}
         />
       </DrawerSection>
-      <div className="flex flex-wrap items-center justify-between">
-        <DrawerSection title="Default node color">
+      <DrawerSection title="Default node color">
+        <div className="flex flex-wrap items-center justify-between">
           <ColorInput color={localItem.defaultNodeColor as string} name="defaultNodeColor" onChange={handleChange} />
-        </DrawerSection>
-      </div>
-      <div className="flex flex-wrap items-center justify-between">
-        <DrawerSection title="Default edge color">
+        </div>
+      </DrawerSection>
+      <DrawerSection title="Default edge color">
+        <div className="flex flex-wrap items-center justify-between">
           <ColorInput color={localItem.defaultEdgeColor as string} name="defaultEdgeColor" onChange={handleChange} />
-        </DrawerSection>
-      </div>
+        </div>
+      </DrawerSection>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox
@@ -144,7 +144,7 @@ export default function DrawerBoardContent() {
       </div>
 
       <Button
-        className="p-button-outlined p-button-success ml-auto"
+        className="p-button-outlined p-button-success ml-auto h-10 min-h-[2.5rem]"
         disabled={createBoardMutation.isLoading || updateBoardMutation.isLoading}
         loading={createBoardMutation.isLoading || updateBoardMutation.isLoading}
         onClick={async () =>
