@@ -10,7 +10,8 @@ export type MapPinType = {
   lng: number;
   color: string;
   backgroundColor: string;
-  icon: string;
+  icon?: string;
+  image?: string;
   isPublic: boolean;
   text?: string;
   map_link?: string;

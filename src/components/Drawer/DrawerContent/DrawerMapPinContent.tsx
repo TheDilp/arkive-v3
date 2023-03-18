@@ -8,7 +8,7 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateSubItem, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useCreateSubItem, useGetAllImages, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
@@ -17,9 +17,13 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
+import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../IconSelect/IconSelect";
 import { handleCloseDrawer } from "../Drawer";
+import DrawerSection from "../DrawerSection";
 
 export default function DrawerMapPinContent() {
   const { project_id, item_id } = useParams();
@@ -29,7 +33,9 @@ export default function DrawerMapPinContent() {
   const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents", {
     staleTime: 5 * 60 * 1000,
   });
-
+  const { data: images } = useGetAllImages(project_id as string, {
+    staleTime: 5 * 60 * 1000,
+  });
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const currentPin = map?.map_pins?.find((pin) => pin.id === drawer?.data?.id);
 
@@ -105,6 +111,20 @@ export default function DrawerMapPinContent() {
           value={localItem.doc_id}
         />
       </div>
+      <DrawerSection subtitle="If an image is selected it will replace the icon." title="Pin image (optional)">
+        <Dropdown
+          className="w-full"
+          filter
+          itemTemplate={ImageDropdownItem}
+          name="image"
+          onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? undefined : e.value })}
+          options={["None", ...(images || [])] || []}
+          placeholder="Select map"
+          value={localItem?.image}
+          valueTemplate={ImageDropdownValue({ image: localItem?.image })}
+          virtualScrollerOptions={virtualScrollerSettings}
+        />
+      </DrawerSection>
       <div className="flex flex-wrap items-center justify-between">
         <Dropdown
           className="w-full"

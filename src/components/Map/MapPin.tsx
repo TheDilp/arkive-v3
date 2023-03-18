@@ -18,7 +18,7 @@ export default function MapPin({
   cm: MutableRefObject<any>;
   readOnly?: boolean;
 }) {
-  const { id, icon, color, backgroundColor, text, lat, lng, doc_id, map_link, isPublic } = markerData;
+  const { id, icon, image, color, backgroundColor, text, lat, lng, doc_id, map_link, isPublic } = markerData;
   const navigate = useNavigate();
   const { project_id } = useParams();
   const updateMapPin = useUpdateSubItem<MapPinType>(project_id as string, "map_pins", "maps");
@@ -56,6 +56,9 @@ export default function MapPin({
       }
     },
   };
+  const background = `url('https://api.iconify.design/${icon?.match(/.*:/g)?.[0]?.replace(":", "") || "mdi:"}/${
+    icon ? icon?.replace(/.*:/g, "") : ""
+  }.svg?color=%23${color ? color.replace("#", "") : ""}') no-repeat`;
   return (
     <Marker
       draggable={!readOnly}
@@ -72,13 +75,13 @@ export default function MapPin({
                   e.stopPropagation();
                 }}
                 style={{
-                  background: `url('https://api.iconify.design/${icon.match(/.*:/g)?.[0]?.replace(":", "") || "mdi:"}/${
-                    icon ? icon?.replace(/.*:/g, "") : ""
-                  }.svg?color=%23${color ? color.replace("#", "") : ""}') no-repeat`,
-                  backgroundColor,
+                  background: image ? "" : background,
+                  backgroundImage: `url(${image})`,
+                  backgroundColor: image ? "" : backgroundColor,
                   backgroundPosition: "center",
-                  backgroundSize: "2rem",
-                  border: "white solid 3px",
+                  backgroundSize: image ? "contain" : "2rem",
+                  // backgroundSize: "2rem",
+                  border: image ? "" : "white solid 3px",
                   zIndex: 999999,
                 }}
               />

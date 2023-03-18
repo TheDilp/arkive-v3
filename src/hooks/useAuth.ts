@@ -9,6 +9,7 @@ export function useAuth() {
     onAuthStateChanged(auth, (res) => {
       if (res) setUser(res.uid);
       if (!res) window.location.href = "https://home.thearkive.app";
+      // if (!res) window.location.href = "http://localhost:5173/auth/signin";
     });
   }, []);
 
