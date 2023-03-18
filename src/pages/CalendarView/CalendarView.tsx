@@ -18,6 +18,7 @@ import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { getFillerDayNumber, getNextDate, getStartingDayForMonth } from "../../utils/calendarUtils";
 import { useEventMenuItems } from "../../utils/contextMenus";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { getItem, setItem } from "../../utils/storage";
 
 function MonthDropdownTemplate(data: MonthType) {
@@ -78,7 +79,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
           <Icon
             className="cursor-pointer text-zinc-600 transition-colors hover:text-zinc-200"
             fontSize={32}
-            icon="mdi:chevron-left"
+            icon={IconEnum.chevron_left}
             onClick={() => {
               if (calendar) {
                 const previousDate = getNextDate(date, calendar, "previous");
@@ -92,7 +93,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
           <Icon
             className="cursor-pointer text-zinc-600 transition-colors hover:text-zinc-200"
             fontSize={32}
-            icon="mdi:chevron-right"
+            icon={IconEnum.chevron_right}
             onClick={() => {
               if (calendar) {
                 const nextDate = getNextDate(date, calendar, "next");
@@ -147,11 +148,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
               onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "months" })}
               tooltip="Create months"
               tooltipOptions={{ position: "left" }}>
-              <Icon
-                className="cursor-pointer transition-colors hover:text-sky-400"
-                fontSize={28}
-                icon="ph:calendar-plus-thin"
-              />
+              <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon={IconEnum.calendar} />
             </Button>
           </span>
         ) : (

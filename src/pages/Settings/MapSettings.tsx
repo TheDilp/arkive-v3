@@ -21,6 +21,7 @@ import { AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { MapType } from "../../types/ItemTypes/mapTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { getMapImageLink } from "../../utils/CRUD/CRUDUrls";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
@@ -57,7 +58,7 @@ function IconColumn({ id, icon, folder }: MapType) {
         <Icon
           className={`rounded-full ${folder ? "" : "cursor-pointer hover:bg-sky-400"}`}
           fontSize={24}
-          icon={folder ? "mdi:folder" : icon || "mdi:file"}
+          icon={folder ? IconEnum.folder : icon || IconEnum.document}
           inline
         />
       </IconSelect>

@@ -12,6 +12,7 @@ import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import { useDeleteTags, useGetTagSettings, useUpdateTag } from "../../CRUD/OtherCRUD";
 import { TagSettingsType, TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../utils/toast";
 
 function DeleteColumn(item: TagType, deleteTags: UseMutateFunction<any, unknown, string[], unknown>) {
@@ -100,7 +101,7 @@ function ExpandedSection(tag: TagSettingsType) {
               key={node.id}
               className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
               to={`../../boards/${node.parentId}/${node.id}`}>
-              <Icon icon="ph:graph-light" />
+              <Icon icon={IconEnum.board} />
               {node.label || "Unlabeled node"}
             </Link>
           ))}
@@ -113,7 +114,7 @@ function ExpandedSection(tag: TagSettingsType) {
               key={edge.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
               to={`../../boards/${edge.parentId}/${edge.id}`}>
-              <Icon icon="ph:graph-light" />
+              <Icon icon={IconEnum.board} />
               {edge.label || "Unlabeled edge"}{" "}
               {`(${edge?.source?.label || "Unlabeled node"} - ${edge?.target?.label || "Unlabeled node"})`}
             </Link>
@@ -127,7 +128,7 @@ function ExpandedSection(tag: TagSettingsType) {
               key={calendar.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
               to={`../../calendars${calendar.folder ? "/folder" : ""}/${calendar.id}`}>
-              <Icon icon="ph:graph-light" />
+              <Icon icon={IconEnum.board} />
               {calendar.title}
             </Link>
           ))}
@@ -141,7 +142,7 @@ function ExpandedSection(tag: TagSettingsType) {
                   key={event.id}
                   className="flex cursor-pointer items-center hover:text-sky-400"
                   to={`../../calendars/${event.calendarsId}/${event.id}`}>
-                  <Icon icon="ph:graph-light" />
+                  <Icon icon={IconEnum.board} />
                   {event.title}
                 </Link>
               ))
@@ -155,7 +156,7 @@ function ExpandedSection(tag: TagSettingsType) {
               key={screen.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
               to={`../../screens${screen.folder ? "/folder" : ""}/${screen.id}`}>
-              <Icon icon="ph:graph-light" />
+              <Icon icon={IconEnum.board} />
               {screen.title || "Unlabeled edge"}
             </Link>
           ))}
@@ -168,7 +169,7 @@ function ExpandedSection(tag: TagSettingsType) {
               key={card.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
               to={`../../screens/${card.parentId}/${card.id}`}>
-              <Icon icon="ph:graph-light" />
+              <Icon icon={IconEnum.board} />
               {card.document.title}
             </Link>
           ))}
@@ -181,7 +182,7 @@ function ExpandedSection(tag: TagSettingsType) {
               key={dictionary.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
               to={`../../dictionaries${dictionary.folder ? "/folder" : ""}/${dictionary.id}`}>
-              <Icon icon="ph:graph-light" />
+              <Icon icon={IconEnum.board} />
               {dictionary.title}
             </Link>
           ))}

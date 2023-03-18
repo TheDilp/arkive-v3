@@ -22,6 +22,7 @@ import { TagType } from "../../types/generalTypes";
 import { BoardType } from "../../types/ItemTypes/boardTypes";
 import { boardNodeShapes } from "../../utils/boardUtils";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { defaultNodeFilterFunction, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
 import BooleanFilter from "./Filters/BooleanFilter";
@@ -57,7 +58,7 @@ function IconColumn({ id, icon, folder }: BoardType) {
         <Icon
           className={`rounded-full ${folder ? "" : "cursor-pointer hover:bg-sky-400"}`}
           fontSize={24}
-          icon={folder ? "mdi:folder" : icon || "mdi:file"}
+          icon={folder ? IconEnum.folder : icon || IconEnum.document}
           inline
         />
       </IconSelect>

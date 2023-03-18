@@ -28,6 +28,8 @@ export const IconEnum = {
   drag: "ph:dots-six-vertical-thin",
   chevron_up: "mdi:chevron-up",
   chevron_down: "mdi:chevron-down",
+  chevron_left: "mdi:chevron-left",
+  chevron_right: "mdi:chevron-right",
   user: "ph:user",
   table: "ph:table-thin",
   grid: "ph:grid-four-thin",

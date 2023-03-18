@@ -8,6 +8,7 @@ import { useDeleteItem, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { toaster } from "../../utils/toast";
 import { IconSelect } from "../IconSelect/IconSelect";
 
@@ -95,7 +96,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
             }}>
             <Icon
               className={`rounded-full ${type === "documents" ? "hover:bg-sky-400" : ""}`}
-              icon={"icon" in node.data ? (node.data?.icon as string) : "mdi:file"}
+              icon={"icon" in node.data ? (node.data?.icon as string) : IconEnum.document}
               inline
             />
           </IconSelect>

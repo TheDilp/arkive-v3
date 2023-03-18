@@ -18,6 +18,7 @@ import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { TagType } from "../../types/generalTypes";
 import { ScreenType } from "../../types/ItemTypes/screenTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { getSectionSizeName, SectionSizeOptions } from "../../utils/screenUtils";
 import { getCheckedValue, tagsFilterFunction } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
@@ -46,7 +47,7 @@ function IconColumn({ id, icon, folder }: ScreenType) {
         <Icon
           className={`rounded-full ${folder ? "" : "cursor-pointer hover:bg-sky-400"}`}
           fontSize={24}
-          icon={folder ? "mdi:folder" : icon || "mdi:file"}
+          icon={folder ? IconEnum.folder : icon || IconEnum.document}
           inline
         />
       </IconSelect>

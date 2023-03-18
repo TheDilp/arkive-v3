@@ -1,11 +1,12 @@
 import { DefaultDocumentType } from "../../types/ItemTypes/documentTypes";
+import { IconEnum } from "./GeneralDefaults";
 
 export const DefaultDocument: DefaultDocumentType = {
   alter_names: [],
   content: undefined,
   expanded: false,
   folder: false,
-  icon: "mdi:file",
+  icon: IconEnum.document,
   parentId: null,
   properties: [],
   isPublic: false,

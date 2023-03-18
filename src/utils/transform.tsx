@@ -21,21 +21,21 @@ export function getItemNameForTree(type: AvailableItemTypes) {
   return "";
 }
 export function getItemIcon(type: AvailableItemTypes) {
-  if (type === "documents") return "mdi:file";
-  if (type === "maps") return "mdi:map-outline";
-  if (type === "boards") return "ph:graph";
-  if (type === "screens") return "fluent:board-24-regular";
-  if (type === "dictionaries") return "mdi-light:book";
-  if (type === "calendars") return "ph:calendar-blank";
-  if (type === "timelines") return "mdi:timeline-clock-outline";
-  if (type === "randomtables") return "arcticons:reroll";
+  if (type === "documents") return IconEnum.document;
+  if (type === "maps") return IconEnum.map;
+  if (type === "boards") return IconEnum.board;
+  if (type === "screens") return IconEnum.screen;
+  if (type === "dictionaries") return IconEnum.dictionary;
+  if (type === "calendars") return IconEnum.calendar;
+  if (type === "timelines") return IconEnum.timeline;
+  if (type === "randomtables") return IconEnum.randomtables;
   return IconEnum.add;
 }
 export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
   if ("icon" in item) return item.icon;
-  if (type === "maps") return "mdi:map";
+  if (type === "maps") return IconEnum.map;
   if (type === "boards") return IconEnum.board;
-  return "mdi:file";
+  return IconEnum.document;
 }
 
 export function getLinkForFullSearch(
