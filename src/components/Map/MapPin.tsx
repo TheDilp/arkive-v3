@@ -80,7 +80,7 @@ export default function MapPin({
                   backgroundColor: image ? "" : backgroundColor,
                   backgroundPosition: "center",
                   backgroundSize: image ? "contain" : "2rem",
-                  // backgroundSize: "2rem",
+                  backgroundRepeat: "no-repeat",
                   border: image ? "" : "white solid 3px",
                   zIndex: 999999,
                 }}
