@@ -56,6 +56,7 @@ export default function MapPin({
       }
     },
   };
+  console.log(image);
   const background = `url('https://api.iconify.design/${icon?.match(/.*:/g)?.[0]?.replace(":", "") || "mdi:"}/${
     icon ? icon?.replace(/.*:/g, "") : ""
   }.svg?color=%23${color ? color.replace("#", "") : ""}') no-repeat`;
@@ -76,7 +77,7 @@ export default function MapPin({
                 }}
                 style={{
                   background: image ? "" : background,
-                  backgroundImage: `url(${image})`,
+                  backgroundImage: image ? `url(${image})` : "",
                   backgroundColor: image ? "" : backgroundColor,
                   backgroundPosition: "center",
                   backgroundSize: image ? "contain" : "2rem",
