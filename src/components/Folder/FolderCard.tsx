@@ -60,7 +60,7 @@ export default function FolderCard({ id, title, type, isFolder, isPublic, icon, 
       to={`/project/${project_id}/${getCardURL({ isFolder, type, id })}`}>
       <div className="flex h-24 w-40 cursor-pointer flex-col items-center justify-center px-4 transition-colors hover:text-blue-300">
         {image && !isFolder ? (
-          <img alt={type} className="max-h-[70px] object-contain" src={`${baseURLS.baseImageHost}${image}`} />
+          <img alt={type} className="max-h-[70px] object-contain" loading="lazy" src={`${baseURLS.baseImageHost}${image}`} />
         ) : (
           <Icon fontSize={80} icon={isFolder ? IconEnum.folder : icon} />
         )}

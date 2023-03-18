@@ -6,7 +6,6 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { useGetAllImages, useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { FolderViewCards } from "../../pages/FolderView/FolderViewCards";
-import { baseURLS } from "../../types/CRUDenums";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
 
 type Props = {
