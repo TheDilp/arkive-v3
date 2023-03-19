@@ -40,7 +40,7 @@ function ExpandedSection(tag: TagSettingsType) {
   if (!tag) return null;
   const { documents, maps, map_pins, boards, nodes, edges, calendars, events, screens, cards, dictionaries } = tag;
   return (
-    <TabView className="h-72" panelContainerClassName="h-full min-h-full" renderActiveOnly>
+    <TabView className="h-72" panelContainerClassName="h-72" renderActiveOnly>
       <TabPanel disabled={!documents.length} header="Documents">
         <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
           {documents.map((doc) => (
