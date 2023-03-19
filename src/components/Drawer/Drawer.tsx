@@ -73,7 +73,8 @@ export default function Drawer() {
   return (
     <PrimeDrawer
       className={`p-sidebar-${drawer.drawerSize || "sm"} mainDrawer max-h-full overflow-y-auto`}
-      dismissable={false}
+      dismissable={drawer?.modal ?? false}
+      fullScreen={drawer.fullscreen ?? false}
       icons={() => DrawerIcons(setDrawer)}
       modal={drawer?.modal ?? false}
       onHide={() => handleCloseDrawer(setDrawer)}

@@ -23,9 +23,10 @@ type Props = {
   providedSectionDraggable: DraggableProvided;
   sectionSize: string | undefined;
   setSections: Dispatch<SetStateAction<SectionType[]>>;
+  isReadOnly?: boolean;
 };
 
-export default function ScreenSection({ section, providedSectionDraggable, sectionSize, setSections }: Props) {
+export default function ScreenSection({ section, providedSectionDraggable, sectionSize, setSections, isReadOnly }: Props) {
   const { item_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const updateSectionMutation = useUpdateSubItem<SectionType>(item_id as string, "sections", "screens");
@@ -65,30 +66,35 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
       {...providedSectionDraggable.draggableProps}
       ref={providedSectionDraggable.innerRef}>
       <h3
-        className="group mb-1 flex max-w-full items-center justify-between  rounded bg-zinc-800 py-1 px-2 font-Merriweather text-xl"
+        className="group mb-1 flex max-w-full items-center justify-between rounded bg-zinc-800 py-1 px-2 font-Merriweather text-xl"
         {...providedSectionDraggable.dragHandleProps}
-        onClick={() => updateSectionMutation.mutate({ id: section.id, expanded: !section.expanded })}>
+        onClick={() => {
+          if (isReadOnly) return;
+          updateSectionMutation.mutate({ id: section.id, expanded: !section.expanded });
+        }}>
         <span className="w-full truncate">{section.title}</span>
-        <div className="item-center flex">
-          <Icon
-            className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
-            icon={IconEnum.edit}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDrawer({ ...DefaultDrawer, show: true, type: "sections", data: section });
-            }}
-          />
-          <Icon
-            className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
-            icon={IconEnum.add}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDrawer({ ...DefaultDrawer, show: true, type: "cards", data: section });
-            }}
-          />
-        </div>
+        {isReadOnly ? null : (
+          <div className="item-center flex">
+            <Icon
+              className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
+              icon={IconEnum.edit}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setDrawer({ ...DefaultDrawer, show: true, type: "sections", data: section });
+              }}
+            />
+            <Icon
+              className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
+              icon={IconEnum.add}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setDrawer({ ...DefaultDrawer, show: true, type: "cards", data: section });
+              }}
+            />
+          </div>
+        )}
       </h3>
       <Droppable direction="vertical" droppableId={section.id} type="CARD">
         {(droppableProvided, droppableSnapshot) => (
@@ -103,7 +109,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
               <div className="scrollbar-hidden flex h-full max-w-full flex-col overflow-x-hidden ">
                 {section?.cards
                   ? section.cards.map((card, index) => (
-                      <Draggable key={card.id} draggableId={card.id} index={index}>
+                      <Draggable key={card.id} draggableId={card.id} index={index} isDragDisabled={!!isReadOnly}>
                         {(providedDraggable) => (
                           <div
                             className="my-1 w-full max-w-full"
@@ -114,6 +120,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
                               card={card}
                               cardSize={section.cardSize}
                               deleteCard={deleteCard}
+                              isReadOnly={isReadOnly}
                               updateCard={updateCard}
                             />
                           </div>

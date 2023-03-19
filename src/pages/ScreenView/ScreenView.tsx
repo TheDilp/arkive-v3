@@ -18,32 +18,40 @@ import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { onDragEnd } from "../../utils/screenUtils";
 
-export default function ScreenView() {
+type Props = {
+  id?: string;
+  isReadOnly?: boolean;
+};
+
+export default function ScreenView({ id, isReadOnly }: Props) {
   const queryClient = useQueryClient();
   const { project_id, item_id } = useParams();
-  const { data, isLoading } = useGetItem<ScreenType>(item_id as string, "screens");
+  const { data, isLoading } = useGetItem<ScreenType>(id || (item_id as string), "screens");
   const [sections, setSections] = useState<SectionType[]>([]);
   const [, setDrawer] = useAtom(DrawerAtom);
-  const updateSectionMutation = useUpdateSubItem<SectionType>(item_id as string, "sections", "screens");
+  const updateSectionMutation = useUpdateSubItem<SectionType>(id || (item_id as string), "sections", "screens");
   useEffect(() => {
     if (data?.sections) setSections(data.sections);
-  }, [data, item_id]);
+  }, [data, id, item_id]);
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-hidden p-4">
-      <div>
-        <Button
-          className="p-button-outlined"
-          icon="pi pi-plus"
-          iconPos="right"
-          label="Create Section"
-          onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections" })}
-        />
-      </div>
+      {isReadOnly ? null : (
+        <div>
+          <Button
+            className="p-button-outlined"
+            icon="pi pi-plus"
+            iconPos="right"
+            label="Create Section"
+            onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections" })}
+          />
+        </div>
+      )}
       <div className="flex h-full gap-x-2 overflow-hidden">
         {!isLoading ? (
           <DragDropContext
             onDragEnd={(result) => {
-              onDragEnd(result, sections, setSections, queryClient, project_id as string, item_id as string);
+              if (isReadOnly) return;
+              onDragEnd(result, sections, setSections, queryClient, project_id as string, id || (item_id as string));
             }}>
             <Droppable direction="horizontal" droppableId={data?.id || "screenDroppable"} type="SECTION">
               {(providedScreen) => (
@@ -52,10 +60,11 @@ export default function ScreenView() {
                   {...providedScreen.droppableProps}
                   ref={providedScreen.innerRef}>
                   {sections?.map((section, sectionIndex) => (
-                    <Draggable key={section.id} draggableId={section.id} index={sectionIndex}>
+                    <Draggable key={section.id} draggableId={section.id} index={sectionIndex} isDragDisabled={!!isReadOnly}>
                       {(providedSectionDraggable) =>
-                        section.expanded ? (
+                        section.expanded || isReadOnly ? (
                           <ScreenSection
+                            isReadOnly={isReadOnly}
                             providedSectionDraggable={providedSectionDraggable}
                             section={section}
                             sectionSize={data?.sectionSize}

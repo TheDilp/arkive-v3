@@ -46,7 +46,7 @@ export default function MapPin({
   const eventHandlers = {
     click: (e: any) => {
       if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
-      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !readOnly) {
+      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !e.originalEvent.metaKey && !readOnly) {
         if (doc_id) {
           setDrawer({
             ...DefaultDrawer,
@@ -64,6 +64,15 @@ export default function MapPin({
       } else if (e.originalEvent.altKey && doc_id) {
         e.originalEvent.preventDefault();
         navigate(`../../documents/${doc_id}`);
+      } else if (e.originalEvent.metaKey) {
+        setDrawer({
+          ...DefaultDrawer,
+          type: "content_preview",
+          data: { id: "", type: "screens" },
+          show: true,
+          drawerSize: "lg",
+          modal: true,
+        });
       }
     },
     contextmenu: (e: any) => {
