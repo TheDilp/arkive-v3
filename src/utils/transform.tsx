@@ -11,6 +11,21 @@ export const buttonLabelWithIcon = (title: string, icon: string, size?: number) 
   </div>
 );
 
+export function getItemNameForSettings(name: string) {
+  if (name.includes("project")) return "Project settings";
+  if (name.includes("document")) return "Document settings";
+  if (name.includes("map")) return "Map settings";
+  if (name.includes("board")) return "Graph settings";
+  if (name.includes("calendar")) return "Calendar settings";
+  if (name.includes("timeline")) return "Timeline settings";
+  if (name.includes("screen")) return "Screen settings";
+  if (name.includes("dictionary")) return "Dictionary settings";
+  if (name.includes("randomtable")) return "Random Table settings";
+  if (name.includes("tag")) return "Tag settings";
+  if (name.includes("misc")) return "Miscellaneous settings";
+  return "Settings";
+}
+
 export function getItemNameForTree(type: AvailableItemTypes) {
   if (type) {
     if (type === "randomtables") return "random table";
