@@ -44,10 +44,10 @@ export default function MentionDropdownComponent() {
         })
         .slice(0, 5),
     );
-  }, 500);
+  }, 700);
 
   useEffect(() => {
-    if (state && state?.query?.full?.length > 1) {
+    if (state && state?.query?.full?.length >= 3) {
       search();
     } else {
       setOptions([]);
