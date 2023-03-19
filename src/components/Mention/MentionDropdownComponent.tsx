@@ -1,8 +1,8 @@
 import { FloatingWrapper, useMentionAtom } from "@remirror/react";
-import { useQuery } from "@tanstack/react-query";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 import { baseURLS } from "../../types/CRUDenums";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
@@ -10,36 +10,29 @@ import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 export default function MentionDropdownComponent() {
   const { project_id } = useParams();
   const [options, setOptions] = useState<{ id: string; label: string; displayLabel?: string }[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
 
   const { state, getMenuProps, getItemProps, indexIsHovered, indexIsSelected } = useMentionAtom({
     items: options,
   });
 
-  const enabled = Boolean(!!state?.name && state?.query?.full?.length && state.query.full.length > 0);
-
-  const { data: items, isFetching } = useQuery<
-    { id: string; title: string; translation?: string }[],
-    unknown,
-    { id: string; label: string; searchItem?: string; displayLabel?: string }[]
-  >(
-    ["mentionItems", project_id, state?.name],
-    async () => {
-      if (state)
-        return FetchFunction({
-          url: `${baseURLS.baseServer}search`,
-          method: "POST",
-          body: JSON.stringify({
-            project_id,
-            query: state?.query?.full,
-            type: state?.name,
-          }),
-        });
-      return [];
-    },
-    {
-      enabled,
-      select: (res) => {
-        return res.map((item) => {
+  const search = useDebouncedCallback(async () => {
+    setIsFetching(true);
+    const items = await FetchFunction({
+      url: `${baseURLS.baseServer}search`,
+      method: "POST",
+      body: JSON.stringify({
+        project_id,
+        query: state?.query?.full,
+        type: state?.name,
+        take: 5,
+      }),
+    });
+    setIsFetching(false);
+    setOptions(
+      items
+        .sort()
+        .map((item: any) => {
           if (item?.translation)
             return {
               id: item.id,
@@ -48,30 +41,18 @@ export default function MentionDropdownComponent() {
               displayLabel: `${item.title} (${item.translation})`,
             };
           return { id: item.id, label: item.title };
-        });
-      },
-      onSuccess: (data) => {
-        setOptions(data);
-      },
-    },
-  );
+        })
+        .slice(0, 5),
+    );
+  }, 500);
 
   useEffect(() => {
-    if (!state) {
-      return;
+    if (state && state?.query?.full?.length > 1) {
+      search();
+    } else {
+      setOptions([]);
     }
-
-    const searchTerm = state.query.full.toLowerCase();
-
-    const filteredOptions = (items || [])
-      .filter((item) =>
-        item?.searchItem ? item.searchItem.toLowerCase().includes(searchTerm) : item.label.toLowerCase().includes(searchTerm),
-      )
-      .sort()
-      .slice(0, 5);
-
-    setOptions(filteredOptions);
-  }, [state]);
+  }, [state?.query?.full]);
 
   return (
     <FloatingWrapper
