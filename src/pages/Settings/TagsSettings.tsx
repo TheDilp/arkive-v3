@@ -40,8 +40,8 @@ function ExpandedSection(tag: TagSettingsType) {
   if (!tag) return null;
   const { documents, maps, map_pins, boards, nodes, edges, calendars, events, screens, cards, dictionaries } = tag;
   return (
-    <TabView className="h-max" panelContainerClassName="max-h-full" renderActiveOnly>
-      <TabPanel disabled={!documents.length} header="Documents">
+    <TabView className="h-[30rem]" panelContainerClassName="max-h-full" renderActiveOnly>
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!documents.length} header="Documents">
         <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
           {documents.map((doc) => (
             <Link
@@ -55,7 +55,7 @@ function ExpandedSection(tag: TagSettingsType) {
         </div>
       </TabPanel>
 
-      <TabPanel disabled={!maps.length} header="Maps">
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!maps.length} header="Maps">
         <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
           {maps.map((map) => (
             <Link
@@ -68,7 +68,7 @@ function ExpandedSection(tag: TagSettingsType) {
           ))}
         </div>
       </TabPanel>
-      <TabPanel disabled={!maps.length} header="Map pins">
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!maps.length} header="Map pins">
         <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
           {map_pins.map((map_pin) => (
             <Link
@@ -81,7 +81,7 @@ function ExpandedSection(tag: TagSettingsType) {
           ))}
         </div>
       </TabPanel>
-      <TabPanel disabled={!boards.length} header="Graphs">
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!boards.length} header="Graphs">
         <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
           {boards.map((board) => (
             <Link
@@ -94,7 +94,7 @@ function ExpandedSection(tag: TagSettingsType) {
           ))}
         </div>
       </TabPanel>
-      <TabPanel disabled={!nodes.length} header="Nodes">
+      <TabPanel contentClassName="overflow-hidden h-full" disabled={!nodes.length} header="Nodes">
         <div className="flex h-full w-full flex-col gap-y-2 overflow-auto px-2">
           {nodes.map((node) => (
             <Link
