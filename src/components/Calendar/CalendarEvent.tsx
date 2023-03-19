@@ -31,18 +31,20 @@ function openOtherEvent(setDrawer: (update: SetStateAction<DrawerAtomType>) => v
 function OtherEvents({ events, openEvent }: { events: EventType[]; openEvent: (event: EventType) => void }) {
   const otherEvents = events.slice(5);
   return (
-    <div className="m-2 w-48 border-zinc-900 bg-zinc-900 p-2">
-      {otherEvents.map((event) => (
-        <div
-          key={event.id}
-          className="select-none"
-          onClick={() => openEvent(event)}
-          onKeyDown={() => {}}
-          role="button"
-          tabIndex={-1}>
-          {event.title}
-        </div>
-      ))}
+    <div className="m-2 max-h-56 w-48 overflow-hidden rounded border-zinc-900 bg-zinc-900">
+      <div className="h-56 max-h-full w-full overflow-y-auto">
+        {otherEvents.map((event) => (
+          <div
+            key={event.id}
+            className="select-none truncate border-zinc-800 bg-zinc-900 p-2 transition-colors odd:border-y hover:text-sky-400"
+            onClick={() => openEvent(event)}
+            onKeyDown={() => {}}
+            role="button"
+            tabIndex={-1}>
+            {event.title}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
