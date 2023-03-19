@@ -915,7 +915,6 @@ export function useEventMenuItems() {
   const finalItems = [
     {
       command: () => {
-        console.log(contextMenuData);
         setDrawer({
           ...DefaultDrawer,
           data: contextMenuData?.data,

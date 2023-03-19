@@ -214,7 +214,6 @@ export default function BoardView({ isReadOnly }: Props) {
     cyRef?.current?._cy.on("click", function (evt: any) {
       // If the target is the background of the canvas
       if (evt.target === cyRef?.current?._cy && boardState.addNodes) {
-        console.log(evt);
         const { x, y } = evt.position;
         createNodeMutation.mutate({
           ...DefaultNode,
