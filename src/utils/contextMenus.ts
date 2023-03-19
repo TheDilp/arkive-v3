@@ -1,5 +1,5 @@
 import { UseMutationResult } from "@tanstack/react-query";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -911,10 +911,11 @@ export function useEditorMenuItems() {
 
 export function useEventMenuItems() {
   const [, setDrawer] = useAtom(DrawerAtom);
-  const [contextMenuData] = useAtom(OtherContextMenuAtom);
+  const contextMenuData = useAtomValue(OtherContextMenuAtom);
   const finalItems = [
     {
       command: () => {
+        console.log(contextMenuData);
         setDrawer({
           ...DefaultDrawer,
           data: contextMenuData?.data,

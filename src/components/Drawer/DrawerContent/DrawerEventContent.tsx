@@ -59,11 +59,9 @@ export default function DrawerEventContent() {
   const deleteEventMutation = useDeleteItem("events", project_id as string);
 
   const [localItem, setLocalItem] = useState<EventType | EventCreateType>(
-    drawer?.data?.event?.id ? drawer.data : { ...DefaultEvent, ...drawer.data },
+    drawer?.data?.event?.id ? drawer.data.event : { ...DefaultEvent, ...drawer.data },
   );
-
   const [monthDays, setMonthDays] = useState(0);
-
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   const createUpdateEvent = async () => {
@@ -115,6 +113,7 @@ export default function DrawerEventContent() {
   useEffect(() => {
     if (calendar && typeof localItem?.month === "number") setMonthDays(calendar?.months?.[localItem.month]?.days);
   }, [localItem?.month]);
+
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-y-auto overflow-x-hidden">
       <h2 className="truncate text-center font-Lato text-2xl">

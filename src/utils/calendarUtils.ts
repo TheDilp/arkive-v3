@@ -11,6 +11,10 @@ export function sortEvents(a: EventType, b: EventType) {
         return 0;
       }
     }
+  } else if (a.hours && !b.hours) return -1;
+  else if (!a.hours && b.hours) return 1;
+  else {
+    return 0;
   }
   return 0;
 }

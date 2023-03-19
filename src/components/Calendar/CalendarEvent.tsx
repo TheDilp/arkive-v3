@@ -10,21 +10,26 @@ import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
   month: MonthType;
-  monthEvents: EventType[];
+  dayEvents: EventType[];
   index: number;
   year: number;
   isReadOnly?: boolean;
   cm: any;
 };
 
-function openOtherEvent(setDrawer: (update: SetStateAction<DrawerAtomType>) => void, event: EventType) {
+function openOtherEvent(
+  setDrawer: (update: SetStateAction<DrawerAtomType>) => void,
+  event: EventType,
+  month: MonthType,
+  isReadOnly?: boolean,
+) {
   setDrawer({
     ...DefaultDrawer,
-    data: event,
     show: true,
     type: "events",
+    data: { ...event, month },
+    exceptions: { eventDescription: true, isReadOnly },
     drawerSize: "md",
-    exceptions: { eventDescription: true },
   });
 }
 
@@ -49,8 +54,8 @@ function OtherEvents({ events, openEvent }: { events: EventType[]; openEvent: (e
   );
 }
 
-export default function CalendarEvent({ monthEvents, index, month, year, isReadOnly, cm }: Props) {
-  const sortedEvents = [...monthEvents].sort(sortEvents);
+export default function CalendarEvent({ dayEvents, index, month, year, isReadOnly, cm }: Props) {
+  const sortedEvents = [...dayEvents].sort(sortEvents);
   const daysEvents = sortedEvents.filter((event) => event.day === index + 1 && event.year === year);
   const visibleEvents = daysEvents.slice(0, 5);
   const [, setContextMenuData] = useAtom(OtherContextMenuAtom);
@@ -58,7 +63,7 @@ export default function CalendarEvent({ monthEvents, index, month, year, isReadO
   const [, setDrawer] = useAtom(DrawerAtom);
   return (
     <div className="flex flex-col gap-y-0.5 p-1">
-      {monthEvents
+      {dayEvents && visibleEvents.length
         ? visibleEvents.map((event) => (
             <Tooltip
               key={event.id}
@@ -86,7 +91,7 @@ export default function CalendarEvent({ monthEvents, index, month, year, isReadO
                   })
                 }
                 onContextMenu={(e) => {
-                  setContextMenuData({ data: { event, monthDays: month.days }, cm, show: true });
+                  setContextMenuData({ data: { event, monthDays: month.days, month }, cm, show: true });
                   if (cm.current) cm.current.show(e);
                 }}
                 onKeyDown={() => {}}
@@ -104,7 +109,12 @@ export default function CalendarEvent({ monthEvents, index, month, year, isReadO
       {daysEvents.length > 5 ? (
         <Tooltip
           closeOnClick
-          content={<OtherEvents events={daysEvents} openEvent={(event: EventType) => openOtherEvent(setDrawer, event)} />}
+          content={
+            <OtherEvents
+              events={daysEvents}
+              openEvent={(event: EventType) => openOtherEvent(setDrawer, event, month, isReadOnly)}
+            />
+          }
           isClickable>
           <div className="flex justify-between truncate rounded bg-zinc-800 px-1 text-sm transition-all duration-100 hover:bg-zinc-500">
             <div className="select-none">Show more...</div>
