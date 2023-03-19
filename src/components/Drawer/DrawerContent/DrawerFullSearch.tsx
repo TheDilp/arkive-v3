@@ -33,7 +33,7 @@ export default function DrawerFullSearch() {
   const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
   const { data: allTags } = useGetAllTags(project_id as string);
 
-  const debounceSearch = useDebouncedCallback((searchQuery: string | TagType[], type: "namecontent" | "tags") => {
+  const debounceSearch = useDebouncedCallback((searchQuery: string | TagType[], type: "namecontent" | "tags" | "category") => {
     if (searchQuery) {
       const finalQuery = Array.isArray(searchQuery) ? searchQuery.map((tag) => tag.title) : searchQuery;
 
@@ -72,13 +72,11 @@ export default function DrawerFullSearch() {
         <TabMenu
           activeIndex={menuIndex}
           className="searchTabs"
-          model={[{ label: "Title" }, { label: "Tags" }]}
+          model={[{ label: "Title" }, { label: "Category" }, { label: "Tags" }]}
           onTabChange={(e) => setMenuIndex(e.index)}
         />
         {menuIndex === 0 ? (
-          <div>
-            <h2 className="w-full text-center font-Lato text-2xl">Search all items</h2>
-
+          <div className="flex w-full flex-col">
             <span className="p-input-icon-right w-full">
               {isSearching ? <i className="pi pi-spin pi-spinner" /> : null}
               <InputText
@@ -96,7 +94,23 @@ export default function DrawerFullSearch() {
         ) : null}
         {menuIndex === 1 ? (
           <div className="flex w-full flex-col">
-            <h2 className="w-full text-center font-Lato text-2xl">Search by Tag</h2>
+            <span className="p-input-icon-right w-full">
+              {isSearching ? <i className="pi pi-spin pi-spinner" /> : null}
+              <InputText
+                autoFocus
+                className="w-full"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  debounceSearch(e.target.value, "category");
+                }}
+                placeholder="Enter at least 3 characters"
+                value={query}
+              />
+            </span>
+          </div>
+        ) : null}
+        {menuIndex === 2 ? (
+          <div className="flex w-full flex-col">
             <AutoComplete
               autoFocus
               className="w-full"

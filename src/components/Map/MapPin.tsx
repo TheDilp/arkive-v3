@@ -7,7 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { MapPinType } from "../../types/ItemTypes/mapTypes";
-import { MapContextAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom, MapContextAtom } from "../../utils/Atoms/atoms";
+import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { formatImageURL } from "../../utils/transform";
 
 export default function MapPin({
@@ -40,11 +41,23 @@ export default function MapPin({
   const updateMapPin = useUpdateSubItem<MapPinType>(project_id as string, "map_pins", "maps");
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
   const [, setMapContext] = useAtom(MapContextAtom);
+  const [, setDrawer] = useAtom(DrawerAtom);
 
   const eventHandlers = {
     click: (e: any) => {
-      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !readOnly) return;
       if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
+      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !readOnly) {
+        if (doc_id) {
+          setDrawer({
+            ...DefaultDrawer,
+            type: "content_preview",
+            data: { id: doc_id, type: "documents" },
+            show: true,
+            drawerSize: "md",
+            modal: true,
+          });
+        }
+      }
       if (e.originalEvent.shiftKey && map_link) {
         e.originalEvent.preventDefault();
         navigate(`../${map_link}`);

@@ -49,7 +49,9 @@ export default function Navbar() {
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
                 icon="ion:search"
-                onClick={() => setDrawer({ ...DefaultDrawer, position: "right", show: true, type: "full_search" })}
+                onClick={() =>
+                  setDrawer({ ...DefaultDrawer, position: "right", drawerSize: "md", show: true, type: "full_search" })
+                }
               />
               <Icon
                 className="fileBrowserIcon cursor-pointer hover:text-blue-300"

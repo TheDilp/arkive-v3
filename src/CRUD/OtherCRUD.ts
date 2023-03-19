@@ -15,7 +15,7 @@ export const useGetAllTags = (project_id: string) => {
   );
 };
 export const useFullSearch = (project_id: string) => {
-  return useMutation(async ({ query, type }: { query: string | string[]; type: "namecontent" | "tags" }) =>
+  return useMutation(async ({ query, type }: { query: string | string[]; type: "namecontent" | "tags" | "category" }) =>
     FetchFunction({
       url: `${baseURLS.baseServer}${getURLS.getFullSearch}${project_id}/${type}`,
       method: "POST",

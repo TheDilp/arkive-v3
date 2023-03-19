@@ -36,6 +36,7 @@ const DrawerMonthContent = lazy(() => import("./DrawerContent/DrawerMonthContent
 const DrawerEventContent = lazy(() => import("./DrawerContent/DrawerEventContent"));
 const DrawerEventDescription = lazy(() => import("./DrawerContent/DrawerEventDescription"));
 const DrawerSwatchContent = lazy(() => import("./DrawerContent/DrawerSwatchContent"));
+const DrawerContentPreview = lazy(() => import("./DrawerContent/DrawerContentPreview"));
 
 export function handleCloseDrawer(
   setDrawer: Dispatch<SetStateAction<DrawerAtomType>>,
@@ -74,7 +75,7 @@ export default function Drawer() {
       className={`p-sidebar-${drawer.drawerSize || "sm"} mainDrawer max-h-full overflow-y-auto`}
       dismissable={false}
       icons={() => DrawerIcons(setDrawer)}
-      modal={false}
+      modal={drawer?.modal ?? false}
       onHide={() => handleCloseDrawer(setDrawer)}
       position={drawer.position}
       showCloseIcon={false}
@@ -105,6 +106,7 @@ export default function Drawer() {
         {drawer.type === "randomtables" ? <DrawerRandomTableContent /> : null}
         {drawer.type === "randomtableoptions" ? <DrawerRandomTableOptionContent /> : null}
         {drawer.type === "swatches" ? <DrawerSwatchContent /> : null}
+        {drawer.type === "content_preview" ? <DrawerContentPreview type={drawer?.data?.type} /> : null}
       </Suspense>
     </PrimeDrawer>
   );

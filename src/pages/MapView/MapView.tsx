@@ -53,6 +53,8 @@ export default function MapView({ isReadOnly }: Props) {
 
   if (loading || isLoading) return <ProgressSpinner />;
   if (!currentMap) return null;
+
+  console.log(isReadOnly);
   return (
     <div className="flex h-full w-full flex-col">
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
