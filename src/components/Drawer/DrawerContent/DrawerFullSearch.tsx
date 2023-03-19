@@ -157,6 +157,9 @@ export default function DrawerFullSearch() {
                   setQuery(e.target.value);
                   debounceSearch(e.target.value, menuIndex ? "category" : "namecontent");
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") debounceSearch(e.currentTarget.value, menuIndex ? "category" : "namecontent");
+                }}
                 placeholder="Enter at least 3 characters"
                 value={query}
               />
