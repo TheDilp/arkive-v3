@@ -17,8 +17,8 @@ export function goToNodeEdge(subitem_id: string | undefined, id: string, boardRe
 }
 
 export function getIconForFullSearch(item: SearchResultType) {
-  if ("folder" in item && item.folder) return "mdi:folder";
-  let icon = "mdi:file";
+  if ("folder" in item && item.folder) return IconEnum.folder;
+  let icon = IconEnum.document;
   if ("icon" in item) icon = item.icon || IconEnum.document;
   if ("text" in item) icon = IconEnum.map_pin;
   if ("label" in item) icon = IconEnum.board;
@@ -38,5 +38,5 @@ export function getSearchGroupIcon(type: AvailableSearchResultTypes) {
   if (type === "timelines") return IconEnum.timeline;
   if (type === "events") return IconEnum.event;
 
-  return "mdi:file";
+  return IconEnum.document;
 }

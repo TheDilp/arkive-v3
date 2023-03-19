@@ -1,4 +1,5 @@
 import { AutoComplete } from "primereact/autocomplete";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
 import { useState } from "react";
@@ -6,7 +7,9 @@ import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useFullSearch, useGetAllTags } from "../../../CRUD/OtherCRUD";
-import { AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
+import { baseURLS } from "../../../types/CRUDenums";
+import { AllAvailableTypes, AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
+import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import SearchResultGroup from "../SearchResults/SearchResultGroup";
 
 const SearchDefault = {
@@ -23,42 +26,110 @@ const SearchDefault = {
   events: [],
 };
 
+const searchCategories: { label: string; value: AllAvailableTypes }[] = [
+  {
+    label: "Documents",
+    value: "documents",
+  },
+  {
+    label: "Maps",
+    value: "maps",
+  },
+  {
+    label: "Graphs",
+    value: "boards",
+  },
+  {
+    label: "Nodes",
+    value: "nodes",
+  },
+  {
+    label: "Edges",
+    value: "edges",
+  },
+  {
+    label: "Calendars",
+    value: "calendars",
+  },
+  {
+    label: "Timelines",
+    value: "timelines",
+  },
+  {
+    label: "Events",
+    value: "events",
+  },
+  {
+    label: "Screens",
+    value: "screens",
+  },
+  {
+    label: "Sections",
+    value: "sections",
+  },
+  {
+    label: "Words",
+    value: "words",
+  },
+];
+
 export default function DrawerFullSearch() {
   const [query, setQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [tags, setTags] = useState<TagType[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<AllAvailableTypes>("documents");
   const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
   const [menuIndex, setMenuIndex] = useState(0);
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
   const { project_id } = useParams();
-  const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
+  const { mutate: searchMutation } = useFullSearch(project_id as string);
   const { data: allTags } = useGetAllTags(project_id as string);
 
-  const debounceSearch = useDebouncedCallback((searchQuery: string | TagType[], type: "namecontent" | "tags" | "category") => {
-    if (searchQuery) {
-      const finalQuery = Array.isArray(searchQuery) ? searchQuery.map((tag) => tag.title) : searchQuery;
+  const debounceSearch = useDebouncedCallback(
+    async (searchQuery: string | TagType[], type: "namecontent" | "tags" | "category") => {
+      setIsSearching(true);
+      if (searchQuery) {
+        const finalQuery = Array.isArray(searchQuery) ? searchQuery.map((tag) => tag.title) : searchQuery;
 
-      if ((!Array.isArray(searchQuery) && searchQuery.length >= 3) || Array.isArray(searchQuery)) {
-        searchMutation(
-          { query: finalQuery, type },
-          {
-            onSuccess: (data: {
-              documents: [];
-              maps: [];
-              boards: [];
-              pins: [];
-              nodes: [];
-              edges: [];
-              screens: [];
-              sections: [];
-              calendars: [];
-              timelines: [];
-              events: [];
-            }) => setResults(data),
-          },
-        );
-      }
-    } else setResults(SearchDefault);
-  }, 500);
+        if ((!Array.isArray(searchQuery) && searchQuery.length >= 3) || Array.isArray(searchQuery)) {
+          if (type === "category") {
+            const result = await FetchFunction({
+              url: `${baseURLS.baseServer}search`,
+              method: "POST",
+              body: JSON.stringify({
+                project_id,
+                query: searchQuery,
+                type: selectedCategory,
+              }),
+            });
+            setResults({ ...SearchDefault, [selectedCategory]: result });
+          } else {
+            searchMutation(
+              { query: finalQuery, type },
+              {
+                onSuccess: (data: {
+                  documents: [];
+                  maps: [];
+                  boards: [];
+                  pins: [];
+                  nodes: [];
+                  edges: [];
+                  screens: [];
+                  sections: [];
+                  calendars: [];
+                  timelines: [];
+                  events: [];
+                }) => setResults(data),
+              },
+            );
+          }
+        }
+      } else setResults(SearchDefault);
+
+      setIsSearching(false);
+    },
+    500,
+  );
 
   const debounceTags = useDebouncedCallback((tagsQuery: string) => {
     const t = allTags?.filter((tag) => tag.title.toLowerCase().includes(tagsQuery.toLowerCase()));
@@ -75,8 +146,8 @@ export default function DrawerFullSearch() {
           model={[{ label: "Title" }, { label: "Category" }, { label: "Tags" }]}
           onTabChange={(e) => setMenuIndex(e.index)}
         />
-        {menuIndex === 0 ? (
-          <div className="flex w-full flex-col">
+        {menuIndex === 0 || menuIndex === 1 ? (
+          <div className="flex w-full flex-nowrap items-center justify-between gap-2">
             <span className="p-input-icon-right w-full">
               {isSearching ? <i className="pi pi-spin pi-spinner" /> : null}
               <InputText
@@ -84,31 +155,26 @@ export default function DrawerFullSearch() {
                 className="w-full"
                 onChange={(e) => {
                   setQuery(e.target.value);
-                  debounceSearch(e.target.value, "namecontent");
+                  debounceSearch(e.target.value, menuIndex ? "category" : "namecontent");
                 }}
                 placeholder="Enter at least 3 characters"
                 value={query}
               />
             </span>
-          </div>
-        ) : null}
-        {menuIndex === 1 ? (
-          <div className="flex w-full flex-col">
-            <span className="p-input-icon-right w-full">
-              {isSearching ? <i className="pi pi-spin pi-spinner" /> : null}
-              <InputText
-                autoFocus
-                className="w-full"
+            {menuIndex === 1 ? (
+              <Dropdown
+                className="min-w-[10rem]"
                 onChange={(e) => {
-                  setQuery(e.target.value);
-                  debounceSearch(e.target.value, "category");
+                  setSelectedCategory(e.value);
+                  if (query.length >= 3) debounceSearch(query, "category");
                 }}
-                placeholder="Enter at least 3 characters"
-                value={query}
+                options={searchCategories}
+                value={selectedCategory}
               />
-            </span>
+            ) : null}
           </div>
         ) : null}
+
         {menuIndex === 2 ? (
           <div className="flex w-full flex-col">
             <AutoComplete
@@ -135,7 +201,7 @@ export default function DrawerFullSearch() {
 
       <div className="mt-2 flex flex-col gap-y-2 font-Lato">
         {isSearching ? "Searching..." : null}
-        {results && Object.keys(results).length > 0
+        {!isSearching && results && Object.keys(results).length > 0
           ? Object.keys(results).map((key) => (
               <SearchResultGroup
                 key={key}
@@ -143,7 +209,7 @@ export default function DrawerFullSearch() {
                 itemType={key as AvailableSearchResultTypes}
               />
             ))
-          : (query && "No items match this query.") || ""}
+          : (query && !isSearching && "No items match this query.") || ""}
       </div>
     </div>
   );
