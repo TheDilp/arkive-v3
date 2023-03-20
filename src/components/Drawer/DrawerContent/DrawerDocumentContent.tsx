@@ -37,7 +37,9 @@ export default function DrawerDocumentContent() {
 
   const queryClient = useQueryClient();
   const allDocuments = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
-  const { data: document } = useGetItem<DocumentType>(drawer.data?.id, "documents", { enabled: !!drawer.data?.id });
+  const { data: document } = useGetItem<DocumentType>(drawer.id, "documents", {
+    enabled: !!drawer.data?.id,
+  });
   const { data: images } = useGetAllImages(project_id as string);
 
   const createDocumentMutation = useCreateItem<DocumentType>("documents");
