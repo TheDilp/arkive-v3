@@ -37,7 +37,7 @@ export default function DrawerDocumentContent() {
 
   const queryClient = useQueryClient();
   const allDocuments = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
-  const { data: document } = useGetItem<DocumentType>(drawer.id, "documents", {
+  const { data: document } = useGetItem<DocumentType>(drawer.id as string, "documents", {
     enabled: !!drawer.data?.id,
   });
   const { data: images } = useGetAllImages(project_id as string);
