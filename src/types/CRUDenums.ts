@@ -58,6 +58,7 @@ export const createURLS = {
   createRandomTable: "createrandomtable",
   createRandomTableOption: "createrandomtableoption",
   createTag: "createtag",
+  createAlterName: "createaltername",
   createSwatch: "createswatch",
   uploadImage: "uploadimage/images/",
   uploadMap: "uploadimage/maps/",

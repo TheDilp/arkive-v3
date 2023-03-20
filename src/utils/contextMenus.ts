@@ -48,7 +48,7 @@ export function useMapContextMenuItems({
               setDrawer({ ...DefaultDrawer, data: drawer?.data, position: "right", show: true, type: "map_pins" });
             },
             icon: "pi pi-fw pi-map-marker",
-            label: "New Token",
+            label: "New Pin",
           },
           {
             command: () => mapRef?.current?.fitBounds(bounds),

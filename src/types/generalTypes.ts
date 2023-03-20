@@ -22,6 +22,7 @@ export type AvailableItemTypes =
   | "timelines"
   | "randomtables";
 export type AvailableSubItemTypes =
+  | "alter_names"
   | "map_pins"
   | "map_layers"
   | "nodes"

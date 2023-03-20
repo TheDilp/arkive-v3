@@ -2,12 +2,22 @@ import { RemirrorJSON } from "remirror";
 
 import { BaseItemType } from "../generalTypes";
 
+export interface AlterNameType {
+  id: string;
+  title: string;
+}
+
+export interface AlterNameCreateType extends AlterNameType {
+  project_id: string;
+  parentId: string;
+}
+
 export interface DocumentType extends BaseItemType {
   content: undefined | RemirrorJSON;
   icon: string;
   template: boolean;
   properties: undefined | string[];
-  alter_names: string[];
+  alter_names: AlterNameType[];
   image?: string | null;
   parent?: DocumentType;
 }
