@@ -18,34 +18,35 @@ export default function MentionDropdownComponent() {
 
   const search = useDebouncedCallback(async () => {
     setIsFetching(true);
-    const items = await FetchFunction({
-      url: `${baseURLS.baseServer}search`,
-      method: "POST",
-      body: JSON.stringify({
-        project_id,
-        query: state?.query?.full,
-        type: state?.name,
-        take: 5,
-      }),
-    });
+    const items: { id: string; title: string; displayLabel?: string; parentId?: string; translation?: string }[][] =
+      await FetchFunction({
+        url: `${baseURLS.baseServer}search`,
+        method: "POST",
+        body: JSON.stringify({
+          project_id,
+          query: state?.query?.full,
+          type: state?.name,
+          take: 5,
+        }),
+      });
     setIsFetching(false);
     setOptions(
       items
+        .flat()
         .sort()
-        .map((item: any) => {
+        .map((item) => {
           if (item?.translation)
             return {
-              id: item.id,
+              id: item?.parentId || item.id,
               searchItem: item.translation,
               label: item.title,
               displayLabel: `${item.title} (${item.translation})`,
             };
-          return { id: item.id, label: item.title };
+          return { id: item?.parentId || item.id, label: item.title };
         })
-        .slice(0, 5),
+        .slice(0, 10),
     );
   }, 700);
-
   useEffect(() => {
     if (state && state?.query?.full?.length >= 3) {
       search();
