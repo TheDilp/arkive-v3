@@ -110,7 +110,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         <div className="flex items-center opacity-0 group-hover:opacity-100">
           <Icon
             color="white"
-            icon="material-symbols:edit-outline"
+            icon={IconEnum.edit}
             onClick={(e) => {
               e.stopPropagation();
               setDrawer({
@@ -125,7 +125,7 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
           />
           <Icon
             color="white"
-            icon="ic:outline-delete"
+            icon={IconEnum.trash}
             onClick={(e) => {
               e.stopPropagation();
               deleteItem(

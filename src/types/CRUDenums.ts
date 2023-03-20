@@ -118,6 +118,7 @@ export const deleteURLs = {
   deleteRandomTable: "deleterandomtable",
   deleteRandomTableOption: "deleterandomtableoption",
   deleteTags: "deletetags",
+  deleteAlterName: "deletealtername",
 };
 
 export const MainToSubType = {

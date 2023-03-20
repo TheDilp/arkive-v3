@@ -255,7 +255,7 @@ Inputs
   @apply truncate;
 }
 .alterNamesChips {
-  .p-chips-token {
+  .p-autocomplete-token {
     @apply max-w-full bg-orange-600 !important;
   }
 }

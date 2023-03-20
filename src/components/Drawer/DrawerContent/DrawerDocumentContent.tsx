@@ -3,7 +3,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import { Chips } from "primereact/chips";
 import { Dropdown } from "primereact/dropdown";
 import { Image } from "primereact/image";
 import { InputText } from "primereact/inputtext";
@@ -12,6 +11,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useGetAllImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
+import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS } from "../../../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -23,11 +23,13 @@ import { DropdownFilter } from "../../../utils/filters";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { virtualScrollerSettings } from "../../../utils/uiUtils";
+import AlterNames from "../../AlterNames/AlterNames";
 import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import { IconSelect } from "../../IconSelect/IconSelect";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
+import DrawerSection from "../DrawerSection";
 
 export default function DrawerDocumentContent() {
   const { project_id } = useParams();
@@ -35,7 +37,7 @@ export default function DrawerDocumentContent() {
 
   const queryClient = useQueryClient();
   const allDocuments = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
-  const document = allDocuments?.find((doc) => doc.id === drawer.id);
+  const { data: document } = useGetItem<DocumentType>(drawer.data?.id, "documents", { enabled: !!drawer.data?.id });
   const { data: images } = useGetAllImages(project_id as string);
 
   const createDocumentMutation = useCreateItem<DocumentType>("documents");
@@ -140,21 +142,13 @@ export default function DrawerDocumentContent() {
             />
           </div>
         )}
-        <div className="w-full">
-          <Chips
-            allowDuplicate={false}
-            className="alterNamesChips"
-            max={5}
-            name="alter_names"
-            onChange={(e) => handleChange(e.target)}
-            placeholder="Alternative names (5 max)"
-            value={localItem?.alter_names}
-          />
-        </div>
+        <DrawerSection title="Alternative names">
+          <AlterNames handleChange={handleChange} localItem={localItem} />
+        </DrawerSection>
 
-        <div className="">
+        <DrawerSection title="Tags">
           <Tags handleChange={handleChange} localItem={localItem} type="documents" />
-        </div>
+        </DrawerSection>
 
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Is Folder?</span>

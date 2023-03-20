@@ -4,13 +4,13 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import { Dispatch, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes, BreadcrumbsType } from "../../types/generalTypes";
 
 export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
   const { project_id, item_id } = useParams();
-  const queryClient = useQueryClient();
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsType>([]);
-  const data: AllItemsType[] | undefined = queryClient.getQueryData(["allItems", project_id, type]);
+  const { data } = useGetAllItems<AllItemsType>(project_id as string, type, { staleTime: 5 * 60 * 1000 });
   const currentItem = data?.find((item) => item.id === item_id);
   const navigate = useNavigate();
   function recursiveFindParents(
@@ -19,19 +19,21 @@ export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
     tempBreadcrumbs: BreadcrumbsType,
     setCrumbs: Dispatch<SetStateAction<BreadcrumbsType>>,
   ) {
-    const parent = recursiveDocuments.find((doc) => doc.id === parent_id);
-    if (parent) {
-      tempBreadcrumbs.push({
-        template: (
-          <Link
-            className="fontWeight700 text-white"
-            to={`/project/${project_id}/documents/${parent.folder ? "folder/" : ""}${parent.id}`}>
-            {parent.title}
-          </Link>
-        ),
-      });
+    if (parent_id) {
+      const parent = recursiveDocuments.find((doc) => doc.id === parent_id);
+      if (parent) {
+        tempBreadcrumbs.push({
+          template: (
+            <Link
+              className="fontWeight700 text-white"
+              to={`/project/${project_id}/documents/${parent.folder ? "folder/" : ""}${parent.id}`}>
+              {parent.title}
+            </Link>
+          ),
+        });
 
-      recursiveFindParents(parent.parentId || null, recursiveDocuments, tempBreadcrumbs, setCrumbs);
+        recursiveFindParents(parent.parentId || null, recursiveDocuments, tempBreadcrumbs, setCrumbs);
+      }
     } else {
       const current = tempBreadcrumbs.shift();
       if (current) tempBreadcrumbs.push(current);
@@ -53,7 +55,6 @@ export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
             ),
           },
         ];
-
         recursiveFindParents(currentItem?.parentId || null, data as AllItemsType[], tempBreadcrumbs, setBreadcrumbs);
       } else {
         setBreadcrumbs([]);

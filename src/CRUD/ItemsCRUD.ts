@@ -388,7 +388,7 @@ export const useUpdateManySubItems = <SubItemType>(item_id: string, subType: Ava
         }
         return { old };
       },
-      onError: (error, variables, context) => {
+      onError: (_, __, context) => {
         toaster("error", "There was an error updating these items.");
         queryClient.setQueryData(["boards", item_id], context?.old);
       },
@@ -433,6 +433,7 @@ export const useDeleteSubItem = (item_id: string, subType: AvailableSubItemTypes
             return oldData;
           });
         }
+
         return { old };
       },
       onSuccess: () => toaster("success", "Items successfully deleted."),
