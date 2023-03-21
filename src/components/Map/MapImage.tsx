@@ -17,10 +17,10 @@ type Props = {
   bounds: LatLngBoundsExpression;
   imgRef: any;
   isReadOnly?: boolean;
-  clusterPins: boolean;
+  isClusteringPins: boolean;
 };
 
-export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, clusterPins }: Props) {
+export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, isClusteringPins }: Props) {
   const { item_id, subitem_id } = useParams();
   const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps");
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
@@ -101,12 +101,8 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, clusterP
 
         {/* Markers layer */}
         <LayersControl.Overlay checked name="Markers">
-          {clusterPins ? (
-            <MarkerClusterGroup
-              chunkedLoading
-              disableClusteringAtZoom={clusterPins}
-              removeOutsideVisibleBounds
-              showCoverageOnHover>
+          {isClusteringPins ? (
+            <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds showCoverageOnHover>
               {currentMap?.map_pins &&
                 currentMap?.map_pins
                   ?.filter(PinFilter)

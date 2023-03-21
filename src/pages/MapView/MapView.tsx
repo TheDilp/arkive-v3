@@ -75,9 +75,9 @@ export default function MapView({ isReadOnly }: Props) {
             zoomSnap={0}>
             <MapImage
               bounds={bounds as LatLngBoundsExpression}
-              clusterPins={currentMap.clusterPins}
               cm={cm}
               imgRef={imgRef}
+              isClusteringPins={currentMap.clusterPins}
               isReadOnly={isReadOnly}
               src={currentMap?.image || ""}
             />
