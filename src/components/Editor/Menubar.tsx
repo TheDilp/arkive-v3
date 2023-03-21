@@ -188,9 +188,9 @@ export default function MenuBar() {
         },
         {
           className: active.bulletList() ? "menuBarButtonActive" : "",
-          template: (item: any, options: any) => (
+          template: (_: any, options: any) => (
             <span className={`${options.className} text-center `} onClick={options.onClick}>
-              <div className="justify-content-center customMenuBarIconContainer m-0 flex">
+              <div className="customMenuBarIconContainer m-0 flex justify-center">
                 <Icon className={`${options.iconClassName} m-0 `} icon="bi:list-ul" />
               </div>
             </span>
@@ -203,9 +203,9 @@ export default function MenuBar() {
         {
           className: active.orderedList() ? "menuBarButtonActive" : "",
 
-          template: (item: any, options: any) => (
+          template: (_: any, options: any) => (
             <span className={`${options.className} text-center `} onClick={options.onClick}>
-              <div className="justify-content-center customMenuBarIconContainer m-0 flex">
+              <div className="customMenuBarIconContainer m-0 flex justify-center">
                 <Icon className={`${options.iconClassName} m-0 `} icon="bi:list-ol" />
               </div>
             </span>
@@ -306,11 +306,11 @@ export default function MenuBar() {
           },
         },
         {
-          template: (item: any, options: any) => (
+          template: (_: any, options: any) => (
             <span
               className={`${options.className} text-center  ${active.horizontalRule() ? "menuBarButtonActive" : ""}`}
               onClick={options.onClick}>
-              <div className="justify-content-center customMenuBarIconContainer m-0 flex">
+              <div className="customMenuBarIconContainer m-0 flex justify-center">
                 <Icon className={`${options.iconClassName} m-0`} icon="radix-icons:divider-horizontal" />
               </div>
             </span>
@@ -360,7 +360,7 @@ export default function MenuBar() {
           className: active.secret() ? "menuBarButtonActive" : "",
           template: (_: any, options: any) => (
             <span className={`${options.className} text-center `} onClick={options.onClick}>
-              <div className="justify-content-center customMenuBarIconContainer m-0 flex">
+              <div className="customMenuBarIconContainer m-0 flex justify-center">
                 <i className={`pi pi-eye${active.secret() ? "-slash" : ""}`} />
               </div>
             </span>

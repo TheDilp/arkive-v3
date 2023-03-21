@@ -18,12 +18,14 @@ export default function InsertImageEditor() {
   const [localImage, setLocalImage] = useState("");
 
   return (
-    <div>
+    <div className="flex w-96 items-center justify-between gap-x-2">
       <Dropdown
+        className="flex-1"
+        filter
         itemTemplate={ImageDropdownItem}
         onChange={(e) => setLocalImage(e.value)}
         options={images || []}
-        placeholder="Select map"
+        placeholder="Select image"
         value={localImage}
         valueTemplate={ImageDropdownValue({ image: localImage })}
         virtualScrollerOptions={virtualScrollerSettings}
