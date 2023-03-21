@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useGetAllImages, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
-import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS } from "../../../types/CRUDenums";
 import { DocumentCreateType, DocumentType } from "../../../types/ItemTypes/documentTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -37,9 +36,7 @@ export default function DrawerDocumentContent() {
 
   const queryClient = useQueryClient();
   const allDocuments = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
-  const { data: document } = useGetItem<DocumentType>(drawer.id as string, "documents", {
-    enabled: !!drawer.data?.id,
-  });
+  const document = allDocuments?.find((doc) => doc.id === drawer.id);
   const { data: images } = useGetAllImages(project_id as string);
 
   const createDocumentMutation = useCreateItem<DocumentType>("documents");
@@ -57,6 +54,7 @@ export default function DrawerDocumentContent() {
 
   useEffect(() => {
     if (document) {
+      console.log(document);
       setLocalItem(document);
     } else {
       setLocalItem({
