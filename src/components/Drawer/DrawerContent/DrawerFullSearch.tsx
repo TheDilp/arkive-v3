@@ -1,3 +1,4 @@
+import { useAtomValue } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
@@ -9,6 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useFullSearch, useGetAllTags } from "../../../CRUD/OtherCRUD";
 import { baseURLS } from "../../../types/CRUDenums";
 import { AllAvailableTypes, AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
+import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import SearchResultGroup from "../SearchResults/SearchResultGroup";
 
@@ -74,12 +76,14 @@ const searchCategories: { label: string; value: AllAvailableTypes }[] = [
 ];
 
 export default function DrawerFullSearch() {
+  const drawer = useAtomValue(DrawerAtom);
+
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [tags, setTags] = useState<TagType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<AllAvailableTypes>("documents");
+  const [selectedCategory, setSelectedCategory] = useState<AllAvailableTypes>(drawer?.data?.category || "documents");
   const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
-  const [menuIndex, setMenuIndex] = useState(0);
+  const [menuIndex, setMenuIndex] = useState(drawer?.data?.index ?? 0);
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
   const { project_id } = useParams();
   const { mutate: searchMutation } = useFullSearch(project_id as string);
