@@ -16,6 +16,7 @@ export const IconEnum = {
   event: "ph:flag",
   dictionary: "ph:book-bookmark-light",
   randomtables: "game-icons:perspective-dice-six-faces-random",
+  word: "codicon:whole-word",
   tags: "ph:tag-thin",
 
   // Other
@@ -33,4 +34,5 @@ export const IconEnum = {
   user: "ph:user",
   table: "ph:table-thin",
   grid: "ph:grid-four-thin",
+  search: "ph:magnifying-glass-light",
 };

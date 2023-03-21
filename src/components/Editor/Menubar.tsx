@@ -61,7 +61,7 @@ export default function MenuBar() {
     // Model is passed in directly here to ensure rerenders on change of the active booleans
     // active.bold(), active.italic(), etc
     <Menubar
-      className="Lato w-full border-0 p-0"
+      className="w-full border-0 p-0 font-Lato"
       model={[
         {
           label: "B",

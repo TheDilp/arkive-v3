@@ -35,6 +35,14 @@ export function getItemNameForTree(type: AvailableItemTypes) {
   }
   return "";
 }
+
+export function getItemTypeFromName(
+  name: "document" | "map" | "graph" | "calendar" | "timeline" | "screen" | "dictionary" | "random table" | "random_table",
+) {
+  if (name === "random table" || name === "random_table") return "randomtables";
+  if (name === "dictionary") return "dictionaries";
+  return name.concat("s") as AvailableItemTypes;
+}
 export function getItemIcon(type: AvailableItemTypes) {
   if (type === "documents") return IconEnum.document;
   if (type === "maps") return IconEnum.map;

@@ -1,7 +1,8 @@
 import { useAtom } from "jotai";
+import { KBarProvider } from "kbar";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 import { useGetUser } from "../../CRUD/AuthCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
@@ -10,6 +11,7 @@ import { MemberType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
 import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
+import CmdK, { CMDKActions } from "../CmdK/CmdK";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import LoadingScreen from "../Loading/LoadingScreen";
@@ -20,6 +22,7 @@ import Sidebar from "../Sidebar/Sidebar";
 export default function Layout() {
   const { project_id } = useParams();
   const user = useAuth();
+  const navigate = useNavigate();
   const [, setUserAtom] = useAtom(UserAtom);
   const [, setProjectAtom] = useAtom(ProjectAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
@@ -49,6 +52,7 @@ export default function Layout() {
   return (
     <div className="flex h-full max-w-full overflow-hidden">
       <Sidebar />
+
       {user ? (
         <>
           <ConfirmDialog />
@@ -59,12 +63,15 @@ export default function Layout() {
       ) : null}
 
       <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
-        <Navbar />
-        {user || isFetching || isFetchingProject ? (
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        ) : null}
+        <KBarProvider actions={CMDKActions(navigate, project_id as string)}>
+          <Navbar />
+          <CmdK />
+          {user || isFetching || isFetchingProject ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <Outlet />
+            </Suspense>
+          ) : null}
+        </KBarProvider>
       </div>
     </div>
   );
