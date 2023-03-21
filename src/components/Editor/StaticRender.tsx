@@ -30,7 +30,8 @@ const typeMap = (project_id: string): MarkMap => ({
       const { attrs } = props[0].node;
       if (attrs) {
         const { id, label, name: type } = attrs;
-        if (type === "documents") return <DocumentMention id={id} label={label} project_id={project_id} title={label} />;
+        if (type === "documents")
+          return <DocumentMention id={id} isDisabledTooltip label={label} project_id={project_id} title={label} />;
 
         if (type === "maps") return <MapMention nodeId={id} nodeLabel={label} project_id={project_id} />;
 
