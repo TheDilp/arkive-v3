@@ -37,7 +37,7 @@ export default function SearchResultGroup({ items, itemType }: Props) {
                 setDrawer({ ...DefaultDrawer, position: "right" });
               }}
               to={getLinkForFullSearch(
-                item.id,
+                "document" in item && item?.document?.id ? item?.document?.id : item.id,
                 "parentId" in item ? (item.parentId as string) : (item.calendarsId as string),
                 itemType,
                 project_id as string,
