@@ -55,7 +55,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
     });
   }, []);
   const deleteCard = useCallback((id: string, sectionId: string) => {
-    FetchFunction({ url: `${baseURLS.baseServer}${deleteURLs.deleteCard}${id}`, method: "DELETE" });
+    FetchFunction({ url: `${baseURLS.baseServer}${deleteURLs.deleteCard}`, body: JSON.stringify({ id }), method: "DELETE" });
     setSections((prev) =>
       prev.map((prevSection) => {
         if (prevSection.id !== sectionId) return prevSection;
