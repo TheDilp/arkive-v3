@@ -39,7 +39,7 @@ export default function Navbar() {
                   <ProgressSpinner style={{ width: "2.5rem" }} />
                 </div>
               ) : (
-                <div className="rounded-full border p-0.5">
+                <div className="rounded-full border border-zinc-600 p-0.5">
                   <Tooltip allowedPlacements={["bottom", "left"]} content={<DefaultTooltip>All saved.</DefaultTooltip>}>
                     <Icon color="lightgreen" icon="codicon:check-all" />
                   </Tooltip>
