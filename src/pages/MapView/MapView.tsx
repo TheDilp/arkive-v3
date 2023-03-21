@@ -53,7 +53,7 @@ export default function MapView({ isReadOnly }: Props) {
 
   if (loading || isLoading) return <ProgressSpinner />;
   if (!currentMap) return null;
-
+  console.log(currentMap);
   return (
     <div className="flex h-full w-full flex-col">
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
@@ -75,6 +75,7 @@ export default function MapView({ isReadOnly }: Props) {
             zoomSnap={0}>
             <MapImage
               bounds={bounds as LatLngBoundsExpression}
+              clusterPins={currentMap.clusterPins}
               cm={cm}
               imgRef={imgRef}
               isReadOnly={isReadOnly}

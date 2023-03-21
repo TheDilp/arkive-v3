@@ -17,9 +17,10 @@ type Props = {
   bounds: LatLngBoundsExpression;
   imgRef: any;
   isReadOnly?: boolean;
+  clusterPins: boolean;
 };
 
-export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props) {
+export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, clusterPins }: Props) {
   const { item_id, subitem_id } = useParams();
   const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps");
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
@@ -100,12 +101,25 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
 
         {/* Markers layer */}
         <LayersControl.Overlay checked name="Markers">
-          <MarkerClusterGroup chunkedLoading showCoverageOnHover>
-            {currentMap?.map_pins &&
-              currentMap?.map_pins
-                ?.filter(PinFilter)
-                .map((pin) => <MapPin key={pin.id} cm={cm} pinData={pin} readOnly={isReadOnly} />)}
-          </MarkerClusterGroup>
+          {clusterPins ? (
+            <MarkerClusterGroup
+              chunkedLoading
+              disableClusteringAtZoom={clusterPins}
+              removeOutsideVisibleBounds
+              showCoverageOnHover>
+              {currentMap?.map_pins &&
+                currentMap?.map_pins
+                  ?.filter(PinFilter)
+                  .map((pin) => <MapPin key={pin.id} cm={cm} pinData={pin} readOnly={isReadOnly} />)}
+            </MarkerClusterGroup>
+          ) : (
+            <LayerGroup>
+              {currentMap?.map_pins &&
+                currentMap?.map_pins
+                  ?.filter(PinFilter)
+                  .map((pin) => <MapPin key={pin.id} cm={cm} pinData={pin} readOnly={isReadOnly} />)}
+            </LayerGroup>
+          )}
         </LayersControl.Overlay>
         <LayerGroup>
           {currentMap?.map_layers?.length

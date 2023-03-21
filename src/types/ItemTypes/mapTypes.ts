@@ -36,6 +36,7 @@ export interface MapType extends BaseItemType {
   parent?: MapType;
   map_pins: MapPinType[];
   map_layers: MapLayerType[];
+  clusterPins: boolean;
 }
 
 export type MapCreateType = Partial<Omit<MapType, "project_id">> & {
