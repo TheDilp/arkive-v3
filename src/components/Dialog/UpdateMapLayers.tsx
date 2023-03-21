@@ -62,7 +62,7 @@ export default function UpdateMapLayers() {
         </Button>
       </div>
 
-      <div className="flex w-fit flex-wrap items-center gap-y-1">
+      <div className="flex w-min max-w-full flex-col items-center gap-y-1">
         <span className="w-full text-sm text-zinc-400">Only layers with a set map image will be visible</span>
 
         {layers
@@ -84,6 +84,7 @@ export default function UpdateMapLayers() {
                 />
                 <div className="w-48">
                   <Dropdown
+                    className="w-full"
                     filter
                     itemTemplate={MapImageDropdownItem}
                     onChange={(e) =>

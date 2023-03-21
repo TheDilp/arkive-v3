@@ -132,7 +132,7 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
             body: mapsFormData,
             method: "POST",
           });
-          await queryClient.refetchQueries({ queryKey: ["allMaps", project_id] });
+          await queryClient.refetchQueries({ queryKey: ["allMapImages", project_id] });
         }
         setUploading(false);
         setTypes([]);
