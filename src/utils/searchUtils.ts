@@ -1,6 +1,6 @@
 import { Core } from "cytoscape";
 
-import { AvailableSearchResultTypes, SearchResultType } from "../types/generalTypes";
+import { AllAvailableTypes, AvailableSearchResultTypes, SearchResultType } from "../types/generalTypes";
 import { IconEnum } from "./DefaultValues/GeneralDefaults";
 
 export function goToNodeEdge(subitem_id: string | undefined, id: string, boardRef: Core) {
@@ -40,3 +40,66 @@ export function getSearchGroupIcon(type: AvailableSearchResultTypes) {
 
   return IconEnum.document;
 }
+
+export const searchCategories: { label: string; value: AllAvailableTypes; icon: string }[] = [
+  {
+    icon: IconEnum.document,
+    label: "Documents",
+    value: "documents",
+  },
+  {
+    icon: IconEnum.map,
+    label: "Maps",
+    value: "maps",
+  },
+  {
+    icon: IconEnum.map_pin,
+    label: "Map pins",
+    value: "map_pins",
+  },
+  {
+    icon: IconEnum.board,
+    label: "Graphs",
+    value: "boards",
+  },
+  {
+    icon: IconEnum.node,
+    label: "Nodes",
+    value: "nodes",
+  },
+  {
+    icon: IconEnum.edge,
+    label: "Edges",
+    value: "edges",
+  },
+  {
+    icon: IconEnum.calendar,
+    label: "Calendars",
+    value: "calendars",
+  },
+  {
+    icon: IconEnum.timeline,
+    label: "Timelines",
+    value: "timelines",
+  },
+  {
+    icon: IconEnum.event,
+    label: "Events",
+    value: "events",
+  },
+  {
+    icon: IconEnum.screen,
+    label: "Screens",
+    value: "screens",
+  },
+  {
+    icon: IconEnum.section,
+    label: "Sections",
+    value: "sections",
+  },
+  {
+    icon: IconEnum.word,
+    label: "Words",
+    value: "words",
+  },
+];
