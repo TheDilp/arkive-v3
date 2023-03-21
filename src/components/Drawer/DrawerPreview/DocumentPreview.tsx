@@ -10,7 +10,7 @@ type Props = {
 
 export default function DocumentPreview({ id }: Props) {
   const { data, isFetching } = useGetItem<DocumentType>(id, "documents", { staleTime: 60 * 1000 });
-
+  console.log(data);
   if (isFetching || !data) return null;
 
   return <StaticRender content={data.content as RemirrorJSON} />;

@@ -58,7 +58,6 @@ const markMap: MarkMap = {
 
 export default function StaticRender({ content }: { content: RemirrorJSON }) {
   const { project_id } = useParams();
-
   const parsedContent = removeKeys(content, ["style", "resizable"]);
   return (
     <div className="staticRendererContainer">

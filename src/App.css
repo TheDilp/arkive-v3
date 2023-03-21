@@ -169,7 +169,7 @@ Inputs
     @apply float-right ml-4;
   }
   *[nodetextalignment="center"]:not(blockquote) {
-    @apply text-center;
+    @apply flex justify-center text-center;
   }
 
   div[data-callout-type="error"],
