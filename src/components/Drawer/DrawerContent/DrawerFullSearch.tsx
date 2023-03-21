@@ -12,6 +12,7 @@ import { baseURLS } from "../../../types/CRUDenums";
 import { AllAvailableTypes, AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
+import { searchCategories } from "../../../utils/searchUtils";
 import SearchResultGroup from "../SearchResults/SearchResultGroup";
 
 const SearchDefault = {
@@ -27,53 +28,6 @@ const SearchDefault = {
   timelines: [],
   events: [],
 };
-
-const searchCategories: { label: string; value: AllAvailableTypes }[] = [
-  {
-    label: "Documents",
-    value: "documents",
-  },
-  {
-    label: "Maps",
-    value: "maps",
-  },
-  {
-    label: "Graphs",
-    value: "boards",
-  },
-  {
-    label: "Nodes",
-    value: "nodes",
-  },
-  {
-    label: "Edges",
-    value: "edges",
-  },
-  {
-    label: "Calendars",
-    value: "calendars",
-  },
-  {
-    label: "Timelines",
-    value: "timelines",
-  },
-  {
-    label: "Events",
-    value: "events",
-  },
-  {
-    label: "Screens",
-    value: "screens",
-  },
-  {
-    label: "Sections",
-    value: "sections",
-  },
-  {
-    label: "Words",
-    value: "words",
-  },
-];
 
 export default function DrawerFullSearch() {
   const drawer = useAtomValue(DrawerAtom);
