@@ -71,7 +71,9 @@ export default function DrawerCardContent() {
               method: "POST",
               body: JSON.stringify(
                 selectedDocuments
-                  .filter((doc) => !drawer?.data?.cards.some((card: CardType) => card.documentsId === doc.id))
+                  .filter((doc) =>
+                    drawer?.data?.cards ? !drawer?.data?.cards?.some((card: CardType) => card.documentsId === doc.id) : true,
+                  )
                   .map((doc) => ({
                     id: crypto.randomUUID(),
                     documentsId: doc.id,
