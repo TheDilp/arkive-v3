@@ -1,7 +1,8 @@
 import { useAtom } from "jotai";
-import { LatLngBoundsExpression } from "leaflet";
+import { Icon, LatLngBoundsExpression } from "leaflet";
 import { MutableRefObject, useEffect, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import { useParams } from "react-router-dom";
 
 import { useGetItem } from "../../hooks/useGetItem";
@@ -99,12 +100,12 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly }: Props)
 
         {/* Markers layer */}
         <LayersControl.Overlay checked name="Markers">
-          <LayerGroup>
+          <MarkerClusterGroup chunkedLoading showCoverageOnHover>
             {currentMap?.map_pins &&
               currentMap?.map_pins
                 ?.filter(PinFilter)
                 .map((pin) => <MapPin key={pin.id} cm={cm} pinData={pin} readOnly={isReadOnly} />)}
-          </LayerGroup>
+          </MarkerClusterGroup>
         </LayersControl.Overlay>
         <LayerGroup>
           {currentMap?.map_layers?.length

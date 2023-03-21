@@ -54,7 +54,6 @@ export default function DrawerDocumentContent() {
 
   useEffect(() => {
     if (document) {
-      console.log(document);
       setLocalItem(document);
     } else {
       setLocalItem({
