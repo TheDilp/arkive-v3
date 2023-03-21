@@ -4,13 +4,14 @@
 /* eslint-disable react/jsx-no-bind */
 import { Draggable, DraggableProvided, Droppable } from "@hello-pangea/dnd";
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { SetStateAction, useAtom } from "jotai";
 import { Dispatch, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
 import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
 import { baseURLS, deleteURLs } from "../../types/CRUDenums";
-import { CardType, SectionType } from "../../types/ItemTypes/screenTypes";
+import { CardType, ScreenType, SectionType } from "../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export default function ScreenSection({ section, providedSectionDraggable, sectionSize, setSections, isReadOnly }: Props) {
+  const queryClient = useQueryClient();
   const { item_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
   const updateSectionMutation = useUpdateSubItem<SectionType>(item_id as string, "sections", "screens");
@@ -34,8 +36,8 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
 
   const updateCard = useCallback((sectionId: string, cardId: string, expanded: boolean) => {
     updateCardMutation.mutate({ id: cardId, expanded });
-    setSections((prev) =>
-      prev.map((prevSection) => {
+    setSections((prev) => {
+      const newSections = prev.map((prevSection) => {
         if (prevSection.id !== sectionId) return prevSection;
         return {
           ...prevSection,
@@ -44,8 +46,13 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
             return { ...card, expanded };
           }),
         };
-      }),
-    );
+      });
+      queryClient.setQueryData<ScreenType>(["screens", item_id], (oldData) => {
+        if (oldData) return { ...oldData, sections: newSections };
+        return oldData;
+      });
+      return newSections;
+    });
   }, []);
   const deleteCard = useCallback((id: string, sectionId: string) => {
     FetchFunction({ url: `${baseURLS.baseServer}${deleteURLs.deleteCard}${id}`, method: "DELETE" });
