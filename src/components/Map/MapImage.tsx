@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { Icon, LatLngBoundsExpression } from "leaflet";
+import { LatLngBoundsExpression } from "leaflet";
 import { MutableRefObject, useEffect, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
