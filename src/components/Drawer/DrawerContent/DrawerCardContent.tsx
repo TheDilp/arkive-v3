@@ -41,7 +41,10 @@ export default function DrawerCardContent() {
         optionLabel="title"
         options={(documents || [])
           .filter(
-            (doc) => !doc.template && !doc.folder && !drawer.data?.cards?.some((card: CardType) => card.documentsId === doc.id),
+            (doc) =>
+              !doc.template &&
+              !doc.folder &&
+              (drawer?.data?.cards ? !drawer.data?.cards?.some((card: CardType) => card.documentsId === doc.id) : true),
           )
           .map((doc) => ({ id: doc.id, title: doc.title }))}
         placeholder="Select documents"
