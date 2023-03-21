@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { SetStateAction } from "jotai";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Dispatch, useEffect, useState } from "react";
@@ -35,9 +34,7 @@ export default function Breadcrumbs({ type }: { type: AvailableItemTypes }) {
         recursiveFindParents(parent.parentId || null, recursiveDocuments, tempBreadcrumbs, setCrumbs);
       }
     } else {
-      const current = tempBreadcrumbs.shift();
-      if (current) tempBreadcrumbs.push(current);
-      setCrumbs(tempBreadcrumbs);
+      setCrumbs(tempBreadcrumbs.reverse());
     }
   }
 
