@@ -18,7 +18,7 @@ export default function MentionDropdownComponent() {
 
   const search = useDebouncedCallback(async () => {
     setIsFetching(true);
-    const items: { id: string; title: string; displayLabel?: string; parentId?: string; translation?: string }[][] =
+    const items: { id: string; title: string; displayLabel?: string; parentId?: string; translation?: string }[] =
       await FetchFunction({
         url: `${baseURLS.baseServer}search`,
         method: "POST",
@@ -32,7 +32,6 @@ export default function MentionDropdownComponent() {
     setIsFetching(false);
     setOptions(
       items
-        .flat()
         .sort()
         .map((item) => {
           if (item?.translation)
