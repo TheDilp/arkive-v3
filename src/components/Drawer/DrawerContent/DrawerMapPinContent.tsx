@@ -70,6 +70,7 @@ export default function DrawerMapPinContent() {
       <DrawerSection title="Marker text">
         <div className="flex flex-wrap items-center">
           <InputText
+            autoFocus
             className="w-full"
             onChange={(e) => handleChange({ name: "text", value: e.target.value })}
             placeholder="Marker Popup Text"
