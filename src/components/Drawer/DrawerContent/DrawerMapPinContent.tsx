@@ -132,6 +132,7 @@ export default function DrawerMapPinContent() {
       <div className="flex flex-wrap items-center justify-between">
         <Dropdown
           className="w-full"
+          filter
           onChange={(e) => handleChange({ name: "doc_id", value: e.target.value })}
           optionLabel="title"
           options={documents ? [...(documents as DocumentType[])]?.filter((item) => !item.template && !item.folder) : []}
@@ -157,6 +158,7 @@ export default function DrawerMapPinContent() {
       <div className="flex flex-wrap items-center justify-between">
         <Dropdown
           className="w-full"
+          filter
           onChange={(e) => handleChange({ name: "map_link", value: e.target.value })}
           optionLabel="title"
           options={maps ? [...(maps as MapType[])]?.filter((item) => !item.folder && item.id !== item_id) : []}
