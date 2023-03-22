@@ -7,11 +7,9 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-import { useFullSearch, useGetAllTags } from "../../../CRUD/OtherCRUD";
-import { baseURLS } from "../../../types/CRUDenums";
+import { useFullSearch, useGetAllTags, useSpecificSearch } from "../../../CRUD/OtherCRUD";
 import { AllAvailableTypes, AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
-import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 import { searchCategories } from "../../../utils/searchUtils";
 import SearchResultGroup from "../SearchResults/SearchResultGroup";
 
@@ -33,34 +31,27 @@ export default function DrawerFullSearch() {
   const drawer = useAtomValue(DrawerAtom);
 
   const [query, setQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
   const [tags, setTags] = useState<TagType[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<AllAvailableTypes>(drawer?.data?.category || "documents");
   const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
   const [menuIndex, setMenuIndex] = useState(drawer?.data?.index ?? 0);
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
   const { project_id } = useParams();
-  const { mutate: searchMutation } = useFullSearch(project_id as string);
+  const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
+  const { mutate: specificSearchMutation, isLoading: isSearchingSpecific } = useSpecificSearch(project_id as string);
   const { data: allTags } = useGetAllTags(project_id as string);
 
   const debounceSearch = useDebouncedCallback(
     async (searchQuery: string | TagType[], type: "namecontent" | "tags" | "category") => {
-      setIsSearching(true);
       if (searchQuery) {
         const finalQuery = Array.isArray(searchQuery) ? searchQuery.map((tag) => tag.title) : searchQuery;
 
         if ((!Array.isArray(searchQuery) && searchQuery.length >= 3) || Array.isArray(searchQuery)) {
-          if (type === "category") {
-            const result = await FetchFunction({
-              url: `${baseURLS.baseServer}search`,
-              method: "POST",
-              body: JSON.stringify({
-                project_id,
-                query: searchQuery,
-                type: selectedCategory,
-              }),
-            });
-            setResults({ ...SearchDefault, [selectedCategory]: result });
+          if (type === "category" && typeof searchQuery === "string") {
+            specificSearchMutation(
+              { searchQuery, selectedCategory },
+              { onSuccess: (data) => setResults({ ...SearchDefault, [selectedCategory]: data }) },
+            );
           } else {
             searchMutation(
               { query: finalQuery, type },
@@ -83,8 +74,6 @@ export default function DrawerFullSearch() {
           }
         }
       } else setResults(SearchDefault);
-
-      setIsSearching(false);
     },
     500,
   );
@@ -107,7 +96,7 @@ export default function DrawerFullSearch() {
         {menuIndex === 0 || menuIndex === 1 ? (
           <div className="flex w-full flex-nowrap items-center justify-between gap-2">
             <span className="p-input-icon-right w-full">
-              {isSearching ? <i className="pi pi-spin pi-spinner" /> : null}
+              {isSearching || isSearchingSpecific ? <i className="pi pi-spin pi-spinner" /> : null}
               <InputText
                 autoFocus
                 className="w-full"
