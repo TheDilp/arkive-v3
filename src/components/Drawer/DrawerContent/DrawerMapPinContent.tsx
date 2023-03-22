@@ -67,31 +67,32 @@ export default function DrawerMapPinContent() {
   if (!map) return null;
   return (
     <div className="flex w-full flex-col gap-y-5">
-      <div className="flex flex-wrap items-center">
-        <h4 className="w-full text-lg underline">Marker Text</h4>
-        <InputText
-          className="w-full"
-          onChange={(e) => handleChange({ name: "text", value: e.target.value })}
-          placeholder="Marker Popup Text"
-          value={localItem?.text}
-        />
-      </div>
-      <div className="flex flex-wrap items-center justify-between">
-        <h4 className="w-full text-lg underline">Marker Icon</h4>
-
-        <IconSelect setIcon={(newIcon) => handleChange({ name: "icon", value: newIcon })}>
-          <Icon
-            className="cursor-pointer rounded-full hover:bg-sky-400"
-            color={localItem.color}
-            fontSize={32}
-            icon={localItem.icon ?? IconEnum.map_pin}
-            inline
+      <DrawerSection title="Marker text">
+        <div className="flex flex-wrap items-center">
+          <InputText
+            className="w-full"
+            onChange={(e) => handleChange({ name: "text", value: e.target.value })}
+            placeholder="Marker Popup Text"
+            value={localItem?.text}
           />
-        </IconSelect>
-        <div className="">
-          <ColorInput color={localItem.color || "#ffffff"} name="color" onChange={handleChange} />
         </div>
-      </div>
+      </DrawerSection>
+      <DrawerSection title="Marker icon">
+        <div className="flex flex-wrap items-center justify-between">
+          <IconSelect setIcon={(newIcon) => handleChange({ name: "icon", value: newIcon })}>
+            <Icon
+              className="cursor-pointer rounded-full hover:bg-sky-400"
+              color={localItem.color}
+              fontSize={32}
+              icon={localItem.icon ?? IconEnum.map_pin}
+              inline
+            />
+          </IconSelect>
+          <div className="">
+            <ColorInput color={localItem.color || "#ffffff"} name="color" onChange={handleChange} />
+          </div>
+        </div>
+      </DrawerSection>
       <DrawerSection title="Marker background">
         <div className="flex flex-wrap items-center justify-between">
           <div>
