@@ -3,14 +3,16 @@ import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { useFullSearch, useGetAllTags, useSpecificSearch } from "../../../CRUD/OtherCRUD";
+import { useKeyPress } from "../../../hooks/useNavigateSearchResults";
 import { AllAvailableTypes, AvailableSearchResultTypes, FullSearchResults, TagType } from "../../../types/generalTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { searchCategories } from "../../../utils/searchUtils";
+import { getLinkForFullSearch } from "../../../utils/transform";
 import SearchResultGroup from "../SearchResults/SearchResultGroup";
 
 const SearchDefault = {
@@ -28,19 +30,24 @@ const SearchDefault = {
 };
 
 export default function DrawerFullSearch() {
+  const { project_id } = useParams();
+  const searchInputRef = useRef() as MutableRefObject<HTMLInputElement>;
   const drawer = useAtomValue(DrawerAtom);
+  const navigate = useNavigate();
+  const downPress = useKeyPress("ArrowDown");
+  const upPress = useKeyPress("ArrowUp");
+  const enterPress = useKeyPress("Enter");
 
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState<TagType[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<AllAvailableTypes>(drawer?.data?.category || "documents");
   const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
   const [menuIndex, setMenuIndex] = useState(drawer?.data?.index ?? 0);
+  const [index, setIndex] = useState({ category: 0, index: 0 });
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
-  const { project_id } = useParams();
   const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
   const { mutate: specificSearchMutation, isLoading: isSearchingSpecific } = useSpecificSearch(project_id as string);
   const { data: allTags } = useGetAllTags(project_id as string);
-
   const debounceSearch = useDebouncedCallback(
     async (searchQuery: string | TagType[], type: "namecontent" | "tags" | "category") => {
       if (searchQuery) {
@@ -77,12 +84,19 @@ export default function DrawerFullSearch() {
     },
     500,
   );
-
   const debounceTags = useDebouncedCallback((tagsQuery: string) => {
     const t = allTags?.filter((tag) => tag.title.toLowerCase().includes(tagsQuery.toLowerCase()));
     if (t && t.length) setFilteredTags(t);
     else setFilteredTags([]);
   }, 500);
+
+  const keyPressResults = useMemo(
+    () =>
+      Object.entries(results)
+        .filter(([, value]) => value.length)
+        .map(([, value]) => value),
+    [results],
+  );
 
   useEffect(() => {
     if (drawer?.data) {
@@ -90,6 +104,55 @@ export default function DrawerFullSearch() {
       if (drawer?.data?.category) setSelectedCategory(drawer?.data?.category);
     }
   }, [drawer?.data]);
+
+  useEffect(() => {
+    if (downPress && keyPressResults.some((res) => res.length) && document.activeElement === searchInputRef.current) {
+      const currentIndex = index.index;
+      if (currentIndex === keyPressResults[index.category].length - 1) {
+        const newCategory = index.category + 1;
+        if (newCategory > keyPressResults.length - 1) setIndex({ category: 0, index: 0 });
+        else setIndex({ category: newCategory, index: 0 });
+      } else {
+        setIndex((prev) => ({ ...prev, index: prev.index + 1 }));
+      }
+    }
+  }, [downPress]);
+  useEffect(() => {
+    if (upPress && keyPressResults.some((res) => res.length) && document.activeElement === searchInputRef.current) {
+      const currentIndex = index.index;
+
+      if (currentIndex === 0) {
+        const newCategory = index.category - 1;
+        if (newCategory < 0) {
+          setIndex({ category: keyPressResults.length - 1, index: keyPressResults[keyPressResults.length - 1].length - 1 });
+        } else {
+          setIndex({ category: newCategory, index: keyPressResults[newCategory].length - 1 });
+        }
+      } else {
+        setIndex((prev) => ({ category: prev.category, index: prev.index - 1 }));
+      }
+    }
+  }, [upPress]);
+
+  useEffect(() => {
+    if (enterPress && document.activeElement === searchInputRef.current) {
+      const item = keyPressResults?.[index.category]?.[index.index];
+      if (item) {
+        const type = Object.entries(results)
+          .filter(([, value]) => value.length)
+          .map(([key]) => key)[index.category] as AvailableSearchResultTypes;
+
+        const link = getLinkForFullSearch(
+          "document" in item && item?.document?.id ? item?.document?.id : item.id,
+          "parentId" in item ? (item.parentId as string) : (item.calendarsId as string),
+          type,
+          project_id as string,
+          "folder" in item ? item.folder : false,
+        );
+        navigate(link);
+      }
+    }
+  }, [enterPress]);
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -105,15 +168,16 @@ export default function DrawerFullSearch() {
             <span className="p-input-icon-right w-full">
               {isSearching || isSearchingSpecific ? <i className="pi pi-spin pi-spinner" /> : null}
               <InputText
+                ref={searchInputRef}
                 autoFocus
                 className="w-full"
                 onChange={(e) => {
                   setQuery(e.target.value);
                   debounceSearch(e.target.value, menuIndex ? "category" : "namecontent");
                 }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") debounceSearch(e.currentTarget.value, menuIndex ? "category" : "namecontent");
-                }}
+                // onKeyDown={(e) => {
+                //   if (e.key === "Enter") debounceSearch(e.currentTarget.value, menuIndex ? "category" : "namecontent");
+                // }}
                 placeholder="Enter at least 3 characters"
                 value={query}
               />
@@ -159,13 +223,16 @@ export default function DrawerFullSearch() {
       <div className="mt-2 flex flex-col gap-y-2 font-Lato">
         {isSearching ? "Searching..." : null}
         {!isSearching && results && Object.keys(results).length > 0
-          ? Object.keys(results).map((key) => (
-              <SearchResultGroup
-                key={key}
-                items={results[key as AvailableSearchResultTypes]}
-                itemType={key as AvailableSearchResultTypes}
-              />
-            ))
+          ? Object.entries(results)
+              .filter(([, value]) => value.length !== 0)
+              .map(([key], idx) => (
+                <SearchResultGroup
+                  key={key}
+                  index={idx === index.category ? index.index : undefined}
+                  items={results[key as AvailableSearchResultTypes]}
+                  itemType={key as AvailableSearchResultTypes}
+                />
+              ))
           : (query && !isSearching && "No items match this query.") || ""}
       </div>
     </div>

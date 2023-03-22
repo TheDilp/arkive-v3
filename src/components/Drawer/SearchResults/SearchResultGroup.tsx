@@ -13,9 +13,10 @@ import SearchResult from "./SearchResult";
 type Props = {
   items: SearchResultType[];
   itemType: AvailableSearchResultTypes;
+  index: number | undefined;
 };
 
-export default function SearchResultGroup({ items, itemType }: Props) {
+export default function SearchResultGroup({ items, itemType, index }: Props) {
   const { project_id, subitem_id } = useParams();
 
   const [, setDrawer] = useAtom(DrawerAtom);
@@ -28,10 +29,12 @@ export default function SearchResultGroup({ items, itemType }: Props) {
         {capitalCase(itemType)}
       </h5>
       {Array.isArray(items)
-        ? items.map((item) => (
+        ? items.map((item, itemIdx) => (
             <Link
               key={item.id}
-              className="flex cursor-pointer items-center gap-x-1 py-1 hover:bg-sky-400"
+              className={`flex cursor-pointer items-center gap-x-1 py-1 hover:bg-sky-400 ${
+                index === itemIdx ? "bg-blue-300" : ""
+              }`}
               onClick={() => {
                 if (boardRef) goToNodeEdge(subitem_id, item.id, boardRef);
                 setDrawer({ ...DefaultDrawer, position: "right" });
