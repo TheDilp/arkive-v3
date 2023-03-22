@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
+import { capitalCase } from "remirror";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
@@ -50,7 +51,7 @@ export default function ItemsTree({ type }: Props) {
             });
           }}>
           <div className="flex w-full items-center justify-center gap-x-1">
-            <div className="w-full">New {itemName === "board" ? "graph" : itemName}</div>
+            <div className="w-full">New {itemName === "board" ? "Graph" : capitalCase(itemName)}</div>
             <div className="ml-auto">
               <Icon fontSize={20} icon={getItemIcon(type)} />
             </div>
