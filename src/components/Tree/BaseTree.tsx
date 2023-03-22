@@ -118,7 +118,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
       }}>
       <ContextMenu cm={cm} items={contextItems} />
       <InputText
-        className="mt-1 w-full px-1"
+        className="p-inputtext-sm mt-1 w-full px-1"
         onChange={(e) => setFilter(e.target.value)}
         placeholder="Filter by Title"
         value={filter}
