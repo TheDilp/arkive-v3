@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { LatLngBoundsExpression } from "leaflet";
-import { MutableRefObject, useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { useParams } from "react-router-dom";
@@ -21,6 +21,7 @@ type Props = {
 };
 
 export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, isClusteringPins }: Props) {
+  const firstRender = useRef(true);
   const { item_id, subitem_id } = useParams();
   const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps");
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
@@ -87,9 +88,10 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, isCluste
     if (subitem_id && currentMap) {
       const pin = currentMap.map_pins.find((map_pin) => map_pin.id === subitem_id);
       if (pin) map.panTo([pin.lat, pin.lng], {});
-    } else {
-      map.fitBounds(bounds);
-    }
+    } else if (firstRender.current) map.fitBounds(bounds);
+    return () => {
+      firstRender.current = false;
+    };
   }, [subitem_id, bounds]);
   if (!map) return null;
   return (
