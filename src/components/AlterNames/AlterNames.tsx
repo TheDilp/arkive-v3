@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateSubItem, useDeleteSubItem } from "../../CRUD/ItemsCRUD";
 import { AlterNameCreateType, DocumentCreateType } from "../../types/ItemTypes/documentTypes";
+import { toaster } from "../../utils/toast";
 
 type Props = {
   handleChange: ({ name, value }: { name: string; value: any }) => void;
@@ -35,12 +36,23 @@ export default function AlterNames({ handleChange, localItem, isSettings }: Prop
         }
         // For adding completely new alter_names
         if (e.key === "Enter" && e.currentTarget.value !== "" && e.currentTarget.value !== undefined) {
+          if (
+            localItem?.alter_names &&
+            localItem?.alter_names?.some((alter_name) => alter_name.title.toLowerCase() === e.currentTarget.value)
+          ) {
+            toaster("warning", "Alternative names must be unique for each document.");
+            return;
+          }
+
           const id = crypto.randomUUID();
           handleChange({
             name: "alter_names",
-            value: [...(localItem?.alter_names || []), { id, title: e?.currentTarget?.value }],
+            value: [
+              ...(localItem?.alter_names || []),
+              { id, title: e?.currentTarget?.value, parentId: localItem.id, project_id },
+            ],
           });
-          if (!isSettings)
+          if (!isSettings && localItem.id)
             createAlterName({
               id,
               title: e.currentTarget.value,
