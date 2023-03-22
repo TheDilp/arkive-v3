@@ -32,8 +32,10 @@ const SearchDefault = {
 export default function DrawerFullSearch() {
   const { project_id } = useParams();
   const searchInputRef = useRef() as MutableRefObject<HTMLInputElement>;
+
   const drawer = useAtomValue(DrawerAtom);
   const navigate = useNavigate();
+
   const downPress = useKeyPress("ArrowDown");
   const upPress = useKeyPress("ArrowUp");
   const enterPress = useKeyPress("Enter");
@@ -45,9 +47,12 @@ export default function DrawerFullSearch() {
   const [menuIndex, setMenuIndex] = useState(drawer?.data?.index ?? 0);
   const [index, setIndex] = useState({ category: 0, index: 0 });
   const [results, setResults] = useState<FullSearchResults>(SearchDefault);
+
   const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
   const { mutate: specificSearchMutation, isLoading: isSearchingSpecific } = useSpecificSearch(project_id as string);
+
   const { data: allTags } = useGetAllTags(project_id as string);
+
   const debounceSearch = useDebouncedCallback(
     async (searchQuery: string | TagType[], type: "namecontent" | "tags" | "category") => {
       if (searchQuery) {
@@ -104,7 +109,6 @@ export default function DrawerFullSearch() {
       if (drawer?.data?.category) setSelectedCategory(drawer?.data?.category);
     }
   }, [drawer?.data]);
-
   useEffect(() => {
     if (downPress && keyPressResults.some((res) => res.length) && document.activeElement === searchInputRef.current) {
       const currentIndex = index.index;
@@ -203,6 +207,7 @@ export default function DrawerFullSearch() {
               className="w-full"
               completeMethod={(e) => debounceTags(e.query)}
               field="title"
+              inputRef={searchInputRef}
               multiple
               onChange={(e) => setTags(e.value)}
               onSelect={(e) => debounceSearch([...tags, e.value], "tags")}
