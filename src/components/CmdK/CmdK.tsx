@@ -76,7 +76,20 @@ export function CMDKActions(navigate: NavigateFunction, project_id: string) {
         parent: "new",
         perform: () => setDrawer({ ...DefaultDrawer, show: true, type: getItemTypeFromName(opt.name) }),
       })),
-
+      {
+        id: "all_search",
+        name: "All",
+        icon: IconEnum.search,
+        keywords: "",
+        parent: "search",
+        perform: () =>
+          setDrawer({
+            ...DefaultDrawer,
+            type: "full_search",
+            show: true,
+            drawerSize: "md",
+          }),
+      },
       ...searchCategories.map((category) => ({
         id: `${category}_search`,
         name: capitalCase(category.label),

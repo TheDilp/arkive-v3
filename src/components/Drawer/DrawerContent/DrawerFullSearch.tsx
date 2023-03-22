@@ -3,7 +3,7 @@ import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { TabMenu } from "primereact/tabmenu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -83,6 +83,13 @@ export default function DrawerFullSearch() {
     if (t && t.length) setFilteredTags(t);
     else setFilteredTags([]);
   }, 500);
+
+  useEffect(() => {
+    if (drawer?.data) {
+      if (typeof drawer?.data?.index === "number") setMenuIndex(drawer?.data?.index);
+      if (drawer?.data?.category) setSelectedCategory(drawer?.data?.category);
+    }
+  }, [drawer?.data]);
 
   return (
     <div className="flex flex-col gap-y-4">
