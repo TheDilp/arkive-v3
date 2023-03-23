@@ -32,6 +32,7 @@ export const getURLS = {
   // Misc
   getAllTags: "alltags/",
   getAllSettingsTags: "alltags/settings/",
+  getAllAlterNames: "allalternames/settings/",
   getSearchTags: "searchtags/",
   getFullSearch: "fullsearch/",
 };
@@ -88,6 +89,7 @@ export const updateURLs = {
   updateRandomTableOption: "updaterandomtableoption",
   updateSwatch: "updateswatch",
   updateTag: "updatetag",
+  updateAlterName: "updatealtername",
 
   sortDocuments: "sortdocuments",
   sortMaps: "sortmaps",
@@ -119,6 +121,7 @@ export const deleteURLs = {
   deleteRandomTableOption: "deleterandomtableoption",
   deleteTags: "deletetags",
   deleteAlterName: "deletealtername",
+  deleteAlterNames: "deletealternames",
 };
 
 export const MainToSubType = {

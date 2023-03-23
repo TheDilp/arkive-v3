@@ -1,14 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
-import {
-  AllAvailableTypes,
-  AvailableItemTypes,
-  TagCreateType,
-  TagSettingsType,
-  TagType,
-  TagUpdateType,
-} from "../types/generalTypes";
+import { AllAvailableTypes, AvailableItemTypes, TagCreateType, TagSettingsType, TagType } from "../types/generalTypes";
+import { AlterNameType } from "../types/ItemTypes/documentTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -64,6 +58,15 @@ export const useGetTagSettings = (project_id: string) => {
     },
   );
 };
+export const useGetAlterNameSettings = (project_id: string) => {
+  return useQuery<AlterNameType[]>(
+    ["allAlterNames", project_id, "settings"],
+    async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllAlterNames}${project_id}`, method: "GET" }),
+    {
+      staleTime: 5 * 60 * 1000,
+    },
+  );
+};
 export const useCreateTag = (project_id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
@@ -93,32 +96,34 @@ export const useCreateTag = (project_id: string) => {
     },
   );
 };
-export const useUpdateTag = (project_id: string) => {
+export const useUpdateAlterNameTag = <ItemType extends { id: string; title: string }>(
+  project_id: string,
+  type: "tag" | "alter_name",
+) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (variables: Partial<Omit<TagUpdateType, "project_id">> & { id?: string }) =>
+    async (variables: Partial<Omit<ItemType, "project_id">> & { id?: string }) =>
       FetchFunction({
-        url: `${baseURLS.baseServer}${updateURLs.updateTag}`,
+        url: `${baseURLS.baseServer}${type === "tag" ? updateURLs.updateTag : updateURLs.updateAlterName}`,
         method: "POST",
         body: JSON.stringify({ ...variables }),
       }),
     {
       onMutate: (variables) => {
-        const oldData = queryClient.getQueryData(["tagsSettings", project_id]);
+        const oldData = queryClient.getQueryData([type === "tag" ? "allTags" : "allAlterNames", project_id, "settings"]);
 
-        queryClient.setQueryData(["tagsSettings", project_id], (old: TagType[] | undefined) => {
+        queryClient.setQueryData<ItemType[]>([type === "tag" ? "allTags" : "allAlterNames", project_id, "settings"], (old) => {
           if (old) {
-            return old.map((tag) => {
-              if (tag.id === variables.id) {
-                return { ...tag, ...variables };
+            return old.map((item) => {
+              if (item.id === variables.id) {
+                return { ...item, ...variables };
               }
-              return tag;
+              return item;
             });
           }
           return old;
         });
-        // queryClient.refetchQueries(["allItems", project_id]);
         return { oldData };
       },
       onError: (_, __, context) => {
@@ -128,26 +133,26 @@ export const useUpdateTag = (project_id: string) => {
     },
   );
 };
-export const useDeleteTags = (project_id: string) => {
+export const useDeleteAlterNamesTags = <ItemType extends { id: string }>(project_id: string, type: "tag" | "alter_name") => {
   const queryClient = useQueryClient();
   return useMutation(
     async (ids: string[]) =>
       FetchFunction({
-        url: `${baseURLS.baseServer}${deleteURLs.deleteTags}`,
+        url: `${baseURLS.baseServer}${type === "tag" ? deleteURLs.deleteTags : deleteURLs.deleteAlterNames}`,
         method: "DELETE",
         body: JSON.stringify({ ids }),
       }),
     {
       onMutate: (variables) => {
-        const oldData = queryClient.getQueryData(["tagsSettings", project_id]);
+        const oldData = queryClient.getQueryData([type === "tag" ? "allTags" : "allAlterNames", project_id]);
 
-        queryClient.setQueryData(["tagsSettings", project_id], (old: TagType[] | undefined) => {
+        queryClient.setQueryData<ItemType[]>([type === "tag" ? "allTags" : "allAlterNames", project_id], (old) => {
           if (old) {
             return old.filter((tag) => !variables.includes(tag.id));
           }
           return old;
         });
-        queryClient.refetchQueries(["allItems", project_id]);
+        queryClient.refetchQueries([type === "tag" ? "allTags" : "allAlterNames", project_id]);
         return { oldData };
       },
       onError: (_, __, context) => {

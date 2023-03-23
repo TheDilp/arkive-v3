@@ -3,7 +3,7 @@ import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autoc
 import { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateTag, useGetAllTags, useUpdateTag } from "../../CRUD/OtherCRUD";
+import { useCreateTag, useGetAllTags, useUpdateAlterNameTag } from "../../CRUD/OtherCRUD";
 import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { BoardCreateType, DefaultEdgeType, DefaultNodeType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { CalendarCreateType } from "../../types/ItemTypes/calendarTypes";
@@ -56,7 +56,7 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
   const [tags, setTags] = useState(initialTags || []);
   const { mutate: createTag } = useCreateTag(project_id as string);
 
-  const { mutate: updateTag } = useUpdateTag(project_id as string);
+  const { mutate: updateTag } = useUpdateAlterNameTag(project_id as string, "tag");
 
   return (
     <AutoComplete

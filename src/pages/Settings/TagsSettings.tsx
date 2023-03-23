@@ -9,7 +9,7 @@ import { Link, useParams } from "react-router-dom";
 
 import AlterNameTagTitle from "../../components/Settings/Columns/AlterNameTagTitle";
 import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
-import { useDeleteTags, useGetTagSettings, useUpdateAlterNameTag } from "../../CRUD/OtherCRUD";
+import { useDeleteAlterNamesTags, useGetTagSettings, useUpdateAlterNameTag } from "../../CRUD/OtherCRUD";
 import { TagSettingsType, TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
@@ -198,7 +198,7 @@ export default function TagsSettings() {
   const [expandedRows, setExpandedRows] = useState<any[] | DataTableExpandedRows>([]);
   const { data: tags, isLoading: isLoadingTags } = useGetTagSettings(project_id as string);
   const { mutate: updateTag } = useUpdateAlterNameTag(project_id as string, "tag");
-  const { mutate: deleteTags } = useDeleteTags(project_id as string);
+  const { mutate: deleteTags } = useDeleteAlterNamesTags(project_id as string, "tag");
   return (
     <div className="tagSettings h-screen px-4 pt-4 pb-16">
       <DataTable
@@ -219,7 +219,7 @@ export default function TagsSettings() {
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column className="w-8" expander />
         <Column
-          body={AlterNameTagTitle}
+          body={(data) => AlterNameTagTitle(data, "tag")}
           editor={(e) => TitleEditor(e, (data) => updateTag(data))}
           field="title"
           header="Tag"
