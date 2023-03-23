@@ -1,9 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Link } from "react-router-dom";
 
+import { useGetAllItems } from "../../CRUD/ItemsCRUD";
+import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { OtherContextMenuAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { getSingleURL } from "../../utils/CRUD/CRUDUrls";
@@ -11,11 +13,12 @@ import StaticRender from "../Editor/StaticRender";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
-  title?: string;
+  alterId: string | null;
   id: string | undefined;
   label: string;
   isDisabledTooltip?: boolean;
   project_id: string | undefined;
+  title?: string;
 };
 
 export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title">) {
@@ -40,7 +43,17 @@ export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title"
     </Card>
   );
 }
-export default function DocumentMention({ title, id, label, isDisabledTooltip, project_id }: Props) {
+export default function DocumentMention({ alterId, title, id, label, isDisabledTooltip, project_id }: Props) {
+  const queryClient = useQueryClient();
+  const allDocuments = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
+
+  const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents", {
+    enabled: !allDocuments,
+    staleTime: 5 * 60 * 1000,
+  });
+  console.log(alterId);
+  const doc = (allDocuments || documents)?.find((d) => d?.id === id);
+  const finalName = alterId ? doc?.alter_names?.find((a) => a?.id === alterId)?.title : doc?.title || title || label;
   const [mention, setMention] = useAtom(OtherContextMenuAtom);
   return (
     <Tooltip content={<DocumentMentionTooltip id={id} title={title || label} />} disabled={isDisabledTooltip ?? false}>
@@ -53,7 +66,7 @@ export default function DocumentMention({ title, id, label, isDisabledTooltip, p
           }
         }}
         to={!project_id ? `/view/documents/${id}` : `/project/${project_id}/documents/${id}`}>
-        {title || label}
+        {finalName || title || label}
       </Link>
     </Tooltip>
   );

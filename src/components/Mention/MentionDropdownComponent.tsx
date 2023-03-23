@@ -41,7 +41,7 @@ export default function MentionDropdownComponent() {
               label: item.title,
               displayLabel: `${item.title} (${item.translation})`,
             };
-          return { id: item?.parentId || item.id, label: item.title };
+          return { id: item?.parentId || item.id, alterId: item?.parentId ? item.id : null, label: item.title };
         })
         .slice(0, 10),
     );
@@ -53,7 +53,6 @@ export default function MentionDropdownComponent() {
       setOptions([]);
     }
   }, [state?.query?.full]);
-
   return (
     <FloatingWrapper
       containerClass="commandMenu"

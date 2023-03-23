@@ -36,6 +36,13 @@ export type StaticRendererType = { content: RemirrorJSON };
 
 export const DefaultEditorExtensions = () => {
   const CustomMentionExtension = new MentionAtomExtension({
+    extraAttributes: {
+      alterId: {
+        default: null,
+        parseDOM: (dom) => dom.getAttribute("data-alterId"),
+        toDOM: () => ["data-alterId"],
+      },
+    },
     matchers: [
       {
         char: "@",
