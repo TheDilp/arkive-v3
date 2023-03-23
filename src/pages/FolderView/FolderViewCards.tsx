@@ -17,7 +17,7 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
   const menuItems = useTreeMenuItems(contextMenu, type, project_id as string);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-[90%] flex-col">
       <ContextMenu cm={cm} items={menuItems} />
       <div className="flex h-full flex-1 flex-wrap content-start gap-y-4 overflow-auto">
         {items.length
