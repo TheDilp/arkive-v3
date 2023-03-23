@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { UseMutateFunction, useQueryClient } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableExpandedRows } from "primereact/datatable";
@@ -196,6 +196,7 @@ function TagTitle(tag: TagType) {
   return <Tag value={title} />;
 }
 export default function TagsSettings() {
+  const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [selected, setSelected] = useState<string[]>([]);
   const [expandedRows, setExpandedRows] = useState<any[] | DataTableExpandedRows>([]);
@@ -221,7 +222,15 @@ export default function TagsSettings() {
         value={tags}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column className="w-8" expander />
-        <Column body={TagTitle} editor={(e) => TitleEditor(e, updateTag)} field="title" header="Tag" sortable />
+        <Column
+          body={TagTitle}
+          editor={(e) =>
+            TitleEditor(e, (data) => updateTag(data, { onSuccess: () => queryClient.refetchQueries(["allTags", project_id]) }))
+          }
+          field="title"
+          header="Tag"
+          sortable
+        />
         <Column align="center" body={(e) => DeleteColumn(e, deleteTags)} className="w-28" header="Delete Tag" />
       </DataTable>
     </div>
