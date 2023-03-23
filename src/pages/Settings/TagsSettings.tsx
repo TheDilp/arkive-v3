@@ -1,15 +1,15 @@
 import { Icon } from "@iconify/react";
-import { UseMutateFunction, useQueryClient } from "@tanstack/react-query";
+import { UseMutateFunction } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableExpandedRows } from "primereact/datatable";
 import { TabPanel, TabView } from "primereact/tabview";
-import { Tag } from "primereact/tag";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import AlterNameTagTitle from "../../components/Settings/Columns/AlterNameTagTitle";
 import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
-import { useDeleteTags, useGetTagSettings, useUpdateTag } from "../../CRUD/OtherCRUD";
+import { useDeleteTags, useGetTagSettings, useUpdateAlterNameTag } from "../../CRUD/OtherCRUD";
 import { TagSettingsType, TagType } from "../../types/generalTypes";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
@@ -36,7 +36,7 @@ function DeleteColumn(item: TagType, deleteTags: UseMutateFunction<any, unknown,
   );
 }
 
-function ExpandedSection(tag: TagSettingsType) {
+function ExpandedSection(tag: TagSettingsType, project_id: string) {
   if (!tag) return null;
   const { documents, maps, map_pins, boards, nodes, edges, calendars, events, screens, cards, dictionaries } = tag;
   return (
@@ -47,7 +47,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={doc.id}
               className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
-              to={`../../documents${doc.folder ? "/folder" : ""}/${doc.id}`}>
+              to={`/project/${project_id}/documents${doc.folder ? "/folder" : ""}/${doc.id}`}>
               <Icon icon={doc.icon} />
               {doc.title}
             </Link>
@@ -61,7 +61,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={map.id}
               className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
-              to={`../../maps${map.folder ? "/folder" : ""}/${map.id}`}>
+              to={`/project/${project_id}/maps${map.folder ? "/folder" : ""}/${map.id}`}>
               <Icon icon={map.icon} />
               {map.title}
             </Link>
@@ -74,7 +74,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={map_pin.id}
               className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
-              to={`../../maps/${map_pin.parentId}/${map_pin.id}`}>
+              to={`/project/${project_id}/maps/${map_pin.parentId}/${map_pin.id}`}>
               <Icon icon={map_pin?.icon || IconEnum.map_pin} />
               {map_pin?.text || "Unnamed pin"}
             </Link>
@@ -87,7 +87,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={board.id}
               className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
-              to={`../../boards${board.folder ? "/folder" : ""}/${board.id}`}>
+              to={`/project/${project_id}/boards${board.folder ? "/folder" : ""}/${board.id}`}>
               <Icon icon={board.icon} />
               {board.title}
             </Link>
@@ -100,7 +100,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={node.id}
               className="flex cursor-pointer items-center gap-x-1 pl-1 hover:text-sky-400"
-              to={`../../boards/${node.parentId}/${node.id}`}>
+              to={`/project/${project_id}/boards/${node.parentId}/${node.id}`}>
               <Icon icon={IconEnum.board} />
               {node.label || "Unlabeled node"}
             </Link>
@@ -113,7 +113,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={edge.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
-              to={`../../boards/${edge.parentId}/${edge.id}`}>
+              to={`/project/${project_id}/boards/${edge.parentId}/${edge.id}`}>
               <Icon icon={IconEnum.board} />
               {edge.label || "Unlabeled edge"}{" "}
               {`(${edge?.source?.label || "Unlabeled node"} - ${edge?.target?.label || "Unlabeled node"})`}
@@ -127,7 +127,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={calendar.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
-              to={`../../calendars${calendar.folder ? "/folder" : ""}/${calendar.id}`}>
+              to={`/project/${project_id}/calendars${calendar.folder ? "/folder" : ""}/${calendar.id}`}>
               <Icon icon={IconEnum.board} />
               {calendar.title}
             </Link>
@@ -141,7 +141,7 @@ function ExpandedSection(tag: TagSettingsType) {
                 <Link
                   key={event.id}
                   className="flex cursor-pointer items-center hover:text-sky-400"
-                  to={`../../calendars/${event.calendarsId}/${event.id}`}>
+                  to={`/project/${project_id}/calendars/${event.calendarsId}/${event.id}`}>
                   <Icon icon={IconEnum.board} />
                   {event.title}
                 </Link>
@@ -155,7 +155,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={screen.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
-              to={`../../screens${screen.folder ? "/folder" : ""}/${screen.id}`}>
+              to={`/project/${project_id}/screens${screen.folder ? "/folder" : ""}/${screen.id}`}>
               <Icon icon={IconEnum.board} />
               {screen.title || "Unlabeled edge"}
             </Link>
@@ -168,7 +168,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={card.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
-              to={`../../screens/${card.parentId}/${card.id}`}>
+              to={`/project/${project_id}/screens/${card.parentId}/${card.id}`}>
               <Icon icon={IconEnum.board} />
               {card.document.title}
             </Link>
@@ -181,7 +181,7 @@ function ExpandedSection(tag: TagSettingsType) {
             <Link
               key={dictionary.id}
               className="flex cursor-pointer items-center hover:text-sky-400"
-              to={`../../dictionaries${dictionary.folder ? "/folder" : ""}/${dictionary.id}`}>
+              to={`/project/${project_id}/dictionaries${dictionary.folder ? "/folder" : ""}/${dictionary.id}`}>
               <Icon icon={IconEnum.board} />
               {dictionary.title}
             </Link>
@@ -191,17 +191,13 @@ function ExpandedSection(tag: TagSettingsType) {
     </TabView>
   );
 }
-function TagTitle(tag: TagType) {
-  const { title } = tag;
-  return <Tag value={title} />;
-}
+
 export default function TagsSettings() {
-  const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [selected, setSelected] = useState<string[]>([]);
   const [expandedRows, setExpandedRows] = useState<any[] | DataTableExpandedRows>([]);
   const { data: tags, isLoading: isLoadingTags } = useGetTagSettings(project_id as string);
-  const { mutate: updateTag } = useUpdateTag(project_id as string);
+  const { mutate: updateTag } = useUpdateAlterNameTag(project_id as string, "tag");
   const { mutate: deleteTags } = useDeleteTags(project_id as string);
   return (
     <div className="tagSettings h-screen px-4 pt-4 pb-16">
@@ -213,7 +209,7 @@ export default function TagsSettings() {
         onSelectionChange={(e) => setSelected(e.value)}
         paginator
         removableSort
-        rowExpansionTemplate={(data) => ExpandedSection(data)}
+        rowExpansionTemplate={(data) => ExpandedSection(data, project_id as string)}
         rows={10}
         selection={selected}
         selectionMode="checkbox"
@@ -223,10 +219,8 @@ export default function TagsSettings() {
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column className="w-8" expander />
         <Column
-          body={TagTitle}
-          editor={(e) =>
-            TitleEditor(e, (data) => updateTag(data, { onSuccess: () => queryClient.refetchQueries(["allTags", project_id]) }))
-          }
+          body={AlterNameTagTitle}
+          editor={(e) => TitleEditor(e, (data) => updateTag(data))}
           field="title"
           header="Tag"
           sortable
