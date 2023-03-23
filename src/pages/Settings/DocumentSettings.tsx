@@ -1,7 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import { Chips } from "primereact/chips";
 import { Column, ColumnEditorOptions } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
@@ -14,7 +13,6 @@ import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
 import IconColumn from "../../components/Settings/Columns/IconColumn";
 import { TitleEditor } from "../../components/Settings/Editors/TitleEditor";
 import SettingsTable from "../../components/Settings/SettingsTable";
-import Tags from "../../components/Tags/Tags";
 import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
 import { TagType } from "../../types/generalTypes";
@@ -87,39 +85,11 @@ function TagsAlterNamesColumn({ alter_names, tags }: DocumentType, type: "tags" 
   return (
     <div className={`flex w-[10rem] flex-wrap justify-center gap-1 truncate ${type}Tags`}>
       {type === "tags" ? tags.map((tag) => <Tag key={tag.id} value={tag.title} />) : null}
-      {type === "alter_names" ? alter_names.map((tag: string) => <Tag key={tag} value={tag} />) : null}
+      {type === "alter_names" ? alter_names.map((alter_name) => <Tag key={alter_name.id} value={alter_name.title} />) : null}
     </div>
   );
 }
-function TagsEditor(editorOptions: ColumnEditorOptions) {
-  const { rowData, editorCallback } = editorOptions;
-  return (
-    <Tags
-      handleChange={({ value }) => {
-        if (editorCallback) editorCallback(value);
-      }}
-      localItem={rowData}
-      type="documents"
-    />
-  );
-}
-function AlterNamesEditor(editorOptions: ColumnEditorOptions, updateDocument: (data: Partial<DocumentType>) => void) {
-  const { rowData, editorCallback } = editorOptions;
-  return (
-    <Chips
-      allowDuplicate={false}
-      className="alterNamesChips box-border max-h-40 min-h-[48px] w-full max-w-full border-l border-zinc-600"
-      max={5}
-      onChange={(e) => {
-        const { value } = e;
-        updateDocument({ id: rowData.id, alter_names: value });
-        if (editorCallback) editorCallback(value);
-      }}
-      placeholder="Alternative names (5 max)"
-      value={rowData.alter_names}
-    />
-  );
-}
+
 function ActionsColumn({ id, folder }: DocumentType, navigate: NavigateFunction, deleteAction: (docId: string) => void) {
   return (
     <div className="flex justify-center gap-x-1">
@@ -154,7 +124,6 @@ export default function DocumentSettings() {
   const { mutate } = useUpdateItem("documents", project_id as string);
   const { mutate: deleteMutation } = useDeleteItem("documents", project_id as string);
   const queryClient = useQueryClient();
-
   const updateDocument = (data: Partial<DocumentType>) =>
     mutate(data, {
       onSuccess: async () => {
@@ -213,20 +182,7 @@ export default function DocumentSettings() {
           sortable
           sortField="parent.title"
         />
-        <Column
-          align="center"
-          body={(data) => TagsAlterNamesColumn(data, "tags")}
-          editor={TagsEditor}
-          field="tags"
-          filter
-          filterElement={(options) => TagsFilter(options, tags ?? [])}
-          filterFunction={tagsFilterFunction}
-          filterMatchMode="custom"
-          header="Tags"
-          showFilterMatchModes={false}
-          sortable
-          sortField="tags"
-        />
+
         <Column
           align="center"
           body={(data) => FolderTemplatePublicColumn(data, "folder")}
@@ -267,11 +223,23 @@ export default function DocumentSettings() {
         <Column
           align="center"
           body={(data) => TagsAlterNamesColumn(data, "alter_names")}
-          editor={(e) => AlterNamesEditor(e, updateDocument)}
           field="alter_names"
           header="Alternative Names"
           sortable
           sortField="alter_names"
+        />
+        <Column
+          align="center"
+          body={(data) => TagsAlterNamesColumn(data, "tags")}
+          field="tags"
+          filter
+          filterElement={(options) => TagsFilter(options, tags ?? [])}
+          filterFunction={tagsFilterFunction}
+          filterMatchMode="custom"
+          header="Tags"
+          showFilterMatchModes={false}
+          sortable
+          sortField="tags"
         />
         <Column align="center" body={(data) => ActionsColumn(data, navigate, deleteAction)} header="Actions" />
       </SettingsTable>
