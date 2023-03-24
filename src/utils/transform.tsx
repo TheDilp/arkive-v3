@@ -39,6 +39,7 @@ export function getItemNameForTree(type: AvailableItemTypes) {
 export function getItemTypeFromName(
   name: "document" | "map" | "graph" | "calendar" | "timeline" | "screen" | "dictionary" | "random table" | "random_table",
 ) {
+  if (name === "graph") return "boards";
   if (name === "random table" || name === "random_table") return "randomtables";
   if (name === "dictionary") return "dictionaries";
   return name.concat("s") as AvailableItemTypes;
