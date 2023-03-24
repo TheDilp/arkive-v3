@@ -328,7 +328,7 @@ export default function MenuBar() {
             if (link) {
               const href = window.prompt("Enter the URL:", link);
               if (href) {
-                updateLink({ href, target: "_blank" });
+                updateLink({ href: "https://".concat(href), target: "_blank" });
                 focus();
               } else {
                 removeLink();
@@ -336,7 +336,7 @@ export default function MenuBar() {
             } else {
               const href = window.prompt("Enter the URL:", undefined);
               if (href) {
-                updateLink({ href, target: "_blank" });
+                updateLink({ href: "https://".concat(href), target: "_blank" });
                 focus();
               }
             }
