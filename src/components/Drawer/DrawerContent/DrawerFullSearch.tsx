@@ -2,6 +2,7 @@ import { useAtomValue } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { Message } from "primereact/message";
 import { TabMenu } from "primereact/tabmenu";
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -232,9 +233,9 @@ export default function DrawerFullSearch() {
         results &&
         !isSearching &&
         !isSearchingSpecific &&
-        !Object.entries(results).filter(([, value]) => value.length !== 0).length
-          ? "No items match this query."
-          : null}
+        !Object.entries(results).filter(([, value]) => value.length !== 0).length ? (
+          <Message text="No items match this query." />
+        ) : null}
         {!isSearching && results && Object.keys(results).length > 0
           ? Object.entries(results)
               .filter(([, value]) => value.length !== 0)
