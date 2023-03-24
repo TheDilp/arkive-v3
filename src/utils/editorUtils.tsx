@@ -47,18 +47,22 @@ export const DefaultEditorExtensions = () => {
       {
         char: "@",
         name: "documents",
+        supportedCharacters: /[\w\d_]+( [\w\d_]+){0,2}/g,
       },
       {
         char: "#",
         name: "maps",
+        supportedCharacters: /[\w\d_]+( [\w\d_]+){0,2}/g,
       },
       {
         char: "$",
         name: "boards",
+        supportedCharacters: /[\w\d_]+( [\w\d_]+){0,2}/g,
       },
       {
         char: "%",
         name: "words",
+        supportedCharacters: /[\w\d_]+( [\w\d_]+){0,2}/g,
       },
     ],
   });
