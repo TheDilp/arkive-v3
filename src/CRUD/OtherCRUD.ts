@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
 import { AllAvailableTypes, AvailableItemTypes, TagCreateType, TagSettingsType, TagType } from "../types/generalTypes";
-import { AlterNameType } from "../types/ItemTypes/documentTypes";
+import { AlterNameType, DocumentType } from "../types/ItemTypes/documentTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -103,7 +103,7 @@ export const useUpdateAlterNameTag = <ItemType extends { id: string; title: stri
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (variables: Partial<Omit<ItemType, "project_id">> & { id?: string }) =>
+    async (variables: Partial<Omit<ItemType, "project_id">> & { id?: string; parentId?: string }) =>
       FetchFunction({
         url: `${baseURLS.baseServer}${type === "tag" ? updateURLs.updateTag : updateURLs.updateAlterName}`,
         method: "POST",
@@ -124,6 +124,20 @@ export const useUpdateAlterNameTag = <ItemType extends { id: string; title: stri
           }
           return old;
         });
+        if (type === "alter_name") {
+          queryClient.setQueryData<DocumentType[]>(["allItems", project_id, "documents"], (old) => {
+            if (old) {
+              return old.map((item) => {
+                if (item.id === variables?.parentId) {
+                  return { ...item, ...variables };
+                }
+                return item;
+              });
+            }
+            return old;
+          });
+        }
+
         return { oldData };
       },
       onError: (_, __, context) => {
