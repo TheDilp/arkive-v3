@@ -67,12 +67,18 @@ export default function DrawerBoardContent() {
             })
           }
           onKeyDown={(e) => {
-            if (e.key === "Enter" && board) {
-              updateBoardMutation?.mutate({
-                id: board.id,
-                ...changedData,
-              });
-            }
+            if (e.key === "Enter")
+              createUpdateItem<BoardType>(
+                board,
+                localItem,
+                changedData,
+                DefaultBoard,
+                allBoards,
+                resetChanges,
+                createBoardMutation.mutateAsync,
+                updateBoardMutation.mutateAsync,
+                setDrawer,
+              );
           }}
           placeholder="Graph title"
           value={localItem?.title || ""}
