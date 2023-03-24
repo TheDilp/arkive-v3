@@ -1,6 +1,6 @@
 import { SetStateAction } from "jotai";
 import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
-import { Dispatch, useState } from "react";
+import { Dispatch, MutableRefObject, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateTag, useGetAllTags, useUpdateAlterNameTag } from "../../CRUD/OtherCRUD";
@@ -9,6 +9,7 @@ import { BoardCreateType, DefaultEdgeType, DefaultNodeType, EdgeType, NodeType }
 import { CalendarCreateType } from "../../types/ItemTypes/calendarTypes";
 import { DocumentCreateType } from "../../types/ItemTypes/documentTypes";
 import { MapCreateType } from "../../types/ItemTypes/mapTypes";
+import { toaster } from "../../utils/toast";
 
 type Props = {
   handleChange: ({ name, value }: { name: string; value: any }) => void;
@@ -55,16 +56,18 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
   const { data: initialTags } = useGetAllTags(project_id as string);
   const [tags, setTags] = useState(initialTags || []);
   const { mutate: createTag } = useCreateTag(project_id as string);
-
+  const autocompleteRef = useRef() as MutableRefObject<any>;
   const { mutate: updateTag } = useUpdateAlterNameTag(project_id as string, "tag");
 
   return (
     <AutoComplete
+      ref={autocompleteRef}
       className="tagsAutocomplete max-h-40 w-full overflow-y-auto border-zinc-600"
       completeMethod={(e) => filterTags(e, initialTags || [], setTags)}
       field="title"
       multiple
       onChange={(e) => setTags(e.value)}
+      onClick={() => autocompleteRef?.current?.show()}
       onKeyPress={(e) => {
         if (isSettings) {
           e.stopPropagation();
@@ -82,6 +85,11 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
         if (isSettings) {
           e.originalEvent.preventDefault();
           e.originalEvent.preventDefault();
+        }
+        const selectedIds = (localItem?.tags || []).map((t) => t?.id);
+        if (selectedIds.includes(e.value.id)) {
+          toaster("warning", "Cannot have duplicate tags.");
+          return;
         }
         handleChange({ name: "tags", value: [...(localItem?.tags || []), e.value] });
         if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "connect") });
