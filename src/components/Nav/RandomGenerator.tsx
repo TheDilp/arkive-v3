@@ -44,8 +44,7 @@ export default function RandomGenerator() {
             loading={loadingTableOptions}
             onClick={async () => {
               if (selectedRandomTable) {
-                const currentData = queryClient.getQueryData<RandomTableType>(["randomtables", selectedRandomTable.id, false]);
-                if (!currentData) setLoadingTableOptions(true);
+                setLoadingTableOptions(true);
                 const tableData = await queryClient.ensureQueryData<RandomTableType>(["randomtables", selectedRandomTable.id], {
                   queryFn: async () =>
                     FetchFunction({
@@ -65,8 +64,7 @@ export default function RandomGenerator() {
           <hr className="border-zinc-700" />
           {result ? (
             <div
-              className="overflow-y-auto"
-              draggable
+              draggable="true"
               onDragStart={(e) => {
                 e.dataTransfer.setData("random_table_option_result", JSON.stringify(result));
               }}>
