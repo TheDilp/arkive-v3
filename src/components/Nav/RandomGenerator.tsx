@@ -65,8 +65,9 @@ export default function RandomGenerator() {
           {result ? (
             <div
               draggable="true"
-              onDragStart={(e) => {
-                e.dataTransfer.setData("random_table_option_result", JSON.stringify(result));
+              onDragStart={(ev) => {
+                const string = JSON.stringify(result);
+                if (string) ev.dataTransfer.setData("Text", string);
               }}>
               <h4 className="select-none pb-2 font-Merriweather text-lg font-medium">
                 {result.index + 1}. {result.title}
