@@ -95,7 +95,6 @@ export default function Editor({ content, editable }: EditorType) {
           }}
           onDrop={(e) => {
             const stringData = e.dataTransfer.getData("Text");
-
             if (!stringData) return;
             if (stringData) {
               const data: { index: number; title: string; description?: string } = JSON.parse(e.dataTransfer.getData("Text"));
