@@ -46,7 +46,7 @@ export default function DrawerFullSearch() {
   const [filteredTags, setFilteredTags] = useState<TagType[]>([]);
   const [menuIndex, setMenuIndex] = useState(drawer?.data?.index ?? 0);
   const [index, setIndex] = useState({ category: 0, index: 0 });
-  const [results, setResults] = useState<FullSearchResults>(SearchDefault);
+  const [results, setResults] = useState<FullSearchResults | null>(null);
 
   const { mutate: searchMutation, isLoading: isSearching } = useFullSearch(project_id as string);
   const { mutate: specificSearchMutation, isLoading: isSearchingSpecific } = useSpecificSearch(project_id as string);
@@ -85,7 +85,7 @@ export default function DrawerFullSearch() {
             );
           }
         }
-      } else setResults(SearchDefault);
+      } else setResults(null);
     },
     500,
   );
@@ -97,7 +97,7 @@ export default function DrawerFullSearch() {
 
   const keyPressResults = useMemo(
     () =>
-      Object.entries(results)
+      Object.entries(results || {})
         .filter(([, value]) => value.length)
         .map(([, value]) => value),
     [results],
@@ -109,6 +109,7 @@ export default function DrawerFullSearch() {
       if (drawer?.data?.category) setSelectedCategory(drawer?.data?.category);
     }
   }, [drawer?.data]);
+
   useEffect(() => {
     if (downPress && keyPressResults.some((res) => res.length) && document.activeElement === searchInputRef.current) {
       const currentIndex = index.index;
@@ -121,6 +122,7 @@ export default function DrawerFullSearch() {
       }
     }
   }, [downPress]);
+
   useEffect(() => {
     if (upPress && keyPressResults.some((res) => res.length) && document.activeElement === searchInputRef.current) {
       const currentIndex = index.index;
@@ -142,7 +144,7 @@ export default function DrawerFullSearch() {
     if (enterPress && document.activeElement === searchInputRef.current) {
       const item = keyPressResults?.[index.category]?.[index.index];
       if (item) {
-        const type = Object.entries(results)
+        const type = Object.entries(results || {})
           .filter(([, value]) => value.length)
           .map(([key]) => key)[index.category] as AvailableSearchResultTypes;
 
@@ -157,7 +159,6 @@ export default function DrawerFullSearch() {
       }
     }
   }, [enterPress]);
-
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex flex-col gap-y-2">
@@ -227,6 +228,13 @@ export default function DrawerFullSearch() {
 
       <div className="mt-2 flex flex-col gap-y-2 font-Lato">
         {isSearching ? "Searching..." : null}
+        {query &&
+        results &&
+        !isSearching &&
+        !isSearchingSpecific &&
+        !Object.entries(results).filter(([, value]) => value.length !== 0).length
+          ? "No items match this query."
+          : null}
         {!isSearching && results && Object.keys(results).length > 0
           ? Object.entries(results)
               .filter(([, value]) => value.length !== 0)
@@ -238,7 +246,7 @@ export default function DrawerFullSearch() {
                   itemType={key as AvailableSearchResultTypes}
                 />
               ))
-          : (query && !isSearching && "No items match this query.") || ""}
+          : null}
       </div>
     </div>
   );
