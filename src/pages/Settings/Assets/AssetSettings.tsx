@@ -4,7 +4,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDebouncedCallback } from "use-debounce";
+import { DebouncedState, useDebouncedCallback } from "use-debounce";
 
 import { useGetAllSettingsImages } from "../../../CRUD/ItemsCRUD";
 import { ListGridItem } from "./GridItem";
@@ -15,7 +15,7 @@ function AssetSettingsHeader(
   filter: "all" | "image" | "map",
   setLayout: Dispatch<SetStateAction<"list" | "grid">>,
   setFilter: Dispatch<SetStateAction<"all" | "image" | "map">>,
-  setSearch: Dispatch<SetStateAction<string>>,
+  setSearch: DebouncedState<(input: string) => void>,
 ) {
   return (
     <div className="flex items-center gap-x-4">
