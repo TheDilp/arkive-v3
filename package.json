@@ -1,12 +1,12 @@
 {
-  "name": "arkivev2-local",
+  "name": "arkive-v3",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "build": "vite build",
     "preview": "vite preview",
-    "start": "vite"
+    "start": "vite --host --port=$PORT"
   },
   "dependencies": {
     "@floating-ui/react": "^0.18.0",
