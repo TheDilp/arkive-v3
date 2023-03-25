@@ -1,8 +1,10 @@
 import { SetStateAction } from "jotai";
 import { DataView, DataViewLayoutOptions } from "primereact/dataview";
 import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
 import { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 import { useGetAllSettingsImages } from "../../../CRUD/ItemsCRUD";
 import { ListGridItem } from "./GridItem";
@@ -13,6 +15,7 @@ function AssetSettingsHeader(
   filter: "all" | "image" | "map",
   setLayout: Dispatch<SetStateAction<"list" | "grid">>,
   setFilter: Dispatch<SetStateAction<"all" | "image" | "map">>,
+  setSearch: Dispatch<SetStateAction<string>>,
 ) {
   return (
     <div className="flex items-center gap-x-4">
@@ -38,6 +41,7 @@ function AssetSettingsHeader(
         placeholder="Sort By Price"
         value={filter}
       />
+      <InputText placeholder="Search" onChange={(e) => setSearch(e.currentTarget.value)} />
     </div>
   );
 }
@@ -47,20 +51,29 @@ export default function AssetSettings() {
   const { data: images, isFetching } = useGetAllSettingsImages(project_id as string);
   const [layout, setLayout] = useState<"grid" | "list">("grid");
   const [filter, setFilter] = useState<"all" | "image" | "map">("all");
+  const [search, setSearch] = useState("");
+
+  const debouncedSearch = useDebouncedCallback((input: string) => {
+    setSearch(input);
+  }, 500);
+
   return (
     <div className="p-4">
       <DataView
-        header={AssetSettingsHeader(layout, filter, setLayout, setFilter)}
+        className={`p-dataview-${layout}`}
+        header={AssetSettingsHeader(layout, filter, setLayout, setFilter, debouncedSearch)}
         itemTemplate={layout === "list" ? ListAssetItem : ListGridItem}
         layout={layout}
         loading={isFetching}
         paginator
-        rows={18}
-        value={images?.filter((image) => {
-          if (filter === "image") return !image.includes("maps");
-          if (filter === "map") return image.includes("maps");
-          return true;
-        })}
+        rows={layout === "list" ? 10 : 18}
+        value={images
+          ?.filter((image) => {
+            if (filter === "image") return !image.includes("maps");
+            if (filter === "map") return image.includes("maps");
+            return true;
+          })
+          ?.filter((image) => image.toLowerCase().includes(search.toLowerCase()))}
       />
     </div>
   );
