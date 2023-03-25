@@ -92,7 +92,7 @@ function App() {
         }
         user?.getIdToken();
       }
-      if (!user && !pathname.includes("view")) {
+      if (!user && !pathname.includes("view") && !pathname.includes("auth")) {
         window.location.href = "https://home.thearkive.app";
       }
     });
