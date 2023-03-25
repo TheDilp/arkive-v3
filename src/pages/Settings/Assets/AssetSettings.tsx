@@ -5,6 +5,7 @@ import { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetAllSettingsImages } from "../../../CRUD/ItemsCRUD";
+import { ListGridItem } from "./GridItem";
 import { ListAssetItem } from "./ListItem";
 
 function AssetSettingsHeader(
@@ -44,13 +45,13 @@ function AssetSettingsHeader(
 export default function AssetSettings() {
   const { project_id } = useParams();
   const { data: images, isFetching } = useGetAllSettingsImages(project_id as string);
-  const [layout, setLayout] = useState<"grid" | "list">("list");
+  const [layout, setLayout] = useState<"grid" | "list">("grid");
   const [filter, setFilter] = useState<"all" | "image" | "map">("all");
   return (
     <div className="p-4">
       <DataView
         header={AssetSettingsHeader(layout, filter, setLayout, setFilter)}
-        itemTemplate={ListAssetItem}
+        itemTemplate={layout === "list" ? ListAssetItem : ListGridItem}
         layout={layout}
         loading={isFetching}
         paginator

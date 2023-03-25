@@ -388,3 +388,9 @@ Inputs
 .p-inputnumber-button {
   @apply bg-blue-300 !important;
 }
+
+.p-dataview-content {
+  .p-grid {
+    @apply grid-cols-6 gap-x-4 !important;
+  }
+}
