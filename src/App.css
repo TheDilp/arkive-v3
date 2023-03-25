@@ -391,6 +391,6 @@ Inputs
 
 .p-dataview-content {
   .p-grid {
-    @apply max-h-[65vh] grid-cols-6 gap-x-4 !important;
+    @apply max-h-[65vh] grid-cols-6 gap-x-4 overflow-y-auto !important;
   }
 }
