@@ -9,7 +9,7 @@ export function ListAssetItem(image: string) {
   return (
     <div className="flex w-full max-w-full items-center gap-x-4 overflow-x-auto overflow-y-hidden">
       <div className="h-32 w-32">
-        <Image alt="Listasset" className="h-32 w-32" imageClassName="object-contain" preview src={image} />
+        <Image downloadable alt="Listasset" className="h-32 w-32" imageClassName="object-contain" preview src={image} />
       </div>
       <div className="flex flex-1 items-center justify-between pr-6">
         <div className="flex-1">
