@@ -363,13 +363,6 @@ export default function BoardView({ isReadOnly }: Props) {
         ref={cyRef}
         className="h-[94%] w-full"
         cy={(cy) => {
-          // @ts-ignore
-          // cyRef.current = cy;
-          // cyRef.current.gridGuide({
-          //   ...cytoscapeGridOptions,
-          //   snapToGridDuringDrag: boardState.grid,
-          //   drawGrid: boardState.grid,
-          // });
           setBoardRef(cy);
         }}
         elements={elements}

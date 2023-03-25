@@ -1,4 +1,5 @@
-import { useAtom } from "jotai";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
@@ -9,22 +10,33 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
-import { useGetAllImages } from "../../CRUD/ItemsCRUD";
+import { useGetAllSettingsImages } from "../../CRUD/ItemsCRUD";
 import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
-import { baseURLS } from "../../types/CRUDenums";
+import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
+import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
+import { exportImages } from "../../utils/imageUtils";
 import { toaster } from "../../utils/toast";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
 
 export default function ProjectSettings() {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [userData] = useAtom(UserAtom);
+  const userData = useAtomValue(UserAtom);
+  const [loading, setLoading] = useState(false);
   const { data, isLoading } = useGetSingleProject(project_id as string);
-  const { data: allImages } = useGetAllImages(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
+  const {
+    data: allImages,
+    refetch,
+    isFetching: isFetchingAllImages,
+  } = useGetAllSettingsImages(project_id as string, {
+    enabled: false,
+    staleTime: 5 * 60 * 1000,
+  });
   useEffect(() => {
     if (data) setLocalItem(data);
   }, [data]);
@@ -148,7 +160,30 @@ export default function ProjectSettings() {
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Export All</h3>
         <h4 className="text-base font-semibold">This button exports only images that are related to this project.</h4>
-        <Button className="p-button-outlined w-fit" disabled icon="pi pi-download" iconPos="right" label="Export Images" />
+        <Button
+          className="p-button-outlined w-fit"
+          onClick={async () => {
+            setLoading(true);
+            const data = await queryClient.ensureQueryData({
+              queryKey: ["allSettingsImages", project_id],
+              queryFn: async () =>
+                FetchFunction({
+                  url: `${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`,
+                  method: "GET",
+                }),
+            });
+            if (data) {
+              console.log(data);
+              const images = data?.map((img: { Key: string }) => `${import.meta.env.VITE_S3_CDN_HOST}/${img.Key}`);
+              if (data) await exportImages(project_id as string, images);
+            }
+            setLoading(false);
+          }}
+          icon="pi pi-download"
+          iconPos="right"
+          loading={loading}
+          label="Export Images"
+        />
       </div>
       <hr className="border-zinc-700" />
 
