@@ -55,7 +55,7 @@ export default function AssetSettings() {
         layout={layout}
         loading={isFetching}
         paginator
-        rows={5}
+        rows={18}
         value={images?.filter((image) => {
           if (filter === "image") return !image.includes("maps");
           if (filter === "map") return image.includes("maps");
