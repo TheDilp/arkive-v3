@@ -1,4 +1,7 @@
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
 import { TagType } from "../types/generalTypes";
+import { ProjectType } from "../types/ItemTypes/projectTypes";
 
 export function tagsFilterFunction(value: TagType[], filter: TagType[] | null) {
   if (!filter || !value) return true;
@@ -35,3 +38,8 @@ export const userPermissions = [
     value: "editor",
   },
 ];
+
+export function exportProject(project: ProjectType) {
+  const data = new Blob([JSON.stringify(project)], { type: "text/plain;charset=utf-8" });
+  saveAs(data, `${project.id}.json`);
+}

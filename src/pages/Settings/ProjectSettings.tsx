@@ -10,7 +10,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
-import { useGetAllSettingsImages } from "../../CRUD/ItemsCRUD";
+import { useGetAllImages, useGetAllSettingsImages } from "../../CRUD/ItemsCRUD";
 import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
@@ -18,6 +18,7 @@ import { UserAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { exportImages } from "../../utils/imageUtils";
+import { exportProject } from "../../utils/settingsUtils";
 import { toaster } from "../../utils/toast";
 import { virtualScrollerSettings } from "../../utils/uiUtils";
 
@@ -29,12 +30,7 @@ export default function ProjectSettings() {
   const [loading, setLoading] = useState(false);
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
-  const {
-    data: allImages,
-    refetch,
-    isFetching: isFetchingAllImages,
-  } = useGetAllSettingsImages(project_id as string, {
-    enabled: false,
+  const { data: allImages } = useGetAllImages(project_id as string, {
     staleTime: 5 * 60 * 1000,
   });
   useEffect(() => {
@@ -152,16 +148,32 @@ export default function ProjectSettings() {
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Export Project</h3>
         <h4 className="text-base font-semibold">
-          This exports all data related to documents, maps, boards and images from this project in the JSON format (docs, maps,
-          boards).
+          This exports all data related to documents, maps, graphs, calendars, timelines, screens, dictionaries and random
+          tables from this project in the JSON format.
         </h4>
-        <Button className="p-button-outlined w-fit" disabled icon="pi pi-download" iconPos="right" label="Export All" />
+        <Button
+          className="p-button-outlined w-fit"
+          onClick={async () => {
+            setLoading(true);
+            const data: ProjectType = await FetchFunction({
+              url: `${baseURLS.baseServer}exportproject/${project_id}`,
+              method: "GET",
+            });
+            exportProject(data);
+            setLoading(false);
+          }}
+          icon="pi pi-download"
+          iconPos="right"
+          disabled={loading}
+          label="Export All"
+        />
       </div>
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Export All</h3>
         <h4 className="text-base font-semibold">This button exports only images that are related to this project.</h4>
         <Button
           className="p-button-outlined w-fit"
+          disabled={loading}
           onClick={async () => {
             setLoading(true);
             const data = await queryClient.ensureQueryData({
