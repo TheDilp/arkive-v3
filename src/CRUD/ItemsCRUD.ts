@@ -10,6 +10,7 @@ import { SortIndexes } from "../types/treeTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { getItems } from "../utils/CRUD/CRUDFunctions";
 import { createURL, deleteManyURL, deleteURL, sortURL, updateManyURL, updateURL } from "../utils/CRUD/CRUDUrls";
+import { removeDeletedImages } from "../utils/imageUtils";
 import { toaster } from "../utils/toast";
 
 export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItemTypes, options?: UseQueryOptions) => {
@@ -271,7 +272,6 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
     async (id: string) => {
       if (id) {
         const url = deleteURL(type);
-        console.log(url);
         if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id }) });
       }
       return null;
@@ -594,25 +594,17 @@ export const useDeleteImage = (project_id: string) => {
     {
       onMutate: (variables) => {
         queryClient.setQueryData<{ Key: string }[]>(["allSettingsImages", project_id], (oldData) => {
-          if (oldData) {
-            console.log(oldData, variables);
-
-            return oldData.filter((oldImage) => !oldImage.Key.includes(variables.image));
-          }
+          if (oldData) return removeDeletedImages(oldData, variables);
           return oldData;
         });
         if (variables.type === "images") {
           queryClient.setQueryData<{ Key: string }[]>(["allImages", project_id], (oldData) => {
-            if (oldData) {
-              return oldData.filter((oldImage) => !oldImage.Key.includes(variables.image));
-            }
+            if (oldData) return removeDeletedImages(oldData, variables);
             return oldData;
           });
         } else if (variables.type === "maps") {
           queryClient.setQueryData<{ Key: string }[]>(["allMapImages", project_id], (oldData) => {
-            if (oldData) {
-              return oldData.filter((oldImage) => !oldImage.Key.includes(variables.image));
-            }
+            if (oldData) return removeDeletedImages(oldData, variables);
             return oldData;
           });
         }

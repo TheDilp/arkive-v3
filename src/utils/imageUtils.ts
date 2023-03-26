@@ -28,3 +28,10 @@ export async function exportImages(project_id: string, images: string[]) {
       });
   }
 }
+
+export function removeDeletedImages(images: { Key: string }[], variables: { type: "images" | "maps"; image: string }) {
+  return images.filter((oldImage) => {
+    if (oldImage.Key.includes(variables.type) && oldImage.Key.includes(variables.image)) return false;
+    return true;
+  });
+}
