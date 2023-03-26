@@ -573,6 +573,7 @@ export const useGetAllSettingsImages = (project_id: string, options?: UseQueryOp
     {
       staleTime: options?.staleTime || 5 * 60 * 1000,
       select: (data) => {
+        console.log(data);
         return {
           size: data?.reduce((accumulator, currentValue) => accumulator + currentValue.Size, 0),
           images: data
