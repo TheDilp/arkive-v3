@@ -67,7 +67,6 @@ export default function BoardView({ isReadOnly }: Props) {
     (source: string, target: string, color?: string) => {
       cyRef?.current?._cy?.remove(".eh-ghost-edge");
       createEdgeMutation.mutate({
-        ...DefaultEdge,
         id: crypto.randomUUID(),
         parentId: item_id as string,
         source_id: source,
@@ -216,7 +215,6 @@ export default function BoardView({ isReadOnly }: Props) {
       if (evt.target === cyRef?.current?._cy && boardState.addNodes) {
         const { x, y } = evt.position;
         createNodeMutation.mutate({
-          ...DefaultNode,
           x,
           y,
           parentId: item_id,
@@ -333,7 +331,6 @@ export default function BoardView({ isReadOnly }: Props) {
         if (data.type === "documents") {
           const { id: doc_id, title: label } = data;
           createNodeMutation.mutate({
-            ...DefaultNode,
             x,
             y,
             parentId: item_id,
@@ -346,7 +343,6 @@ export default function BoardView({ isReadOnly }: Props) {
           });
         } else if (data.type === "images") {
           createNodeMutation.mutate({
-            ...DefaultNode,
             x,
             y,
             parentId: item_id,

@@ -202,8 +202,7 @@ export default function ProjectSettings() {
       <div className="flex flex-col gap-y-2">
         <h3 className="text-lg font-semibold">Delete Project</h3>
         <h4 className="text-base font-bold text-red-600">
-          Warning: A deleted project cannot be recovered. This also deletes all documents, maps, boards and images associated
-          with this project.
+          Warning: A deleted project cannot be recovered. This also deletes all data and images associated with this project.
         </h4>
         <h5 className="text-sm font-semibold">You can export a project before deleting it via the button above.</h5>
 

@@ -70,40 +70,40 @@ export type EdgeType = {
   label?: string;
   tags: TagType[];
 
-  curveStyle: "straight" | "unbundled-bezier" | "taxi";
-  lineStyle: "solid" | "dashed" | "dotted";
-  lineCap: "butt" | "round" | "square";
-  lineFill: "solid" | "linear-gradient";
-  lineOpacity: number;
-  lineColor: string;
-  width: number;
-  controlPointDistances: number;
-  controlPointWeights: number;
-  taxiDirection: "auto" | "vertical" | "horizontal" | "upward" | "downward" | "leftward" | "rightward";
-  taxiTurn: number;
-  arrowScale: number;
+  curveStyle?: "straight" | "unbundled-bezier" | "taxi";
+  lineStyle?: "solid" | "dashed" | "dotted";
+  lineCap?: "butt" | "round" | "square";
+  lineFill?: "solid" | "linear-gradient";
+  lineOpacity?: number;
+  lineColor?: string;
+  width?: number;
+  controlPointDistances?: number;
+  controlPointWeights?: number;
+  taxiDirection?: "auto" | "vertical" | "horizontal" | "upward" | "downward" | "leftward" | "rightward";
+  taxiTurn?: number;
+  arrowScale?: number;
 
-  sourceArrowShape: ArrowShape;
-  sourceArrowFill: ArrowFill;
-  sourceArrowColor: string;
+  sourceArrowShape?: ArrowShape;
+  sourceArrowFill?: ArrowFill;
+  sourceArrowColor?: string;
 
-  targetArrowShape: ArrowShape;
-  targetArrowFill: ArrowFill;
-  targetArrowColor: string;
+  targetArrowShape?: ArrowShape;
+  targetArrowFill?: ArrowFill;
+  targetArrowColor?: string;
 
-  midSourceArrowShape: ArrowShape;
-  midSourceArrowFill: ArrowFill;
-  midSourceArrowColor: string;
+  midSourceArrowShape?: ArrowShape;
+  midSourceArrowFill?: ArrowFill;
+  midSourceArrowColor?: string;
 
-  midTargetArrowShape: ArrowShape;
-  midTargetArrowFill: ArrowFill;
-  midTargetArrowColor: string;
+  midTargetArrowShape?: ArrowShape;
+  midTargetArrowFill?: ArrowFill;
+  midTargetArrowColor?: string;
 
-  fontSize: number;
-  fontColor: string;
-  fontFamily: string;
+  fontSize?: number;
+  fontColor?: string;
+  fontFamily?: string;
 
-  zIndex: number;
+  zIndex?: number;
 
   parentId: string;
   source_id: string;

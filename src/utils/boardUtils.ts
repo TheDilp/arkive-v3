@@ -471,7 +471,27 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
     .filter((node) => !node.template)
     .map((node: NodeType) => ({
       data: {
-        ...node,
+        id: node.id,
+
+        type: node?.type || "rectangle",
+        width: node?.width || 50,
+        height: node?.height || 50,
+        x: node?.x || 0,
+        y: node?.y || 0,
+
+        fontSize: node?.fontSize || 16,
+        fontColor: node?.fontColor || "#ffffff",
+        fontFamily: node?.fontFamily || "Lato",
+        textVAlign: node?.textVAlign || "center",
+        textHAlign: node?.textHAlign || "center",
+
+        locked: node?.locked || false,
+        template: node?.template || false,
+        zIndex: node?.zIndex || 1,
+
+        backgroundColor: node?.backgroundColor || "#595959",
+        backgroundOpacity: node?.backgroundOpacity || 1,
+
         classes: `${isReadOnly ? "publicBoardNode" : "boardNode"}`,
         label: node.label || "",
         zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
@@ -487,12 +507,48 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
 export function mapEdges(edges: EdgeType[], isReadOnly?: boolean) {
   return edges.map((edge: EdgeType) => ({
     data: {
-      ...edge,
+      id: edge.id,
+
       source: edge.source_id,
       target: edge.target_id,
       classes: `boardEdge ${isReadOnly && "publicBoardEdge"}`,
       zIndexCompare: "manual",
-      label: edge.label || "",
+      label: edge?.label || "",
+
+      curveStyle: edge?.curveStyle || "straight",
+      lineStyle: edge?.lineStyle || "solid",
+      lineColor: edge?.lineColor || "#595959",
+      lineFill: edge?.lineFill || "solid",
+      lineOpacity: edge?.lineOpacity || 1,
+      width: edge?.width || 1,
+
+      controlPointDistances: edge?.controlPointDistances || -100,
+      controlPointWeights: edge?.controlPointWeights || 0.5,
+
+      taxiDirection: edge?.taxiDirection || "auto",
+      taxiTurn: edge?.taxiTurn || 50,
+
+      arrowScale: edge?.arrowScale || 1,
+
+      sourceArrowShape: edge?.sourceArrowShape || "none",
+      sourceArrowColor: edge?.sourceArrowColor || "#595959",
+      sourceArrowFill: edge?.sourceArrowFill || "filled",
+
+      targetArrowShape: edge?.targetArrowShape || "none",
+      targetArrowColor: edge?.targetArrowColor || "#595959",
+      targetArrowFill: edge?.targetArrowFill || "filled",
+
+      midSourceArrowShape: edge?.midSourceArrowShape || "none",
+      midSourceArrowColor: edge?.midSourceArrowColor || "#595959",
+      midSourceArrowFill: edge?.midSourceArrowFill || "filled",
+
+      midTargetArrowShape: edge?.midTargetArrowShape || "none",
+      midTargetArrowColor: edge?.midTargetArrowColor || "#595959",
+      midTargetArrowFill: edge?.midTargetArrowFill || "filled",
+
+      fontSize: edge?.fontSize || 16,
+      fontColor: edge?.fontColor || "#ffffff",
+      fontFamily: edge?.fontFamily || "Lato",
     },
   }));
 }
