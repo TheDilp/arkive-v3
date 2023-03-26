@@ -36,4 +36,5 @@ export const IconEnum = {
   table: "ph:table-thin",
   grid: "ph:grid-four-thin",
   search: "ph:magnifying-glass-light",
+  image: "ph:images-thin",
 };

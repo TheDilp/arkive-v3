@@ -97,8 +97,8 @@ export default function CalendarEvent({ dayEvents, index, month, year, isReadOnl
                 onKeyDown={() => {}}
                 role="button"
                 style={{
-                  backgroundColor: event.backgroundColor,
-                  color: event.textColor,
+                  backgroundColor: event?.backgroundColor || "#075985",
+                  color: event?.textColor || "#ffffff",
                 }}
                 tabIndex={-1}>
                 {event.title}

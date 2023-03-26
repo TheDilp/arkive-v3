@@ -41,6 +41,7 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   { icon: IconEnum.randomtables, navigate: "./settings/randomtable-settings", title: "Random Tables" },
   { icon: IconEnum.tags, navigate: "./settings/tag-settings", title: "Tags" },
   { icon: IconEnum.alter_names, navigate: "./settings/alternative-names-settings", title: "Alternative Names" },
+  { icon: IconEnum.image, navigate: "./settings/asset-settings", title: "Assets" },
   { icon: "ic:baseline-miscellaneous-services", navigate: "./settings/misc-settings", title: "Miscellaneous" },
 
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },

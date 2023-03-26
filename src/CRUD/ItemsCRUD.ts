@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
-import { baseURLS, getURLS } from "../types/CRUDenums";
+import { baseURLS, deleteURLs, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
 import { BoardType } from "../types/ItemTypes/boardTypes";
 import { DictionaryType } from "../types/ItemTypes/dictionaryTypes";
@@ -536,6 +536,8 @@ export const useUpdateManyNodesPosition = (item_id: string) => {
   );
 };
 
+// Images
+
 export const useGetAllImages = (project_id: string, options?: UseQueryOptions) => {
   return useQuery<{ Key: string }[], unknown, string[]>(
     ["allImages", project_id],
@@ -573,6 +575,49 @@ export const useGetAllSettingsImages = (project_id: string, options?: UseQueryOp
         return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
       },
       enabled: options?.enabled,
+    },
+  );
+};
+
+export const useDeleteImage = (project_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (variables: { image: string; type: "images" | "maps" }) => {
+      return FetchFunction({
+        url: `${baseURLS.baseServer}${deleteURLs.deleteImage}`,
+        method: "DELETE",
+
+        body: JSON.stringify({ project_id, image: variables.image, type: variables.type }),
+      });
+    },
+    {
+      onMutate: (variables) => {
+        queryClient.setQueryData<{ Key: string }[]>(["allSettingsImages", project_id], (oldData) => {
+          if (oldData) {
+            console.log(oldData, variables);
+
+            return oldData.filter((oldImage) => !oldImage.Key.includes(variables.image));
+          }
+          return oldData;
+        });
+        if (variables.type === "images") {
+          queryClient.setQueryData<{ Key: string }[]>(["allImages", project_id], (oldData) => {
+            if (oldData) {
+              return oldData.filter((oldImage) => !oldImage.Key.includes(variables.image));
+            }
+            return oldData;
+          });
+        } else if (variables.type === "maps") {
+          queryClient.setQueryData<{ Key: string }[]>(["allMapImages", project_id], (oldData) => {
+            if (oldData) {
+              return oldData.filter((oldImage) => !oldImage.Key.includes(variables.image));
+            }
+            return oldData;
+          });
+        }
+
+        return {};
+      },
     },
   );
 };

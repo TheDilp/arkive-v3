@@ -1,9 +1,24 @@
+import { UseMutateFunction } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
+import { useParams } from "react-router-dom";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
 
 /* eslint-disable react/destructuring-assignment */
-export function ListAssetItem(image: string) {
+export function ListAssetItem(
+  image: string,
+  deleteImage: UseMutateFunction<
+    any,
+    unknown,
+    {
+      image: string;
+      type: "images" | "maps";
+    },
+    {}
+  >,
+) {
+  const { project_id } = useParams();
   const imageName = image.split("/").pop();
   const isMap = image.includes("maps");
   return (
@@ -17,7 +32,15 @@ export function ListAssetItem(image: string) {
         </div>
         <div className="flex items-center gap-x-8">
           <Tag severity={isMap ? "warning" : "info"} style={{ fontSize: "1rem" }} value={isMap ? "Map" : "Image"} />
-          <Button className="p-button-outlined p-button-danger" icon="pi pi-trash" />
+          <Button
+            className="p-button-outlined p-button-danger"
+            icon="pi pi-trash"
+            onClick={() =>
+              deleteItem("Are you sure you want to delete this image?", () => {
+                if (imageName) deleteImage({ image: imageName, type: isMap ? "maps" : "images" });
+              })
+            }
+          />
         </div>
       </div>
     </div>

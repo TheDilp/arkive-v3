@@ -134,6 +134,7 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
           });
           await queryClient.refetchQueries({ queryKey: ["allMapImages", project_id] });
         }
+        await queryClient.refetchQueries({ queryKey: ["allSettingsImages", project_id] });
         setUploading(false);
         setTypes([]);
         e.options.clear();

@@ -6,7 +6,7 @@ import { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DebouncedState, useDebouncedCallback } from "use-debounce";
 
-import { useGetAllSettingsImages } from "../../../CRUD/ItemsCRUD";
+import { useDeleteImage, useGetAllSettingsImages } from "../../../CRUD/ItemsCRUD";
 import { ListGridItem } from "./GridItem";
 import { ListAssetItem } from "./ListItem";
 
@@ -49,9 +49,11 @@ function AssetSettingsHeader(
 export default function AssetSettings() {
   const { project_id } = useParams();
   const { data: images, isFetching } = useGetAllSettingsImages(project_id as string);
-  const [layout, setLayout] = useState<"grid" | "list">("grid");
+  const [layout, setLayout] = useState<"grid" | "list">("list");
   const [filter, setFilter] = useState<"all" | "image" | "map">("all");
   const [search, setSearch] = useState("");
+
+  const { mutate: deleteImage } = useDeleteImage(project_id as string);
 
   const debouncedSearch = useDebouncedCallback((input: string) => {
     setSearch(input);
@@ -62,7 +64,7 @@ export default function AssetSettings() {
       <DataView
         className={`p-dataview-${layout}`}
         header={AssetSettingsHeader(layout, filter, setLayout, setFilter, debouncedSearch)}
-        itemTemplate={layout === "list" ? ListAssetItem : ListGridItem}
+        itemTemplate={(item) => (layout === "list" ? ListAssetItem(item, deleteImage) : ListGridItem)}
         layout={layout}
         loading={isFetching}
         paginator

@@ -122,6 +122,7 @@ export const deleteURLs = {
   deleteTags: "deletetags",
   deleteAlterName: "deletealtername",
   deleteAlterNames: "deletealternames",
+  deleteImage: "deleteimage",
 };
 
 export const MainToSubType = {
