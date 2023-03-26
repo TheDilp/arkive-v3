@@ -120,10 +120,9 @@ Inputs
 .staticRendererContainer {
   @apply p-4 font-Lato;
 
-  a {
+  a[rel] {
     @apply text-sky-300 underline !important;
   }
-
   :is(h1, h2, h3, h4, h5, h6) {
     @apply font-bold;
   }
@@ -187,7 +186,7 @@ Inputs
 
     .remirror-mention-atom {
       a {
-        @apply text-black;
+        @apply text-black !important;
       }
     }
   }
