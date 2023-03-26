@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { SelectButton } from "primereact/selectbutton";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
@@ -24,7 +25,9 @@ function FileUploadItemTemplate(
   return (
     <div className="flex w-full items-center justify-between">
       <img alt="Error" className="w-12" src={objectURL} />
-      <p className="truncate">{name}</p>
+      <div>
+        <p className="truncate">{name}</p>
+      </div>
       <SelectButton
         onChange={(e) => {
           const allTypes = [...types];
@@ -36,6 +39,14 @@ function FileUploadItemTemplate(
         }}
         options={["Image", "Map"]}
         value={[...types].find((t) => t.name === name)?.type}
+      />
+      <Button
+        className="p-button-rounded p-button-outlined p-button-danger"
+        icon="pi pi-times"
+        onClick={() => {
+          const allTypes = [...(types || [])].filter((t) => t.name !== name);
+          setTypes(allTypes);
+        }}
       />
     </div>
   );
@@ -101,6 +112,7 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
       accept="image/*"
       cancelOptions={cancelOptions}
       chooseOptions={chooseOptions}
+      onClear={() => setTypes([])}
       customUpload
       emptyTemplate={<p className="text-center text-gray-400">Drag and Drop image files here!</p>}
       headerTemplate={headerTemplate}
