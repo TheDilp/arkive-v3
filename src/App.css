@@ -64,7 +64,7 @@
   @apply h-12 flex-1 p-0 !important;
 }
 .p-tabview .p-tabview-panels {
-  /* @apply bg-zinc-800 !important; */
+  @apply bg-zinc-800 !important;
 }
 .wikiTabs {
   .p-tabview-panels {
