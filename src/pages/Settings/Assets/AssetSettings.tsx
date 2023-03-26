@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { DebouncedState, useDebouncedCallback } from "use-debounce";
 
 import { useDeleteImage, useGetAllSettingsImages } from "../../../CRUD/ItemsCRUD";
+import { bytesToSize } from "../../../utils/uiUtils";
 import { ListGridItem } from "./GridItem";
 import { ListAssetItem } from "./ListItem";
 
@@ -16,6 +17,7 @@ function AssetSettingsHeader(
   setLayout: Dispatch<SetStateAction<"list" | "grid">>,
   setFilter: Dispatch<SetStateAction<"all" | "image" | "map">>,
   setSearch: DebouncedState<(input: string) => void>,
+  size: number | undefined,
 ) {
   return (
     <div className="flex items-center gap-x-4">
@@ -42,13 +44,14 @@ function AssetSettingsHeader(
         value={filter}
       />
       <InputText placeholder="Search" onChange={(e) => setSearch(e.currentTarget.value)} />
+      {size ? <span>Total storage used: {bytesToSize(size)}</span> : null}
     </div>
   );
 }
 
 export default function AssetSettings() {
   const { project_id } = useParams();
-  const { data: images, isFetching } = useGetAllSettingsImages(project_id as string);
+  const { data, isFetching } = useGetAllSettingsImages(project_id as string);
   const [layout, setLayout] = useState<"grid" | "list">("list");
   const [filter, setFilter] = useState<"all" | "image" | "map">("all");
   const [search, setSearch] = useState("");
@@ -58,19 +61,18 @@ export default function AssetSettings() {
   const debouncedSearch = useDebouncedCallback((input: string) => {
     setSearch(input);
   }, 500);
-
   return (
     <div className="p-4">
       <DataView
         className={`p-dataview-${layout}`}
-        header={AssetSettingsHeader(layout, filter, setLayout, setFilter, debouncedSearch)}
+        header={AssetSettingsHeader(layout, filter, setLayout, setFilter, debouncedSearch, data?.size)}
         // @ts-ignore
         itemTemplate={(item) => (layout === "list" ? ListAssetItem(item, deleteImage) : ListGridItem(item))}
         layout={layout}
         loading={isFetching}
         paginator
         rows={layout === "list" ? 10 : 18}
-        value={images
+        value={(data?.images || [])
           ?.filter((image) => {
             if (filter === "image") return !image.includes("maps");
             if (filter === "map") return image.includes("maps");

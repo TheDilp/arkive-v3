@@ -567,19 +567,19 @@ export const useGetAllMapImages = (project_id: string) => {
   );
 };
 export const useGetAllSettingsImages = (project_id: string, options?: UseQueryOptions) => {
-  return useQuery<{ Key: string }[], unknown, string[]>(
+  return useQuery<{ Key: string; Size: number }[], unknown, { size: number; images: string[] }>(
     ["allSettingsImages", project_id],
     async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, method: "GET" }),
     {
       staleTime: options?.staleTime || 5 * 60 * 1000,
-      select: (data) => {
-        return data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`);
-      },
+      select: (data) => ({
+        size: data?.reduce((accumulator, currentValue) => accumulator + currentValue.Size, 0),
+        images: data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`),
+      }),
       enabled: options?.enabled,
     },
   );
 };
-
 export const useDeleteImage = (project_id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
