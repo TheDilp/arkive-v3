@@ -64,7 +64,8 @@ export default function AssetSettings() {
       <DataView
         className={`p-dataview-${layout}`}
         header={AssetSettingsHeader(layout, filter, setLayout, setFilter, debouncedSearch)}
-        itemTemplate={(item) => (layout === "list" ? ListAssetItem(item, deleteImage) : ListGridItem)}
+        // @ts-ignore
+        itemTemplate={(item) => (layout === "list" ? ListAssetItem(item, deleteImage) : ListGridItem(item))}
         layout={layout}
         loading={isFetching}
         paginator
