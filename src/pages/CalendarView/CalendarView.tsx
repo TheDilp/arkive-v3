@@ -61,7 +61,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
         if (savedDate)
           setDate({
             ...savedDate,
-            era: era || savedDate.era || null,
+            era: era || null,
           });
         else setDate({ year: 1, month: 0, era: era || null });
       }
@@ -69,7 +69,6 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
   }, [item_id, subitem_id, calendar, era]);
 
   if (isLoading) return <LoadingScreen />;
-
   return (
     <div className="flex h-full w-full max-w-full flex-col">
       <ContextMenu cm={cm} items={eventContextMenuItems} />
@@ -103,7 +102,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
             }}
           />
         </div>
-        <span className="flex w-[12rem] select-none items-center truncate">
+        <span className="flex select-none items-center truncate">
           <Dropdown
             className="monthDropdown h-min"
             itemTemplate={MonthDropdownTemplate}
@@ -123,8 +122,11 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
             options={calendar?.months}
             value={calendar?.months?.[date?.month]}
           />
+        </span>
+        <div className="px-2">
           <InputNumber
-            inputClassName="yearInput"
+            className="yearInput"
+            inputClassName="w-full max-w-full"
             onChange={(e) => {
               if (e.value) debounceYearChange(e.value);
             }}
@@ -132,8 +134,10 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
             useGrouping={false}
             value={date.year}
           />
+        </div>
+        <span className="w-fit select-none truncate text-base italic">
+          {date?.era ? `(${date.year - date.era.start_year + 1} - ${date.era.title})` : null}
         </span>
-        <span className="w-fit select-none truncate text-base italic">{date?.era ? `(${date.era.title})` : null}</span>
         {!isReadOnly ? (
           <span className="ml-auto flex">
             <Button

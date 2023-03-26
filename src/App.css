@@ -97,7 +97,7 @@
 Inputs
 */
 .yearInput {
-  @apply h-8 w-24 border-0 border-b bg-transparent p-0 !important;
+  @apply h-8 w-32 border-0 bg-transparent p-0 !important;
 }
 /* Editor */
 .remirror-editor-wrapper {
