@@ -90,18 +90,24 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
           alignItems: "center",
           backgroundColor: "transparent",
           display: "flex",
+          flexDirection: "column",
         }}>
-        {chooseButton}
-        <span>{uploadButton}</span>
-        <div
-          onClick={() => {
-            fileUploadRef.current?.clear();
-          }}
-          onKeyDown={() => {}}
-          role="button"
-          tabIndex={-1}>
-          {cancelButton}
+        <div className="flex w-full items-center justify-start">
+          {chooseButton}
+          <span>{uploadButton}</span>
+          <div
+            onClick={() => {
+              fileUploadRef.current?.clear();
+            }}
+            onKeyDown={() => {}}
+            role="button"
+            tabIndex={-1}>
+            {cancelButton}
+          </div>
         </div>
+        <span className="max-w-[250px] text-xs text-zinc-400">
+          Images are converted to WEBP format for better compression and smaller size.
+        </span>
       </div>
     );
   };
