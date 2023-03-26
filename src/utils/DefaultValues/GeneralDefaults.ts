@@ -37,4 +37,5 @@ export const IconEnum = {
   grid: "ph:grid-four-thin",
   search: "ph:magnifying-glass-light",
   image: "ph:images-thin",
+  add_calendar: "ph:calendar-plus-light",
 };

@@ -152,7 +152,11 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
               onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "months" })}
               tooltip="Create months"
               tooltipOptions={{ position: "left" }}>
-              <Icon className="cursor-pointer transition-colors hover:text-sky-400" fontSize={28} icon={IconEnum.calendar} />
+              <Icon
+                className="cursor-pointer transition-colors hover:text-sky-400"
+                fontSize={28}
+                icon={IconEnum.add_calendar}
+              />
             </Button>
           </span>
         ) : (
