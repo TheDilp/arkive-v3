@@ -572,10 +572,14 @@ export const useGetAllSettingsImages = (project_id: string, options?: UseQueryOp
     async () => FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getAllSettingsImages}${project_id}`, method: "GET" }),
     {
       staleTime: options?.staleTime || 5 * 60 * 1000,
-      select: (data) => ({
-        size: data?.reduce((accumulator, currentValue) => accumulator + currentValue.Size, 0),
-        images: data?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`),
-      }),
+      select: (data) => {
+        return {
+          size: data?.reduce((accumulator, currentValue) => accumulator + currentValue.Size, 0),
+          images: data
+            ?.filter((image) => Boolean(image.Key))
+            ?.map((image) => `${import.meta.env.VITE_S3_CDN_HOST}/${image.Key}`),
+        };
+      },
       enabled: options?.enabled,
     },
   );

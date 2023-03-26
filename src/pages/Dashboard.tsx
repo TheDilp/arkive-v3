@@ -43,9 +43,7 @@ export default function Dashboard() {
           <Navbar />
           <div className="flex w-full flex-wrap items-start justify-start gap-x-6 gap-y-6 px-6 py-4 pl-6">
             {projects?.length
-              ? projects?.map((project: ProjectType) => (
-                  <ProjectCard key={project.id} {...project} user_id={userData?.id || ""} />
-                ))
+              ? projects?.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
               : "Click the button on the left to create a new project."}
           </div>
         </div>

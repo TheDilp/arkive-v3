@@ -32,7 +32,7 @@ export const useCreateProject = () => {
         if (old) return [...old, { ...data }];
         return [data];
       });
-      toaster("success", "Your project has been successfully updated.");
+      toaster("success", "Your project has been successfully created.");
     },
   });
 };
