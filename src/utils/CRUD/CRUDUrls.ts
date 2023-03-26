@@ -23,7 +23,7 @@ export const updateURL = (type: AllAvailableTypes) => {
 
 export const deleteURL = (type: AllAvailableTypes) => {
   if (type === "dictionaries") return `${baseURLS.baseServer}deletedictionary`;
-  return `${baseURLS.baseServer}update${type.slice(0, -1).replace("_", "")}`;
+  return `${baseURLS.baseServer}delete${type.slice(0, -1).replace("_", "")}`;
 };
 
 export const sortURL = (type: AllAvailableTypes) => {

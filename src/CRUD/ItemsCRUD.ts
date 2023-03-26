@@ -271,6 +271,7 @@ export const useDeleteItem = (type: AllAvailableTypes, project_id: string) => {
     async (id: string) => {
       if (id) {
         const url = deleteURL(type);
+        console.log(url);
         if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id }) });
       }
       return null;

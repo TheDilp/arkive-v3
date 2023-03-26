@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { MutableRefObject, useRef } from "react";
 import { useParams } from "react-router-dom";
 
@@ -13,7 +13,7 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
   const { project_id } = useParams();
 
   const cm = useRef() as MutableRefObject<any>;
-  const [contextMenu] = useAtom(SidebarTreeContextAtom);
+  const contextMenu = useAtomValue(SidebarTreeContextAtom);
   const menuItems = useTreeMenuItems(contextMenu, type, project_id as string);
 
   return (
