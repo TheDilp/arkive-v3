@@ -3,7 +3,9 @@ import { Button } from "primereact/button";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useParams } from "react-router-dom";
+import { baseURLS } from "../../../types/CRUDenums";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { downloadImage } from "../../../utils/imageUtils";
 
 /* eslint-disable react/destructuring-assignment */
 export function ListAssetItem(
@@ -30,8 +32,20 @@ export function ListAssetItem(
         <div className="flex-1">
           <div className="truncate text-xl font-bold">{imageName}</div>
         </div>
-        <div className="flex items-center gap-x-8">
+        <div className="flex items-center gap-x-4">
           <Tag severity={isMap ? "warning" : "info"} style={{ fontSize: "1rem" }} value={isMap ? "Map" : "Image"} />
+          <Button
+            className="p-button-outlined p-button-success"
+            icon="pi pi-download"
+            onClick={
+              () => {
+                if (imageName) downloadImage(image, imageName);
+              }
+              // deleteItem("Are you sure you want to delete this image?", () => {
+              //   if (imageName) deleteImage({ image: imageName, type: isMap ? "maps" : "images" });
+              // })
+            }
+          />
           <Button
             className="p-button-outlined p-button-danger"
             icon="pi pi-trash"

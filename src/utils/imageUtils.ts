@@ -35,3 +35,22 @@ export function removeDeletedImages(images: { Key: string }[], variables: { type
     return true;
   });
 }
+
+export function downloadImage(url: string, name: string) {
+  if (url) {
+    let link = document.createElement("a");
+
+    if (link.download !== undefined) {
+      link.setAttribute("href", url);
+      link.setAttribute("download", name);
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      return true;
+    }
+
+    return false;
+  }
+}
