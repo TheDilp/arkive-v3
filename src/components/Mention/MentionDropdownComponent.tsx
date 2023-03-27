@@ -9,7 +9,7 @@ import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 
 export default function MentionDropdownComponent() {
   const { project_id } = useParams();
-  const [options, setOptions] = useState<{ id: string; label: string; displayLabel?: string }[]>([]);
+  const [options, setOptions] = useState<{ key: string; id: string; label: string; displayLabel?: string }[]>([]);
   const [isFetching, setIsFetching] = useState(false);
 
   const { state, getMenuProps, getItemProps, indexIsHovered, indexIsSelected } = useMentionAtom({
@@ -18,7 +18,7 @@ export default function MentionDropdownComponent() {
 
   const search = useDebouncedCallback(async () => {
     setIsFetching(true);
-    const items: { id: string; title: string; displayLabel?: string; parentId?: string; translation?: string }[] =
+    const items: { key: string; id: string; title: string; displayLabel?: string; parentId?: string; translation?: string }[] =
       await FetchFunction({
         url: `${baseURLS.baseServer}search`,
         method: "POST",
@@ -36,12 +36,13 @@ export default function MentionDropdownComponent() {
         .map((item) => {
           if (item?.translation)
             return {
+              key: item.id,
               id: item?.parentId || item.id,
               searchItem: item.translation,
               label: item.title,
               displayLabel: `${item.title} (${item.translation})`,
             };
-          return { id: item?.parentId || item.id, alterId: item?.parentId ? item.id : null, label: item.title };
+          return { key: item.id, id: item?.parentId || item.id, alterId: item?.parentId ? item.id : null, label: item.title };
         })
         .slice(0, 10),
     );
@@ -68,7 +69,7 @@ export default function MentionDropdownComponent() {
           ? (options || []).map((item, index) => {
               return (
                 <li
-                  key={item.id}
+                  key={item.key}
                   className={`remirror-mention-atom-popup-item flex w-[12rem] items-center justify-between ${
                     indexIsSelected(index) ? "remirror-mention-atom-popup-highlight" : ""
                   } ${indexIsHovered(index) ? "remirror-mention-atom-popup-highlight" : ""}`}
