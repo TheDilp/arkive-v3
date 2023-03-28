@@ -1,4 +1,4 @@
-import { Collection, EdgeDefinition, EventObject, NodeDefinition } from "cytoscape";
+import { Collection, EventObject } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -160,7 +160,24 @@ export default function BoardView({ isReadOnly }: Props) {
         // Grid extenstion messes with the "grab events"
         // "Freeon" event triggers on double clicking
         // This is a safeguard to prevent the node position from being changed on anything EXCEPT dragging
-        addOrUpdateNode({ id: target.data.id, ...target.position });
+
+        if (target.position.x !== target?.data.x || target.position.y !== target.data?.y) {
+          setNodes((prev) => {
+            const idx = prev.findIndex((n) => n.data.id === target.data.id);
+
+            if (idx !== -1) {
+              const newNodes = [...prev];
+              const foundNode = newNodes[idx];
+              if (foundNode.data.x !== target.position.x || foundNode.data.y !== target.position.y) {
+                addOrUpdateNode({ id: target.data.id, ...target.position });
+                newNodes[idx] = { ...newNodes[idx], data: { ...foundNode.data, ...target.position } };
+                return newNodes;
+              }
+              return prev;
+            }
+            return prev;
+          });
+        }
       });
       // Double Click
       cyRef?.current?._cy.on("dbltap", "node", function (evt: any) {
