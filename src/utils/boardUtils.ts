@@ -472,6 +472,7 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
     .map((node: NodeType) => ({
       data: {
         id: node.id,
+        label: node.label || node.document?.title || "",
 
         type: node?.type || "rectangle",
         width: node?.width || 50,
@@ -493,7 +494,6 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
         backgroundOpacity: node?.backgroundOpacity || 1,
 
         classes: `${isReadOnly ? "publicBoardNode" : "boardNode"}`,
-        label: node.label || "",
         zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
 
         // Used for displaying in drawer
