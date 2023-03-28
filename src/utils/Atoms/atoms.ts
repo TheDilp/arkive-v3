@@ -1,10 +1,8 @@
 import cytoscape, { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { EdgeHandlesInstance } from "cytoscape-edgehandles";
 import { atom } from "jotai";
-import { DialogPositionType } from "primereact/dialog";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
-import { EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
@@ -25,7 +23,7 @@ export type DialogTypes =
 export type DialogAtomType = {
   id: null | string;
   type: DialogTypes;
-  position?: DialogPositionType;
+  position?: "top" | "bottom" | "left" | "right" | "top-right" | "top-left" | "bottom-left" | "bottom-right" | "center";
   modal?: boolean;
   fullscreen?: boolean;
   show: boolean;

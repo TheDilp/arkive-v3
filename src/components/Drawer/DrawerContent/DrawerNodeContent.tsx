@@ -60,7 +60,6 @@ export default function DrawerNodeContent() {
                 ...newNodes[idx],
                 data: { ...newNodes[idx].data, ...rest, backgroundImage: getNodeImage(localItem) },
               };
-              console.log(newNodes[idx].data);
               return newNodes;
             }
             return oldNodes;

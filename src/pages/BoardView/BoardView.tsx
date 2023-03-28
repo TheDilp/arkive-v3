@@ -101,9 +101,9 @@ export default function BoardView({ isReadOnly }: Props) {
       if (cyRef?.current?._cy) {
         cyRef?.current?._cy.removeListener("click mousedown cxttap dbltap free");
         setBoardState((prev) => ({ ...prev, drawMode: false }));
-        setNodes([]);
-        setEdges([]);
       }
+      setNodes([]);
+      setEdges([]);
     };
   }, [item_id]);
 
