@@ -132,8 +132,9 @@ export default function RandomTableView() {
       <DataTable
         loading={isLoading}
         paginator
-        responsiveLayout="scroll"
         rows={100}
+        scrollable
+        scrollHeight="80vh"
         size="small"
         value={randomTable?.random_table_options || []}>
         <Column
