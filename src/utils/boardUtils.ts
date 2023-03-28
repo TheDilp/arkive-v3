@@ -550,6 +550,8 @@ export function mapEdges(edges: EdgeType[], isReadOnly?: boolean) {
       fontSize: edge?.fontSize || 16,
       fontColor: edge?.fontColor || "#ffffff",
       fontFamily: edge?.fontFamily || "Lato",
+
+      tags: edge.tags,
     },
   }));
 }

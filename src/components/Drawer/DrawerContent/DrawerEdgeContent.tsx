@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { EdgeDefinition } from "cytoscape";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -13,7 +14,7 @@ import { capitalCase } from "remirror";
 import { useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { BoardType, EdgeType } from "../../../types/ItemTypes/boardTypes";
-import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { DrawerAtom, EdgesAtom } from "../../../utils/Atoms/atoms";
 import {
   boardEdgeCurveStyles,
   boardEdgeLineStyles,
@@ -37,14 +38,43 @@ function FontItemTemplate(item: { label: string; value: string }) {
 export default function DrawerEdgeContent() {
   const { item_id } = useParams();
   const queryClient = useQueryClient();
+
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+  const [edges, setEdges] = useAtom(EdgesAtom);
+
   const updateEdgeMutation = useUpdateSubItem(item_id as string, "edges", "boards");
   const [localItem, setLocalItem] = useState<EdgeType | undefined>(drawer?.data as EdgeType);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
+
+  function updateLocalEdge(newData: Partial<EdgeDefinition>) {
+    if (localItem) {
+      const idx = edges?.findIndex((edge) => edge.data.id === localItem.id);
+
+      if (typeof idx === "number" && idx !== -1) {
+        setEdges((oldEdges) => {
+          if (oldEdges) {
+            const newNodes = [...oldEdges];
+            newNodes[idx] = {
+              ...newNodes[idx],
+              data: { ...newNodes[idx].data, ...newData },
+            };
+            return newNodes;
+          }
+          return oldEdges;
+        });
+      }
+    }
+  }
+
   const handleEnter: KeyboardEventHandler = (e: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { tags, ...rest } = changedData;
-    if (e.key === "Enter" && localItem) updateEdgeMutation.mutate({ id: localItem.id, ...rest });
+    if (changedData) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { tags, ...rest } = changedData;
+      if (e.key === "Enter" && localItem) {
+        updateEdgeMutation.mutate({ id: localItem.id, ...rest });
+        updateLocalEdge(rest);
+      }
+    }
   };
 
   useEffect(() => {
@@ -54,6 +84,7 @@ export default function DrawerEdgeContent() {
     setDrawer(DefaultDrawer);
     return null;
   }
+  console.log(drawer?.data);
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flex w-full flex-1 flex-col overflow-y-auto">
@@ -158,7 +189,7 @@ export default function DrawerEdgeContent() {
               <div className="flex w-full flex-wrap items-center justify-between">
                 <span className="w-full text-sm text-zinc-400">Edge color</span>
                 <ColorInput
-                  color={localItem.lineColor}
+                  color={localItem?.lineColor || "#ffffff"}
                   name="lineColor"
                   onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                 />
@@ -209,7 +240,7 @@ export default function DrawerEdgeContent() {
               <div className="flex w-full flex-wrap items-center justify-between">
                 <span className="w-full text-sm text-zinc-400">Label color</span>
                 <ColorInput
-                  color={localItem.fontColor}
+                  color={localItem?.fontColor || "#ffffff"}
                   name="fontColor"
                   onChange={({ name, value }) => handleChange({ name, value: getHexColor(value) })}
                 />
@@ -287,6 +318,9 @@ export default function DrawerEdgeContent() {
             if (changedData) {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { tags, ...rest } = changedData;
+
+              updateLocalEdge(rest);
+
               updateEdgeMutation.mutate(
                 { id: localItem.id, ...rest },
                 {
