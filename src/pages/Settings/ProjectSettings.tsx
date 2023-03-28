@@ -10,7 +10,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ImageDropdownItem } from "../../components/Dropdown/ImageDropdownItem";
 import ImageDropdownValue from "../../components/Dropdown/ImageDropdownValue";
-import { useGetAllImages, useGetAllSettingsImages } from "../../CRUD/ItemsCRUD";
+import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
@@ -59,6 +59,7 @@ export default function ProjectSettings() {
         </div>
         <Dropdown
           className="w-64"
+          filter
           itemTemplate={ImageDropdownItem}
           onChange={(e) => {
             updateProject.mutate({ id: data?.id, image: e.value });
@@ -153,19 +154,19 @@ export default function ProjectSettings() {
         </h4>
         <Button
           className="p-button-outlined w-fit"
+          disabled={loading}
+          icon="pi pi-download"
+          iconPos="right"
+          label="Export All"
           onClick={async () => {
             setLoading(true);
-            const data: ProjectType = await FetchFunction({
+            const projectData: ProjectType = await FetchFunction({
               url: `${baseURLS.baseServer}exportproject/${project_id}`,
               method: "GET",
             });
-            exportProject(data);
+            exportProject(projectData);
             setLoading(false);
           }}
-          icon="pi pi-download"
-          iconPos="right"
-          disabled={loading}
-          label="Export All"
         />
       </div>
       <div className="flex flex-col gap-y-2">
@@ -174,9 +175,13 @@ export default function ProjectSettings() {
         <Button
           className="p-button-outlined w-fit"
           disabled={loading}
+          icon="pi pi-download"
+          iconPos="right"
+          label="Export Images"
+          loading={loading}
           onClick={async () => {
             setLoading(true);
-            const data = await queryClient.ensureQueryData({
+            const imagesData = await queryClient.ensureQueryData({
               queryKey: ["allSettingsImages", project_id],
               queryFn: async () =>
                 FetchFunction({
@@ -184,17 +189,12 @@ export default function ProjectSettings() {
                   method: "GET",
                 }),
             });
-            if (data) {
-              console.log(data);
-              const images = data?.map((img: { Key: string }) => `${import.meta.env.VITE_S3_CDN_HOST}/${img.Key}`);
+            if (imagesData) {
+              const images = imagesData?.map((img: { Key: string }) => `${import.meta.env.VITE_S3_CDN_HOST}/${img.Key}`);
               if (data) await exportImages(project_id as string, images);
             }
             setLoading(false);
           }}
-          icon="pi pi-download"
-          iconPos="right"
-          loading={loading}
-          label="Export Images"
         />
       </div>
       <hr className="border-zinc-700" />
