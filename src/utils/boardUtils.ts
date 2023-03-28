@@ -464,7 +464,7 @@ export function getNodeImage(node: NodeType) {
     image = node.image;
   }
   if (image !== "") return formatImageURL(image);
-  return null;
+  return [];
 }
 export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
   return nodes
@@ -495,9 +495,12 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
         classes: `${isReadOnly ? "publicBoardNode" : "boardNode"}`,
         label: node.label || "",
         zIndexCompare: node.zIndex === 0 ? "manual" : "auto",
+
+        // Used for displaying in drawer
+        image: node?.image,
+        document: node?.document,
+
         backgroundImage: getNodeImage(node) || [],
-      },
-      scratch: {
         doc_id: node?.doc_id,
       },
       locked: isReadOnly || node.locked,

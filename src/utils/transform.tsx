@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { ColorPickerValueType } from "primereact/colorpicker";
+import { ColorPickerRGBType } from "primereact/colorpicker";
 
 import { AllItemsType, AvailableItemTypes, AvailableSearchResultTypes } from "../types/generalTypes";
 import { IconEnum } from "./DefaultValues/GeneralDefaults";
@@ -78,7 +78,7 @@ export function getLinkForFullSearch(
   return "./";
 }
 
-export function getHexColor(value: string | ColorPickerValueType) {
+export function getHexColor(value: string | ColorPickerRGBType) {
   return `#${value?.toString().replaceAll("#", "")}`;
 }
 

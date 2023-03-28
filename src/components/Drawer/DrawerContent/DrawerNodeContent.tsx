@@ -58,7 +58,17 @@ export default function DrawerNodeContent() {
               const newNodes = [...oldNodes];
               newNodes[idx] = {
                 ...newNodes[idx],
-                data: { ...newNodes[idx].data, ...rest, backgroundImage: getNodeImage(localItem) },
+                data: {
+                  ...newNodes[idx].data,
+                  ...rest,
+                  backgroundImage: getNodeImage({
+                    ...newNodes[idx].data,
+                    ...localItem,
+                    document: localItem.doc_id
+                      ? (documents || allDocumentsData)?.find((doc) => doc.id === localItem.doc_id)
+                      : undefined,
+                  }),
+                },
               };
               return newNodes;
             }
