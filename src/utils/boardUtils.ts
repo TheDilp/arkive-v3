@@ -513,6 +513,7 @@ export function mapEdges(edges: EdgeType[], isReadOnly?: boolean) {
       target: edge.target_id,
       classes: `boardEdge ${isReadOnly && "publicBoardEdge"}`,
       zIndexCompare: "manual",
+      zIndex: edge?.zIndex || 1,
       label: edge?.label || "",
 
       curveStyle: edge?.curveStyle || "straight",

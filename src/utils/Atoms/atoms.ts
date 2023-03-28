@@ -1,9 +1,10 @@
-import cytoscape from "cytoscape";
+import cytoscape, { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { EdgeHandlesInstance } from "cytoscape-edgehandles";
 import { atom } from "jotai";
 import { DialogPositionType } from "primereact/dialog";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
+import { EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
@@ -70,6 +71,10 @@ export const BoardStateAtom = atom<{
   drawMode: false,
   curveStyle: "straight",
 });
+
+export const NodesAtom = atom<NodeDefinition[]>([]);
+export const EdgesAtom = atom<EdgeDefinition[]>([]);
+
 export const BoardEdgeHandlesAtom = atom<EdgeHandlesInstance | null>(null);
 export const UserAtom = atom<(UserType & { permission: "owner" | "member" | null }) | null>(null);
 export const DocumentsSidebar = atom<number>(0);

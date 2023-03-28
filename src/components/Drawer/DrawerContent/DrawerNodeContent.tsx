@@ -11,11 +11,12 @@ import { useGetAllImages, useGetAllItems, useUpdateSubItem } from "../../../CRUD
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { BoardType, NodeType } from "../../../types/ItemTypes/boardTypes";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
-import { DrawerAtom } from "../../../utils/Atoms/atoms";
+import { DrawerAtom, NodesAtom } from "../../../utils/Atoms/atoms";
 import {
   BoardFontFamilies,
   BoardFontSizes,
   boardNodeShapes,
+  getNodeImage,
   textHAlignOptions,
   textVAlignOptions,
 } from "../../../utils/boardUtils";
@@ -34,6 +35,9 @@ export default function DrawerNodeContent() {
   const queryClient = useQueryClient();
 
   const [drawer, setDrawer] = useAtom(DrawerAtom);
+
+  const [nodes, setNodes] = useAtom(NodesAtom);
+
   const documents: DocumentType[] | undefined = queryClient.getQueryData(["allItems", project_id as string, "documents"]);
   const { data: allDocumentsData } = useGetAllItems<DocumentType>(project_id as string, "documents", { enabled: !documents });
   const { mutate: updateNodeMutation, isLoading: isUpdating } = useUpdateSubItem(item_id as string, "nodes", "boards");
@@ -45,6 +49,24 @@ export default function DrawerNodeContent() {
       if (changedData) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { tags, ...rest } = changedData;
+
+        const idx = nodes?.findIndex((node) => node.data.id === localItem.id);
+
+        if (typeof idx === "number" && idx !== -1) {
+          setNodes((oldNodes) => {
+            if (oldNodes) {
+              const newNodes = [...oldNodes];
+              newNodes[idx] = {
+                ...newNodes[idx],
+                data: { ...newNodes[idx].data, ...rest, backgroundImage: getNodeImage(localItem) },
+              };
+              console.log(newNodes[idx].data);
+              return newNodes;
+            }
+            return oldNodes;
+          });
+        }
+
         updateNodeMutation(
           { id: localItem.id, ...rest },
           {
@@ -149,7 +171,7 @@ export default function DrawerNodeContent() {
               options={["None", ...(images || [])] || []}
               placeholder="Select image"
               resetFilterOnHide
-              value={localItem}
+              value={localItem.image}
               valueTemplate={ImageDropdownValue({ image: localItem?.image })}
               virtualScrollerOptions={virtualScrollerSettings}
             />

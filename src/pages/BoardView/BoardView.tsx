@@ -12,15 +12,10 @@ import { useBatchUpdateNodePositions } from "../../hooks/useBatchDragEvents";
 import { useGetItem } from "../../hooks/useGetItem";
 import { BoardDragItemType } from "../../types/generalTypes";
 import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
-import { BoardReferenceAtom, BoardStateAtom, DrawerAtom } from "../../utils/Atoms/atoms";
+import { BoardReferenceAtom, BoardStateAtom, DrawerAtom, EdgesAtom, NodesAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import {
-  cytoscapeGridOptions,
-  DefaultEdge,
-  DefaultNode,
-  getCytoscapeStylesheet,
-} from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeGridOptions, getCytoscapeStylesheet } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 
@@ -44,7 +39,9 @@ export default function BoardView({ isReadOnly }: Props) {
     nodes: null,
     edges: null,
   });
-  const [elements, setElements] = useState<(NodeDefinition | EdgeDefinition)[]>([]);
+
+  const [nodes, setNodes] = useAtom(NodesAtom);
+  const [edges, setEdges] = useAtom(EdgesAtom);
 
   const { data: board, isLoading } = useGetItem<BoardType>(item_id as string, "boards", {}, isReadOnly);
   const { addOrUpdateNode } = useBatchUpdateNodePositions(item_id as string);
@@ -80,15 +77,12 @@ export default function BoardView({ isReadOnly }: Props) {
   );
 
   useEffect(() => {
-    let temp_nodes: NodeDefinition[] = [];
-    let temp_edges: EdgeDefinition[] = [];
-    if (board?.nodes && board.nodes.length > 0) {
-      temp_nodes = mapNodes(board.nodes, isReadOnly);
+    if (board?.nodes && board.nodes.length > 0 && !nodes.length) {
+      setNodes(mapNodes(board.nodes, isReadOnly));
     }
-    if (board?.edges && board.edges.length > 0) {
-      temp_edges = mapEdges(board.edges, isReadOnly);
+    if (board?.edges && board.edges.length > 0 && !edges.length) {
+      setEdges(mapEdges(board.edges, isReadOnly));
     }
-    setElements([...temp_nodes, ...temp_edges]);
   }, [board]);
 
   useEffect(() => {
@@ -107,6 +101,8 @@ export default function BoardView({ isReadOnly }: Props) {
       if (cyRef?.current?._cy) {
         cyRef?.current?._cy.removeListener("click mousedown cxttap dbltap free");
         setBoardState((prev) => ({ ...prev, drawMode: false }));
+        setNodes([]);
+        setEdges([]);
       }
     };
   }, [item_id]);
@@ -361,7 +357,7 @@ export default function BoardView({ isReadOnly }: Props) {
         cy={(cy) => {
           setBoardRef(cy);
         }}
-        elements={elements}
+        elements={[...nodes, ...edges]}
         // @ts-ignore
         stylesheet={styleSheet}
       />
