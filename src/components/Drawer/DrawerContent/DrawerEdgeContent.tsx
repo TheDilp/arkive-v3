@@ -72,7 +72,7 @@ export default function DrawerEdgeContent() {
       const { tags, ...rest } = changedData;
       if (e.key === "Enter" && localItem) {
         updateEdgeMutation.mutate({ id: localItem.id, ...rest });
-        updateLocalEdge(rest);
+        updateLocalEdge(changedData);
       }
     }
   };
@@ -84,7 +84,6 @@ export default function DrawerEdgeContent() {
     setDrawer(DefaultDrawer);
     return null;
   }
-  console.log(drawer?.data);
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flex w-full flex-1 flex-col overflow-y-auto">
@@ -319,7 +318,7 @@ export default function DrawerEdgeContent() {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { tags, ...rest } = changedData;
 
-              updateLocalEdge(rest);
+              updateLocalEdge(changedData);
 
               updateEdgeMutation.mutate(
                 { id: localItem.id, ...rest },

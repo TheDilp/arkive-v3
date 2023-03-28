@@ -61,6 +61,7 @@ export default function DrawerNodeContent() {
                 data: {
                   ...newNodes[idx].data,
                   ...rest,
+                  tags,
                   backgroundImage: getNodeImage({
                     ...newNodes[idx].data,
                     ...localItem,

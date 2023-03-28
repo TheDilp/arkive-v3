@@ -500,6 +500,8 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
         image: node?.image,
         document: node?.document,
 
+        tags: node.tags,
+
         backgroundImage: getNodeImage(node) || [],
         doc_id: node?.doc_id,
       },

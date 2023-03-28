@@ -90,16 +90,16 @@ export default function BoardView({ isReadOnly }: Props) {
     if (firstRender && firstRender.current) {
       firstRender.current = false;
     }
-    // ehRef.current = undefined;
 
     return () => {
+      const refVariable = cyRef?.current;
       firstRender.current = true;
       if (ehRef?.current) {
         ehRef.current.destroy();
         ehRef.current = undefined;
       }
-      if (cyRef?.current?._cy) {
-        cyRef?.current?._cy.removeListener("click mousedown cxttap dbltap free");
+      if (refVariable?._cy) {
+        refVariable?._cy.removeListener("click mousedown cxttap dbltap free");
         setBoardState((prev) => ({ ...prev, drawMode: false }));
       }
       setNodes([]);
