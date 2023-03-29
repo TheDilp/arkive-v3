@@ -42,6 +42,11 @@ export const DefaultEditorExtensions = () => {
         parseDOM: (dom) => dom.getAttribute("data-alterId"),
         toDOM: () => ["data-alterId"],
       },
+      projectId: {
+        default: null,
+        parseDOM: (dom) => dom.getAttribute("data-projectId"),
+        toDOM: () => ["data-projectId"],
+      },
     },
     matchers: [
       {
