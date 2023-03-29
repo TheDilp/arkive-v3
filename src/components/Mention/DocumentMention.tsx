@@ -51,7 +51,6 @@ export default function DocumentMention({ alterId, title, id, label, isDisabledT
     enabled: !allDocuments,
     staleTime: 5 * 60 * 1000,
   });
-  console.log(alterId);
   const doc = (allDocuments || documents)?.find((d) => d?.id === id);
   const finalName = alterId ? doc?.alter_names?.find((a) => a?.id === alterId)?.title : doc?.title || title || label;
   const [mention, setMention] = useAtom(OtherContextMenuAtom);

@@ -472,7 +472,7 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
     .map((node: NodeType) => ({
       data: {
         id: node.id,
-        label: node.label || node.document?.title || "",
+        label: node?.label || "",
 
         type: node?.type || "rectangle",
         width: node?.width || 50,

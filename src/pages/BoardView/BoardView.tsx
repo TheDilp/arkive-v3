@@ -15,9 +15,10 @@ import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTyp
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom, EdgesAtom, NodesAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import { cytoscapeGridOptions, getCytoscapeStylesheet } from "../../utils/DefaultValues/BoardDefaults";
+import { cytoscapeGridOptions, DefaultNode, getCytoscapeStylesheet } from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
+import { formatImageURL } from "../../utils/transform";
 
 type Props = {
   isReadOnly?: boolean;
@@ -343,27 +344,78 @@ export default function BoardView({ isReadOnly }: Props) {
 
         if (data.type === "documents") {
           const { id: doc_id, title: label } = data;
-          createNodeMutation.mutate({
-            x,
-            y,
-            parentId: item_id,
-            type: board?.defaultNodeShape,
-            backgroundColor: board?.defaultNodeColor,
-            id: crypto.randomUUID(),
-            label,
-            image,
-            doc_id,
-          });
+          createNodeMutation.mutate(
+            {
+              x,
+              y,
+              parentId: item_id,
+              type: board?.defaultNodeShape,
+              backgroundColor: board?.defaultNodeColor,
+              id: crypto.randomUUID(),
+              label,
+              image,
+              doc_id,
+            },
+            {
+              onSuccess: (res) => {
+                setNodes((prev) => [
+                  ...prev,
+                  {
+                    data: {
+                      label,
+                      backgroundImage: formatImageURL(image || "") || "",
+                      doc_id,
+                      ...DefaultNode,
+                      id: res.id,
+                      classes: "boardNode",
+                      type: board?.defaultNodeShape || "rectangle",
+                      backgroundColor: board?.defaultNodeColor || "#595959",
+                      zIndexCompare: res.zIndex === 0 ? "manual" : "auto",
+                    },
+                    position: {
+                      x,
+                      y,
+                    },
+                  },
+                ]);
+              },
+            },
+          );
         } else if (data.type === "images") {
-          createNodeMutation.mutate({
-            x,
-            y,
-            parentId: item_id,
-            type: board?.defaultNodeShape,
-            backgroundColor: board?.defaultNodeColor,
-            id: crypto.randomUUID(),
-            image,
-          });
+          createNodeMutation.mutate(
+            {
+              x,
+              y,
+              parentId: item_id,
+              type: board?.defaultNodeShape,
+              backgroundColor: board?.defaultNodeColor,
+              id: crypto.randomUUID(),
+              image,
+            },
+            {
+              onSuccess: (res) => {
+                setNodes((prev) => [
+                  ...prev,
+                  {
+                    data: {
+                      backgroundImage: formatImageURL(image || "") || "",
+                      ...DefaultNode,
+                      label: "",
+                      id: res.id,
+                      classes: "boardNode",
+                      type: board?.defaultNodeShape || "rectangle",
+                      backgroundColor: board?.defaultNodeColor || "#595959",
+                      zIndexCompare: res.zIndex === 0 ? "manual" : "auto",
+                    },
+                    position: {
+                      x,
+                      y,
+                    },
+                  },
+                ]);
+              },
+            },
+          );
         }
       }}>
       <ContextMenu cm={cm} items={contextItems} />

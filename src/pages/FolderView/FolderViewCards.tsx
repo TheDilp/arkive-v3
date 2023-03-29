@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { MutableRefObject, useRef } from "react";
 import { useParams } from "react-router-dom";
 

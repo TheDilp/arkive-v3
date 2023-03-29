@@ -14,7 +14,15 @@ import {
 import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/ItemTypes/boardTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
-import { BoardReferenceAtom, DialogAtom, DrawerAtom, MapContextAtom, OtherContextMenuAtom } from "./Atoms/atoms";
+import {
+  BoardReferenceAtom,
+  DialogAtom,
+  DrawerAtom,
+  EdgesAtom,
+  MapContextAtom,
+  NodesAtom,
+  OtherContextMenuAtom,
+} from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { deleteItem } from "./Confirms/Confirm";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
@@ -76,6 +84,8 @@ export function useMapContextMenuItems({
 
 export function useBoardContextMenuItems({ type, boardContext, item_id, board }: BoardContextMenuType) {
   const [boardRef] = useAtom(BoardReferenceAtom);
+  const [nds, setNodes] = useAtom(NodesAtom);
+  const [, setEdges] = useAtom(EdgesAtom);
   const [, setDialog] = useAtom(DialogAtom);
   const updateManyNodes = useUpdateManySubItems(item_id, "nodes");
   const createNodeMutation = useCreateSubItem<NodeType>(item_id as string, "nodes", "boards");
@@ -89,7 +99,27 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
     return [
       {
         command: () => {
-          if (boardContext.x && boardContext.y)
+          if (boardContext.x && boardContext.y) {
+            const id = crypto.randomUUID();
+            setNodes((prev) => [
+              ...prev,
+              {
+                data: {
+                  label: "",
+                  ...DefaultNode,
+                  id,
+                  classes: "boardNode",
+                  type: board?.defaultNodeShape || "rectangle",
+                  backgroundColor: board?.defaultNodeColor || "#595959",
+                  zIndexCompare: "auto",
+                },
+                locked: false,
+                position: {
+                  x: boardContext.x as number,
+                  y: boardContext.y as number,
+                },
+              },
+            ]);
             createNodeMutation.mutate({
               ...DefaultNode,
               type: board?.defaultNodeShape,
@@ -97,9 +127,9 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
               x: boardContext.x,
               y: boardContext.y,
               parentId: item_id as string,
-              id: crypto.randomUUID(),
+              id,
             });
-          else toaster("error", "There was an error creating your node (missing X and Y).");
+          } else toaster("error", "There was an error creating your node (missing X and Y).");
         },
         label: "New Node",
       },
@@ -110,14 +140,37 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
             label: "Unlock Selected",
             icon: "pi pi-fw pi-lock",
             command: () => {
-              if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+              if (boardRef) {
+                const selectedNodes = boardRef.nodes(":selected");
+                changeLockState(boardRef, false, updateManyNodes);
+                const ids = selectedNodes.map((n) => n.data().id);
+                setNodes((prev) => {
+                  const newNodes = prev.map((n) => {
+                    if (ids.includes(n.data.id)) return { ...n, locked: false };
+                    return n;
+                  });
+                  return newNodes;
+                });
+              }
             },
           },
           {
             label: "Lock Selected",
             icon: "pi pi-fw pi-unlock",
             command: () => {
-              if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+              if (boardRef) {
+                const selectedNodes = boardRef.nodes(":selected");
+                const ids = selectedNodes.map((n) => n.data().id);
+
+                changeLockState(boardRef, true, updateManyNodes);
+                setNodes((prev) => {
+                  const newNodes = prev.map((n) => {
+                    if (ids.includes(n.data.id)) return { ...n, locked: true };
+                    return n;
+                  });
+                  return newNodes;
+                });
+              }
             },
           },
         ],
@@ -167,6 +220,12 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
         command: () => {
           if (boardRef) {
             const ids: string[] = boardRef.nodes(":selected").map((node: any) => node.data().id);
+            setEdges((prev) => prev.filter((e) => !ids.includes(e.data.source) && !ids.includes(e.data.target)));
+            setNodes((prev) =>
+              prev.filter((n) => {
+                return !ids.includes(n.data.id as string);
+              }),
+            );
             deleteManyNodes.mutate(ids);
           }
         },
@@ -201,14 +260,38 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
             label: "Unlock selected",
             icon: "pi pi-fw pi-lock-open",
             command: () => {
-              if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+              if (boardRef) {
+                changeLockState(boardRef, false, updateManyNodes);
+                const selectedNodes = boardRef.nodes(":selected");
+                const ids = selectedNodes.map((n) => n.data().id);
+
+                setNodes((prev) => {
+                  const newNodes = prev.map((n) => {
+                    if (ids.includes(n.data.id)) return { ...n, locked: false };
+                    return n;
+                  });
+                  return newNodes;
+                });
+              }
             },
           },
           {
             label: "Lock selected",
             icon: "pi pi-fw pi-lock",
             command: () => {
-              if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+              if (boardRef) {
+                changeLockState(boardRef, true, updateManyNodes);
+                const selectedNodes = boardRef.nodes(":selected");
+                const ids = selectedNodes.map((n) => n.data().id);
+
+                setNodes((prev) => {
+                  const newNodes = prev.map((n) => {
+                    if (ids.includes(n.data.id)) return { ...n, locked: true };
+                    return n;
+                  });
+                  return newNodes;
+                });
+              }
             },
           },
         ],
@@ -223,6 +306,21 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
           if (selected.length === 0) {
             toaster("warning", "No elements are selected.");
           } else {
+            const nodeIds = nodes.map((node) => node.id());
+            const edgeIds = edges.map((edge) => edge.id());
+            setEdges((prev) =>
+              prev.filter((e) => {
+                if (edgeIds.includes(e.data.id as string)) return false;
+                if (nodeIds.includes(e.data.source)) return false;
+                if (nodeIds.includes(e.data.target)) return false;
+                return true;
+              }),
+            );
+            setNodes((prev) =>
+              prev.filter((n) => {
+                return !nodeIds.includes(n.data.id as string);
+              }),
+            );
             if (nodes.length) deleteManyNodes.mutate(nodes.map((node) => node.id()));
             if (edges.length) deleteManyEdges.mutate(edges.map((edge) => edge.id()));
           }
