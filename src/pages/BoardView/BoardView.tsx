@@ -1,7 +1,7 @@
 import { Collection, EventObject } from "cytoscape";
 import { useAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 
@@ -15,7 +15,12 @@ import { BoardContext, BoardType, EdgeType, NodeType } from "../../types/ItemTyp
 import { BoardReferenceAtom, BoardStateAtom, DrawerAtom, EdgesAtom, NodesAtom } from "../../utils/Atoms/atoms";
 import { edgehandlesSettings, mapEdges, mapNodes, toModelPosition } from "../../utils/boardUtils";
 import { useBoardContextMenuItems } from "../../utils/contextMenus";
-import { cytoscapeGridOptions, DefaultNode, getCytoscapeStylesheet } from "../../utils/DefaultValues/BoardDefaults";
+import {
+  cytoscapeGridOptions,
+  DefaultEdge,
+  DefaultNode,
+  getCytoscapeStylesheet,
+} from "../../utils/DefaultValues/BoardDefaults";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 import { formatImageURL } from "../../utils/transform";
@@ -61,21 +66,40 @@ export default function BoardView({ isReadOnly }: Props) {
   });
   const createNodeMutation = useCreateSubItem<NodeType>(item_id as string, "nodes", "boards");
   const createEdgeMutation = useCreateSubItem<EdgeType>(item_id as string, "edges", "boards");
-  const makeEdgeCallback = useCallback(
-    (source: string, target: string, color?: string) => {
-      cyRef?.current?._cy?.remove(".eh-ghost-edge");
-      createEdgeMutation.mutate({
-        id: crypto.randomUUID(),
-        parentId: item_id as string,
-        source_id: source,
-        target_id: target,
-        lineColor: color,
-        curveStyle: boardState.curveStyle,
-        targetArrowColor: color,
-      });
-    },
-    [boardState.curveStyle],
-  );
+  const makeEdgeCallback = (source: string, target: string, color?: string) => {
+    cyRef?.current?._cy?.remove(".eh-ghost-edge");
+    const id = crypto.randomUUID();
+
+    setEdges((prev) => {
+      const newEdges = [...prev];
+      const newEdge = mapEdges(
+        [
+          // @ts-ignore
+          {
+            ...DefaultEdge,
+            id,
+            source_id: source,
+
+            target_id: target,
+            lineColor: color || "#595959",
+            curveStyle: boardState.curveStyle,
+            targetArrowColor: color,
+          },
+        ],
+        false,
+      );
+      return newEdges.concat(newEdge);
+    });
+    createEdgeMutation.mutate({
+      id,
+      parentId: item_id as string,
+      source_id: source,
+      target_id: target,
+      lineColor: color,
+      curveStyle: boardState.curveStyle,
+      targetArrowColor: color,
+    });
+  };
 
   useEffect(() => {
     if (board?.nodes && board.nodes.length > 0 && !nodes.length) {
