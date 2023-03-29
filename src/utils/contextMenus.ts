@@ -11,6 +11,7 @@ import {
   useUpdateItem,
   useUpdateManySubItems,
 } from "../CRUD/ItemsCRUD";
+import { baseURLS } from "../types/CRUDenums";
 import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/ItemTypes/boardTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
@@ -25,6 +26,7 @@ import {
 } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { deleteItem } from "./Confirms/Confirm";
+import { FetchFunction } from "./CRUD/CRUDFetch";
 import { DefaultNode } from "./DefaultValues/BoardDefaults";
 import { DefaultDialog, DefaultDrawer } from "./DefaultValues/DrawerDialogDefaults";
 import { toaster } from "./toast";
@@ -548,6 +550,17 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
               toaster("success", "URL copied! 🔗");
             });
           }
+        },
+      },
+      {
+        label: "Send to Discord",
+        icon: "pi pi-fw pi-discord",
+        command: () => {
+          FetchFunction({
+            url: `${baseURLS.baseServer}sendpublicitem`,
+            method: "POST",
+            body: JSON.stringify({ id: cmType?.data?.id, project_id, item_type: "documents" }),
+          });
         },
       },
       {
