@@ -23,6 +23,7 @@ import {
   MapContextAtom,
   NodesAtom,
   OtherContextMenuAtom,
+  UserAtom,
 } from "./Atoms/atoms";
 import { changeLockState } from "./boardUtils";
 import { deleteItem } from "./Confirms/Confirm";
@@ -356,6 +357,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
   const deleteItemMutation = useDeleteItem(type, project_id);
   const [, setDrawer] = useAtom(DrawerAtom);
   const [, setDialog] = useAtom(DialogAtom);
+  const User = useAtomValue(UserAtom);
   const navigate = useNavigate();
 
   if (cmType?.folder) {
@@ -555,13 +557,28 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         label: "Send to Discord",
         icon: "pi pi-fw pi-discord",
-        command: () => {
-          FetchFunction({
-            url: `${baseURLS.baseServer}sendpublicitem`,
-            method: "POST",
-            body: JSON.stringify({ id: cmType?.data?.id, project_id, item_type: "documents" }),
-          });
-        },
+        items: User?.webhooks?.length
+          ? User.webhooks.map((webhook, idx) => ({
+              label: webhook?.title || `Webhook ${idx + 1}`,
+              command: () =>
+                FetchFunction({
+                  url: `${baseURLS.baseServer}sendpublicitem`,
+                  method: "POST",
+                  body: JSON.stringify({
+                    id: cmType?.data?.id,
+                    item_type: "documents",
+                    project_id,
+                    webhook_url: webhook.url,
+                  }),
+                }),
+            }))
+          : [
+              {
+                label: "Add Webhooks",
+                icon: "pi pi-fw pi-plus",
+                command: () => navigate(`/user/${User?.id}`),
+              },
+            ],
       },
       {
         command: () =>

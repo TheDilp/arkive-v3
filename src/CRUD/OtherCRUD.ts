@@ -176,3 +176,13 @@ export const useDeleteAlterNamesTags = <ItemType extends { id: string }>(project
     },
   );
 };
+
+export function useCreateWebhook() {
+  return useMutation(async (variables: { user_id: string; title?: string; url: string }) =>
+    FetchFunction({
+      url: `${baseURLS.baseServer}createwebhook`,
+      method: "POST",
+      body: JSON.stringify(variables),
+    }),
+  );
+}
