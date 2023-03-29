@@ -84,7 +84,7 @@ export function useMapContextMenuItems({
 
 export function useBoardContextMenuItems({ type, boardContext, item_id, board }: BoardContextMenuType) {
   const [boardRef] = useAtom(BoardReferenceAtom);
-  const [nds, setNodes] = useAtom(NodesAtom);
+  const [, setNodes] = useAtom(NodesAtom);
   const [, setEdges] = useAtom(EdgesAtom);
   const [, setDialog] = useAtom(DialogAtom);
   const updateManyNodes = useUpdateManySubItems(item_id, "nodes");
