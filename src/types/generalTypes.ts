@@ -192,3 +192,10 @@ export type IconSelectMenuType = {
   close: () => void;
   iconTypes: IconCategoriesType[];
 };
+
+export type WebhookType = {
+  id: string;
+  title?: string;
+  url: string;
+  user_id: string;
+};

@@ -1,3 +1,4 @@
+import { WebhookType } from "./generalTypes";
 import { ProjectType } from "./ItemTypes/projectTypes";
 
 export type UserType = {
@@ -6,6 +7,7 @@ export type UserType = {
   nickname: string;
   email: string;
   image?: string;
+  webhooks: WebhookType[];
 
   projects?: ProjectType[];
   createrOf?: ProjectType[];
