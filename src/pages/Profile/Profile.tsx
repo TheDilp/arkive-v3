@@ -1,6 +1,7 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
+import { TabPanel, TabView } from "primereact/tabview";
 import { useState } from "react";
 
 import LoadingScreen from "../../components/Loading/LoadingScreen";
@@ -31,13 +32,17 @@ export default function Profile() {
   const { handleChange, changedData } = useHandleChange({ data: localData, setData: setLocalData });
   if (isFetching || !localData) return <LoadingScreen />;
   return (
-    <>
+    <div className="flex h-full flex-col ">
       <Navbar />
-      <div className="flex h-full w-full flex-col items-center justify-start">
-        <div className="mt-2 flex items-center bg-zinc-900 p-2">
-          <div
-            className="flex min-w-[20rem] flex-col items-center justify-between gap-y-4 "
-            title={`${localData?.nickname} - Profile`}>
+
+      <div className="flex h-full w-full flex-col items-center justify-start gap-y-8 p-8">
+        <div
+          className="flex w-full max-w-[80%] flex-col items-center justify-between gap-4 rounded border border-zinc-700 px-8"
+          title={`${localData?.nickname} - Profile`}>
+          <div className="w-full">
+            <h1 className="pt-4 font-Merriweather text-4xl">Profile</h1>
+          </div>
+          <div className="flex w-full items-center justify-between">
             <div className="relative w-60">
               <img
                 alt="Profile"
@@ -49,25 +54,31 @@ export default function Profile() {
               />
             </div>
             <InputText
-              className="w-full"
+              className="w-full max-w-[40%]"
               name="nickname"
               onChange={(e) => handleChange(e.target)}
               placeholder="Enter a nickname"
               value={localData?.nickname}
             />
-            <Button
-              className="p-button-success p-button-outlined w-full"
-              disabled={!changedData}
-              icon="pi pi-user-edit"
-              iconPos="right"
-              label="Save profile"
-              onClick={() => {
-                if (localData?.id) mutate({ id: localData.id, ...changedData });
-              }}
-            />
+            <div className="ml-auto">
+              <Button
+                className="p-button-success p-button-outlined w-full"
+                disabled={!changedData}
+                icon="pi pi-user-edit"
+                iconPos="right"
+                label="Save profile"
+                onClick={() => {
+                  if (localData?.id) mutate({ id: localData.id, ...changedData });
+                }}
+              />
+            </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+
+        <div className="flex w-full max-w-[80%] flex-col gap-4 rounded border border-zinc-700 p-8">
+          <div className="w-full">
+            <h1 className="pt-4 font-Merriweather text-4xl">Webhooks</h1>
+          </div>
           {localData?.webhooks?.map((webhook) => (
             <Webhook key={webhook.id} {...webhook} />
           ))}
@@ -106,6 +117,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -41,8 +41,15 @@ export default function MentionDropdownComponent() {
               searchItem: item.translation,
               label: item.title,
               displayLabel: `${item.title} (${item.translation})`,
+              projectId: project_id,
             };
-          return { key: item.id, id: item?.parentId || item.id, alterId: item?.parentId ? item.id : null, label: item.title };
+          return {
+            key: item.id,
+            id: item?.parentId || item.id,
+            alterId: item?.parentId ? item.id : null,
+            label: item.title,
+            projectId: project_id,
+          };
         })
         .slice(0, 10),
     );
