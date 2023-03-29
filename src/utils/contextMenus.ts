@@ -560,8 +560,12 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         items: User?.webhooks?.length
           ? User.webhooks.map((webhook, idx) => ({
               label: webhook?.title || `Webhook ${idx + 1}`,
-              command: () =>
-                FetchFunction({
+              command: async () => {
+                if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+                  toaster("warning", "Document must be public to send to discord.");
+                  return;
+                }
+                await FetchFunction({
                   url: `${baseURLS.baseServer}sendpublicitem`,
                   method: "POST",
                   body: JSON.stringify({
@@ -570,7 +574,8 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
                     project_id,
                     webhook_url: webhook.url,
                   }),
-                }),
+                });
+              },
             }))
           : [
               {
