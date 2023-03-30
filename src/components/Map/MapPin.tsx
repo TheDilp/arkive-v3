@@ -46,7 +46,7 @@ export default function MapPin({
   const eventHandlers = {
     click: (e: any) => {
       if (e.originalEvent.shiftKey && e.originalEvent.altKey) return;
-      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !e.originalEvent.metaKey && !readOnly) {
+      if (!e.originalEvent.shiftKey && !e.originalEvent.altKey && !e.originalEvent.metaKey) {
         if (doc_id) {
           setDrawer({
             ...DefaultDrawer,
@@ -54,6 +54,9 @@ export default function MapPin({
             data: { id: doc_id, type: "documents" },
             show: true,
             drawerSize: "md",
+            exceptions: {
+              isReadOnly: readOnly,
+            },
             modal: true,
           });
         }

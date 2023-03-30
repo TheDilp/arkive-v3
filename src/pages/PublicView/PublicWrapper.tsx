@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 
 import Drawer from "../../components/Drawer/Drawer";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
-import CalendarView from "../CalendarView/CalendarView";
 
 const BoardView = lazy(() => import("../BoardView/BoardView"));
 const MapView = lazy(() => import("../MapView/MapView"));
+const CalendarView = lazy(() => import("../CalendarView/CalendarView"));
 const PublicDocumentView = lazy(() => import("./PublicDocumentView"));
 export default function PublicWrapper() {
   const { type } = useParams();
@@ -14,7 +14,12 @@ export default function PublicWrapper() {
   return (
     <Suspense fallback={<LoadingScreen />}>
       {type === "documents" ? <PublicDocumentView /> : null}
-      {type === "maps" ? <MapView isReadOnly /> : null}
+      {type === "maps" ? (
+        <>
+          <Drawer />
+          <MapView isReadOnly />
+        </>
+      ) : null}
       {type === "boards" ? <BoardView isReadOnly /> : null}
       {type === "calendars" ? (
         <>

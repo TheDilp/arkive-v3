@@ -17,6 +17,7 @@ type Props = {
   id: string | undefined;
   label: string;
   isDisabledTooltip?: boolean;
+  isReadOnly?: boolean;
   project_id: string | undefined;
   title?: string;
 };
@@ -43,12 +44,11 @@ export function DocumentMentionTooltip({ title, id }: Pick<Props, "id" | "title"
     </Card>
   );
 }
-export default function DocumentMention({ alterId, title, id, label, isDisabledTooltip, project_id }: Props) {
+export default function DocumentMention({ alterId, title, id, label, isDisabledTooltip, isReadOnly, project_id }: Props) {
   const queryClient = useQueryClient();
   const allDocuments = queryClient.getQueryData<DocumentType[]>(["allItems", project_id, "documents"]);
-
   const { data: documents } = useGetAllItems<DocumentType>(project_id as string, "documents", {
-    enabled: !allDocuments,
+    enabled: !!allDocuments || !isReadOnly,
     staleTime: 5 * 60 * 1000,
   });
   const doc = (allDocuments || documents)?.find((d) => d?.id === id);

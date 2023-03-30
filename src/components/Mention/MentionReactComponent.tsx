@@ -11,6 +11,7 @@ type Props = {
 
 export default function MentionReactComponent({ node }: Props) {
   const { project_id } = useParams();
+
   if (node?.attrs) {
     const { id, name, label, alterId } = node.attrs;
     if (name === "documents")

@@ -11,7 +11,7 @@ import WordMention from "../Mention/WordMention";
 
 export type MarkMap = Partial<Record<string, string | ComponentType<any>>>;
 
-const typeMap = (project_id: string): MarkMap => ({
+const typeMap = (project_id: string, isReadOnly?: boolean): MarkMap => ({
   bulletList: "ul",
   doc: Doc,
   hardBreak: "br",
@@ -29,9 +29,19 @@ const typeMap = (project_id: string): MarkMap => ({
     if (props?.[0]?.node) {
       const { attrs } = props[0].node;
       if (attrs) {
-        const { id, label, name: type } = attrs;
+        const { id, label, alterId, name: type } = attrs;
         if (type === "documents")
-          return <DocumentMention id={id} isDisabledTooltip label={label} project_id={project_id} title={label} />;
+          return (
+            <DocumentMention
+              alterId={alterId}
+              id={id}
+              isDisabledTooltip
+              isReadOnly={isReadOnly}
+              label={label}
+              project_id={project_id}
+              title={label}
+            />
+          );
 
         if (type === "maps") return <MapMention nodeId={id} nodeLabel={label} project_id={project_id} />;
 
@@ -57,12 +67,16 @@ const markMap: MarkMap = {
   link: "a",
 };
 
-export default function StaticRender({ content }: { content: RemirrorJSON }) {
+export default function StaticRender({ content, isReadOnly }: { content: RemirrorJSON; isReadOnly?: boolean }) {
   const { project_id } = useParams();
   const parsedContent = removeKeys(content, ["style", "resizable"]);
   return (
     <div className="staticRendererContainer">
-      <RemirrorRenderer json={parsedContent as RemirrorJSON} markMap={markMap} typeMap={typeMap(project_id as string)} />
+      <RemirrorRenderer
+        json={parsedContent as RemirrorJSON}
+        markMap={markMap}
+        typeMap={typeMap(project_id as string, isReadOnly)}
+      />
     </div>
   );
 }

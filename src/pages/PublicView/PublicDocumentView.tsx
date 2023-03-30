@@ -24,7 +24,7 @@ export default function PublicDocumentView() {
     <div className="min-h-full overflow-hidden px-[16.67%]">
       <h1 className="w-full pt-3 pb-2 text-center font-Merriweather text-4xl">{data?.title}</h1>
       <div className="max-h-full min-h-full overflow-y-auto bg-zinc-700 pb-24">
-        {data && "content" in data && data?.content ? <StaticRender content={data.content} /> : null}
+        {data && "content" in data && data?.content ? <StaticRender content={data.content} isReadOnly /> : null}
       </div>
     </div>
   );
