@@ -643,6 +643,13 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         label: "Copy Public URL",
         icon: "pi pi-fw pi-link",
+        command: () => {
+          if (navigator && navigator.clipboard) {
+            navigator.clipboard.writeText(`${window.location.host}/view/maps/${cmType?.data?.id}`).then(() => {
+              toaster("success", "URL copied! 🔗");
+            });
+          }
+        },
       },
       {
         label: "Send to Discord",

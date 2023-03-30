@@ -23,7 +23,7 @@ type Props = {
 export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, isClusteringPins }: Props) {
   const firstRender = useRef(true);
   const { item_id, subitem_id } = useParams();
-  const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps");
+  const { data: currentMap } = useGetItem<MapType>(item_id as string, "maps", { staleTime: 60 * 1000 }, isReadOnly);
   const [markerFilter, setMarkerFilter] = useState<"map" | "doc" | false>(false);
 
   const PinFilter = (mapPin: MapPinType) => {
@@ -33,17 +33,17 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, isCluste
           return false;
         }
         if (markerFilter === "doc") {
-          return mapPin.doc_id;
+          return Boolean(mapPin.doc_id);
         }
         return true;
       }
       return false;
     }
     if (markerFilter === "map") {
-      return mapPin.map_link;
+      return Boolean(mapPin.map_link);
     }
     if (markerFilter === "doc") {
-      return mapPin.doc_id;
+      return Boolean(mapPin.doc_id);
     }
     return true;
   };
