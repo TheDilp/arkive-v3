@@ -145,7 +145,7 @@ export default function UpdateMapLayers() {
                           onSuccess: () =>
                             toaster(
                               "info",
-                              `Visiblity of this layer has been changed to: ${!layer.isPublic ? "public" : "private."}`,
+                              `Visiblity of this layer has been changed to: ${!layer.isPublic ? "PUBLIC" : "PRIVATE."}`,
                             ),
                         },
                       );
