@@ -84,7 +84,6 @@ export function useMapContextMenuItems({
 
   return items;
 }
-
 export function useBoardContextMenuItems({ type, boardContext, item_id, board }: BoardContextMenuType) {
   const [boardRef] = useAtom(BoardReferenceAtom);
   const [, setNodes] = useAtom(NodesAtom);
@@ -644,6 +643,37 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       {
         label: "Copy Public URL",
         icon: "pi pi-fw pi-link",
+      },
+      {
+        label: "Send to Discord",
+        icon: "pi pi-fw pi-discord",
+        items: User?.webhooks?.length
+          ? User.webhooks.map((webhook, idx) => ({
+              label: webhook?.title || `Webhook ${idx + 1}`,
+              command: async () => {
+                if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+                  toaster("warning", "Map must be public to send to discord.");
+                  return;
+                }
+                await FetchFunction({
+                  url: `${baseURLS.baseServer}sendpublicitem`,
+                  method: "POST",
+                  body: JSON.stringify({
+                    id: cmType?.data?.id,
+                    item_type: "maps",
+                    project_id,
+                    webhook_url: webhook.url,
+                  }),
+                });
+              },
+            }))
+          : [
+              {
+                label: "Add Webhooks",
+                icon: "pi pi-fw pi-plus",
+                command: () => navigate(`/user/${User?.id}`),
+              },
+            ],
       },
       {
         label: "Delete Map",

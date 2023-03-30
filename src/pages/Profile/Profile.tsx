@@ -1,7 +1,6 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
-import { TabPanel, TabView } from "primereact/tabview";
 import { useState } from "react";
 
 import LoadingScreen from "../../components/Loading/LoadingScreen";
