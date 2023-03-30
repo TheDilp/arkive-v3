@@ -101,7 +101,7 @@ export default function DrawerMapPinContent() {
           </div>
           <div className="flex flex-1 justify-end">
             <InputSwitch
-              checked={localItem.showBackground}
+              checked={localItem?.showBackground ?? true}
               onChange={(e) => handleChange({ name: "showBackground", value: e.value })}
               tooltip="Show background"
               tooltipOptions={{ position: "left" }}
@@ -116,7 +116,7 @@ export default function DrawerMapPinContent() {
           </div>
           <div className="flex flex-1 justify-end">
             <InputSwitch
-              checked={localItem.showBorder}
+              checked={localItem?.showBorder ?? true}
               onChange={(e) => handleChange({ name: "showBorder", value: e.value })}
               tooltip="Show border"
               tooltipOptions={{ position: "left" }}
@@ -126,7 +126,10 @@ export default function DrawerMapPinContent() {
       </DrawerSection>
       <div className="flex flex-wrap items-center justify-between">
         <span>Public:</span>
-        <Checkbox checked={localItem.isPublic} onChange={(e) => handleChange({ name: "isPublic", value: e.target.checked })} />
+        <Checkbox
+          checked={localItem?.isPublic ?? false}
+          onChange={(e) => handleChange({ name: "isPublic", value: e.target.checked })}
+        />
         <p className="w-full pt-2 text-xs text-zinc-400">
           If a document is linked, the marker will use its public setting by default.
         </p>
@@ -149,7 +152,7 @@ export default function DrawerMapPinContent() {
           filter
           itemTemplate={ImageDropdownItem}
           name="image"
-          onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? undefined : e.value })}
+          onChange={(e) => handleChange({ name: "image", value: e.value === "None" ? null : e.value })}
           options={["None", ...(images || [])] || []}
           placeholder="Select map"
           value={localItem?.image}
