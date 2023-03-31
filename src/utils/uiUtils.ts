@@ -74,3 +74,10 @@ export function bytesToSize(bytes: number) {
   if (i === 0) return `${bytes} ${sizes[i]})`;
   return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
 }
+
+export function getCDNImage(image: string) {
+  return image.replace(
+    "https://the-arkive-v3.nyc3.digitaloceanspaces.com",
+    "https://the-arkive-v3.nyc3.cdn.digitaloceanspaces.com",
+  );
+}

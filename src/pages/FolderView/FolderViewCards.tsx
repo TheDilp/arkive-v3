@@ -8,6 +8,7 @@ import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { useTreeMenuItems } from "../../utils/contextMenus";
 import { getIcon } from "../../utils/transform";
+import { getCDNImage } from "../../utils/uiUtils";
 
 export function FolderViewCards({ type, items }: { type: AvailableItemTypes; items: AllItemsType[] }) {
   const { project_id } = useParams();
@@ -15,7 +16,6 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
   const cm = useRef() as MutableRefObject<any>;
   const contextMenu = useAtomValue(SidebarTreeContextAtom);
   const menuItems = useTreeMenuItems(contextMenu, type, project_id as string);
-
   return (
     <div className="flex h-[90%] flex-col">
       <ContextMenu cm={cm} items={menuItems} />
@@ -28,7 +28,7 @@ export function FolderViewCards({ type, items }: { type: AvailableItemTypes; ite
                 icon={getIcon(type, item)}
                 id={item.id}
                 // @ts-ignore
-                image={item?.image || undefined}
+                image={item?.image ? getCDNImage(item?.image) : undefined}
                 isFolder={item.folder}
                 isPublic={item.isPublic}
                 title={item.title}
