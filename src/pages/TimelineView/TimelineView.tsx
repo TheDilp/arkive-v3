@@ -58,7 +58,9 @@ export default function TimelineView() {
 
   const [groupItems, setGroupItems] = useState(10);
   if (isLoading) return <LoadingScreen />;
-  const allEvents = timeline?.calendars?.map((cal) => cal.events)?.flat();
+  const allEvents = timeline?.calendars
+    ?.map((cal) => cal?.events?.map((ev) => ({ ...ev, year: ev.year + cal.startYear })))
+    ?.flat();
   return (
     <div className="flex h-full flex-col overflow-hidden p-4">
       <div className="flex w-full gap-x-2">
