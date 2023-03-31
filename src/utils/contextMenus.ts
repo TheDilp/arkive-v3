@@ -743,6 +743,37 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
         },
       },
       {
+        label: "Send to Discord",
+        icon: "pi pi-fw pi-discord",
+        items: User?.webhooks?.length
+          ? User.webhooks.map((webhook, idx) => ({
+              label: webhook?.title || `Webhook ${idx + 1}`,
+              command: async () => {
+                if (cmType?.data && "isPublic" in cmType.data && !cmType.data?.isPublic) {
+                  toaster("warning", "Board must be public to send to discord.");
+                  return;
+                }
+                await FetchFunction({
+                  url: `${baseURLS.baseServer}sendpublicitem`,
+                  method: "POST",
+                  body: JSON.stringify({
+                    id: cmType?.data?.id,
+                    item_type: "boards",
+                    project_id,
+                    webhook_url: webhook.url,
+                  }),
+                });
+              },
+            }))
+          : [
+              {
+                label: "Add Webhooks",
+                icon: "pi pi-fw pi-plus",
+                command: () => navigate(`/user/${User?.id}`),
+              },
+            ],
+      },
+      {
         label: "Delete Board",
         icon: "pi pi-fw pi-trash",
         command: () =>
@@ -803,6 +834,7 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
           }
         },
       },
+
       {
         label: "Delete Calendar",
         icon: "pi pi-fw pi-trash",
