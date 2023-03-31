@@ -16,6 +16,7 @@ export async function FetchFunction({
     body,
     headers: {
       "Access-Control-Allow-Origin": "*",
+      "Content-Type": typeof body === "string" ? "application/json" : "multipart/form-data",
       Authorization: `Bearer ${token}`,
     },
   });
