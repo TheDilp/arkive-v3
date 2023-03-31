@@ -3,7 +3,7 @@ import { DefaultCalendarType, DefaultEraType, DefaultEventType, DefaultMonthType
 export const DefaultCalendar: DefaultCalendarType = {
   title: "",
   project_id: "",
-  startYear: 0,
+  offset: 0,
 };
 export const DefaultEra: DefaultEraType = {
   title: "",
