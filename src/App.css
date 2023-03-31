@@ -375,7 +375,9 @@ Inputs
   @apply select-none;
 }
 
-.marker-cluster-small {
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
   @apply flex items-center justify-center border border-white bg-zinc-800 !important;
   div {
     @apply m-0 bg-transparent font-Lato text-base !important;
