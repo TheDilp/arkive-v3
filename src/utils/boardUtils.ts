@@ -483,7 +483,7 @@ export function mapNodes(nodes: NodeType[], isReadOnly?: boolean) {
         fontSize: node?.fontSize || 16,
         fontColor: node?.fontColor || "#ffffff",
         fontFamily: node?.fontFamily || "Lato",
-        textVAlign: node?.textVAlign || "center",
+        textVAlign: node?.textVAlign || "top",
         textHAlign: node?.textHAlign || "center",
 
         locked: node?.locked || false,
