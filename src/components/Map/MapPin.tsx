@@ -63,10 +63,12 @@ export default function MapPin({
       }
       if (e.originalEvent.shiftKey && map_link) {
         e.originalEvent.preventDefault();
-        navigate(`../${map_link}`);
+        if (readOnly) navigate(`/view/maps/${map_link}`);
+        else navigate(`/project/${project_id}/maps/${map_link}`);
       } else if (e.originalEvent.altKey && doc_id) {
         e.originalEvent.preventDefault();
-        navigate(`../../documents/${doc_id}`);
+        if (readOnly) navigate(`/view/documents/${doc_id}`);
+        else navigate(`/project/${project_id}/documents/${doc_id}}`);
       } else if (e.originalEvent.metaKey) {
         setDrawer({
           ...DefaultDrawer,
