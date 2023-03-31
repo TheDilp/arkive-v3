@@ -191,7 +191,7 @@ export default function DrawerCalendarContent() {
               </DrawerSection>
               <DrawerSection
                 subtitle="This number offsets the calendar from a 'global' year 0."
-                title="Calendar start year (optional)">
+                title="Calendar offset (optional)">
                 <InputNumber
                   name="offset"
                   onChange={(e) => handleChange({ name: "offset", value: e.value })}
