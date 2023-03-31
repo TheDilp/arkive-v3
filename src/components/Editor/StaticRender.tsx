@@ -25,6 +25,26 @@ const typeMap = (project_id: string, isReadOnly?: boolean): MarkMap => ({
   callout: Callout,
   horizontalRule: "hr",
   image: "img",
+  // tableRow: (...props: any) => <div className="flex h-96 w-full">{props?.[0]?.children?.map((c: ReactElement) => c)}</div>,
+  // tableCell: (...props: any) => {
+  //   console.log(props?.[0]?.node?.attrs?.colwidth);
+  //   return (
+  //     <div className="h-full overflow-y-auto border" style={{ width: "33.3%" }}>
+  //       {props?.[0]?.children?.map((c: ReactElement) => (
+  //         <div className="max-w-sm break-all ">{c}</div>
+  //       ))}
+  //     </div>
+  //   );
+  // },
+  // tableHeaderCell: () => "test",
+  // table: (...props: any) => {
+  //   return (
+  //     <div className="w-full">
+  //       <div className="w-full">{props?.[0]?.children?.map((c: ReactElement) => c)}</div>
+  //     </div>
+  //   );
+  // },
+
   mentionAtom: (...props: any) => {
     if (props?.[0]?.node) {
       const { attrs } = props[0].node;

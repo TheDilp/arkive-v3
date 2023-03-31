@@ -20,6 +20,7 @@ import {
   MentionAtomExtension,
   NodeFormattingExtension,
   OrderedListExtension,
+  // TableExtension,
   TaskListExtension,
   UnderlineExtension,
 } from "remirror/extensions";
@@ -107,12 +108,13 @@ export const DefaultEditorExtensions = () => {
     CustomMentionExtension,
     new GapCursorExtension({}),
     new DropCursorExtension({}),
+    // new TableExtension({ resizable: true }),
   ];
 };
 
 export const editorHooks = [
   () => {
-    const { getJSON, getText } = useHelpers();
+    const { getJSON, getText, getMarkdown } = useHelpers();
     const { project_id, item_id } = useParams();
     const saveContentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
     const { data: document } = useGetItem<DocumentType>(item_id as string, "documents");
@@ -140,11 +142,22 @@ export const editorHooks = [
       },
       [getText, item_id],
     );
+    const handleExportMarkdown = useCallback(() => {
+      const markdown = getMarkdown();
+      saveAs(
+        new Blob([markdown], {
+          type: "text/plaintext;charset=utf-8",
+        }),
+        `${document?.title || `Arkive Document - ${item_id}`}.md`,
+      );
+      return true;
+    }, []);
 
     // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
 
     useKeymap("Mod-s", handleSaveShortcut);
     useKeymap("Mod-e", handleExportShortcut);
+    useKeymap("Mod-m", handleExportMarkdown);
   },
 ];
 
