@@ -189,6 +189,15 @@ export default function DrawerCalendarContent() {
                   value={localItem.minutes}
                 />
               </DrawerSection>
+              <DrawerSection
+                subtitle="This number offsets the calendar from a 'global' year 0."
+                title="Calendar start year (optional)">
+                <InputNumber
+                  name="startYear"
+                  onChange={(e) => handleChange({ name: "startYear", value: e.value })}
+                  value={localItem?.startYear}
+                />
+              </DrawerSection>
 
               <DrawerSection title="Tags">
                 <Tags handleChange={handleChange} localItem={localItem} type="calendars" />
