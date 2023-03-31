@@ -40,7 +40,7 @@ export default function DrawerCalendarContent() {
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: calendar, isLoading } = useGetItem<CalendarType>(drawer?.data?.id || drawer?.id, "calendars", {
-    enabled: drawer?.data?.id || drawer?.id,
+    enabled: !!drawer?.data?.id || !!drawer?.id,
   });
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
   const createCalendarMutation = useCreateItem<CalendarType>("calendars");
