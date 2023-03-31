@@ -39,7 +39,7 @@ export default function DrawerCalendarContent() {
   const queryClient = useQueryClient();
   const { project_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
-  const { data: calendar, isLoading } = useGetItem<CalendarType>(drawer?.data?.id || drawer?.id, "calendars", {
+  const { data: calendar, isFetching } = useGetItem<CalendarType>(drawer?.data?.id || drawer?.id, "calendars", {
     enabled: !!drawer?.data?.id || !!drawer?.id,
   });
   const allCalendars = queryClient.getQueryData<CalendarType[]>(["allItems", project_id, "calendars"]);
@@ -70,7 +70,7 @@ export default function DrawerCalendarContent() {
   }, [calendar]);
 
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-  if (isLoading) return <ProgressSpinner />;
+  if (isFetching) return <ProgressSpinner />;
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flexw-full flex-1 flex-col">
