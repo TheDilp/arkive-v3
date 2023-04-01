@@ -36,7 +36,15 @@ export type AvailableSubItemTypes =
   | "randomtableoptions";
 export type AllAvailableTypes = AvailableItemTypes | AvailableSubItemTypes;
 
-export type AllItemsType = DocumentType | MapType | BoardType | CalendarType | ScreenType | DictionaryType | RandomTableType;
+export type AllItemsType =
+  | DocumentType
+  | MapType
+  | BoardType
+  | CalendarType
+  | TimelineType
+  | ScreenType
+  | DictionaryType
+  | RandomTableType;
 export type AllSubItemsType =
   | MapPinType
   | MapLayerType

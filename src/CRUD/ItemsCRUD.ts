@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
+import set from "lodash.set";
 
 import { baseURLS, deleteURLs, getURLS } from "../types/CRUDenums";
 import { AllAvailableTypes, AllItemsType, AvailableItemTypes, AvailableSubItemTypes } from "../types/generalTypes";
@@ -13,7 +14,7 @@ import { createURL, deleteManyURL, deleteURL, sortURL, updateManyURL, updateURL 
 import { removeDeletedImages } from "../utils/imageUtils";
 import { toaster } from "../utils/toast";
 
-export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItemTypes, options?: UseQueryOptions) => {
+export const useGetAllItems = <ItemType>(project_id: string, type: AvailableItemTypes, options?: UseQueryOptions<ItemType>) => {
   return useQuery<ItemType[]>(["allItems", project_id, type], async () => getItems(project_id as string, type), {
     enabled: options?.enabled,
     staleTime: options?.staleTime,
@@ -217,8 +218,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
               return subItem;
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
-          }
-          if (
+          } else if (
             type === "maps" &&
             ((subType === "map_layers" && "map_layers" in oldData) || (subType === "map_pins" && "map_pins" in oldData))
           ) {
@@ -227,8 +227,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
               return subItem;
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
-          }
-          if (
+          } else if (
             type === "calendars" &&
             ((subType === "months" && "months" in oldData) || (subType === "eras" && "eras" in oldData))
           ) {
@@ -237,21 +236,52 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
               return subItem;
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
-          }
-          if (type === "screens" && subType === "sections" && "sections" in oldData) {
+          } else if (type === "screens" && subType === "sections" && "sections" in oldData) {
             const updatedData = (oldData[subType] || []).map((subItem) => {
               if (subItem.id === variables.id) return { ...subItem, ...variables };
               return subItem;
             });
             queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
-          }
+          } else if (type === "dictionaries" && subType === "words" && "words" in oldData) {
+            const updatedData = (oldData[subType] || []).map((subItem) => {
+              if (subItem.id === variables.id) return { ...subItem, ...variables };
+              return subItem;
+            });
+            queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
+          } else if (type === "calendars" && subType === "events") {
+            const monthIdx =
+              "monthsId" in variables && "months" in oldData
+                ? oldData?.months?.findIndex((month) => month.id === variables.monthsId)
+                : null;
 
-          if (type === "dictionaries" && subType === "words" && "words" in oldData) {
-            const updatedData = (oldData[subType] || []).map((subItem) => {
-              if (subItem.id === variables.id) return { ...subItem, ...variables };
-              return subItem;
-            });
-            queryClient.setQueryData([type, item_id], { ...oldData, [subType]: updatedData });
+            if (typeof monthIdx === "number" && monthIdx !== -1 && "months" in oldData) {
+              const eventIdx = oldData.months[monthIdx].events.findIndex((event) => event.id === variables.id);
+
+              if (typeof eventIdx === "number" && eventIdx !== -1) {
+                const newData = { ...oldData };
+                const newEvents = [...oldData.months[monthIdx].events];
+                newEvents[eventIdx] = { ...newEvents[eventIdx], ...variables };
+                set(newData, `months[${monthIdx}].events`, newEvents);
+                queryClient.setQueryData([type, item_id], newData);
+              }
+            }
+          } else if (type === "timelines" && subType === "events") {
+            const calendarIdx =
+              "calendarsId" in variables && "calendars" in oldData
+                ? oldData?.calendars?.findIndex((cal) => cal.id === variables.calendarsId)
+                : null;
+            if (typeof calendarIdx === "number" && calendarIdx !== -1 && "calendars" in oldData) {
+              const eventIdx = oldData.calendars[calendarIdx].events.findIndex((event) => event.id === variables.id);
+
+              if (typeof eventIdx === "number" && eventIdx !== -1) {
+                const newData = { ...oldData };
+                const newEvents = [...oldData.calendars[calendarIdx].events];
+                newEvents[eventIdx] = { ...newEvents[eventIdx], ...variables };
+                set(newData, `calendars[${calendarIdx}].events`, newEvents);
+                console.log(oldData, newData);
+                queryClient.setQueryData([type, item_id], newData);
+              }
+            }
           }
         }
 

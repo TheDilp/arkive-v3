@@ -151,13 +151,13 @@ export default function DrawerDocumentContent() {
 
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Is Folder?</span>
-          <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />
+          <Checkbox checked={localItem?.folder ?? false} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />
         </div>
         {!localItem?.template ? (
           <div className="flex items-center justify-between">
             <span className="p-checkbox-label">Is Public?</span>
             <Checkbox
-              checked={localItem?.isPublic}
+              checked={localItem?.isPublic ?? false}
               name="isPublic"
               onChange={(e) => handleChange({ name: e.target.name, value: e.target.checked })}
               tooltip="If checked, anyone can access the content via a public page"

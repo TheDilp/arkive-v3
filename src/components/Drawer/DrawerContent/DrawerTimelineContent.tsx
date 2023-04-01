@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 
 import { useCreateItem, useDeleteItem, useGetAllItems, useUpdateItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
+import { CalendarType } from "../../../types/ItemTypes/calendarTypes";
 import { TimelineCreateType, TimelineType } from "../../../types/ItemTypes/timelineTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
@@ -16,6 +17,7 @@ import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import { DefaultTimeline } from "../../../utils/DefaultValues/TimelineDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
+import LoadingScreen from "../../Loading/LoadingScreen";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
@@ -25,28 +27,30 @@ export default function DrawerTimelineContent() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
 
   const allTimelines = queryClient.getQueryData<TimelineType[]>(["allItems", project_id, "timelines"]);
-  const { data: allCalendars } = useGetAllItems(project_id as string, "calendars");
-  const dictionary = allTimelines?.find((dict) => dict.id === drawer.id);
+  const { data: allCalendars, isFetching } = useGetAllItems<CalendarType>(project_id as string, "calendars", {
+    staleTime: 5 * 60 * 1000,
+  });
+  const timeline = allTimelines?.find((dict) => dict.id === drawer.id);
 
   const createTimelineMutation = useCreateItem("timelines");
   const updateTimelineMutation = useUpdateItem("timelines", project_id as string);
   const deleteTimelineMutation = useDeleteItem("timelines", project_id as string);
-
   const [localItem, setLocalItem] = useState<TimelineType | TimelineCreateType>(
     drawer?.data ?? { ...DefaultTimeline, project_id: project_id as string },
   );
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
 
   useEffect(() => {
-    if (dictionary) {
-      setLocalItem(dictionary);
+    if (timeline) {
+      setLocalItem(timeline);
     } else {
       setLocalItem({
         ...DefaultTimeline,
         project_id: project_id as string,
       });
     }
-  }, [dictionary, project_id]);
+  }, [timeline, project_id]);
+  if (isFetching) return <LoadingScreen />;
   return (
     <div className="flex h-full flex-col gap-y-2">
       <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Timeline"}</h2>
@@ -59,7 +63,7 @@ export default function DrawerTimelineContent() {
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               await createUpdateItem<TimelineType>(
-                dictionary,
+                timeline,
                 localItem,
                 changedData,
                 DefaultTimeline,
@@ -78,12 +82,17 @@ export default function DrawerTimelineContent() {
       <DrawerSection subtitle="Calendars from which the timeline will draw events" title="Calendars">
         <MultiSelect
           className="w-full"
+          display="chip"
+          dropdownIcon={isFetching ? "pi pi-spin pi-spinner" : "pi pi-chevron-down"}
+          filter
           name="calendars"
-          onChange={(e) => handleChange({ name: "calendars", value: e.value })}
+          onChange={(e) => {
+            handleChange({ name: "calendars", value: allCalendars?.filter((cal) => e.value.includes(cal?.id)) });
+          }}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               await createUpdateItem<TimelineType>(
-                dictionary,
+                timeline,
                 localItem,
                 changedData,
                 DefaultTimeline,
@@ -96,10 +105,11 @@ export default function DrawerTimelineContent() {
             }
           }}
           optionLabel="title"
-          options={allCalendars}
+          options={allCalendars || []}
           optionValue="id"
-          placeholder="Selected Calendars"
-          value={localItem?.calendars || ""}
+          placeholder="Selected calendars"
+          showSelectAll={false}
+          value={localItem?.calendars?.map((cal) => cal?.id) || []}
         />
       </DrawerSection>
       <Button
@@ -108,7 +118,7 @@ export default function DrawerTimelineContent() {
         loading={createTimelineMutation.isLoading || updateTimelineMutation.isLoading}
         onClick={async () => {
           await createUpdateItem<TimelineType>(
-            dictionary,
+            timeline,
             localItem,
             changedData,
             DefaultTimeline,

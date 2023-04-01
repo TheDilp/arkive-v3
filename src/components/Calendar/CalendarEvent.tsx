@@ -1,4 +1,4 @@
-import { SetStateAction, useAtom } from "jotai";
+import { SetStateAction, useSetAtom } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { EventType, MonthType } from "../../types/ItemTypes/calendarTypes";
@@ -58,9 +58,9 @@ export default function CalendarEvent({ dayEvents, index, month, year, isReadOnl
   const sortedEvents = [...dayEvents].sort(sortEvents);
   const daysEvents = sortedEvents.filter((event) => event.day === index + 1 && event.year === year);
   const visibleEvents = daysEvents.slice(0, 5);
-  const [, setContextMenuData] = useAtom(OtherContextMenuAtom);
+  const setContextMenuData = useSetAtom(OtherContextMenuAtom);
 
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   return (
     <div className="flex flex-col gap-y-0.5 p-1">
       {dayEvents && visibleEvents.length

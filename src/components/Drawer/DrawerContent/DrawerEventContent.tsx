@@ -10,13 +10,12 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import { useDeleteItem, useGetAllItems } from "../../../CRUD/ItemsCRUD";
+import { useDeleteItem, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
-import { baseURLS, createURLS, deleteURLs, updateURLs } from "../../../types/CRUDenums";
+import { baseURLS, createURLS, deleteURLs } from "../../../types/CRUDenums";
 import { CalendarType, EventCreateType, EventType } from "../../../types/ItemTypes/calendarTypes";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
-import { TimelineType } from "../../../types/ItemTypes/timelineTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
@@ -69,24 +68,19 @@ export default function DrawerEventContent() {
   );
   const [monthDays, setMonthDays] = useState(0);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
-
+  const { mutateAsync } = useUpdateSubItem(item_id as string, "events", itemType);
   const createUpdateEvent = async () => {
     setLoading(true);
     if (changedData) {
       if (localItem?.id) {
         let payload = omit(changedData, ["tags"]);
 
-        if (changedData?.month) {
-          set(payload, "monthsId", changedData?.month?.id);
-          payload = omit(payload, ["month"]);
-        }
+        if (itemType === "timelines") set(payload, "calendarsId", localItem?.calendarsId);
+        if (itemType === "calendars" || changedData?.monthsId)
+          set(payload, "monthsId", changedData?.month?.id || localItem?.monthsId);
+        payload = omit(payload, ["month"]);
+        await mutateAsync({ ...payload, id: localItem.id });
 
-        await FetchFunction({
-          url: `${baseURLS.baseServer}${updateURLs.updateEvent}`,
-          method: "POST",
-          body: JSON.stringify({ ...payload, id: localItem.id }),
-        });
-        await queryClient.refetchQueries<CalendarType | TimelineType>([itemType, item_id]);
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully updated.");
@@ -100,8 +94,7 @@ export default function DrawerEventContent() {
           method: "POST",
           body: JSON.stringify({ ...payload, monthsId: localItem?.month?.id, calendarsId: item_id as string }),
         });
-
-        await queryClient.refetchQueries<CalendarType | TimelineType>([itemType, item_id]);
+        // await queryClient.refetchQueries<CalendarType | TimelineType>([itemType, item_id]);
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully created.");

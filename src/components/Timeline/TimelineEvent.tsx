@@ -1,13 +1,13 @@
 import { SetStateAction } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
-import { EventType } from "../../types/ItemTypes/calendarTypes";
+import { TimelineDisplayEventType } from "../../types/ItemTypes/timelineTypes";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { DocumentMentionTooltip } from "../Mention/DocumentMention";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
-  event: EventType;
+  event: TimelineDisplayEventType;
   setDrawer: (update: SetStateAction<DrawerAtomType>) => void;
 };
 

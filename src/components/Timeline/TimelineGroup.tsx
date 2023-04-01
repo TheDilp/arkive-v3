@@ -1,18 +1,17 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 
-import { EventType } from "../../types/ItemTypes/calendarTypes";
-import { TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
+import { TimelineDisplayEventType, TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import TimelineEvent from "./TimelineEvent";
 
 type Props = {
   year: number;
-  events: EventType[];
+  events: TimelineDisplayEventType[];
   viewSettings: TimelineViewSettings;
 };
 
 export default function TimelineGroup({ year, events, viewSettings }: Props) {
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   const { groupBy } = viewSettings;
   const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   return (
@@ -30,7 +29,7 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
                 <div className="flex flex-1 flex-wrap items-center gap-1 px-2">
                   {events.length
                     ? events
-                        .filter((event) => event.year === year + item)
+                        .filter((event) => event.displayYear === year + item)
                         .map((event) => <TimelineEvent key={event.id} event={event} setDrawer={setDrawer} />)
                     : null}
                 </div>

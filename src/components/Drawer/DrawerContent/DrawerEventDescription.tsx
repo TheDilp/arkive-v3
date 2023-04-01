@@ -8,12 +8,16 @@ import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../../utils/DefaultValues/DrawerDialogDefaults";
 import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
 import StaticRender from "../../Editor/StaticRender";
+import LoadingScreen from "../../Loading/LoadingScreen";
 
 export default function DrawerEventDescription() {
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: document, isFetching } = useGetItem<DocumentType>(drawer?.data?.documentsId, "documents", {
+    staleTime: 5 * 60 * 1000,
     enabled: !!drawer?.data?.documentsId,
   });
+
+  if (isFetching) return <LoadingScreen />;
   return (
     <div>
       <h2 className="sticky top-0 flex items-center justify-between overflow-x-auto bg-zinc-800 pb-2 font-Lato text-2xl">

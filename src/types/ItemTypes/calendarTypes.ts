@@ -36,7 +36,7 @@ export type MonthType = {
   parentId: string;
 };
 
-export type EventType = {
+export interface EventType {
   id: string;
   title: string;
   description?: string;
@@ -61,7 +61,7 @@ export type EventType = {
   calendarsId: string | null;
 
   tags: TagType[];
-};
+}
 
 export type CalendarCreateType = Partial<Omit<CalendarType, "parentId">>;
 export type EraCreateType = Partial<Omit<EraType, "events">>;

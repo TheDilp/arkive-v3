@@ -1,12 +1,17 @@
 import { BaseItemType } from "../generalTypes";
-import { CalendarType } from "./calendarTypes";
+import { CalendarType, EventType } from "./calendarTypes";
+
+export interface TimelineDisplayEventType extends EventType {
+  displayYear: number;
+}
 
 export interface TimelineType extends BaseItemType {
   id: string;
   title: string;
 
   parent?: TimelineType;
-  calendars: CalendarType[];
+  calendars: (Omit<CalendarType, "events"> & { events: TimelineDisplayEventType[] })[];
+  events: TimelineDisplayEventType[];
 }
 
 export type TimelineCreateType = Partial<Omit<TimelineType, "project_id">>;

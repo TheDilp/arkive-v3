@@ -54,13 +54,19 @@ export default function TimelineView() {
     view: { label: "Grouped", value: "Grouped" },
   });
   const [year, setYear] = useState(1);
-  const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines");
+  const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines", {
+    staleTime: 5 * 60 * 1000,
+    select: (data: TimelineType) => {
+      return {
+        ...data,
+        events: data?.calendars?.map((cal) => cal?.events?.map((ev) => ({ ...ev, displayYear: ev.year + cal.offset })))?.flat(),
+      };
+    },
+  });
 
   const [groupItems, setGroupItems] = useState(10);
   if (isLoading) return <LoadingScreen />;
-  const allEvents = timeline?.calendars
-    ?.map((cal) => cal?.events?.map((ev) => ({ ...ev, year: ev.year + cal.offset })))
-    ?.flat();
+
   return (
     <div className="flex h-full flex-col overflow-hidden p-4">
       <div className="flex w-full gap-x-2">
@@ -126,10 +132,10 @@ export default function TimelineView() {
           <TimelineGroup
             key={item}
             events={
-              allEvents
+              timeline?.events
                 ?.filter((event) => {
-                  if (item !== 0) return event.year > item * 10 && event.year <= item * 10 + 10;
-                  return event.year > 0 && event.year <= 10;
+                  if (item !== 0) return event.displayYear > item * 10 && event.displayYear <= item * 10 + 10;
+                  return event.displayYear > 0 && event.displayYear <= 10;
                 })
                 .sort(sortEvents) || []
             }
