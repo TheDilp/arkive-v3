@@ -140,9 +140,8 @@ export default function DrawerEventContent() {
                 "monthsId" in newEvent && "months" in oldData
                   ? oldData?.months?.findIndex((month) => month.id === newEvent.monthsId)
                   : null;
-
               if (typeof monthIdx === "number" && monthIdx !== -1 && "months" in oldData) {
-                const newData = { ...oldData };
+                const newData = cloneDeep(oldData);
                 const newEvents = [...newData.months[monthIdx].events];
                 newEvents.push(newEvent);
 
@@ -157,7 +156,7 @@ export default function DrawerEventContent() {
                   : null;
 
               if (typeof calendarIdx === "number" && calendarIdx !== -1 && "calendars" in oldData) {
-                const newData = { ...oldData };
+                const newData = cloneDeep(oldData);
 
                 const newEvents = [...oldData.calendars[calendarIdx].events];
                 newEvents.push(newEvent);
