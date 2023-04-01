@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import DrawerSection from "../../components/Drawer/DrawerSection";
@@ -12,6 +12,8 @@ import { TimelineType, TimelineViewSettings } from "../../types/ItemTypes/timeli
 import { sortEvents } from "../../utils/calendarUtils";
 import { TimelineGroupingOptions, TimelineViewOptions } from "../../utils/timelineUtils";
 import { scrollElementIntoView } from "../../utils/uiUtils";
+
+type Props = { isReadOnly?: boolean };
 
 function scrollBasedOnGroup(groupBy: boolean, year: number) {
   if (groupBy) {
@@ -47,18 +49,14 @@ function scrollToYear({
   }
 }
 
-export default function TimelineView() {
+export default function TimelineView({ isReadOnly }: Props) {
   const { item_id } = useParams();
   const [viewSettings, setViewSettings] = useState<TimelineViewSettings>({
     groupBy: true,
     view: { label: "Grouped", value: "Grouped" },
   });
   const [year, setYear] = useState(1);
-  const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines");
-
-  useEffect(() => {
-    console.log(timeline);
-  }, [timeline?.calendars]);
+  const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines", {}, isReadOnly);
 
   const [groupItems, setGroupItems] = useState(10);
   if (isLoading) return <LoadingScreen />;
@@ -137,6 +135,7 @@ export default function TimelineView() {
                 })
                 .sort(sortEvents) || []
             }
+            isReadOnly={isReadOnly}
             viewSettings={viewSettings}
             year={item * 10 + 1}
           />

@@ -59,7 +59,6 @@ export default function CalendarEvent({ dayEvents, index, month, year, isReadOnl
   const daysEvents = sortedEvents.filter((event) => event.day === index + 1 && event.year === year);
   const visibleEvents = daysEvents.slice(0, 5);
   const setContextMenuData = useSetAtom(OtherContextMenuAtom);
-
   const setDrawer = useSetAtom(DrawerAtom);
   return (
     <div className="flex flex-col gap-y-0.5 p-1">

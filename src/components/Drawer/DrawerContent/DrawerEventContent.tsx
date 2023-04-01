@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import omit from "lodash.omit";
 import set from "lodash.set";
 import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
@@ -253,6 +254,13 @@ export default function DrawerEventContent() {
       <DrawerSection title="Event tags">
         <Tags handleChange={handleChange} localItem={localItem} type="events" />
       </DrawerSection>
+      <div className="flex items-center justify-between">
+        <span>Public:</span>
+        <Checkbox
+          checked={localItem?.isPublic ?? false}
+          onChange={(e) => handleChange({ name: "isPublic", value: e.target.checked })}
+        />
+      </div>
       <hr className="border-zinc-600" />
       <Button
         className="p-button-outlined p-button-success"

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import Drawer from "../../components/Drawer/Drawer";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
+import TimelineView from "../TimelineView/TimelineView";
 
 const BoardView = lazy(() => import("../BoardView/BoardView"));
 const MapView = lazy(() => import("../MapView/MapView"));
@@ -26,6 +27,13 @@ export default function PublicWrapper() {
           <Drawer />
 
           <CalendarView isReadOnly />
+        </>
+      ) : null}
+      {type === "timelines" ? (
+        <>
+          <Drawer />
+
+          <TimelineView isReadOnly />
         </>
       ) : null}
     </Suspense>

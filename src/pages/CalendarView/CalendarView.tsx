@@ -224,7 +224,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
                     />
                     <CalendarEvent
                       cm={cm}
-                      dayEvents={calendar?.months[date.month]?.events.filter((ev) => ev.day === day + 1) || []}
+                      dayEvents={calendar?.months[date.month]?.events?.filter((ev) => ev?.day === day + 1) || []}
                       index={index}
                       isReadOnly={isReadOnly}
                       month={calendar.months[date.month]}

@@ -9,9 +9,10 @@ import { Tooltip } from "../Tooltip/Tooltip";
 type Props = {
   event: TimelineDisplayEventType;
   setDrawer: (update: SetStateAction<DrawerAtomType>) => void;
+  isReadOnly?: boolean;
 };
 
-export default function TimelineEvent({ event, setDrawer }: Props) {
+export default function TimelineEvent({ event, setDrawer, isReadOnly }: Props) {
   return (
     <Tooltip
       content={
@@ -24,18 +25,19 @@ export default function TimelineEvent({ event, setDrawer }: Props) {
       customOffset={{
         mainAxis: 5,
       }}
-      disabled={!event?.documentsId && !event?.description}>
+      disabled={(!event?.documentsId && !event?.description) || !event.isPublic}>
       <div
         className="max-h-fit max-w-fit rounded px-2 transition-all duration-100 hover:brightness-125"
-        onClick={() =>
-          setDrawer({
-            ...DefaultDrawer,
-            show: true,
-            type: "events",
-            data: event,
-            drawerSize: "sm",
-          })
-        }
+        onClick={() => {
+          if (!isReadOnly)
+            setDrawer({
+              ...DefaultDrawer,
+              show: true,
+              type: "events",
+              data: event,
+              drawerSize: "sm",
+            });
+        }}
         onKeyDown={() => {}}
         role="button"
         style={{ backgroundColor: event.backgroundColor, color: event.textColor }}
