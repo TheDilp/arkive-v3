@@ -3,9 +3,9 @@ import JSZip from "jszip";
 
 export async function exportImages(project_id: string, images: string[]) {
   const zip = new JSZip();
-  let images_folder = zip.folder("images");
+  const images_folder = zip.folder("images");
   if (images) {
-    for (let index = 0; index < images?.length; index++) {
+    for (let index = 0; index < images?.length; index += 1) {
       if (images?.[index]) {
         const res = await fetch(images[index]);
         const blob = await res.blob();
@@ -36,21 +36,14 @@ export function removeDeletedImages(images: { Key: string }[], variables: { type
   });
 }
 
-export function downloadImage(url: string, name: string) {
+export async function downloadImage(url: string, name: string) {
   if (url) {
-    let link = document.createElement("a");
+    const res = await fetch(url);
+    const blob = await res.blob();
 
-    if (link.download !== undefined) {
-      link.setAttribute("href", url);
-      link.setAttribute("download", name);
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    saveAs(blob, name);
 
-      return true;
-    }
-
-    return false;
+    return true;
   }
+  return false;
 }
