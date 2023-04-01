@@ -136,62 +136,77 @@ export default function DrawerEventContent() {
       <DrawerSection title="Event date">
         <div className="flex w-full flex-col gap-y-1">
           <div className="flex gap-x-0.5">
-            <InputNumber
-              disabled={localItem?.month === undefined}
-              inputClassName="w-full"
-              max={localItem?.month?.days}
-              min={1}
-              name="day"
-              onChange={(e) => {
-                handleChange({
-                  name: "day",
-                  value: e.value && monthDays && e.value >= monthDays ? monthDays : e.value,
-                });
-              }}
-              placeholder="Day"
-              tooltip={localItem?.month === undefined ? "Select a month first" : ""}
-              tooltipOptions={{ disabled: localItem?.month !== undefined, position: "left" }}
-              useGrouping={false}
-              value={localItem?.day}
-            />
-            <Dropdown
-              dropdownIcon={isFetching ? "pi pi-spin pi-spinner" : "pi pi-chevron-down"}
-              name="monthsId"
-              onChange={(e) => handleChange({ name: "monthsId", value: e.value })}
-              optionLabel="title"
-              options={calendar?.months}
-              optionValue="id"
-              placeholder="Month"
-              value={localItem?.monthsId}
-            />
-            <InputNumber
-              inputClassName="w-full"
-              name="year"
-              onChange={(e) => handleChange({ name: "year", value: e.value })}
-              placeholder="Year"
-              useGrouping={false}
-              value={localItem?.year}
-            />
+            <span>
+              <span className="text-sm text-zinc-400">Day</span>
+
+              <InputNumber
+                disabled={localItem?.month === undefined}
+                inputClassName="w-full"
+                max={localItem?.month?.days}
+                min={1}
+                name="day"
+                onChange={(e) => {
+                  handleChange({
+                    name: "day",
+                    value: e.value && monthDays && e.value >= monthDays ? monthDays : e.value,
+                  });
+                }}
+                placeholder="Day"
+                tooltip={localItem?.month === undefined ? "Select a month first" : ""}
+                tooltipOptions={{ disabled: localItem?.month !== undefined, position: "left" }}
+                useGrouping={false}
+                value={localItem?.day}
+              />
+            </span>
+            <span>
+              <span className="text-sm text-zinc-400">Month</span>
+              <Dropdown
+                dropdownIcon={isFetching ? "pi pi-spin pi-spinner" : "pi pi-chevron-down"}
+                name="monthsId"
+                onChange={(e) => handleChange({ name: "monthsId", value: e.value })}
+                optionLabel="title"
+                options={calendar?.months}
+                optionValue="id"
+                placeholder="Month"
+                value={localItem?.monthsId}
+              />
+            </span>
+            <span>
+              <span className="text-sm text-zinc-400">Year</span>
+              <InputNumber
+                inputClassName="w-full"
+                name="year"
+                onChange={(e) => handleChange({ name: "year", value: e.value })}
+                placeholder="Year"
+                useGrouping={false}
+                value={localItem?.year}
+              />
+            </span>
           </div>
           <div className="flex gap-x-0.5">
-            <InputNumber
-              inputClassName="w-full"
-              min={1}
-              name="hours"
-              onChange={(e) => handleChange({ name: "hours", value: e.value })}
-              placeholder="Hour(s)"
-              useGrouping={false}
-              value={localItem?.hours}
-            />
-
-            <InputNumber
-              inputClassName="w-full"
-              name="minutes"
-              onChange={(e) => handleChange({ name: "minutes", value: e.value })}
-              placeholder="Minute(s)"
-              useGrouping={false}
-              value={localItem?.minutes}
-            />
+            <span>
+              <span className="text-sm text-zinc-400">Hours</span>
+              <InputNumber
+                inputClassName="w-full"
+                min={1}
+                name="hours"
+                onChange={(e) => handleChange({ name: "hours", value: e.value })}
+                placeholder="Hour(s)"
+                useGrouping={false}
+                value={localItem?.hours}
+              />
+            </span>
+            <span>
+              <span className="text-sm text-zinc-400">Minutes</span>
+              <InputNumber
+                inputClassName="w-full"
+                name="minutes"
+                onChange={(e) => handleChange({ name: "minutes", value: e.value })}
+                placeholder="Minute(s)"
+                useGrouping={false}
+                value={localItem?.minutes}
+              />
+            </span>
           </div>
         </div>
       </DrawerSection>
