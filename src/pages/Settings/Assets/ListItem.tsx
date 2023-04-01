@@ -1,17 +1,17 @@
 import { UseMutateFunction } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
 import { Button } from "primereact/button";
 import { Image } from "primereact/image";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { Tag } from "primereact/tag";
 import { useRef } from "react";
-
-import { deleteItem } from "../../../utils/Confirms/Confirm";
-import { downloadImage } from "../../../utils/imageUtils";
-import { useAtomValue } from "jotai";
-import { UserAtom } from "../../../utils/Atoms/atoms";
-import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
-import { baseURLS } from "../../../types/CRUDenums";
 import { useParams } from "react-router-dom";
+
+import { baseURLS } from "../../../types/CRUDenums";
+import { UserAtom } from "../../../utils/Atoms/atoms";
+import { deleteItem } from "../../../utils/Confirms/Confirm";
+import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
+import { downloadImage } from "../../../utils/imageUtils";
 
 /* eslint-disable react/destructuring-assignment */
 export function ListAssetItem(
@@ -57,26 +57,148 @@ export function ListAssetItem(
             }}
           />
           <OverlayPanel ref={op} style={{ width: "fit-content" }}>
-            {UserData?.webhooks?.map((hook, idx) => (
-              <Button
-                key={hook.id}
-                className="p-button-outlined p-button-secondary min-w-fit"
-                onClick={async () =>
-                  FetchFunction({
-                    url: `${baseURLS.baseServer}sendpublicitem`,
-                    method: "POST",
-                    body: JSON.stringify({
-                      id: "",
-                      item_type: "images",
-                      project_id,
-                      webhook_url: hook.url,
-                      image,
-                    }),
-                  })
-                }>
-                {hook?.title || `Server ${idx + 1}`}
-              </Button>
-            ))}
+            <div className="flex flex-col gap-y-1">
+              {UserData?.webhooks?.map((hook, idx) => (
+                <Button
+                  key={hook.id}
+                  className="p-button-outlined p-button-secondary w-full min-w-fit"
+                  onClick={async () =>
+                    FetchFunction({
+                      url: `${baseURLS.baseServer}sendpublicitem`,
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: "",
+                        item_type: "images",
+                        project_id,
+                        webhook_url: hook.url,
+                        image,
+                      }),
+                    })
+                  }>
+                  {hook?.title || `Server ${idx + 1}`}
+                </Button>
+              ))}
+              {UserData?.webhooks?.map((hook, idx) => (
+                <Button
+                  key={hook.id}
+                  className="p-button-outlined p-button-secondary w-full min-w-fit"
+                  onClick={async () =>
+                    FetchFunction({
+                      url: `${baseURLS.baseServer}sendpublicitem`,
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: "",
+                        item_type: "images",
+                        project_id,
+                        webhook_url: hook.url,
+                        image,
+                      }),
+                    })
+                  }>
+                  {hook?.title || `Server ${idx + 1}`}
+                </Button>
+              ))}
+              {UserData?.webhooks?.map((hook, idx) => (
+                <Button
+                  key={hook.id}
+                  className="p-button-outlined p-button-secondary w-full min-w-fit"
+                  onClick={async () =>
+                    FetchFunction({
+                      url: `${baseURLS.baseServer}sendpublicitem`,
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: "",
+                        item_type: "images",
+                        project_id,
+                        webhook_url: hook.url,
+                        image,
+                      }),
+                    })
+                  }>
+                  {hook?.title || `Server ${idx + 1}`}
+                </Button>
+              ))}
+              {UserData?.webhooks?.map((hook, idx) => (
+                <Button
+                  key={hook.id}
+                  className="p-button-outlined p-button-secondary w-full min-w-fit"
+                  onClick={async () =>
+                    FetchFunction({
+                      url: `${baseURLS.baseServer}sendpublicitem`,
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: "",
+                        item_type: "images",
+                        project_id,
+                        webhook_url: hook.url,
+                        image,
+                      }),
+                    })
+                  }>
+                  {hook?.title || `Server ${idx + 1}`}
+                </Button>
+              ))}
+              {UserData?.webhooks?.map((hook, idx) => (
+                <Button
+                  key={hook.id}
+                  className="p-button-outlined p-button-secondary w-full min-w-fit"
+                  onClick={async () =>
+                    FetchFunction({
+                      url: `${baseURLS.baseServer}sendpublicitem`,
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: "",
+                        item_type: "images",
+                        project_id,
+                        webhook_url: hook.url,
+                        image,
+                      }),
+                    })
+                  }>
+                  {hook?.title || `Server ${idx + 1}`}
+                </Button>
+              ))}
+              {UserData?.webhooks?.map((hook, idx) => (
+                <Button
+                  key={hook.id}
+                  className="p-button-outlined p-button-secondary w-full min-w-fit"
+                  onClick={async () =>
+                    FetchFunction({
+                      url: `${baseURLS.baseServer}sendpublicitem`,
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: "",
+                        item_type: "images",
+                        project_id,
+                        webhook_url: hook.url,
+                        image,
+                      }),
+                    })
+                  }>
+                  {hook?.title || `Server ${idx + 1}`}
+                </Button>
+              ))}
+              {UserData?.webhooks?.map((hook, idx) => (
+                <Button
+                  key={hook.id}
+                  className="p-button-outlined p-button-secondary w-full min-w-fit"
+                  onClick={async () =>
+                    FetchFunction({
+                      url: `${baseURLS.baseServer}sendpublicitem`,
+                      method: "POST",
+                      body: JSON.stringify({
+                        id: "",
+                        item_type: "images",
+                        project_id,
+                        webhook_url: hook.url,
+                        image,
+                      }),
+                    })
+                  }>
+                  {hook?.title || `Server ${idx + 1}`}
+                </Button>
+              ))}
+            </div>
           </OverlayPanel>
           <Button
             className="p-button-outlined p-button-danger"

@@ -118,7 +118,6 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
       accept="image/*"
       cancelOptions={cancelOptions}
       chooseOptions={chooseOptions}
-      onClear={() => setTypes([])}
       customUpload
       emptyTemplate={<p className="text-center text-gray-400">Drag and Drop image files here!</p>}
       headerTemplate={headerTemplate}
@@ -126,6 +125,7 @@ export default function QuickUploadDialog({ setUploading }: { setUploading: Disp
       maxFileSize={20000000}
       multiple
       name="quickupload[]"
+      onClear={() => setTypes([])}
       onSelect={onTemplateSelect}
       uploadHandler={async (e) => {
         setUploading(true);
