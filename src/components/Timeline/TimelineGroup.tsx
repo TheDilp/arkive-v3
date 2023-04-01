@@ -14,6 +14,7 @@ export default function TimelineGroup({ year, events, viewSettings }: Props) {
   const setDrawer = useSetAtom(DrawerAtom);
   const { groupBy } = viewSettings;
   const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  console.log(events);
   return (
     <div
       className="flex h-fit max-h-full min-h-[24rem] w-full border-r border-zinc-700 first:border-t last:border-b even:border-y"

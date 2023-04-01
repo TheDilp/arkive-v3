@@ -22,6 +22,7 @@ export function useGetItem<ItemType>(
     },
     enabled: options?.enabled,
     staleTime: options?.staleTime,
+    select: options?.select,
   });
 
   return { data, isLoading, isFetching };
