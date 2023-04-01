@@ -1,5 +1,6 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
+import cloneDeep from "lodash.clonedeep";
 import omit from "lodash.omit";
 import set from "lodash.set";
 import { Button } from "primereact/button";
@@ -17,6 +18,7 @@ import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, createURLS, deleteURLs } from "../../../types/CRUDenums";
 import { CalendarType, EventCreateType, EventType } from "../../../types/ItemTypes/calendarTypes";
 import { DocumentType } from "../../../types/ItemTypes/documentTypes";
+import { TimelineType } from "../../../types/ItemTypes/timelineTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
@@ -35,13 +37,50 @@ function disableEventSaveButton(localItem: EventType | EventCreateType) {
     return true;
   return false;
 }
-async function deleteEvent(id: string, calendar_id: string, queryClient: QueryClient, itemType: "timelines" | "calendars") {
+async function deleteEvent(
+  event: EventType | Partial<Omit<EventType, "era">>,
+  item_id: string,
+  queryClient: QueryClient,
+  itemType: "timelines" | "calendars",
+) {
   await FetchFunction({
     url: `${baseURLS.baseServer}${deleteURLs.deleteEvent}`,
     method: "DELETE",
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ id: event.id }),
   });
-  await queryClient.refetchQueries<CalendarType>([itemType, calendar_id]);
+  queryClient.setQueryData<CalendarType | TimelineType>([itemType, item_id], (oldData) => {
+    if (oldData) {
+      if (itemType === "calendars") {
+        const monthIdx =
+          "monthsId" in event && "months" in oldData
+            ? oldData?.months?.findIndex((month) => month.id === event.monthsId)
+            : null;
+
+        if (typeof monthIdx === "number" && monthIdx !== -1 && "months" in oldData) {
+          const newData = cloneDeep(oldData);
+          const newEvents = [...newData.months[monthIdx].events].filter((ev) => ev.id !== event.id);
+          set(newData, `months[${monthIdx}].events`, newEvents);
+          console.log("TEST");
+          return newData;
+        }
+      }
+      if (itemType === "timelines") {
+        const calendarIdx =
+          "calendarsId" in event && "calendars" in oldData
+            ? oldData?.calendars?.findIndex((cal) => cal.id === event.calendarsId)
+            : null;
+
+        if (typeof calendarIdx === "number" && calendarIdx !== -1 && "calendars" in oldData) {
+          const newData = cloneDeep(oldData);
+          const newEvents = [...oldData.calendars[calendarIdx].events].filter((ev) => ev.id !== event.id);
+          set(newData, `calendars[${calendarIdx}].events`, newEvents);
+          return { ...newData };
+        }
+      }
+    }
+
+    return oldData;
+  });
 }
 
 export default function DrawerEventContent() {
@@ -90,12 +129,47 @@ export default function DrawerEventContent() {
       } else {
         const payload = omit(localItem, ["month"]);
 
-        await FetchFunction({
+        const newEvent = await FetchFunction({
           url: `${baseURLS.baseServer}${createURLS.createEvent}`,
           method: "POST",
           body: JSON.stringify({ ...payload, monthsId: localItem?.month?.id, calendarsId: item_id as string }),
         });
-        // await queryClient.refetchQueries<CalendarType | TimelineType>([itemType, item_id]);
+        queryClient.setQueryData<CalendarType | TimelineType>([itemType, item_id], (oldData) => {
+          if (oldData) {
+            if (itemType === "calendars") {
+              const monthIdx =
+                "monthsId" in newEvent && "months" in oldData
+                  ? oldData?.months?.findIndex((month) => month.id === newEvent.monthsId)
+                  : null;
+
+              if (typeof monthIdx === "number" && monthIdx !== -1 && "months" in oldData) {
+                const newData = { ...oldData };
+                const newEvents = [...newData.months[monthIdx].events];
+                newEvents.push(newEvent);
+
+                set(newData, `months[${monthIdx}].events`, newEvents);
+                return newData;
+              }
+            }
+            if (itemType === "timelines") {
+              const calendarIdx =
+                "calendarsId" in newEvent && "calendars" in oldData
+                  ? oldData?.calendars?.findIndex((cal) => cal.id === newEvent.calendarsId)
+                  : null;
+
+              if (typeof calendarIdx === "number" && calendarIdx !== -1 && "calendars" in oldData) {
+                const newData = { ...oldData };
+
+                const newEvents = [...oldData.calendars[calendarIdx].events];
+                newEvents.push(newEvent);
+                set(newData, `calendars[${calendarIdx}].events`, newEvents);
+                return newData;
+              }
+            }
+          }
+
+          return oldData;
+        });
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully created.");
@@ -280,7 +354,7 @@ export default function DrawerEventContent() {
                 "Are you sure you want to delete this event?",
                 () => {
                   if (localItem?.id) {
-                    deleteEvent(localItem.id, item_id as string, queryClient, itemType);
+                    deleteEvent(localItem, item_id as string, queryClient, itemType);
                     handleCloseDrawer(setDrawer, "right");
                   } else {
                     toaster("info", "Item not deleted.");

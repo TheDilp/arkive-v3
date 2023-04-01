@@ -95,28 +95,24 @@ export const useCreateSubItem = <SubItemType extends { id: string; parentId: str
             ((subType === "nodes" && "nodes" in oldData) || (subType === "edges" && "edges" in oldData))
           ) {
             const updatedData = [...(oldData[subType] || []), variables];
-
             queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
-          }
-          if (
+          } else if (
             type === "maps" &&
             ((subType === "map_layers" && "map_layers" in oldData) || (subType === "map_pins" && "map_pins" in oldData))
           ) {
             const updatedData = [...(oldData[subType] || []), variables];
             queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
-          }
-          if (type === "screens" && subType === "sections" && "sections" in oldData) {
+          } else if (type === "screens" && subType === "sections" && "sections" in oldData) {
             const updatedData = [...(oldData[subType] || []), variables];
             queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
-          }
-          if (type === "dictionaries" && subType === "words" && "words" in oldData) {
+          } else if (type === "dictionaries" && subType === "words" && "words" in oldData) {
             const updatedData = [...(oldData[subType] || []), variables];
             queryClient.setQueryData([type, id], { ...oldData, [subType]: updatedData });
           }
         }
-
         return { oldData };
       },
+
       onError: (error, _, context) => {
         toaster("error", `There was an error updating this item. ${error}`);
         queryClient.setQueryData([type, id], context?.oldData);
