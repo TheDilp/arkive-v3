@@ -1186,6 +1186,7 @@ export function useEventMenuItems(item_id: string, itemType: "calendars" | "time
 
               return oldData;
             });
+            toaster("success", "Event deleted successfully");
           });
         }
       },
