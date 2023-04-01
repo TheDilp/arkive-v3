@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { Image } from "primereact/image";
 import { Tag } from "primereact/tag";
 import { useParams } from "react-router-dom";
-import { baseURLS } from "../../../types/CRUDenums";
+
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { downloadImage } from "../../../utils/imageUtils";
 
@@ -20,13 +20,12 @@ export function ListAssetItem(
     {}
   >,
 ) {
-  const { project_id } = useParams();
   const imageName = image.split("/").pop();
   const isMap = image.includes("maps");
   return (
     <div className="flex w-full max-w-full items-center gap-x-4 overflow-x-auto overflow-y-hidden">
       <div className="h-32 w-32">
-        <Image downloadable alt="Listasset" className="h-32 w-32" imageClassName="object-contain" preview src={image} />
+        <Image alt="Listasset" className="h-32 w-32" downloadable imageClassName="object-contain" preview src={image} />
       </div>
       <div className="flex flex-1 items-center justify-between pr-6">
         <div className="flex-1">
@@ -37,14 +36,16 @@ export function ListAssetItem(
           <Button
             className="p-button-outlined p-button-success"
             icon="pi pi-download"
-            onClick={
-              () => {
-                if (imageName) downloadImage(image, imageName);
-              }
-              // deleteItem("Are you sure you want to delete this image?", () => {
-              //   if (imageName) deleteImage({ image: imageName, type: isMap ? "maps" : "images" });
-              // })
-            }
+            onClick={() => {
+              if (imageName) downloadImage(image, imageName);
+            }}
+          />
+          <Button
+            className="p-button-outlined p-button-info"
+            icon="pi pi-share-alt"
+            onClick={() => {
+              if (imageName) downloadImage(image, imageName);
+            }}
           />
           <Button
             className="p-button-outlined p-button-danger"

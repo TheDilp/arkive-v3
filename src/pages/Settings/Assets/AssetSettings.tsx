@@ -43,7 +43,7 @@ function AssetSettingsHeader(
         placeholder="Sort By Price"
         value={filter}
       />
-      <InputText placeholder="Search" onChange={(e) => setSearch(e.currentTarget.value)} />
+      <InputText onChange={(e) => setSearch(e.currentTarget.value)} placeholder="Search" />
       {size ? <span>Total storage used: {bytesToSize(size)}</span> : null}
     </div>
   );
