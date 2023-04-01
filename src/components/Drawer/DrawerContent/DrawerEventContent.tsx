@@ -107,6 +107,8 @@ export default function DrawerEventContent() {
     }
   };
 
+  console.log(localItem);
+
   useEffect(() => {
     setLocalItem((prev) => ({ ...prev, ...drawer.data }));
   }, [drawer.data]);

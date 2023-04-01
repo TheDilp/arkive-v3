@@ -31,7 +31,7 @@ export default function DayNumber({
               if (!isFiller)
                 setDrawer({
                   ...DefaultDrawer,
-                  data: { day: dayNumber + 1, month, year },
+                  data: { day: dayNumber + 1, month, monthsId: month.id, year },
                   type: "events",
                   show: true,
                 });
