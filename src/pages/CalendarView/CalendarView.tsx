@@ -29,7 +29,6 @@ function MonthDropdownTemplate(data: MonthType) {
 export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
   const { item_id, subitem_id } = useParams();
   const { data: calendar, isLoading } = useGetItem<CalendarType>(item_id as string, "calendars", {}, isReadOnly);
-
   // Event context menu
   const cm = useRef() as any;
   const eventContextMenuItems = useEventMenuItems(item_id as string, "calendars");

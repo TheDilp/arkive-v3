@@ -255,7 +255,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
               const eventIdx = oldData.months[monthIdx].events.findIndex((event) => event.id === variables.id);
 
               if (typeof eventIdx === "number" && eventIdx !== -1) {
-                const newData = { ...oldData };
+                const newData = cloneDeep(oldData);
                 const newEvents = [...newData.months[monthIdx].events];
                 newEvents[eventIdx] = { ...newEvents[eventIdx], ...variables };
                 set(newData, `months[${monthIdx}].events`, newEvents);
