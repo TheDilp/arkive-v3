@@ -1,15 +1,17 @@
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import DrawerSection from "../../components/Drawer/DrawerSection";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import TimelineGroup from "../../components/Timeline/TimelineGroup";
 import { useGetItem } from "../../hooks/useGetItem";
 import { TimelineType, TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 import { sortEvents } from "../../utils/calendarUtils";
+import { useEventMenuItems } from "../../utils/contextMenus";
 import { TimelineGroupingOptions, TimelineViewOptions } from "../../utils/timelineUtils";
 import { scrollElementIntoView } from "../../utils/uiUtils";
 
@@ -58,11 +60,17 @@ export default function TimelineView({ isReadOnly }: Props) {
   const [year, setYear] = useState(1);
   const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines", {}, isReadOnly);
 
+  // Event context menu
+  const cm = useRef() as any;
+  const eventContextMenuItems = useEventMenuItems(item_id as string, "timelines");
+
   const [groupItems, setGroupItems] = useState(10);
   if (isLoading) return <LoadingScreen />;
 
   return (
     <div className="flex h-full flex-col overflow-hidden p-4">
+      <ContextMenu cm={cm} items={eventContextMenuItems} />
+
       <div className="flex w-full gap-x-2">
         <DrawerSection title="Group by year">
           <SelectButton
@@ -125,6 +133,7 @@ export default function TimelineView({ isReadOnly }: Props) {
         {[...Array(groupItems).keys()].map((item) => (
           <TimelineGroup
             key={item}
+            cm={cm}
             events={
               timeline?.calendars
                 ?.map((cal) => cal?.events?.map((ev) => ({ ...ev, displayYear: ev.year + cal.offset })))

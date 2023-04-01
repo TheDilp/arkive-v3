@@ -1,6 +1,8 @@
-import { UseMutationResult } from "@tanstack/react-query";
-import { useAtom, useAtomValue } from "jotai";
-import { MutableRefObject } from "react";
+import { UseMutationResult, useQueryClient } from "@tanstack/react-query";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import cloneDeep from "lodash.clonedeep";
+import set from "lodash.set";
+import { MutableRefObject, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -14,6 +16,8 @@ import {
 import { baseURLS } from "../types/CRUDenums";
 import { AllItemsType, AvailableItemTypes } from "../types/generalTypes";
 import { BoardContext, BoardContextType, BoardType, NodeType } from "../types/ItemTypes/boardTypes";
+import { CalendarType } from "../types/ItemTypes/calendarTypes";
+import { TimelineType } from "../types/ItemTypes/timelineTypes";
 import { SidebarTreeItemType } from "../types/treeTypes";
 import {
   BoardReferenceAtom,
@@ -1111,9 +1115,15 @@ export function useEditorMenuItems() {
   return finalItems;
 }
 
-export function useEventMenuItems() {
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const contextMenuData = useAtomValue(OtherContextMenuAtom);
+export function useEventMenuItems(item_id: string, itemType: "calendars" | "timelines") {
+  const setDrawer = useSetAtom(DrawerAtom);
+  const [contextMenuData, setContextMenuData] = useAtom(OtherContextMenuAtom);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    return () => setContextMenuData({ ...contextMenuData, data: null });
+  }, []);
+
   const finalItems = [
     {
       command: () => {
@@ -1128,6 +1138,57 @@ export function useEventMenuItems() {
       },
       icon: "pi pi-fw pi-bookmark",
       label: "Edit event",
+    },
+    {
+      icon: "pi pi-fw pi-trash",
+      label: "Delete event",
+      command: () => {
+        if (contextMenuData?.data?.event?.id) {
+          deleteItem("Are you sure you want to delete this event?", async () => {
+            await FetchFunction({
+              url: `${baseURLS.baseServer}deleteevent`,
+              method: "DELETE",
+              body: JSON.stringify({ id: contextMenuData?.data?.event?.id }),
+            });
+
+            queryClient.setQueryData<CalendarType | TimelineType>([itemType, item_id], (oldData) => {
+              if (oldData) {
+                if (itemType === "calendars") {
+                  const monthIdx =
+                    "monthsId" in contextMenuData.data.event && "months" in oldData
+                      ? oldData?.months?.findIndex((month) => month.id === contextMenuData.data.event.monthsId)
+                      : null;
+
+                  if (typeof monthIdx === "number" && monthIdx !== -1 && "months" in oldData) {
+                    const newData = cloneDeep(oldData);
+                    const newEvents = [...newData.months[monthIdx].events].filter(
+                      (ev) => ev.id !== contextMenuData.data.event.id,
+                    );
+                    set(newData, `months[${monthIdx}].events`, newEvents);
+                    return newData;
+                  }
+                }
+                if (itemType === "timelines") {
+                  const calendarIdx =
+                    "calendarsId" in contextMenuData.data.event && "calendars" in oldData
+                      ? oldData?.calendars?.findIndex((cal) => cal.id === contextMenuData.data.event.calendarsId)
+                      : null;
+                  if (typeof calendarIdx === "number" && calendarIdx !== -1 && "calendars" in oldData) {
+                    const newData = cloneDeep(oldData);
+                    const newEvents = [...oldData.calendars[calendarIdx].events].filter(
+                      (ev) => ev.id !== contextMenuData.data.event.id,
+                    );
+                    set(newData, `calendars[${calendarIdx}].events`, newEvents);
+                    return { ...newData };
+                  }
+                }
+              }
+
+              return oldData;
+            });
+          });
+        }
+      },
     },
   ];
 

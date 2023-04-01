@@ -9,9 +9,10 @@ type Props = {
   events: TimelineDisplayEventType[];
   viewSettings: TimelineViewSettings;
   isReadOnly?: boolean;
+  cm: any;
 };
 
-export default function TimelineGroup({ year, events, viewSettings, isReadOnly }: Props) {
+export default function TimelineGroup({ year, events, viewSettings, isReadOnly, cm }: Props) {
   const setDrawer = useSetAtom(DrawerAtom);
   const { groupBy } = viewSettings;
   const items = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -36,7 +37,7 @@ export default function TimelineGroup({ year, events, viewSettings, isReadOnly }
                     ? events
                         .filter((event) => event.displayYear === year + item)
                         .map((event) => (
-                          <TimelineEvent key={event.id} event={event} isReadOnly={isReadOnly} setDrawer={setDrawer} />
+                          <TimelineEvent key={event.id} cm={cm} event={event} isReadOnly={isReadOnly} setDrawer={setDrawer} />
                         ))
                     : null}
                 </div>
@@ -44,7 +45,9 @@ export default function TimelineGroup({ year, events, viewSettings, isReadOnly }
             ))
           : null}
         {events.length && !groupBy
-          ? events.map((event) => <TimelineEvent key={event.id} event={event} isReadOnly={isReadOnly} setDrawer={setDrawer} />)
+          ? events.map((event) => (
+              <TimelineEvent key={event.id} cm={cm} event={event} isReadOnly={isReadOnly} setDrawer={setDrawer} />
+            ))
           : null}
       </div>
     </div>

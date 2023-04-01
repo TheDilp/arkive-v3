@@ -32,7 +32,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
 
   // Event context menu
   const cm = useRef() as any;
-  const eventContextMenuItems = useEventMenuItems();
+  const eventContextMenuItems = useEventMenuItems(item_id as string, "calendars");
 
   const setDrawer = useSetAtom(DrawerAtom);
   const [date, setDate] = useState<{ month: number; year: number; era: EraType | null }>({ month: 0, year: 1, era: null });

@@ -1,7 +1,8 @@
-import { SetStateAction } from "jotai";
+import { SetStateAction, useSetAtom } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { TimelineDisplayEventType } from "../../types/ItemTypes/timelineTypes";
+import { OtherContextMenuAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { DocumentMentionTooltip } from "../Mention/DocumentMention";
 import { Tooltip } from "../Tooltip/Tooltip";
@@ -9,10 +10,12 @@ import { Tooltip } from "../Tooltip/Tooltip";
 type Props = {
   event: TimelineDisplayEventType;
   setDrawer: (update: SetStateAction<DrawerAtomType>) => void;
+  cm: any;
   isReadOnly?: boolean;
 };
 
-export default function TimelineEvent({ event, setDrawer, isReadOnly }: Props) {
+export default function TimelineEvent({ event, setDrawer, isReadOnly, cm }: Props) {
+  const setContextMenuData = useSetAtom(OtherContextMenuAtom);
   return (
     <Tooltip
       content={
@@ -37,6 +40,10 @@ export default function TimelineEvent({ event, setDrawer, isReadOnly }: Props) {
               data: event,
               drawerSize: "sm",
             });
+        }}
+        onContextMenu={(e) => {
+          setContextMenuData({ data: { event }, cm, show: true });
+          if (cm.current) cm.current.show(e);
         }}
         onKeyDown={() => {}}
         role="button"
