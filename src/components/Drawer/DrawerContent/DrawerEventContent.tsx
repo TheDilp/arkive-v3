@@ -51,7 +51,13 @@ export default function DrawerEventContent() {
   const queryClient = useQueryClient();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [loading, setLoading] = useState(false);
-  const { data: calendar, isFetching } = useGetItem<CalendarType>(drawer.data?.calendarsId || (item_id as string), "calendars");
+  const { data: calendar, isFetching } = useGetItem<CalendarType>(
+    drawer.data?.calendarsId || (item_id as string),
+    "calendars",
+    {
+      staleTime: 5 * 60 * 1000,
+    },
+  );
   const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents", {
     staleTime: 5 * 60 * 1000,
     enabled: !!calendar && !isFetching,
@@ -156,6 +162,7 @@ export default function DrawerEventContent() {
               value={localItem?.day}
             />
             <Dropdown
+              dropdownIcon={isFetching ? "pi pi-spin pi-spinner" : "pi pi-chevron-down"}
               name="monthsId"
               onChange={(e) => handleChange({ name: "monthsId", value: e.value })}
               optionLabel="title"
