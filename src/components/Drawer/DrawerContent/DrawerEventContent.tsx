@@ -60,7 +60,6 @@ async function deleteEvent(
           const newData = cloneDeep(oldData);
           const newEvents = [...newData.months[monthIdx].events].filter((ev) => ev.id !== event.id);
           set(newData, `months[${monthIdx}].events`, newEvents);
-          console.log("TEST");
           return newData;
         }
       }
