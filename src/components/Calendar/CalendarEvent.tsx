@@ -90,8 +90,6 @@ export default function CalendarEvent({ dayEvents, index, month, year, isReadOnl
                   })
                 }
                 onContextMenu={(e) => {
-                  console.log(event);
-
                   setContextMenuData({ data: { event, monthDays: month.days, month }, cm, show: true });
                   if (cm.current) cm.current.show(e);
                 }}

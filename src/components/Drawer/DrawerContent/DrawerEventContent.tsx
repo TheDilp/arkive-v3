@@ -117,13 +117,13 @@ export default function DrawerEventContent() {
         if (itemType === "timelines") set(payload, "calendarsId", localItem?.calendarsId);
         if (itemType === "calendars" || changedData?.monthsId)
           set(payload, "monthsId", changedData?.month?.id || localItem?.monthsId);
+
         payload = omit(payload, ["month"]);
         await mutateAsync({ ...payload, id: localItem.id });
 
         resetChanges();
         setLoading(false);
         toaster("success", "Event successfully updated.");
-        console.log(payload);
         handleCloseDrawer(setDrawer, "right");
       } else {
         const payload = omit(localItem, ["month"]);

@@ -1,9 +1,9 @@
 import { SetStateAction } from "jotai";
-import { AutoComplete, AutoCompleteCompleteMethodParams } from "primereact/autocomplete";
+import { AutoComplete, AutoCompleteCompleteEvent } from "primereact/autocomplete";
 import { Dispatch, MutableRefObject, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateTag, useGetAllTags, useUpdateAlterNameTag } from "../../CRUD/OtherCRUD";
+import { useCreateTag, useGetAllTags } from "../../CRUD/OtherCRUD";
 import { AllItemsType, AvailableItemTypes, TagType } from "../../types/generalTypes";
 import { BoardCreateType, DefaultEdgeType, DefaultNodeType, EdgeType, NodeType } from "../../types/ItemTypes/boardTypes";
 import { CalendarCreateType } from "../../types/ItemTypes/calendarTypes";
@@ -40,11 +40,7 @@ function getTagRelationId(
   };
 }
 
-const filterTags = (
-  e: AutoCompleteCompleteMethodParams,
-  initialTags: TagType[],
-  setTags: Dispatch<SetStateAction<TagType[]>>,
-) => {
+const filterTags = (e: AutoCompleteCompleteEvent, initialTags: TagType[], setTags: Dispatch<SetStateAction<TagType[]>>) => {
   const { query } = e;
   if (query && initialTags) setTags(initialTags.filter((tag) => tag.title.toLowerCase().includes(query.toLowerCase())));
 
@@ -57,7 +53,6 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
   const [tags, setTags] = useState(initialTags || []);
   const { mutate: createTag } = useCreateTag(project_id as string);
   const autocompleteRef = useRef() as MutableRefObject<any>;
-  const { mutate: updateTag } = useUpdateAlterNameTag(project_id as string, "tag");
 
   return (
     <AutoComplete
@@ -92,7 +87,6 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
           return;
         }
         handleChange({ name: "tags", value: [...(localItem?.tags || []), e.value] });
-        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "connect") });
       }}
       onUnselect={(e) => {
         if (isSettings) {
@@ -103,7 +97,6 @@ export default function Tags({ handleChange, localItem, type, isSettings }: Prop
           name: "tags",
           value: [...(localItem?.tags || []).filter((tag) => tag.id !== e.value.id)],
         });
-        if (localItem.id) updateTag({ id: e.value.id, ...getTagRelationId(localItem.id, type, "disconnect") });
       }}
       placeholder="Add Tags"
       suggestions={tags}
