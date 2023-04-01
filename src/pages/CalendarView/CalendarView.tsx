@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
@@ -34,7 +34,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
   const cm = useRef() as any;
   const eventContextMenuItems = useEventMenuItems();
 
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   const [date, setDate] = useState<{ month: number; year: number; era: EraType | null }>({ month: 0, year: 1, era: null });
   const monthDays = calendar?.months?.[date.month]?.days;
 

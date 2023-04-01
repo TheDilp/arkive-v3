@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
+import cloneDeep from "lodash.clonedeep";
 import set from "lodash.set";
 
 import { baseURLS, deleteURLs, getURLS } from "../types/CRUDenums";
@@ -259,7 +260,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
 
               if (typeof eventIdx === "number" && eventIdx !== -1) {
                 const newData = { ...oldData };
-                const newEvents = [...oldData.months[monthIdx].events];
+                const newEvents = [...newData.months[monthIdx].events];
                 newEvents[eventIdx] = { ...newEvents[eventIdx], ...variables };
                 set(newData, `months[${monthIdx}].events`, newEvents);
                 queryClient.setQueryData([type, item_id], newData);
@@ -275,7 +276,8 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
               const eventIdx = oldData.calendars[calendarIdx].events.findIndex((event) => event.id === variables.id);
 
               if (typeof eventIdx === "number" && eventIdx !== -1) {
-                const newData = { ...oldData };
+                const newData = cloneDeep(oldData);
+
                 const newEvents = [...oldData.calendars[calendarIdx].events];
                 newEvents[eventIdx] = { ...newEvents[eventIdx], ...variables };
                 set(newData, `calendars[${calendarIdx}].events`, newEvents);

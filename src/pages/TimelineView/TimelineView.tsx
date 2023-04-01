@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import DrawerSection from "../../components/Drawer/DrawerSection";
@@ -54,15 +54,11 @@ export default function TimelineView() {
     view: { label: "Grouped", value: "Grouped" },
   });
   const [year, setYear] = useState(1);
-  const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines", {
-    staleTime: 5 * 60 * 1000,
-    select: (data: TimelineType) => {
-      return {
-        ...data,
-        events: data?.calendars?.map((cal) => cal?.events?.map((ev) => ({ ...ev, displayYear: ev.year + cal.offset })))?.flat(),
-      };
-    },
-  });
+  const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines");
+
+  useEffect(() => {
+    console.log(timeline);
+  }, [timeline?.calendars]);
 
   const [groupItems, setGroupItems] = useState(10);
   if (isLoading) return <LoadingScreen />;
@@ -132,7 +128,9 @@ export default function TimelineView() {
           <TimelineGroup
             key={item}
             events={
-              timeline?.events
+              timeline?.calendars
+                ?.map((cal) => cal?.events?.map((ev) => ({ ...ev, displayYear: ev.year + cal.offset })))
+                ?.flat()
                 ?.filter((event) => {
                   if (item !== 0) return event.displayYear > item * 10 && event.displayYear <= item * 10 + 10;
                   return event.displayYear > 0 && event.displayYear <= 10;
