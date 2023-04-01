@@ -270,6 +270,7 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
               "calendarsId" in variables && "calendars" in oldData
                 ? oldData?.calendars?.findIndex((cal) => cal.id === variables.calendarsId)
                 : null;
+
             if (typeof calendarIdx === "number" && calendarIdx !== -1 && "calendars" in oldData) {
               const eventIdx = oldData.calendars[calendarIdx].events.findIndex((event) => event.id === variables.id);
 
@@ -278,7 +279,6 @@ export const useUpdateSubItem = <SubItemType extends { id: string }>(
                 const newEvents = [...oldData.calendars[calendarIdx].events];
                 newEvents[eventIdx] = { ...newEvents[eventIdx], ...variables };
                 set(newData, `calendars[${calendarIdx}].events`, newEvents);
-                console.log(oldData, newData);
                 queryClient.setQueryData([type, item_id], newData);
               }
             }
