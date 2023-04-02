@@ -2,7 +2,7 @@ import { PlaceholderExtension, useHelpers, useKeymap } from "@remirror/react";
 import { saveAs } from "file-saver";
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { EditorState, prosemirrorNodeToHtml, RemirrorJSON } from "remirror";
+import { EditorState, RemirrorJSON } from "remirror";
 import {
   BlockquoteExtension,
   BoldExtension,
@@ -29,10 +29,8 @@ import { SecretExtension } from "../components/Editor/Extensions/SecretsExtensio
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
 import { useUpdateItem } from "../CRUD/ItemsCRUD";
 import { useGetItem } from "../hooks/useGetItem";
-import { baseURLS } from "../types/CRUDenums";
 import { slashMenuItem } from "../types/generalTypes";
 import { DocumentType } from "../types/ItemTypes/documentTypes";
-import { FetchFunction } from "./CRUD/CRUDFetch";
 import { toaster } from "./toast";
 
 export type StaticRendererType = { content: RemirrorJSON };
@@ -116,7 +114,7 @@ export const DefaultEditorExtensions = () => {
 
 export const editorHooks = [
   () => {
-    const { getJSON, getText, getMarkdown } = useHelpers();
+    const { getJSON, getText, getHTML } = useHelpers();
     const { project_id, item_id } = useParams();
     const saveContentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
     const { data: document } = useGetItem<DocumentType>(item_id as string, "documents", { staleTime: 5 * 60 * 1000 });
@@ -131,43 +129,21 @@ export const editorHooks = [
       },
       [getJSON, item_id],
     );
-    const handleExportShortcut = useCallback(
-      ({ state }: { state: EditorState }) => {
-        const htmlString = prosemirrorNodeToHtml(state.doc);
-        saveAs(
-          new Blob([htmlString], {
-            type: "text/html;charset=utf-8",
-          }),
-          `${document?.title || `Arkive Document - ${item_id}`}.html`,
-        );
-        return true; // Prevents any further key handlers from being run.
-      },
-      [getText, item_id],
-    );
-    const handleExportMarkdown = useCallback(() => {
-      const markdown = getMarkdown();
-      FetchFunction({
-        url: `${baseURLS.baseServer}exportpdf`,
-        method: "POST",
-        body: JSON.stringify({ content: markdown }),
-      })
-        .then((res) => {
-          const blob = new Blob([new Uint8Array(res?.content?.data).buffer], {
-            type: "application/pdf",
-          });
-          saveAs(blob, `${document?.title}.pdf`);
-        })
-
-        .catch((err) => console.log(err));
-
-      return true;
-    }, []);
+    const handleExportShortcut = useCallback(() => {
+      const htmlString = getHTML();
+      saveAs(
+        new Blob([htmlString], {
+          type: "text/html;charset=utf-8",
+        }),
+        `${document?.title || `Arkive Document - ${item_id}`}.html`,
+      );
+      return true; // Prevents any further key handlers from being run.
+    }, [getText, item_id]);
 
     // "Mod" means platform agnostic modifier key - i.e. Ctrl on Windows, or Cmd on MacOS
 
     useKeymap("Mod-s", handleSaveShortcut);
     useKeymap("Mod-e", handleExportShortcut);
-    useKeymap("Mod-m", handleExportMarkdown);
   },
 ];
 
