@@ -119,7 +119,6 @@ export interface BaseItemType {
   sort: number;
   folder: boolean;
   isPublic: boolean;
-  expanded: boolean;
   tags: TagType[];
 }
 export type NavItemType = {

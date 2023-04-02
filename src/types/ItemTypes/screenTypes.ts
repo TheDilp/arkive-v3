@@ -4,7 +4,6 @@ import { DocumentType } from "./documentTypes";
 export type CardType = {
   id: string;
   sort: number;
-  expanded: boolean;
 
   document: DocumentType;
   documentsId: string;
@@ -18,8 +17,8 @@ export type SectionType = {
   id: string;
   title: string;
   parentId: string;
-  expanded: boolean;
   cards: CardType[];
+  expanded: boolean;
   cardSize: string;
 };
 export type SectionCreateType = Partial<Omit<SectionType, "cards" | "parentId">> & {
@@ -27,7 +26,7 @@ export type SectionCreateType = Partial<Omit<SectionType, "cards" | "parentId">>
   parentId: string;
   sort: number;
 };
-export type DefaultSectionType = Pick<SectionType, "id" | "parentId" | "title" | "expanded" | "cardSize">;
+export type DefaultSectionType = Pick<SectionType, "id" | "parentId" | "title" | "cardSize">;
 
 export interface ScreenType extends BaseItemType {
   id: string;

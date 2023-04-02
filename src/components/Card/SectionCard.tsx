@@ -12,10 +12,11 @@ type Props = {
   cardSize: string;
   updateCard: (sectionId: string, cardId: string, expanded: boolean) => void;
   deleteCard: (id: string, sectionId: string) => void;
+  isExpanded: boolean;
   isReadOnly?: boolean;
 };
 
-export default function SectionCard({ card, deleteCard, updateCard, cardSize, isReadOnly }: Props) {
+export default function SectionCard({ card, deleteCard, updateCard, cardSize, isExpanded: expanded, isReadOnly }: Props) {
   return (
     <div key={card.id} className="w-full max-w-full rounded-sm bg-zinc-700">
       <h4 className="group flex h-10 w-full items-center justify-between gap-x-2  py-2 font-Lato text-lg ">
@@ -40,15 +41,15 @@ export default function SectionCard({ card, deleteCard, updateCard, cardSize, is
             <Icon
               className="cursor-pointer"
               fontSize={28}
-              icon={card.expanded ? IconEnum.chevron_up : IconEnum.chevron_down}
+              icon={expanded ?? false ? IconEnum.chevron_up : IconEnum.chevron_down}
               onClick={() => {
-                updateCard(card.parentId, card.id, !card.expanded);
+                updateCard(card.parentId, card.id, expanded);
               }}
             />
           </div>
         )}
       </h4>
-      {card?.expanded ? (
+      {expanded ?? false ? (
         <div className={`${getCardSizeClass(cardSize)} overflow-auto border-t border-zinc-600`}>
           {card?.document?.content ? <StaticRender content={card.document.content} /> : null}
         </div>

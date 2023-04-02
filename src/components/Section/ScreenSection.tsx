@@ -9,14 +9,16 @@ import { SetStateAction, useAtom } from "jotai";
 import { Dispatch, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
-import { useUpdateSubItem } from "../../CRUD/ItemsCRUD";
+import { updateSection } from "../../pages/ScreenView/ScreenView";
 import { baseURLS, deleteURLs } from "../../types/CRUDenums";
-import { CardType, ScreenType, SectionType } from "../../types/ItemTypes/screenTypes";
+import { ScreenType, SectionType } from "../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { getSectionSizeClass } from "../../utils/screenUtils";
+import { getItem } from "../../utils/storage";
+import { setExpanded } from "../../utils/uiUtils";
 import SectionCard from "../Card/SectionCard";
 
 type Props = {
@@ -31,11 +33,11 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
   const queryClient = useQueryClient();
   const { item_id } = useParams();
   const [, setDrawer] = useAtom(DrawerAtom);
-  const updateSectionMutation = useUpdateSubItem<SectionType>(item_id as string, "sections", "screens");
-  const updateCardMutation = useUpdateSubItem<CardType>(item_id as string, "cards", "screens");
+
+  const expandedCards = (getItem("cards-expanded") || []) as string[];
 
   const updateCard = useCallback((sectionId: string, cardId: string, expanded: boolean) => {
-    updateCardMutation.mutate({ id: cardId, expanded });
+    setExpanded("cards", cardId, expanded);
     setSections((prev) => {
       const newSections = prev.map((prevSection) => {
         if (prevSection.id !== sectionId) return prevSection;
@@ -43,7 +45,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
           ...prevSection,
           cards: prevSection.cards.map((card) => {
             if (card.id !== cardId) return card;
-            return { ...card, expanded };
+            return { ...card, expanded: !expanded };
           }),
         };
       });
@@ -77,7 +79,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
         {...providedSectionDraggable.dragHandleProps}
         onClick={() => {
           if (isReadOnly) return;
-          updateSectionMutation.mutate({ id: section.id, expanded: !section.expanded });
+          updateSection(setSections, section.id, section.expanded);
         }}>
         <span className="w-full truncate">{section.title}</span>
         {isReadOnly ? null : (
@@ -127,6 +129,7 @@ export default function ScreenSection({ section, providedSectionDraggable, secti
                               card={card}
                               cardSize={section.cardSize}
                               deleteCard={deleteCard}
+                              isExpanded={expandedCards.includes(card.id)}
                               isReadOnly={isReadOnly}
                               updateCard={updateCard}
                             />

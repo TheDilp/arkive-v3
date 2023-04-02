@@ -1,5 +1,6 @@
-import { IconCategoriesType, NavItemType } from "../types/generalTypes";
+import { AllAvailableTypes, IconCategoriesType, NavItemType } from "../types/generalTypes";
 import { IconEnum } from "./DefaultValues/GeneralDefaults";
+import { getItem, setItem } from "./storage";
 
 export const virtualScrollerSettings = {
   delay: 10,
@@ -80,4 +81,14 @@ export function getCDNImage(image: string) {
     "https://the-arkive-v3.nyc3.digitaloceanspaces.com",
     "https://the-arkive-v3.nyc3.cdn.digitaloceanspaces.com",
   );
+}
+
+export function setExpanded(type: AllAvailableTypes, id: string, isExpanded: boolean) {
+  const getItems = (getItem(`${type}-expanded`) || []) as string[];
+  if (isExpanded)
+    setItem(
+      `${type}-expanded`,
+      getItems.filter((item: string) => item !== id),
+    );
+  else setItem(`${type}-expanded`, [...getItems, id]);
 }
