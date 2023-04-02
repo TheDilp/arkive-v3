@@ -12,6 +12,7 @@ import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { useTreeMenuItems } from "../../utils/contextMenus";
+import { getItem } from "../../utils/storage";
 import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
@@ -54,7 +55,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const contextItems = useTreeMenuItems(contextMenu, type, project_id as string);
 
   const { data: tags } = useGetAllTags(project_id as string);
-
+  const expanededItems: string[] = (getItem(`${type}-expanded`) || []) as string[];
   const cm = useRef() as MutableRefObject<any>;
   const [treeData, setTreeData] = useState<NodeModel<AllItemsType>[]>([]);
   const [filter, setFilter] = useState("");
@@ -157,7 +158,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
         }}
         dragPreviewRender={DragPreviewComponent}
         dropTargetOffset={10}
-        initialOpen={[...(items || [])]?.filter((item) => item.expanded).map((doc) => doc.id) || false}
+        initialOpen={
+          [...(items || [])]?.filter((item) => (expanededItems || []).includes(item.id)).map((doc) => doc.id) || false
+        }
         insertDroppableFirst={false}
         onDrop={(tree, options) => {
           const { dragSourceId, dropTargetId } = options;

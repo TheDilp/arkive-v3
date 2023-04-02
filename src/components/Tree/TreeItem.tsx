@@ -9,6 +9,7 @@ import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
+import { setItem } from "../../utils/storage";
 import { toaster } from "../../utils/toast";
 import { IconSelect } from "../IconSelect/IconSelect";
 
@@ -66,10 +67,10 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
               // Toggle expanded state for the folders
               e.preventDefault();
               e.stopPropagation();
-              updateMutation?.mutate({
-                expanded: !isOpen,
-                id: node.id as string,
-              });
+              let expandedItems = JSON.parse(localStorage.getItem(`${type}-expanded`) || "[]");
+              if (isOpen) expandedItems = expandedItems.filter((item: string) => item !== node.id);
+              else expandedItems.push(node.id);
+              setItem(`${type}-expanded`, expandedItems);
 
               onToggle();
             }}
