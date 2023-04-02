@@ -2,7 +2,7 @@ import "remirror/styles/all.css";
 
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { Navigate, useParams } from "react-router-dom";
@@ -25,12 +25,12 @@ import { toaster } from "../../utils/toast";
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
-  const { data: currentDocument, isLoading } = useGetItem(item_id as string, "documents", { enabled: !!editable }) as {
-    data: DocumentType;
-    isLoading: boolean;
-  };
+  const { data: currentDocument, isLoading } = useGetItem<DocumentType>(item_id as string, "documents", {
+    enabled: !!editable && !!item_id,
+    staleTime: 5 * 60 * 1000,
+  });
   const queryClient = useQueryClient();
-  const [, setMention] = useAtom(OtherContextMenuAtom);
+  const setMention = useSetAtom(OtherContextMenuAtom);
   const cm = useRef() as MutableRefObject<any>;
   const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
 
@@ -71,38 +71,39 @@ export default function Editor({ content, editable }: EditorType) {
             editable === false ? content || undefined : ("content" in currentDocument && currentDocument?.content) || undefined,
         }),
       );
+  }, [currentDocument, item_id]);
 
+  useEffect(() => {
     return () => {
       queryClient.refetchQueries({ queryKey: ["documents", item_id] });
     };
-  }, [currentDocument, item_id]);
-  if (isLoading) return <ProgressSpinner />;
+  }, [item_id]);
 
   if (!currentDocument && !isLoading) {
     toaster("warning", "That document doesn't exist.");
     return <Navigate to="../" />;
   }
 
-  if (currentDocument)
-    return (
-      <div className="flex w-full flex-1">
-        <ContextMenu cm={cm} items={items} />
-        <div
-          className={`${editable ? "" : "h-96"}  relative flex w-full flex-col content-start`}
-          onContextMenu={(e) => {
-            setMention({ cm, data: getContext(), show: false });
-            if (cm.current) cm.current.show(e);
-          }}
-          onDrop={(e) => {
-            const stringData = e.dataTransfer.getData("Text");
-            if (!stringData) return;
-            if (stringData) {
-              const data: { index: number; title: string; description?: string } = JSON.parse(e.dataTransfer.getData("Text"));
-              if (!data) return;
-              getContext()?.commands.insertText(`${data.title}: ${data?.description}`);
-            }
-          }}>
-          {editable ? <Breadcrumbs type="documents" /> : null}
+  return (
+    <div className="flex w-full flex-1">
+      <ContextMenu cm={cm} items={items} />
+      <div
+        className={`${editable ? "" : "h-96"}  relative flex w-full flex-col content-start`}
+        onContextMenu={(e) => {
+          setMention({ cm, data: getContext(), show: false });
+          if (cm.current) cm.current.show(e);
+        }}
+        onDrop={(e) => {
+          const stringData = e.dataTransfer.getData("Text");
+          if (!stringData) return;
+          if (stringData) {
+            const data: { index: number; title: string; description?: string } = JSON.parse(e.dataTransfer.getData("Text"));
+            if (!data) return;
+            getContext()?.commands.insertText(`${data.title}: ${data?.description}`);
+          }
+        }}>
+        {editable ? <Breadcrumbs type="documents" /> : null}
+        {!isLoading ? (
           <Remirror
             classNames={[
               "editor",
@@ -115,19 +116,20 @@ export default function Editor({ content, editable }: EditorType) {
             hooks={editorHooks}
             initialContent={state}
             manager={manager}>
+            {editable ? <Menubar /> : null}
             <OnChangeJSON
               onChange={(changedContent: RemirrorJSON) => {
                 onChange(changedContent, item_id as string);
               }}
             />
-            {editable ? <Menubar /> : null}
             <EditorComponent />
             <MentionDropdownComponent />
             <CommandMenu />
           </Remirror>
-        </div>
+        ) : (
+          <ProgressSpinner />
+        )}
       </div>
-    );
-
-  return null;
+    </div>
+  );
 }

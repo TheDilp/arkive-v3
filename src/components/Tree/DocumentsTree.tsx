@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { SplitButton } from "primereact/splitbutton";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
@@ -10,7 +10,7 @@ import BaseTree from "./BaseTree";
 
 export default function DocumentsTree() {
   const { project_id } = useParams();
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
   const createDocumentMutation = useCreateItem("documents");
 

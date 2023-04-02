@@ -117,7 +117,7 @@ export const editorHooks = [
     const { getJSON, getText, getMarkdown } = useHelpers();
     const { project_id, item_id } = useParams();
     const saveContentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
-    const { data: document } = useGetItem<DocumentType>(item_id as string, "documents");
+    const { data: document } = useGetItem<DocumentType>(item_id as string, "documents", { staleTime: 5 * 60 * 1000 });
     const handleSaveShortcut = useCallback(
       ({ state }: { state: EditorState }) => {
         toaster("success", "Document successfully saved!");

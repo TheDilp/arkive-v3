@@ -3,7 +3,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { Icon } from "@iconify/react";
 import { useActive, useAttrs, useCommands, useRemirrorContext } from "@remirror/react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Menubar } from "primereact/menubar";
 import { useParams } from "react-router-dom";
 import { findParentNode, RemirrorJSON } from "remirror";
@@ -43,7 +43,7 @@ export default function MenuBar() {
   const { getState } = useRemirrorContext();
   const active = useActive();
   const attrs = useAttrs();
-  const [, setDialog] = useAtom(DialogAtom);
+  const setDialog = useSetAtom(DialogAtom);
   const updateDocumentMutation = useUpdateItem<DocumentType>("documents", project_id as string);
   function calloutToggle(type: string) {
     if (active.callout()) {
