@@ -155,7 +155,7 @@ export const editorHooks = [
           const blob = new Blob([new Uint8Array(res?.content?.data).buffer], {
             type: "application/pdf",
           });
-          saveAs(blob, `${res?.filename}.pdf`);
+          saveAs(blob, `${document?.title}.pdf`);
         })
 
         .catch((err) => console.log(err));
