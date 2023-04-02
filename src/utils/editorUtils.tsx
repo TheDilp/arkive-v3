@@ -29,8 +29,10 @@ import { SecretExtension } from "../components/Editor/Extensions/SecretsExtensio
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
 import { useUpdateItem } from "../CRUD/ItemsCRUD";
 import { useGetItem } from "../hooks/useGetItem";
+import { baseURLS } from "../types/CRUDenums";
 import { slashMenuItem } from "../types/generalTypes";
 import { DocumentType } from "../types/ItemTypes/documentTypes";
+import { FetchFunction } from "./CRUD/CRUDFetch";
 import { toaster } from "./toast";
 
 export type StaticRendererType = { content: RemirrorJSON };
@@ -144,12 +146,20 @@ export const editorHooks = [
     );
     const handleExportMarkdown = useCallback(() => {
       const markdown = getMarkdown();
-      saveAs(
-        new Blob([markdown], {
-          type: "text/plaintext;charset=utf-8",
-        }),
-        `${document?.title || `Arkive Document - ${item_id}`}.md`,
-      );
+      FetchFunction({
+        url: `${baseURLS.baseServer}exportpdf`,
+        method: "POST",
+        body: JSON.stringify({ content: markdown }),
+      })
+        .then((res) => {
+          const blob = new Blob([new Uint8Array(res?.content?.data).buffer], {
+            type: "application/pdf",
+          });
+          saveAs(blob, `${res?.filename}.pdf`);
+        })
+
+        .catch((err) => console.log(err));
+
       return true;
     }, []);
 
