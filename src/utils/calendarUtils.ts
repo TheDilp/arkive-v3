@@ -68,9 +68,9 @@ export function getFillerDayNumber(calendarMonths: MonthType[], currentMonthInde
   const days = calendarMonths[calendarMonths.length - 1]?.days;
   if (days) {
     if (currentMonthIndex === 0) {
-      return calendarMonths[calendarMonths.length - 1].days - day - 1;
+      return days - day - 1;
     }
-    return calendarMonths[currentMonthIndex - 1].days - day - 1;
+    return days - day - 1;
   }
   return 0;
 }
