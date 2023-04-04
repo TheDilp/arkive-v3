@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -53,6 +53,7 @@ function ActionsColumn(
         tooltip="Copy"
         tooltipOptions={{ showDelay: 300, position: "left" }}
       />
+
       <Button
         className="p-button-danger p-button-outlined"
         icon="pi pi-fw pi-trash"
@@ -67,8 +68,7 @@ export default function RandomTableView() {
   const { item_id } = useParams();
   const [result, setResult] = useState<null | { index: number; title: string; description?: string }>(null);
   const { data: randomTable, isLoading } = useGetItem<RandomTableType>(item_id as string, "randomtables");
-
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   const { mutate: deleteMutation } = useDeleteSubItem(item_id as string, "randomtableoptions", "randomtables");
   const deleteAction = (id: string) => deleteItem("Are you sure you want to delete this item?", () => deleteMutation(id));
   const editAction = (data: { id: string; title: string; description: string }) =>

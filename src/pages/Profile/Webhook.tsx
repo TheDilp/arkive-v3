@@ -43,9 +43,9 @@ export default function Webhook({ title, url }: Pick<WebhookType, "title" | "url
       <Button
         className="p-button-outlined p-button-danger w-1/6"
         disabled
-        icon="pi pi-plus"
+        icon="pi pi-trash"
         iconPos="right"
-        label="Update webhook"
+        label="Delete webhook"
         // onClick={() => {
         //   if (localData?.id) createWebhookMutation({ user_id: localData.id, title: newWebhook.title, url: newWebhook.url });
         // }}

@@ -1059,6 +1059,33 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
       //   icon: "pi pi-fw pi-link",
       // },
       {
+        label: "Roll to Discord",
+        icon: "pi pi-fw pi-discord",
+        items: User?.webhooks?.length
+          ? User.webhooks.map((webhook, idx) => ({
+              label: webhook?.title || `Webhook ${idx + 1}`,
+              command: async () => {
+                await FetchFunction({
+                  url: `${baseURLS.baseServer}sendpublicitem`,
+                  method: "POST",
+                  body: JSON.stringify({
+                    id: cmType?.data?.id,
+                    item_type: "random_tables",
+                    project_id,
+                    webhook_url: webhook.url,
+                  }),
+                });
+              },
+            }))
+          : [
+              {
+                label: "Add Webhooks",
+                icon: "pi pi-fw pi-plus",
+                command: () => navigate(`/user/${User?.id}`),
+              },
+            ],
+      },
+      {
         label: "Delete Random Table",
         icon: "pi pi-fw pi-trash",
         command: () =>
