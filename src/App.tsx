@@ -17,11 +17,11 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import AuthLayout from "./pages/Auth/AuthLayout";
-import SettingsContentView from "./pages/ContentView/SettingsContentView";
 import Dashboard from "./pages/Dashboard";
 
 const Signin = lazy(() => import("./pages/Auth/Signin"));
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
+const SettingsContentView = lazy(() => import("./pages/ContentView/SettingsContentView"));
 const Signup = lazy(() => import("./pages/Auth/Signup"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
 const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
@@ -55,25 +55,6 @@ function App() {
   // Initialize Firebase
 
   initializeApp(firebaseConfig);
-
-  // useEffect(() => {
-  //   const th = getItem("theme");
-  //   if (th) setTheme(th as "dark" | "light");
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!theme) {
-  //     setItem("theme", "dark");
-  //     setTheme("dark");
-  //   } else {
-  //     const el = document.getElementById("app-theme") as HTMLLinkElement;
-  //     if (theme === "dark") {
-  //       el.href = "/node_modules/primereact/resources/themes/arya-blue/theme.css";
-  //     } else {
-  //       el.href = "/node_modules/primereact/resources/themes/saga-blue/theme.css";
-  //     }
-  //   }
-  // }, [theme]);
 
   useEffect(() => {
     const auth = getAuth();
