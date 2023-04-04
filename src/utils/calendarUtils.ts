@@ -65,8 +65,12 @@ export function getStartingDayForMonth(
   return (daysBeforeYear % weekdays) + dayBeforeMonth;
 }
 export function getFillerDayNumber(calendarMonths: MonthType[], currentMonthIndex: number, day: number) {
-  if (currentMonthIndex === 0) {
-    return calendarMonths[calendarMonths.length - 1].days - day - 1;
+  const days = calendarMonths[calendarMonths.length - 1]?.days;
+  if (days) {
+    if (currentMonthIndex === 0) {
+      return calendarMonths[calendarMonths.length - 1].days - day - 1;
+    }
+    return calendarMonths[currentMonthIndex - 1].days - day - 1;
   }
-  return calendarMonths[currentMonthIndex - 1].days - day - 1;
+  return 0;
 }
