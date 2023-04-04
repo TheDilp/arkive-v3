@@ -36,6 +36,8 @@ export default function Signup() {
             nickname: signUpData.nickname,
             auth_id: res.user.uid,
           });
+        })
+        .then(() => {
           navigate("/");
         })
         .catch((error) => {
