@@ -178,7 +178,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
                     onKeyDown={() => {}}
                     role="button"
                     tabIndex={-1}>
-                    <DayTitle key={day} index={index} weekdays={calendar.days} />
+                    <DayTitle key={day} index={index} weekdays={calendar?.days ?? 0} />
                   </div>
                 ))}
                 {[
