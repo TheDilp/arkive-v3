@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getCookie } from "../storage";
 
 export async function FetchFunction({
   url,
@@ -9,8 +9,7 @@ export async function FetchFunction({
   method: "GET" | "POST" | "DELETE";
   body?: string | FormData;
 }) {
-  const auth = getAuth();
-  const token = await auth.currentUser?.getIdToken();
+  const token = getCookie("__session");
   const res = await fetch(url, {
     method,
     body,

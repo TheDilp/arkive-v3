@@ -9,6 +9,8 @@
     "start": "vite"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^4.14.2",
+    "@clerk/themes": "^1.5.1",
     "@floating-ui/react": "^0.18.0",
     "@hello-pangea/dnd": "^16.2.0",
     "@iconify/react": "^4.0.0",
@@ -24,7 +26,6 @@
     "cytoscape-edgehandles": "^4.0.1",
     "cytoscape-grid-guide": "^2.3.3",
     "file-saver": "^2.0.5",
-    "firebase": "^9.16.0",
     "jotai": "^2.0.3",
     "jszip": "^3.10.1",
     "kbar": "0.1.0-beta.40",

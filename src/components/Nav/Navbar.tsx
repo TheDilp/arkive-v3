@@ -1,11 +1,11 @@
+import { UserButton } from "@clerk/clerk-react";
 import { Icon } from "@iconify/react";
-import { useIsMutating, useQueryClient } from "@tanstack/react-query";
-import { getAuth, signOut } from "firebase/auth";
-import { useAtom, useAtomValue } from "jotai";
+import { useIsMutating } from "@tanstack/react-query";
+import { useAtomValue, useSetAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { DialogAtom, DrawerAtom, SidebarCollapseAtom, ThemeAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import PageTitle from "../Title/PageTitle";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
@@ -13,16 +13,13 @@ import { Tooltip } from "../Tooltip/Tooltip";
 import RandomGenerator from "./RandomGenerator";
 
 export default function Navbar() {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  // const navigate = useNavigate();
   const { project_id } = useParams();
-  const [, setDialog] = useAtom(DialogAtom);
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const [, setUserData] = useAtom(UserAtom);
+  const setDialog = useSetAtom(DialogAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
 
   const sidebarToggle = useAtomValue(SidebarCollapseAtom);
-  const auth = getAuth();
   const mutationCount = useIsMutating();
   return (
     <div
@@ -66,9 +63,9 @@ export default function Navbar() {
                 className="cursor-pointer hover:text-blue-300"
                 fontSize={20}
                 icon="ph:user-fill"
-                onClick={() => {
-                  navigate(`/user/${auth.currentUser?.uid}`);
-                }}
+                // onClick={() => {
+                //   navigate(`/user/${auth.currentUser?.uid}`);
+                // }}
               />
               {/* <Icon
                 className="cursor-pointer hover:text-blue-300"
@@ -82,18 +79,7 @@ export default function Navbar() {
             </>
           ) : null}
 
-          <Icon
-            className="cursor-pointer hover:text-blue-300"
-            fontSize={20}
-            icon="mdi:log-out"
-            onClick={() => {
-              signOut(auth).then(() => {
-                queryClient.clear();
-                setUserData(null);
-                window.location.href = "https://home.thearkive.app";
-              });
-            }}
-          />
+          <UserButton />
         </span>
       </div>
     </div>

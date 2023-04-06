@@ -1,4 +1,5 @@
-import { useAtom } from "jotai";
+import { SignedIn } from "@clerk/clerk-react";
+import { useAtom, useSetAtom } from "jotai";
 import { KBarProvider } from "kbar";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
@@ -23,8 +24,8 @@ export default function Layout() {
   const { project_id } = useParams();
   const user = useAuth();
   const navigate = useNavigate();
-  const [, setUserAtom] = useAtom(UserAtom);
-  const [, setProjectAtom] = useAtom(ProjectAtom);
+  const setUserAtom = useSetAtom(UserAtom);
+  const setProjectAtom = useSetAtom(ProjectAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
     enabled: !!user,
     onSuccess: (data) => {
@@ -50,29 +51,31 @@ export default function Layout() {
     if (projectData) setProjectAtom(projectData as ProjectType);
   }, [projectData]);
   return (
-    <div className="flex h-full max-w-full overflow-hidden">
-      <Sidebar />
+    <SignedIn>
+      <div className="flex h-full max-w-full overflow-hidden">
+        <Sidebar />
 
-      {user ? (
-        <>
-          <ConfirmDialog />
-          <DialogWrapper />
-          <SecondarySidebar />
-          <Drawer />
-        </>
-      ) : null}
+        {user ? (
+          <>
+            <ConfirmDialog />
+            <DialogWrapper />
+            <SecondarySidebar />
+            <Drawer />
+          </>
+        ) : null}
 
-      <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
-        <KBarProvider actions={CMDKActions(navigate, project_id as string)}>
-          <Navbar />
-          <CmdK />
-          {user || isFetching || isFetchingProject ? (
-            <Suspense fallback={<LoadingScreen />}>
-              <Outlet />
-            </Suspense>
-          ) : null}
-        </KBarProvider>
+        <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
+          <KBarProvider actions={CMDKActions(navigate, project_id as string)}>
+            <Navbar />
+            <CmdK />
+            {user || isFetching || isFetchingProject ? (
+              <Suspense fallback={<LoadingScreen />}>
+                <Outlet />
+              </Suspense>
+            ) : null}
+          </KBarProvider>
+        </div>
       </div>
-    </div>
+    </SignedIn>
   );
 }
