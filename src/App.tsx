@@ -18,9 +18,6 @@ import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import Dashboard from "./pages/Dashboard";
 
-// @ts-ignore
-window.global ||= global;
-
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
 const SettingsContentView = lazy(() => import("./pages/ContentView/SettingsContentView"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));

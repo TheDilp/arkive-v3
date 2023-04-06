@@ -9,6 +9,9 @@ import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 
+// @ts-ignore
+window.global ||= global;
+
 cytoscape.use(edgehandles);
 gridguide(cytoscape);
 
