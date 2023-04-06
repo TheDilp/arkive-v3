@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
-  // define: {
-  //   global: {},
-  // },
+  define: {
+    global: "globalThis",
+  },
   esbuild: {
     drop: mode === "production" ? ["console", "debugger"] : [],
   },
