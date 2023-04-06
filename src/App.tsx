@@ -41,7 +41,7 @@ const queryClient = new QueryClient({
 function App() {
   const navigate = useNavigate();
   return (
-    <main className="flex h-screen w-screen flex-col bg-sky-400">
+    <main className="flex h-screen w-screen flex-col">
       <ClerkProvider
         appearance={{
           baseTheme: dark,
