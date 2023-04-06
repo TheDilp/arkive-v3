@@ -3,6 +3,9 @@ import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  define: {
+    global: "globalThis",
+  },
   esbuild: {
     drop: mode === "production" ? ["console", "debugger"] : [],
   },
