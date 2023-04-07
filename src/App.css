@@ -406,3 +406,9 @@ Inputs
     @apply grid-cols-1 !important;
   }
 }
+
+.miscSettings {
+  .p-tabview-panels {
+    @apply bg-[#121212] !important;
+  }
+}

@@ -19,6 +19,10 @@ export async function FetchFunction({
       Authorization: `Bearer ${token}`,
     },
   });
+  if (res.status === 403) {
+    // @ts-ignore
+    await window?.Clerk?.signOut();
+  }
   if (!res.ok) {
     throw new Error("There was an error with this request (server error).");
   }

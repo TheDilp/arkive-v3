@@ -1,8 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
+import omit from "lodash.omit";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
 import { AllAvailableTypes, AvailableItemTypes, TagCreateType, TagSettingsType, TagType } from "../types/generalTypes";
 import { AlterNameType, DocumentType } from "../types/ItemTypes/documentTypes";
+import { UserType } from "../types/userTypes";
+import { UserAtom } from "../utils/Atoms/atoms";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -178,11 +182,56 @@ export const useDeleteAlterNamesTags = <ItemType extends { id: string }>(project
 };
 
 export function useCreateWebhook() {
-  return useMutation(async (variables: { user_id: string; title?: string; url: string }) =>
-    FetchFunction({
-      url: `${baseURLS.baseServer}createwebhook`,
-      method: "POST",
-      body: JSON.stringify(variables),
-    }),
+  const queryClient = useQueryClient();
+  const setUserAtom = useSetAtom(UserAtom);
+  return useMutation(
+    async (variables: { user_id: string; title: string; url: string; auth_id: string }) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}createwebhook`,
+        method: "POST",
+        body: JSON.stringify(omit(variables, ["auth_id"])),
+      }),
+    {
+      onSuccess: (data, variables) => {
+        queryClient.setQueryData<UserType>(["user", variables.auth_id], (old) => {
+          if (old) {
+            return { ...old, webhooks: [...old.webhooks, data] };
+          }
+          return old;
+        });
+        if (data)
+          setUserAtom((prev) => {
+            if (prev) return { ...prev, webhooks: [...prev.webhooks, data] };
+            return prev;
+          });
+      },
+    },
+  );
+}
+export function useDeleteWebhook() {
+  const queryClient = useQueryClient();
+  const setUserAtom = useSetAtom(UserAtom);
+  return useMutation(
+    async (variables: { user_id: string; id: string; auth_id: string }) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}deletewebhook`,
+        method: "DELETE",
+        body: JSON.stringify(variables),
+      }),
+    {
+      onSuccess: (data, variables) => {
+        queryClient.setQueryData<UserType>(["user", variables.auth_id], (old) => {
+          if (old) {
+            return { ...old, webhooks: old.webhooks.filter((webhook) => webhook.id !== data.id) };
+          }
+          return old;
+        });
+        if (data)
+          setUserAtom((prev) => {
+            if (prev) return { ...prev, webhooks: prev.webhooks.filter((webhook) => webhook.id !== variables.id) };
+            return prev;
+          });
+      },
+    },
   );
 }

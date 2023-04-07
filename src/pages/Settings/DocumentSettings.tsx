@@ -68,7 +68,7 @@ function FolderTemplatePublicColumn(
 
   return (
     <Checkbox
-      checked={getCheckedValue({ folder, template, isPublic }, type)}
+      checked={getCheckedValue({ folder, template, isPublic }, type) ?? false}
       disabled={type === "template"}
       onChange={(e) =>
         updateDocumentMutation?.mutate(
@@ -115,7 +115,7 @@ function ActionsColumn({ id, folder }: DocumentType, navigate: NavigateFunction,
 export default function DocumentSettings() {
   const { project_id } = useParams();
   const navigate = useNavigate();
-  const tableRef = useRef() as MutableRefObject<DataTable>;
+  const tableRef = useRef() as MutableRefObject<DataTable<DocumentType[]>>;
   const { data: documents, isLoading } = useGetAllItems<DocumentType>(project_id as string, "documents");
   const { data: tags } = useGetAllTags(project_id as string);
   const { data: images } = useGetAllImages(project_id as string);

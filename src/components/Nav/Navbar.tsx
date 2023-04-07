@@ -59,23 +59,6 @@ export default function Navbar() {
               <Tooltip allowedPlacements={["bottom-end"]} content={<RandomGenerator />} isClickable>
                 <Icon className="cursor-pointer hover:text-blue-300" fontSize={20} icon="arcticons:reroll" />
               </Tooltip>
-              <Icon
-                className="cursor-pointer hover:text-blue-300"
-                fontSize={20}
-                icon="ph:user-fill"
-                // onClick={() => {
-                //   navigate(`/user/${auth.currentUser?.uid}`);
-                // }}
-              />
-              {/* <Icon
-                className="cursor-pointer hover:text-blue-300"
-                fontSize={20}
-                icon={theme === "dark" ? "ph:moon" : "ph:sun-dim-light"}
-                onClick={() => {
-                  setItem("theme", theme === "dark" ? "light" : "dark");
-                  setTheme(theme === "dark" ? "light" : "dark");
-                }}
-              /> */}
             </>
           ) : null}
 
