@@ -202,7 +202,6 @@ export type IconSelectMenuType = {
 
 export type WebhookType = {
   id: string;
-  title?: string;
+  title: string;
   url: string;
-  user_id: string;
 };

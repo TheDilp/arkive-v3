@@ -1,16 +1,13 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
 import { useState } from "react";
 
 import LoadingScreen from "../../components/Loading/LoadingScreen";
 import Navbar from "../../components/Nav/Navbar";
 import { useGetUser, useUpdateProfile } from "../../CRUD/AuthCRUD";
-import { useCreateWebhook } from "../../CRUD/OtherCRUD";
 import { useAuth } from "../../hooks/useAuth";
 import { useHandleChange } from "../../hooks/useGetChanged";
 import { UserType } from "../../types/userTypes";
-import Webhook from "./Webhook";
 
 export default function Profile() {
   const user = useAuth();
@@ -27,7 +24,6 @@ export default function Profile() {
   );
   const [newWebhook, setNewWebhook] = useState({ title: "", url: "" });
   const { mutate } = useUpdateProfile();
-  const { mutate: createWebhookMutation } = useCreateWebhook();
   const { handleChange, changedData } = useHandleChange({ data: localData, setData: setLocalData });
   if (isFetching || !localData) return <LoadingScreen />;
   return (
@@ -71,48 +67,6 @@ export default function Profile() {
                 }}
               />
             </div>
-          </div>
-        </div>
-
-        <div className="flex w-full max-w-[80%] flex-col gap-4 rounded border border-zinc-700 p-8">
-          <div className="w-full">
-            <h1 className="pt-4 font-Merriweather text-4xl">Webhooks</h1>
-          </div>
-          {localData?.webhooks?.map((webhook) => (
-            <Webhook key={webhook.id} {...webhook} />
-          ))}
-          <div className="flex w-full max-w-2xl justify-center gap-x-6">
-            <InputText
-              autoComplete="false"
-              className="w-1/3"
-              inputMode="text"
-              name="Webhook title"
-              onChange={(e) => setNewWebhook({ ...newWebhook, title: e.target.value })}
-              placeholder="Webhook title"
-              value={newWebhook.title}
-            />
-            <Password
-              autoComplete="false"
-              className="w-1/3"
-              disabled={!newWebhook.title}
-              feedback={false}
-              name="Webhook url"
-              onChange={(e) => setNewWebhook({ ...newWebhook, url: e.target.value })}
-              placeholder="Webhook url"
-              toggleMask
-              type="text"
-              value={newWebhook.url}
-            />
-            <Button
-              className="p-button-outlined p-button-success w-1/3"
-              icon="pi pi-plus"
-              iconPos="right"
-              label="Add webhook"
-              onClick={() => {
-                if (localData?.id)
-                  createWebhookMutation({ user_id: localData.id, title: newWebhook.title, url: newWebhook.url });
-              }}
-            />
           </div>
         </div>
       </div>
