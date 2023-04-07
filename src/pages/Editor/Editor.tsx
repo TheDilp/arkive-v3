@@ -46,7 +46,7 @@ export default function Editor({ content, editable }: EditorType) {
     return transformers.remove(json, invalidContent);
   }, []);
 
-  const { manager, state, getContext, set } = useRemirror({
+  const { manager, state, getContext } = useRemirror({
     content: editable === false ? content || undefined : (currentDocument && currentDocument?.content) || undefined,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -74,6 +74,7 @@ export default function Editor({ content, editable }: EditorType) {
     if (currentDocument)
       manager.view.updateState(
         manager.createState({
+          selection: getContext()?.getState().selection,
           content:
             editable === false ? content || undefined : ("content" in currentDocument && currentDocument?.content) || undefined,
         }),
@@ -87,6 +88,7 @@ export default function Editor({ content, editable }: EditorType) {
         const newValue = JSON.parse(value);
         manager.view.updateState(
           manager.createState({
+            selection: getContext()?.getState().selection,
             content: newValue,
           }),
         );
@@ -97,7 +99,6 @@ export default function Editor({ content, editable }: EditorType) {
 
     return () => {
       record.unsubscribe(item_id as string, () => console.log("unsubscribed"));
-      console.log("UNSUB");
       queryClient.refetchQueries({ queryKey: ["documents", item_id] });
     };
   }, [item_id]);
