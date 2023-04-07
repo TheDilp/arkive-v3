@@ -1,5 +1,6 @@
 import "remirror/styles/all.css";
 
+import { DeepstreamClient } from "@deepstream/client";
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
@@ -23,8 +24,14 @@ import { useEditorMenuItems } from "../../utils/contextMenus";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
 
+const client = new DeepstreamClient(import.meta.env.VITE_SYNC_SERVER, {
+  path: "/deepstream",
+});
+client.login();
+
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
+
   const { data: currentDocument, isLoading } = useGetItem<DocumentType>(item_id as string, "documents", {
     enabled: !!editable && !!item_id,
     staleTime: 5 * 60 * 1000,
@@ -39,7 +46,7 @@ export default function Editor({ content, editable }: EditorType) {
     return transformers.remove(json, invalidContent);
   }, []);
 
-  const { manager, state, getContext } = useRemirror({
+  const { manager, state, getContext, set } = useRemirror({
     content: editable === false ? content || undefined : (currentDocument && currentDocument?.content) || undefined,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -72,9 +79,25 @@ export default function Editor({ content, editable }: EditorType) {
         }),
       );
   }, [currentDocument, item_id]);
+  const record = client.record.getRecord(item_id as string);
 
   useEffect(() => {
+    record.subscribe(item_id as string, (value) => {
+      try {
+        const newValue = JSON.parse(value);
+        manager.view.updateState(
+          manager.createState({
+            content: newValue,
+          }),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
     return () => {
+      record.unsubscribe(item_id as string, () => console.log("unsubscribed"));
+      console.log("UNSUB");
       queryClient.refetchQueries({ queryKey: ["documents", item_id] });
     };
   }, [item_id]);
@@ -120,6 +143,7 @@ export default function Editor({ content, editable }: EditorType) {
             <OnChangeJSON
               onChange={(changedContent: RemirrorJSON) => {
                 onChange(changedContent, item_id as string);
+                record.set(item_id as string, JSON.stringify(changedContent));
               }}
             />
             <EditorComponent />
