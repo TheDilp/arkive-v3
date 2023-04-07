@@ -16,7 +16,7 @@ import { checkIfOwner, navItems } from "../../utils/uiUtils";
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const navigate = useNavigate();
-  const [userData] = useAtom(UserAtom);
+  const userData = useAtomValue(UserAtom);
   const isOwner = checkIfOwner(userData?.permission);
   return (
     <>

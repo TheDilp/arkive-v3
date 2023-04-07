@@ -1,5 +1,5 @@
 import { SignedIn } from "@clerk/clerk-react";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { KBarProvider } from "kbar";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
@@ -33,14 +33,14 @@ export default function Layout() {
     },
   });
   const { isFetching } = useGetUser(
-    user as string,
+    user?.id as string,
     {
       enabled: !!user && !isFetchingProject,
       onSuccess: (data) => {
         if (data) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { members, ...userData } = data as UserType & { members: MemberType[] };
-          setUserAtom({ ...userData, permission: projectData?.ownerId === user ? "owner" : "member" });
+          setUserAtom({ ...userData, permission: projectData?.ownerId === user?.id ? "owner" : "member" });
         }
       },
     },
