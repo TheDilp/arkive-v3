@@ -16,7 +16,6 @@ import { ToastContainer } from "react-toastify";
 
 import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
-import Test from "./components/Test";
 import Dashboard from "./pages/Dashboard";
 
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
@@ -58,7 +57,6 @@ function App() {
             <Suspense fallback={<LoadingScreen />}>
               <ReactQueryDevtools position="bottom-right" />
               <Routes>
-                <Route element={<Test />} path="test" />
                 <Route element={<SignUp />} path="sign-up/*" />
                 <Route element={<SignIn />} path="sign-in/*" />
 

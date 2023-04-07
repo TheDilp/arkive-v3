@@ -1,6 +1,5 @@
 import "remirror/styles/all.css";
 
-import { DeepstreamClient } from "@deepstream/client";
 import { EditorComponent, OnChangeJSON, Remirror, useRemirror } from "@remirror/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
@@ -23,11 +22,6 @@ import { OtherContextMenuAtom } from "../../utils/Atoms/atoms";
 import { useEditorMenuItems } from "../../utils/contextMenus";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 import { toaster } from "../../utils/toast";
-
-const client = new DeepstreamClient(import.meta.env.VITE_SYNC_SERVER, {
-  path: "/deepstream",
-});
-client.login();
 
 export default function Editor({ content, editable }: EditorType) {
   const { project_id, item_id } = useParams();
@@ -80,25 +74,9 @@ export default function Editor({ content, editable }: EditorType) {
         }),
       );
   }, [currentDocument, item_id]);
-  const record = client.record.getRecord(item_id as string);
 
   useEffect(() => {
-    record.subscribe(item_id as string, (value) => {
-      try {
-        const newValue = JSON.parse(value);
-        manager.view.updateState(
-          manager.createState({
-            selection: getContext()?.getState().selection,
-            content: newValue,
-          }),
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    });
-
     return () => {
-      record.unsubscribe(item_id as string, () => console.log("unsubscribed"));
       queryClient.refetchQueries({ queryKey: ["documents", item_id] });
     };
   }, [item_id]);
@@ -144,7 +122,6 @@ export default function Editor({ content, editable }: EditorType) {
             <OnChangeJSON
               onChange={(changedContent: RemirrorJSON) => {
                 onChange(changedContent, item_id as string);
-                record.set(item_id as string, JSON.stringify(changedContent));
               }}
             />
             <EditorComponent />
