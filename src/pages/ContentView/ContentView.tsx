@@ -1,14 +1,13 @@
 import { lazy } from "react";
 import { useParams } from "react-router-dom";
 
-import TimelineView from "../TimelineView/TimelineView";
-
 const Editor = lazy(() => import("../Editor/Editor"));
 const MapView = lazy(() => import("../MapView/MapView"));
 const BoardView = lazy(() => import("../BoardView/BoardView"));
 const ScreenView = lazy(() => import("../ScreenView/ScreenView"));
 const DictionaryView = lazy(() => import("../DictionaryView/DictionaryView"));
 const CalendarView = lazy(() => import("../CalendarView/CalendarView"));
+const TimelineView = lazy(() => import("../TimelineView/TimelineView"));
 const RandomTableView = lazy(() => import("../RandomTableView/RandomTableView"));
 
 export default function ContentView() {
