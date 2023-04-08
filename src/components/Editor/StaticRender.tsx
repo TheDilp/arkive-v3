@@ -90,6 +90,7 @@ const markMap: MarkMap = {
 export default function StaticRender({ content, isReadOnly }: { content: RemirrorJSON; isReadOnly?: boolean }) {
   const { project_id } = useParams();
   const parsedContent = removeKeys(content, ["style", "resizable"]);
+  if (!parsedContent) return null;
   return (
     <div className="staticRendererContainer">
       <RemirrorRenderer
