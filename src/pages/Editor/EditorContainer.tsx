@@ -52,6 +52,9 @@ export default function EditorContainer({
       hooks={editorHooks}
       manager={manager}
       onChange={(params) => {
+        if (params.firstRender) {
+          return;
+        }
         setState(params.state);
         onChange(params.state.doc.toJSON(), document.id);
       }}

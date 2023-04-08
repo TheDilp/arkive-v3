@@ -92,3 +92,7 @@ export function setExpanded(type: AllAvailableTypes, id: string, isExpanded: boo
     );
   else setItem(`${type}-expanded`, [...getItems, id]);
 }
+
+export function generateHexColor() {
+  return Math.floor(Math.random() * 16777215).toString(16);
+}
