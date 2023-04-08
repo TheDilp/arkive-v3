@@ -111,11 +111,14 @@ export default function DrawerMapContent() {
       </DrawerSection>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
-        <Checkbox checked={localItem.folder} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />
+        <Checkbox checked={localItem.folder ?? false} onChange={(e) => handleChange({ name: "folder", value: e.checked })} />
       </div>
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Cluster pins?</span>
-        <Checkbox checked={localItem.clusterPins} onChange={(e) => handleChange({ name: "clusterPins", value: e.checked })} />
+        <Checkbox
+          checked={localItem.clusterPins ?? false}
+          onChange={(e) => handleChange({ name: "clusterPins", value: e.checked })}
+        />
       </div>
       <Button
         className="p-button-outlined p-button-success ml-auto"
