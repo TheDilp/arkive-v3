@@ -6,7 +6,6 @@ export const DefaultBoard: DefaultBoardType = {
   icon: IconEnum.board,
   folder: false,
   isPublic: false,
-  expanded: false,
   parentId: null,
   tags: [],
   defaultNodeShape: "rectangle",
