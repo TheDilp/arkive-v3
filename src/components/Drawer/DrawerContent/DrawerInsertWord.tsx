@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -11,7 +11,7 @@ import { FetchFunction } from "../../../utils/CRUD/CRUDFetch";
 export default function DrawerInsertWord() {
   const { project_id } = useParams();
   const [query, setQuery] = useState("");
-  const [mention] = useAtom(OtherContextMenuAtom);
+  const mention = useAtomValue(OtherContextMenuAtom);
   const {
     data: items,
     refetch,
@@ -31,6 +31,7 @@ export default function DrawerInsertWord() {
             project_id,
             query,
             type: "words",
+            take: 5,
           }),
         });
       return [];
@@ -54,7 +55,7 @@ export default function DrawerInsertWord() {
   );
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (query.length > 1) {
+      if (query.length >= 1) {
         refetch();
       }
     }, 500);
@@ -80,13 +81,13 @@ export default function DrawerInsertWord() {
           {items?.map((item) => (
             <li key={item.id} className="border-zinc-700 py-1 font-Lato even:border-y">
               <button
-                className="flex w-full cursor-pointer items-center justify-between hover:text-sky-400"
+                className="flex w-full cursor-pointer items-center justify-between gap-x-2 hover:text-sky-400"
                 onClick={() => {
                   mention.data.commands.createMentionAtom({ name: "words" }, { id: item.id, label: item.label });
                 }}
                 type="button">
                 <span className="font-semibold">{item.label} </span>
-                <span className="text-sm font-light italic">
+                <span className="truncate text-sm font-light italic">
                   ({item?.language || null}: {item?.searchItem})
                 </span>
               </button>
