@@ -25,6 +25,7 @@ import {
   UnderlineExtension,
   YjsExtension,
 } from "remirror/extensions";
+import { WebsocketProvider } from "y-websocket";
 
 import { SecretExtension } from "../components/Editor/Extensions/SecretsExtension";
 import MentionReactComponent from "../components/Mention/MentionReactComponent";
@@ -35,7 +36,7 @@ import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { toaster } from "./toast";
 
 export type StaticRendererType = { content: RemirrorJSON };
-export const DefaultEditorExtensions = (provider: any) => {
+export const DefaultEditorExtensions = (provider: WebsocketProvider) => {
   const CustomMentionExtension = new MentionAtomExtension({
     extraAttributes: {
       alterId: {
@@ -108,7 +109,9 @@ export const DefaultEditorExtensions = (provider: any) => {
     CustomMentionExtension,
     new GapCursorExtension({}),
     new DropCursorExtension({}),
-    new YjsExtension({ getProvider: () => provider }),
+    new YjsExtension({
+      getProvider: () => provider,
+    }),
     // new TableExtension({ resizable: true }),
   ];
 };

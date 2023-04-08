@@ -14,15 +14,12 @@ export function useGetYProvider(item_id: string, user: any) {
       const ydoc = new Y.Doc();
 
       const p = new WebsocketProvider(import.meta.env.VITE_SYNC_SERVER, item_id, ydoc);
-      const { awareness } = p;
-      awareness.setLocalStateField("user", {
-        // Define a print name that should be displayed
-        name: user?.firstName || `User ${Math.random() * 10}`,
-        // Define a color that should be associated to the user:
+
+      p.awareness.setLocalStateField("user", {
+        name: user?.firstName || `user-${Math.round(10000 * Math.random())}`,
         color: generateHexColor(),
       });
       // add content to ydoc
-
       setProvider(p);
       p.on("synced", () => {
         setSynced(true);
@@ -33,13 +30,12 @@ export function useGetYProvider(item_id: string, user: any) {
       const ydoc = new Y.Doc();
       // add content to ydoc
       const p = new WebsocketProvider(import.meta.env.VITE_SYNC_SERVER, item_id, ydoc);
-      const { awareness } = p;
-      awareness.setLocalStateField("user", {
-        // Define a print name that should be displayed
-        name: user?.firstName || `User ${Math.random() * 10}`,
-        // Define a color that should be associated to the user:
+
+      p.awareness.setLocalStateField("user", {
+        name: user?.firstName || `user-${Math.round(10000 * Math.random())}`,
         color: generateHexColor(),
       });
+
       setProvider(p);
       p.on("synced", () => {
         setSynced(true);
