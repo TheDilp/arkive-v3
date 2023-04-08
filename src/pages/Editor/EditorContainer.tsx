@@ -56,8 +56,11 @@ export default function EditorContainer({
         if (params.firstRender) {
           return;
         }
+        if (params.tr?.docChanged) {
+          onChange(params.state.doc.toJSON(), document.id);
+        }
+        // console.log(params.tr);
         setState(params.state);
-        onChange(params.state.doc.toJSON(), document.id);
       }}
       state={state}>
       <MenuBar />
