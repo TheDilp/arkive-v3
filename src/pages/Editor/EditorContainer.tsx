@@ -41,7 +41,8 @@ export default function EditorContainer({
       id,
     });
   }, 1250);
-  const onChange = useCallback((changedContent: RemirrorJSON, doc_id: string) => {
+  const onChange = useCallback((changedContent: RemirrorJSON, doc_id: string, yChange: object | undefined) => {
+    if (yChange) return;
     debounced(changedContent, doc_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -57,9 +58,8 @@ export default function EditorContainer({
           return;
         }
         if (params.tr?.docChanged) {
-          onChange(params.state.doc.toJSON(), document.id);
+          onChange(params.state.doc.toJSON(), document.id, params.tr?.meta?.["y-sync$"]);
         }
-        // console.log(params.tr);
         setState(params.state);
       }}
       state={state}>
