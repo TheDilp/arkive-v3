@@ -22,15 +22,15 @@ export default function EditorContentWrapper() {
   useEffect(() => {
     if (firstRender.current && !provider) {
       const yDoc = new Y.Doc();
-      setProvider(new WebsocketProvider(import.meta.env.VITE_SYNC_SERVER as string, item_id as string, yDoc));
+      setProvider(new WebsocketProvider(import.meta.env.VITE_SYNC_SERVER, item_id as string, yDoc));
       firstRender.current = false;
     } else if (provider) {
       provider.roomname = item_id as string;
     }
     return () => {
-      provider?.disconnect();
-      provider?.destroy();
-      setProvider(null);
+      // provider?.disconnect();
+      // provider?.destroy();
+      // setProvider(null);
       firstRender.current = true;
     };
   }, []);
