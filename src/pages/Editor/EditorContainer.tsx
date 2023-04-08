@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { InvalidContentHandler, RemirrorJSON } from "remirror";
 import { useDebouncedCallback } from "use-debounce";
 
+import MenuBar from "../../components/Editor/Menubar";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
@@ -59,6 +60,7 @@ export default function EditorContainer({
         onChange(params.state.doc.toJSON(), document.id);
       }}
       state={state}>
+      <MenuBar />
       {children}
     </Remirror>
   );
