@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { WebrtcProvider } from "y-webrtc";
+import { WebsocketProvider } from "y-websocket";
 import * as Y from "yjs";
 
 import LoadingScreen from "../../components/Loading/LoadingScreen";
@@ -12,7 +12,8 @@ import EditorContainer from "./EditorContainer";
 export default function EditorContentWrapper() {
   const { item_id } = useParams();
   const firstRender = useRef(true);
-  const [provider, setProvider] = useState<WebrtcProvider | null>(null);
+
+  const [provider, setProvider] = useState<WebsocketProvider | null>();
   const { data: currentDocument, isFetching } = useGetItem<DocumentType>(item_id as string, "documents", {
     enabled: !!item_id,
     // staleTime: 5 * 60 * 1000,
@@ -21,19 +22,18 @@ export default function EditorContentWrapper() {
   useEffect(() => {
     if (firstRender.current && !provider) {
       const yDoc = new Y.Doc();
-
-      setProvider(new WebrtcProvider(item_id as string, yDoc));
+      setProvider(new WebsocketProvider(import.meta.env.VITE_SYNC_SERVER as string, item_id as string, yDoc));
       firstRender.current = false;
     } else if (provider) {
-      provider.roomName = item_id as string;
+      provider.roomname = item_id as string;
     }
     return () => {
-      // provider?.disconnect();
-      // provider?.destroy();
-      // setProvider(null);
+      provider?.disconnect();
+      provider?.destroy();
+      setProvider(null);
       firstRender.current = true;
     };
-  }, [item_id]);
+  }, []);
 
   if (isFetching || !currentDocument || !provider) return <LoadingScreen />;
   return (
