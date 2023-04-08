@@ -23,6 +23,7 @@ import {
   // TableExtension,
   TaskListExtension,
   UnderlineExtension,
+  YjsExtension,
 } from "remirror/extensions";
 
 import { SecretExtension } from "../components/Editor/Extensions/SecretsExtension";
@@ -34,8 +35,7 @@ import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { toaster } from "./toast";
 
 export type StaticRendererType = { content: RemirrorJSON };
-
-export const DefaultEditorExtensions = () => {
+export const DefaultEditorExtensions = (provider: any) => {
   const CustomMentionExtension = new MentionAtomExtension({
     extraAttributes: {
       alterId: {
@@ -108,6 +108,7 @@ export const DefaultEditorExtensions = () => {
     CustomMentionExtension,
     new GapCursorExtension({}),
     new DropCursorExtension({}),
+    new YjsExtension({ getProvider: () => provider }),
     // new TableExtension({ resizable: true }),
   ];
 };

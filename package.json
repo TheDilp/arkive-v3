@@ -51,7 +51,9 @@
     "remirror": "^2.0.26",
     "use-debounce": "^8.0.4",
     "use-keyboard-list-navigation": "^2.4.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "y-webrtc": "^10.2.5",
+    "yjs": "^13.5.52"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^4.16.1",
