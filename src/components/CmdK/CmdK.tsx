@@ -1,6 +1,5 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { KBarAnimator, KBarPortal, KBarPositioner, KBarResults, KBarSearch, useMatches } from "kbar";
-import { useMemo } from "react";
 import { NavigateFunction } from "react-router-dom";
 import { capitalCase } from "remirror";
 
@@ -8,6 +7,7 @@ import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { searchCategories } from "../../utils/searchUtils";
+import { toaster } from "../../utils/toast";
 import { getItemTypeFromName } from "../../utils/transform";
 import CMDKResultItem from "./CmdKResultItem";
 
@@ -39,75 +39,82 @@ const navigateToOptions = [
   { name: "randomtables", icon: IconEnum.randomtables, shortcut: ["Shift+R"] },
 ] as const;
 
-export function CMDKActions(navigate: NavigateFunction, project_id: string) {
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const results = useMemo(
-    () => [
-      { id: "navigate", icon: IconEnum.chevron_right, name: "Navigate to...", keywords: "", shortcut: ["Shift+O"] },
-      {
-        id: "new",
-        icon: IconEnum.add,
+export function CMDKActions(navigate: NavigateFunction, project_id: string, pendingUpdates: boolean) {
+  const setDrawer = useSetAtom(DrawerAtom);
+  const navResults = navigateToOptions.map((opt) => ({
+    id: `navigate_${opt.name}`,
+    icon: opt.icon,
+    name: `${capitalCase(opt.name)}`,
+    keywords: "",
+    shortcut: opt.shortcut,
+    parent: "navigate",
+    perform: () => {
+      console.log(pendingUpdates);
 
-        name: "Create new",
-        keywords: "",
-        shortcut: ["Shift+N"],
-      },
-      {
-        id: "search",
-        icon: IconEnum.search,
-        name: "Search for...",
-        keywords: "",
-        shortcut: ["Shift+E"],
-      },
-      ...navigateToOptions.map((opt) => ({
-        id: `navigate_${opt.name}`,
-        icon: opt.icon,
-        name: `${capitalCase(opt.name)}`,
-        keywords: "",
-        shortcut: opt.shortcut,
-        parent: "navigate",
-        perform: () => navigate(`/project/${project_id}/${opt.name}`),
-      })),
-      ...createNewOptions.map((opt) => ({
-        id: `new_${opt.name}`,
-        icon: opt.icon,
-        name: `New ${capitalCase(opt.name)}`,
-        keywords: "",
-        parent: "new",
-        perform: () => setDrawer({ ...DefaultDrawer, show: true, type: getItemTypeFromName(opt.name) }),
-      })),
-      {
-        id: "all_search",
-        name: "All",
-        icon: IconEnum.search,
-        keywords: "",
-        parent: "search",
-        perform: () =>
-          setDrawer({
-            ...DefaultDrawer,
-            type: "full_search",
-            show: true,
-            drawerSize: "md",
-          }),
-      },
-      ...searchCategories.map((category) => ({
-        id: `${category}_search`,
-        name: capitalCase(category.label),
-        icon: category.icon,
-        keywords: "",
-        parent: "search",
-        perform: () =>
-          setDrawer({
-            ...DefaultDrawer,
-            type: "full_search",
-            show: true,
-            drawerSize: "md",
-            data: { index: 1, category: category.value },
-          }),
-      })),
-    ],
-    [],
-  );
+      if (pendingUpdates) {
+        toaster("warning", "Please wait for all pending updates to finish before navigating away.");
+        return;
+      }
+      navigate(`/project/${project_id}/${opt.name}`);
+    },
+  }));
+
+  const results = [
+    { id: "navigate", icon: IconEnum.chevron_right, name: "Navigate to...", keywords: "", shortcut: ["Shift+O"] },
+    {
+      id: "new",
+      icon: IconEnum.add,
+
+      name: "Create new",
+      keywords: "",
+      shortcut: ["Shift+N"],
+    },
+    {
+      id: "search",
+      icon: IconEnum.search,
+      name: "Search for...",
+      keywords: "",
+      shortcut: ["Shift+E"],
+    },
+    ...navResults,
+    ...createNewOptions.map((opt) => ({
+      id: `new_${opt.name}`,
+      icon: opt.icon,
+      name: `New ${capitalCase(opt.name)}`,
+      keywords: "",
+      parent: "new",
+      perform: () => setDrawer({ ...DefaultDrawer, show: true, type: getItemTypeFromName(opt.name) }),
+    })),
+    {
+      id: "all_search",
+      name: "All",
+      icon: IconEnum.search,
+      keywords: "",
+      parent: "search",
+      perform: () =>
+        setDrawer({
+          ...DefaultDrawer,
+          type: "full_search",
+          show: true,
+          drawerSize: "md",
+        }),
+    },
+    ...searchCategories.map((category) => ({
+      id: `${category}_search`,
+      name: capitalCase(category.label),
+      icon: category.icon,
+      keywords: "",
+      parent: "search",
+      perform: () =>
+        setDrawer({
+          ...DefaultDrawer,
+          type: "full_search",
+          show: true,
+          drawerSize: "md",
+          data: { index: 1, category: category.value },
+        }),
+    })),
+  ];
   return results;
 }
 

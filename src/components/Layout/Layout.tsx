@@ -1,5 +1,5 @@
 import { SignedIn } from "@clerk/clerk-react";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { KBarProvider } from "kbar";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
@@ -11,7 +11,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { MemberType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
-import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { PendingUpdatesAtom, ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
 import CmdK, { CMDKActions } from "../CmdK/CmdK";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
@@ -26,6 +26,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const setUserAtom = useSetAtom(UserAtom);
   const setProjectAtom = useSetAtom(ProjectAtom);
+  const pendingUpdates = useAtomValue(PendingUpdatesAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
     enabled: !!user,
     onSuccess: (data) => {
@@ -65,7 +66,7 @@ export default function Layout() {
         ) : null}
 
         <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
-          <KBarProvider actions={CMDKActions(navigate, project_id as string)}>
+          <KBarProvider actions={CMDKActions(navigate, project_id as string, pendingUpdates)}>
             <Navbar />
             <CmdK />
             {user || isFetching || isFetchingProject ? (

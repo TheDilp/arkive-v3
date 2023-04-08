@@ -116,6 +116,9 @@ Inputs
   }
 }
 
+.remirror-editor.ProseMirror .ProseMirror-yjs-cursor div {
+  @apply rounded-sm p-1 font-Lato !important;
+}
 .editor,
 .staticRendererContainer {
   @apply p-4 font-Lato;

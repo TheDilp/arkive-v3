@@ -1,4 +1,5 @@
 import { Remirror, useRemirror } from "@remirror/react";
+import { useSetAtom } from "jotai";
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { InvalidContentHandler, RemirrorJSON } from "remirror";
@@ -7,6 +8,7 @@ import { useDebouncedCallback } from "use-debounce";
 import MenuBar from "../../components/Editor/Menubar";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
+import { PendingUpdatesAtom } from "../../utils/Atoms/atoms";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 
 export default function EditorContainer({
@@ -20,6 +22,8 @@ export default function EditorContainer({
 }) {
   const { project_id } = useParams();
   const { mutate: updateDocumentMutation } = useUpdateItem<DocumentType>("documents", project_id as string);
+
+  const setPendingUpdates = useSetAtom(PendingUpdatesAtom);
 
   const onError: InvalidContentHandler = useCallback(({ json, invalidContent, transformers }) => {
     // Automatically remove all invalid nodes and marks.
@@ -43,6 +47,7 @@ export default function EditorContainer({
   }, 1250);
   const onChange = useCallback((changedContent: RemirrorJSON, doc_id: string, yChange: object | undefined) => {
     if (yChange) return;
+    setPendingUpdates(true);
     debounced(changedContent, doc_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -58,7 +63,7 @@ export default function EditorContainer({
           return;
         }
         if (params.tr?.docChanged) {
-          onChange(params.state.doc.toJSON(), document.id, params.tr?.meta?.["y-sync$"]);
+          onChange(params.state.doc.toJSON(), document.id, params.tr?.getMeta("y-sync$"));
         }
         setState(params.state);
       }}

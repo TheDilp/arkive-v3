@@ -1,12 +1,12 @@
 import { Icon } from "@iconify/react";
 import { NodeModel } from "@minoru/react-dnd-treeview";
-import { useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useDeleteItem, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
-import { DrawerAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom, PendingUpdatesAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
@@ -25,8 +25,9 @@ type Props = {
 export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Props) {
   const { project_id, item_id } = useParams();
   const navigate = useNavigate();
-  const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setContextMenu = useSetAtom(SidebarTreeContextAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
+  const pendingUpdates = useAtomValue(PendingUpdatesAtom);
   const updateMutation = useUpdateItem<AllItemsType>(type, project_id as string);
   const deleteMutation = useDeleteItem(type, project_id as string);
   if (!node.data) return null;
@@ -34,6 +35,10 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
     <button
       className="group inline-flex w-full cursor-pointer items-center gap-x-1 py-1 text-left text-base hover:bg-sky-700"
       onClick={() => {
+        if (pendingUpdates) {
+          toaster("warning", "Please wait for autosave to the document finish or save manually with CTRL/CMD + S.");
+          return;
+        }
         // Navigate if not a folder
         if (!node.data?.folder) navigate(`./${type}/${node.id}`);
         else navigate(`./${type}/folder/${node.id}`);

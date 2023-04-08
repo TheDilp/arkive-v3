@@ -21,6 +21,7 @@ export default function Navbar() {
 
   const sidebarToggle = useAtomValue(SidebarCollapseAtom);
   const mutationCount = useIsMutating();
+
   return (
     <div
       className={`flex h-14 min-h-[56px] w-full flex-nowrap items-center border-b border-zinc-800 ${

@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { useParams } from "react-router-dom";
 
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
@@ -10,7 +10,7 @@ import { FolderViewCards } from "./FolderViewCards";
 
 export default function FolderView() {
   const { project_id, item_id, type } = useParams();
-  const [documentsTab] = useAtom(DocumentsSidebar);
+  const documentsTab = useAtomValue(DocumentsSidebar);
   const { data, isFetching } = useGetAllItems<AllItemsType>(project_id as string, type as AvailableItemTypes, {
     staleTime: 5 * 60 * 1000,
   });
