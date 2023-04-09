@@ -16,10 +16,10 @@ type Props = {
   children: JSX.Element | null;
 };
 function SidebarContainer({ children }: Props) {
-  const { isMd } = useBreakpoint();
+  const { isLg } = useBreakpoint();
   const [sidebar, setSidebar] = useAtom(SidebarCollapseAtom);
   const theme = useAtomValue(ThemeAtom);
-  return isMd ? (
+  return !isLg ? (
     <PrimeSidebar
       className={`treeSidebar ${theme === "dark" ? "bg-zinc-800" : "bg-white"} transition-all`}
       onHide={() => {
