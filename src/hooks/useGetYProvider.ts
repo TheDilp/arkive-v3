@@ -43,6 +43,7 @@ export function useGetYProvider(item_id: string, user: any) {
     }
     return () => {
       firstRender.current = false;
+      provider?.destroy();
     };
   }, [item_id]);
 
