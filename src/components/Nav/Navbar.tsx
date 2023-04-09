@@ -5,6 +5,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useParams } from "react-router-dom";
 
+import useIsLocal from "../../hooks/useIsLocal";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { DialogAtom, DrawerAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
@@ -17,6 +18,7 @@ import RandomGenerator from "./RandomGenerator";
 export default function Navbar() {
   const { isLg } = useBreakpoint();
   const { project_id } = useParams();
+  const isLocal = useIsLocal();
   const setDialog = useSetAtom(DialogAtom);
   const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
@@ -78,7 +80,7 @@ export default function Navbar() {
             </>
           ) : null}
 
-          <UserButton />
+          {isLocal ? null : <UserButton />}
         </span>
       </div>
     </div>

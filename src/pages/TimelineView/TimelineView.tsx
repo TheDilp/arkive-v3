@@ -7,13 +7,13 @@ import { useParams } from "react-router-dom";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import DrawerSection from "../../components/Drawer/DrawerSection";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
-import TimelineGroup from "../../components/Timeline/TimelineGroup";
 import { useGetItem } from "../../hooks/useGetItem";
 import { TimelineType, TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
-import { sortEvents } from "../../utils/calendarUtils";
 import { useEventMenuItems } from "../../utils/contextMenus";
 import { TimelineGroupingOptions, TimelineViewOptions } from "../../utils/timelineUtils";
 import { scrollElementIntoView } from "../../utils/uiUtils";
+import TimelineDetailedView from "./TimelineDetailedView";
+import TimelineGroupedView from "./TimelineGroupedView";
 
 type Props = { isReadOnly?: boolean };
 
@@ -109,7 +109,7 @@ export default function TimelineView({ isReadOnly }: Props) {
             <SelectButton
               className="mb-2"
               onChange={(e) => {
-                if (e.value) setViewSettings((prev) => ({ ...prev, view: e.value }));
+                if (e.value) setViewSettings((prev) => ({ ...prev, view: { label: e.value, value: e.value } }));
               }}
               optionDisabled="isDisabled"
               optionLabel="label"
@@ -130,25 +130,18 @@ export default function TimelineView({ isReadOnly }: Props) {
             }
           }
         }}>
-        {[...Array(groupItems).keys()].map((item) => (
-          <TimelineGroup
-            key={item}
+        {viewSettings.view.value === "Grouped" ? (
+          <TimelineGroupedView
+            calendars={timeline?.calendars || []}
             cm={cm}
-            events={
-              timeline?.calendars
-                ?.map((cal) => cal?.events?.map((ev) => ({ ...ev, displayYear: ev.year + cal.offset })))
-                ?.flat()
-                ?.filter((event) => {
-                  if (item !== 0) return event.displayYear > item * 10 && event.displayYear <= item * 10 + 10;
-                  return event.displayYear > 0 && event.displayYear <= 10;
-                })
-                .sort(sortEvents) || []
-            }
+            groupItems={groupItems}
             isReadOnly={isReadOnly}
             viewSettings={viewSettings}
-            year={item * 10 + 1}
           />
-        ))}
+        ) : null}
+        {viewSettings.view.value === "Vertical" || viewSettings.view.value === "Horizontal" ? (
+          <TimelineDetailedView calendars={timeline?.calendars || []} />
+        ) : null}
       </div>
     </div>
   );

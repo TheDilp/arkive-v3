@@ -1,7 +1,7 @@
-import { useUser } from "@clerk/clerk-react";
 import { useParams } from "react-router-dom";
 
 import LoadingScreen from "../../components/Loading/LoadingScreen";
+import { useAuth } from "../../hooks/useAuth";
 import { useGetItem } from "../../hooks/useGetItem";
 import { useGetYProvider } from "../../hooks/useGetYProvider";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
@@ -10,7 +10,7 @@ import EditorContainer from "./EditorContainer";
 
 export default function EditorContentWrapper() {
   const { item_id } = useParams();
-  const { user } = useUser();
+  const user = useAuth();
   const { provider, synced } = useGetYProvider(item_id as string, user);
 
   const { data: currentDocument, isFetching } = useGetItem<DocumentType>(item_id as string, "documents", {
