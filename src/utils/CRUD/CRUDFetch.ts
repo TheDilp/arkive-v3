@@ -10,11 +10,12 @@ export async function FetchFunction({
   body?: string | FormData;
 }) {
   const token = getCookie("__session");
+  const isLocal = import.meta.env.VITE_LOCAL === "true";
   const res = await fetch(url, {
     method,
     body,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": isLocal ? "*" : import.meta.env.VITE_BASE_SERVER,
       ...(typeof body === "string" ? { "Content-Type": "application/json" } : {}),
       Authorization: `Bearer ${token}`,
     },
