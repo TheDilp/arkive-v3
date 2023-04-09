@@ -8,6 +8,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useGetUser } from "../../CRUD/AuthCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useAuth } from "../../hooks/useAuth";
+import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { MemberType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
@@ -24,6 +25,7 @@ export default function Layout() {
   const { project_id } = useParams();
   const user = useAuth();
   const navigate = useNavigate();
+  const { isLg } = useBreakpoint();
   const setUserAtom = useSetAtom(UserAtom);
   const setProjectAtom = useSetAtom(ProjectAtom);
   const pendingUpdates = useAtomValue(PendingUpdatesAtom);
@@ -54,7 +56,7 @@ export default function Layout() {
   return (
     <SignedIn>
       <div className="flex h-full max-w-full overflow-hidden">
-        <Sidebar />
+        {isLg ? <Sidebar /> : null}
 
         {user ? (
           <>
@@ -75,6 +77,7 @@ export default function Layout() {
               </Suspense>
             ) : null}
           </KBarProvider>
+          {!isLg ? <Sidebar /> : null}
         </div>
       </div>
     </SignedIn>

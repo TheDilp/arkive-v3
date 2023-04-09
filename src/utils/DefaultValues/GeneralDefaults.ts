@@ -38,4 +38,7 @@ export const IconEnum = {
   search: "ph:magnifying-glass-light",
   image: "ph:images-thin",
   add_calendar: "ph:calendar-plus-light",
+  settings: "ph:cog-thin",
+  menu: "mdi:menu",
+  menu_open: "mdi:menu-open",
 };

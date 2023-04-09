@@ -41,10 +41,10 @@ export default function Editor({ editable }: EditorType) {
   }
 
   return (
-    <div className="flex w-full flex-1">
+    <div className="flex h-[calc(100%-12rem)] w-full flex-1">
       <ContextMenu cm={cm} items={items} />
       <div
-        className={`${editable ? "" : "h-96"}  relative flex w-full flex-col content-start`}
+        className="relative flex h-full w-full flex-col content-start"
         onContextMenu={(e) => {
           setMention({ cm, data: { commands }, show: false });
           if (cm.current) cm.current.show(e);

@@ -20,10 +20,10 @@ const useMediaQuery = (query: string) => {
 };
 
 export const useBreakpoint = () => ({
-  isXs: useMediaQuery("(max-width: 320px)"),
-  isSm: useMediaQuery("(max-width: 640px)"),
-  isMd: useMediaQuery("(max-width: 768px)"),
-  isLg: useMediaQuery("(max-width: 1024px)"),
-  isXl: useMediaQuery("(max-width: 1280px)"),
+  isXs: useMediaQuery("(min-width: 320px)"),
+  isSm: useMediaQuery("(min-width: 640px)"),
+  isMd: useMediaQuery("(min-width: 768px)"),
+  isLg: useMediaQuery("(min-width: 1024px)"),
+  isXl: useMediaQuery("(min-width: 1280px)"),
   isXXl: useMediaQuery("(min-width: 1281px)"),
 });

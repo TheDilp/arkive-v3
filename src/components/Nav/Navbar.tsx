@@ -1,25 +1,27 @@
 import { UserButton } from "@clerk/clerk-react";
 import { Icon } from "@iconify/react";
 import { useIsMutating } from "@tanstack/react-query";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useParams } from "react-router-dom";
 
+import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { DialogAtom, DrawerAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { setItem } from "../../utils/storage";
 import PageTitle from "../Title/PageTitle";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 import RandomGenerator from "./RandomGenerator";
 
 export default function Navbar() {
-  // const navigate = useNavigate();
+  const { isLg } = useBreakpoint();
   const { project_id } = useParams();
   const setDialog = useSetAtom(DialogAtom);
   const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
 
-  const sidebarToggle = useAtomValue(SidebarCollapseAtom);
+  const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const mutationCount = useIsMutating();
 
   return (
@@ -28,6 +30,19 @@ export default function Navbar() {
         theme === "dark" ? "bg-zinc-900" : "bg-white"
       } py-2 shadow`}>
       <div className="flex w-full items-center justify-center gap-x-2 px-2">
+        {!isLg ? (
+          <div className="min-w-18 w-18 flex h-14 items-center">
+            <Icon
+              className="cursor-pointer hover:text-blue-300"
+              fontSize={28}
+              icon={`mdi:${sidebarToggle ? "menu-open" : "menu"}`}
+              onClick={() => {
+                setSidebarToggle(!sidebarToggle);
+                setItem("sidebarState", !sidebarToggle);
+              }}
+            />
+          </div>
+        ) : null}
         {!sidebarToggle ? <PageTitle /> : null}
         <span className="ml-auto flex items-center gap-x-2">
           {project_id ? (

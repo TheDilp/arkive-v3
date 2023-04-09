@@ -9,7 +9,7 @@ export default function PageTitle() {
   const isSettings = pathname.includes("settings");
   const itemName = isSettings ? getItemNameForSettings(type as string) : getItemNameForTree(type as AvailableItemTypes);
   return (
-    <h2 className="h-8 text-center font-Merriweather text-2xl capitalize delay-1000">
+    <h2 className="h-8 truncate text-center font-Merriweather text-2xl capitalize delay-1000">
       {itemName && isSettings ? itemName : null}
       {itemName && !isSettings ? `${itemName.replace("y", "ies").replace("-", " ")}s` : null}
     </h2>
