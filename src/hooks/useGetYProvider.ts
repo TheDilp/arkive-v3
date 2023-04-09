@@ -3,12 +3,15 @@ import { WebsocketProvider } from "y-websocket";
 import * as Y from "yjs";
 
 import { generateHexColor } from "../utils/uiUtils";
+import useIsLocal from "./useIsLocal";
 
 export function useGetYProvider(item_id: string, user: any) {
+  const isLocal = useIsLocal();
   const [provider, setProvider] = useState<WebsocketProvider | null>(null);
   const [synced, setSynced] = useState(false);
   const firstRender = useRef(true);
   useEffect(() => {
+    if (isLocal) return () => {};
     setSynced(false);
     if (!provider && firstRender.current) {
       const ydoc = new Y.Doc();

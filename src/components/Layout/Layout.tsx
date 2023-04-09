@@ -25,6 +25,7 @@ import Sidebar from "../Sidebar/Sidebar";
 function LayoutWrapper() {
   const { project_id } = useParams();
   const user = useAuth();
+  const isLocal = useIsLocal();
   const navigate = useNavigate();
   const { isLg } = useBreakpoint();
   const setUserAtom = useSetAtom(UserAtom);
@@ -51,7 +52,6 @@ function LayoutWrapper() {
     },
     false,
   );
-
   useEffect(() => {
     if (projectData) setProjectAtom(projectData as ProjectType);
   }, [projectData]);
@@ -59,7 +59,7 @@ function LayoutWrapper() {
     <div className="flex h-full max-w-full overflow-hidden">
       {isLg ? <Sidebar /> : null}
 
-      {user ? (
+      {user || isLocal ? (
         <>
           <ConfirmDialog />
           <DialogWrapper />
@@ -72,7 +72,7 @@ function LayoutWrapper() {
         <KBarProvider actions={CMDKActions(navigate, project_id as string, pendingUpdates)}>
           <Navbar />
           <CmdK />
-          {user || isFetching || isFetchingProject ? (
+          {user || isLocal || isFetching || isFetchingProject ? (
             <Suspense fallback={<LoadingScreen />}>
               <Outlet />
             </Suspense>

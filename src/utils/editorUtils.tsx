@@ -36,7 +36,14 @@ import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { toaster } from "./toast";
 
 export type StaticRendererType = { content: RemirrorJSON };
-export const DefaultEditorExtensions = (provider: WebsocketProvider) => {
+export const DefaultEditorExtensions = (provider: WebsocketProvider, isLocal: boolean) => {
+  const CustomYjsExtension = isLocal
+    ? []
+    : [
+        new YjsExtension({
+          getProvider: () => provider,
+        }),
+      ];
   const CustomMentionExtension = new MentionAtomExtension({
     extraAttributes: {
       alterId: {
@@ -109,9 +116,7 @@ export const DefaultEditorExtensions = (provider: WebsocketProvider) => {
     CustomMentionExtension,
     new GapCursorExtension({}),
     new DropCursorExtension({}),
-    new YjsExtension({
-      getProvider: () => provider,
-    }),
+    ...CustomYjsExtension,
     // new TableExtension({ resizable: true }),
   ];
 };
