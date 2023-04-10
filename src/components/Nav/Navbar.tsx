@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 import { useIsMutating } from "@tanstack/react-query";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import useIsLocal from "../../hooks/useIsLocal";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
@@ -19,6 +19,7 @@ export default function Navbar() {
   const { isLg } = useBreakpoint();
   const { project_id } = useParams();
   const isLocal = useIsLocal();
+  const { pathname } = useLocation();
   const setDialog = useSetAtom(DialogAtom);
   const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
@@ -32,7 +33,7 @@ export default function Navbar() {
         theme === "dark" ? "bg-zinc-900" : "bg-white"
       } py-2 shadow`}>
       <div className="flex w-full items-center justify-center gap-x-2 px-2">
-        {!isLg ? (
+        {!isLg && pathname !== "/" ? (
           <div className="min-w-18 w-18 flex h-14 items-center">
             <Icon
               className="cursor-pointer hover:text-blue-300"
