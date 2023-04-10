@@ -63,11 +63,11 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
   );
 }
 
-function SidebarDashBoardItems() {
+export function DashboardSidebar() {
   const { mutate: createProjectMutation, isLoading } = useCreateProject();
 
   return (
-    <li className="mt-14">
+    <div className="flex w-full flex-row items-center  bg-zinc-900 lg:h-full lg:w-16 lg:flex-col">
       <Button
         className="p-button-text p-button-secondary"
         loading={isLoading}
@@ -76,7 +76,7 @@ function SidebarDashBoardItems() {
         tooltipOptions={{ position: "right" }}>
         {isLoading ? null : <Icon className="newSectionButton text-white" fontSize={28} icon={IconEnum.add} />}
       </Button>
-    </li>
+    </div>
   );
 }
 
@@ -89,8 +89,8 @@ export default function Sidebar() {
         theme === "dark" ? "zinc" : "white"
       }-900`}>
       <nav className="flex h-48 flex-1 flex-col overflow-x-hidden overflow-y-hidden lg:h-full lg:overflow-y-auto lg:overflow-x-hidden">
-        <ul className="flex w-screen overflow-x-auto lg:w-full lg:flex-1 lg:flex-col lg:items-center lg:justify-start lg:px-4">
-          {pathname === "/" ? <SidebarDashBoardItems /> : <SidebarProjectItems items={navItems} pathname={pathname} />}
+        <ul className="flex w-screen overflow-x-auto lg:w-full lg:flex-1 lg:flex-col lg:items-center lg:justify-start lg:overflow-x-hidden lg:px-4">
+          <SidebarProjectItems items={navItems} pathname={pathname} />
         </ul>
       </nav>
     </div>
