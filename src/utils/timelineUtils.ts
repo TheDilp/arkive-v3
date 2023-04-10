@@ -12,6 +12,6 @@ export const TimelineGroupingOptions = ["Off", "On"];
 
 export const TimelineViewOptions = [
   { label: "Vertical", value: "Vertical" },
-  { label: "Horizontal", value: "Horizontal", isDisabled: true },
+  { label: "Horizontal", value: "Horizontal" },
   { label: "Grouped", value: "Grouped" },
 ];

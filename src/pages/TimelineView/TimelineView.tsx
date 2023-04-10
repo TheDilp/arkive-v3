@@ -140,7 +140,7 @@ export default function TimelineView({ isReadOnly }: Props) {
           />
         ) : null}
         {viewSettings.view.value === "Vertical" || viewSettings.view.value === "Horizontal" ? (
-          <TimelineDetailedView calendars={timeline?.calendars || []} />
+          <TimelineDetailedView calendars={timeline?.calendars || []} viewSettings={viewSettings} />
         ) : null}
       </div>
     </div>
