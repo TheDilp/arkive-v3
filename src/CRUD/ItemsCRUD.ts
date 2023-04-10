@@ -164,7 +164,6 @@ export const useUpdateItem = <ItemType extends { id: string }>(type: AllAvailabl
                     return {
                       ...item,
                       isPublic: "isPublic" in variables ? (variables.isPublic as boolean) : item.isPublic,
-                      expanded: "expanded" in variables ? (variables.expanded as boolean) : item.expanded,
                     };
                   return item;
                 });
