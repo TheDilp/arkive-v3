@@ -13,11 +13,12 @@ export default function TimelineDetailedView({ calendars }: Props) {
   const events = calendars.flatMap((cal) => cal.events);
 
   const parentRef = useRef() as MutableRefObject<HTMLDivElement>;
-  const rowVirtualizer = useVirtualizer({
+  const ColumnVirtualizer = useVirtualizer({
     count: events.length,
     horizontal: true,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 350,
+    estimateSize: () => 300,
+    overscan: 10,
   });
 
   return (
@@ -25,11 +26,11 @@ export default function TimelineDetailedView({ calendars }: Props) {
       <div ref={parentRef} className=" h-full w-full overflow-x-auto">
         <div
           style={{
-            width: `${rowVirtualizer.getTotalSize()}px`,
+            width: `${ColumnVirtualizer.getTotalSize()}px`,
             height: "100%",
             position: "relative",
           }}>
-          {rowVirtualizer.getVirtualItems().map((virtualItem, idx) => (
+          {ColumnVirtualizer.getVirtualItems().map((virtualItem, idx) => (
             <div
               key={virtualItem.index}
               className="absolute top-0 left-0 flex h-full justify-center"
