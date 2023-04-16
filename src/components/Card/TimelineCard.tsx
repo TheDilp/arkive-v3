@@ -1,5 +1,6 @@
 import { RemirrorJSON } from "remirror";
 
+import { useBreakpoint } from "../../hooks/useMediaQuery";
 import StaticRender from "../Editor/StaticRender";
 
 type Props = {
@@ -10,12 +11,21 @@ type Props = {
   description: string | undefined;
 };
 
+function getVerticalLeftPosition(isLg: boolean) {
+  if (isLg) {
+    return "18.5%";
+  }
+  return "0%";
+}
+
 export default function TimelineCard({ isHorizontal, size, title, content, description }: Props) {
+  const { isLg } = useBreakpoint();
+
   return (
     <div
       className="p-card absolute top-[22.5%] h-72 w-72 max-w-[288px]"
       style={{
-        left: isHorizontal ? "0" : "22.5%",
+        left: isHorizontal ? "0" : getVerticalLeftPosition(isLg),
         width: isHorizontal ? `${size}px` : "",
       }}>
       <h3 className="p-card-title text-center ">{title}</h3>

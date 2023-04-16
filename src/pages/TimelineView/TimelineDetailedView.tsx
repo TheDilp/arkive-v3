@@ -35,7 +35,7 @@ export default function TimelineDetailedView({ calendars, viewSettings }: Props)
           {ColumnVirtualizer.getVirtualItems().map((virtualItem, idx) => (
             <div
               key={virtualItem.index}
-              className="absolute top-0 left-0 flex justify-start"
+              className="absolute top-0 left-0 flex  justify-start"
               style={{
                 height: isHorizontal ? "100%" : `${virtualItem.size}px`,
                 width: isHorizontal ? `${virtualItem.size}px` : "100%",
