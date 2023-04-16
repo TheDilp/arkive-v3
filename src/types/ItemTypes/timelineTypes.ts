@@ -19,5 +19,10 @@ export type TimelineCreateType = Partial<Omit<TimelineType, "project_id">>;
 export type DefaultTimelineType = Pick<TimelineType, "title" | "project_id">;
 
 export type TimelineViewType = "Vertical" | "Horizontal" | "Grouped";
+export type TimelineModeType = "Simple" | "Detailed";
 
-export type TimelineViewSettings = { groupBy: boolean; view: { label: TimelineViewType; value: TimelineViewType } };
+export type TimelineViewSettings = {
+  groupBy: boolean;
+  view: { label: TimelineViewType; value: TimelineViewType };
+  mode: { label: TimelineModeType; value: TimelineModeType };
+};

@@ -10,7 +10,7 @@ import LoadingScreen from "../../components/Loading/LoadingScreen";
 import { useGetItem } from "../../hooks/useGetItem";
 import { TimelineType, TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 import { useEventMenuItems } from "../../utils/contextMenus";
-import { TimelineGroupingOptions, TimelineViewOptions } from "../../utils/timelineUtils";
+import { TimelineGroupingOptions, TimelineModeOptions, TimelineViewOptions } from "../../utils/timelineUtils";
 import { scrollElementIntoView } from "../../utils/uiUtils";
 import TimelineDetailedView from "./TimelineDetailedView";
 import TimelineGroupedView from "./TimelineGroupedView";
@@ -56,6 +56,7 @@ export default function TimelineView({ isReadOnly }: Props) {
   const [viewSettings, setViewSettings] = useState<TimelineViewSettings>({
     groupBy: true,
     view: { label: "Grouped", value: "Grouped" },
+    mode: { label: "Detailed", value: "Detailed" },
   });
   const [year, setYear] = useState(1);
   const { data: timeline, isLoading } = useGetItem<TimelineType>(item_id as string, "timelines", {}, isReadOnly);
@@ -75,6 +76,7 @@ export default function TimelineView({ isReadOnly }: Props) {
         <DrawerSection title="Group by year">
           <SelectButton
             className="mb-2"
+            disabled={viewSettings.view.value !== "Grouped"}
             onChange={(e) => {
               setViewSettings((prev) => ({ ...prev, groupBy: e.value === "On" }));
             }}
@@ -86,11 +88,13 @@ export default function TimelineView({ isReadOnly }: Props) {
           <div className="flex gap-x-1">
             <Button
               className="p-button-outlined mb-2"
+              disabled={viewSettings.view.value !== "Grouped"}
               label="Jump"
               onClick={() => scrollToYear({ year, groupItems, setGroupItems, groupBy: viewSettings.groupBy })}
             />
             <InputNumber
               className="w-24"
+              disabled={viewSettings.view.value !== "Grouped"}
               inputClassName="w-full"
               onChange={(e) => {
                 if (e.value) setYear(e.value);
@@ -104,7 +108,21 @@ export default function TimelineView({ isReadOnly }: Props) {
             />
           </div>
         </DrawerSection>
-        <div className="ml-auto">
+        <div className="ml-auto flex gap-x-2">
+          {viewSettings.view.value !== "Grouped" ? (
+            <DrawerSection title="Mode">
+              <SelectButton
+                className="mb-2"
+                onChange={(e) => {
+                  if (e.value) setViewSettings((prev) => ({ ...prev, mode: { label: e.value, value: e.value } }));
+                }}
+                optionDisabled="isDisabled"
+                optionLabel="label"
+                options={TimelineModeOptions}
+                value={viewSettings.mode.label}
+              />
+            </DrawerSection>
+          ) : null}
           <DrawerSection title="Viewing mode">
             <SelectButton
               className="mb-2"

@@ -15,3 +15,7 @@ export const TimelineViewOptions = [
   { label: "Horizontal", value: "Horizontal" },
   { label: "Grouped", value: "Grouped" },
 ];
+export const TimelineModeOptions = [
+  { label: "Simple", value: "Simple" },
+  { label: "Detailed", value: "Detailed" },
+];

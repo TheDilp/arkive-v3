@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { MutableRefObject, useRef } from "react";
 
-import StaticRender from "../../components/Editor/StaticRender";
+import TimelineCard from "../../components/Card/TimelineCard";
 import { CalendarType } from "../../types/ItemTypes/calendarTypes";
 import { TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 
@@ -41,24 +41,27 @@ export default function TimelineDetailedView({ calendars, viewSettings }: Props)
                 width: isHorizontal ? `${virtualItem.size}px` : "100%",
                 transform: isHorizontal ? `translateX(${virtualItem.start}px)` : `translateY(${virtualItem.start}px)`,
               }}>
-              <div
-                className="p-card absolute top-[22.5%] h-72 w-72 max-w-[288px]"
-                style={{
-                  left: isHorizontal ? "0" : "22.5%",
-                  width: isHorizontal ? `${virtualItem.size}px` : "",
-                }}>
-                <h3 className="p-card-title text-center ">{events[idx].title}</h3>
-                <div className="p-card-body h-[calc(100%-1.85rem)] overflow-hidden">
-                  <div className=" h-full w-full overflow-auto">
-                    {events && events?.[idx]?.document?.content ? (
-                      // @ts-ignore
-                      <StaticRender content={events[idx].document.content} />
-                    ) : (
-                      <p>{events[idx].description || ""}</p>
-                    )}
-                  </div>
+              {viewSettings.mode.value === "Detailed" ? (
+                <TimelineCard
+                  content={events[idx]?.document?.content}
+                  description={events[idx]?.description}
+                  isHorizontal={isHorizontal}
+                  size={virtualItem.size}
+                  title={events[idx].title}
+                />
+              ) : (
+                <div
+                  className="absolute"
+                  style={{
+                    left: isHorizontal ? "0" : "10.5%",
+                    top: "61.5%",
+                    width: isHorizontal ? `${virtualItem.size}px` : "",
+                  }}>
+                  <p className="w-fit min-w-[5rem] max-w-[40rem] break-words text-center font-Merriweather text-4xl">
+                    {events[idx].title}
+                  </p>
                 </div>
-              </div>
+              )}
               <div
                 className="absolute z-20 flex w-full justify-center"
                 style={{
