@@ -44,6 +44,7 @@ export default function TimelineDetailedView({ calendars, viewSettings }: Props)
               {viewSettings.mode.value === "Detailed" ? (
                 <TimelineCard
                   content={events[idx]?.document?.content}
+                  date={`${events[idx].day} ${events[idx].month.title} ${events[idx].year}`}
                   description={events[idx]?.description}
                   isHorizontal={isHorizontal}
                   size={virtualItem.size}
@@ -53,11 +54,14 @@ export default function TimelineDetailedView({ calendars, viewSettings }: Props)
                 <div
                   className="absolute"
                   style={{
-                    left: isHorizontal ? "0" : "10.5%",
+                    left: isHorizontal ? "33%" : "10.5%",
                     top: "61.5%",
                     width: isHorizontal ? `${virtualItem.size}px` : "",
                   }}>
-                  <p className="w-fit min-w-[5rem] max-w-[40rem] break-words text-center font-Merriweather text-4xl">
+                  <p
+                    className={`w-fit min-w-[5rem] text-center font-Merriweather text-4xl ${
+                      isHorizontal ? "max-w-[15rem] truncate" : "max-w-[40rem] break-words"
+                    }`}>
                     {events[idx].title}
                   </p>
                 </div>
