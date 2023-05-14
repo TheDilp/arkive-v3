@@ -7,7 +7,6 @@ import { useDebouncedCallback } from "use-debounce";
 
 import MenuBar from "../../components/Editor/Menubar";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
-import useIsLocal from "../../hooks/useIsLocal";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
 // import { PendingUpdatesAtom } from "../../utils/Atoms/atoms";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
@@ -21,7 +20,6 @@ export default function EditorContainer({
   children: JSX.Element | JSX.Element[] | null;
   provider: any;
 }) {
-  const isLocal = useIsLocal();
   const { project_id } = useParams();
   const { mutate: updateDocumentMutation } = useUpdateItem<DocumentType>("documents", project_id as string);
 
@@ -36,7 +34,7 @@ export default function EditorContainer({
     content: !document?.content ? undefined : (document && document?.content) || undefined,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    extensions: DefaultEditorExtensions(provider, isLocal),
+    extensions: DefaultEditorExtensions(provider),
     selection: "start",
     onError,
   });

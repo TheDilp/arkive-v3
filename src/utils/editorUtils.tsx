@@ -36,14 +36,12 @@ import { DocumentType } from "../types/ItemTypes/documentTypes";
 import { toaster } from "./toast";
 
 export type StaticRendererType = { content: RemirrorJSON };
-export const DefaultEditorExtensions = (provider: WebsocketProvider, isLocal: boolean) => {
-  const CustomYjsExtension = isLocal
-    ? []
-    : [
-        new YjsExtension({
-          getProvider: () => provider,
-        }),
-      ];
+export const DefaultEditorExtensions = (provider: WebsocketProvider) => {
+  const CustomYjsExtension = [
+    new YjsExtension({
+      getProvider: () => provider,
+    }),
+  ];
   const CustomMentionExtension = new MentionAtomExtension({
     extraAttributes: {
       alterId: {

@@ -1,4 +1,3 @@
-import { SignedIn } from "@clerk/clerk-react";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 import ProjectCard from "../components/Card/ProjectCard";
@@ -6,15 +5,13 @@ import Navbar from "../components/Nav/Navbar";
 import { DashboardSidebar } from "../components/Sidebar/Sidebar";
 import { useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { useAuth } from "../hooks/useAuth";
-import useIsLocal from "../hooks/useIsLocal";
 import { useBreakpoint } from "../hooks/useMediaQuery";
 import { ProjectType } from "../types/ItemTypes/projectTypes";
 
-function DashboardContent() {
+export default function Dashboard() {
   const user = useAuth();
-  const isLocal = useIsLocal();
   const { isLg } = useBreakpoint();
-  const { isLoading, error, data: projects } = useGetAllProjects(!!user || isLocal);
+  const { isLoading, error, data: projects } = useGetAllProjects(!!user);
 
   if (isLoading)
     return (
@@ -40,14 +37,5 @@ function DashboardContent() {
         </div>
       </div>
     </div>
-  );
-}
-export default function Dashboard() {
-  const isLocal = useIsLocal();
-  if (isLocal) return <DashboardContent />;
-  return (
-    <SignedIn>
-      <DashboardContent />
-    </SignedIn>
   );
 }
