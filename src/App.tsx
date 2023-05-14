@@ -22,8 +22,8 @@ const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
 const SettingsContentView = lazy(() => import("./pages/ContentView/SettingsContentView"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
 const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
-
 const Profile = lazy(() => import("./pages/Profile/Profile"));
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -39,7 +39,6 @@ const queryClient = new QueryClient({
 
 function App() {
   const navigate = useNavigate();
-
   return (
     <main className="flex h-screen w-screen flex-col">
       <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
@@ -50,6 +49,9 @@ function App() {
         }}
         navigate={(to) => navigate(to)}
         publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
+        <SignedOut>
+          <RedirectToSignIn />
+        </SignedOut>
         <QueryClientProvider client={queryClient}>
           <DndProvider backend={MultiBackend} options={getBackendOptions()}>
             <Suspense fallback={<LoadingScreen />}>
@@ -76,9 +78,6 @@ function App() {
             </Suspense>
           </DndProvider>
         </QueryClientProvider>
-        <SignedOut>
-          <RedirectToSignIn />
-        </SignedOut>
       </ClerkProvider>
     </main>
   );
