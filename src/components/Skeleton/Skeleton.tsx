@@ -20,3 +20,17 @@ export function TreeSkeleton() {
     </ul>
   );
 }
+
+export function FolderSkeleton() {
+  return (
+    <div className="flex h-full flex-1 flex-wrap content-start gap-4 overflow-auto">
+      <div className="h-24 w-40 animate-pulse rounded bg-zinc-800" />
+      <div className="h-24 w-40 animate-pulse rounded bg-zinc-800" />
+      <div className="h-24 w-40 animate-pulse rounded bg-zinc-800" />
+      <div className="h-24 w-40 animate-pulse rounded bg-zinc-800" />
+      <div className="h-24 w-40 animate-pulse rounded bg-zinc-800" />
+      <div className="h-24 w-40 animate-pulse rounded bg-zinc-800" />
+      <div className="h-24 w-40 animate-pulse rounded bg-zinc-800" />
+    </div>
+  );
+}

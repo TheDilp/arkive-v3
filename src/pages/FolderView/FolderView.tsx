@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { useParams } from "react-router-dom";
 
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
-import LoadingScreen from "../../components/Loading/LoadingScreen";
+import { FolderSkeleton } from "../../components/Skeleton/Skeleton";
 import { useGetAllItems } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { DocumentsSidebar } from "../../utils/Atoms/atoms";
@@ -11,14 +11,15 @@ import { FolderViewCards } from "./FolderViewCards";
 export default function FolderView() {
   const { project_id, item_id, type } = useParams();
   const documentsTab = useAtomValue(DocumentsSidebar);
-  const { data, isFetching } = useGetAllItems<AllItemsType>(project_id as string, type as AvailableItemTypes, {
+  const { data, isFetching, isLoading } = useGetAllItems<AllItemsType>(project_id as string, type as AvailableItemTypes, {
     staleTime: 5 * 60 * 1000,
   });
-  if (isFetching) return <LoadingScreen />;
   return (
     <div className="folderView flex flex-1 flex-col gap-4 overflow-hidden px-8">
       <Breadcrumbs type={type as AvailableItemTypes} />
-      {data && data.length > 0 ? (
+      {isLoading && isFetching ? <FolderSkeleton /> : null}
+
+      {!isLoading && data && data.length > 0 ? (
         <FolderViewCards
           items={
             (data || [])
