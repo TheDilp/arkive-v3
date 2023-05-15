@@ -79,6 +79,15 @@ export default function Navbar() {
             </>
           ) : null}
 
+          <Tooltip allowedPlacements={["bottom-end"]} content={<RandomGenerator />} isClickable>
+            <div className="relative">
+              <span className="absolute -top-1 left-2 flex h-3 w-3 pb-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500" />
+              </span>
+              <Icon className="cursor-pointer hover:text-blue-300" fontSize={20} icon="ph:bell" />
+            </div>
+          </Tooltip>
           <UserButton />
         </span>
       </div>

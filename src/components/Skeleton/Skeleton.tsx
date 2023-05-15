@@ -34,3 +34,12 @@ export function FolderSkeleton() {
     </div>
   );
 }
+
+export function RandomTableSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="h-8 w-full animate-pulse rounded bg-zinc-700" />
+      <div className="h-8 w-full animate-pulse rounded bg-zinc-700" />
+    </div>
+  );
+}

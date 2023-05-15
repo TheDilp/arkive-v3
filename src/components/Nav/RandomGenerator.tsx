@@ -10,7 +10,7 @@ import { RandomTableType } from "../../types/ItemTypes/randomTableTypes";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { getRandomTableResult } from "../../utils/randomtableUtils";
 import { buttonLabelWithIcon } from "../../utils/transform";
-import LoadingScreen from "../Loading/LoadingScreen";
+import { RandomTableSkeleton } from "../Skeleton/Skeleton";
 
 export default function RandomGenerator() {
   const queryClient = useQueryClient();
@@ -25,7 +25,7 @@ export default function RandomGenerator() {
   return (
     <div className="relative max-h-80 min-h-[20rem] w-80 max-w-[20rem] rounded bg-zinc-800 p-2">
       {isFetching ? (
-        <LoadingScreen />
+        <RandomTableSkeleton />
       ) : (
         <div className="flex flex-col gap-y-2">
           <Dropdown
