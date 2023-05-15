@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 import { capitalCase } from "remirror";
@@ -17,7 +17,7 @@ type Props = {
 
 export default function ItemsTree({ type }: Props) {
   const { project_id } = useParams();
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   const createItemMutation = useCreateItem<AllItemsType>(type);
   const itemName = getItemNameForTree(type);
   return (
