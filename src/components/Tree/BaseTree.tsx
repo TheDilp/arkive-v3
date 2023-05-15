@@ -2,7 +2,6 @@ import { DragLayerMonitorProps, NodeModel, PlaceholderRenderParams, Tree } from 
 import { useAtom } from "jotai";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -16,6 +15,7 @@ import { getItem } from "../../utils/storage";
 import { getDepth, handleDrop } from "../../utils/tree";
 import ContextMenu from "../ContextMenu/ContextMenu";
 import DragPreview from "../Sidebar/DragPreview";
+import { TreeSkeleton } from "../Skeleton/Skeleton";
 import TreeItem from "./TreeItem";
 
 type Props = {
@@ -109,7 +109,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
-  if (isLoadingItems) return <ProgressSpinner />;
+  if (isLoadingItems) return <TreeSkeleton />;
   return (
     <div
       className="flex h-full flex-col"
