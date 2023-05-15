@@ -33,6 +33,7 @@ export const IconEnum = {
   chevron_left: "mdi:chevron-left",
   chevron_right: "mdi:chevron-right",
   user: "ph:user",
+  users: "ph:users",
   table: "ph:table-thin",
   grid: "ph:grid-four-thin",
   search: "ph:magnifying-glass-light",
