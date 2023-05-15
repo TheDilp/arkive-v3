@@ -1,6 +1,8 @@
 import { lazy } from "react";
 import { useParams } from "react-router-dom";
 
+import MemberSettings from "../Settings/MemberSettings";
+
 const ProjectSettings = lazy(() => import("../Settings/ProjectSettings"));
 const DocumentSettings = lazy(() => import("../Settings/DocumentSettings"));
 const MapSettings = lazy(() => import("../Settings/MapSettings"));
@@ -27,7 +29,8 @@ export default function SettingsContentView() {
   if (type === "randomtable-settings") return <RandomTableSettings />;
   if (type === "tag-settings") return <TagsSettings />;
   if (type === "alternative-names-settings") return <AlternativeNamesSettings />;
-  if (type === "misc-settings") return <MiscellaneousSettings />;
+  if (type === "member-settings") return <MemberSettings />;
   if (type === "asset-settings") return <AssetSettings />;
+  if (type === "misc-settings") return <MiscellaneousSettings />;
   return null;
 }
