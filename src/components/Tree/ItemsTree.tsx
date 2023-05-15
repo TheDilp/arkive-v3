@@ -26,7 +26,7 @@ export default function ItemsTree({ type }: Props) {
         {itemName === "dictionary" ? "dictionaries" : `${itemName}s`}
       </h2>
 
-      <div className="mt-3 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-b border-zinc-600 pb-2">
+      <div className="mt-3 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-zinc-600 pb-2">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
           icon="pi pi-folder"
