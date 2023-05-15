@@ -14,7 +14,7 @@ type Props = {
   isLoading: boolean;
   selected: AllItemsType[];
   setSelected: Dispatch<SetStateAction<any>>;
-  tableRef: MutableRefObject<DataTable>;
+  tableRef: MutableRefObject<DataTable<AllItemsType[]>>;
 };
 
 export default function SettingsTable({ children, data, selected, setSelected, globalFilter, isLoading, tableRef }: Props) {
