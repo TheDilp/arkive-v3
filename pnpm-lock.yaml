@@ -118,9 +118,6 @@ dependencies:
   react-toastify:
     specifier: ^9.1.1
     version: 9.1.2(react-dom@18.2.0)(react@18.2.0)
-  react-use-websocket:
-    specifier: ^4.3.1
-    version: 4.3.1(react-dom@18.2.0)(react@18.2.0)
   remirror:
     specifier: ^2.0.26
     version: 2.0.26(@remirror/pm@2.0.4)(prettier@2.8.7)
@@ -6293,16 +6290,6 @@ packages:
       react-dom: '>=16.13'
     dependencies:
       debounce: 1.2.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /react-use-websocket@4.3.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-zHPLWrgcqydJaak2O5V9hiz4q2dwkwqNQqpgFVmSuPxLZdsZlnDs8DVHy3WtHH+A6ms/8aHIyX7+7ulOcrnR0Q==}
-    peerDependencies:
-      react: '>= 18.0.0'
-      react-dom: '>= 18.0.0'
-    dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
