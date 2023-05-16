@@ -1,5 +1,5 @@
 import { Remirror, useRemirror } from "@remirror/react";
-// import { useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { InvalidContentHandler, RemirrorJSON } from "remirror";
@@ -8,7 +8,7 @@ import { useDebouncedCallback } from "use-debounce";
 import MenuBar from "../../components/Editor/Menubar";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
-// import { PendingUpdatesAtom } from "../../utils/Atoms/atoms";
+import { PermissionAtom } from "../../utils/Atoms/atoms";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 
 export default function EditorContainer({
@@ -22,8 +22,9 @@ export default function EditorContainer({
 }) {
   const { project_id } = useParams();
   const { mutate: updateDocumentMutation } = useUpdateItem<DocumentType>("documents", project_id as string);
+  const permissions = useAtomValue(PermissionAtom);
 
-  // const setPendingUpdates = useSetAtom(PendingUpdatesAtom);
+  const canEdit = permissions === "owner" || permissions?.documents === "Edit";
 
   const onError: InvalidContentHandler = useCallback(({ json, invalidContent, transformers }) => {
     // Automatically remove all invalid nodes and marks.
@@ -55,7 +56,7 @@ export default function EditorContainer({
   return (
     <Remirror
       classNames={["editor", "w-full", "flex-1", "font-Lato", "h-[calc(100vh-10rem)] overflow-y-auto"]}
-      editable
+      editable={canEdit}
       hooks={editorHooks}
       manager={manager}
       onChange={(params) => {
@@ -71,7 +72,7 @@ export default function EditorContainer({
         setState(params.state);
       }}
       state={state}>
-      <MenuBar />
+      {canEdit ? <MenuBar /> : null}
       {children}
     </Remirror>
   );
