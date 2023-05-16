@@ -61,9 +61,6 @@ dependencies:
   jszip:
     specifier: ^3.10.1
     version: 3.10.1
-  kbar:
-    specifier: 0.1.0-beta.40
-    version: 0.1.0-beta.40(react-dom@18.2.0)(react@18.2.0)
   leaflet:
     specifier: ^1.9.3
     version: 1.9.3
@@ -1299,53 +1296,6 @@ packages:
 
   /@popperjs/core@2.11.7:
     resolution: {integrity: sha512-Cr4OjIkipTtcXKjAsm8agyleBuDHvxzeBoa1v543lbv1YaIwQjESsVcmjiWiPEbC1FIeHOG/Op9kdCmAmiS3Kw==}
-    dev: false
-
-  /@radix-ui/react-compose-refs@1.0.0(react@18.2.0):
-    resolution: {integrity: sha512-0KaSv6sx787/hK3eF53iOkiSLwAGlFMx5lotrqD2pTjB18KbybKoEIgkNZTKC60YECDQTKGTRcDBILwZVqVKvA==}
-    peerDependencies:
-      react: ^16.8 || ^17.0 || ^18.0
-    dependencies:
-      '@babel/runtime': 7.21.0
-      react: 18.2.0
-    dev: false
-
-  /@radix-ui/react-portal@1.0.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-swu32idoCW7KA2VEiUZGBSu9nB6qwGdV6k6HYhUoOo3M1FFpD+VgLzUqtt3mwL1ssz7r2x8MggpLSQach2Xy/Q==}
-    peerDependencies:
-      react: ^16.8 || ^17.0 || ^18.0
-      react-dom: ^16.8 || ^17.0 || ^18.0
-    dependencies:
-      '@babel/runtime': 7.21.0
-      '@radix-ui/react-primitive': 1.0.2(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@radix-ui/react-primitive@1.0.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-zY6G5Qq4R8diFPNwtyoLRZBxzu1Z+SXMlfYpChN7Dv8gvmx9X3qhDqiLWvKseKVJMuedFeU/Sa0Sy/Ia+t06Dw==}
-    peerDependencies:
-      react: ^16.8 || ^17.0 || ^18.0
-      react-dom: ^16.8 || ^17.0 || ^18.0
-    dependencies:
-      '@babel/runtime': 7.21.0
-      '@radix-ui/react-slot': 1.0.1(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@radix-ui/react-slot@1.0.1(react@18.2.0):
-    resolution: {integrity: sha512-avutXAFL1ehGvAXtPquu0YK5oz6ctS474iM3vNGQIkswrVhdrS52e3uoMQBzZhNRAIE0jBnUyXWNmSjGHhCFcw==}
-    peerDependencies:
-      react: ^16.8 || ^17.0 || ^18.0
-    dependencies:
-      '@babel/runtime': 7.21.0
-      '@radix-ui/react-compose-refs': 1.0.0(react@18.2.0)
-      react: 18.2.0
-    dev: false
-
-  /@reach/observe-rect@1.2.0:
-    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
     dev: false
 
   /@react-dnd/asap@5.0.2:
@@ -3562,10 +3512,6 @@ packages:
     resolution: {integrity: sha512-GHuDRO12Sypu2cV70d1dkA2EUmXHgntrzbpvOB+Qy+49ypNfGgFQIC2fhhXbnyrJRynDCAARsT7Ou0M6hirpfw==}
     dev: false
 
-  /command-score@0.1.2:
-    resolution: {integrity: sha512-VtDvQpIJBvBatnONUsPzXYFVKQQAhuf3XTNOAsdBxCNO/QCtUUd8LSgjn0GVarBkCad6aJCZfXgrjYbl/KRr7w==}
-    dev: false
-
   /compute-scroll-into-view@1.0.20:
     resolution: {integrity: sha512-UCB0ioiyj8CRjtrvaceBLqqhZCVP+1B8+NWQhmdsm0VXOJtobBCf1dBQmebCCo34qZmUwZfIH2MZLqNHazrfjg==}
     dev: false
@@ -4380,10 +4326,6 @@ packages:
     resolution: {integrity: sha512-xJuoT5+L99XlZ8twedaRf6Ax2TgQVxvgZOYoPKqZufmJib0tL2tegPBOZb1pVNgIhlqDlA0eO0c3wBvQcmzx4w==}
     dev: true
 
-  /fast-equals@2.0.4:
-    resolution: {integrity: sha512-caj/ZmjHljPrZtbzJ3kfH5ia/k4mTJe/qSiXAGzxZWRZgsgDV0cvNaQULqUX8t0/JVlzzEdYOwCN5DmzTxoD4w==}
-    dev: false
-
   /fast-glob@3.2.12:
     resolution: {integrity: sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==}
     engines: {node: '>=8.6.0'}
@@ -5059,21 +5001,6 @@ packages:
       pako: 1.0.11
       readable-stream: 2.3.8
       setimmediate: 1.0.5
-    dev: false
-
-  /kbar@0.1.0-beta.40(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-vEV02WuEBvKaSivO2DnNtyd3gUAbruYrZCax5fXcLcVTFV6q0/w6Ew3z6Qy+AqXxbZdWguwQ3POIwgdHevp+6A==}
-    peerDependencies:
-      react: ^16.0.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      '@radix-ui/react-portal': 1.0.2(react-dom@18.2.0)(react@18.2.0)
-      command-score: 0.1.2
-      fast-equals: 2.0.4
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-virtual: 2.10.4(react@18.2.0)
-      tiny-invariant: 1.3.1
     dev: false
 
   /language-subtag-registry@0.3.22:
@@ -6316,15 +6243,6 @@ packages:
       throttle-debounce: 3.0.1
       ts-easing: 0.2.0
       tslib: 2.5.0
-    dev: false
-
-  /react-virtual@2.10.4(react@18.2.0):
-    resolution: {integrity: sha512-Ir6+oPQZTVHfa6+JL9M7cvMILstFZH/H3jqeYeKI4MSUX+rIruVwFC6nGVXw9wqAw8L0Kg2KvfXxI85OvYQdpQ==}
-    peerDependencies:
-      react: ^16.6.3 || ^17.0.0
-    dependencies:
-      '@reach/observe-rect': 1.2.0
-      react: 18.2.0
     dev: false
 
   /react@18.2.0:

@@ -29,7 +29,6 @@
     "file-saver": "^2.0.5",
     "jotai": "^2.0.3",
     "jszip": "^3.10.1",
-    "kbar": "0.1.0-beta.40",
     "leaflet": "^1.9.3",
     "localstorage-slim": "^2.3.0",
     "lodash.clonedeep": "^4.5.0",

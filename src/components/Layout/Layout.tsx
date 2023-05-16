@@ -1,9 +1,8 @@
 import { SignedIn, useUser } from "@clerk/clerk-react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { KBarProvider } from "kbar";
+import { useAtom, useSetAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { useGetUser } from "../../CRUD/AuthCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
@@ -11,8 +10,7 @@ import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { MemberType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
-import { PendingUpdatesAtom, ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
-import CmdK, { CMDKActions } from "../CmdK/CmdK";
+import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import LoadingScreen from "../Loading/LoadingScreen";
@@ -23,7 +21,6 @@ import Sidebar from "../Sidebar/Sidebar";
 export default function LayoutWrapper() {
   const { project_id } = useParams();
   const { user } = useUser();
-  const navigate = useNavigate();
   const { isLg } = useBreakpoint();
 
   const [userData, setUserAtom] = useAtom(UserAtom);
@@ -44,7 +41,6 @@ export default function LayoutWrapper() {
   );
 
   const setProjectAtom = useSetAtom(ProjectAtom);
-  const pendingUpdates = useAtomValue(PendingUpdatesAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
     enabled: !!user,
     onSuccess: (data) => {
@@ -71,15 +67,12 @@ export default function LayoutWrapper() {
         ) : null}
 
         <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
-          <KBarProvider actions={CMDKActions(navigate, project_id as string, pendingUpdates)}>
-            <Navbar />
-            <CmdK />
-            {user || isFetchingProject ? (
-              <Suspense fallback={<LoadingScreen />}>
-                <Outlet />
-              </Suspense>
-            ) : null}
-          </KBarProvider>
+          <Navbar />
+          {user || isFetchingProject ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <Outlet />
+            </Suspense>
+          ) : null}
           {!isLg ? <Sidebar /> : null}
         </div>
       </div>
