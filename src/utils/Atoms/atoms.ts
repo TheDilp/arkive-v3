@@ -72,8 +72,8 @@ export const BoardStateAtom = atom<{
 export const NodesAtom = atom<NodeDefinition[]>([]);
 export const EdgesAtom = atom<EdgeDefinition[]>([]);
 
-export const UserAtom = atom<(UserType & { permission: "owner" | "member" | null }) | null>(null);
-
+export const UserAtom = atom<UserType | null>(null);
+export const PermissionAtom = atom<"owner" | "member" | null>(null);
 export const PendingUpdatesAtom = atom<boolean>(false);
 
 // Atom for documents or templates tab
