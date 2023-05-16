@@ -9,7 +9,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { NavItemType } from "../../types/generalTypes";
-import { SidebarCollapseAtom, ThemeAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { PermissionAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
 import { checkIfOwner, navItems } from "../../utils/uiUtils";
@@ -18,8 +18,8 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
   const { isLg } = useBreakpoint();
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const navigate = useNavigate();
-  const userData = useAtomValue(UserAtom);
-  const isOwner = checkIfOwner(userData?.permission);
+  const permission = useAtomValue(PermissionAtom);
+  const isOwner = checkIfOwner(permission);
   return (
     <>
       {isLg ? (

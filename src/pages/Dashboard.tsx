@@ -1,16 +1,38 @@
 import { SignedIn, useUser } from "@clerk/clerk-react";
+import { useSetAtom } from "jotai";
 
 import ProjectCard from "../components/Card/ProjectCard";
 import Navbar from "../components/Nav/Navbar";
 import { DashboardSidebar } from "../components/Sidebar/Sidebar";
 import { ProjectCardSkeleton } from "../components/Skeleton/Skeleton";
+import { useGetUser } from "../CRUD/AuthCRUD";
 import { useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../hooks/useMediaQuery";
+import { MemberType } from "../types/generalTypes";
 import { ProjectType } from "../types/ItemTypes/projectTypes";
+import { UserType } from "../types/userTypes";
+import { UserAtom } from "../utils/Atoms/atoms";
 
 export default function Dashboard() {
-  const user = useUser();
+  const { user } = useUser();
   const { isLg } = useBreakpoint();
+
+  const setUserAtom = useSetAtom(UserAtom);
+  useGetUser(
+    user?.id as string,
+    {
+      enabled: !!user,
+      onSuccess: (data) => {
+        if (data) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { members, ...userData } = data as UserType & { members: MemberType[] };
+          setUserAtom(userData);
+        }
+      },
+    },
+    false,
+  );
+
   const { isLoading, error, data: projects } = useGetAllProjects(!!user);
 
   if (error) return <span>An error has occurred</span>;
@@ -28,7 +50,7 @@ export default function Dashboard() {
                   <ProjectCardSkeleton />
                 </>
               ) : null}
-              {!isLoading && projects?.length
+              {!isLoading
                 ? projects?.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
                 : "Click the button on the left to create a new project."}
             </div>

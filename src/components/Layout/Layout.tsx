@@ -5,13 +5,10 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 
-import { useGetUser } from "../../CRUD/AuthCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { MemberType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { UserType } from "../../types/userTypes";
-import { PendingUpdatesAtom, ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { PendingUpdatesAtom, PermissionAtom, ProjectAtom } from "../../utils/Atoms/atoms";
 import CmdK, { CMDKActions } from "../CmdK/CmdK";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
@@ -25,8 +22,9 @@ export default function LayoutWrapper() {
   const { user } = useUser();
   const navigate = useNavigate();
   const { isLg } = useBreakpoint();
-  const setUserAtom = useSetAtom(UserAtom);
+
   const setProjectAtom = useSetAtom(ProjectAtom);
+  const setPermissionAtom = useSetAtom(PermissionAtom);
   const pendingUpdates = useAtomValue(PendingUpdatesAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
     enabled: !!user,
@@ -35,23 +33,13 @@ export default function LayoutWrapper() {
     },
   });
 
-  const { isFetching } = useGetUser(
-    user?.id as string,
-    {
-      enabled: !!user && !isFetchingProject,
-      onSuccess: (data) => {
-        if (data) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { members, ...userData } = data as UserType & { members: MemberType[] };
-          setUserAtom({ ...userData, permission: projectData?.ownerId === user?.id ? "owner" : "member" });
-        }
-      },
-    },
-    false,
-  );
   useEffect(() => {
-    if (projectData) setProjectAtom(projectData as ProjectType);
-  }, [projectData]);
+    if (projectData) {
+      setProjectAtom(projectData as ProjectType);
+      if (projectData.ownerId === user?.id) setPermissionAtom("owner");
+      if (projectData.members.some((member) => member.user_id === user?.id)) setPermissionAtom("member");
+    }
+  }, [projectData, project_id]);
   return (
     <SignedIn>
       <div className="flex h-full max-w-full overflow-hidden">
@@ -70,7 +58,7 @@ export default function LayoutWrapper() {
           <KBarProvider actions={CMDKActions(navigate, project_id as string, pendingUpdates)}>
             <Navbar />
             <CmdK />
-            {user || isFetching || isFetchingProject ? (
+            {user || isFetchingProject ? (
               <Suspense fallback={<LoadingScreen />}>
                 <Outlet />
               </Suspense>

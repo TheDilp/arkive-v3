@@ -15,6 +15,7 @@ export function useGetUser(id: string, options?: UseQueryOptions, isPublic?: boo
   const { data, isLoading, isFetching } = useQuery<UserType>({
     queryKey: ["user", id],
     queryFn: async () => {
+      if (!id) return null;
       const url = isPublic ? `${baseURLS.baseServer}publicuser/${id}` : `${baseURLS.baseServer}user/${id}`;
       if (url) {
         return FetchFunction({ url, method: "GET" });

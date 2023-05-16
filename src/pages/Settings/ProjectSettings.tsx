@@ -14,7 +14,7 @@ import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { UserAtom } from "../../utils/Atoms/atoms";
+import { PermissionAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { exportImages } from "../../utils/imageUtils";
@@ -27,6 +27,7 @@ export default function ProjectSettings() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const userData = useAtomValue(UserAtom);
+  const permission = useAtomValue(PermissionAtom);
   const [loading, setLoading] = useState(false);
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
@@ -38,7 +39,7 @@ export default function ProjectSettings() {
   }, [data]);
   const updateProject = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
-  if (!userData?.permission || userData.permission !== "owner") {
+  if (!permission || permission !== "owner") {
     toaster("info", "You do not have permissions to view the project settings.");
     return <Navigate to="/" />;
   }
