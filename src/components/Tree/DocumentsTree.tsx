@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
-import { DrawerAtom, ThemeAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom, PermissionAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
 
@@ -13,6 +13,7 @@ export default function DocumentsTree() {
   const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
   const createDocumentMutation = useCreateItem("documents");
+  const permissions = useAtomValue(PermissionAtom);
 
   const items = useMemo(
     () => [
@@ -58,6 +59,7 @@ export default function DocumentsTree() {
     <div className={`h-screen p-4 ${theme === "dark" ? "" : "border-r bg-white"}`}>
       <SplitButton
         className="p-button-outlined w-full"
+        disabled={permissions !== "owner" && typeof permissions === "object" && permissions?.documents !== "Edit"}
         icon="pi pi-plus"
         label="Create Document"
         loading={createDocumentMutation?.isLoading}

@@ -1,12 +1,12 @@
 import { Icon } from "@iconify/react";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { useParams } from "react-router-dom";
 import { capitalCase } from "remirror";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
-import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
-import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { AllItemsType, AvailableItemTypes, PermissionCategoriesType } from "../../types/generalTypes";
+import { DrawerAtom, PermissionAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getItemIcon, getItemNameForTree } from "../../utils/transform";
 import BaseTree from "./BaseTree";
@@ -19,6 +19,7 @@ export default function ItemsTree({ type }: Props) {
   const { project_id } = useParams();
   const setDrawer = useSetAtom(DrawerAtom);
   const createItemMutation = useCreateItem<AllItemsType>(type);
+  const permissions = useAtomValue(PermissionAtom);
   const itemName = getItemNameForTree(type);
   return (
     <div className="flex h-screen flex-1 flex-col">
@@ -29,6 +30,11 @@ export default function ItemsTree({ type }: Props) {
       <div className="mt-3 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-zinc-600 pb-2">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
+          disabled={
+            permissions !== "owner" &&
+            typeof permissions === "object" &&
+            permissions?.[type as PermissionCategoriesType] !== "Edit"
+          }
           icon="pi pi-folder"
           iconPos="right"
           label="New Folder"
@@ -42,6 +48,11 @@ export default function ItemsTree({ type }: Props) {
         />
         <Button
           className="p-button-outlined w-full truncate"
+          disabled={
+            permissions !== "owner" &&
+            typeof permissions === "object" &&
+            permissions?.[type as PermissionCategoriesType] !== "Edit"
+          }
           onClick={() => {
             setDrawer({
               ...DefaultDrawer,
