@@ -2,6 +2,7 @@ import cytoscape, { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { atom } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
+import { PermissionType } from "../../types/generalTypes";
 import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
@@ -73,7 +74,19 @@ export const NodesAtom = atom<NodeDefinition[]>([]);
 export const EdgesAtom = atom<EdgeDefinition[]>([]);
 
 export const UserAtom = atom<UserType | null>(null);
-export const PermissionAtom = atom<"owner" | "member" | null>(null);
+
+export const PermissionAtom = atom<PermissionType | "owner" | null>((get) => {
+  const projectData = get(ProjectAtom);
+  const userData = get(UserAtom);
+
+  if (projectData && userData) {
+    if (projectData.ownerId === userData.auth_id) return "owner";
+
+    return projectData.members.find((member) => member.member.id === userData.id)?.permissions[0] ?? null;
+  }
+
+  return null;
+});
 export const PendingUpdatesAtom = atom<boolean>(false);
 
 // Atom for documents or templates tab

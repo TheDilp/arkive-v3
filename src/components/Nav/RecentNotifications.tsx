@@ -22,7 +22,7 @@ export default function RecentNotifications() {
       console.log(data);
     });
     socket.on("connect", () => {
-      console.log("CONNECTEd");
+      console.log("connected");
     });
     socket.on("disconnect", () => {
       console.log("disconnected");

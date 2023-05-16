@@ -1,4 +1,4 @@
-import { MemberType } from "../generalTypes";
+import { MemberType, PermissionType } from "../generalTypes";
 
 export type SwatchType = {
   id: string;
@@ -11,6 +11,6 @@ export type ProjectType = {
   title: string;
   image?: string;
   ownerId: string;
-  members: MemberType[];
+  members: { member: MemberType; permissions: PermissionType[]; user_id: string }[];
   swatches: SwatchType[];
 };

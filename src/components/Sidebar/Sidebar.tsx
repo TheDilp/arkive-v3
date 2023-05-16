@@ -8,18 +8,19 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { NavItemType } from "../../types/generalTypes";
+import { NavItemType, PermissionCategoriesType } from "../../types/generalTypes";
 import { PermissionAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
-import { checkIfOwner, navItems } from "../../utils/uiUtils";
+import { checkIfCategoryAllowed, checkIfOwner, navItems } from "../../utils/uiUtils";
 
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
   const { isLg } = useBreakpoint();
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
-  const navigate = useNavigate();
   const permission = useAtomValue(PermissionAtom);
+  const navigate = useNavigate();
   const isOwner = checkIfOwner(permission);
+  if (!permission) return null;
   return (
     <>
       {isLg ? (
@@ -35,30 +36,39 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
           />
         </li>
       ) : null}
-      {items.map((item) => (
-        <Link key={item.icon} className="mx-4 lg:mx-0" to={item.navigate}>
-          <Tooltip content={item.tooltip.replace("_", " ")} position="right" target={`.${item.tooltip}`} />
-          <li
-            className={` ${
-              item.tooltip
-            } flex h-14 cursor-pointer items-center justify-center transition-colors hover:text-sky-400 ${
-              item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400" : ""
-            }`}>
-            <Icon fontSize={28} icon={item.icon} />
-          </li>
-        </Link>
-      ))}
+      {items.map((item) => {
+        const categoryPermission = checkIfCategoryAllowed(permission, item.tooltip.toLowerCase() as PermissionCategoriesType);
+        return (
+          <Link
+            key={item.icon}
+            className={`mx-4 lg:mx-0 ${categoryPermission ? "cursor-pointer" : "cursor-default"}`}
+            to={categoryPermission ? item.navigate : "#"}>
+            <Tooltip content={item.tooltip.replace("_", " ")} position="right" target={`.${item.tooltip}`} />
+            <li
+              className={`${item.tooltip} flex h-14 items-center justify-center transition-colors  ${
+                categoryPermission ? "hover:text-sky-400" : "text-zinc-400 hover:text-zinc-700"
+              } ${item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400 " : ""}
+              ${categoryPermission ? "" : "text-zinc-700"}
+            
+            `}>
+              <Icon fontSize={28} icon={item.icon} />
+            </li>
+          </Link>
+        );
+      })}
 
-      <li className="mx-4 ml-auto flex h-14 items-center lg:mx-0 lg:ml-0 lg:mt-auto">
-        <Icon
-          className={` ${isOwner ? "cursor-pointer hover:text-blue-300" : "text-zinc-600"}`}
-          fontSize={28}
-          icon="mdi:cog"
-          onClick={() => {
-            if (isOwner) navigate("./settings/project-settings");
-          }}
-        />
-      </li>
+      {permission !== "owner" ? null : (
+        <li className="mx-4 ml-auto flex h-14 items-center lg:mx-0 lg:ml-0 lg:mt-auto">
+          <Icon
+            className={`${isOwner ? "cursor-pointer hover:text-blue-300" : "text-zinc-600"}`}
+            fontSize={28}
+            icon="mdi:cog"
+            onClick={() => {
+              if (isOwner) navigate("./settings/project-settings");
+            }}
+          />
+        </li>
+      )}
     </>
   );
 }

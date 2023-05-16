@@ -1,4 +1,10 @@
-import { AllAvailableTypes, IconCategoriesType, NavItemType } from "../types/generalTypes";
+import {
+  AllAvailableTypes,
+  IconCategoriesType,
+  NavItemType,
+  PermissionCategoriesType,
+  PermissionType,
+} from "../types/generalTypes";
 import { IconEnum } from "./DefaultValues/GeneralDefaults";
 import { getItem, setItem } from "./storage";
 
@@ -49,7 +55,7 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 
-export function checkIfOwner(permission?: null | "owner" | "member") {
+export function checkIfOwner(permission?: null | "owner" | PermissionType) {
   if (permission && permission === "owner") return true;
   return false;
 }
@@ -96,4 +102,16 @@ export function setExpanded(type: AllAvailableTypes, id: string, isExpanded: boo
 
 export function generateHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}
+
+export function checkIfCategoryAllowed(permission: PermissionType | "owner" | null, category: PermissionCategoriesType) {
+  if (permission === "owner") return true;
+  if (permission === null) return false;
+  if (
+    typeof permission === "object" &&
+    permission[category] &&
+    (permission[category] === "Edit" || permission[category] === "View")
+  )
+    return true;
+  return false;
 }

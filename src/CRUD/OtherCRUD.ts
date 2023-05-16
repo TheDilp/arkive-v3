@@ -3,8 +3,16 @@ import { useSetAtom } from "jotai";
 import omit from "lodash.omit";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
-import { AllAvailableTypes, AvailableItemTypes, TagCreateType, TagSettingsType, TagType } from "../types/generalTypes";
+import {
+  AllAvailableTypes,
+  AvailableItemTypes,
+  PermissionLevelType,
+  TagCreateType,
+  TagSettingsType,
+  TagType,
+} from "../types/generalTypes";
 import { AlterNameType, DocumentType } from "../types/ItemTypes/documentTypes";
+import { ProjectType } from "../types/ItemTypes/projectTypes";
 import { UserType } from "../types/userTypes";
 import { UserAtom } from "../utils/Atoms/atoms";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
@@ -231,6 +239,53 @@ export function useDeleteWebhook() {
             if (prev) return { ...prev, webhooks: prev.webhooks.filter((webhook) => webhook.id !== variables.id) };
             return prev;
           });
+      },
+    },
+  );
+}
+
+export function useUpdatePermission(project_id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (variables: { id: string; user_id: string; permission: { name: string; value: PermissionLevelType } }) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}updatepermission`,
+        method: "POST",
+        body: JSON.stringify({
+          id: variables.id,
+          permission: { name: variables.permission.name, value: variables.permission.value },
+        }),
+      }),
+    {
+      onMutate: (variables) => {
+        const oldData = queryClient.getQueryData(["singleProject", project_id]);
+
+        queryClient.setQueryData<ProjectType>(["singleProject", project_id], (old) => {
+          if (old) {
+            return {
+              ...old,
+              members: old.members.map((member) => {
+                if (member.id === variables.user_id) {
+                  return {
+                    ...member,
+                    permissions: member.permissions.map((permission) => {
+                      return { ...permission, [variables.permission.name]: variables.permission.value };
+                    }),
+                  };
+                }
+                return member;
+              }),
+            };
+          }
+          return old;
+        });
+
+        return { oldData };
+      },
+      onError: (_, __, context) => {
+        toaster("error", "There was an error updating this permission.");
+        return context?.oldData;
       },
     },
   );

@@ -22,6 +22,7 @@ export default function Dashboard() {
     user?.id as string,
     {
       enabled: !!user,
+      staleTime: 1000 * 60 * 5,
       onSuccess: (data) => {
         if (data) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,7 +34,7 @@ export default function Dashboard() {
     false,
   );
 
-  const { isLoading, error, data: projects } = useGetAllProjects(!!user);
+  const { isLoading, isFetched, error, data: projects } = useGetAllProjects(!!user);
 
   if (error) return <span>An error has occurred</span>;
   return (
@@ -47,10 +48,9 @@ export default function Dashboard() {
               {isLoading ? (
                 <>
                   <ProjectCardSkeleton /> <ProjectCardSkeleton /> <ProjectCardSkeleton /> <ProjectCardSkeleton />
-                  <ProjectCardSkeleton />
                 </>
               ) : null}
-              {!isLoading
+              {!isLoading && isFetched
                 ? projects?.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
                 : "Click the button on the left to create a new project."}
             </div>

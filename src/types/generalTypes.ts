@@ -181,12 +181,42 @@ export type FullSearchResults = {
   events: EventType[];
 };
 
+export type PermissionLevelType = "Edit" | "View" | "None";
+
+export type PermissionCategoriesType =
+  | "documents"
+  | "maps"
+  | "boards"
+  | "screens"
+  | "calendars"
+  | "timelines"
+  | "dictionaries"
+  | "random_tables"
+  | "tags"
+  | "alter_names";
+
+export type PermissionType = {
+  id: string;
+  project_id: string;
+  user_id: string;
+  documents: PermissionLevelType;
+  maps: PermissionLevelType;
+  boards: PermissionLevelType;
+  screens: PermissionLevelType;
+  calendars: PermissionLevelType;
+  timelines: PermissionLevelType;
+  dictionaries: PermissionLevelType;
+  random_tables: PermissionLevelType;
+  tags: PermissionLevelType;
+  alter_names: PermissionLevelType;
+};
+
 export type MemberType = {
   id: string;
   project: ProjectType;
   member: UserType;
 
-  permission: "viewer" | "editor";
+  permissions: PermissionType[];
   project_id: string;
   user_id: string;
 };
