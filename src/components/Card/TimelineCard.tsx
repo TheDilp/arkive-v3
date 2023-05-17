@@ -1,46 +1,26 @@
-import { RemirrorJSON } from "remirror";
+import { Card } from "primereact/card";
 
-import { useBreakpoint } from "../../hooks/useMediaQuery";
+import { TimelineDisplayEventType, TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 import StaticRender from "../Editor/StaticRender";
 
-type Props = {
-  isHorizontal: boolean;
-  size: number;
-  title: string;
-  content: RemirrorJSON | undefined;
-  description: string | undefined;
-  date: string;
-};
-
-function getVerticalLeftPosition(isLg: boolean) {
-  if (isLg) {
-    return "18.5%";
-  }
-  return "0%";
-}
-
-export default function TimelineCard({ date, isHorizontal, size, title, content, description }: Props) {
-  const { isLg } = useBreakpoint();
-
+export default function TimelineCard(
+  { year, month, day, title, document, description }: TimelineDisplayEventType,
+  viewSettings: TimelineViewSettings,
+) {
+  const date = `${day} ${month.title} ${year}`;
+  const {
+    view: { value: viewMode },
+  } = viewSettings;
   return (
-    <div
-      className="p-card absolute top-[22.5%] h-72 w-72 max-w-[288px] font-Lato"
-      style={{
-        left: isHorizontal ? "0" : getVerticalLeftPosition(isLg),
-        width: isHorizontal ? `${size}px` : "",
-      }}>
-      <h3 className="p-card-title break-words px-4 text-center font-Merriweather">{title}</h3>
-      <h4 className="text-center text-lg font-medium">{date}</h4>
-      <div className="p-card-body h-[calc(100%-3.85rem)] overflow-hidden">
-        <div className="h-full max-h-full w-full overflow-auto">
-          {content ? (
-            // @ts-ignore
-            <StaticRender content={content} />
-          ) : (
-            <p>{description || ""}</p>
-          )}
-        </div>
+    <Card className={`${viewMode === "Horizontal" ? "min-w-[36rem]" : "min-w-[20rem]"}`} subTitle={date} title={title}>
+      <div className="h-56 overflow-auto">
+        {document?.content ? (
+          // @ts-ignore
+          <StaticRender content={document.content} />
+        ) : (
+          <p>{description || ""}</p>
+        )}
       </div>
-    </div>
+    </Card>
   );
 }

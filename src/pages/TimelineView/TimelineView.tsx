@@ -1,9 +1,11 @@
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
+import { Timeline } from "primereact/timeline";
 import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import TimelineCard from "../../components/Card/TimelineCard";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
 import DrawerSection from "../../components/Drawer/DrawerSection";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
@@ -12,7 +14,6 @@ import { TimelineType, TimelineViewSettings } from "../../types/ItemTypes/timeli
 import { useEventMenuItems } from "../../utils/contextMenus";
 import { TimelineGroupingOptions, TimelineModeOptions, TimelineViewOptions } from "../../utils/timelineUtils";
 import { scrollElementIntoView } from "../../utils/uiUtils";
-import TimelineDetailedView from "./TimelineDetailedView";
 import TimelineGroupedView from "./TimelineGroupedView";
 
 type Props = { isReadOnly?: boolean };
@@ -55,7 +56,7 @@ export default function TimelineView({ isReadOnly }: Props) {
   const { item_id } = useParams();
   const [viewSettings, setViewSettings] = useState<TimelineViewSettings>({
     groupBy: true,
-    view: { label: "Grouped", value: "Grouped" },
+    view: { label: "Vertical", value: "Vertical" },
     mode: { label: "Detailed", value: "Detailed" },
   });
   const [year, setYear] = useState(1);
@@ -157,9 +158,22 @@ export default function TimelineView({ isReadOnly }: Props) {
             viewSettings={viewSettings}
           />
         ) : null}
-        {viewSettings.view.value === "Vertical" || viewSettings.view.value === "Horizontal" ? (
-          <TimelineDetailedView calendars={timeline?.calendars || []} viewSettings={viewSettings} />
-        ) : null}
+        <div className="flex h-full w-full justify-center overflow-auto">
+          {viewSettings.view.value === "Vertical" || viewSettings.view.value === "Horizontal" ? (
+            <div
+              className={`${
+                viewSettings.view.value === "Horizontal" ? "overlfow-x-auto flex w-full max-w-6xl justify-center" : "max-w-6xl"
+              }`}>
+              <Timeline
+                align="alternate"
+                className={viewSettings.view.value === "Horizontal" ? "horizontalTimeline" : "vertical"}
+                content={(event) => TimelineCard(event, viewSettings)}
+                layout={viewSettings.view.value === "Vertical" ? "vertical" : "horizontal"}
+                value={timeline?.calendars?.flatMap((cal) => cal.events) || []}
+              />
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );

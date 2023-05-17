@@ -415,3 +415,12 @@ Inputs
     @apply bg-[#121212] !important;
   }
 }
+
+.horizontalTimeline {
+  .p-timeline-event:nth-child(odd) .p-timeline-event-content {
+    @apply flex items-start;
+  }
+  .p-timeline-event:nth-child(even) .p-timeline-event-content {
+    @apply flex items-end;
+  }
+}
