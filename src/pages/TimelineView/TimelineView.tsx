@@ -163,7 +163,11 @@ export default function TimelineView({ isReadOnly }: Props) {
             <div
               className={`
               overlfow-x-auto
-              ${viewSettings.view.value === "Horizontal" ? " flex w-full max-w-full overflow-x-auto" : "w-full max-w-6xl"}`}>
+              ${
+                viewSettings.view.value === "Horizontal"
+                  ? " flex w-full max-w-full overflow-x-auto"
+                  : "w-full max-w-6xl overflow-y-auto"
+              }`}>
               <Timeline
                 align="alternate"
                 className={viewSettings.view.value === "Horizontal" ? "horizontalTimeline" : "vertical"}
