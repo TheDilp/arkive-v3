@@ -25,7 +25,7 @@ export default function TimelineDetailedView({ calendars, viewSettings }: Props)
 
   return (
     <div className=" relative h-full w-full overflow-hidden">
-      <div ref={parentRef} className=" h-full w-full overflow-x-auto">
+      <div ref={parentRef} className={`h-full w-full ${isHorizontal ? "overflow-x-auto" : ""}`}>
         <div
           style={{
             width: isHorizontal ? `${ColumnVirtualizer.getTotalSize()}px` : "100%",

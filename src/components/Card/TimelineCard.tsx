@@ -31,8 +31,8 @@ export default function TimelineCard({ date, isHorizontal, size, title, content,
       }}>
       <h3 className="p-card-title break-words px-4 text-center font-Merriweather">{title}</h3>
       <h4 className="text-center text-lg font-medium">{date}</h4>
-      <div className="p-card-body h-[calc(100%-1.85rem)] overflow-hidden">
-        <div className=" h-full w-full overflow-auto">
+      <div className="p-card-body h-[calc(100%-3.85rem)] overflow-hidden">
+        <div className="h-full max-h-full w-full overflow-auto">
           {content ? (
             // @ts-ignore
             <StaticRender content={content} />
