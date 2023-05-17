@@ -56,7 +56,7 @@ export default function TimelineView({ isReadOnly }: Props) {
   const { item_id } = useParams();
   const [viewSettings, setViewSettings] = useState<TimelineViewSettings>({
     groupBy: true,
-    view: { label: "Vertical", value: "Vertical" },
+    view: { label: "Grouped", value: "Grouped" },
     mode: { label: "Detailed", value: "Detailed" },
   });
   const [year, setYear] = useState(1);
@@ -162,7 +162,9 @@ export default function TimelineView({ isReadOnly }: Props) {
           {viewSettings.view.value === "Vertical" || viewSettings.view.value === "Horizontal" ? (
             <div
               className={`${
-                viewSettings.view.value === "Horizontal" ? "overlfow-x-auto flex w-full max-w-6xl justify-center" : "max-w-6xl"
+                viewSettings.view.value === "Horizontal"
+                  ? "overlfow-x-auto flex w-full max-w-6xl justify-center"
+                  : "w-full max-w-6xl"
               }`}>
               <Timeline
                 align="alternate"

@@ -10,7 +10,11 @@ export default function TimelineCard(
   const date = `${day} ${month.title} ${year}`;
   const {
     view: { value: viewMode },
+    mode: { value: mode },
   } = viewSettings;
+
+  if (mode === "Simple") return title;
+
   return (
     <Card className={`${viewMode === "Horizontal" ? "min-w-[36rem]" : "min-w-[20rem]"}`} subTitle={date} title={title}>
       <div className="h-56 overflow-auto">
