@@ -193,7 +193,8 @@ export type PermissionCategoriesType =
   | "dictionaries"
   | "random_tables"
   | "tags"
-  | "alter_names";
+  | "alter_names"
+  | "entities";
 
 export type PermissionType = {
   id: string;
