@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Tooltip as PrimeTooltip } from "primereact/tooltip";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -23,18 +23,18 @@ import { Tooltip } from "../Tooltip/Tooltip";
 
 export default function BoardQuickBar() {
   const { item_id } = useParams();
-  const [boardRef] = useAtom(BoardReferenceAtom);
+  const boardRef = useAtomValue(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
   const [pickerColor, setPickerColor] = useState("#595959");
-  const [, setDialog] = useAtom(DialogAtom);
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDialog = useSetAtom(DialogAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
 
   const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
 
   const updateManyNodes = useUpdateManySubItems<NodeType>(item_id as string, "nodes");
   const updateManyEdges = useUpdateManySubItems<EdgeType>(item_id as string, "edges");
 
-  const [, setExportDialog] = useAtom(DialogAtom);
+  const setExportDialog = useSetAtom(DialogAtom);
   const deleteManyNodesMutation = useDeleteManySubItems(item_id as string, "nodes");
   const deleteManyEdgesMutation = useDeleteManySubItems(item_id as string, "edges");
   const debouncedColorPick = useDebouncedCallback((color) => {

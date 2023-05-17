@@ -89,10 +89,10 @@ export function useMapContextMenuItems({
   return items;
 }
 export function useBoardContextMenuItems({ type, boardContext, item_id, board }: BoardContextMenuType) {
-  const [boardRef] = useAtom(BoardReferenceAtom);
-  const [, setNodes] = useAtom(NodesAtom);
-  const [, setEdges] = useAtom(EdgesAtom);
-  const [, setDialog] = useAtom(DialogAtom);
+  const boardRef = useAtomValue(BoardReferenceAtom);
+  const setNodes = useSetAtom(NodesAtom);
+  const setEdges = useSetAtom(EdgesAtom);
+  const setDialog = useSetAtom(DialogAtom);
   const updateManyNodes = useUpdateManySubItems(item_id, "nodes");
   const createNodeMutation = useCreateSubItem<NodeType>(item_id as string, "nodes", "boards");
   const deleteManyNodes = useDeleteManySubItems(item_id as string, "nodes");

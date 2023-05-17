@@ -66,6 +66,7 @@ export const DefaultNode: DefaultNodeType = {
   textHAlign: "center",
   textVAlign: "top",
   backgroundColor: "#595959",
+  image: "",
   backgroundOpacity: 1,
   locked: false,
   template: false,

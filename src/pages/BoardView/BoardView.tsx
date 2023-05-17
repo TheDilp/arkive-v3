@@ -1,5 +1,5 @@
 import { Collection, EventObject } from "cytoscape";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
@@ -37,7 +37,7 @@ export default function BoardView({ isReadOnly }: Props) {
   const { item_id, subitem_id } = useParams();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
-  const [, setBoardRef] = useAtom(BoardReferenceAtom);
+  const setBoardRef = useSetAtom(BoardReferenceAtom);
   const [boardContext, setBoardContext] = useState<BoardContext>({
     x: null,
     y: null,
@@ -108,7 +108,7 @@ export default function BoardView({ isReadOnly }: Props) {
     if (board?.edges && board.edges.length > 0 && !edges.length) {
       setEdges(mapEdges(board.edges, isReadOnly));
     }
-  }, [board]);
+  }, [board?.nodes, board?.edges]);
 
   useEffect(() => {
     if (!cyRef || !ehRef) return () => {};
@@ -252,13 +252,35 @@ export default function BoardView({ isReadOnly }: Props) {
       // If the target is the background of the canvas
       if (evt.target === cyRef?.current?._cy && boardState.addNodes) {
         const { x, y } = evt.position;
+        console.log(x, y);
+        const id = crypto.randomUUID();
+        setNodes((prev) => [
+          ...prev,
+          {
+            data: {
+              label: "",
+              ...DefaultNode,
+              id,
+              classes: "boardNode",
+              type: board?.defaultNodeShape || "rectangle",
+              backgroundColor: board?.defaultNodeColor || "#595959",
+              backgroundImage: [],
+              zIndexCompare: "auto",
+            },
+            locked: false,
+            position: {
+              x,
+              y,
+            },
+          },
+        ]);
         createNodeMutation.mutate({
           x,
           y,
           parentId: item_id,
           type: board?.defaultNodeShape,
           backgroundColor: board?.defaultNodeColor,
-          id: crypto.randomUUID(),
+          id,
         });
       }
     });
@@ -324,7 +346,6 @@ export default function BoardView({ isReadOnly }: Props) {
       });
     }
   }, [boardState.grid, cyRef?.current?._cy]);
-
   useEffect(() => {
     if (cyRef?.current?._cy) {
       if (drawer.type === "edges" || drawer.type === "nodes") {
