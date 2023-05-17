@@ -53,7 +53,7 @@ export function useMapContextMenuItems({
   bounds: number[][];
   deleteMapPin: UseMutationResult<Response | null, unknown, string, unknown>;
 }) {
-  const [mapContext] = useAtom(MapContextAtom);
+  const mapContext = useAtomValue(MapContextAtom);
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const items =
     mapContext.type === "map"
@@ -1116,8 +1116,8 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
 }
 
 export function useEditorMenuItems() {
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const [mentionContext] = useAtom(OtherContextMenuAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
+  const mentionContext = useAtomValue(OtherContextMenuAtom);
   const finalItems = [
     {
       command: () => {
