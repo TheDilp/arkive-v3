@@ -347,7 +347,11 @@ export function useBoardContextMenuItems({ type, boardContext, item_id, board }:
       {
         label: "Delete Selected Edges",
         command: () => {
-          if (edges) deleteManyEdges.mutate(edges.map((edge: any) => edge.id()));
+          if (edges) {
+            const ids = edges.map((edge: any) => edge.id());
+            deleteManyEdges.mutate(ids);
+            setEdges((prev) => prev.filter((e) => !ids.includes(e.data.id)));
+          }
         },
       },
     ];
