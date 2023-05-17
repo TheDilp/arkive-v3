@@ -20,7 +20,8 @@ export type AvailableItemTypes =
   | "dictionaries"
   | "calendars"
   | "timelines"
-  | "randomtables";
+  | "randomtables"
+  | "entities";
 export type AvailableSubItemTypes =
   | "alter_names"
   | "map_pins"
@@ -210,6 +211,7 @@ export type PermissionType = {
   random_tables: PermissionLevelType;
   tags: PermissionLevelType;
   alter_names: PermissionLevelType;
+  entities: PermissionLevelType;
 };
 
 export type MemberType = {

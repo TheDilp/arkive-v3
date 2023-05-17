@@ -47,10 +47,8 @@ export const useCreateItem = <ItemType>(type: AvailableItemTypes, isTemplate?: b
 
   return useMutation(
     async (newItemValues: Partial<ItemType>) => {
-      const url = createURL(type);
-
       return FetchFunction({
-        url: isTemplate ? `${baseURLS.baseServer}createfromtemplate` : url,
+        url: isTemplate ? `${baseURLS.baseServer}createfromtemplate` : createURL(type),
         body: JSON.stringify(newItemValues),
         method: "POST",
       });

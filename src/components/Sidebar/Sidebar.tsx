@@ -3,7 +3,7 @@
 import { Icon } from "@iconify/react";
 import { useAtom, useAtomValue } from "jotai";
 import { Button } from "primereact/button";
-import { Tooltip } from "primereact/tooltip";
+import { Tooltip as PrimeTooltip } from "primereact/tooltip";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
@@ -13,6 +13,8 @@ import { PermissionAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atom
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
 import { checkIfCategoryAllowed, checkIfOwner, navItems } from "../../utils/uiUtils";
+import { Tooltip } from "../Tooltip/Tooltip";
+import EntitiesOptions from "./EntitiesOptions";
 
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
   const { isLg } = useBreakpoint();
@@ -43,7 +45,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
             key={item.icon}
             className={`mx-4 lg:mx-0 ${categoryPermission ? "cursor-pointer" : "cursor-default"}`}
             to={categoryPermission ? item.navigate : "#"}>
-            <Tooltip content={item.tooltip.replace("_", " ")} position="right" target={`.${item.tooltip}`} />
+            <PrimeTooltip content={item.tooltip.replace("_", " ")} position="right" target={`.${item.tooltip}`} />
             <li
               className={`${item.tooltip} flex h-14 items-center justify-center transition-colors  ${
                 categoryPermission ? "hover:text-sky-400" : "text-zinc-400 hover:text-zinc-700"
@@ -56,6 +58,12 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
           </Link>
         );
       })}
+      {isLg ? <hr className="flex h-7 w-full" /> : null}
+      <li className="mx-4 flex h-14 cursor-pointer items-center justify-center transition-colors lg:mx-0">
+        <Tooltip content={<EntitiesOptions />} isClickable>
+          <Icon fontSize={28} icon={IconEnum.entities} />
+        </Tooltip>
+      </li>
 
       {permission !== "owner" ? null : (
         <li className="mx-4 ml-auto flex h-14 items-center lg:mx-0 lg:ml-0 lg:mt-auto">

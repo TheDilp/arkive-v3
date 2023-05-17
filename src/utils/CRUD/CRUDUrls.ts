@@ -9,12 +9,10 @@ export const getSingleURL = (type: AvailableItemTypes) => {
   return `${baseURLS.baseServer}getsingle${type.slice(0, -1)}`;
 };
 export const createURL = (type: AllAvailableTypes) => {
-  if (type !== "dictionaries") {
-    const urlType = type;
+  if (type === "dictionaries") return `${baseURLS.baseServer}createdictionary`;
+  if (type === "entities") return `${baseURLS.baseServer}createentity`;
 
-    return `${baseURLS.baseServer}create${urlType.slice(0, -1).replace("_", "")}`; // Replace is for random_tables
-  }
-  return `${baseURLS.baseServer}createdictionary`;
+  return `${baseURLS.baseServer}create${type.slice(0, -1).replace("_", "")}`; // Replace is for random_tables
 };
 export const updateURL = (type: AllAvailableTypes) => {
   if (type === "dictionaries") return `${baseURLS.baseServer}updatedictionary`;
