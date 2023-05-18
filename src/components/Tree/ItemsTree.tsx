@@ -8,7 +8,7 @@ import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { AllItemsType, AvailableItemTypes, PermissionCategoriesType } from "../../types/generalTypes";
 import { DrawerAtom, PermissionAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
-import { getItemIcon, getItemNameForTree } from "../../utils/transform";
+import { getItemIcon, getItemNameForTitle, getItemNameForTree } from "../../utils/transform";
 import BaseTree from "./BaseTree";
 
 type Props = {
@@ -21,10 +21,11 @@ export default function ItemsTree({ type }: Props) {
   const createItemMutation = useCreateItem<AllItemsType>(type);
   const permissions = useAtomValue(PermissionAtom);
   const itemName = getItemNameForTree(type);
+  const pageTitle = getItemNameForTitle(type);
   return (
     <div className="flex h-screen flex-1 flex-col">
       <h2 className="h-8 text-center font-Merriweather text-2xl capitalize">
-        {itemName === "dictionary" ? "dictionaries" : `${itemName}s`}
+        {itemName === "dictionary" ? "dictionaries" : `${pageTitle}s`}
       </h2>
 
       <div className="mt-3 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-zinc-600 pb-2">

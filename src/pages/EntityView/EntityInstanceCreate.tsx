@@ -1,4 +1,5 @@
 import { Button } from "primereact/button";
+import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { useState } from "react";
@@ -16,7 +17,7 @@ export default function EntityInstanceCreate() {
   const [entityInstanceData, setEntityInstanceData] = useState<{ [key: string]: string }>({});
 
   const { mutate } = useCreateItem<{ entity_id: string; field_values: { field_id: string; value: string }[] }>(
-    "entity_instances",
+    "entityinstances",
   );
 
   return (
@@ -33,6 +34,19 @@ export default function EntityInstanceCreate() {
                     setEntityInstanceData((prev) => ({ ...prev, [field.id]: e.target.value }));
                   }}
                   value={entityInstanceData[field.id] || ""}
+                />
+              </div>
+            );
+          if (field.type === "number")
+            return (
+              <div key={field.id} className="col-span-1">
+                <DrawerSectionTitle title={field.title} />
+                <InputNumber
+                  className="w-full"
+                  onChange={(e) => {
+                    setEntityInstanceData((prev) => ({ ...prev, [field.id]: e.value?.toFixed() as string }));
+                  }}
+                  value={parseInt(entityInstanceData[field.id] || "0", 10) || 0}
                 />
               </div>
             );

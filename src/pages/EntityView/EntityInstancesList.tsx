@@ -25,12 +25,25 @@ function Header(title: string, entity_id: string) {
     </div>
   );
 }
+function LinkButton(rowData: EntityInstanceType, project_id: string) {
+  const { id } = rowData;
+  return (
+    <Link to={`/project/${project_id}/entity_instances/${id}`}>
+      <Button icon="pi pi-link" />
+    </Link>
+  );
+}
 
-export default function EntityView() {
-  const { item_id } = useParams();
+export default function EntityInstancesList() {
+  const { project_id, item_id } = useParams();
   const { data, isLoading, isFetching } = useGetItem<EntityType>(item_id as string, "entities", { staleTime: 5 * 60 * 1000 });
   const { data: e } = useGetAllItems<EntityInstanceType>(data?.id as string, "entityinstances", { enabled: !!data?.id });
-  if (isLoading) return <TreeSkeleton count={10} />;
+  if (isLoading)
+    return (
+      <div className="p-4">
+        <TreeSkeleton count={10} />;
+      </div>
+    );
   return (
     <div className="h-full p-4">
       <DataTable header={Header(data?.title as string, item_id as string)} loading={isFetching} value={e}>
@@ -54,6 +67,7 @@ export default function EntityView() {
               />
             );
         })}
+        <Column body={(rowData) => LinkButton(rowData, project_id as string)} />
       </DataTable>
     </div>
   );

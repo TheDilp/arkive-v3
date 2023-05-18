@@ -30,7 +30,18 @@ export function getItemNameForTree(type: AvailableItemTypes) {
   if (type) {
     if (type === "randomtables") return "random table";
     if (type === "boards") return "graph";
-    if (type === "entity_instances") return "";
+    if (type === "entities") return "entity";
+    if (type === "entityinstances") return "";
+    if (type !== "dictionaries") return type.slice(0, type.length - 1);
+    return "dictionary";
+  }
+  return "";
+}
+export function getItemNameForTitle(type: AvailableItemTypes) {
+  if (type) {
+    if (type === "randomtables") return "random table";
+    if (type === "boards") return "graph";
+    if (type === "entityinstances") return "";
     if (type !== "dictionaries") return type.slice(0, type.length - 1);
     return "dictionary";
   }
@@ -60,6 +71,7 @@ export function getIcon(type: AvailableItemTypes, item: AllItemsType) {
   if ("icon" in item) return item.icon;
   if (type === "maps") return IconEnum.map;
   if (type === "boards") return IconEnum.board;
+  if (type === "entities") return IconEnum.entities;
   return IconEnum.document;
 }
 

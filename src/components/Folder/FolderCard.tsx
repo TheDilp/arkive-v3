@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -29,7 +29,7 @@ const getCardURL = ({ id, isFolder, type }: { id: string; type: AvailableItemTyp
 };
 
 export default function FolderCard({ id, title, type, isFolder, isPublic, icon, image, cm }: Props) {
-  const [, setContextMenu] = useAtom(SidebarTreeContextAtom);
+  const setContextMenu = useSetAtom(SidebarTreeContextAtom);
   const { project_id } = useParams();
   const sortItemsMutation = useSortMutation(project_id as string, type);
   return (

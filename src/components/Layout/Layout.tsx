@@ -19,7 +19,7 @@ import SecondarySidebar from "../Sidebar/SecondarySidebar";
 import Sidebar from "../Sidebar/Sidebar";
 
 export default function LayoutWrapper() {
-  const { project_id } = useParams();
+  const { project_id, type } = useParams();
   const { user } = useUser();
   const { isLg } = useBreakpoint();
 
@@ -39,7 +39,6 @@ export default function LayoutWrapper() {
     },
     false,
   );
-
   const setProjectAtom = useSetAtom(ProjectAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
     enabled: !!user,
@@ -61,7 +60,7 @@ export default function LayoutWrapper() {
           <>
             <ConfirmDialog />
             <DialogWrapper />
-            <SecondarySidebar />
+            {type && type !== "entity_instances" ? <SecondarySidebar /> : null}
             <Drawer />
           </>
         ) : null}
