@@ -58,7 +58,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
           </Link>
         );
       })}
-      {isLg ? <hr className="flex h-7 w-full" /> : null}
+
       <li className="mx-4 flex h-14 cursor-pointer items-center justify-center transition-colors lg:mx-0">
         <Tooltip content={<EntitiesOptions />} isClickable>
           <Icon fontSize={28} icon={IconEnum.entities} />

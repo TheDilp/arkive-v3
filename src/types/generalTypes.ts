@@ -21,7 +21,8 @@ export type AvailableItemTypes =
   | "calendars"
   | "timelines"
   | "randomtables"
-  | "entities";
+  | "entities"
+  | "entityinstances";
 export type AvailableSubItemTypes =
   | "alter_names"
   | "map_pins"

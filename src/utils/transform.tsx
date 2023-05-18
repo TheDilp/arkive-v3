@@ -30,6 +30,7 @@ export function getItemNameForTree(type: AvailableItemTypes) {
   if (type) {
     if (type === "randomtables") return "random table";
     if (type === "boards") return "graph";
+    if (type === "entity_instances") return "";
     if (type !== "dictionaries") return type.slice(0, type.length - 1);
     return "dictionary";
   }

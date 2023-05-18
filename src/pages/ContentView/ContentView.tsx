@@ -9,6 +9,7 @@ const DictionaryView = lazy(() => import("../DictionaryView/DictionaryView"));
 const CalendarView = lazy(() => import("../CalendarView/CalendarView"));
 const TimelineView = lazy(() => import("../TimelineView/TimelineView"));
 const RandomTableView = lazy(() => import("../RandomTableView/RandomTableView"));
+const EntityView = lazy(() => import("../EntityView/EntityView"));
 
 export default function ContentView() {
   const { type } = useParams();
@@ -21,5 +22,6 @@ export default function ContentView() {
   if (type === "calendars") return <CalendarView />;
   if (type === "timelines") return <TimelineView />;
   if (type === "randomtables") return <RandomTableView />;
+  if (type === "entities") return <EntityView />;
   return null;
 }

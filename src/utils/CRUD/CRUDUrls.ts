@@ -6,11 +6,13 @@ export const getURL = (project_id: string, type: AvailableItemTypes) => {
 };
 export const getSingleURL = (type: AvailableItemTypes) => {
   if (type === "dictionaries") return `${baseURLS.baseServer}getsingledictionary`;
+  if (type === "entities") return `${baseURLS.baseServer}getsingleentity`;
   return `${baseURLS.baseServer}getsingle${type.slice(0, -1)}`;
 };
 export const createURL = (type: AllAvailableTypes) => {
   if (type === "dictionaries") return `${baseURLS.baseServer}createdictionary`;
   if (type === "entities") return `${baseURLS.baseServer}createentity`;
+  if (type === "entityinstances") return `${baseURLS.baseServer}createentityinstance`;
 
   return `${baseURLS.baseServer}create${type.slice(0, -1).replace("_", "")}`; // Replace is for random_tables
 };

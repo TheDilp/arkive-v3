@@ -4,19 +4,12 @@ export function ProjectCardSkeleton() {
   );
 }
 
-export function TreeSkeleton() {
+export function TreeSkeleton({ count = 1 }: { count?: number }) {
   return (
     <ul className="mt-4 flex flex-col gap-y-4">
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
-      <li className="h-4 w-full animate-pulse rounded bg-zinc-800" />
+      {[...Array(count)].map((n) => (
+        <li key={(n ?? Math.random()) + 3} className="h-4 w-full animate-pulse rounded bg-zinc-800" />
+      ))}
     </ul>
   );
 }

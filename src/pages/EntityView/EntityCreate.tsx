@@ -10,7 +10,7 @@ import { useCreateItem } from "../../CRUD/ItemsCRUD";
 import { EntityFieldTypes } from "../../utils/DefaultValues/EntityDefaults";
 
 type FieldProps = {
-  field: { title: string; type: string };
+  field: { title: string; type: string; options: string[] };
   index: number;
   onChange: Dispatch<
     SetStateAction<
@@ -18,6 +18,7 @@ type FieldProps = {
         id: string;
         title: string;
         type: string;
+        options: string[];
       }[]
     >
   >;
@@ -43,6 +44,41 @@ function EntityField({ field, index, onChange }: FieldProps) {
           value={field.type}
         />
       </div>
+      {field.type === "single_option" || field.type === "multiple_options" ? (
+        <>
+          <div className="col-span-2">
+            <h4 className="flex items-end justify-between border-b border-zinc-700 font-Lato">
+              <span>Options</span>
+              <Button
+                className="p-button-text"
+                icon="pi pi-plus"
+                onClick={() =>
+                  onChange((prev) => prev.map((f, i) => (i === index ? { ...f, options: [...f.options, "New option"] } : f)))
+                }
+                size="small"
+              />
+            </h4>
+          </div>
+          <div className="col-span-2 flex flex-col gap-y-2">
+            {field.options.map((option, i) => (
+              <div key={i.toFixed()} className="flex flex-nowrap gap-x-2">
+                <InputText
+                  className="p-inputtext-sm w-full"
+                  onChange={(e) => {
+                    const temp = [...field.options];
+                    temp[i] = e.target.value;
+                    onChange((prev) => prev.map((f, idx) => (idx === index ? { ...f, options: temp } : f)));
+                  }}
+                  value={option}
+                />
+                <div className="col-span-1">
+                  <Button className="p-button-text p-button-danger " icon="pi pi-trash" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : null}
     </>
   );
 }
@@ -50,7 +86,7 @@ function EntityField({ field, index, onChange }: FieldProps) {
 export default function EntityCreate() {
   const { project_id } = useParams();
   const [entity, setEntity] = useState({ title: "", description: "" });
-  const [fields, setFields] = useState<{ id: string; title: string; type: string }[]>([]);
+  const [fields, setFields] = useState<{ id: string; title: string; type: string; options: string[] }[]>([]);
 
   const { mutate } = useCreateItem<{
     title: string;
@@ -60,14 +96,14 @@ export default function EntityCreate() {
   }>("entities");
 
   return (
-    <div className="flex h-full w-full justify-center">
-      <div className="flex h-full w-full max-w-2xl flex-col gap-y-4 p-4">
+    <div className="flex h-full w-full justify-center p-4">
+      <div className="flex h-full w-full max-w-3xl flex-col gap-y-4">
         <div className="w-full">
           <DrawerSectionTitle title="Entity title" />
           <InputText
             className="w-full"
-            onChange={(e) => setEntity((prev) => ({ ...prev, title: e.target.value }))}
-            placeholder="Entity title (e.g. Characters)"
+            onChange={(e) => setEntity((prev) => ({ ...prev, title: e.target.value.trim() }))}
+            placeholder="Must be unique for this project"
           />
         </div>
         <div className="w-full">
@@ -78,13 +114,13 @@ export default function EntityCreate() {
             placeholder="Entity description (optional)"
           />
         </div>
-        <div className="grid max-h-96 grid-cols-2 gap-4 overflow-y-auto">
-          <div className="col-span-2 flex items-center justify-between">
-            <h2 className="font-Lato text-xl">Fields</h2>
+        <div className="grid max-h-96 grid-cols-2 gap-4 overflow-y-auto px-4">
+          <div className="sticky top-0 z-10 col-span-2 flex items-center justify-between border-b border-zinc-700 bg-[#121212]">
+            <h2 className="font-Lato text-2xl">Fields</h2>
             <Button
               className="p-button-text p-button-rounded"
               icon="pi pi-plus"
-              onClick={() => setFields((prev) => [...prev, { id: crypto.randomUUID(), title: "", type: "" }])}
+              onClick={() => setFields((prev) => [...prev, { id: crypto.randomUUID(), title: "", type: "", options: [] }])}
               tooltip="Add new field"
             />
           </div>

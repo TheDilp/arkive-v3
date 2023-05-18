@@ -66,6 +66,7 @@ function App() {
                 <Route element={<Layout />} path="/project/:project_id/*">
                   <Route path=":type/*">
                     <Route element={<CreateView />} path="create" />
+                    <Route element={<CreateView />} path="create/:item_id" />
                     <Route element={<FolderView />} path="" />
                     <Route element={<FolderView />} path="folder/:item_id" />
                     <Route element={<ContentView />} path=":item_id" />

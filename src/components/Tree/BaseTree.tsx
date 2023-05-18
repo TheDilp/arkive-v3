@@ -109,7 +109,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, filter, selectedTags]);
-  if (isLoadingItems) return <TreeSkeleton />;
+  if (isLoadingItems) return <TreeSkeleton count={10} />;
   return (
     <div
       className="flex h-full flex-col"
