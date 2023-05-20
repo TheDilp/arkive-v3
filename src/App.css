@@ -154,6 +154,10 @@ Inputs
     @apply list-decimal;
   }
 
+  hr {
+    @apply border-zinc-700 !important;
+  }
+
   ul {
     @apply list-disc;
   }
