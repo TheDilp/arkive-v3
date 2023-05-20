@@ -61,7 +61,7 @@ export default function CalendarEvent({ dayEvents, index, month, year, isReadOnl
   const setContextMenuData = useSetAtom(OtherContextMenuAtom);
   const setDrawer = useSetAtom(DrawerAtom);
   return (
-    <div className="flex flex-col gap-y-0.5 p-1">
+    <div className="flex h-full flex-1 flex-col gap-y-0.5 p-1">
       {dayEvents && visibleEvents.length
         ? visibleEvents.map((event) => (
             <Tooltip
@@ -78,7 +78,9 @@ export default function CalendarEvent({ dayEvents, index, month, year, isReadOnl
               }}
               disabled={!event?.documentsId && !event?.description}>
               <div
-                className="scrollbar-hidden max-h-12 overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-125"
+                className={`scrollbar-hidden relative overflow-y-auto rounded px-1 text-sm transition-all duration-100 hover:brightness-125 ${
+                  event?.backgroundImage ? "flex-1" : ""
+                }`}
                 onClick={() =>
                   setDrawer({
                     ...DefaultDrawer,
@@ -100,7 +102,14 @@ export default function CalendarEvent({ dayEvents, index, month, year, isReadOnl
                   color: event?.textColor || "#ffffff",
                 }}
                 tabIndex={-1}>
-                {event.title}
+                {event?.backgroundImage ? (
+                  <img
+                    alt={event?.title}
+                    className="absolute top-0 left-0 z-0 h-full w-full object-cover brightness-75"
+                    src={event?.backgroundImage}
+                  />
+                ) : null}
+                <span className="sticky top-0 z-10">{event.title}</span>
               </div>
             </Tooltip>
           ))

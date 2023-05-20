@@ -40,9 +40,10 @@ export interface EventType {
   id: string;
   title: string;
   description?: string;
+  backgroundImage?: string;
 
   textColor: string;
-  backgroundColor: string;
+  backgroundColor?: string;
 
   documentsId?: string;
   document?: DocumentType;

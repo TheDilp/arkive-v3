@@ -210,7 +210,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
                 {[...Array(monthDays).keys()].map((day, index) => (
                   <div
                     key={day}
-                    className="group col-span-1 h-56 border-b border-r border-zinc-700 hover:text-white"
+                    className="group col-span-1 flex h-56 flex-col border-b border-r border-zinc-700 hover:text-white"
                     onKeyDown={() => {}}
                     role="button"
                     tabIndex={-1}>

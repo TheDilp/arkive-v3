@@ -12,7 +12,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-import { useDeleteItem, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
+import { useDeleteItem, useGetAllImages, useGetAllItems, useUpdateSubItem } from "../../../CRUD/ItemsCRUD";
 import { useHandleChange } from "../../../hooks/useGetChanged";
 import { useGetItem } from "../../../hooks/useGetItem";
 import { baseURLS, createURLS, deleteURLs } from "../../../types/CRUDenums";
@@ -31,6 +31,8 @@ import ColorInput from "../../ColorInput/ColorInput";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
+import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 
 function disableEventSaveButton(localItem: EventType | EventCreateType) {
   if (!localItem.title || !localItem.day || (!localItem.month && typeof localItem.month !== "number") || !localItem.year)
@@ -100,6 +102,12 @@ export default function DrawerEventContent() {
     staleTime: 5 * 60 * 1000,
     enabled: !!calendar && !isFetching,
   });
+
+  const { data: images, isLoading: imagesLoading } = useGetAllImages(project_id as string, {
+    staleTime: 5 * 60 * 1000,
+    enabled: !!calendar && !isFetching,
+  });
+
   const deleteEventMutation = useDeleteItem("events", project_id as string);
 
   const [localItem, setLocalItem] = useState<EventType | EventCreateType>(
@@ -108,6 +116,7 @@ export default function DrawerEventContent() {
   const [monthDays, setMonthDays] = useState(0);
   const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
   const { mutateAsync } = useUpdateSubItem(item_id as string, "events", itemType);
+
   const createUpdateEvent = async () => {
     setLoading(true);
     if (changedData) {
@@ -290,6 +299,20 @@ export default function DrawerEventContent() {
           onChange={(e) => handleChange(e.target)}
           placeholder="Note: the event will use a document's content if selected."
           value={localItem.description || ""}
+        />
+      </DrawerSection>
+      <DrawerSection title="Event Background Image (optional)">
+        <Dropdown
+          disabled={isLoading}
+          dropdownIcon={isLoading ? "pi pi-spinner pi-spin" : "pi pi-chevron-down"}
+          filter
+          itemTemplate={ImageDropdownItem}
+          onChange={(e) => handleChange({ name: "backgroundImage", value: e.target.value })}
+          options={images || []}
+          placeholder="Select background image"
+          value={localItem.backgroundImage}
+          valueTemplate={ImageDropdownValue({ image: localItem?.backgroundImage })}
+          virtualScrollerOptions={virtualScrollerSettings}
         />
       </DrawerSection>
       <DrawerSection title="Event Document (optional)">
