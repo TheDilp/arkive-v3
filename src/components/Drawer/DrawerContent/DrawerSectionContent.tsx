@@ -123,16 +123,15 @@ export default function DrawerSectionContent() {
           value={localItem?.cardSize}
         />
       </DrawerSection>
-
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        disabled={isLoadingCreate || isLoadingUpdate || !localItem?.title}
-        loading={isLoadingCreate || isLoadingUpdate}
-        onClick={createUpdateSection}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success ml-auto"
+          disabled={isLoadingCreate || isLoadingUpdate || !localItem?.title}
+          loading={isLoadingCreate || isLoadingUpdate}
+          onClick={createUpdateSection}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {localItem?.id ? (
           <Button
             className="p-button-outlined  p-button-danger w-full"

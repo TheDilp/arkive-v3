@@ -71,26 +71,26 @@ export default function DrawerDictionaryContent() {
         value={localItem?.title || ""}
       />
 
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        loading={createDictionaryMutation.isLoading || updateDictionaryMutation.isLoading}
-        onClick={async () => {
-          await createUpdateItem<DictionaryType>(
-            dictionary,
-            localItem,
-            changedData,
-            DefaultDictionary,
-            allDictionaries,
-            resetChanges,
-            createDictionaryMutation.mutateAsync,
-            updateDictionaryMutation.mutateAsync,
-            setDrawer,
-          );
-        }}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success ml-auto"
+          loading={createDictionaryMutation.isLoading || updateDictionaryMutation.isLoading}
+          onClick={async () => {
+            await createUpdateItem<DictionaryType>(
+              dictionary,
+              localItem,
+              changedData,
+              DefaultDictionary,
+              allDictionaries,
+              resetChanges,
+              createDictionaryMutation.mutateAsync,
+              updateDictionaryMutation.mutateAsync,
+              setDrawer,
+            );
+          }}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"

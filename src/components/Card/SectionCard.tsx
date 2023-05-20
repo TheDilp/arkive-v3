@@ -6,6 +6,8 @@ import { deleteItem } from "../../utils/Confirms/Confirm";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { getCardSizeClass } from "../../utils/screenUtils";
 import StaticRender from "../Editor/StaticRender";
+import DefaultTooltip from "../Tooltip/DefaultTooltip";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
   card: CardType;
@@ -18,17 +20,19 @@ type Props = {
 
 export default function SectionCard({ card, deleteCard, updateCard, cardSize, isExpanded: expanded, isReadOnly }: Props) {
   return (
-    <div key={card.id} className="w-full max-w-full rounded-sm bg-zinc-700">
+    <div className="w-full max-w-full rounded-sm bg-zinc-700">
       <h4 className="group flex h-10 w-full items-center justify-between gap-x-2  py-2 font-Lato text-lg ">
         <span className="select-none truncate px-2">{card.document.title}</span>
         {isReadOnly ? null : (
           <div className="flex items-center">
             <Link to={`../../documents/${card.documentsId}`}>
-              <Icon
-                className="cursor-pointer opacity-0 transition-all group-hover:opacity-100"
-                fontSize={20}
-                icon={IconEnum.edit}
-              />
+              <Tooltip allowedPlacements={["top", "bottom"]} content={<DefaultTooltip>Edit document</DefaultTooltip>}>
+                <Icon
+                  className="cursor-pointer opacity-0 transition-all hover:text-sky-400 group-hover:opacity-100"
+                  fontSize={20}
+                  icon={IconEnum.edit}
+                />
+              </Tooltip>
             </Link>
             <Icon
               className="cursor-pointer opacity-0 transition-all hover:text-red-400 group-hover:opacity-100"

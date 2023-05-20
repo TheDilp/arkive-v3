@@ -127,7 +127,7 @@ export default function DrawerBoardContent() {
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Folder?</span>
         <Checkbox
-          checked={localItem.folder}
+          checked={!!localItem.folder}
           onChange={(e) =>
             handleChange({
               name: "folder",
@@ -139,7 +139,7 @@ export default function DrawerBoardContent() {
       <div className="flex items-center justify-between">
         <span className="p-checkbox-label">Is Public?</span>
         <Checkbox
-          checked={localItem.isPublic}
+          checked={!!localItem.isPublic}
           onChange={(e) =>
             handleChange({
               name: "isPublic",
@@ -148,28 +148,27 @@ export default function DrawerBoardContent() {
           }
         />
       </div>
-
-      <Button
-        className="p-button-outlined p-button-success ml-auto h-10 min-h-[2.5rem]"
-        disabled={createBoardMutation.isLoading || updateBoardMutation.isLoading}
-        loading={createBoardMutation.isLoading || updateBoardMutation.isLoading}
-        onClick={async () =>
-          createUpdateItem<BoardType>(
-            board,
-            localItem,
-            changedData,
-            DefaultBoard,
-            allBoards,
-            resetChanges,
-            createBoardMutation.mutateAsync,
-            updateBoardMutation.mutateAsync,
-            setDrawer,
-          )
-        }
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success ml-auto h-10 min-h-[2.5rem]"
+          disabled={createBoardMutation.isLoading || updateBoardMutation.isLoading}
+          loading={createBoardMutation.isLoading || updateBoardMutation.isLoading}
+          onClick={async () =>
+            createUpdateItem<BoardType>(
+              board,
+              localItem,
+              changedData,
+              DefaultBoard,
+              allBoards,
+              resetChanges,
+              createBoardMutation.mutateAsync,
+              updateBoardMutation.mutateAsync,
+              setDrawer,
+            )
+          }
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {board ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"

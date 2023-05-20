@@ -120,26 +120,26 @@ export default function DrawerMapContent() {
           onChange={(e) => handleChange({ name: "clusterPins", value: e.checked })}
         />
       </div>
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        loading={createMapMutation.isLoading || updateMapMutation.isLoading}
-        onClick={async () =>
-          createUpdateItem<MapType>(
-            map,
-            localItem,
-            changedData,
-            DefaultMap,
-            allMaps,
-            resetChanges,
-            createMapMutation.mutateAsync,
-            updateMapMutation.mutateAsync,
-            setDrawer,
-          )
-        }
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success ml-auto"
+          loading={createMapMutation.isLoading || updateMapMutation.isLoading}
+          onClick={async () =>
+            createUpdateItem<MapType>(
+              map,
+              localItem,
+              changedData,
+              DefaultMap,
+              allMaps,
+              resetChanges,
+              createMapMutation.mutateAsync,
+              updateMapMutation.mutateAsync,
+              setDrawer,
+            )
+          }
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {map ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"

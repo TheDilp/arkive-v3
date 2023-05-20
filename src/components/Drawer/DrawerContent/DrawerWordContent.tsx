@@ -122,18 +122,17 @@ export default function DrawerWordContent() {
         rows={8}
         value={localItem?.description || ""}
       />
-
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        disabled={disableWordSaveButton(localItem)}
-        loading={createWordMutation.isLoading || updateWordMutation.isLoading}
-        onClick={async () => {
-          createUpdateWord();
-        }}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success ml-auto"
+          disabled={disableWordSaveButton(localItem)}
+          loading={createWordMutation.isLoading || updateWordMutation.isLoading}
+          onClick={async () => {
+            createUpdateWord();
+          }}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"

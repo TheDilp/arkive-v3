@@ -173,27 +173,27 @@ export default function DrawerDocumentContent() {
         </div>
       </div>
 
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        disabled={!localItem.title}
-        loading={createDocumentMutation.isLoading || updateDocumentMutation.isLoading}
-        onClick={async () => {
-          await createUpdateItem<DocumentType>(
-            document,
-            localItem,
-            changedData,
-            DefaultDocument,
-            allDocuments,
-            resetChanges,
-            createDocumentMutation.mutateAsync,
-            updateDocumentMutation.mutateAsync,
-            setDrawer,
-          );
-        }}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-1">
+        <Button
+          className="p-button-outlined p-button-success ml-auto"
+          disabled={!localItem.title}
+          loading={createDocumentMutation.isLoading || updateDocumentMutation.isLoading}
+          onClick={async () => {
+            await createUpdateItem<DocumentType>(
+              document,
+              localItem,
+              changedData,
+              DefaultDocument,
+              allDocuments,
+              resetChanges,
+              createDocumentMutation.mutateAsync,
+              updateDocumentMutation.mutateAsync,
+              setDrawer,
+            );
+          }}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger h-10 min-h-[2.5rem] w-full"

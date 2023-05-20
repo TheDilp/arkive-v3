@@ -112,27 +112,27 @@ export default function DrawerTimelineContent() {
           value={localItem?.calendars?.map((cal) => cal?.id) || []}
         />
       </DrawerSection>
-      <Button
-        className="p-button-outlined p-button-success"
-        disabled={createTimelineMutation.isLoading || updateTimelineMutation.isLoading || !localItem?.title}
-        loading={createTimelineMutation.isLoading || updateTimelineMutation.isLoading}
-        onClick={async () => {
-          await createUpdateItem<TimelineType>(
-            timeline,
-            localItem,
-            changedData,
-            DefaultTimeline,
-            allTimelines,
-            resetChanges,
-            createTimelineMutation.mutateAsync,
-            updateTimelineMutation.mutateAsync,
-            setDrawer,
-          );
-        }}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success"
+          disabled={createTimelineMutation.isLoading || updateTimelineMutation.isLoading || !localItem?.title}
+          loading={createTimelineMutation.isLoading || updateTimelineMutation.isLoading}
+          onClick={async () => {
+            await createUpdateItem<TimelineType>(
+              timeline,
+              localItem,
+              changedData,
+              DefaultTimeline,
+              allTimelines,
+              resetChanges,
+              createTimelineMutation.mutateAsync,
+              updateTimelineMutation.mutateAsync,
+              setDrawer,
+            );
+          }}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {localItem?.id ? (
           <Button
             className="p-button-outlined p-button-danger w-full"

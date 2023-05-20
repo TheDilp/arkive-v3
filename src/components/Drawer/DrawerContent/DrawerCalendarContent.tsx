@@ -335,7 +335,7 @@ export default function DrawerCalendarContent() {
         </Button>
       </div>
 
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
         {calendar ? (
           <Button
             className="p-button-outlined p-button-danger w-full"

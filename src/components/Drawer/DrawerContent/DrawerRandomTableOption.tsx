@@ -129,17 +129,17 @@ export default function DrawerRandomTableOptionContent() {
           value={localItem.description}
         />
       </DrawerSection>
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        disabled={loading || !localItem?.title}
-        loading={loading}
-        onClick={async () => {
-          await createUpdateRandomTableOption();
-        }}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success ml-auto"
+          disabled={loading || !localItem?.title}
+          loading={loading}
+          onClick={async () => {
+            await createUpdateRandomTableOption();
+          }}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {document ? (
           <Button
             className="p-button-outlined  p-button-danger w-full"

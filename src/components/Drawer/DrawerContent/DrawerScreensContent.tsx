@@ -93,27 +93,27 @@ export default function DrawerScreensContent() {
           />
         </DrawerSection>
       </div>
-      <Button
-        className="p-button-outlined p-button-success ml-auto"
-        disabled={createScreenMutation.isLoading || updateScreenMutation.isLoading || isDisabledSaveScreen(localItem)}
-        loading={createScreenMutation.isLoading || updateScreenMutation.isLoading}
-        onClick={async () => {
-          await createUpdateItem<ScreenType>(
-            screen,
-            localItem,
-            changedData,
-            DefaultScreen,
-            allScreens,
-            resetChanges,
-            createScreenMutation.mutateAsync,
-            updateScreenMutation.mutateAsync,
-            setDrawer,
-          );
-        }}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
-      <div className="mt-auto flex w-full">
+      <div className="mt-auto flex w-full flex-col gap-y-2">
+        <Button
+          className="p-button-outlined p-button-success ml-auto"
+          disabled={createScreenMutation.isLoading || updateScreenMutation.isLoading || isDisabledSaveScreen(localItem)}
+          loading={createScreenMutation.isLoading || updateScreenMutation.isLoading}
+          onClick={async () => {
+            await createUpdateItem<ScreenType>(
+              screen,
+              localItem,
+              changedData,
+              DefaultScreen,
+              allScreens,
+              resetChanges,
+              createScreenMutation.mutateAsync,
+              updateScreenMutation.mutateAsync,
+              setDrawer,
+            );
+          }}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
         {document ? (
           <Button
             className=" p-button-outlined p-button-danger w-full"

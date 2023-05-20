@@ -384,21 +384,6 @@ export default function DrawerNodeContent() {
           loading={isUpdating}
           onClick={() => {
             updateNode();
-
-            // if (selectedTemplate) {
-            //   //   const { id, template, document, x, y, label, ...restTemplate } = selectedTemplate;
-            //   //   const { show, ...restDialog } = localItem;
-            //   //   updateNodeMutation.mutate({
-            //   //     ...restDialog,
-            //   //     ...restTemplate,
-            //   //     board_id: board_id as string,
-            //   //   });
-            //   //   setSelectedTemplate(null);
-            //   //   toastSuccess("Template Applied");
-            //   // } else {
-
-            //   setSelectedTemplate(null);
-            // }
           }}
           type="submit"
         />
