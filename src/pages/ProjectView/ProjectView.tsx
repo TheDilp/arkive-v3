@@ -43,9 +43,9 @@ export default function ProjectView() {
   if (projectDetails)
     return (
       <div className="grid h-full grid-cols-4 content-start items-start gap-4 p-20">
-        <div className="col-span-4 lg:col-span-3">
+        <div className="col-span-4">
           <Card className="h-48 w-full" title={projectDetails.title}>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-y-2">
               <div className="flex w-full items-center">
                 <Avatar
                   image={projectDetails.owner.image}
@@ -53,23 +53,24 @@ export default function ProjectView() {
                   shape="circle"
                   size="large"
                 />
-                <span className="ml-2">{projectDetails.owner.nickname}</span>
+                <span className="ml-2">
+                  {projectDetails.owner.nickname}
+                  <span className="pl-2 text-sm italic text-zinc-400">(Project owner)</span>
+                </span>
               </div>
-            </div>
-          </Card>
-        </div>
-        <div className="col-span-4 lg:col-span-1">
-          <Card className="h-48 w-full" title="Project members">
-            <div className="flex h-full flex-col overflow-y-auto">
               {projectDetails.members.map((user) => (
                 <div key={user.user_id} className="flex w-full items-center">
                   <Avatar image={user.member.image} label={user.member.nickname.slice(0, 1)} shape="circle" size="large" />
-                  <span className="ml-2">{user.member.nickname}</span>
+                  <span className="ml-2">
+                    {user.member.nickname}
+                    <span className="pl-2 text-sm italic text-zinc-400">(Project member)</span>
+                  </span>
                 </div>
               ))}
             </div>
           </Card>
         </div>
+
         {statItems.map((item) => (
           <div className="col-span-4 md:col-span-2 lg:col-span-1">
             <Card
@@ -80,14 +81,16 @@ export default function ProjectView() {
               {projectDetails[item.item].length === 0 ? (
                 <span className="italic text-zinc-600">There are no {item.item.replaceAll("_", " ")} created yet.</span>
               ) : (
-                projectDetails[item.item].map((subItem) => (
-                  <Link
-                    key={subItem.id}
-                    className="truncate text-xl font-bold transition-colors hover:text-sky-400"
-                    to={`${item.item}/${subItem.id}`}>
-                    {subItem.title}
-                  </Link>
-                ))
+                <div className="flex flex-col gap-y-2">
+                  {projectDetails[item.item].map((subItem) => (
+                    <Link
+                      key={subItem.id}
+                      className="truncate text-xl font-bold transition-colors hover:text-sky-400"
+                      to={`${item.item}/${subItem.id}`}>
+                      {subItem.title}
+                    </Link>
+                  ))}
+                </div>
               )}
             </Card>
           </div>
