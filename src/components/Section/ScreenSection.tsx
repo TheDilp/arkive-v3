@@ -5,7 +5,7 @@
 import { Draggable, DraggableProvided, Droppable } from "@hello-pangea/dnd";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { SetStateAction, useAtom, useSetAtom } from "jotai";
+import { SetStateAction, useSetAtom } from "jotai";
 import { Dispatch, useCallback } from "react";
 import { useParams } from "react-router-dom";
 

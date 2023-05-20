@@ -3,6 +3,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-no-bind */
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { Button } from "primereact/button";
@@ -18,7 +19,6 @@ import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { onDragEnd } from "../../utils/screenUtils";
 import { getItem } from "../../utils/storage";
 import { setExpanded } from "../../utils/uiUtils";
-import { Icon } from "@iconify/react";
 
 type Props = {
   id?: string;
