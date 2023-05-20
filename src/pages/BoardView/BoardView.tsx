@@ -252,7 +252,6 @@ export default function BoardView({ isReadOnly }: Props) {
       // If the target is the background of the canvas
       if (evt.target === cyRef?.current?._cy && boardState.addNodes) {
         const { x, y } = evt.position;
-        console.log(x, y);
         const id = crypto.randomUUID();
         setNodes((prev) => [
           ...prev,

@@ -47,12 +47,15 @@ export default function Dashboard() {
             <div className="flex w-full flex-1 flex-wrap items-start justify-start gap-x-6 gap-y-6 px-6 py-4 pl-6">
               {isLoading ? (
                 <>
-                  <ProjectCardSkeleton /> <ProjectCardSkeleton /> <ProjectCardSkeleton /> <ProjectCardSkeleton />
+                  <ProjectCardSkeleton /> <ProjectCardSkeleton /> <ProjectCardSkeleton />
                 </>
               ) : null}
-              {!isLoading && isFetched
+              {!isLoading && projects && projects.length
                 ? projects?.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
-                : "Click the button on the left to create a new project."}
+                : null}
+              {projects?.length === 0 && isFetched ? (
+                <span className="text-lg">Click the plus button to create a new project.</span>
+              ) : null}
             </div>
             {!isLg ? <DashboardSidebar /> : null}
           </div>
