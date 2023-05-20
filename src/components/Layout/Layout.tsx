@@ -65,7 +65,7 @@ export default function LayoutWrapper() {
           </>
         ) : null}
 
-        <div className="flex h-full w-full flex-1 flex-col overflow-hidden">
+        <div className="flex h-full w-full flex-1 flex-col justify-between overflow-hidden">
           <Navbar />
           {user || isFetchingProject ? (
             <Suspense fallback={<LoadingScreen />}>
