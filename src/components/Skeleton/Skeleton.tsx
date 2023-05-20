@@ -56,7 +56,7 @@ export function ProjectViewSkeleton() {
 
 export function ScreenViewSkeleton() {
   return (
-    <div className="flex flex-col gap-y-2 p-4">
+    <div className="flex flex-col gap-y-2">
       <div className="h-10 w-44 min-w-[6rem] animate-pulse bg-zinc-800" />
       <div className="flex gap-x-2">
         <div className="flex w-[25rem] min-w-[25rem] max-w-[25rem] flex-col gap-y-1">
