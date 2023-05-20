@@ -47,7 +47,7 @@ export default function ProjectView() {
 
   if (projectDetails)
     return (
-      <div className="grid h-full grid-cols-4 content-start items-start gap-4 p-20">
+      <div className="grid h-full grid-cols-4 content-start items-start gap-4 overflow-auto p-20">
         <div
           className="col-span-1 hidden h-full lg:block"
           style={{
