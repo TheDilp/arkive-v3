@@ -11,6 +11,14 @@
     @apply pl-0;
   }
 }
+.projectViewCard {
+  .p-card-body {
+    @apply relative !important;
+    .p-card-title {
+      @apply sticky top-0 z-10 bg-[#1e1e1e] !important;
+    }
+  }
+}
 .p-breadcrumb {
   @apply border-transparent bg-transparent !important;
 }

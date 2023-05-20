@@ -18,10 +18,14 @@ const statItems = [
   { title: "Random tables", icon: IconEnum.randomtables, item: "random_tables" as const },
 ];
 
-function CountHeader(count: number, icon: string) {
+function CountHeader(count: number, icon: string, item: string) {
   return (
     <div className="flex items-center justify-between text-3xl font-bold">
-      {count} <Icon fontSize={32} icon={icon} />
+      {count}
+      <span className="flex items-center gap-x-2 text-2xl font-semibold text-zinc-300">
+        {item.replaceAll("_", " ")}
+        <Icon fontSize={32} icon={icon} />
+      </span>
     </div>
   );
 }
@@ -74,9 +78,8 @@ export default function ProjectView() {
         {statItems.map((item) => (
           <div className="col-span-4 md:col-span-2 lg:col-span-1">
             <Card
-              className="h-56 overflow-y-auto"
-              subTitle={item.title}
-              title={() => CountHeader(projectDetails._count[item.item], item.icon)}>
+              className=" projectViewCard h-64 overflow-y-auto"
+              title={() => CountHeader(projectDetails._count[item.item], item.icon, item.title)}>
               <h4 className="text-lg font-light text-zinc-600">Latest</h4>
               {projectDetails[item.item].length === 0 ? (
                 <span className="italic text-zinc-600">There are no {item.item.replaceAll("_", " ")} created yet.</span>

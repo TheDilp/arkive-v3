@@ -41,14 +41,14 @@ export function ProjectViewSkeleton() {
   return (
     <div className="grid h-full w-full grid-cols-4 content-start gap-4 p-20">
       <div className="col-span-4 h-48 animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56 animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56  animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56  animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56  animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56  animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56  animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56  animate-pulse rounded bg-zinc-800" />
-      <div className="col-span-1 h-56 animate-pulse rounded bg-zinc-800" />
+      <div className="col-span-4 h-64 animate-pulse rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
+      <div className="col-span-4 h-64 animate-pulse  rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
+      <div className="col-span-4 h-64 animate-pulse  rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
+      <div className="col-span-4 h-64 animate-pulse  rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
+      <div className="col-span-4 h-64 animate-pulse  rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
+      <div className="col-span-4 h-64 animate-pulse  rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
+      <div className="col-span-4 h-64 animate-pulse  rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
+      <div className="col-span-4 h-64 animate-pulse rounded bg-zinc-800 md:col-span-2 lg:col-span-1" />
     </div>
   );
 }
