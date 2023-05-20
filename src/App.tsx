@@ -17,12 +17,12 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import Dashboard from "./pages/Dashboard";
-import ProjectView from "./pages/ProjectView/ProjectView";
 
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
 const SettingsContentView = lazy(() => import("./pages/ContentView/SettingsContentView"));
 const FolderView = lazy(() => import("./pages/FolderView/FolderView"));
 const PublicWrapper = lazy(() => import("./pages/PublicView/PublicWrapper"));
+const ProjectView = lazy(() => import("./pages/ProjectView/ProjectView"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
 
 const queryClient = new QueryClient({
