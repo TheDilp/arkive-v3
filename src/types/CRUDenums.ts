@@ -5,7 +5,7 @@ export const baseURLS = {
 export const getURLS = {
   //  Projects
   getSingleProject: "getsingleproject",
-
+  getSingleProjectDetails: "getprojectdetails",
   // Documents
   getSingleDocument: "getsingledocument",
   getManyDocuments: "getmanydocuments",

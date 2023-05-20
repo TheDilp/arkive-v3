@@ -266,7 +266,7 @@ export function useUpdatePermission(project_id: string) {
             return {
               ...old,
               members: old.members.map((member) => {
-                if (member.id === variables.user_id) {
+                if (member.user_id === variables.user_id) {
                   return {
                     ...member,
                     permissions: member.permissions.map((permission) => {

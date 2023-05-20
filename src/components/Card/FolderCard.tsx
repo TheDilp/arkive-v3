@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { MutableRefObject } from "react";
 import { Link, useParams } from "react-router-dom";
 

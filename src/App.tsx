@@ -17,6 +17,7 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import Dashboard from "./pages/Dashboard";
+import ProjectView from "./pages/ProjectView/ProjectView";
 
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
 const SettingsContentView = lazy(() => import("./pages/ContentView/SettingsContentView"));
@@ -63,6 +64,7 @@ function App() {
                 <Route element={<Profile />} path="user/:user_id" />
 
                 <Route element={<Layout />} path="/project/:project_id/*">
+                  <Route element={<ProjectView />} path="" />
                   <Route path=":type/*">
                     <Route element={<FolderView />} path="" />
                     <Route element={<FolderView />} path="folder/:item_id" />

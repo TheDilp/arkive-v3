@@ -2,8 +2,8 @@ import { useAtomValue } from "jotai";
 import { MutableRefObject, useRef } from "react";
 import { useParams } from "react-router-dom";
 
+import FolderCard from "../../components/Card/FolderCard";
 import ContextMenu from "../../components/ContextMenu/ContextMenu";
-import FolderCard from "../../components/Folder/FolderCard";
 import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
 import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { useTreeMenuItems } from "../../utils/contextMenus";

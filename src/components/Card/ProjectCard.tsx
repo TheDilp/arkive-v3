@@ -12,7 +12,7 @@ import { Tooltip } from "../Tooltip/Tooltip";
 
 export default function ProjectCard({ id, image, title }: ProjectType) {
   const header = (
-    <Link className="relative h-60 no-underline" to={`/project/${id}/documents`}>
+    <Link className="relative h-60 no-underline" to={`/project/${id}`}>
       <img
         alt="Card"
         className="h-60 w-full cursor-pointer"

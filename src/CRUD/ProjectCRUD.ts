@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
-import { ProjectType, SwatchType } from "../types/ItemTypes/projectTypes";
+import { ProjectDetails, ProjectType, SwatchType } from "../types/ItemTypes/projectTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -72,6 +72,22 @@ export const useGetSingleProject = (id: string, options?: UseQueryOptions) => {
     ["singleProject", id],
     async () =>
       FetchFunction({ url: `${baseURLS.baseServer}${getURLS.getSingleProject}`, method: "POST", body: JSON.stringify({ id }) }),
+    {
+      enabled: options?.enabled,
+      staleTime: 60 * 5 * 1000,
+      onSuccess: options?.onSuccess,
+    },
+  );
+};
+export const useGetProjectDetails = (id: string, options?: UseQueryOptions) => {
+  return useQuery<ProjectDetails>(
+    ["singleProjectDetails", id],
+    async () =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${getURLS.getSingleProjectDetails}`,
+        method: "POST",
+        body: JSON.stringify({ project_id: id }),
+      }),
     {
       enabled: options?.enabled,
       staleTime: 60 * 5 * 1000,
