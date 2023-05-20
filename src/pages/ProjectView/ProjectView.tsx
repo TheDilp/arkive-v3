@@ -71,7 +71,7 @@ export default function ProjectView() {
           </Card>
         </div>
         {statItems.map((item) => (
-          <div className="col-span-1">
+          <div className="col-span-4 md:col-span-2 lg:col-span-1">
             <Card
               className="h-56 overflow-y-auto"
               subTitle={item.title}
