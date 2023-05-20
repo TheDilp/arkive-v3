@@ -3,6 +3,7 @@ import { Avatar } from "primereact/avatar";
 import { Card } from "primereact/card";
 import { Link, useParams } from "react-router-dom";
 
+import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ProjectViewSkeleton } from "../../components/Skeleton/Skeleton";
 import { useGetProjectDetails } from "../../CRUD/ProjectCRUD";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
@@ -47,7 +48,12 @@ export default function ProjectView() {
   if (projectDetails)
     return (
       <div className="grid h-full grid-cols-4 content-start items-start gap-4 p-20">
-        <div className="col-span-4">
+        <div className="col-span-4 flex items-center justify-between gap-x-4">
+          <img
+            alt={projectDetails.title}
+            className="hidden h-48 rounded lg:block"
+            src={projectDetails?.image || defaultImage}
+          />
           <Card className="h-48 w-full" title={projectDetails.title}>
             <div className="flex flex-col gap-y-2">
               <div className="flex w-full items-center">
@@ -76,7 +82,7 @@ export default function ProjectView() {
         </div>
 
         {statItems.map((item) => (
-          <div className="col-span-4 md:col-span-2 lg:col-span-1">
+          <div key={item.item} className="col-span-4 md:col-span-2 lg:col-span-1">
             <Card
               className=" projectViewCard h-64 overflow-y-auto"
               title={() => CountHeader(projectDetails._count[item.item], item.icon, item.title)}>
