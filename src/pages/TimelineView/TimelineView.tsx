@@ -165,12 +165,12 @@ export default function TimelineView({ isReadOnly }: Props) {
               overlfow-x-auto
               ${
                 viewSettings.view.value === "Horizontal"
-                  ? " flex w-full max-w-full overflow-x-auto"
+                  ? " flex h-full max-h-full w-full max-w-full overflow-x-auto overflow-y-hidden"
                   : "w-full max-w-6xl overflow-y-auto"
               }`}>
               <Timeline
                 align="alternate"
-                className={viewSettings.view.value === "Horizontal" ? "horizontalTimeline" : "vertical"}
+                className={viewSettings.view.value === "Horizontal" ? "horizontalTimeline" : "verticalTimeline"}
                 content={(event) => TimelineCard(event, viewSettings)}
                 layout={viewSettings.view.value === "Vertical" ? "vertical" : "horizontal"}
                 value={timeline?.calendars?.flatMap((cal) => cal.events) || []}
