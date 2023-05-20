@@ -18,6 +18,7 @@ import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { onDragEnd } from "../../utils/screenUtils";
 import { getItem } from "../../utils/storage";
 import { setExpanded } from "../../utils/uiUtils";
+import { Icon } from "@iconify/react";
 
 type Props = {
   id?: string;
@@ -39,6 +40,7 @@ export default function ScreenView({ id, isReadOnly }: Props) {
   const { project_id, item_id } = useParams();
   const { data, isLoading } = useGetItem<ScreenType>(id || (item_id as string), "screens");
   const [sections, setSections] = useState<SectionType[]>([]);
+  const allCollapsed = !sections.some((section) => section.expanded);
   const setDrawer = useSetAtom(DrawerAtom);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ export default function ScreenView({ id, isReadOnly }: Props) {
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-hidden p-4">
       {isReadOnly ? null : (
-        <div>
+        <div className="flex flex-nowrap gap-x-2">
           <Button
             className="p-button-outlined"
             icon="pi pi-plus"
@@ -64,6 +66,18 @@ export default function ScreenView({ id, isReadOnly }: Props) {
             label="Create Section"
             onClick={() => setDrawer({ ...DefaultDrawer, show: true, type: "sections" })}
           />
+          <Button
+            className="p-button-outlined"
+            label={allCollapsed ? "Expand All" : "Collapse All"}
+            onClick={() => {
+              setSections((prev: any) => {
+                return prev.map((prevSection: SectionType) => {
+                  return { ...prevSection, expanded: allCollapsed };
+                });
+              });
+            }}>
+            <Icon icon={`bx:${allCollapsed ? "expand" : "collapse"}-alt`} />
+          </Button>
         </div>
       )}
       <div className="flex h-full gap-x-2 overflow-hidden">

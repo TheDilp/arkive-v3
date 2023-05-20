@@ -5,7 +5,7 @@
 import { Draggable, DraggableProvided, Droppable } from "@hello-pangea/dnd";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { SetStateAction, useAtom } from "jotai";
+import { SetStateAction, useAtom, useSetAtom } from "jotai";
 import { Dispatch, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
@@ -32,7 +32,7 @@ type Props = {
 export default function ScreenSection({ section, providedSectionDraggable, sectionSize, setSections, isReadOnly }: Props) {
   const queryClient = useQueryClient();
   const { item_id } = useParams();
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
 
   const expandedCards = (getItem("cards-expanded") || []) as string[];
 
