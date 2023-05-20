@@ -37,7 +37,9 @@ export default function TimelineCard(
 
   return (
     <Card
-      className={`max-h-full overflow-y-auto ${viewMode === "Horizontal" ? "min-w-[36rem]" : "min-w-[20rem]"}`}
+      className={`max-h-full overflow-y-auto ${viewMode === "Horizontal" ? "min-w-[36rem]" : "min-w-[20rem]"} ${
+        !document?.content && !description && backgroundImage ? "timelineEventNoContent" : ""
+      }`}
       header={() => TimelineCardHeader({ title, subTitle: date, backgroundImage })}>
       <div className=" ">
         {document?.content ? (

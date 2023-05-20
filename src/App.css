@@ -445,3 +445,14 @@ Inputs
 .p-timeline-event-opposite {
   @apply overflow-hidden;
 }
+
+.timelineEventNoContent {
+  @apply h-full;
+  .p-card-header,
+  .p-card-header div {
+    @apply h-full;
+  }
+  .p-card-body {
+    @apply hidden;
+  }
+}
