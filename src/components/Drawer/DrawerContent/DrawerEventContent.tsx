@@ -28,11 +28,11 @@ import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { virtualScrollerSettings } from "../../../utils/uiUtils";
 import ColorInput from "../../ColorInput/ColorInput";
+import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
+import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 import Tags from "../../Tags/Tags";
 import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
-import { ImageDropdownItem } from "../../Dropdown/ImageDropdownItem";
-import ImageDropdownValue from "../../Dropdown/ImageDropdownValue";
 
 function disableEventSaveButton(localItem: EventType | EventCreateType) {
   if (!localItem.title || !localItem.day || (!localItem.month && typeof localItem.month !== "number") || !localItem.year)
@@ -303,8 +303,8 @@ export default function DrawerEventContent() {
       </DrawerSection>
       <DrawerSection title="Event Background Image (optional)">
         <Dropdown
-          disabled={isLoading}
-          dropdownIcon={isLoading ? "pi pi-spinner pi-spin" : "pi pi-chevron-down"}
+          disabled={imagesLoading}
+          dropdownIcon={imagesLoading ? "pi pi-spinner pi-spin" : "pi pi-chevron-down"}
           filter
           itemTemplate={ImageDropdownItem}
           onChange={(e) => handleChange({ name: "backgroundImage", value: e.target.value })}
@@ -357,14 +357,16 @@ export default function DrawerEventContent() {
         />
       </div>
       <hr className="border-zinc-600" />
-      <Button
-        className="p-button-outlined p-button-success"
-        disabled={disableEventSaveButton(localItem) || loading}
-        loading={loading}
-        onClick={() => createUpdateEvent()}
-        type="submit">
-        {buttonLabelWithIcon("Save", IconEnum.save)}
-      </Button>
+      <div className="mt-auto flex w-full">
+        <Button
+          className="p-button-outlined p-button-success w-full"
+          disabled={disableEventSaveButton(localItem) || loading}
+          loading={loading}
+          onClick={() => createUpdateEvent()}
+          type="submit">
+          {buttonLabelWithIcon("Save", IconEnum.save)}
+        </Button>
+      </div>
       <div className="mt-auto flex w-full">
         {localItem?.id ? (
           <Button
