@@ -30,7 +30,6 @@ export const navItems: NavItemType[] = [
   { icon: IconEnum.screen, navigate: "./screens", tooltip: "Screens" },
   { icon: IconEnum.dictionary, navigate: "./dictionaries", tooltip: "Dictionaries" },
   { icon: IconEnum.randomtables, navigate: "./randomtables", tooltip: "Random_Tables" },
-  { icon: IconEnum.entities, navigate: "./entities", tooltip: "Entities" },
 ];
 export const settingsItems: { icon: string; title: string; navigate: string }[] = [
   {
