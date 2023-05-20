@@ -6,7 +6,6 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { Button } from "primereact/button";
-import { ProgressSpinner } from "primereact/progressspinner";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -53,7 +52,7 @@ export default function ScreenView({ id, isReadOnly }: Props) {
       );
     }
   }, [data, id, item_id]);
-  // return <ScreenViewSkeleton />;
+
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-hidden p-4">
       {isReadOnly ? null : (
@@ -110,7 +109,7 @@ export default function ScreenView({ id, isReadOnly }: Props) {
             </Droppable>
           </DragDropContext>
         ) : (
-          <ProgressSpinner />
+          <ScreenViewSkeleton />
         )}
       </div>
     </div>
