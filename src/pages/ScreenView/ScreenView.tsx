@@ -11,6 +11,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import ScreenSection from "../../components/Section/ScreenSection";
+import { ScreenViewSkeleton } from "../../components/Skeleton/Skeleton";
 import { useGetItem } from "../../hooks/useGetItem";
 import { ScreenType, SectionType } from "../../types/ItemTypes/screenTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -52,6 +53,7 @@ export default function ScreenView({ id, isReadOnly }: Props) {
       );
     }
   }, [data, id, item_id]);
+  // return <ScreenViewSkeleton />;
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-hidden p-4">
       {isReadOnly ? null : (

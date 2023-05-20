@@ -53,3 +53,31 @@ export function ProjectViewSkeleton() {
     </div>
   );
 }
+
+export function ScreenViewSkeleton() {
+  return (
+    <div className="flex flex-col gap-y-2 p-4">
+      <div className="h-10 w-44 min-w-[6rem] animate-pulse bg-zinc-800" />
+      <div className="flex gap-x-2">
+        <div className="flex w-[25rem] min-w-[25rem] max-w-[25rem] flex-col gap-y-1">
+          <div className="mb-1 flex h-10 max-w-full animate-pulse items-center justify-between rounded bg-zinc-800 py-1 px-2" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+        </div>
+        <div className="flex w-[25rem] min-w-[25rem] max-w-[25rem] flex-col gap-y-1">
+          <div className="mb-1 flex h-10 max-w-full animate-pulse items-center justify-between rounded bg-zinc-800 py-1 px-2" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+        </div>
+        <div className="flex w-[25rem] min-w-[25rem] max-w-[25rem] flex-col gap-y-1">
+          <div className="mb-1 flex h-10 max-w-full animate-pulse items-center justify-between rounded bg-zinc-800 py-1 px-2" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+          <div className="h-[25rem] max-h-[25rem] min-h-[25rem] animate-pulse bg-zinc-800" />
+        </div>
+      </div>
+    </div>
+  );
+}
