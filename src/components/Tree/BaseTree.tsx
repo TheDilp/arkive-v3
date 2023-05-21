@@ -126,6 +126,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
       />
       <MultiSelect
         className="w-full p-0"
+        disabled={tags?.length === 0}
         display="chip"
         filter
         onChange={(e) => {
@@ -138,7 +139,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
         optionLabel="title"
         options={tags || []}
         optionValue="id"
-        placeholder="Filter by Tags"
+        placeholder={tags?.length ? "Filter by Tags" : "There are no tags"}
         showClear
         value={selectedTags}
       />
