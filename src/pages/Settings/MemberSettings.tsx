@@ -64,7 +64,11 @@ export default function MemberSettings() {
   const { user } = useAuth();
   const UserData = useAtomValue(UserAtom);
   const { mutateAsync: updatePermission } = useUpdatePermission(project_id as string);
-  const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
+  const {
+    data: projectData,
+    isFetching: isFetchingProject,
+    refetch,
+  } = useGetSingleProject(project_id as string, {
     enabled: !!user,
     onSuccess: (data) => {
       setProjectAtom(data as ProjectType);
@@ -97,70 +101,70 @@ export default function MemberSettings() {
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="documents"
           header="Documents"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="maps"
           header="Maps"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="boards"
           header="Maps"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="calendars"
           header="Calendars"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="timelines"
           header="Timelines"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="screens"
           header="Screens"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="dictionaries"
           header="Dictionaries"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="random_tables"
           header="Random Tables"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="tags"
           header="Tags"
         />
         <Column
           body={PermissionBody}
           className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission)}
+          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="title"
           header="Alter names"
         />

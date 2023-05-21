@@ -1,8 +1,9 @@
-import { UseMutateAsyncFunction } from "@tanstack/react-query";
+import { QueryObserverResult, RefetchOptions, RefetchQueryFilters, UseMutateAsyncFunction } from "@tanstack/react-query";
 import { ColumnEditorOptions } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 
 import { PermissionLevelType } from "../../../types/generalTypes";
+import { ProjectType } from "../../../types/ItemTypes/projectTypes";
 import { DefaultPermissions } from "../../../utils/DefaultValues/ProjectDefaults";
 
 export function PermissionEditor(
@@ -23,6 +24,9 @@ export function PermissionEditor(
       oldData: unknown;
     }
   >,
+  refetch: <TPageData>(
+    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
+  ) => Promise<QueryObserverResult<ProjectType, unknown>>,
 ) {
   const { rowData, editorCallback, field } = editorOptions;
   return (
@@ -30,6 +34,7 @@ export function PermissionEditor(
       onChange={async (e) => {
         if (editorCallback) {
           await updateItem({ id: rowData.permissions[0].id, user_id, permission: { name: field, value: e.value } });
+          await refetch();
           editorCallback(e.value);
         }
       }}
