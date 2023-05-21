@@ -1,16 +1,20 @@
 import { Icon } from "@iconify/react";
+import { useAtomValue } from "jotai";
 import { Card } from "primereact/card";
 import { Tooltip as PrimeTooltip } from "primereact/tooltip";
 import { Link } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { baseURLS } from "../../types/CRUDenums";
+import { PermissionCategoriesType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { navItems } from "../../utils/uiUtils";
+import { UserAtom } from "../../utils/Atoms/atoms";
+import { checkIfCategoryAllowed, navItems } from "../../utils/uiUtils";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 
-export default function ProjectCard({ id, image, title }: ProjectType) {
+export default function ProjectCard({ id, image, title, members }: ProjectType) {
+  const UserData = useAtomValue(UserAtom);
   const header = (
     <Link className="relative h-60 no-underline" to={`/project/${id}`}>
       <img
@@ -25,23 +29,34 @@ export default function ProjectCard({ id, image, title }: ProjectType) {
     <div className="grid grid-cols-4 gap-y-2">
       {navItems
         .filter((_, index) => index !== 0)
-        .map((navItem, index) => (
-          <Link
-            key={navItem.icon}
-            className="flex flex-1 justify-center no-underline"
-            to={`../project/${id}/${navItem.navigate}`}>
-            <PrimeTooltip
-              content={navItem.tooltip.replace("_", " ")}
-              position={index < 4 ? "top" : "bottom"}
-              target={`#${navItem.tooltip.replace("_", "")}`}
-            />
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:text-sky-400"
-              id={navItem.tooltip.replace("_", "")}>
-              <Icon fontSize={42} icon={navItem.icon} />
-            </div>
-          </Link>
-        ))}
+        .map((navItem, index) => {
+          const permission = members
+            ?.find((member) => member.user_id === UserData?.id)
+            ?.permissions.find((perm) => perm.project_id === id);
+          const category = checkIfCategoryAllowed(
+            permission ?? null,
+            (navItem.tooltip === "Graphs" ? "Boards" : navItem.tooltip).toLowerCase() as PermissionCategoriesType,
+          );
+          return (
+            <Link
+              key={navItem.icon}
+              className="flex flex-1 justify-center no-underline"
+              to={category ? `../project/${id}/${navItem.navigate}` : "#"}>
+              <PrimeTooltip
+                content={navItem.tooltip.replace("_", " ")}
+                position={index < 4 ? "top" : "bottom"}
+                target={`#${navItem.tooltip.replace("_", "")}`}
+              />
+              <div
+                className={`transition-color flex h-8 w-8 items-center justify-center rounded-full  ${
+                  category ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-700"
+                }`}
+                id={navItem.tooltip.replace("_", "")}>
+                <Icon fontSize={42} icon={navItem.icon} />
+              </div>
+            </Link>
+          );
+        })}
     </div>
   );
   return (

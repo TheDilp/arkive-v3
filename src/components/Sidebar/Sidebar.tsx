@@ -37,7 +37,10 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         </li>
       ) : null}
       {items.map((item) => {
-        const categoryPermission = checkIfCategoryAllowed(permission, item.tooltip.toLowerCase() as PermissionCategoriesType);
+        const categoryPermission = checkIfCategoryAllowed(
+          permission,
+          (item.tooltip === "Graphs" ? "Boards" : item.tooltip).toLowerCase() as PermissionCategoriesType,
+        );
         return (
           <Link
             key={item.icon}

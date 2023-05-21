@@ -117,7 +117,7 @@ export default function MemberSettings() {
           className="max-w-[5rem] truncate"
           editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
           field="boards"
-          header="Maps"
+          header="Graphs"
         />
         <Column
           body={PermissionBody}

@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useAtomValue } from "jotai";
 import { Avatar } from "primereact/avatar";
 import { Card } from "primereact/card";
 import { Link, useParams } from "react-router-dom";
@@ -6,7 +7,10 @@ import { Link, useParams } from "react-router-dom";
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ProjectViewSkeleton } from "../../components/Skeleton/Skeleton";
 import { useGetProjectDetails } from "../../CRUD/ProjectCRUD";
+import { PermissionCategoriesType } from "../../types/generalTypes";
+import { PermissionAtom } from "../../utils/Atoms/atoms";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
+import { checkIfCategoryAllowed } from "../../utils/uiUtils";
 
 const statItems = [
   { title: "Documents", icon: IconEnum.document, item: "documents" as const },
@@ -33,6 +37,7 @@ function CountHeader(count: number, icon: string, item: string) {
 
 export default function ProjectView() {
   const { project_id } = useParams();
+  const permission = useAtomValue(PermissionAtom);
   const {
     data: projectDetails,
     isLoading,
@@ -98,7 +103,11 @@ export default function ProjectView() {
                     <Link
                       key={subItem.id}
                       className="truncate text-xl font-bold transition-colors hover:text-sky-400"
-                      to={`${item.item}/${subItem.id}`}>
+                      to={
+                        checkIfCategoryAllowed(permission, item.item.toLowerCase() as PermissionCategoriesType)
+                          ? `${item.item}/${subItem.id}`
+                          : "#"
+                      }>
                       {subItem.title}
                     </Link>
                   ))}
