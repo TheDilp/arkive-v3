@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 
 import { SwatchType } from "../../types/ItemTypes/projectTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -15,7 +15,7 @@ export default function SwatchCard({
 }: SwatchType & {
   deleteSwatch: (swatchId: string) => void;
 }) {
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   return (
     <div className="group flex h-44 min-w-[10rem] flex-col overflow-hidden rounded border border-zinc-800 shadow-md">
       <div

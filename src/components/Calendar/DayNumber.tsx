@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 
 import { MonthType } from "../../types/ItemTypes/calendarTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
@@ -19,7 +19,7 @@ export default function DayNumber({
   isFiller?: boolean;
   isReadOnly?: boolean;
 }) {
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   return (
     <span className={`${isFiller ? "text-zinc-800" : ""} flex select-none items-center p-1`}>
       {dayNumber + 1}

@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { LatLngBoundsExpression } from "leaflet";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { ImageOverlay, LayerGroup, LayersControl, useMapEvents } from "react-leaflet";
@@ -63,8 +63,8 @@ export default function MapImage({ src, bounds, imgRef, cm, isReadOnly, isCluste
       setMarkerFilter("doc");
     }
   };
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const [, setMapContext] = useAtom(MapContextAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
+  const setMapContext = useSetAtom(MapContextAtom);
   // eslint-disable-next-line no-unused-vars
   const map = useMapEvents({
     contextmenu(e: any) {

@@ -1,4 +1,4 @@
-import { SetStateAction, useAtom } from "jotai";
+import { SetStateAction, useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -39,7 +39,7 @@ function ActionsColumn(
 }
 
 function LeftToolbarTemplate() {
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
   return (
     <div className="flex gap-x-2">
       <Button
@@ -57,7 +57,7 @@ export default function DictionaryView() {
   const { data: dictionary, isLoading } = useGetItem<DictionaryType>(item_id as string, "dictionaries");
 
   const deleteWordMutation = useDeleteSubItem(item_id as string, "words", "dictionaries");
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
 
   return (
     <div className="p-4">

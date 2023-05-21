@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Link, useParams } from "react-router-dom";
 import { capitalCase } from "remirror";
 
@@ -19,8 +19,8 @@ type Props = {
 export default function SearchResultGroup({ items, itemType, index }: Props) {
   const { project_id, subitem_id } = useParams();
 
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const [boardRef] = useAtom(BoardReferenceAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
+  const boardRef = useAtomValue(BoardReferenceAtom);
   if (!items.length) return null;
   return (
     <div>

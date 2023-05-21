@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import L, { LatLngExpression } from "leaflet";
 import { MutableRefObject, useState } from "react";
 import ReactDOM from "react-dom/server";
@@ -40,8 +40,8 @@ export default function MapPin({
   const { project_id } = useParams();
   const updateMapPin = useUpdateSubItem<MapPinType>(project_id as string, "map_pins", "maps");
   const [position, setPosition] = useState<LatLngExpression>([lat, lng]);
-  const [, setMapContext] = useAtom(MapContextAtom);
-  const [, setDrawer] = useAtom(DrawerAtom);
+  const setMapContext = useSetAtom(MapContextAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
 
   const eventHandlers = {
     click: (e: any) => {

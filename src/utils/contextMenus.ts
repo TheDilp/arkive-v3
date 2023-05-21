@@ -362,8 +362,8 @@ export function useTreeMenuItems(cmType: SidebarTreeItemType, type: AvailableIte
   const createItemMutation = useCreateItem<AllItemsType>(type);
   const updateItemMutation = useUpdateItem<AllItemsType>(type, project_id as string);
   const deleteItemMutation = useDeleteItem(type, project_id);
-  const [, setDrawer] = useAtom(DrawerAtom);
-  const [, setDialog] = useAtom(DialogAtom);
+  const setDrawer = useSetAtom(DrawerAtom);
+  const setDialog = useSetAtom(DialogAtom);
   const User = useAtomValue(UserAtom);
   const navigate = useNavigate();
 

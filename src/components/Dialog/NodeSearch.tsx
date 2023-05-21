@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { AutoComplete } from "primereact/autocomplete";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -10,8 +10,8 @@ import { DefaultDialog } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 export default function NodeSearch() {
   const { item_id } = useParams();
-  const [, setDialog] = useAtom(DialogAtom);
-  const [boardRef] = useAtom(BoardReferenceAtom);
+  const setDialog = useSetAtom(DialogAtom);
+  const boardRef = useAtomValue(BoardReferenceAtom);
   const { data: board } = useGetItem<BoardType>(item_id as string, "boards");
   const [search, setSearch] = useState("");
   const [filteredNodes, setFilteredNodes] = useState<NodeType[]>(board?.nodes.filter((node) => node.label) || []);
