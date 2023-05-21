@@ -136,7 +136,10 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
               e.stopPropagation();
               deleteItem(
                 "Are you sure you want to delete this item?",
-                () => deleteMutation?.mutate(node.id as string),
+                () => {
+                  deleteMutation?.mutate(node.id as string);
+                  if (item_id === node.id) navigate(`./${type}`);
+                },
                 () => toaster("info", "Item not deleted."),
               );
             }}
