@@ -21,7 +21,7 @@ import ColorInput from "../ColorInput/ColorInput";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 
-export default function BoardQuickBar() {
+export default function BoardQuickBar({ isViewOnly }: { isViewOnly?: boolean }) {
   const { item_id } = useParams();
   const boardRef = useAtomValue(BoardReferenceAtom);
   const [boardState, setBoardState] = useAtom(BoardStateAtom);
@@ -63,7 +63,7 @@ export default function BoardQuickBar() {
         <PrimeTooltip autoHide content="Reset selected to board's default colors" position="top" target=".resetColors" />
         <PrimeTooltip autoHide content="Edit selected elements" position="top" target=".editSelectedElements" />
 
-        <PrimeTooltip autoHide={false} hideEvent="focus" position="top" target=".colorPresets">
+        <PrimeTooltip autoHide={false} disabled={isViewOnly} hideEvent="focus" position="top" target=".colorPresets">
           <div className="flex w-40 flex-wrap gap-1">
             {ColorPresets.map((color: string) => (
               <button
@@ -84,8 +84,12 @@ export default function BoardQuickBar() {
       </span>
 
       <span
-        className={`flex cursor-pointer hover:text-sky-400 ${boardState.addNodes ? "text-green-500" : ""}  addNodes`}
-        onClick={() => setBoardState({ ...boardState, drawMode: false, addNodes: !boardState.addNodes })}>
+        className={`flex ${isViewOnly ? "cursor-not-allowed" : "cursor-pointer"} hover:text-sky-400 ${
+          boardState.addNodes ? "text-green-500" : ""
+        }  addNodes`}
+        onClick={() => {
+          if (!isViewOnly) setBoardState({ ...boardState, drawMode: false, addNodes: !boardState.addNodes });
+        }}>
         <Icon icon={IconEnum.add} />
       </span>
 
@@ -96,24 +100,24 @@ export default function BoardQuickBar() {
         <Icon icon={IconEnum.grid} />
       </span>
       {/* Lock selected elements button */}
-      <i
+      <span
         className="pi pi-fw pi-lock lockSelected cursor-pointer hover:text-sky-400"
         onClick={() => {
-          if (boardRef) changeLockState(boardRef, true, updateManyNodes);
+          if (boardRef && !isViewOnly) changeLockState(boardRef, true, updateManyNodes);
         }}
       />
       {/* Unlock selected elements button */}
-      <i
+      <span
         className="pi pi-fw pi-lock-open unlockSelected cursor-pointer hover:text-sky-400"
         onClick={() => {
-          if (boardRef) changeLockState(boardRef, false, updateManyNodes);
+          if (boardRef && !isViewOnly) changeLockState(boardRef, false, updateManyNodes);
         }}
       />
       {/* Delete selected elements button */}
       <i
         className="pi pi-fw pi-trash deleteSelected cursor-pointer hover:text-sky-400"
         onClick={() => {
-          if (!boardRef) return;
+          if (!boardRef || isViewOnly) return;
           const selected = boardRef.elements(":selected");
           if (selected.length === 0) {
             toaster("warning", "No elements are selected.");
@@ -148,7 +152,8 @@ export default function BoardQuickBar() {
               ))}
             </div>
           </DefaultTooltip>
-        }>
+        }
+        disabled={isViewOnly}>
         <span className="cursor-pointer">
           <Icon
             className={`cursor-pointer hover:text-sky-400 ${boardState.drawMode ? "text-sky-400" : ""}`}
@@ -164,7 +169,7 @@ export default function BoardQuickBar() {
         </span>
       </Tooltip>
       {/* Export button */}
-      <i
+      <span
         className="pi pi-download saveButton cursor-pointer hover:text-sky-400"
         onClick={() => {
           setExportDialog((prev) => ({

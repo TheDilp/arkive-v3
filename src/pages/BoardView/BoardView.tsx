@@ -27,9 +27,10 @@ import { formatImageURL } from "../../utils/transform";
 
 type Props = {
   isReadOnly?: boolean;
+  isViewOnly?: boolean;
 };
 
-export default function BoardView({ isReadOnly }: Props) {
+export default function BoardView({ isReadOnly, isViewOnly }: Props) {
   const cm = useRef() as MutableRefObject<any>;
   const cyRef = useRef() as any;
   const ehRef = useRef(undefined) as any;
@@ -103,10 +104,10 @@ export default function BoardView({ isReadOnly }: Props) {
 
   useEffect(() => {
     if (board?.nodes && board.nodes.length > 0 && !nodes.length) {
-      setNodes(mapNodes(board.nodes, isReadOnly));
+      setNodes(mapNodes(board.nodes, isReadOnly || isViewOnly));
     }
     if (board?.edges && board.edges.length > 0 && !edges.length) {
-      setEdges(mapEdges(board.edges, isReadOnly));
+      setEdges(mapEdges(board.edges, isReadOnly || isViewOnly));
     }
   }, [board?.nodes, board?.edges]);
 
@@ -134,7 +135,7 @@ export default function BoardView({ isReadOnly }: Props) {
 
   // Board Events
   useEffect(() => {
-    if (cyRef?.current?._cy && !isReadOnly) {
+    if (cyRef?.current?._cy && !isReadOnly && !isViewOnly) {
       // Right click
       cyRef?.current?._cy.on("cxttap", function (evt: any) {
         // If the target is the background of the canvas
@@ -463,7 +464,6 @@ export default function BoardView({ isReadOnly }: Props) {
         }
       }}>
       <ContextMenu cm={cm} items={contextItems} />
-
       <CytoscapeComponent
         ref={cyRef}
         className="h-[94%] w-full"
@@ -474,7 +474,7 @@ export default function BoardView({ isReadOnly }: Props) {
         // @ts-ignore
         stylesheet={styleSheet}
       />
-      {isReadOnly ? null : <BoardQuickBar />}
+      {isReadOnly ? null : <BoardQuickBar isViewOnly={isViewOnly} />}
     </div>
   );
 }

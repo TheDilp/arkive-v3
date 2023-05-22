@@ -7,11 +7,9 @@ import { CalendarType, EventType, MonthType } from "./ItemTypes/calendarTypes";
 import { DictionaryType, WordType } from "./ItemTypes/dictionaryTypes";
 import { DocumentType } from "./ItemTypes/documentTypes";
 import { MapLayerType, MapPinType, MapType } from "./ItemTypes/mapTypes";
-import { ProjectType } from "./ItemTypes/projectTypes";
 import { RandomTableOptionType, RandomTableType } from "./ItemTypes/randomTableTypes";
 import { CardType, ScreenType, SectionType } from "./ItemTypes/screenTypes";
 import { TimelineType } from "./ItemTypes/timelineTypes";
-import { UserType } from "./userTypes";
 
 export type AvailableItemTypes =
   | "documents"
@@ -184,7 +182,27 @@ export type FullSearchResults = {
   events: EventType[];
 };
 
-export type PermissionLevelType = "Edit" | "View" | "None";
+export type PermissionAccessLevels =
+  | "view_document"
+  | "edit_document"
+  | "view_map"
+  | "edit_map"
+  | "view_board"
+  | "edit_board"
+  | "view_screen"
+  | "edit_screen"
+  | "view_calendar"
+  | "edit_calendar"
+  | "view_timeline"
+  | "edit_timeline"
+  | "view_dictionaries"
+  | "edit_dictionaries"
+  | "view_random_tables"
+  | "edit_random_tables"
+  | "view_tags"
+  | "edit_tags"
+  | "view_alter_names"
+  | "edit_alter_names";
 
 export type PermissionCategoriesType =
   | "documents"
@@ -196,35 +214,7 @@ export type PermissionCategoriesType =
   | "dictionaries"
   | "random_tables"
   | "tags"
-  | "alter_names"
-  | "entities";
-
-export type MemberType = {
-  id: string;
-  project: ProjectType;
-  member: UserType;
-
-  permissions: PermissionType[];
-  project_id: string;
-  user_id: string;
-};
-export type PermissionType = {
-  id: string;
-  project_id: string;
-  user_id: string;
-  documents: PermissionLevelType;
-  maps: PermissionLevelType;
-  boards: PermissionLevelType;
-  screens: PermissionLevelType;
-  calendars: PermissionLevelType;
-  timelines: PermissionLevelType;
-  dictionaries: PermissionLevelType;
-  random_tables: PermissionLevelType;
-  tags: PermissionLevelType;
-  alter_names: PermissionLevelType;
-  entities: PermissionLevelType;
-  member?: MemberType;
-};
+  | "alter_names";
 
 export type IconCategoriesType = "general" | "weather";
 

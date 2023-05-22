@@ -9,13 +9,12 @@ import { baseURLS } from "../../types/CRUDenums";
 import { PermissionCategoriesType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserAtom } from "../../utils/Atoms/atoms";
-import { checkIfCategoryAllowed, navItems } from "../../utils/uiUtils";
+import { checkIfCategoryAllowed, checkIfOwner, navItems } from "../../utils/uiUtils";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 
 export default function ProjectCard({ id, image, title, ownerId, permissions }: ProjectType) {
   const UserData = useAtomValue(UserAtom);
-
   const header = (
     <Link className="relative h-60 no-underline" to={`/project/${id}`}>
       <img
@@ -31,16 +30,11 @@ export default function ProjectCard({ id, image, title, ownerId, permissions }: 
       {navItems
         .filter((_, index) => index !== 0)
         .map((navItem, index) => {
-          const permission = permissions.find((perm) => perm.project_id === id && perm?.member?.user_id === UserData?.id);
-          const isAllowed = checkIfCategoryAllowed(
-            ownerId === UserData?.auth_id ? "owner" : permission ?? null,
-            (navItem.tooltip === "Graphs" ? "Boards" : navItem.tooltip).toLowerCase() as PermissionCategoriesType,
-          );
           return (
             <Link
               key={navItem.icon}
               className="flex flex-1 justify-center no-underline"
-              to={isAllowed ? `../project/${id}/${navItem.navigate}` : "#"}>
+              to={true ? `../project/${id}/${navItem.navigate}` : "#"}>
               <PrimeTooltip
                 content={navItem.tooltip.replace("_", " ")}
                 position={index < 4 ? "top" : "bottom"}
@@ -48,7 +42,7 @@ export default function ProjectCard({ id, image, title, ownerId, permissions }: 
               />
               <div
                 className={`transition-color flex h-8 w-8 items-center justify-center rounded-full  ${
-                  isAllowed ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-700"
+                  true ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-700"
                 }`}
                 id={navItem.tooltip.replace("_", "")}>
                 <Icon fontSize={42} icon={navItem.icon} />

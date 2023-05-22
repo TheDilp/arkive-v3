@@ -19,6 +19,7 @@ export const IconEnum = {
   word: "codicon:whole-word",
   alter_names: "ph:arrows-left-right-thin",
   tags: "ph:tag-thin",
+  permissions: "ph:key",
 
   // Other
 

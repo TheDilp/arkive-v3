@@ -1,10 +1,4 @@
-import {
-  AllAvailableTypes,
-  IconCategoriesType,
-  NavItemType,
-  PermissionCategoriesType,
-  PermissionType,
-} from "../types/generalTypes";
+import { AllAvailableTypes, IconCategoriesType, NavItemType } from "../types/generalTypes";
 import { IconEnum } from "./DefaultValues/GeneralDefaults";
 import { getItem, setItem } from "./storage";
 
@@ -48,13 +42,14 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   { icon: IconEnum.tags, navigate: "./settings/tag-settings", title: "Tags" },
   { icon: IconEnum.alter_names, navigate: "./settings/alternative-names-settings", title: "Alternative Names" },
   { icon: IconEnum.image, navigate: "./settings/asset-settings", title: "Assets" },
+  { icon: IconEnum.permissions, navigate: "./settings/roles-permissions-settings", title: "Roles & Permissions" },
   { icon: IconEnum.users, navigate: "./settings/member-settings", title: "Members" },
   { icon: "ic:baseline-miscellaneous-services", navigate: "./settings/misc-settings", title: "Miscellaneous" },
 
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },
 ];
 
-export function checkIfOwner(permission?: null | "owner" | PermissionType) {
+export function checkIfOwner(permission?: null | "owner") {
   if (permission && permission === "owner") return true;
   return false;
 }
@@ -103,14 +98,9 @@ export function generateHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
 
-export function checkIfCategoryAllowed(permission: PermissionType | "owner" | null, category: PermissionCategoriesType) {
+export function checkIfCategoryAllowed(permission: "owner" | null) {
   if (permission === "owner") return true;
   if (permission === null) return false;
-  if (
-    typeof permission === "object" &&
-    permission[category] &&
-    (permission[category] === "Edit" || permission[category] === "View")
-  )
-    return true;
+
   return false;
 }

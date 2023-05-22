@@ -1,5 +1,5 @@
-import { MemberType, PermissionType } from "../generalTypes";
-import { UserType } from "../userTypes";
+import { PermissionAccessLevels, PermissionCategoriesType } from "../generalTypes";
+import { RoleType, UserType } from "../userTypes";
 import { BoardType } from "./boardTypes";
 import { CalendarType } from "./calendarTypes";
 import { DictionaryType } from "./dictionaryTypes";
@@ -15,12 +15,21 @@ export type SwatchType = {
   color: string;
 };
 
+export type PermissionType = {
+  id: string;
+  role: RoleType;
+  role_id: String;
+  resource_type: PermissionCategoriesType;
+  resource_id?: string;
+  permission: PermissionAccessLevels;
+};
+
 export type ProjectType = {
   id: string;
   title: string;
   image?: string;
   ownerId: string;
-  members: { member: MemberType; permissions: PermissionType[]; user_id: string }[];
+  members: UserType[];
   permissions: PermissionType[];
   swatches: SwatchType[];
 };
