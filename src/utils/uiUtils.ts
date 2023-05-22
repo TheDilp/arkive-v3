@@ -36,7 +36,7 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   { icon: IconEnum.board, navigate: "./settings/board-settings", title: "Graphs" },
   { icon: IconEnum.calendar, navigate: "./settings/calendar-settings", title: "Calendars" },
   // { icon: "mdi:timeline-outline", navigate: "./timelines", tooltip: "Timelines" },
-  { icon: IconEnum.board, navigate: "./settings/screen-settings", title: "Screens" },
+  { icon: IconEnum.screen, navigate: "./settings/screen-settings", title: "Screens" },
   { icon: IconEnum.dictionary, navigate: "./settings/dictionary-settings", title: "Dictionaries" },
   { icon: IconEnum.randomtables, navigate: "./settings/randomtable-settings", title: "Random Tables" },
   { icon: IconEnum.tags, navigate: "./settings/tag-settings", title: "Tags" },
