@@ -21,6 +21,7 @@ export type ProjectType = {
   image?: string;
   ownerId: string;
   members: { member: MemberType; permissions: PermissionType[]; user_id: string }[];
+  permissions: PermissionType[];
   swatches: SwatchType[];
 };
 

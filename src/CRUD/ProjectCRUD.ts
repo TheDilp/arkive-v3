@@ -185,7 +185,6 @@ export const useUpdateSwatch = (project_id: string) => {
     },
   );
 };
-
 export const useDeleteSwatch = (project_id: string) => {
   const queryClient = useQueryClient();
 

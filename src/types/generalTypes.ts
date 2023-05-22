@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import React from "react";
 import { RemirrorJSON } from "remirror";
 
@@ -198,6 +199,15 @@ export type PermissionCategoriesType =
   | "alter_names"
   | "entities";
 
+export type MemberType = {
+  id: string;
+  project: ProjectType;
+  member: UserType;
+
+  permissions: PermissionType[];
+  project_id: string;
+  user_id: string;
+};
 export type PermissionType = {
   id: string;
   project_id: string;
@@ -213,16 +223,7 @@ export type PermissionType = {
   tags: PermissionLevelType;
   alter_names: PermissionLevelType;
   entities: PermissionLevelType;
-};
-
-export type MemberType = {
-  id: string;
-  project: ProjectType;
-  member: UserType;
-
-  permissions: PermissionType[];
-  project_id: string;
-  user_id: string;
+  member?: MemberType;
 };
 
 export type IconCategoriesType = "general" | "weather";

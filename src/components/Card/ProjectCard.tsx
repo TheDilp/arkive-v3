@@ -13,8 +13,9 @@ import { checkIfCategoryAllowed, navItems } from "../../utils/uiUtils";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 
-export default function ProjectCard({ id, image, title, members }: ProjectType) {
+export default function ProjectCard({ id, image, title, ownerId, permissions }: ProjectType) {
   const UserData = useAtomValue(UserAtom);
+
   const header = (
     <Link className="relative h-60 no-underline" to={`/project/${id}`}>
       <img
@@ -30,11 +31,10 @@ export default function ProjectCard({ id, image, title, members }: ProjectType) 
       {navItems
         .filter((_, index) => index !== 0)
         .map((navItem, index) => {
-          const permission = members
-            ?.find((member) => member.user_id === UserData?.id)
-            ?.permissions.find((perm) => perm.project_id === id);
-          const category = checkIfCategoryAllowed(
-            permission ?? null,
+          const permission = permissions.find((perm) => perm.project_id === id && perm?.member?.user_id === UserData?.id);
+          const category = permission?.[navItem.tooltip.toLowerCase() as PermissionCategoriesType];
+          const isAllowed = checkIfCategoryAllowed(
+            ownerId === UserData?.auth_id ? "owner" : permission ?? null,
             (navItem.tooltip === "Graphs" ? "Boards" : navItem.tooltip).toLowerCase() as PermissionCategoriesType,
           );
           return (
@@ -49,7 +49,7 @@ export default function ProjectCard({ id, image, title, members }: ProjectType) 
               />
               <div
                 className={`transition-color flex h-8 w-8 items-center justify-center rounded-full  ${
-                  category ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-700"
+                  isAllowed ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-700"
                 }`}
                 id={navItem.tooltip.replace("_", "")}>
                 <Icon fontSize={42} icon={navItem.icon} />
