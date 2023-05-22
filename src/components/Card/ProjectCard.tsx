@@ -32,7 +32,6 @@ export default function ProjectCard({ id, image, title, ownerId, permissions }: 
         .filter((_, index) => index !== 0)
         .map((navItem, index) => {
           const permission = permissions.find((perm) => perm.project_id === id && perm?.member?.user_id === UserData?.id);
-          const category = permission?.[navItem.tooltip.toLowerCase() as PermissionCategoriesType];
           const isAllowed = checkIfCategoryAllowed(
             ownerId === UserData?.auth_id ? "owner" : permission ?? null,
             (navItem.tooltip === "Graphs" ? "Boards" : navItem.tooltip).toLowerCase() as PermissionCategoriesType,
@@ -41,7 +40,7 @@ export default function ProjectCard({ id, image, title, ownerId, permissions }: 
             <Link
               key={navItem.icon}
               className="flex flex-1 justify-center no-underline"
-              to={category ? `../project/${id}/${navItem.navigate}` : "#"}>
+              to={isAllowed ? `../project/${id}/${navItem.navigate}` : "#"}>
               <PrimeTooltip
                 content={navItem.tooltip.replace("_", " ")}
                 position={index < 4 ? "top" : "bottom"}
