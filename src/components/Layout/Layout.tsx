@@ -7,7 +7,6 @@ import { Outlet, useParams } from "react-router-dom";
 import { useGetUser } from "../../CRUD/AuthCRUD";
 import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { MemberType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
 import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
@@ -31,9 +30,7 @@ export default function LayoutWrapper() {
       staleTime: 1000 * 60 * 5,
       onSuccess: (data) => {
         if (data) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { members, ...rest } = data as UserType & { members: MemberType[] };
-          setUserAtom(rest);
+          setUserAtom(data as UserType);
         }
       },
     },

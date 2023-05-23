@@ -77,7 +77,6 @@ export const UserAtom = atom<UserType | null>(null);
 export const PermissionAtom = atom<PermissionType | "owner" | null>((get) => {
   const projectData = get(ProjectAtom);
   const userData = get(UserAtom);
-
   if (projectData?.owner_id === userData?.id) return "owner";
 
   // if (projectData && userData) {

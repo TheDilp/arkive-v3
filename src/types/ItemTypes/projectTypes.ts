@@ -39,7 +39,7 @@ export interface ProjectDetails {
   title: string;
   image: string | null;
   owner: UserType;
-  members: { member: UserType; user_id: string }[];
+  members: UserType[];
   _count: {
     documents: number;
     maps: number;

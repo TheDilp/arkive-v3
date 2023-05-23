@@ -10,7 +10,6 @@ export const useGetAllProjects = (user_id: string, enabled: boolean) => {
     ["allProjects"],
     async () => {
       try {
-        console.log(user_id);
         return FetchFunction({
           url: `${baseURLS.baseServer}getallprojects`,
           method: "POST",

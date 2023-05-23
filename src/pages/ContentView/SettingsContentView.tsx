@@ -11,9 +11,10 @@ const DictionarySettings = lazy(() => import("../Settings/DictionarySettings"));
 const RandomTableSettings = lazy(() => import("../Settings/RandomTableSettings"));
 const TagsSettings = lazy(() => import("../Settings/TagsSettings"));
 const AlternativeNamesSettings = lazy(() => import("../Settings/AlternativeNameSettings"));
-const MiscellaneousSettings = lazy(() => import("../Settings/MiscellaneousSettings"));
+const RoleSettings = lazy(() => import("../Settings/RoleSettings"));
 const AssetSettings = lazy(() => import("../Settings/Assets/AssetSettings"));
 const MemberSettings = lazy(() => import("../Settings/MemberSettings"));
+const MiscellaneousSettings = lazy(() => import("../Settings/MiscellaneousSettings"));
 
 export default function SettingsContentView() {
   const { type } = useParams();
@@ -27,6 +28,7 @@ export default function SettingsContentView() {
   if (type === "randomtable-settings") return <RandomTableSettings />;
   if (type === "tag-settings") return <TagsSettings />;
   if (type === "alternative-names-settings") return <AlternativeNamesSettings />;
+  if (type === "roles-settings") return <RoleSettings />;
   if (type === "member-settings") return <MemberSettings />;
   if (type === "asset-settings") return <AssetSettings />;
   if (type === "misc-settings") return <MiscellaneousSettings />;

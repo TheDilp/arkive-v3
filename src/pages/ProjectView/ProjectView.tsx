@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-import { useAtomValue } from "jotai";
 import { Avatar } from "primereact/avatar";
 import { Card } from "primereact/card";
 import { Link, useParams } from "react-router-dom";
@@ -7,10 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ProjectViewSkeleton } from "../../components/Skeleton/Skeleton";
 import { useGetProjectDetails } from "../../CRUD/ProjectCRUD";
-import { PermissionCategoriesType } from "../../types/generalTypes";
-import { PermissionAtom } from "../../utils/Atoms/atoms";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
-import { checkIfCategoryAllowed } from "../../utils/uiUtils";
 
 const statItems = [
   { title: "Documents", icon: IconEnum.document, item: "documents" as const },
@@ -37,7 +33,6 @@ function CountHeader(count: number, icon: string, item: string) {
 
 export default function ProjectView() {
   const { project_id } = useParams();
-  const permission = useAtomValue(PermissionAtom);
   const {
     data: projectDetails,
     isLoading,
@@ -66,7 +61,7 @@ export default function ProjectView() {
             <div className="flex flex-col gap-y-2">
               <div className="flex w-full items-center">
                 <Avatar
-                  image={projectDetails.owner.image}
+                  image={projectDetails.owner?.image}
                   label={projectDetails.owner.nickname.slice(0, 1)}
                   shape="circle"
                   size="large"
@@ -77,10 +72,10 @@ export default function ProjectView() {
                 </span>
               </div>
               {projectDetails.members.map((user) => (
-                <div key={user.user_id} className="flex w-full items-center">
-                  <Avatar image={user.member.image} label={user.member.nickname.slice(0, 1)} shape="circle" size="large" />
+                <div key={user.id} className="flex w-full items-center">
+                  <Avatar image={user?.image} label={user.nickname.slice(0, 1)} shape="circle" size="large" />
                   <span className="ml-2">
-                    {user.member.nickname}
+                    {user.nickname}
                     <span className="pl-2 text-sm italic text-zinc-400">(Project member)</span>
                   </span>
                 </div>
@@ -103,11 +98,7 @@ export default function ProjectView() {
                     <Link
                       key={subItem.id}
                       className="truncate text-xl font-bold transition-colors hover:text-sky-400"
-                      to={
-                        checkIfCategoryAllowed(permission, item.item.toLowerCase() as PermissionCategoriesType)
-                          ? `${item.item}/${subItem.id}`
-                          : "#"
-                      }>
+                      to={`${item.item}/${subItem.id}`}>
                       {subItem.title}
                     </Link>
                   ))}
