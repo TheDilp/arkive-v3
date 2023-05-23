@@ -11,6 +11,9 @@ export type UserType = {
 
   projects?: ProjectType[];
   createrOf?: ProjectType[];
+
+  roles: RoleType[];
+  permissions: PermissionType[];
 };
 
 export type RoleType = {

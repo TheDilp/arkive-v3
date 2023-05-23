@@ -6,6 +6,7 @@ export const getURLS = {
   //  Projects
   getSingleProject: "getsingleproject",
   getSingleProjectDetails: "getprojectdetails",
+  getProjectMembers: "getprojectmembers",
   // Documents
   getSingleDocument: "getsingledocument",
   getManyDocuments: "getmanydocuments",

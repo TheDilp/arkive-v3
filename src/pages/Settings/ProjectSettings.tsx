@@ -63,7 +63,7 @@ export default function ProjectSettings() {
           filter
           itemTemplate={ImageDropdownItem}
           onChange={(e) => {
-            updateProject.mutate({ id: data?.id, image: e.value });
+            updateProject.mutate({ id: data?.id, image: e.value, user_id: userData.id });
           }}
           options={allImages || []}
           placeholder="Select image"
@@ -79,7 +79,8 @@ export default function ProjectSettings() {
           // @ts-ignore
           onChange={(e) => setLocalItem((prev) => ({ ...prev, id: data?.id as string, title: e.target.value }))}
           onKeyDown={(e) => {
-            if (e.key === "Enter") updateProject.mutate({ id: project_id as string, title: localItem?.title });
+            if (e.key === "Enter")
+              updateProject.mutate({ id: project_id as string, title: localItem?.title, user_id: userData.id });
           }}
           value={localItem?.title || ""}
         />
@@ -89,7 +90,7 @@ export default function ProjectSettings() {
           iconPos="right"
           label="Save"
           onClick={() => {
-            updateProject.mutate({ id: project_id as string, title: localItem?.title });
+            updateProject.mutate({ id: project_id as string, title: localItem?.title, user_id: userData.id });
           }}
         />
       </div>
@@ -163,7 +164,7 @@ export default function ProjectSettings() {
           label="Delete Project"
           onClick={() =>
             deleteItem("Are you sure you want to delete this project?", async () => {
-              await deleteProjectMutation.mutateAsync(project_id as string);
+              await deleteProjectMutation.mutateAsync({ id: project_id as string, user_id: userData.id });
               navigate("/");
             })
           }

@@ -1,3 +1,5 @@
+import { useUser } from "@clerk/clerk-react";
+import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from "@tanstack/react-query";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Column, ColumnBodyOptions } from "primereact/column";
@@ -8,22 +10,28 @@ import { useParams } from "react-router-dom";
 
 import { PermissionEditor } from "../../components/Settings/Editors/PermissionEditor";
 import { useUpdatePermission } from "../../CRUD/OtherCRUD";
-import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
-import { useAuth } from "../../hooks/useAuth";
+import { useGetProjectMembers } from "../../CRUD/ProjectCRUD";
 import { baseURLS } from "../../types/CRUDenums";
-import { MemberType, PermissionCategoriesType } from "../../types/generalTypes";
+import { PermissionCategoriesType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
+import { UserType } from "../../types/userTypes";
 import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
+import { toaster } from "../../utils/toast";
 
-function PermissionBody(rowData: MemberType, options: ColumnBodyOptions) {
+function PermissionBody(rowData: UserType, options: ColumnBodyOptions) {
+  console.log(rowData);
   if (!rowData) return null;
   const { field } = options;
   const { permissions } = rowData;
   return <div>{permissions[0][field as PermissionCategoriesType]}</div>;
 }
 
-function Header() {
+function Header(
+  refetch: <TPageData>(
+    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
+  ) => Promise<QueryObserverResult<ProjectType, unknown>>,
+) {
   const [addNew, setAddNew] = useState(false);
   const [email, setEmail] = useState("");
   const { project_id } = useParams();
@@ -47,6 +55,8 @@ function Header() {
               method: "POST",
               body: JSON.stringify({ email, project_id }),
             });
+            await refetch();
+            toaster("info", "User added to project.");
             setEmail("");
           }}
         />
@@ -58,22 +68,24 @@ function Header() {
 
 export default function MemberSettings() {
   const { project_id } = useParams();
-  const tableRef = useRef() as MutableRefObject<DataTable<MemberType[]>>;
+  const tableRef = useRef() as MutableRefObject<DataTable<any[]>>;
   const setProjectAtom = useSetAtom(ProjectAtom);
-  const [selected, setSelected] = useState<DataTableSelection<MemberType[]>>([]);
-  const { user } = useAuth();
+  const [selected, setSelected] = useState<DataTableSelection<any[]>>([]);
+  const { user } = useUser();
   const UserData = useAtomValue(UserAtom);
   const { mutateAsync: updatePermission } = useUpdatePermission(project_id as string);
   const {
     data: projectData,
     isFetching: isFetchingProject,
     refetch,
-  } = useGetSingleProject(project_id as string, {
+  } = useGetProjectMembers(project_id as string, {
     enabled: !!user,
     onSuccess: (data) => {
       setProjectAtom(data as ProjectType);
     },
   });
+
+  console.log(projectData);
   if (!projectData) return null;
   return (
     <div className="h-[95vh] w-full overflow-hidden p-4">
@@ -82,7 +94,7 @@ export default function MemberSettings() {
         className="h-full w-full"
         dataKey="id"
         editMode="cell"
-        header={Header}
+        header={() => Header(refetch)}
         loading={isFetchingProject}
         onSelectionChange={(e) => setSelected(e.value)}
         paginator

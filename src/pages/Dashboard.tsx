@@ -8,7 +8,6 @@ import { ProjectCardSkeleton } from "../components/Skeleton/Skeleton";
 import { useGetUser } from "../CRUD/AuthCRUD";
 import { useGetAllProjects } from "../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../hooks/useMediaQuery";
-import { MemberType } from "../types/generalTypes";
 import { ProjectType } from "../types/ItemTypes/projectTypes";
 import { UserType } from "../types/userTypes";
 import { UserAtom } from "../utils/Atoms/atoms";
@@ -18,23 +17,21 @@ export default function Dashboard() {
   const { isLg } = useBreakpoint();
 
   const setUserAtom = useSetAtom(UserAtom);
-  useGetUser(
+  const { data: userData } = useGetUser(
     user?.id as string,
     {
       enabled: !!user,
       staleTime: 1000 * 60 * 5,
       onSuccess: (data) => {
         if (data) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { members, ...userData } = data as UserType & { members: MemberType[] };
-          setUserAtom(userData);
+          setUserAtom(data as UserType);
         }
       },
     },
     false,
   );
 
-  const { isLoading, isFetched, error, data: projects } = useGetAllProjects(!!user);
+  const { isLoading, isFetched, error, data: projects } = useGetAllProjects(userData?.id as string, !!user && !userData?.id);
 
   if (error) return <span>An error has occurred</span>;
   return (

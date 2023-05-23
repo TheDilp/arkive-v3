@@ -79,11 +79,13 @@ export const PermissionAtom = atom<PermissionType | "owner" | null>((get) => {
   const projectData = get(ProjectAtom);
   const userData = get(UserAtom);
 
-  if (projectData && userData) {
-    if (projectData.ownerId === userData.auth_id) return "owner";
+  if (projectData?.ownerId === userData?.auth_id) return "owner";
 
-    return projectData.members.find((member) => member.member.id === userData.id)?.permissions[0] ?? null;
-  }
+  // if (projectData && userData) {
+  //   if (projectData.ownerId === userData.auth_id) return "owner";
+
+  //   return projectData.members.find((member) => member.member.id === userData.id)?.permissions[0] ?? null;
+  // }
 
   return null;
 });

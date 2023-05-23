@@ -5,12 +5,16 @@ import { ProjectDetails, ProjectType, SwatchType } from "../types/ItemTypes/proj
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
-export const useGetAllProjects = (enabled: boolean) => {
+export const useGetAllProjects = (user_id: string, enabled: boolean) => {
   return useQuery<ProjectType[]>(
     ["allProjects"],
     async () => {
       try {
-        return FetchFunction({ url: `${baseURLS.baseServer}getallprojects`, method: "GET" });
+        return FetchFunction({
+          url: `${baseURLS.baseServer}getallprojects`,
+          method: "POST",
+          body: JSON.stringify({ user_id }),
+        });
       } catch (error) {
         return [];
       }
@@ -39,7 +43,7 @@ export const useCreateProject = () => {
 export const useUpdateProject = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    async (variables: Partial<ProjectType>) =>
+    async (variables: Partial<ProjectType> & { user_id: string }) =>
       FetchFunction({
         url: `${baseURLS.baseServer}${updateURLs.updateProject}`,
         method: "POST",
@@ -79,6 +83,22 @@ export const useGetSingleProject = (id: string, options?: UseQueryOptions) => {
     },
   );
 };
+export const useGetProjectMembers = (project_id: string, options?: UseQueryOptions) => {
+  return useQuery<ProjectType>(
+    ["projectMembers", project_id],
+    async () =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${getURLS.getProjectMembers}`,
+        method: "POST",
+        body: JSON.stringify({ project_id }),
+      }),
+    {
+      enabled: options?.enabled,
+      staleTime: 60 * 5 * 1000,
+      onSuccess: options?.onSuccess,
+    },
+  );
+};
 export const useGetProjectDetails = (id: string, options?: UseQueryOptions) => {
   return useQuery<ProjectDetails>(
     ["singleProjectDetails", id],
@@ -99,10 +119,10 @@ export const useDeleteProject = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (id: string) => {
+    async ({ id, user_id }: { id: string; user_id: string }) => {
       if (id) {
         const url = `${baseURLS.baseServer}deleteproject`;
-        if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id }) });
+        if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id, user_id }) });
       }
       return null;
     },
@@ -111,7 +131,7 @@ export const useDeleteProject = () => {
         const oldData = queryClient.getQueryData(["allProjects"]);
         queryClient.setQueryData(["allProjects"], (old: ProjectType[] | undefined) => {
           if (old) {
-            return old.filter((project) => project.id !== variables);
+            return old.filter((project) => project.id !== variables.id);
           }
           return old;
         });
@@ -189,10 +209,10 @@ export const useDeleteSwatch = (project_id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (id: string) => {
+    async ({ id, user_id }: { id: string; user_id: string }) => {
       if (id) {
         const url = `${baseURLS.baseServer}deleteswatch`;
-        if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id }) });
+        if (url) return FetchFunction({ url, method: "DELETE", body: JSON.stringify({ id, user_id }) });
       }
       return null;
     },
@@ -201,7 +221,7 @@ export const useDeleteSwatch = (project_id: string) => {
         const oldData = queryClient.getQueryData(["singleProject", project_id]);
         queryClient.setQueryData(["singleProject", project_id], (old: ProjectType | undefined) => {
           if (old) {
-            return { ...old, swatches: (old?.swatches || []).filter((swatch) => swatch.id !== variables) };
+            return { ...old, swatches: (old?.swatches || []).filter((swatch) => swatch.id !== variables.id) };
           }
           return old;
         });
