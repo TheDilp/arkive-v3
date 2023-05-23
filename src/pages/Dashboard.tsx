@@ -31,7 +31,7 @@ export default function Dashboard() {
     false,
   );
 
-  const { isLoading, isFetched, error, data: projects } = useGetAllProjects(userData?.id as string, !!user && !userData?.id);
+  const { isLoading, isFetched, error, data: projects } = useGetAllProjects(userData?.id as string, !!user && !!userData?.id);
 
   if (error) return <span>An error has occurred</span>;
   return (

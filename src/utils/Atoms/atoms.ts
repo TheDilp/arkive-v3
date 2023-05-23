@@ -2,9 +2,8 @@ import cytoscape, { EdgeDefinition, NodeDefinition } from "cytoscape";
 import { atom } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
-import { PermissionType } from "../../types/generalTypes";
 import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
-import { ProjectType } from "../../types/ItemTypes/projectTypes";
+import { PermissionType, ProjectType } from "../../types/ItemTypes/projectTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { UserType } from "../../types/userTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
@@ -79,7 +78,7 @@ export const PermissionAtom = atom<PermissionType | "owner" | null>((get) => {
   const projectData = get(ProjectAtom);
   const userData = get(UserAtom);
 
-  if (projectData?.ownerId === userData?.auth_id) return "owner";
+  if (projectData?.owner_id === userData?.id) return "owner";
 
   // if (projectData && userData) {
   //   if (projectData.ownerId === userData.auth_id) return "owner";

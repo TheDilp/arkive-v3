@@ -13,7 +13,7 @@ import { checkIfCategoryAllowed, checkIfOwner, navItems } from "../../utils/uiUt
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 
-export default function ProjectCard({ id, image, title, ownerId, permissions }: ProjectType) {
+export default function ProjectCard({ id, image, title, owner_id: ownerId, permissions }: ProjectType) {
   const UserData = useAtomValue(UserAtom);
   const header = (
     <Link className="relative h-60 no-underline" to={`/project/${id}`}>

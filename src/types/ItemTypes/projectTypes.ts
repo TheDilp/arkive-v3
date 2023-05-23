@@ -28,7 +28,7 @@ export type ProjectType = {
   id: string;
   title: string;
   image?: string;
-  ownerId: string;
+  owner_id: string;
   members: UserType[];
   permissions: PermissionType[];
   swatches: SwatchType[];
