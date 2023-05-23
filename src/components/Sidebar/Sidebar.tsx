@@ -8,11 +8,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { NavItemType, PermissionCategoriesType } from "../../types/generalTypes";
+import { NavItemType } from "../../types/generalTypes";
 import { PermissionAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
-import { checkIfCategoryAllowed, checkIfOwner, navItems } from "../../utils/uiUtils";
+import { checkIfOwner, navItems } from "../../utils/uiUtils";
 
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
   const { isLg } = useBreakpoint();
@@ -20,7 +20,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
   const permission = useAtomValue(PermissionAtom);
   const navigate = useNavigate();
   const isOwner = checkIfOwner(permission);
-  if (!permission) return null;
+
   return (
     <>
       {isLg ? (
@@ -37,10 +37,11 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         </li>
       ) : null}
       {items.map((item) => {
-        const categoryPermission = checkIfCategoryAllowed(
-          permission,
-          (item.tooltip === "Graphs" ? "Boards" : item.tooltip).toLowerCase() as PermissionCategoriesType,
-        );
+        const categoryPermission = true;
+        // checkIfCategoryAllowed(
+        //   permission,
+        //   (item.tooltip === "Graphs" ? "Boards" : item.tooltip).toLowerCase() as PermissionCategoriesType,
+        // );
         return (
           <Link
             key={item.icon}
