@@ -2,30 +2,19 @@ import { useUser } from "@clerk/clerk-react";
 import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from "@tanstack/react-query";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Button } from "primereact/button";
-import { Column, ColumnBodyOptions } from "primereact/column";
+import { Column } from "primereact/column";
 import { DataTable, DataTableSelection } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import { MutableRefObject, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { PermissionEditor } from "../../components/Settings/Editors/PermissionEditor";
 import { useUpdatePermission } from "../../CRUD/OtherCRUD";
 import { useGetProjectMembers } from "../../CRUD/ProjectCRUD";
 import { baseURLS } from "../../types/CRUDenums";
-import { PermissionCategoriesType } from "../../types/generalTypes";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { UserType } from "../../types/userTypes";
 import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { toaster } from "../../utils/toast";
-
-function PermissionBody(rowData: UserType, options: ColumnBodyOptions) {
-  console.log(rowData);
-  if (!rowData) return null;
-  const { field } = options;
-  const { permissions } = rowData;
-  return <div>{permissions[0][field as PermissionCategoriesType]}</div>;
-}
 
 function Header(
   refetch: <TPageData>(
@@ -41,7 +30,6 @@ function Header(
         className="p-button-outlined p-button-rounded"
         icon="pi pi-user-plus"
         onClick={() => setAddNew((prev) => !prev)}
-        severity="success"
       />
       {addNew ? <InputText onChange={(e) => setEmail(e.target.value)} placeholder="Email" /> : null}
       {addNew ? (
@@ -75,8 +63,8 @@ export default function MemberSettings() {
   const UserData = useAtomValue(UserAtom);
   const { mutateAsync: updatePermission } = useUpdatePermission(project_id as string);
   const {
-    data: projectData,
-    isFetching: isFetchingProject,
+    data: members,
+    isFetching: isFetchingMembers,
     refetch,
   } = useGetProjectMembers(project_id as string, {
     enabled: !!user,
@@ -84,9 +72,7 @@ export default function MemberSettings() {
       setProjectAtom(data as ProjectType);
     },
   });
-
-  console.log(projectData);
-  if (!projectData) return null;
+  if (!members) return null;
   return (
     <div className="h-[95vh] w-full overflow-hidden p-4">
       <DataTable
@@ -95,7 +81,7 @@ export default function MemberSettings() {
         dataKey="id"
         editMode="cell"
         header={() => Header(refetch)}
-        loading={isFetchingProject}
+        loading={isFetchingMembers}
         onSelectionChange={(e) => setSelected(e.value)}
         paginator
         removableSort
@@ -107,79 +93,10 @@ export default function MemberSettings() {
         showGridlines
         size="small"
         sortMode="multiple"
-        value={projectData?.members || []}>
+        value={members || []}>
         <Column headerClassName="w-12" selectionMode="multiple" />
-        <Column className="max-w-[15rem] truncate" field="member.nickname" filter header="Title" />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="documents"
-          header="Documents"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="maps"
-          header="Maps"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="boards"
-          header="Graphs"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="calendars"
-          header="Calendars"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="timelines"
-          header="Timelines"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="screens"
-          header="Screens"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="dictionaries"
-          header="Dictionaries"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="random_tables"
-          header="Random Tables"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="tags"
-          header="Tags"
-        />
-        <Column
-          body={PermissionBody}
-          className="max-w-[5rem] truncate"
-          editor={(editor) => PermissionEditor(editor, UserData?.id as string, updatePermission, refetch)}
-          field="title"
-          header="Alter names"
-        />
+        <Column className="max-w-[15rem] truncate" field="nickname" filter header="Title" />
+        <Column className="max-w-[15rem] truncate" field="" filter header="Role" />
       </DataTable>
     </div>
   );

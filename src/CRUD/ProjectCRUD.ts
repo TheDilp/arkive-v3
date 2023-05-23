@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstac
 
 import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import { ProjectDetails, ProjectType, SwatchType } from "../types/ItemTypes/projectTypes";
+import { RoleType } from "../types/userTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -89,6 +90,22 @@ export const useGetProjectMembers = (project_id: string, options?: UseQueryOptio
     async () =>
       FetchFunction({
         url: `${baseURLS.baseServer}${getURLS.getProjectMembers}`,
+        method: "POST",
+        body: JSON.stringify({ project_id }),
+      }),
+    {
+      enabled: options?.enabled,
+      staleTime: 60 * 5 * 1000,
+      onSuccess: options?.onSuccess,
+    },
+  );
+};
+export const useGetProjectRoles = (project_id: string, options?: UseQueryOptions) => {
+  return useQuery<RoleType[]>(
+    ["projectMembers", project_id],
+    async () =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${getURLS.getProjectRoles}`,
         method: "POST",
         body: JSON.stringify({ project_id }),
       }),
