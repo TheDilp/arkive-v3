@@ -12,6 +12,7 @@ import { RoleCreateType, RoleType } from "../../../types/ItemTypes/projectTypes"
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
 import { deleteItem } from "../../../utils/Confirms/Confirm";
 import { IconEnum } from "../../../utils/DefaultValues/GeneralDefaults";
+import { RoleItems } from "../../../utils/DefaultValues/ProjectDefaults";
 import { toaster } from "../../../utils/toast";
 import { buttonLabelWithIcon } from "../../../utils/transform";
 import { handleCloseDrawer } from "../Drawer";
@@ -24,18 +25,6 @@ function getPermissionValue(localItem: RoleType | RoleCreateType, name: string) 
   return "none";
 }
 
-const RoleItems = [
-  "Documents",
-  "Maps",
-  "Boards",
-  "Calendars",
-  "Timelines",
-  "Screens",
-  "Dictionaries",
-  "Random_tables",
-  "Tags",
-  "Alter_names",
-];
 export default function DrawerRolesContent() {
   const { project_id } = useParams();
   const { mutateAsync: createRole, isLoading: isCreating } = useCreateProjectRole(project_id as string);
@@ -48,6 +37,8 @@ export default function DrawerRolesContent() {
       project_id: project_id as string,
     },
   );
+
+  console.log(role);
 
   return (
     <div className="flex h-full flex-col gap-y-4">
