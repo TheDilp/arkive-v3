@@ -189,6 +189,35 @@ export const useCreateProjectRole = (project_id: string) => {
     },
   );
 };
+export const useUpdateProjectRole = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (variables: RoleCreateType) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${updateURLs.updateRole}`,
+        method: "POST",
+        body: JSON.stringify(variables),
+      }),
+    {
+      onError: () => {
+        toaster("error", "There was an error updating this role.");
+      },
+      onSuccess: (_, variables) => {
+        queryClient.setQueryData(["projectRoles"], (old: RoleType[] | undefined) => {
+          if (old)
+            old.map((role) => {
+              if (role.id === variables.id) {
+                return { ...role, ...variables };
+              }
+              return role;
+            });
+          return old;
+        });
+        toaster("success", "The role has been successfully update. 🔑");
+      },
+    },
+  );
+};
 // #endregion roles
 
 // #region swatches

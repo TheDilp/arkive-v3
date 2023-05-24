@@ -71,6 +71,7 @@ export const createURLS = {
 
 export const updateURLs = {
   updateProject: "updateproject",
+  updateRole: "updaterole",
   updateDocument: "updatedocument",
   updateMap: "updatemap",
   updateMapPin: "updatemappin",

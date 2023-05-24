@@ -287,6 +287,15 @@ Inputs
     @apply bg-orange-400 !important;
   }
 }
+.edit_permission_tag {
+  @apply bg-green-400 !important;
+}
+.view_permission_tag {
+  @apply bg-orange-400 !important;
+}
+.none_permission_tag {
+  @apply bg-zinc-600 !important;
+}
 .alter_namesTags {
   .p-tag {
     @apply bg-orange-600 !important;

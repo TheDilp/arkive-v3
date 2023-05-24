@@ -45,17 +45,17 @@ function getPermission(rowData: RoleType, name: string) {
   return "None";
 }
 
-function getPermissionColor(permission: "Edit" | "View" | "None") {
-  if (permission === "Edit") return "success";
-  if (permission === "View") return "warning";
-  if (permission === "None") return "info";
+function getPermissionClass(permission: "Edit" | "View" | "None") {
+  if (permission === "Edit") return "edit_permission_tag";
+  if (permission === "View") return "view_permission_tag";
+  if (permission === "None") return "none_permission_tag";
   return undefined;
 }
 
 function PermissionBody(rowData: any, options: ColumnBodyOptions) {
   const { field } = options;
   const permission = getPermission(rowData, field);
-  return <Tag severity={getPermissionColor(permission)} value={permission} />;
+  return <Tag className={getPermissionClass(permission)} value={permission} />;
 }
 
 export default function RoleSettings() {
@@ -71,7 +71,7 @@ export default function RoleSettings() {
           <Column
             key={item}
             body={(rowData, options) => PermissionBody(rowData, options)}
-            className="max-w-[12rem] truncate"
+            className="max-w-[8rem] truncate"
             field={item.toLowerCase()}
             header={item.replaceAll("_", " ")}
           />

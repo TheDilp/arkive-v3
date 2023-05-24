@@ -6,7 +6,8 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useCreateProjectRole, useGetProjectRoles } from "../../../CRUD/ProjectCRUD";
+import { useCreateProjectRole, useGetProjectRoles, useUpdateProjectRole } from "../../../CRUD/ProjectCRUD";
+import { useHandleChange } from "../../../hooks/useGetChanged";
 import { RolePermissionsType } from "../../../types/generalTypes";
 import { RoleCreateType, RoleType } from "../../../types/ItemTypes/projectTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -28,6 +29,7 @@ function getPermissionValue(localItem: RoleType | RoleCreateType, name: string) 
 export default function DrawerRolesContent() {
   const { project_id } = useParams();
   const { mutateAsync: createRole, isLoading: isCreating } = useCreateProjectRole(project_id as string);
+  const { mutateAsync: updateRole, isLoading: isUpdating } = useUpdateProjectRole();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: roles } = useGetProjectRoles(project_id as string);
   const role = roles?.find((r) => r.id === drawer.id);
@@ -37,9 +39,7 @@ export default function DrawerRolesContent() {
       project_id: project_id as string,
     },
   );
-
-  console.log(role);
-
+  const { handleChange, changedData, resetChanges } = useHandleChange({ data: localItem, setData: setLocalItem });
   return (
     <div className="flex h-full flex-col gap-y-4">
       <h2 className="text-center font-Lato text-2xl">{role ? `Edit ${role.title}` : "Create new Role"}</h2>
@@ -59,22 +59,18 @@ export default function DrawerRolesContent() {
               <h4>{item.replaceAll("_", " ")}:</h4>
               <Dropdown
                 onChange={(e) => {
-                  const newLocalItem = {
-                    ...localItem,
-                  };
                   if (e.value === "none") {
-                    newLocalItem[`view_${item.toLowerCase()}` as RolePermissionsType] = false;
-                    newLocalItem[`edit_${item.toLowerCase()}` as RolePermissionsType] = false;
+                    handleChange({ name: `view_${item.toLowerCase()}`, value: false });
+                    handleChange({ name: `edit_${item.toLowerCase()}`, value: false });
                   }
                   if (e.value === `view_${item.toLowerCase()}`) {
-                    newLocalItem[`view_${item.toLowerCase()}` as RolePermissionsType] = true;
-                    newLocalItem[`edit_${item.toLowerCase()}` as RolePermissionsType] = false;
+                    handleChange({ name: `view_${item.toLowerCase()}`, value: true });
+                    handleChange({ name: `edit_${item.toLowerCase()}`, value: false });
                   }
                   if (e.value === `edit_${item.toLowerCase()}`) {
-                    newLocalItem[`view_${item.toLowerCase()}` as RolePermissionsType] = false;
-                    newLocalItem[`edit_${item.toLowerCase()}` as RolePermissionsType] = true;
+                    handleChange({ name: `view_${item.toLowerCase()}`, value: false });
+                    handleChange({ name: `edit_${item.toLowerCase()}`, value: true });
                   }
-                  setLocalItem(newLocalItem);
                 }}
                 options={[
                   { label: "None", value: "none" },
@@ -92,10 +88,12 @@ export default function DrawerRolesContent() {
       <div className="mt-auto flex w-full flex-col gap-y-2">
         <Button
           className="p-button-outlined p-button-success ml-auto h-10 min-h-[2.5rem]"
-          disabled={isCreating}
-          loading={isCreating}
+          disabled={isCreating || isUpdating}
+          loading={isCreating || isUpdating}
           onClick={async () => {
-            await createRole(localItem);
+            if (!localItem?.id) await createRole(localItem);
+            else await updateRole({ id: localItem.id, ...changedData });
+            resetChanges();
             handleCloseDrawer(setDrawer, "right");
           }}
           type="submit">
