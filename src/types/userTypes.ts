@@ -15,12 +15,3 @@ export type UserType = {
   roles: RoleType[];
   permissions: PermissionType[];
 };
-
-export type RoleType = {
-  id: string;
-  title: string;
-  description?: string;
-  project: ProjectType;
-  project_id: string;
-  permissions: PermissionType[];
-};

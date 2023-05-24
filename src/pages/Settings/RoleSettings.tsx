@@ -1,14 +1,25 @@
+import { useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { useParams } from "react-router-dom";
 
 import { useGetProjectRoles } from "../../CRUD/ProjectCRUD";
+import { DrawerAtom } from "../../utils/Atoms/atoms";
+import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 
 function Header() {
+  const setDrawer = useSetAtom(DrawerAtom);
   return (
     <div className="flex items-center gap-2">
-      <Button className="p-button-outlined" icon="pi pi-key" label="Create new role" onClick={() => {}} />
+      <Button
+        className="p-button-outlined"
+        icon="pi pi-key"
+        label="Create new role"
+        onClick={() => {
+          setDrawer({ ...DefaultDrawer, show: true, type: "roles" });
+        }}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { RolePermissionsType, PermissionCategoriesType } from "../generalTypes";
-import { RoleType, UserType } from "../userTypes";
+import { PermissionCategoriesType, RolePermissionsType } from "../generalTypes";
+import { UserType } from "../userTypes";
 import { BoardType } from "./boardTypes";
 import { CalendarType } from "./calendarTypes";
 import { DictionaryType } from "./dictionaryTypes";
@@ -59,3 +59,30 @@ export interface ProjectDetails {
   dictionaries: DictionaryType[];
   random_tables: RandomTableType[];
 }
+
+export type RoleType = {
+  id: string;
+  title: string;
+  description?: string;
+  project: ProjectType;
+  project_id: string;
+
+  view_documents: boolean;
+  edit_documents: boolean;
+  view_maps: boolean;
+  edit_maps: boolean;
+  view_boards: boolean;
+  edit_boards: boolean;
+  view_calendars: boolean;
+  edit_calendars: boolean;
+  view_timelines: boolean;
+  edit_timelines: boolean;
+  view_screens: boolean;
+  edit_screens: boolean;
+  view_dictionaries: boolean;
+  edit_dictionaries: boolean;
+  view_random_tables: boolean;
+  edit_random_tables: boolean;
+  edit_tags: boolean;
+  edit_alter_names: boolean;
+};

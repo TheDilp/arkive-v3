@@ -10,6 +10,7 @@ import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
+import DrawerRolesContent from "./DrawerContent/DrawerRolesContent";
 
 const DrawerRandomTableContent = lazy(() => import("./DrawerContent/DrawerRandomTableContent"));
 const DrawerRandomTableOptionContent = lazy(() => import("./DrawerContent/DrawerRandomTableOption"));
@@ -108,6 +109,7 @@ export default function Drawer() {
         {drawer.type === "randomtableoptions" ? <DrawerRandomTableOptionContent /> : null}
         {drawer.type === "swatches" ? <DrawerSwatchContent /> : null}
         {drawer.type === "content_preview" ? <DrawerContentPreview type={drawer?.data?.type} /> : null}
+        {drawer.type === "roles" ? <DrawerRolesContent /> : null}
       </Suspense>
     </PrimeDrawer>
   );

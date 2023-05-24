@@ -11,7 +11,8 @@ export type DrawerAtomType = {
     | "mention"
     | "insert_word"
     | "swatches"
-    | "content_preview";
+    | "content_preview"
+    | "roles";
   drawerSize?: "sm" | "md" | "lg";
   position?: "left" | "right" | "top" | "bottom";
   modal?: boolean;
