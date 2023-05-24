@@ -1,5 +1,5 @@
 import { WebhookType } from "./generalTypes";
-import { PermissionType, ProjectType } from "./ItemTypes/projectTypes";
+import { PermissionType, ProjectType, RoleType } from "./ItemTypes/projectTypes";
 
 export type UserType = {
   id: string;

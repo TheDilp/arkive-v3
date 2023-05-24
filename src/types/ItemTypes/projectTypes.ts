@@ -14,11 +14,8 @@ export type SwatchType = {
   title?: string;
   color: string;
 };
-
 export type PermissionType = {
   id: string;
-  role: RoleType;
-  role_id: String;
   resource_type: PermissionCategoriesType;
   resource_id?: string;
   permission: RolePermissionsType;
@@ -86,3 +83,5 @@ export type RoleType = {
   edit_tags: boolean;
   edit_alter_names: boolean;
 };
+
+export type RoleCreateType = Partial<RoleType> & { title: string; project_id: string };

@@ -55,7 +55,7 @@ export default function DrawerScreensContent() {
   }, [screen, project_id]);
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center font-Lato text-2xl">{screen ? `Edit ${screen.title}` : "Create New Screen"}</h2>
+      <h2 className="text-center font-Lato text-2xl">{screen ? `Edit ${screen.title}` : "Create new Screen"}</h2>
       <DrawerSection title="Section title">
         <InputText
           autoFocus

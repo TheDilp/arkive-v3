@@ -55,7 +55,7 @@ export default function DrawerBoardContent() {
   }, [board, project_id]);
   return (
     <div className="flex h-full flex-col gap-y-2 font-Lato">
-      <h2 className="text-center font-Lato text-2xl">{board ? `Edit ${board.title}` : "Create New Graph"}</h2>
+      <h2 className="text-center font-Lato text-2xl">{board ? `Edit ${board.title}` : "Create new Graph"}</h2>
       <DrawerSection title="Graph title">
         <InputText
           autoFocus

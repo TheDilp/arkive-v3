@@ -198,7 +198,7 @@ export default function DrawerEventContent() {
   return (
     <div className="flex h-full flex-col gap-y-2 overflow-y-auto overflow-x-hidden">
       <h2 className="truncate text-center font-Lato text-2xl">
-        {localItem?.id ? `Edit ${localItem.title}` : "Create New Event"}
+        {localItem?.id ? `Edit ${localItem.title}` : "Create new Event"}
       </h2>
       <DrawerSection title="Event title">
         <InputText

@@ -53,7 +53,7 @@ export default function DrawerTimelineContent() {
   if (isFetching) return <LoadingScreen />;
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Timeline"}</h2>
+      <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create new Timeline"}</h2>
       <DrawerSection title="Timeline title">
         <InputText
           autoFocus

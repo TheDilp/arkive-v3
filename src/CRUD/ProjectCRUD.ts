@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
-import { ProjectDetails, ProjectType, SwatchType } from "../types/ItemTypes/projectTypes";
-import { RoleType } from "../types/userTypes";
+import { ProjectDetails, ProjectType, RoleType, SwatchType } from "../types/ItemTypes/projectTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 

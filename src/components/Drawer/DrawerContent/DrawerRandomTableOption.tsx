@@ -81,7 +81,7 @@ export default function DrawerRandomTableOptionContent() {
   return (
     <div className="flex h-full flex-col gap-y-2 font-Lato">
       <h2 className="text-center font-Lato text-2xl">
-        {localItem?.id ? `Edit ${localItem?.title}` : "Create New Random Table Option"}
+        {localItem?.id ? `Edit ${localItem?.title}` : "Create new Random Table Option"}
       </h2>
       <DrawerSection title="Random table option title">
         <InputText

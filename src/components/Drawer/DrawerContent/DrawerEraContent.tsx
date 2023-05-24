@@ -72,7 +72,7 @@ export default function DrawerEraContent() {
 
   return (
     <div className="flex h-full flex-col gap-y-2">
-      <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Era"}</h2>
+      <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create new Era"}</h2>
       <DrawerSection title="Era title">
         <InputText
           autoFocus

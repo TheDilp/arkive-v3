@@ -74,7 +74,7 @@ export default function DrawerCalendarContent() {
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flexw-full flex-1 flex-col">
-        <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create New Calendar"}</h2>
+        <h2 className="text-center font-Lato text-2xl">{localItem?.id ? `Edit ${localItem.title}` : "Create new Calendar"}</h2>
         <TabView className="h-[90%] w-full overflow-y-auto" renderActiveOnly>
           <TabPanel header="Calendar">
             <div className="flex w-full flex-col gap-y-3 overflow-y-auto pt-3">

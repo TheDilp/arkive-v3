@@ -49,7 +49,7 @@ export default function DrawerRandomTableContent() {
   return (
     <div className="flex h-full flex-col gap-y-2 font-Lato">
       <h2 className="text-center font-Lato text-2xl">
-        {randomTable ? `Edit ${randomTable.title}` : "Create New Random Table"}
+        {randomTable ? `Edit ${randomTable.title}` : "Create new Random Table"}
       </h2>
       <DrawerSection title="Random table title">
         <InputText
