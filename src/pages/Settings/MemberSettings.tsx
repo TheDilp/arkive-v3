@@ -93,7 +93,7 @@ export default function MemberSettings() {
         showGridlines
         size="small"
         sortMode="multiple"
-        value={members || []}>
+        value={(members as any) || []}>
         <Column headerClassName="w-12" selectionMode="multiple" />
         <Column className="max-w-[15rem] truncate" field="nickname" filter header="Title" />
         <Column className="max-w-[15rem] truncate" field="" filter header="Role" />

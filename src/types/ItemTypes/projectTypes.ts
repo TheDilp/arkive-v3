@@ -1,4 +1,4 @@
-import { PermissionAccessLevels, PermissionCategoriesType } from "../generalTypes";
+import { RolePermissionsType, PermissionCategoriesType } from "../generalTypes";
 import { RoleType, UserType } from "../userTypes";
 import { BoardType } from "./boardTypes";
 import { CalendarType } from "./calendarTypes";
@@ -21,7 +21,7 @@ export type PermissionType = {
   role_id: String;
   resource_type: PermissionCategoriesType;
   resource_id?: string;
-  permission: PermissionAccessLevels;
+  permission: RolePermissionsType;
 };
 
 export type ProjectType = {

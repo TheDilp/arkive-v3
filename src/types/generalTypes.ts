@@ -182,26 +182,24 @@ export type FullSearchResults = {
   events: EventType[];
 };
 
-export type PermissionAccessLevels =
-  | "view_document"
-  | "edit_document"
-  | "view_map"
-  | "edit_map"
-  | "view_board"
-  | "edit_board"
-  | "view_screen"
-  | "edit_screen"
-  | "view_calendar"
-  | "edit_calendar"
-  | "view_timeline"
-  | "edit_timeline"
+export type RolePermissionsType =
+  | "view_documents"
+  | "edit_documents"
+  | "view_maps"
+  | "edit_maps"
+  | "view_boards"
+  | "edit_boards"
+  | "view_screens"
+  | "edit_screens"
+  | "view_calendars"
+  | "edit_calendars"
+  | "view_timelines"
+  | "edit_timelines"
   | "view_dictionaries"
   | "edit_dictionaries"
   | "view_random_tables"
   | "edit_random_tables"
-  | "view_tags"
   | "edit_tags"
-  | "view_alter_names"
   | "edit_alter_names";
 
 export type PermissionCategoriesType =

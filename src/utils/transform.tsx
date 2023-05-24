@@ -21,6 +21,8 @@ export function getItemNameForSettings(name: string) {
   if (name.includes("screen")) return "Screen settings";
   if (name.includes("dictionary")) return "Dictionary settings";
   if (name.includes("randomtable")) return "Random Table settings";
+  if (name.includes("roles")) return "Role settings";
+  if (name.includes("members")) return "Member settings";
   if (name.includes("tag")) return "Tag settings";
   if (name.includes("misc")) return "Miscellaneous settings";
   return "Settings";

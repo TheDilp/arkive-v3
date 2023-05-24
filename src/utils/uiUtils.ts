@@ -43,7 +43,7 @@ export const settingsItems: { icon: string; title: string; navigate: string }[] 
   { icon: IconEnum.alter_names, navigate: "./settings/alternative-names-settings", title: "Alternative Names" },
   { icon: IconEnum.image, navigate: "./settings/asset-settings", title: "Assets" },
   { icon: IconEnum.permissions, navigate: "./settings/roles-settings", title: "Roles" },
-  { icon: IconEnum.users, navigate: "./settings/member-settings", title: "Members" },
+  { icon: IconEnum.users, navigate: "./settings/members-settings", title: "Members" },
   { icon: "ic:baseline-miscellaneous-services", navigate: "./settings/misc-settings", title: "Miscellaneous" },
 
   // { icon: "carbon:template", navigate: "./forms", tooltip: "Forms" },

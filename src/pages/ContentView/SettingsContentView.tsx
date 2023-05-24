@@ -29,7 +29,7 @@ export default function SettingsContentView() {
   if (type === "tag-settings") return <TagsSettings />;
   if (type === "alternative-names-settings") return <AlternativeNamesSettings />;
   if (type === "roles-settings") return <RoleSettings />;
-  if (type === "member-settings") return <MemberSettings />;
+  if (type === "members-settings") return <MemberSettings />;
   if (type === "asset-settings") return <AssetSettings />;
   if (type === "misc-settings") return <MiscellaneousSettings />;
   return null;
