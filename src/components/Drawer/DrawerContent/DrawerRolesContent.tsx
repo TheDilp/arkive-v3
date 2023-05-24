@@ -1,10 +1,12 @@
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetProjectRoles } from "../../../CRUD/ProjectCRUD";
+import { useCreateProjectRole, useGetProjectRoles } from "../../../CRUD/ProjectCRUD";
 import { RolePermissionsType } from "../../../types/generalTypes";
 import { RoleCreateType, RoleType } from "../../../types/ItemTypes/projectTypes";
 import { DrawerAtom } from "../../../utils/Atoms/atoms";
@@ -36,6 +38,7 @@ const RoleItems = [
 ];
 export default function DrawerRolesContent() {
   const { project_id } = useParams();
+  const { mutateAsync: createRole, isLoading: isCreating } = useCreateProjectRole(project_id as string);
   const [drawer, setDrawer] = useAtom(DrawerAtom);
   const { data: roles } = useGetProjectRoles(project_id as string);
   const role = roles?.find((r) => r.id === drawer.id);
@@ -47,8 +50,17 @@ export default function DrawerRolesContent() {
   );
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col gap-y-4">
       <h2 className="text-center font-Lato text-2xl">{role ? `Edit ${role.title}` : "Create new Role"}</h2>
+      <DrawerSection title="Role name">
+        <InputText onChange={(e) => setLocalItem((prev) => ({ ...prev, title: e.target.value }))} value={localItem.title} />
+      </DrawerSection>
+      <DrawerSection title="Role description (optional)">
+        <InputTextarea
+          onChange={(e) => setLocalItem((prev) => ({ ...prev, description: e.target.value }))}
+          value={localItem.description}
+        />
+      </DrawerSection>
       <DrawerSection title="Permissions">
         <div className="flex flex-col gap-y-4">
           {RoleItems.map((item) => (
@@ -89,9 +101,12 @@ export default function DrawerRolesContent() {
       <div className="mt-auto flex w-full flex-col gap-y-2">
         <Button
           className="p-button-outlined p-button-success ml-auto h-10 min-h-[2.5rem]"
-          // disabled={createBoardMutation.isLoading || updateBoardMutation.isLoading}
-          // loading={createBoardMutation.isLoading || updateBoardMutation.isLoading}
-          onClick={async () => {}}
+          disabled={isCreating}
+          loading={isCreating}
+          onClick={async () => {
+            await createRole(localItem);
+            handleCloseDrawer(setDrawer, "right");
+          }}
           type="submit">
           {buttonLabelWithIcon("Save", IconEnum.save)}
         </Button>
@@ -103,7 +118,6 @@ export default function DrawerRolesContent() {
                 deleteItem(
                   "Are you sure you want to delete this role? All users with this role will lose permissions associated with this role.",
                   () => {
-                    // deleteBoardMutation?.mutate(board.id);
                     handleCloseDrawer(setDrawer, "right");
                   },
                   () => toaster("info", "Item not deleted."),

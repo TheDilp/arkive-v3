@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
 import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
-import { ProjectDetails, ProjectType, RoleType, SwatchType } from "../types/ItemTypes/projectTypes";
+import { ProjectDetails, ProjectType, RoleCreateType, RoleType, SwatchType } from "../types/ItemTypes/projectTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -99,22 +99,7 @@ export const useGetProjectMembers = (project_id: string, options?: UseQueryOptio
     },
   );
 };
-export const useGetProjectRoles = (project_id: string, options?: UseQueryOptions) => {
-  return useQuery<RoleType[]>(
-    ["projectMembers", project_id],
-    async () =>
-      FetchFunction({
-        url: `${baseURLS.baseServer}${getURLS.getProjectRoles}`,
-        method: "POST",
-        body: JSON.stringify({ project_id }),
-      }),
-    {
-      enabled: options?.enabled,
-      staleTime: 60 * 5 * 1000,
-      onSuccess: options?.onSuccess,
-    },
-  );
-};
+
 export const useGetProjectDetails = (id: string, options?: UseQueryOptions) => {
   return useQuery<ProjectDetails>(
     ["singleProjectDetails", id],
@@ -164,6 +149,49 @@ export const useDeleteProject = () => {
   );
 };
 
+// #region roles
+export const useGetProjectRoles = (project_id: string, options?: UseQueryOptions) => {
+  return useQuery<RoleType[]>(
+    ["projectRoles", project_id],
+    async () =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${getURLS.getProjectRoles}`,
+        method: "POST",
+        body: JSON.stringify({ project_id }),
+      }),
+    {
+      enabled: options?.enabled,
+      staleTime: 60 * 5 * 1000,
+      onSuccess: options?.onSuccess,
+    },
+  );
+};
+export const useCreateProjectRole = (project_id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (variables: RoleCreateType) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${createURLS.createRole}`,
+        method: "POST",
+        body: JSON.stringify({ ...variables, project_id }),
+      }),
+    {
+      onError: () => {
+        toaster("error", "There was an error creating this role.");
+      },
+      onSuccess: (data) => {
+        queryClient.setQueryData(["projectRoles"], (old: RoleType[] | undefined) => {
+          if (old) return [...old, data];
+          return [data];
+        });
+        toaster("success", "The role has been successfully created. 🔑");
+      },
+    },
+  );
+};
+// #endregion roles
+
+// #region swatches
 export const useCreateSwatch = (project_id: string) => {
   const queryClient = useQueryClient();
   return useMutation(
@@ -253,3 +281,5 @@ export const useDeleteSwatch = (project_id: string) => {
     },
   );
 };
+
+// #endregion swatches

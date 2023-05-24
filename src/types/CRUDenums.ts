@@ -41,6 +41,7 @@ export const getURLS = {
 
 export const createURLS = {
   createProject: "createproject",
+  createRole: "createrole",
   createDocument: "createdocument",
   createMap: "createmap",
   createMapPin: "createmappin",
