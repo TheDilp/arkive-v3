@@ -84,6 +84,8 @@ export type RoleType = {
   edit_random_tables: boolean;
   edit_tags: boolean;
   edit_alter_names: boolean;
+  upload_assets: boolean;
+  delete_assets: boolean;
 };
 
 export type RoleCreateType = Partial<RoleType> & { title: string; project_id: string };

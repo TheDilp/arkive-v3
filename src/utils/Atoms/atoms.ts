@@ -102,6 +102,8 @@ export const RoleAtom = atom<(RoleType & { is_owner: boolean }) | null>((get) =>
       edit_dictionaries: true,
       edit_tags: true,
       edit_alter_names: true,
+      upload_assets: true,
+      delete_assets: true,
       is_owner: true,
     };
 
