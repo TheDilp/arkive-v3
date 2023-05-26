@@ -5,8 +5,8 @@ import { MutableRefObject } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useDeleteItem, useUpdateItem } from "../../CRUD/ItemsCRUD";
-import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
-import { DrawerAtom, PendingUpdatesAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
+import { AllItemsType, AvailableItemTypes, RolePermissionsType } from "../../types/generalTypes";
+import { DrawerAtom, PendingUpdatesAtom, RoleAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
@@ -30,6 +30,8 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
   const pendingUpdates = useAtomValue(PendingUpdatesAtom);
   const updateMutation = useUpdateItem<AllItemsType>(type, project_id as string);
   const deleteMutation = useDeleteItem(type, project_id as string);
+  const UserRole = useAtomValue(RoleAtom);
+  const isAllowed = UserRole?.[`edit_${type}` as RolePermissionsType];
   if (!node.data) return null;
   return (
     <button
@@ -44,17 +46,17 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         else navigate(`./${type}/folder/${node.id}`);
       }}
       onContextMenu={(e) => {
-        if (node.droppable)
+        if (node.droppable && isAllowed)
           setContextMenu({
             data: node.data,
             type,
             folder: node.droppable,
             template: false,
           });
-        else if (node.data && "template" in node.data && node.data?.template) {
+        else if (node.data && "template" in node.data && node.data?.template && isAllowed) {
           setContextMenu({ data: node.data, type, folder: false, template: true });
-        } else setContextMenu({ data: node.data, type, folder: false, template: false });
-        cm.current.show(e);
+        } else if (isAllowed) setContextMenu({ data: node.data, type, folder: false, template: false });
+        if (isAllowed) cm.current.show(e);
       }}
       type="button">
       <span
@@ -113,38 +115,41 @@ export default function TreeItem({ node, depth, isOpen, onToggle, cm, type }: Pr
         <div className="w-full truncate">
           {node.text} {"template" in node.data && node.data?.template && !node.droppable ? "[TEMPLATE]" : null}
         </div>
-        <div className="flex items-center opacity-0 group-hover:opacity-100">
-          <Icon
-            color="white"
-            icon={IconEnum.edit}
-            onClick={(e) => {
-              e.stopPropagation();
-              setDrawer({
-                exceptions: {},
-                id: node.id as string,
-                data: node.data,
-                position: "right",
-                show: true,
-                type,
-              });
-            }}
-          />
-          <Icon
-            color="white"
-            icon={IconEnum.trash}
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteItem(
-                "Are you sure you want to delete this item?",
-                () => {
-                  deleteMutation?.mutate(node.id as string);
-                  if (item_id === node.id) navigate(`./${type}`);
-                },
-                () => toaster("info", "Item not deleted."),
-              );
-            }}
-          />
-        </div>
+        {isAllowed ? (
+          <div className="flex items-center opacity-0 group-hover:opacity-100">
+            <Icon
+              color="white"
+              icon={IconEnum.edit}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isAllowed)
+                  setDrawer({
+                    exceptions: {},
+                    id: node.id as string,
+                    data: node.data,
+                    position: "right",
+                    show: true,
+                    type,
+                  });
+              }}
+            />
+            <Icon
+              color="white"
+              icon={IconEnum.trash}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteItem(
+                  "Are you sure you want to delete this item?",
+                  () => {
+                    deleteMutation?.mutate(node.id as string);
+                    if (item_id === node.id) navigate(`./${type}`);
+                  },
+                  () => toaster("info", "Item not deleted."),
+                );
+              }}
+            />
+          </div>
+        ) : null}
       </div>
     </button>
   );

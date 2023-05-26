@@ -1,5 +1,5 @@
 import { DragLayerMonitorProps, NodeModel, PlaceholderRenderParams, Tree } from "@minoru/react-dnd-treeview";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
@@ -7,9 +7,9 @@ import { useParams } from "react-router-dom";
 
 import { useGetAllItems, useSortMutation, useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { useGetAllTags } from "../../CRUD/OtherCRUD";
-import { AllItemsType, AvailableItemTypes } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes, RolePermissionsType } from "../../types/generalTypes";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
-import { SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
+import { RoleAtom, SidebarTreeContextAtom } from "../../utils/Atoms/atoms";
 import { useTreeMenuItems } from "../../utils/contextMenus";
 import { getItem } from "../../utils/storage";
 import { getDepth, handleDrop } from "../../utils/tree";
@@ -53,7 +53,7 @@ export default function BaseTree({ isTemplates, type }: Props) {
   const sortItemMutation = useSortMutation(project_id as string, type);
   const [contextMenu, setContextMenu] = useAtom(SidebarTreeContextAtom);
   const contextItems = useTreeMenuItems(contextMenu, type, project_id as string);
-
+  const UserRole = useAtomValue(RoleAtom);
   const { data: tags } = useGetAllTags(project_id as string);
   const expanededItems: string[] = (getItem(`${type}-expanded`) || []) as string[];
   const cm = useRef() as MutableRefObject<any>;
@@ -117,7 +117,9 @@ export default function BaseTree({ isTemplates, type }: Props) {
         setContextMenu({ data: null, type, folder: false, template: true });
         cm?.current?.show(e);
       }}>
-      <ContextMenu cm={cm} items={contextItems} />
+      {UserRole?.is_owner || UserRole?.[`edit_${type}` as RolePermissionsType] ? (
+        <ContextMenu cm={cm} items={contextItems} />
+      ) : null}
       <InputText
         className="p-inputtext-sm mt-1 w-full px-1"
         onChange={(e) => setFilter(e.target.value)}
