@@ -20,7 +20,7 @@
   }
 }
 .p-breadcrumb {
-  @apply border-transparent bg-transparent !important;
+  @apply border-transparent bg-transparent pb-8 !important;
 }
 /* Button */
 .p-button-danger {
