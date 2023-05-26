@@ -1,3 +1,4 @@
+import { useAtomValue } from "jotai";
 import { CRS, LatLngBoundsExpression } from "leaflet";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +10,7 @@ import MapImage from "../../components/Map/MapImage";
 import { useDeleteItem } from "../../CRUD/ItemsCRUD";
 import { useGetItem } from "../../hooks/useGetItem";
 import { MapType } from "../../types/ItemTypes/mapTypes";
+import { RoleAtom } from "../../utils/Atoms/atoms";
 import { useMapContextMenuItems } from "../../utils/contextMenus";
 
 type Props = {
@@ -23,6 +25,7 @@ export default function MapView({ isReadOnly }: Props) {
     [0, 0],
   ]);
   const [loading, setLoading] = useState(true);
+  const UserRole = useAtomValue(RoleAtom);
   const mapRef = useRef() as any;
   const imgRef = useRef() as any;
   const cm = useRef() as any;
@@ -55,7 +58,7 @@ export default function MapView({ isReadOnly }: Props) {
   return (
     <div className="flex h-full w-full flex-col">
       <link href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" rel="stylesheet" />
-      <ContextMenu cm={cm} items={items} />
+      {UserRole?.is_owner || UserRole?.edit_maps ? <ContextMenu cm={cm} items={items} /> : null}
       {/* This div is needed for layers to properly work */}
       {currentMap ? (
         <div className="h-full w-full">
