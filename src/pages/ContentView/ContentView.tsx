@@ -17,7 +17,7 @@ const RandomTableView = lazy(() => import("../RandomTableView/RandomTableView"))
 function PermissionWrapper({ children, type }: { children: JSX.Element[] | JSX.Element | null; type: string | undefined }) {
   const UserRole = useAtomValue(RoleAtom);
   if (!UserRole) return <div className="w-full p-4">{type === "documents" ? <EditorSkeleton /> : null}</div>;
-  return <span>{children}</span>;
+  return <span className="h-full w-full">{children}</span>;
 }
 
 export default function ContentView() {
