@@ -14,21 +14,16 @@ const CalendarView = lazy(() => import("../CalendarView/CalendarView"));
 const TimelineView = lazy(() => import("../TimelineView/TimelineView"));
 const RandomTableView = lazy(() => import("../RandomTableView/RandomTableView"));
 
-function PermissionWrapper({ children }: { children: JSX.Element[] | JSX.Element | null }) {
+function PermissionWrapper({ children, type }: { children: JSX.Element[] | JSX.Element | null; type: string | undefined }) {
   const UserRole = useAtomValue(RoleAtom);
-  if (!UserRole)
-    return (
-      <div className="w-full p-4">
-        <EditorSkeleton />
-      </div>
-    );
+  if (!UserRole) return <div className="w-full p-4">{type === "documents" ? <EditorSkeleton /> : null}</div>;
   return <span>{children}</span>;
 }
 
 export default function ContentView() {
   const { type } = useParams();
   return (
-    <PermissionWrapper>
+    <PermissionWrapper type={type}>
       <>
         {type === "documents" ? <EditorContentWrapper /> : null}
         {type === "maps" ? <MapView /> : null}
