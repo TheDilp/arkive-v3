@@ -22,9 +22,9 @@ export default function EditorContainer({
 }) {
   const { project_id } = useParams();
   const { mutate: updateDocumentMutation } = useUpdateItem<DocumentType>("documents", project_id as string);
-  const permissions = useAtomValue(RoleAtom);
+  const UserRole = useAtomValue(RoleAtom);
 
-  const canEdit = permissions === "owner" || permissions?.documents === "Edit";
+  const canEdit = UserRole?.is_owner || UserRole?.edit_documents;
 
   const onError: InvalidContentHandler = useCallback(({ json, invalidContent, transformers }) => {
     // Automatically remove all invalid nodes and marks.
