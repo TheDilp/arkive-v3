@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { useAtom, useAtomValue } from "jotai";
 import { Button } from "primereact/button";
 import { Tooltip as PrimeTooltip } from "primereact/tooltip";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
@@ -12,6 +12,7 @@ import { NavItemType } from "../../types/generalTypes";
 import { RoleAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
+import { toaster } from "../../utils/toast";
 import { checkItemPermission, navItems } from "../../utils/uiUtils";
 import { SidebarSkeleton } from "../Skeleton/Skeleton";
 
@@ -36,19 +37,23 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
           />
         </li>
       ) : null}
-      {items.map((item) => {
+      {items.map((item, idx) => {
         const categoryPermission = checkItemPermission(item.tooltip.toLowerCase(), userRole, false);
         return (
           <Link
             key={item.icon}
-            className={`mx-4 lg:mx-0 ${categoryPermission ? "cursor-pointer" : "cursor-default"}`}
-            to={categoryPermission ? item.navigate : "#"}>
+            className={`mx-4 lg:mx-0 ${categoryPermission || !idx ? "cursor-pointer" : "cursor-default"}`}
+            onClick={() => {
+              if (!categoryPermission && idx)
+                toaster("error", "You do not have viewing or editing permissions for this category.");
+            }}
+            to={categoryPermission || !idx ? item.navigate : "#"}>
             <PrimeTooltip content={item.tooltip.replace("_", " ")} position="right" target={`.${item.tooltip}`} />
             <li
               className={`${item.tooltip} flex h-14 items-center justify-center transition-colors  ${
-                categoryPermission ? "hover:text-sky-400" : "text-zinc-400 hover:text-zinc-700"
+                categoryPermission || !idx ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-400 hover:text-zinc-700"
               } ${item.navigate !== "/" && pathname.includes(item.navigate.replace("./", "")) ? "text-sky-400 " : ""}
-              ${categoryPermission ? "" : "text-zinc-700"}
+              ${categoryPermission || !idx ? "" : "text-zinc-700"}
             
             `}>
               <Icon fontSize={28} icon={item.icon} />
@@ -57,18 +62,18 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         );
       })}
 
-      {userRole !== "owner" ? null : (
+      {userRole.is_owner ? (
         <li className="mx-4 ml-auto flex h-14 items-center lg:mx-0 lg:ml-0 lg:mt-auto">
           <Icon
-            className={`${isOwner ? "cursor-pointer hover:text-blue-300" : "text-zinc-600"}`}
+            className={`${userRole.is_owner ? "cursor-pointer hover:text-blue-300" : "text-zinc-600"}`}
             fontSize={28}
             icon="mdi:cog"
             onClick={() => {
-              if (isOwner) navigate("./settings/project-settings");
+              if (userRole.is_owner) navigate("./settings/project-settings");
             }}
           />
         </li>
-      )}
+      ) : null}
     </>
   );
 }

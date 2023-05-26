@@ -1,5 +1,8 @@
+import { useAtomValue } from "jotai";
 import { lazy } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, To, useParams } from "react-router-dom";
+
+import { RoleAtom } from "../../utils/Atoms/atoms";
 
 const ProjectSettings = lazy(() => import("../Settings/ProjectSettings"));
 const DocumentSettings = lazy(() => import("../Settings/DocumentSettings"));
@@ -18,6 +21,10 @@ const MiscellaneousSettings = lazy(() => import("../Settings/MiscellaneousSettin
 
 export default function SettingsContentView() {
   const { type } = useParams();
+  const userRole = useAtomValue(RoleAtom);
+  if (!userRole?.is_owner) {
+    return <Navigate to={-1 as To} />;
+  }
   if (type === "project-settings") return <ProjectSettings />;
   if (type === "document-settings") return <DocumentSettings />;
   if (type === "map-settings") return <MapSettings />;

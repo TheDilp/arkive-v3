@@ -74,12 +74,12 @@ export const EdgesAtom = atom<EdgeDefinition[]>([]);
 
 export const UserAtom = atom<UserType | null>(null);
 
-export const RoleAtom = atom<RoleType | null>((get) => {
+export const RoleAtom = atom<(RoleType & { is_owner: boolean }) | null>((get) => {
   const projectData = get(ProjectAtom);
   const userData = get(UserAtom);
 
   if (projectData && projectData?.owner_id === userData?.id) {
-    const owner: RoleType = {
+    const owner: RoleType & { is_owner: boolean } = {
       id: crypto.randomUUID(),
       title: "OWNER",
       project: projectData,
@@ -102,14 +102,16 @@ export const RoleAtom = atom<RoleType | null>((get) => {
       edit_dictionaries: true,
       edit_tags: true,
       edit_alter_names: true,
+      is_owner: true,
     };
 
     return owner;
   }
 
   if (projectData && userData) {
-    console.log(projectData.members.find((member) => member.id === userData.id));
-    return projectData.members.find((member) => member.id === userData.id)?.roles[0] ?? null;
+    const role = projectData.members.find((member) => member.id === userData.id)?.roles[0];
+    if (role) return { ...role, is_owner: false };
+    return null;
   }
 
   return null;
