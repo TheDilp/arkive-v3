@@ -3,7 +3,7 @@ import { atom } from "jotai";
 
 import { DrawerAtomType } from "../../types/drawerDialogTypes";
 import { MapPinType, MapType } from "../../types/ItemTypes/mapTypes";
-import { PermissionType, ProjectType } from "../../types/ItemTypes/projectTypes";
+import { ProjectType, RoleType } from "../../types/ItemTypes/projectTypes";
 import { SidebarTreeItemType } from "../../types/treeTypes";
 import { UserType } from "../../types/userTypes";
 import { DefaultDialog, DefaultDrawer } from "../DefaultValues/DrawerDialogDefaults";
@@ -74,16 +74,43 @@ export const EdgesAtom = atom<EdgeDefinition[]>([]);
 
 export const UserAtom = atom<UserType | null>(null);
 
-export const PermissionAtom = atom<PermissionType | "owner" | null>((get) => {
+export const RoleAtom = atom<RoleType | null>((get) => {
   const projectData = get(ProjectAtom);
   const userData = get(UserAtom);
-  if (projectData?.owner_id === userData?.id) return "owner";
 
-  // if (projectData && userData) {
-  //   if (projectData.ownerId === userData.auth_id) return "owner";
+  if (projectData && projectData?.owner_id === userData?.id) {
+    const owner: RoleType = {
+      id: crypto.randomUUID(),
+      title: "OWNER",
+      project: projectData,
+      project_id: projectData.id,
+      view_documents: true,
+      edit_documents: true,
+      view_maps: true,
+      edit_maps: true,
+      view_boards: true,
+      edit_boards: true,
+      view_calendars: true,
+      edit_calendars: true,
+      view_timelines: true,
+      edit_timelines: true,
+      view_screens: true,
+      edit_screens: true,
+      view_random_tables: true,
+      edit_random_tables: true,
+      view_dictionaries: true,
+      edit_dictionaries: true,
+      edit_tags: true,
+      edit_alter_names: true,
+    };
 
-  //   return projectData.members.find((member) => member.member.id === userData.id)?.permissions[0] ?? null;
-  // }
+    return owner;
+  }
+
+  if (projectData && userData) {
+    console.log(projectData.members.find((member) => member.id === userData.id));
+    return projectData.members.find((member) => member.id === userData.id)?.roles[0] ?? null;
+  }
 
   return null;
 });

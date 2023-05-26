@@ -4,23 +4,23 @@ import { Icon } from "@iconify/react";
 import { useAtom, useAtomValue } from "jotai";
 import { Button } from "primereact/button";
 import { Tooltip as PrimeTooltip } from "primereact/tooltip";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { useCreateProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { NavItemType } from "../../types/generalTypes";
-import { PermissionAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
+import { RoleAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { setItem } from "../../utils/storage";
-import { checkIfOwner, navItems } from "../../utils/uiUtils";
+import { checkItemPermission, navItems } from "../../utils/uiUtils";
+import { SidebarSkeleton } from "../Skeleton/Skeleton";
 
 function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathname: string }) {
   const { isLg } = useBreakpoint();
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
-  const permission = useAtomValue(PermissionAtom);
+  const userRole = useAtomValue(RoleAtom);
   const navigate = useNavigate();
-  const isOwner = checkIfOwner(permission);
-
+  if (userRole === null) return <SidebarSkeleton />;
   return (
     <>
       {isLg ? (
@@ -37,11 +37,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         </li>
       ) : null}
       {items.map((item) => {
-        const categoryPermission = true;
-        // checkIfCategoryAllowed(
-        //   permission,
-        //   (item.tooltip === "Graphs" ? "Boards" : item.tooltip).toLowerCase() as PermissionCategoriesType,
-        // );
+        const categoryPermission = checkItemPermission(item.tooltip.toLowerCase(), userRole, false);
         return (
           <Link
             key={item.icon}
@@ -61,7 +57,7 @@ function SidebarProjectItems({ items, pathname }: { items: NavItemType[]; pathna
         );
       })}
 
-      {permission !== "owner" ? null : (
+      {userRole !== "owner" ? null : (
         <li className="mx-4 ml-auto flex h-14 items-center lg:mx-0 lg:ml-0 lg:mt-auto">
           <Icon
             className={`${isOwner ? "cursor-pointer hover:text-blue-300" : "text-zinc-600"}`}

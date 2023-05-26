@@ -81,3 +81,40 @@ export function ScreenViewSkeleton() {
     </div>
   );
 }
+
+export function SidebarSkeleton() {
+  return (
+    <>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+      <div className="flex h-14 w-full items-center justify-center">
+        <div className="h-7 w-7 animate-pulse rounded-full bg-zinc-700" />
+      </div>
+    </>
+  );
+}

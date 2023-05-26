@@ -1,22 +1,20 @@
 import { Icon } from "@iconify/react";
+import { useAtomValue } from "jotai";
 import { Card } from "primereact/card";
 import { Tooltip as PrimeTooltip } from "primereact/tooltip";
 import { Link } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { baseURLS } from "../../types/CRUDenums";
-import { RolePermissionsType } from "../../types/generalTypes";
-import { ProjectType, RoleType } from "../../types/ItemTypes/projectTypes";
+import { ProjectType } from "../../types/ItemTypes/projectTypes";
+import { UserAtom } from "../../utils/Atoms/atoms";
 import { toaster } from "../../utils/toast";
-import { navItems } from "../../utils/uiUtils";
+import { checkItemPermission, navItems } from "../../utils/uiUtils";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
 
-function checkItemPermission(item: string, role: RoleType) {
-  return role[`view_${item.toLowerCase()}` as RolePermissionsType] || role[`edit_${item.toLowerCase()}` as RolePermissionsType];
-}
-
-export default function ProjectCard({ id, image, title, roles }: ProjectType) {
+export default function ProjectCard({ id, image, title, roles, owner_id }: ProjectType) {
+  const UserData = useAtomValue(UserAtom);
   const userRole = roles[0];
 
   const header = (
@@ -34,7 +32,7 @@ export default function ProjectCard({ id, image, title, roles }: ProjectType) {
       {navItems
         .filter((_, index) => index !== 0)
         .map((navItem, index) => {
-          const itemPermission = checkItemPermission(navItem.tooltip, userRole);
+          const itemPermission = checkItemPermission(navItem.tooltip.toLowerCase(), userRole, UserData?.id === owner_id);
           return (
             <Link
               key={navItem.icon}

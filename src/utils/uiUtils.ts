@@ -1,4 +1,5 @@
-import { AllAvailableTypes, IconCategoriesType, NavItemType } from "../types/generalTypes";
+import { AllAvailableTypes, IconCategoriesType, NavItemType, RolePermissionsType } from "../types/generalTypes";
+import { RoleType } from "../types/ItemTypes/projectTypes";
 import { IconEnum } from "./DefaultValues/GeneralDefaults";
 import { getItem, setItem } from "./storage";
 
@@ -98,9 +99,7 @@ export function generateHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
 
-export function checkIfCategoryAllowed(permission: "owner" | null) {
-  if (permission === "owner") return true;
-  if (permission === null) return false;
-
-  return false;
+export function checkItemPermission(item: string, role: RoleType, isOwner?: boolean) {
+  if (isOwner) return isOwner;
+  return role[`view_${item}` as RolePermissionsType] || role[`edit_${item}` as RolePermissionsType];
 }

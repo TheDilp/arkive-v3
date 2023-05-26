@@ -8,7 +8,7 @@ import { useDebouncedCallback } from "use-debounce";
 import MenuBar from "../../components/Editor/Menubar";
 import { useUpdateItem } from "../../CRUD/ItemsCRUD";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
-import { PermissionAtom } from "../../utils/Atoms/atoms";
+import { RoleAtom } from "../../utils/Atoms/atoms";
 import { DefaultEditorExtensions, editorHooks } from "../../utils/editorUtils";
 
 export default function EditorContainer({
@@ -22,7 +22,7 @@ export default function EditorContainer({
 }) {
   const { project_id } = useParams();
   const { mutate: updateDocumentMutation } = useUpdateItem<DocumentType>("documents", project_id as string);
-  const permissions = useAtomValue(PermissionAtom);
+  const permissions = useAtomValue(RoleAtom);
 
   const canEdit = permissions === "owner" || permissions?.documents === "Edit";
 

@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { lazy } from "react";
 import { useParams } from "react-router-dom";
 
-import { PermissionAtom } from "../../utils/Atoms/atoms";
+import { RoleAtom } from "../../utils/Atoms/atoms";
 
 const EditorContentWrapper = lazy(() => import("../Editor/EditorContentWrapper"));
 const MapView = lazy(() => import("../MapView/MapView"));
@@ -14,7 +14,7 @@ const TimelineView = lazy(() => import("../TimelineView/TimelineView"));
 const RandomTableView = lazy(() => import("../RandomTableView/RandomTableView"));
 
 function PermissionWrapper({ children }: { children: JSX.Element[] | JSX.Element | null }) {
-  const permissions = useAtomValue(PermissionAtom);
+  const permissions = useAtomValue(RoleAtom);
   console.log(permissions);
   return <span>{children}</span>;
 }

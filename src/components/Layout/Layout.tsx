@@ -1,5 +1,5 @@
 import { SignedIn, useUser } from "@clerk/clerk-react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
@@ -9,7 +9,7 @@ import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
-import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { ProjectAtom, RoleAtom, UserAtom } from "../../utils/Atoms/atoms";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import LoadingScreen from "../Loading/LoadingScreen";
@@ -21,13 +21,13 @@ export default function LayoutWrapper() {
   const { project_id, type } = useParams();
   const { user } = useUser();
   const { isLg } = useBreakpoint();
-
+  const setProjectAtom = useSetAtom(ProjectAtom);
   const [userData, setUserAtom] = useAtom(UserAtom);
   useGetUser(
     user?.id as string,
     {
       enabled: !!user && !userData,
-      staleTime: 1000 * 60 * 5,
+      staleTime: 60 * 5 * 1000,
       onSuccess: (data) => {
         if (data) {
           setUserAtom(data as UserType);
@@ -36,19 +36,18 @@ export default function LayoutWrapper() {
     },
     false,
   );
-  const setProjectAtom = useSetAtom(ProjectAtom);
   const { data: projectData, isFetching: isFetchingProject } = useGetSingleProject(project_id as string, {
     enabled: !!user,
     onSuccess: (data) => {
       setProjectAtom(data as ProjectType);
     },
   });
+  const userRole = useAtomValue(RoleAtom);
   useEffect(() => {
     if (projectData) {
       setProjectAtom(projectData as ProjectType);
     }
   }, [projectData, project_id]);
-
   return (
     <SignedIn>
       <div className="flex h-full max-w-full overflow-hidden">

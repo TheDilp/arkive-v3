@@ -14,7 +14,7 @@ import { useGetAllImages } from "../../CRUD/ItemsCRUD";
 import { useDeleteProject, useGetSingleProject, useUpdateProject } from "../../CRUD/ProjectCRUD";
 import { baseURLS, getURLS } from "../../types/CRUDenums";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { PermissionAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { RoleAtom, UserAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { exportImages } from "../../utils/imageUtils";
@@ -27,7 +27,7 @@ export default function ProjectSettings() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const userData = useAtomValue(UserAtom);
-  const permission = useAtomValue(PermissionAtom);
+  const permission = useAtomValue(RoleAtom);
   const [loading, setLoading] = useState(false);
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);

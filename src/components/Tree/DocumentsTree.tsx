@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
-import { DrawerAtom, PermissionAtom, ThemeAtom } from "../../utils/Atoms/atoms";
+import { DrawerAtom, RoleAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import BaseTree from "./BaseTree";
 
@@ -13,7 +13,7 @@ export default function DocumentsTree() {
   const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
   const createDocumentMutation = useCreateItem("documents");
-  const permissions = useAtomValue(PermissionAtom);
+  const permissions = useAtomValue(RoleAtom);
 
   const items = useMemo(
     () => [
