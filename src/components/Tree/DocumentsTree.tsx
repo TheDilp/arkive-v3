@@ -13,7 +13,7 @@ export default function DocumentsTree() {
   const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
   const createDocumentMutation = useCreateItem("documents");
-  const permissions = useAtomValue(RoleAtom);
+  const UserRole = useAtomValue(RoleAtom);
 
   const items = useMemo(
     () => [
@@ -59,7 +59,7 @@ export default function DocumentsTree() {
     <div className={`h-screen p-4 ${theme === "dark" ? "" : "border-r bg-white"}`}>
       <SplitButton
         className="p-button-outlined w-full"
-        disabled={permissions !== "owner" && typeof permissions === "object" && permissions?.documents !== "Edit"}
+        disabled={!UserRole?.is_owner && !UserRole?.edit_documents}
         icon="pi pi-plus"
         label="Create Document"
         loading={createDocumentMutation?.isLoading}

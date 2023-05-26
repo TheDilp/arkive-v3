@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { capitalCase } from "remirror";
 
 import { useCreateItem } from "../../CRUD/ItemsCRUD";
-import { AllItemsType, AvailableItemTypes, PermissionCategoriesType } from "../../types/generalTypes";
+import { AllItemsType, AvailableItemTypes, RolePermissionsType } from "../../types/generalTypes";
 import { DrawerAtom, RoleAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getItemIcon, getItemNameForTitle, getItemNameForTree } from "../../utils/transform";
@@ -19,9 +19,10 @@ export default function ItemsTree({ type }: Props) {
   const { project_id } = useParams();
   const setDrawer = useSetAtom(DrawerAtom);
   const createItemMutation = useCreateItem<AllItemsType>(type);
-  const permissions = useAtomValue(RoleAtom);
+  const UserRole = useAtomValue(RoleAtom);
   const itemName = getItemNameForTree(type);
   const pageTitle = getItemNameForTitle(type);
+
   return (
     <div className="flex h-screen flex-1 flex-col">
       <h2 className="h-8 text-center font-Merriweather text-2xl capitalize">
@@ -31,11 +32,7 @@ export default function ItemsTree({ type }: Props) {
       <div className="mt-3 flex flex-col items-center justify-between gap-y-2 gap-x-1 border-zinc-600 pb-2">
         <Button
           className="p-button-outlined p-button-secondary w-full truncate"
-          disabled={
-            permissions !== "owner" &&
-            typeof permissions === "object" &&
-            permissions?.[type as PermissionCategoriesType] !== "Edit"
-          }
+          disabled={!UserRole?.is_owner && !UserRole?.[`edit_${type}` as RolePermissionsType]}
           icon="pi pi-folder"
           iconPos="right"
           label="New Folder"
@@ -49,11 +46,7 @@ export default function ItemsTree({ type }: Props) {
         />
         <Button
           className="p-button-outlined w-full truncate"
-          disabled={
-            permissions !== "owner" &&
-            typeof permissions === "object" &&
-            permissions?.[type as PermissionCategoriesType] !== "Edit"
-          }
+          disabled={!UserRole?.is_owner && !UserRole?.[`edit_${type}` as RolePermissionsType]}
           onClick={() => {
             setDrawer({
               ...DefaultDrawer,
