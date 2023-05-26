@@ -6,7 +6,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { useLocation, useParams } from "react-router-dom";
 
 import { useBreakpoint } from "../../hooks/useMediaQuery";
-import { DialogAtom, DrawerAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
+import { DialogAtom, DrawerAtom, RoleAtom, SidebarCollapseAtom, ThemeAtom } from "../../utils/Atoms/atoms";
 import { DefaultDialog, DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { setItem } from "../../utils/storage";
 import PageTitle from "../Title/PageTitle";
@@ -21,7 +21,7 @@ export default function Navbar() {
   const setDialog = useSetAtom(DialogAtom);
   const setDrawer = useSetAtom(DrawerAtom);
   const theme = useAtomValue(ThemeAtom);
-
+  const UserRole = useAtomValue(RoleAtom);
   const [sidebarToggle, setSidebarToggle] = useAtom(SidebarCollapseAtom);
   const mutationCount = useIsMutating();
 
@@ -68,10 +68,17 @@ export default function Navbar() {
                 }
               />
               <Icon
-                className="fileBrowserIcon cursor-pointer hover:text-blue-300"
+                className={`fileBrowserIcon ${
+                  UserRole?.is_owner || UserRole?.upload_assets
+                    ? "cursor-pointer hover:text-blue-300"
+                    : "cursor-not-allowed text-zinc-600"
+                }`}
                 fontSize={20}
                 icon="ion:upload"
-                onClick={() => setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" })}
+                onClick={() => {
+                  if (UserRole?.is_owner || UserRole?.upload_assets)
+                    setDialog({ ...DefaultDialog, position: "top-right", show: true, type: "files" });
+                }}
               />
               <Tooltip allowedPlacements={["bottom-end"]} content={<RandomGenerator />} isClickable>
                 <Icon className="cursor-pointer hover:text-blue-300" fontSize={20} icon="arcticons:reroll" />
