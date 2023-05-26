@@ -101,5 +101,8 @@ export function generateHexColor() {
 
 export function checkItemPermission(item: string, role: RoleType, isOwner?: boolean) {
   if (isOwner) return isOwner;
-  return role[`view_${item}` as RolePermissionsType] || role[`edit_${item}` as RolePermissionsType];
+  return (
+    role[`view_${item === "graphs" ? "boards" : item}` as RolePermissionsType] ||
+    role[`edit_${item === "graphs" ? "boards" : item}` as RolePermissionsType]
+  );
 }
