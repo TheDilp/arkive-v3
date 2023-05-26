@@ -17,7 +17,6 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./components/Layout/Layout";
 import LoadingScreen from "./components/Loading/LoadingScreen";
 import Dashboard from "./pages/Dashboard";
-import { AbacProvider } from "react-abac";
 
 const ContentView = lazy(() => import("./pages/ContentView/ContentView"));
 const SettingsContentView = lazy(() => import("./pages/ContentView/SettingsContentView"));

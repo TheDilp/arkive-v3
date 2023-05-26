@@ -7,10 +7,10 @@ import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { baseURLS } from "../../types/CRUDenums";
 import { RolePermissionsType } from "../../types/generalTypes";
 import { ProjectType, RoleType } from "../../types/ItemTypes/projectTypes";
+import { toaster } from "../../utils/toast";
 import { navItems } from "../../utils/uiUtils";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
-import { toaster } from "../../utils/toast";
 
 function checkItemPermission(item: string, role: RoleType) {
   return role[`view_${item.toLowerCase()}` as RolePermissionsType] || role[`edit_${item.toLowerCase()}` as RolePermissionsType];
