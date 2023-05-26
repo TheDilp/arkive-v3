@@ -118,3 +118,27 @@ export function SidebarSkeleton() {
     </>
   );
 }
+
+export function EditorSkeleton() {
+  return (
+    <div className="max-w-full animate-pulse" role="status">
+      <div className="mb-4 h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[75%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[64%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[79%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[75%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[64%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[79%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[64%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[79%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[75%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
+      <div className="mb-2.5 h-2 max-w-[79%] rounded-full bg-gray-200 dark:bg-gray-700" />
+      <span className="sr-only">Loading...</span>
+    </div>
+  );
+}

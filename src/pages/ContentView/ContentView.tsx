@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { lazy } from "react";
 import { useParams } from "react-router-dom";
 
-import { FolderSkeleton } from "../../components/Skeleton/Skeleton";
+import { EditorSkeleton } from "../../components/Skeleton/Skeleton";
 import { RoleAtom } from "../../utils/Atoms/atoms";
 
 const EditorContentWrapper = lazy(() => import("../Editor/EditorContentWrapper"));
@@ -16,7 +16,12 @@ const RandomTableView = lazy(() => import("../RandomTableView/RandomTableView"))
 
 function PermissionWrapper({ children }: { children: JSX.Element[] | JSX.Element | null }) {
   const UserRole = useAtomValue(RoleAtom);
-  if (!UserRole) return <FolderSkeleton />;
+  if (!UserRole)
+    return (
+      <div className="w-full p-4">
+        <EditorSkeleton />
+      </div>
+    );
   return <span>{children}</span>;
 }
 
