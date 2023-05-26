@@ -7,20 +7,17 @@ import {
   UseMutateAsyncFunction,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useAtomValue } from "jotai";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableSelection } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useUpdatePermission } from "../../CRUD/OtherCRUD";
 import { useAssignRole, useGetProjectMembers, useGetProjectRoles, useRevokeRole } from "../../CRUD/ProjectCRUD";
 import { baseURLS } from "../../types/CRUDenums";
 import { UserType } from "../../types/userTypes";
-import { UserAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { toaster } from "../../utils/toast";
 
@@ -101,10 +98,8 @@ export default function MemberSettings() {
   const tableRef = useRef() as MutableRefObject<DataTable<any[]>>;
   const [selected, setSelected] = useState<DataTableSelection<any[]>>([]);
   const { user } = useUser();
-  const UserData = useAtomValue(UserAtom);
   const { mutateAsync: assignRole } = useAssignRole();
   const { mutateAsync: revokeRole } = useRevokeRole();
-  const { mutateAsync: updatePermission } = useUpdatePermission(project_id as string);
   const {
     data: members,
     isFetching: isFetchingMembers,
@@ -113,14 +108,10 @@ export default function MemberSettings() {
     enabled: !!user,
   });
 
-  const { data: roles, isFetching: isFetchingRoles } = useGetProjectRoles(project_id as string, {
+  const { data: roles } = useGetProjectRoles(project_id as string, {
     staleTime: 5 * 60 * 1000,
   });
   const mappedRoles = roles?.map((role) => ({ value: role.id, label: role.title }));
-
-  useEffect(() => {
-    console.log("TEST");
-  }, [members]);
 
   if (!members) return null;
   return (
