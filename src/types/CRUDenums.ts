@@ -102,6 +102,9 @@ export const updateURLs = {
   sortSections: "sortsections",
   sortCards: "sortcards",
   sortMonths: "sortmonths",
+
+  assignRole: "assignrole",
+  revokeRole: "revokerole",
 };
 
 export const deleteURLs = {

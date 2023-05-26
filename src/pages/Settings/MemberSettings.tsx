@@ -1,25 +1,33 @@
 import { useUser } from "@clerk/clerk-react";
-import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from "@tanstack/react-query";
-import { useAtomValue, useSetAtom } from "jotai";
+import {
+  QueryClient,
+  QueryObserverResult,
+  RefetchOptions,
+  RefetchQueryFilters,
+  UseMutateAsyncFunction,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableSelection } from "primereact/datatable";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { MutableRefObject, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useUpdatePermission } from "../../CRUD/OtherCRUD";
-import { useGetProjectMembers } from "../../CRUD/ProjectCRUD";
+import { useAssignRole, useGetProjectMembers, useGetProjectRoles, useRevokeRole } from "../../CRUD/ProjectCRUD";
 import { baseURLS } from "../../types/CRUDenums";
-import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { UserType } from "../../types/userTypes";
+import { UserAtom } from "../../utils/Atoms/atoms";
 import { FetchFunction } from "../../utils/CRUD/CRUDFetch";
 import { toaster } from "../../utils/toast";
 
 function Header(
   refetch: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
-  ) => Promise<QueryObserverResult<ProjectType, unknown>>,
+  ) => Promise<QueryObserverResult<UserType[], unknown>>,
 ) {
   const [addNew, setAddNew] = useState(false);
   const [email, setEmail] = useState("");
@@ -53,14 +61,49 @@ function Header(
     </div>
   );
 }
+type RoleChangeFn = UseMutateAsyncFunction<
+  any,
+  unknown,
+  {
+    user_id: string;
+    role_id: string;
+  },
+  unknown
+>;
+function RoleBody(
+  rowData: UserType,
+  roles: { label: string; value: string }[] | undefined,
+  assignRole: RoleChangeFn,
+  revokeRole: RoleChangeFn,
+  queryClient: QueryClient,
+) {
+  const role_id = rowData?.roles?.[0]?.id;
+  const { id: user_id } = rowData;
+  return (
+    <Dropdown
+      className="w-full"
+      clearIcon="pi pi-times"
+      onChange={async (e) => {
+        if (e.value) await assignRole({ user_id, role_id: e.value });
+        else await revokeRole({ user_id, role_id });
+        await queryClient.refetchQueries({ queryKey: ["projectMembers"] });
+      }}
+      options={roles || []}
+      showClear
+      value={role_id}
+    />
+  );
+}
 
 export default function MemberSettings() {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const tableRef = useRef() as MutableRefObject<DataTable<any[]>>;
-  const setProjectAtom = useSetAtom(ProjectAtom);
   const [selected, setSelected] = useState<DataTableSelection<any[]>>([]);
   const { user } = useUser();
   const UserData = useAtomValue(UserAtom);
+  const { mutateAsync: assignRole } = useAssignRole();
+  const { mutateAsync: revokeRole } = useRevokeRole();
   const { mutateAsync: updatePermission } = useUpdatePermission(project_id as string);
   const {
     data: members,
@@ -68,10 +111,17 @@ export default function MemberSettings() {
     refetch,
   } = useGetProjectMembers(project_id as string, {
     enabled: !!user,
-    onSuccess: (data) => {
-      setProjectAtom(data as ProjectType);
-    },
   });
+
+  const { data: roles, isFetching: isFetchingRoles } = useGetProjectRoles(project_id as string, {
+    staleTime: 5 * 60 * 1000,
+  });
+  const mappedRoles = roles?.map((role) => ({ value: role.id, label: role.title }));
+
+  useEffect(() => {
+    console.log("TEST");
+  }, [members]);
+
   if (!members) return null;
   return (
     <div className="h-[95vh] w-full overflow-hidden p-4">
@@ -95,8 +145,14 @@ export default function MemberSettings() {
         sortMode="multiple"
         value={(members as any) || []}>
         <Column headerClassName="w-12" selectionMode="multiple" />
-        <Column className="max-w-[15rem] truncate" field="nickname" filter header="Title" />
-        <Column className="max-w-[15rem] truncate" field="" filter header="Role" />
+        <Column className="w-3/4 truncate" field="nickname" filter header="Title" />
+        <Column
+          body={(rowData) => RoleBody(rowData, mappedRoles, assignRole, revokeRole, queryClient)}
+          className="max-w-[10rem] truncate"
+          field="roles"
+          filter
+          header="Role"
+        />
       </DataTable>
     </div>
   );

@@ -3,14 +3,7 @@ import { useSetAtom } from "jotai";
 import omit from "lodash.omit";
 
 import { baseURLS, createURLS, deleteURLs, getURLS, updateURLs } from "../types/CRUDenums";
-import {
-  AllAvailableTypes,
-  AvailableItemTypes,
-  PermissionLevelType,
-  TagCreateType,
-  TagSettingsType,
-  TagType,
-} from "../types/generalTypes";
+import { AllAvailableTypes, AvailableItemTypes, TagCreateType, TagSettingsType, TagType } from "../types/generalTypes";
 import { AlterNameType, DocumentType } from "../types/ItemTypes/documentTypes";
 import { ProjectType } from "../types/ItemTypes/projectTypes";
 import { UserType } from "../types/userTypes";

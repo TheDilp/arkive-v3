@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -20,6 +21,9 @@ import { handleCloseDrawer } from "../Drawer";
 import DrawerSection from "../DrawerSection";
 
 function getPermissionValue(localItem: RoleType | RoleCreateType, name: string) {
+  if (name === "timelines") {
+    console.log(localItem[`view_${name}` as RolePermissionsType], `view_${name}`, localItem);
+  }
   if (localItem[`edit_${name}` as RolePermissionsType]) return `edit_${name}`;
   if (localItem[`view_${name}` as RolePermissionsType]) return `view_${name}`;
 
@@ -28,6 +32,7 @@ function getPermissionValue(localItem: RoleType | RoleCreateType, name: string) 
 
 export default function DrawerRolesContent() {
   const { project_id } = useParams();
+  const queryClient = useQueryClient();
   const { mutateAsync: createRole, isLoading: isCreating } = useCreateProjectRole(project_id as string);
   const { mutateAsync: updateRole, isLoading: isUpdating } = useUpdateProjectRole();
   const [drawer, setDrawer] = useAtom(DrawerAtom);
@@ -94,6 +99,7 @@ export default function DrawerRolesContent() {
             if (!localItem?.id) await createRole(localItem);
             else await updateRole({ id: localItem.id, ...changedData });
             resetChanges();
+            queryClient.refetchQueries({ queryKey: ["projectRoles"] });
             handleCloseDrawer(setDrawer, "right");
           }}
           type="submit">

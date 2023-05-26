@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstac
 
 import { baseURLS, createURLS, getURLS, updateURLs } from "../types/CRUDenums";
 import { ProjectDetails, ProjectType, RoleCreateType, RoleType, SwatchType } from "../types/ItemTypes/projectTypes";
+import { UserType } from "../types/userTypes";
 import { FetchFunction } from "../utils/CRUD/CRUDFetch";
 import { toaster } from "../utils/toast";
 
@@ -84,7 +85,7 @@ export const useGetSingleProject = (id: string, options?: UseQueryOptions) => {
   );
 };
 export const useGetProjectMembers = (project_id: string, options?: UseQueryOptions) => {
-  return useQuery<ProjectType>(
+  return useQuery<UserType[]>(
     ["projectMembers", project_id],
     async () =>
       FetchFunction({
@@ -213,7 +214,43 @@ export const useUpdateProjectRole = () => {
             });
           return old;
         });
-        toaster("success", "The role has been successfully update. 🔑");
+        toaster("success", "The role has been successfully updated. 🔑");
+      },
+    },
+  );
+};
+export const useAssignRole = () => {
+  return useMutation(
+    async (variables: { user_id: string; role_id: string }) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${updateURLs.assignRole}`,
+        method: "POST",
+        body: JSON.stringify(variables),
+      }),
+    {
+      onError: () => {
+        toaster("error", "There was an error assigning this role.");
+      },
+      onSuccess: () => {
+        toaster("success", "The role has been successfully assigned. 🔑");
+      },
+    },
+  );
+};
+export const useRevokeRole = () => {
+  return useMutation(
+    async (variables: { user_id: string; role_id: string }) =>
+      FetchFunction({
+        url: `${baseURLS.baseServer}${updateURLs.revokeRole}`,
+        method: "POST",
+        body: JSON.stringify(variables),
+      }),
+    {
+      onError: () => {
+        toaster("error", "There was an error revoking this role.");
+      },
+      onSuccess: () => {
+        toaster("success", "The role has been successfully revoked. 🔑");
       },
     },
   );
