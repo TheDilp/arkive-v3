@@ -48,6 +48,7 @@ export default function LayoutWrapper() {
       setProjectAtom(projectData as ProjectType);
     }
   }, [projectData, project_id]);
+
   return (
     <SignedIn>
       <div className="flex h-full max-w-full overflow-hidden">

@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { PermissionCategoriesType, RolePermissionsType } from "../generalTypes";
 import { UserType } from "../userTypes";
 import { BoardType } from "./boardTypes";
@@ -29,6 +30,7 @@ export type ProjectType = {
   members: UserType[];
   permissions: PermissionType[];
   swatches: SwatchType[];
+  roles: RoleType[];
 };
 
 export interface ProjectDetails {

@@ -136,12 +136,11 @@ export default function MemberSettings() {
         sortMode="multiple"
         value={(members as any) || []}>
         <Column headerClassName="w-12" selectionMode="multiple" />
-        <Column className="w-3/4 truncate" field="nickname" filter header="Title" />
+        <Column className="w-3/4 truncate" field="nickname" filter header="Title" sortable />
         <Column
           body={(rowData) => RoleBody(rowData, mappedRoles, assignRole, revokeRole, queryClient)}
           className="max-w-[10rem] truncate"
           field="roles"
-          filter
           header="Role"
         />
       </DataTable>

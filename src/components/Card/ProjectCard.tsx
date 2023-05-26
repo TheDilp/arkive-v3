@@ -1,20 +1,24 @@
 import { Icon } from "@iconify/react";
-import { useAtomValue } from "jotai";
 import { Card } from "primereact/card";
 import { Tooltip as PrimeTooltip } from "primereact/tooltip";
 import { Link } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { baseURLS } from "../../types/CRUDenums";
-import { PermissionCategoriesType } from "../../types/generalTypes";
-import { ProjectType } from "../../types/ItemTypes/projectTypes";
-import { UserAtom } from "../../utils/Atoms/atoms";
-import { checkIfCategoryAllowed, checkIfOwner, navItems } from "../../utils/uiUtils";
+import { RolePermissionsType } from "../../types/generalTypes";
+import { ProjectType, RoleType } from "../../types/ItemTypes/projectTypes";
+import { navItems } from "../../utils/uiUtils";
 import DefaultTooltip from "../Tooltip/DefaultTooltip";
 import { Tooltip } from "../Tooltip/Tooltip";
+import { toaster } from "../../utils/toast";
 
-export default function ProjectCard({ id, image, title, owner_id: ownerId, permissions }: ProjectType) {
-  const UserData = useAtomValue(UserAtom);
+function checkItemPermission(item: string, role: RoleType) {
+  return role[`view_${item.toLowerCase()}` as RolePermissionsType] || role[`edit_${item.toLowerCase()}` as RolePermissionsType];
+}
+
+export default function ProjectCard({ id, image, title, roles }: ProjectType) {
+  const userRole = roles[0];
+
   const header = (
     <Link className="relative h-60 no-underline" to={`/project/${id}`}>
       <img
@@ -30,11 +34,15 @@ export default function ProjectCard({ id, image, title, owner_id: ownerId, permi
       {navItems
         .filter((_, index) => index !== 0)
         .map((navItem, index) => {
+          const itemPermission = checkItemPermission(navItem.tooltip, userRole);
           return (
             <Link
               key={navItem.icon}
               className="flex flex-1 justify-center no-underline"
-              to={true ? `../project/${id}/${navItem.navigate}` : "#"}>
+              onClick={() => {
+                if (!itemPermission) toaster("error", "You do not have viewing or editing permissions for this category.");
+              }}
+              to={itemPermission ? `../project/${id}/${navItem.navigate}` : "#"}>
               <PrimeTooltip
                 content={navItem.tooltip.replace("_", " ")}
                 position={index < 4 ? "top" : "bottom"}
@@ -42,7 +50,7 @@ export default function ProjectCard({ id, image, title, owner_id: ownerId, permi
               />
               <div
                 className={`transition-color flex h-8 w-8 items-center justify-center rounded-full  ${
-                  true ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-700"
+                  itemPermission ? "hover:text-sky-400" : "cursor-not-allowed text-zinc-700"
                 }`}
                 id={navItem.tooltip.replace("_", "")}>
                 <Icon fontSize={42} icon={navItem.icon} />
