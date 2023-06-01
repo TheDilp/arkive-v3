@@ -23,6 +23,7 @@ export default function SettingsContentView() {
   const { type } = useParams();
   const userRole = useAtomValue(RoleAtom);
   if (!userRole?.is_owner) {
+    console.log(userRole?.is_owner);
     return <Navigate to={-1 as To} />;
   }
   if (type === "project-settings") return <ProjectSettings />;

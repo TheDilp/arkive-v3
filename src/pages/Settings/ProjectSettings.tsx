@@ -27,7 +27,7 @@ export default function ProjectSettings() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const userData = useAtomValue(UserAtom);
-  const permission = useAtomValue(RoleAtom);
+  const userRole = useAtomValue(RoleAtom);
   const [loading, setLoading] = useState(false);
   const { data, isLoading } = useGetSingleProject(project_id as string);
   const [localItem, setLocalItem] = useState<ProjectType | undefined>(data);
@@ -39,7 +39,7 @@ export default function ProjectSettings() {
   }, [data]);
   const updateProject = useUpdateProject();
   const deleteProjectMutation = useDeleteProject();
-  if (!permission || permission !== "owner") {
+  if (!userRole || !userRole?.is_owner) {
     toaster("info", "You do not have permissions to view the project settings.");
     return <Navigate to="/" />;
   }
