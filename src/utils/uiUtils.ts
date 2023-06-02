@@ -106,3 +106,7 @@ export function checkItemPermission(item: string, role: RoleType, isOwner?: bool
     role[`edit_${item === "graphs" ? "boards" : item}` as RolePermissionsType]
   );
 }
+
+export function setTabTitle(title: string | undefined) {
+  document.title = `The Arkive ${title ? "|" : ""} ${title ?? ""}`;
+}

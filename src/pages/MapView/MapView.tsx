@@ -12,6 +12,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { MapType } from "../../types/ItemTypes/mapTypes";
 import { RoleAtom } from "../../utils/Atoms/atoms";
 import { useMapContextMenuItems } from "../../utils/contextMenus";
+import { setTabTitle } from "../../utils/uiUtils";
 
 type Props = {
   isReadOnly?: boolean;
@@ -35,6 +36,7 @@ export default function MapView({ isReadOnly }: Props) {
   const items = useMapContextMenuItems({ mapRef, bounds, deleteMapPin });
   useEffect(() => {
     if (currentMap && currentMap?.image) {
+      setTabTitle(currentMap.title);
       const img = new Image();
       img.src = currentMap.image;
       img.onload = () => {

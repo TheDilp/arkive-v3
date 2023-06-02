@@ -1,5 +1,6 @@
 import { SignedIn, useUser } from "@clerk/clerk-react";
 import { useSetAtom } from "jotai";
+import { useLayoutEffect } from "react";
 
 import ProjectCard from "../components/Card/ProjectCard";
 import Navbar from "../components/Nav/Navbar";
@@ -11,6 +12,7 @@ import { useBreakpoint } from "../hooks/useMediaQuery";
 import { ProjectType } from "../types/ItemTypes/projectTypes";
 import { UserType } from "../types/userTypes";
 import { UserAtom } from "../utils/Atoms/atoms";
+import { setTabTitle } from "../utils/uiUtils";
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -32,6 +34,10 @@ export default function Dashboard() {
   );
 
   const { isLoading, isFetched, error, data: projects } = useGetAllProjects(userData?.id as string, !!user && !!userData?.id);
+
+  useLayoutEffect(() => {
+    setTabTitle(undefined);
+  }, []);
 
   if (error) return <span>An error has occurred</span>;
   return (

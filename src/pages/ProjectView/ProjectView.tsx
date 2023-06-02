@@ -1,12 +1,14 @@
 import { Icon } from "@iconify/react";
 import { Avatar } from "primereact/avatar";
 import { Card } from "primereact/card";
+import { useLayoutEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import defaultImage from "../../assets/DefaultProjectImage.jpg";
 import { ProjectViewSkeleton } from "../../components/Skeleton/Skeleton";
 import { useGetProjectDetails } from "../../CRUD/ProjectCRUD";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
+import { setTabTitle } from "../../utils/uiUtils";
 
 const statItems = [
   { title: "Documents", icon: IconEnum.document, item: "documents" as const },
@@ -38,6 +40,13 @@ export default function ProjectView() {
     isLoading,
     isFetching,
   } = useGetProjectDetails(project_id as string, { staleTime: 60 * 24 * 1000 });
+
+  useLayoutEffect(() => {
+    if (projectDetails) {
+      setTabTitle(projectDetails.title);
+    }
+  }, [projectDetails]);
+
   if (isLoading || isFetching)
     return (
       <div className="h-full w-full">

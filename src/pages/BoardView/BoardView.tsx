@@ -1,7 +1,7 @@
 import { Collection, EventObject } from "cytoscape";
 import { useAtom, useSetAtom } from "jotai";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import { useParams } from "react-router-dom";
 
@@ -24,6 +24,7 @@ import {
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { toaster } from "../../utils/toast";
 import { formatImageURL } from "../../utils/transform";
+import { setTabTitle } from "../../utils/uiUtils";
 
 type Props = {
   isReadOnly?: boolean;
@@ -101,6 +102,12 @@ export default function BoardView({ isReadOnly, isViewOnly }: Props) {
       targetArrowColor: color,
     });
   };
+
+  useLayoutEffect(() => {
+    if (board) {
+      setTabTitle(board.title);
+    }
+  }, [board]);
 
   useEffect(() => {
     if (board?.nodes && board.nodes.length > 0 && !nodes.length) {

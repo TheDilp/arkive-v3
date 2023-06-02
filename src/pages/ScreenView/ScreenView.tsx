@@ -18,7 +18,7 @@ import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { onDragEnd } from "../../utils/screenUtils";
 import { getItem } from "../../utils/storage";
-import { setExpanded } from "../../utils/uiUtils";
+import { setExpanded, setTabTitle } from "../../utils/uiUtils";
 
 type Props = {
   id?: string;
@@ -44,6 +44,9 @@ export default function ScreenView({ id, isReadOnly }: Props) {
   const setDrawer = useSetAtom(DrawerAtom);
 
   useEffect(() => {
+    if (data?.title) {
+      setTabTitle(data.title);
+    }
     if (data?.sections) {
       const expandedSections = (getItem("sections-expanded") || []) as string[];
       setSections(

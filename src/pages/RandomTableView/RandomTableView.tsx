@@ -3,7 +3,7 @@ import { useSetAtom } from "jotai";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Tooltip } from "../../components/Tooltip/Tooltip";
@@ -16,6 +16,7 @@ import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { getRandomTableResult } from "../../utils/randomtableUtils";
 import { toaster } from "../../utils/toast";
 import { buttonLabelWithIcon } from "../../utils/transform";
+import { setTabTitle } from "../../utils/uiUtils";
 
 function IconColumn({ icon, iconColor }: RandomTableOptionType) {
   if (icon)
@@ -78,6 +79,12 @@ export default function RandomTableView() {
       show: true,
       type: "randomtableoptions",
     });
+
+  useLayoutEffect(() => {
+    if (randomTable?.title) {
+      setTabTitle(randomTable.title);
+    }
+  }, [randomTable]);
 
   return (
     <div className="flex w-full flex-col p-4">

@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Toolbar } from "primereact/toolbar";
+import { useLayoutEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { useDeleteSubItem } from "../../CRUD/ItemsCRUD";
@@ -12,6 +13,7 @@ import { DictionaryType, WordType } from "../../types/ItemTypes/dictionaryTypes"
 import { DrawerAtom } from "../../utils/Atoms/atoms";
 import { deleteItem } from "../../utils/Confirms/Confirm";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
+import { setTabTitle } from "../../utils/uiUtils";
 
 function ActionsColumn(
   data: WordType,
@@ -58,6 +60,12 @@ export default function DictionaryView() {
 
   const deleteWordMutation = useDeleteSubItem(item_id as string, "words", "dictionaries");
   const setDrawer = useSetAtom(DrawerAtom);
+
+  useLayoutEffect(() => {
+    if (dictionary?.title) {
+      setTabTitle(dictionary.title);
+    }
+  }, [dictionary]);
 
   return (
     <div className="p-4">

@@ -1,4 +1,5 @@
 import { useAtomValue } from "jotai";
+import { useLayoutEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import LoadingScreen from "../../components/Loading/LoadingScreen";
@@ -7,6 +8,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { useGetYProvider } from "../../hooks/useGetYProvider";
 import { DocumentType } from "../../types/ItemTypes/documentTypes";
 import { RoleAtom } from "../../utils/Atoms/atoms";
+import { setTabTitle } from "../../utils/uiUtils";
 import Editor from "./Editor";
 import EditorContainer from "./EditorContainer";
 
@@ -18,6 +20,13 @@ export default function EditorContentWrapper() {
   const { data: currentDocument, isFetching } = useGetItem<DocumentType>(item_id as string, "documents", {
     enabled: !!item_id || !!provider,
   });
+
+  useLayoutEffect(() => {
+    if (currentDocument) {
+      setTabTitle(currentDocument.title);
+    }
+  }, [currentDocument]);
+
   if (isFetching || !currentDocument || !provider || !synced) return <LoadingScreen />;
   return (
     <EditorContainer document={currentDocument} provider={provider}>

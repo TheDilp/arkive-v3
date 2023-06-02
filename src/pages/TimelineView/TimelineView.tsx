@@ -2,7 +2,7 @@ import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 import { Timeline } from "primereact/timeline";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import TimelineCard from "../../components/Card/TimelineCard";
@@ -13,7 +13,7 @@ import { useGetItem } from "../../hooks/useGetItem";
 import { TimelineType, TimelineViewSettings } from "../../types/ItemTypes/timelineTypes";
 import { useEventMenuItems } from "../../utils/contextMenus";
 import { TimelineGroupingOptions, TimelineModeOptions, TimelineViewOptions } from "../../utils/timelineUtils";
-import { scrollElementIntoView } from "../../utils/uiUtils";
+import { scrollElementIntoView, setTabTitle } from "../../utils/uiUtils";
 import TimelineGroupedView from "./TimelineGroupedView";
 
 type Props = { isReadOnly?: boolean };
@@ -67,6 +67,13 @@ export default function TimelineView({ isReadOnly }: Props) {
   const eventContextMenuItems = useEventMenuItems(item_id as string, "timelines");
 
   const [groupItems, setGroupItems] = useState(10);
+
+  useLayoutEffect(() => {
+    if (timeline) {
+      setTabTitle(timeline.title);
+    }
+  }, [timeline]);
+
   if (isLoading) return <LoadingScreen />;
 
   return (

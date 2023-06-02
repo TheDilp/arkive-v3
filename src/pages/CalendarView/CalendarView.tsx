@@ -20,6 +20,7 @@ import { useEventMenuItems } from "../../utils/contextMenus";
 import { DefaultDrawer } from "../../utils/DefaultValues/DrawerDialogDefaults";
 import { IconEnum } from "../../utils/DefaultValues/GeneralDefaults";
 import { getItem, setItem } from "../../utils/storage";
+import { setTabTitle } from "../../utils/uiUtils";
 
 function MonthDropdownTemplate(data: MonthType) {
   const { title } = data;
@@ -48,6 +49,7 @@ export default function CalendarView({ isReadOnly }: { isReadOnly?: boolean }) {
 
   useEffect(() => {
     if (calendar) {
+      setTabTitle(calendar.title);
       if (subitem_id) {
         const monthIdx = calendar.months.findIndex((mth) => mth.events.some((ev) => ev.id === subitem_id));
         if (monthIdx !== -1) {
