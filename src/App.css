@@ -115,18 +115,6 @@ Inputs
   @apply overflow-y-auto !important;
 }
 
-.staticRendererContainer {
-  p {
-    @apply min-h-[1rem];
-  }
-  a {
-    @apply cursor-pointer  hover:text-sky-100  !important;
-  }
-  hr {
-    @apply border-zinc-600 !important;
-  }
-}
-
 .remirror-editor.ProseMirror .ProseMirror-yjs-cursor div {
   @apply rounded-sm p-1 font-Lato !important;
 }
@@ -225,6 +213,17 @@ Inputs
     padding: 1rem;
     border-radius: 0.1rem;
     overflow: auto;
+  }
+}
+.staticRendererContainer {
+  p {
+    @apply min-h-[1rem];
+  }
+  a {
+    @apply cursor-pointer  hover:text-sky-100  !important;
+  }
+  hr {
+    @apply border-zinc-600 !important;
   }
 }
 .drawerEventDescription {
