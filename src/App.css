@@ -122,6 +122,9 @@ Inputs
   a {
     @apply cursor-pointer  hover:text-sky-100  !important;
   }
+  hr {
+    @apply border-zinc-600 !important;
+  }
 }
 
 .remirror-editor.ProseMirror .ProseMirror-yjs-cursor div {
