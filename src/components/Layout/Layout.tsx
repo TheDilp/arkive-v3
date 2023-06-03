@@ -1,5 +1,5 @@
-import { SignedIn, useUser } from "@clerk/clerk-react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { RedirectToSignIn, SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
+import { useAtom, useSetAtom } from "jotai";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Suspense, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
@@ -9,7 +9,7 @@ import { useGetSingleProject } from "../../CRUD/ProjectCRUD";
 import { useBreakpoint } from "../../hooks/useMediaQuery";
 import { ProjectType } from "../../types/ItemTypes/projectTypes";
 import { UserType } from "../../types/userTypes";
-import { ProjectAtom, RoleAtom, UserAtom } from "../../utils/Atoms/atoms";
+import { ProjectAtom, UserAtom } from "../../utils/Atoms/atoms";
 import DialogWrapper from "../Dialog/DialogWrapper";
 import Drawer from "../Drawer/Drawer";
 import LoadingScreen from "../Loading/LoadingScreen";
@@ -42,36 +42,40 @@ export default function LayoutWrapper() {
       setProjectAtom(data as ProjectType);
     },
   });
-  const userRole = useAtomValue(RoleAtom);
   useEffect(() => {
     if (projectData) {
       setProjectAtom(projectData as ProjectType);
     }
   }, [projectData, project_id]);
   return (
-    <SignedIn>
-      <div className="flex h-full max-w-full overflow-hidden">
-        {isLg ? <Sidebar /> : null}
+    <>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+      <SignedIn>
+        <div className="flex h-full max-w-full overflow-hidden">
+          {isLg ? <Sidebar /> : null}
 
-        {user ? (
-          <>
-            <ConfirmDialog />
-            <DialogWrapper />
-            {type && type !== "entity_instances" ? <SecondarySidebar /> : null}
-            <Drawer />
-          </>
-        ) : null}
-
-        <div className={`flex h-full w-full flex-1 flex-col  overflow-hidden ${!isLg ? "justify-between" : ""}`}>
-          <Navbar />
-          {user || isFetchingProject ? (
-            <Suspense fallback={<LoadingScreen />}>
-              <Outlet />
-            </Suspense>
+          {user ? (
+            <>
+              <ConfirmDialog />
+              <DialogWrapper />
+              {type && type !== "entity_instances" ? <SecondarySidebar /> : null}
+              <Drawer />
+            </>
           ) : null}
-          {!isLg ? <Sidebar /> : null}
+
+          <div className={`flex h-full w-full flex-1 flex-col  overflow-hidden ${!isLg ? "justify-between" : ""}`}>
+            <Navbar />
+            {user || isFetchingProject ? (
+              <Suspense fallback={<LoadingScreen />}>
+                <Outlet />
+              </Suspense>
+            ) : null}
+            {!isLg ? <Sidebar /> : null}
+          </div>
         </div>
-      </div>
-    </SignedIn>
+      </SignedIn>
+    </>
   );
 }

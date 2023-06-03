@@ -4,7 +4,7 @@ import "primereact/resources/themes/arya-blue/theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-import { ClerkProvider, RedirectToSignIn, SignedOut, SignIn, SignUp } from "@clerk/clerk-react";
+import { ClerkProvider, SignIn, SignUp } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 import { getBackendOptions, MultiBackend } from "@minoru/react-dnd-treeview";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -40,6 +40,7 @@ const queryClient = new QueryClient({
 
 function App() {
   const navigate = useNavigate();
+
   return (
     <main className="flex h-screen w-screen flex-col">
       <ToastContainer autoClose={1500} newestOnTop pauseOnHover theme="dark" />
@@ -50,9 +51,6 @@ function App() {
         }}
         navigate={(to) => navigate(to)}
         publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-        <SignedOut>
-          <RedirectToSignIn />
-        </SignedOut>
         <QueryClientProvider client={queryClient}>
           <DndProvider backend={MultiBackend} options={getBackendOptions()}>
             <Suspense fallback={<LoadingScreen />}>

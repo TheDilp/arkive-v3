@@ -1,4 +1,4 @@
-import { SignedIn, useUser } from "@clerk/clerk-react";
+import { RedirectToSignIn, SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
 import { useSetAtom } from "jotai";
 import { useLayoutEffect } from "react";
 
@@ -41,29 +41,34 @@ export default function Dashboard() {
 
   if (error) return <span>An error has occurred</span>;
   return (
-    <SignedIn>
-      <div className="flex h-full w-full flex-col overflow-y-auto">
-        <div className="align-start flex w-full flex-1 flex-col">
-          <Navbar />
-          <div className="flex h-full w-full flex-col overflow-hidden lg:flex-row">
-            {isLg ? <DashboardSidebar /> : null}
-            <div className="flex w-full flex-1 flex-wrap items-start justify-start gap-x-6 gap-y-6 px-6 py-4 pl-6">
-              {isLoading ? (
-                <>
-                  <ProjectCardSkeleton /> <ProjectCardSkeleton /> <ProjectCardSkeleton />
-                </>
-              ) : null}
-              {!isLoading && projects && projects.length
-                ? projects?.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
-                : null}
-              {projects?.length === 0 && isFetched ? (
-                <span className="text-lg">Click the plus button to create a new project.</span>
-              ) : null}
+    <>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+      <SignedIn>
+        <div className="flex h-full w-full flex-col overflow-y-auto">
+          <div className="align-start flex w-full flex-1 flex-col">
+            <Navbar />
+            <div className="flex h-full w-full flex-col overflow-hidden lg:flex-row">
+              {isLg ? <DashboardSidebar /> : null}
+              <div className="flex w-full flex-1 flex-wrap items-start justify-start gap-x-6 gap-y-6 px-6 py-4 pl-6">
+                {isLoading ? (
+                  <>
+                    <ProjectCardSkeleton /> <ProjectCardSkeleton /> <ProjectCardSkeleton />
+                  </>
+                ) : null}
+                {!isLoading && projects && projects.length
+                  ? projects?.map((project: ProjectType) => <ProjectCard key={project.id} {...project} />)
+                  : null}
+                {projects?.length === 0 && isFetched ? (
+                  <span className="text-lg">Click the plus button to create a new project.</span>
+                ) : null}
+              </div>
+              {!isLg ? <DashboardSidebar /> : null}
             </div>
-            {!isLg ? <DashboardSidebar /> : null}
           </div>
         </div>
-      </div>
-    </SignedIn>
+      </SignedIn>
+    </>
   );
 }
