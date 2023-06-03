@@ -167,7 +167,9 @@ export default function DrawerDocumentContent() {
         ) : null}
         <div className="flex items-center justify-between">
           <span className="p-checkbox-label">Icon</span>
-          <IconSelect setIcon={(newIcon: string) => handleChange({ name: "icon", value: newIcon })}>
+          <IconSelect
+            iconTypes={["general", "weather"]}
+            setIcon={(newIcon: string) => handleChange({ name: "icon", value: newIcon })}>
             <Icon className="cursor-pointer" fontSize={20} icon={localItem.icon || IconEnum.document} />
           </IconSelect>
         </div>
