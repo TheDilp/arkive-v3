@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, To, useParams } from "react-router-dom";
 
 import StaticRender from "../../components/Editor/StaticRender";
 import LoadingScreen from "../../components/Loading/LoadingScreen";
@@ -18,7 +18,7 @@ export default function PublicDocumentView() {
   if (isLoading) return <LoadingScreen />;
   if (!data?.isPublic && !isLoading) {
     toaster("warning", "That page is not public.");
-    return <Navigate to="/" />;
+    return <Navigate to={-1 as To} />;
   }
   return (
     <div className="min-h-full overflow-hidden px-[16.67%]">
