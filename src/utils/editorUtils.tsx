@@ -94,7 +94,7 @@ export const DefaultEditorExtensions = (provider: WebsocketProvider) => {
     new UnderlineExtension({}),
     new BlockquoteExtension({}),
     new BulletListExtension({
-      enableSpine: false,
+      enableSpine: true,
     }),
     new TaskListExtension({}),
     new OrderedListExtension({}),
