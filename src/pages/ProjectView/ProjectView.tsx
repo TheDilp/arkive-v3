@@ -38,7 +38,9 @@ function CountHeader({
     <div className="flex items-center justify-between text-3xl font-bold">
       {count}
       <span className="flex items-center gap-x-2 text-2xl font-semibold text-zinc-300">
-        <Link to={`/project/${project_id}/${item_type}`}>{item.replaceAll("_", " ")}</Link>
+        <Link className="transition-colors hover:text-sky-400" to={`/project/${project_id}/${item_type}`}>
+          {item.replaceAll("_", " ")}
+        </Link>
         <Icon fontSize={32} icon={icon} />
       </span>
     </div>
