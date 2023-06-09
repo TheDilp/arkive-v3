@@ -21,12 +21,24 @@ const statItems = [
   { title: "Random tables", icon: IconEnum.randomtables, item: "random_tables" as const },
 ];
 
-function CountHeader(count: number, icon: string, item: string) {
+function CountHeader({
+  count,
+  icon,
+  item,
+  project_id,
+  item_type,
+}: {
+  count: number;
+  icon: string;
+  item: string;
+  project_id: string;
+  item_type: string;
+}) {
   return (
     <div className="flex items-center justify-between text-3xl font-bold">
       {count}
       <span className="flex items-center gap-x-2 text-2xl font-semibold text-zinc-300">
-        {item.replaceAll("_", " ")}
+        <Link to={`/project/${project_id}/${item_type}`}>{item.replaceAll("_", " ")}</Link>
         <Icon fontSize={32} icon={icon} />
       </span>
     </div>
@@ -97,13 +109,21 @@ export default function ProjectView() {
           <div key={item.item} className="col-span-4 md:col-span-2 lg:col-span-1">
             <Card
               className=" projectViewCard h-64 overflow-y-auto"
-              title={() => CountHeader(projectDetails._count[item.item], item.icon, item.title)}>
+              title={() =>
+                CountHeader({
+                  count: projectDetails._count[item.item],
+                  icon: item.icon,
+                  item: item.title,
+                  item_type: item.item,
+                  project_id: project_id as string,
+                })
+              }>
               <h4 className="text-lg font-light text-zinc-600">Latest</h4>
               {projectDetails[item.item].length === 0 ? (
                 <span className="italic text-zinc-600">There are no {item.item.replaceAll("_", " ")} created yet.</span>
               ) : (
                 <div className="flex flex-col gap-y-2">
-                  {projectDetails[item.item].map((subItem) => (
+                  {projectDetails[item.item].reverse().map((subItem) => (
                     <Link
                       key={subItem.id}
                       className="truncate text-xl font-bold transition-colors hover:text-sky-400"
