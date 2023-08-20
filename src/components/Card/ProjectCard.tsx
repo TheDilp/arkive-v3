@@ -15,7 +15,7 @@ import { Tooltip } from "../Tooltip/Tooltip";
 
 export default function ProjectCard({ id, image, title, roles, owner_id }: ProjectType) {
   const UserData = useAtomValue(UserAtom);
-  const userRole = roles[0];
+  const userRole = roles?.[0];
 
   const header = (
     <Link className="relative h-60 no-underline" to={`/project/${id}`}>
